@@ -26,3 +26,6 @@ qtcAddDeployment()
 
 OTHER_FILES += \
     qml/Fang/FeedTitleDelegate.qml
+
+RESOURCES += \
+    Resources.qrc

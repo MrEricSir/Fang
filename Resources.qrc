@@ -1,0 +1,14 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qml/Fang/Button.qml</file>
+        <file>qml/Fang/FeedTitleDelegate.qml</file>
+        <file>qml/Fang/main.qml</file>
+        <file>qml/Fang/News.qml</file>
+        <file>qml/Fang/NewsItemDelegate.qml</file>
+        <file>qml/Fang/Sidebar.qml</file>
+        <file>qml/Fang/images/arrows_left.png</file>
+        <file>qml/Fang/images/arrows_right.png</file>
+        <file>qml/Fang/images/minus.png</file>
+        <file>qml/Fang/images/plus.png</file>
+    </qresource>
+</RCC>
