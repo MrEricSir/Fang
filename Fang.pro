@@ -15,7 +15,9 @@ QML_IMPORT_PATH =
 # CONFIG += qdeclarative-boostable
 
 # The .cpp file which was generated for your project. Feel free to hack it.
-SOURCES += main.cpp
+SOURCES += main.cpp \
+    ListModel.cpp \
+    FeedItem.cpp
 
 # Installation path
 # target.path =
@@ -29,3 +31,7 @@ OTHER_FILES += \
 
 RESOURCES += \
     Resources.qrc
+
+HEADERS += \
+    ListModel.h \
+    FeedItem.h

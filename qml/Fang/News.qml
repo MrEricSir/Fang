@@ -15,7 +15,9 @@ Item {
             id: newsItem
         }
         
-        model: ListModel {
+        model: feedModel
+            
+            /*ListModel {
             ListElement {
                 title: "Doctor Beat"
                 author: "Miami sound Machine"
@@ -35,6 +37,6 @@ Hey doctor, could you give me somethin' to ease the pain
                 url: "http://www.usatoday.com/story/news/world/2013/07/20/japan-election-abe-economy/2570723/"
                 siteTitle: "USA Today"
             }
-        }
+        } */
     }
 }
