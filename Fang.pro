@@ -14,17 +14,23 @@ QML_IMPORT_PATH =
 # Speed up launching on MeeGo/Harmattan when using applauncherd daemon
 # CONFIG += qdeclarative-boostable
 
+QT       += core network
+
 # The .cpp file which was generated for your project. Feel free to hack it.
-SOURCES += main.cpp \
-    ListModel.cpp \
-    NewsItem.cpp \
-    FeedItem.cpp
+SOURCES += src/main.cpp \
+    src/models/ListModel.cpp \
+    src/models/NewsItem.cpp \
+    src/models/FeedItem.cpp \
+    src/parser/Parser.cpp \
+    src/parser/RawFeed.cpp \
+    src/parser/RawNews.cpp \
+    src/FangApp.cpp
 
 # Installation path
 # target.path =
 
 # Please do not modify the following two lines. Required for deployment.
-include(qmlapplicationviewer/qmlapplicationviewer.pri)
+include(src/qmlapplicationviewer/qmlapplicationviewer.pri)
 qtcAddDeployment()
 
 OTHER_FILES += \
@@ -34,6 +40,10 @@ RESOURCES += \
     Resources.qrc
 
 HEADERS += \
-    ListModel.h \
-    NewsItem.h \
-    FeedItem.h
+    src/models/ListModel.h \
+    src/models/NewsItem.h \
+    src/models/FeedItem.h \
+    src/parser/Parser.h \
+    src/parser/RawFeed.h \
+    src/parser/RawNews.h \
+    src/FangApp.h

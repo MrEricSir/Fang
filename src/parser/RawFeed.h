@@ -1,0 +1,26 @@
+#ifndef RAWFEED_H
+#define RAWFEED_H
+
+#include <QObject>
+
+#include "RawNews.h"
+
+class RawFeed : public QObject
+{
+    Q_OBJECT
+public:
+    explicit RawFeed(QObject *parent = 0);
+    
+    QString title;
+    QString subtitle;
+    QUrl url;
+    QDateTime lastUpdated;
+    quint32 minutesToUpdate;
+    
+    QList<RawNews*> items;
+    
+    // For debuggin' and stuff.
+    QString toString();
+};
+
+#endif // RAWFEED_H

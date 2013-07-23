@@ -1,5 +1,6 @@
 import QtQuick 1.1
 
+// Feed list sidebar
 Item {
     id: sidebar
     
@@ -69,6 +70,7 @@ Item {
         }
     }
     
+    // Mini-toolbar under the sidebar.
     Rectangle {
         id: sidebarControls
         height: 40
@@ -83,6 +85,7 @@ Item {
             anchors.fill: parent
             anchors.margins: 5
             
+            // Adds a feed.
             Button {
                 id: addButton
                 
@@ -99,6 +102,7 @@ Item {
                 onClicked: addClicked()
             }
             
+            // Removes a feed.
             Button {
                 id: removeButton
                 
@@ -117,7 +121,7 @@ Item {
                 onClicked: removeClicked()
             }
             
-            // Button to close the 
+            // Closes the sidebar.
             Button {
                 id: closeButton
                 
