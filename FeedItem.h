@@ -16,21 +16,25 @@ public:
     
     enum Roles {
         TitleRole = Qt::UserRole+1,
-        AuthorRole,
-        DescriptionRole,
-        TimestampRole,
-        UrlRole
+        SubtitleRole,
+        LastUpdatedRole,
+        MinutesToUpdateRole,
+        UrlRole,
+        ImageURLRole,
+        NewsListRole
     };
-  
+    
     FeedItem(QObject *parent = 0);
     
     // This class is immutable, so this is the c'tor you'll want to use.
     explicit FeedItem(
             const QString& title,
-            const QString& author,
-            const QString& description,
-            const QDateTime& timestamp,
+            const QString& subtitle,
+            const QDateTime& lastUpdated,
+            quint32 minutesToUpdate,
             const QUrl& url,
+            const QUrl& imageURL,
+            ListModel *newsFeed,
             QObject *parent = 0);
     
     // For sorting
@@ -42,17 +46,21 @@ public:
     
     inline QString id() const { return title; }
     inline QString getTitle() const { return title; }
-    inline QString getAuthor() const { return author; }
-    inline QString getDescription() const { return description; }
-    inline QDateTime getTimestamp() const { return timestamp; }
+    inline QString getSubtitle() const { return subtitle; }
+    inline QDateTime getLastUpdated() const { return lastUpdated; }
+    inline quint32 getMinutesToUpdate() const { return minutesToUpdate; }
     inline QUrl getURL() const { return url; }
+    inline QUrl getImageURL() const { return imageURL; }
+    inline ListModel* getNewsList() const { return newsList; }
    
   private:
     QString title;
-    QString author;
-    QString description;
-    QDateTime timestamp;
+    QString subtitle;
+    QDateTime lastUpdated;
+    quint32 minutesToUpdate;
     QUrl url;
+    QUrl imageURL;
+    ListModel* newsList;
 };
 
 #endif // FEEDITEM_H

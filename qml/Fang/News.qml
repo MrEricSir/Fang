@@ -15,7 +15,9 @@ Item {
             id: newsItem
         }
         
-        model: feedModel
+        model: sidebar.newsList
+        
+        
             
             /*ListModel {
             ListElement {

@@ -7,6 +7,9 @@ Item {
     signal removeClicked()
     signal closeClicked()
     
+    // Currently selected news list
+    property variant newsList: feedListView.currentItem.feedModel.newsList
+    
     // Const property
     property int buttonSize: 30
     
@@ -27,9 +30,13 @@ Item {
                 anchors.fill: parent
                 delegate: FeedTitleDelegate {
                     id: titleDelegate
+                    
+                    property variant feedModel: model // Hack to get current data
                 }
                 
-                model: ListModel {
+                model: feedListModel
+                    /*
+                    ListModel {
                     ListElement {
                         title: "All News"
                         url: ""
@@ -57,6 +64,7 @@ Item {
                         lastUpdated: 123
                     }
                 }
+                */
             }
         }
     }

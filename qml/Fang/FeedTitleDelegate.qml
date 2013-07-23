@@ -56,7 +56,7 @@ Item {
                     
                     Image {
                         id: feedIcon
-                        source: image || ""
+                        source: imageURL || ""
                         anchors.verticalCenter: parent.verticalCenter
                         width: 30
                         height: 30

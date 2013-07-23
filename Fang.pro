@@ -17,6 +17,7 @@ QML_IMPORT_PATH =
 # The .cpp file which was generated for your project. Feel free to hack it.
 SOURCES += main.cpp \
     ListModel.cpp \
+    NewsItem.cpp \
     FeedItem.cpp
 
 # Installation path
@@ -34,4 +35,5 @@ RESOURCES += \
 
 HEADERS += \
     ListModel.h \
+    NewsItem.h \
     FeedItem.h
