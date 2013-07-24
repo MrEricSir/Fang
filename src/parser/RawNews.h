@@ -15,6 +15,7 @@ public:
     QString title;
     QString author;
     QString description;
+    QString content;
     QDateTime timestamp;
     QUrl url;
     

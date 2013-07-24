@@ -7,6 +7,7 @@
 #include <QVariant>
 
 #include "ListModel.h"
+#include "FeedItem.h"
 
 class NewsItem : public ListItem
 {
@@ -15,17 +16,21 @@ class NewsItem : public ListItem
 public:
     
     enum Roles {
-        TitleRole = Qt::UserRole+1,
+        FeedRole = Qt::UserRole + 1,
+        TitleRole,
         AuthorRole,
         DescriptionRole,
         TimestampRole,
-        UrlRole
+        UrlRole,
+        SiteTitleRole,
+        SiteImageURLRole
     };
   
     NewsItem(QObject *parent = 0);
     
     // This class is immutable, so this is the c'tor you'll want to use.
     explicit NewsItem(
+            FeedItem* feed,
             const QString& title,
             const QString& author,
             const QString& description,
@@ -36,11 +41,11 @@ public:
     // For sorting
     bool operator<(const NewsItem& rhs);
     
-    
     QVariant data(int role) const;
     QHash<int, QByteArray> roleNames() const;
     
     inline QString id() const { return title; }
+    inline FeedItem* getFeed() const { return feed; }
     inline QString getTitle() const { return title; }
     inline QString getAuthor() const { return author; }
     inline QString getDescription() const { return description; }
@@ -48,6 +53,7 @@ public:
     inline QUrl getURL() const { return url; }
    
   private:
+    FeedItem* feed;
     QString title;
     QString author;
     QString description;

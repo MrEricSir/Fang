@@ -1,4 +1,5 @@
 #include "FeedItem.h"
+#include "NewsItem.h"
 
 FeedItem::FeedItem(QObject *parent) :
     ListItem(parent),
@@ -9,19 +10,24 @@ FeedItem::FeedItem(QObject *parent) :
     url(),
     imageURL()
 {
+    newsList = new ListModel(new NewsItem, parent);
 }
 
 FeedItem::FeedItem(const QString &title, const QString &subtitle, const QDateTime &lastUpdated, 
-                   quint32 minutesToUpdate, const QUrl &url, const QUrl &imageURL, ListModel* newsList, QObject* parent) :
+                   quint32 minutesToUpdate, const QUrl &url, const QUrl &imageURL, QObject* parent) :
     ListItem(parent),
     title(title),
     subtitle(subtitle),
     lastUpdated(lastUpdated),
     minutesToUpdate(minutesToUpdate),
     url(url),
-    imageURL(imageURL),
-    newsList(newsList)
+    imageURL(imageURL)
 {
+    newsList = new ListModel(new NewsItem, parent);
+}
+
+FeedItem::~FeedItem() {
+    delete newsList;
 }
 
 QHash<int, QByteArray> FeedItem::roleNames() const

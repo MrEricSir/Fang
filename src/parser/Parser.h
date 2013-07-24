@@ -40,6 +40,7 @@ protected slots:
     
 private:
     void parseXml();
+    void resetParserVars();
     
     RawFeed* feed;
     RawNews* currentItem;
@@ -49,6 +50,18 @@ private:
 
     QNetworkAccessManager manager;
     QNetworkReply *currentReply;
+    
+    // Parser vars
+    int numItems;
+    QString currentTag;
+    QString currentPrefix;
+    QString url;
+    QString title;
+    QString subtitle;
+    QString content;
+    QString timestamp;
+    QString author;
+    //
 };
 
 #endif // PARSER_H

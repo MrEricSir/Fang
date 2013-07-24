@@ -14,7 +14,8 @@ QML_IMPORT_PATH =
 # Speed up launching on MeeGo/Harmattan when using applauncherd daemon
 # CONFIG += qdeclarative-boostable
 
-QT       += core network
+# For Fang we'll need QtCore, the network, and the built-in SQLite database.
+QT       += core network sql
 
 # The .cpp file which was generated for your project. Feel free to hack it.
 SOURCES += src/main.cpp \

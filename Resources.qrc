@@ -10,5 +10,6 @@
         <file>qml/Fang/images/arrows_right.png</file>
         <file>qml/Fang/images/minus.png</file>
         <file>qml/Fang/images/plus.png</file>
+        <file>qml/Fang/ScrollBar.qml</file>
     </qresource>
 </RCC>

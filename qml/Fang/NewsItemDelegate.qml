@@ -28,6 +28,22 @@ Column {
             font.family: "Tahoma"
             width: parent.width
             wrapMode: Text.WordWrap
+            
+            // Makes the headline clickable
+            MouseArea {
+                anchors.fill: parent
+                hoverEnabled: true
+                onEntered: {
+                    parent.color = "blue"
+                    parent.font.underline = true
+                }
+                onExited: {
+                    parent.color = "black"
+                    parent.font.underline = false
+                }
+                
+                onClicked: Qt.openUrlExternally(url)
+            }
         }
         
         // Line break
@@ -47,19 +63,34 @@ Column {
             width: parent.width
             height: newsItemSiteTitle.paintedHeight
             
+            spacing: 4
+            
+            Image {
+                width: 20
+                height: 20
+                
+                source: siteImageURL
+                
+                fillMode: Image.PreserveAspectFit
+                anchors.verticalCenter: parent.verticalCenter
+            }
+            
             Text {
                 id: newsItemSiteTitle
-                width: newsSubheadlineRow.width / 2
+                width: newsSubheadlineRow.width / 2 - 20
+                
                 text: siteTitle
+                
                 font.pointSize: 10
                 font.family: "Tahoma"
                 elide: Text.ElideRight
             }
+            
             Text {
                 id: newsItemDate
                 
                 horizontalAlignment: Text.AlignRight
-                width: newsSubheadlineRow.width / 2
+                width: newsSubheadlineRow.width / 2 - 10
                 text: qsTr("May 4th 10:30 PM")
                 font.pointSize: 10
                 font.family: "Tahoma"
@@ -86,12 +117,33 @@ Column {
             settings.standardFontFamily: "Tahoma"
             
             settings.javaEnabled: false
-            settings.javascriptEnabled: false
-            settings.pluginsEnabled: false
+            settings.javascriptEnabled: true//false
+            settings.localContentCanAccessRemoteUrls: false
+            settings.pluginsEnabled: true //false
+            
+            focus: false
             
             // WebView can't handle sizes changes well, so we'll hack around it.
-            onWidthChanged: reloadTimer.restart();
-            onHeightChanged: reloadTimer.restart();
+            property int oldWidth: 0
+            onWidthChanged: {
+                if (oldWidth == 0) {
+                    oldWidth = width;
+                    return;
+                }
+                
+                reloadTimer.restart();
+                oldWidth = width;
+            }
+            property int oldHeight: 0
+            onHeightChanged: {
+                if (oldHeight == 0) {
+                    oldHeight = height;
+                    return;
+                }
+                
+                reloadTimer.restart();
+                oldHeight = height;
+            }
             
             // Timer for reloading when the size changes.
             Timer {
@@ -103,6 +155,25 @@ Column {
                 // Hack to force a refresh.
                 onTriggered: webViewNews.html = webViewNews.html
             }
+            
+            onLoadFinished: {
+                            evaluateJavaScript(' \
+                                var els = document.getElementsByTagName("a"); \
+                                for (var i in els){ \
+                                    els[i].onclick = function(e){e.preventDefault(); qml.qmlCall(this.getAttribute("href")); return false;} \
+                                } \
+                            ')
+                            enabled = true;
+                            }
+                        javaScriptWindowObjects: QtObject {
+                            WebView.windowObjectName: "qml"
+            
+                            function qmlCall(url) {
+                                console.log(url);
+                                Qt.openUrlExternally(url)
+                            }
+                        }
+                        
         }
     }
 }

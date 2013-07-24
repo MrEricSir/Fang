@@ -7,6 +7,7 @@
 #include <QVariant>
 
 #include "ListModel.h"
+//#include "NewsItem.h"
 
 class FeedItem : public ListItem
 {
@@ -26,6 +27,8 @@ public:
     
     FeedItem(QObject *parent = 0);
     
+    virtual ~FeedItem();
+    
     // This class is immutable, so this is the c'tor you'll want to use.
     explicit FeedItem(
             const QString& title,
@@ -34,7 +37,6 @@ public:
             quint32 minutesToUpdate,
             const QUrl& url,
             const QUrl& imageURL,
-            ListModel *newsFeed,
             QObject *parent = 0);
     
     // For sorting
@@ -52,8 +54,9 @@ public:
     inline QUrl getURL() const { return url; }
     inline QUrl getImageURL() const { return imageURL; }
     inline ListModel* getNewsList() const { return newsList; }
+    
    
-  private:
+private:
     QString title;
     QString subtitle;
     QDateTime lastUpdated;

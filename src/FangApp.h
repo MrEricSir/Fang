@@ -19,17 +19,25 @@ public:
     
     void init();
     
+    // Returns the feed for the given index from 0..feedCount
+    FeedItem *getFeed(int index);
+    
 signals:
     
 public slots:
     void onFeedFinished();
     
+    inline int feedCount() { return feedList->rowCount(); }
+    
 private:
-    ListModel *createNewsModel();
-    ListModel *createFeed();
+    //ListModel *createNewsModel();
+    ListModel *createFeedList();
+    
+    QString htmlifyContent(const QString &content);
     
     QmlApplicationViewer* viewer;
     Parser parser;
+    ListModel *feedList;
     ListModel* newsModels[3];
 };
 

@@ -45,6 +45,7 @@ public:
   QModelIndex indexFromItem( const ListItem* item) const;
   void clear();
   inline QHash<int, QByteArray> roleNames() const { return m_prototype->roleNames(); }
+  inline ListItem* row(int row) { return m_list.at(row); }
  
 private slots:
   void handleItemChange();

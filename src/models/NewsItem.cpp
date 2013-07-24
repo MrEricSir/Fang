@@ -1,7 +1,9 @@
 #include "NewsItem.h"
+#include <QDebug>
 
 NewsItem::NewsItem(QObject *parent) :
     ListItem(parent),
+    feed(NULL),
     title(""),
     author(""),
     description(""),
@@ -10,9 +12,11 @@ NewsItem::NewsItem(QObject *parent) :
 {
 }
 
-NewsItem::NewsItem(const QString &title, const QString &author, const QString &description, 
-                   const QDateTime &timestamp, const QUrl &url, QObject *parent) :
+NewsItem::NewsItem(FeedItem* feed, const QString &title, const QString &author, 
+                   const QString &description, const QDateTime &timestamp, const QUrl &url, 
+                   QObject *parent) :
     ListItem(parent),
+    feed(feed),
     title(title),
     author(author),
     description(description),
@@ -24,11 +28,14 @@ NewsItem::NewsItem(const QString &title, const QString &author, const QString &d
 QHash<int, QByteArray> NewsItem::roleNames() const
 {
     QHash<int, QByteArray> names;
+    names[FeedRole] = "feed";
     names[TitleRole] = "title";
     names[AuthorRole] = "author";
     names[TimestampRole] = "timestamp";
     names[DescriptionRole] = "description";
     names[UrlRole] = "url";
+    names[SiteTitleRole] = "siteTitle";
+    names[SiteImageURLRole] = "siteImageURL";
     return names;
 }
 
@@ -45,6 +52,10 @@ QVariant NewsItem::data(int role) const
         return getDescription();
     case UrlRole:
         return getURL();
+    case SiteTitleRole:
+        return feed->getTitle();
+    case SiteImageURLRole:
+        return feed->getImageURL();
     default:
         return QVariant();
     }
