@@ -7,7 +7,6 @@
 #include <QVariant>
 
 #include "ListModel.h"
-//#include "NewsItem.h"
 
 class FeedItem : public ListItem
 {
@@ -22,7 +21,8 @@ public:
         MinutesToUpdateRole,
         UrlRole,
         ImageURLRole,
-        NewsListRole
+        NewsListRole,
+        IsUpdatingRole
     };
     
     FeedItem(QObject *parent = 0);
@@ -46,6 +46,8 @@ public:
     QVariant data(int role) const;
     QHash<int, QByteArray> roleNames() const;
     
+    void setIsUpdating(bool isUpdating);
+    
     inline QString id() const { return title; }
     inline QString getTitle() const { return title; }
     inline QString getSubtitle() const { return subtitle; }
@@ -54,8 +56,8 @@ public:
     inline QUrl getURL() const { return url; }
     inline QUrl getImageURL() const { return imageURL; }
     inline ListModel* getNewsList() const { return newsList; }
+    inline int getIsUpdating() const { return isUpdating; }
     
-   
 private:
     QString title;
     QString subtitle;
@@ -64,6 +66,7 @@ private:
     QUrl url;
     QUrl imageURL;
     ListModel* newsList;
+    int isUpdating;
 };
 
 #endif // FEEDITEM_H

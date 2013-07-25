@@ -25,7 +25,11 @@ SOURCES += src/main.cpp \
     src/parser/Parser.cpp \
     src/parser/RawFeed.cpp \
     src/parser/RawNews.cpp \
-    src/FangApp.cpp
+    src/FangApp.cpp \
+    src/operations/OperationManager.cpp \
+    src/operations/Operation.cpp \
+    src/operations/UpdateFeedOperation.cpp \
+    src/utilities/Utilities.cpp
 
 # Installation path
 # target.path =
@@ -47,4 +51,8 @@ HEADERS += \
     src/parser/Parser.h \
     src/parser/RawFeed.h \
     src/parser/RawNews.h \
-    src/FangApp.h
+    src/FangApp.h \
+    src/operations/OperationManager.h \
+    src/operations/Operation.h \
+    src/operations/UpdateFeedOperation.h \
+    src/utilities/Utilities.h

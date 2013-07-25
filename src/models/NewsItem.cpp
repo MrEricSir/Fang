@@ -47,6 +47,7 @@ QVariant NewsItem::data(int role) const
     case AuthorRole:
         return getAuthor();
     case TimestampRole:
+        qDebug() << "timestamp "<< getTimestamp().toString();
         return getTimestamp();
     case DescriptionRole:
         return getDescription();

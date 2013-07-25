@@ -77,8 +77,8 @@ void Parser::parseXml() {
                 numItems++;
             }
             
-            currentTag = xml.name().toString();
-            currentPrefix = xml.prefix().toString();
+            currentTag = xml.name().toString().toLower();
+            currentPrefix = xml.prefix().toString().toLower();
         } else if (xml.isEndElement()) {
             if (xml.name() == "item" || xml.name() == "entry") {
                 //qDebug() << "End element:" << xml.name().toString();
@@ -95,7 +95,17 @@ void Parser::parseXml() {
                 currentItem->content = content;
                 // Examples:
                 // Tue, 02 Jul 2013 01:01:24 +0000
+                
+                // TODO: figure out the time zone issue
+                // For now, we're shaving off everything after the last space.
+                timestamp = timestamp.left(timestamp.trimmed().lastIndexOf(" "));
+                //qDebug() << "Time string: " << timestamp;
+                
                 currentItem->timestamp = QDateTime::fromString(timestamp, "ddd, dd MMM yyyy hh:mm:ss"); 
+                if (!currentItem->timestamp.isValid()) {
+                    qDebug() << "Time string: " << timestamp;
+                    qDebug() << "invalid date!";
+                }
                 currentItem->url = QUrl(url);
                 
                 feed->items.append(currentItem);
@@ -111,7 +121,7 @@ void Parser::parseXml() {
             }
 
         } else if (xml.isCharacters() && !xml.isWhitespace()) {
-            QString xmlString = xml.text().toString().toLower();
+            QString xmlString = xml.text().toString();//.toLower();
             if (currentTag == "title")
                 title += xmlString;
             else if (currentTag == "link")
@@ -179,7 +189,7 @@ void Parser::netFinished(QNetworkReply *reply)
     Q_UNUSED(reply);
     
     if (result == Parser::OK) {
-        qDebug() << "Parse looked good, items = " << feed->items.size();
+        //qDebug() << "Parse looked good, items = " << feed->items.size();
         emit finished();
     }
  }

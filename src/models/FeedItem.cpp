@@ -8,7 +8,8 @@ FeedItem::FeedItem(QObject *parent) :
     lastUpdated(),
     minutesToUpdate(0),
     url(),
-    imageURL()
+    imageURL(),
+    isUpdating(false)
 {
     newsList = new ListModel(new NewsItem, parent);
 }
@@ -21,7 +22,8 @@ FeedItem::FeedItem(const QString &title, const QString &subtitle, const QDateTim
     lastUpdated(lastUpdated),
     minutesToUpdate(minutesToUpdate),
     url(url),
-    imageURL(imageURL)
+    imageURL(imageURL),
+    isUpdating(false)
 {
     newsList = new ListModel(new NewsItem, parent);
 }
@@ -40,6 +42,7 @@ QHash<int, QByteArray> FeedItem::roleNames() const
     names[UrlRole] = "url";
     names[ImageURLRole] = "imageURL";
     names[NewsListRole] = "newsList";
+    names[IsUpdatingRole] = "isUpdating";
     return names;
 }
 
@@ -60,6 +63,8 @@ QVariant FeedItem::data(int role) const
         return getImageURL();
     case NewsListRole:
         return QVariant::fromValue(getNewsList());
+    //case IsUpdatingRole:
+        //return getIsUpdating();
     default:
         return QVariant();
     }
@@ -69,4 +74,11 @@ bool FeedItem::operator<(const FeedItem& rhs) {
     // TODO
     // add ordinal to DB
     return false;
+}
+
+
+void FeedItem::setIsUpdating(bool isUpdating)
+{
+    this->isUpdating = isUpdating;
+    emit dataChanged();
 }

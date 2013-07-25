@@ -81,7 +81,6 @@ Item {
     
     width: 8
     anchors {top: parent.top; bottom: parent.bottom; right: parent.right; rightMargin: 5 }
-    visible: (track.height == slider.height) ? false : true //TODO: !visible -> width: 0 (but creates a binding loop)
     
     function showScrollbar() {
         state = "active";
@@ -94,7 +93,6 @@ Item {
         onContentYChanged: showScrollbar()
     }
     
-    
     // Go inactive after a short period.
     Timer {
         id: inactiveTimer
@@ -105,7 +103,7 @@ Item {
     }
     
     Item {
-        anchors {fill: parent; margins: 1; }
+        anchors.fill: parent
         
         Timer {
             property int scrollAmount
@@ -148,17 +146,23 @@ Item {
                 
                 height: 100
                 
-                property int maxScrollbarY: parent.height - height
+                property int maxScrollbarY: track.height - height
                 
                 // Base y value is total scroll area scalled to scroll bar size.
-                property int baseY: (target.contentY / (target.contentHeight - parent.height)) * 
+                property int baseY: (target.contentY / (target.contentHeight - target.height)) * 
                                     maxScrollbarY
                 
                 // Force y to be between 0 and max height
-                y: Math.max(0, Math.min(baseY, maxScrollbarY))
+                y: sliderMouseArea.drag.active || scrollAnimation.running ? y : Math.max(0, Math.min(baseY, maxScrollbarY))
                 
                 MouseArea {
+                    id: sliderMouseArea
+                    
                     anchors.fill: parent
+                    
+                    // The target's new contentY value
+                    property int newContentY: 0
+                    
                     drag.target: parent
                     drag.axis: Drag.YAxis
                     drag.minimumY: 0
@@ -168,13 +172,26 @@ Item {
                     
                     onPositionChanged: {
                         if (pressedButtons == Qt.LeftButton) {
-                            target.contentY = slider.y * target.contentHeight / track.height
+                            newContentY = (slider.y * target.contentHeight) / slider.maxScrollbarY
+                            newContentY = Math.max(0, Math.min(newContentY, target.contentHeight))
+                            scrollAnimation.restart();
                         }
                         
                         inactiveTimer.restart()
                     }
                     
+                    // Scoot the view back it to bounds if we overshot.
                     onReleased: target.returnToBounds();
+                    
+                    NumberAnimation {
+                        id: scrollAnimation
+                        
+                        target: scrollBar.target
+                        properties: "contentY"
+                        to: sliderMouseArea.newContentY
+                        duration: 450
+                        easing.type: Easing.OutQuad
+                    }
                 }
             }
         }

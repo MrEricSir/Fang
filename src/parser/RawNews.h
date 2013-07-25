@@ -6,11 +6,15 @@
 #include <QUrl>
 #include <QString>
 
+#include <QDebug>
+
 class RawNews : public QObject
 {
     Q_OBJECT
 public:
     explicit RawNews(QObject *parent = 0);
+    
+    virtual ~RawNews() {}
     
     QString title;
     QString author;

@@ -91,7 +91,7 @@ Column {
                 
                 horizontalAlignment: Text.AlignRight
                 width: newsSubheadlineRow.width / 2 - 10
-                text: qsTr("May 4th 10:30 PM")
+                text: ""//Qt.formatDateTime(timestamp)
                 font.pointSize: 10
                 font.family: "Tahoma"
                 elide: Text.ElideRight
@@ -108,9 +108,9 @@ Column {
         
         WebView {
             id: webViewNews
-            width: parent.width
+            //width: parent.width
             preferredWidth: parent.width
-            preferredHeight: 50
+            preferredHeight: 1
             
             html: description
             
@@ -141,6 +141,7 @@ Column {
                     return;
                 }
                 
+                console.log("new height", height)
                 reloadTimer.restart();
                 oldHeight = height;
             }
@@ -153,7 +154,7 @@ Column {
                 repeat: false
                 
                 // Hack to force a refresh.
-                onTriggered: webViewNews.html = webViewNews.html
+                //onTriggered: webViewNews.html = webViewNews.html
             }
             
             onLoadFinished: {

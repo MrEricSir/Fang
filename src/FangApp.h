@@ -6,6 +6,8 @@
 
 #include "qmlapplicationviewer/qmlapplicationviewer.h"
 
+#include "operations/OperationManager.h"
+
 #include "models/NewsItem.h"
 #include "models/FeedItem.h"
 #include "models/ListModel.h"
@@ -25,8 +27,6 @@ public:
 signals:
     
 public slots:
-    void onFeedFinished();
-    
     inline int feedCount() { return feedList->rowCount(); }
     
 private:
@@ -36,7 +36,7 @@ private:
     QString htmlifyContent(const QString &content);
     
     QmlApplicationViewer* viewer;
-    Parser parser;
+    OperationManager manager;
     ListModel *feedList;
     ListModel* newsModels[3];
 };
