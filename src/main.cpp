@@ -6,14 +6,14 @@
 #include "FangApp.h"
 
 #include "models/FangWebView.h"
-#include "models/FangFeedSelection.h"
+#include "models/MouseWheelArea.h"
 #include "qmlapplicationviewer/qmlapplicationviewer.h"
 
 
 Q_DECL_EXPORT int main(int argc, char *argv[])
 {
     qmlRegisterType<QDeclarativeWebView>("Fang", 1, 0, "FangWebView");
-    qmlRegisterType<FangFeedSelection>("Fang", 1, 0, "FangFeedSelection");
+    qmlRegisterType<MouseWheelArea>("Fang", 1, 0, "MouseWheelArea");
     
     QScopedPointer<QApplication> app(createApplication(argc, argv));
     

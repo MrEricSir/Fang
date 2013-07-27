@@ -33,8 +33,8 @@ SOURCES += src/main.cpp \
     src/models/FangWebView.cpp \
     src/models/NewsWeb.cpp \
     src/operations/LoadAllFeedsOperation.cpp \
-    src/models/FangFeedSelection.cpp \
-    src/db/DB.cpp
+    src/db/DB.cpp \
+    src/models/MouseWheelArea.cpp
 
 # Installation path
 # target.path =
@@ -66,5 +66,5 @@ HEADERS += \
     src/models/FangWebView.h \
     src/models/NewsWeb.h \
     src/operations/LoadAllFeedsOperation.h \
-    src/models/FangFeedSelection.h \
-    src/db/DB.h
+    src/db/DB.h \
+    src/models/MouseWheelArea.h

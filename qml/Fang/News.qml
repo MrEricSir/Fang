@@ -30,6 +30,33 @@ Item {
                 preferredWidth: parent.parent.width
                 
                 focus: true
+                
+                MouseArea {
+                    anchors.fill: parent
+                    acceptedButtons: Qt.RightButton
+                }
+                
+                MouseWheelArea {
+                    id: wheelArea
+                    
+                    anchors.fill: parent
+                    property double deltaY: 0
+                    onWheel: {
+                        console.log("Wheel! ", delta)
+                        deltaY = delta;
+                        wheelScrollAnimation.restart();
+                    }
+                    
+                    NumberAnimation {
+                        id: wheelScrollAnimation
+                        
+                        target: newsFlickable
+                        properties: "contentY"
+                        to: newsFlickable.contentY - wheelArea.deltaY
+                        duration: 200
+                        easing.type: Easing.OutQuad
+                    }
+                }
             }
         }
     }

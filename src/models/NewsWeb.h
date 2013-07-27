@@ -5,6 +5,7 @@
 #include <QList>
 #include <QWebElement>
 #include <QWebFrame>
+#include <QDesktopServices>
 
 #include "FangWebView.h"
 #include "NewsItem.h"
@@ -62,6 +63,12 @@ private slots:
      * @param ok
      */
     void onLoadFinished(bool ok);
+    
+     /**
+      * @brief Link handler. Opens links in external browser.
+      * @param url
+      */
+     void onLinkClicked(const QUrl &url);
     
     /**
      * @param item
