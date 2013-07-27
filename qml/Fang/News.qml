@@ -42,8 +42,7 @@ Item {
                     anchors.fill: parent
                     property double deltaY: 0
                     onWheel: {
-                        console.log("Wheel! ", delta)
-                        deltaY = delta;
+                        deltaY = delta * 1.5; // Fudge factor!
                         wheelScrollAnimation.restart();
                     }
                     
@@ -52,7 +51,8 @@ Item {
                         
                         target: newsFlickable
                         properties: "contentY"
-                        to: newsFlickable.contentY - wheelArea.deltaY
+                        to: Math.max(0, Math.min(newsFlickable.contentY - wheelArea.deltaY,
+                                                 newsFlickable.contentHeight - newsFlickable.height));
                         duration: 200
                         easing.type: Easing.OutQuad
                     }
