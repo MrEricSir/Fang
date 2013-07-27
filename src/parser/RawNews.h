@@ -23,7 +23,10 @@ public:
     QDateTime timestamp;
     QUrl url;
     
-    bool operator<(const RawNews& rhs);
+    // Sorting
+    bool operator<(const RawNews& right);
+    static bool LessThan(const RawNews* left, const RawNews* right);
+    static bool GreaterThan(const RawNews* left, const RawNews* right);
     
 };
 

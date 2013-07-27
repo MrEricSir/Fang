@@ -4,12 +4,13 @@
         <file>qml/Fang/FeedTitleDelegate.qml</file>
         <file>qml/Fang/main.qml</file>
         <file>qml/Fang/News.qml</file>
-        <file>qml/Fang/NewsItemDelegate.qml</file>
         <file>qml/Fang/Sidebar.qml</file>
         <file>qml/Fang/images/arrows_left.png</file>
         <file>qml/Fang/images/arrows_right.png</file>
         <file>qml/Fang/images/minus.png</file>
         <file>qml/Fang/images/plus.png</file>
         <file>qml/Fang/ScrollBar.qml</file>
+        <file>html/NewsPage.html</file>
+        <file>sql/1.sql</file>
     </qresource>
 </RCC>

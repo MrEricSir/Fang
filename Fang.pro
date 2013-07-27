@@ -15,7 +15,7 @@ QML_IMPORT_PATH =
 # CONFIG += qdeclarative-boostable
 
 # For Fang we'll need QtCore, the network, and the built-in SQLite database.
-QT       += core network sql
+QT       += core network sql webkit webkitwidgets
 
 # The .cpp file which was generated for your project. Feel free to hack it.
 SOURCES += src/main.cpp \
@@ -29,7 +29,12 @@ SOURCES += src/main.cpp \
     src/operations/OperationManager.cpp \
     src/operations/Operation.cpp \
     src/operations/UpdateFeedOperation.cpp \
-    src/utilities/Utilities.cpp
+    src/utilities/Utilities.cpp \
+    src/models/FangWebView.cpp \
+    src/models/NewsWeb.cpp \
+    src/operations/LoadAllFeedsOperation.cpp \
+    src/models/FangFeedSelection.cpp \
+    src/db/DB.cpp
 
 # Installation path
 # target.path =
@@ -39,7 +44,9 @@ include(src/qmlapplicationviewer/qmlapplicationviewer.pri)
 qtcAddDeployment()
 
 OTHER_FILES += \
-    qml/Fang/FeedTitleDelegate.qml
+    qml/Fang/FeedTitleDelegate.qml \
+    html/NewsPage.html \
+    sql/1.sql
 
 RESOURCES += \
     Resources.qrc
@@ -55,4 +62,9 @@ HEADERS += \
     src/operations/OperationManager.h \
     src/operations/Operation.h \
     src/operations/UpdateFeedOperation.h \
-    src/utilities/Utilities.h
+    src/utilities/Utilities.h \
+    src/models/FangWebView.h \
+    src/models/NewsWeb.h \
+    src/operations/LoadAllFeedsOperation.h \
+    src/models/FangFeedSelection.h \
+    src/db/DB.h

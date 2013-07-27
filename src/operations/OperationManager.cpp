@@ -14,6 +14,8 @@ void OperationManager::add(Operation *operation)
 
 void OperationManager::onOperationFinished(Operation* operation)
 {
+    emit(operationFinished(operation));
+    
     // TODO: come up with real memory management system.
     //qDebug() << "Operation finished";
     //delete operation; // Signal is auto-disconnected.

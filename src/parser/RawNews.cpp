@@ -10,11 +10,21 @@ RawNews::RawNews(QObject *parent) :
 {
 }
 
-bool RawNews::operator<(const RawNews& rhs) {
+bool RawNews::operator<(const RawNews& right) {
+    return LessThan(this, &right);
+}
+
+bool RawNews::LessThan(const RawNews *left, const RawNews *right)
+{
     // Use title if dates are equal.
-    if (timestamp == rhs.timestamp)
-        return title < rhs.title;
+    if (left->timestamp == right->timestamp)
+        return left->title < right->title;
     
     // Sort on timestamp.
-    return timestamp < rhs.timestamp;
+    return left->timestamp < right->timestamp;
+}
+
+bool RawNews::GreaterThan(const RawNews *left, const RawNews *right)
+{
+    return LessThan(left, right);
 }

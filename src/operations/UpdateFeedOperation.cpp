@@ -14,7 +14,6 @@ UpdateFeedOperation::UpdateFeedOperation(QObject *parent, FeedItem *feed) :
 
 UpdateFeedOperation::~UpdateFeedOperation()
 {
-    qDebug() << "Well, Bye!";
     if (rawFeed != NULL)
         delete rawFeed;
 }
@@ -40,22 +39,23 @@ void UpdateFeedOperation::onFeedFinished()
     }
     
     // Sort the list oldest to newest.
-    //qSort(rawFeed->items.end(), rawFeed->items.begin());
+    qSort(rawFeed->items.begin(), rawFeed->items.end(), RawNews::GreaterThan);
     
     // TODO: Check what actually needs updating in data model.
     
-    RawNews* rawNews;
-    foreach(rawNews, rawFeed->items) {
-        feed->getNewsList()->appendRow(
-                    new NewsItem(feed, rawNews->title,
+    // Update data model.
+    foreach(RawNews* rawNews, rawFeed->items) {
+        feed->append(
+                    new NewsItem(feed,
+                                 0,
+                                 rawNews->title,
                                  rawNews->author,
-                                 Utilities::htmlify(rawNews->content != "" ? rawNews->content : rawNews->description),
+                                 rawNews->description,
+                                 rawNews->content,
                                  rawNews->timestamp,
-                                 rawNews->url,
-                                 feed->getNewsList()
+                                 rawNews->url
                                  ));
     }
-    
     
     
     // TODO: Update DB.

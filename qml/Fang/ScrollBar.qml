@@ -41,6 +41,7 @@ import QtQuick 1.1
 Item {
     id: scrollBar
     
+    // The flickable component to scroll.
     property variant target
     
     states: [
@@ -79,8 +80,13 @@ Item {
         }
     ]
     
-    width: 8
-    anchors {top: parent.top; bottom: parent.bottom; right: parent.right; rightMargin: 5 }
+    // Only show scrollbar when there's something to scroll.
+    visible: target.contentHeight > height
+    
+    width: 12
+    anchors.top: parent.top
+    anchors.bottom: parent.bottom
+    anchors.right: parent.right
     
     function showScrollbar() {
         state = "active";
@@ -98,7 +104,7 @@ Item {
         id: inactiveTimer
         
         repeat: false
-        interval: 1000
+        interval: 500
         onTriggered: scrollBar.state = "inactive"
     }
     
@@ -119,26 +125,27 @@ Item {
             }
         }
         
+        MouseArea {
+            anchors.fill: parent
+            focus: true
+            
+            enabled: scrollBar.state == "inactive"
+            hoverEnabled: true
+            
+            // If the mouse is entered or moves, start scroll timer again.
+            onEntered: showScrollbar()
+            onMousePositionChanged: showScrollbar()
+        }
+        
         Item {
             id: track
             anchors.fill: parent
-            
-            MouseArea {
-                anchors.fill: parent
-                focus: true
-                
-                enabled: scrollBar.state == "inactive"
-                hoverEnabled: true
-                
-                // If the mouse is entered or moves, start scroll timer again.
-                onEntered: showScrollbar()
-                onMousePositionChanged: showScrollbar()
-            }
+            anchors.rightMargin: 5;
             
             Rectangle {
                 id: slider
                 
-                color: "#ccc"
+                color: "#999"
                 width: parent.width
                 radius: 5
                 anchors.left: parent.left
@@ -172,8 +179,8 @@ Item {
                     
                     onPositionChanged: {
                         if (pressedButtons == Qt.LeftButton) {
-                            newContentY = (slider.y * target.contentHeight) / slider.maxScrollbarY
-                            newContentY = Math.max(0, Math.min(newContentY, target.contentHeight))
+                            newContentY = (slider.y / slider.maxScrollbarY) * (target.contentHeight - target.height)
+                            newContentY = Math.max(0, Math.min(newContentY, target.contentHeight-target.height))
                             scrollAnimation.restart();
                         }
                         

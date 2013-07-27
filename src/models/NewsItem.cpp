@@ -2,71 +2,47 @@
 #include <QDebug>
 
 NewsItem::NewsItem(QObject *parent) :
-    ListItem(parent),
+    QObject(parent),
     feed(NULL),
+    _id(-1),
     title(""),
     author(""),
-    description(""),
+    summary(""),
+    content(""),
     timestamp(),
     url()
 {
 }
 
-NewsItem::NewsItem(FeedItem* feed, const QString &title, const QString &author, 
-                   const QString &description, const QDateTime &timestamp, const QUrl &url, 
-                   QObject *parent) :
-    ListItem(parent),
+NewsItem::NewsItem(FeedItem* feed, qint64 id, const QString &title, const QString &author,
+                   const QString &summary, const QString &content, const QDateTime &timestamp,
+                   const QUrl &url) :
+    QObject(feed),
     feed(feed),
+    _id(id),
     title(title),
     author(author),
-    description(description),
+    summary(summary),
+    content(content),
     timestamp(timestamp),
     url(url)
 {
 }
 
-QHash<int, QByteArray> NewsItem::roleNames() const
-{
-    QHash<int, QByteArray> names;
-    names[FeedRole] = "feed";
-    names[TitleRole] = "title";
-    names[AuthorRole] = "author";
-    names[TimestampRole] = "timestamp";
-    names[DescriptionRole] = "description";
-    names[UrlRole] = "url";
-    names[SiteTitleRole] = "siteTitle";
-    names[SiteImageURLRole] = "siteImageURL";
-    return names;
+bool NewsItem::operator<(const NewsItem& right) {
+    return LessThan(this, &right);
 }
 
-QVariant NewsItem::data(int role) const
-{
-    switch(role) {
-    case TitleRole:
-        return getTitle();
-    case AuthorRole:
-        return getAuthor();
-    case TimestampRole:
-        qDebug() << "timestamp "<< getTimestamp().toString();
-        return getTimestamp();
-    case DescriptionRole:
-        return getDescription();
-    case UrlRole:
-        return getURL();
-    case SiteTitleRole:
-        return feed->getTitle();
-    case SiteImageURLRole:
-        return feed->getImageURL();
-    default:
-        return QVariant();
-    }
-}
-
-bool NewsItem::operator<(const NewsItem& rhs) {
+bool NewsItem::LessThan(const NewsItem* left, const NewsItem* right) {
     // Use title if dates are equal.
-    if (timestamp == rhs.timestamp)
-        return title < rhs.title;
+    if (left->timestamp == right->timestamp)
+        return left->title < right->title;
     
     // Sort on timestamp.
-    return timestamp < rhs.timestamp;
+    return left->timestamp < right->timestamp;
+}
+
+bool NewsItem::GreaterThan(const NewsItem *left, const NewsItem *right)
+{
+    return !LessThan(left, right);
 }

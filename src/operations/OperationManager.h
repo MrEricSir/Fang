@@ -16,6 +16,8 @@ public:
     
 signals:
     
+    void operationFinished(Operation* operation);
+    
 public slots:
     
     /**

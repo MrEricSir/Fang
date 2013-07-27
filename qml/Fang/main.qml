@@ -76,6 +76,8 @@ Rectangle {
         ]
         
         onCloseClicked: sidebar.state = "closed"
+        
+        onFeedSelected: news.reload.trigger()
     }
     
     

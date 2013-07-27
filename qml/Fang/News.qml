@@ -1,24 +1,73 @@
 import QtQuick 1.1
+import Fang 1.0
 
 Item {
     id: news
     
-    ListView {
-        id: newsListView
+    property variant reload: newsView.reload
+    
+    Item {
+        id: newsMargin
         
         anchors.fill: parent
-        anchors.leftMargin: 15
-        anchors.rightMargin: 15
-        spacing: 20
+        anchors.rightMargin: 16
+        anchors.leftMargin: 12
         
-        delegate: NewsItemDelegate {
-            id: newsItem
+        Flickable {
+            id: newsFlickable
+            
+            width: parent.width
+            anchors.fill: parent
+            contentWidth: Math.max(parent.width, newsView.width)
+            contentHeight: Math.max(parent.height, newsView.height)
+            
+            flickableDirection: Flickable.VerticalFlick
+            
+            FangWebView {
+                id: newsView
+                objectName: "newsView" // MUST NOT CHANGE (used in C++)
+                
+                preferredWidth: parent.parent.width
+                
+                focus: true
+            }
+        }
+    }
+    
+    // WebView can't handle sizes changes well, so we'll hack around it.
+    property int oldWidth: 0
+    onWidthChanged: {
+        if (oldWidth == 0) {
+            oldWidth = width;
+            return;
         }
         
-        model: sidebar.newsList
+        reloadTimer.restart();
+        oldWidth = width;
+    }
+    property int oldHeight: 0
+    onHeightChanged: {
+        if (oldHeight == 0) {
+            oldHeight = height;
+            return;
+        }
+        
+        reloadTimer.restart();
+        oldHeight = height;
+    }
+    
+    // Timer for reloading when the size changes.
+    Timer {
+        id: reloadTimer
+        interval: 50
+        running: false
+        repeat: false
+        
+        // Force a refresh.
+        onTriggered: newsView.reload.trigger();
     }
     
     ScrollBar {
-        target: newsListView
+        target: newsFlickable
     }
 }

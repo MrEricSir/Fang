@@ -7,9 +7,7 @@ Item {
     signal addClicked()
     signal removeClicked()
     signal closeClicked()
-    
-    // Currently selected news list
-    property variant newsList: feedListView.currentItem.feedModel.newsList
+    signal feedSelected()
     
     // Const property
     property int buttonSize: 30
@@ -32,40 +30,16 @@ Item {
                 delegate: FeedTitleDelegate {
                     id: titleDelegate
                     
-                    property variant feedModel: model // Hack to get current data
+                    // This sets the selected item in the C++ layer.
+                    ListView.onIsCurrentItemChanged: {
+                        if (ListView.isCurrentItem)
+                            feedListView.model.selected = self
+                        
+                        sidebar.feedSelected();
+                    }
                 }
                 
                 model: feedListModel
-                    /*
-                    ListModel {
-                    ListElement {
-                        title: "All News"
-                        url: ""
-                        lastUpdated: 123
-                    }
-                    
-                    ListElement {
-                        image: "http://www.mrericsir.com/blog/wp-content/themes/eric-cordobo-green-park-2/favicon.ico"
-                        title: "MrEricSir.com"
-                        url: "http://www.mrericsir.com"
-                        lastUpdated: 123
-                    }
-                    
-                    ListElement {
-                        image: "http://static.arstechnica.net/favicon.ico"
-                        title: "Ars Technica"
-                        url: "blue"
-                        lastUpdated: 123
-                    }
-                    
-                    ListElement {
-                        title: "SFist"
-                        image: "http://www.sfist.com/favicon.ico"
-                        url: "green"
-                        lastUpdated: 123
-                    }
-                }
-                */
             }
         }
     }

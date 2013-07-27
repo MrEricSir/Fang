@@ -8,7 +8,7 @@
 #include "listmodel.h"
  
 ListModel::ListModel(ListItem* prototype, QObject *parent) :
-    QAbstractListModel(parent), m_prototype(prototype)
+    QAbstractListModel(parent), m_prototype(prototype), _selected(NULL)
 {
     
 }
@@ -44,6 +44,10 @@ void ListModel::appendRows(const QList<ListItem *> &items)
     m_list.append(item);
   }
   endInsertRows();
+  
+  foreach(ListItem* item, items) {
+      emit added(item);
+  }
 }
  
 void ListModel::insertRow(int row, ListItem *item)
@@ -52,6 +56,8 @@ void ListModel::insertRow(int row, ListItem *item)
   connect(item, SIGNAL(dataChanged()), SLOT(handleItemChange()));
   m_list.insert(row, item);
   endInsertRows();
+  
+  emit added(item);
 }
  
 void ListModel::handleItemChange()
@@ -84,26 +90,49 @@ void ListModel::clear()
   qDeleteAll(m_list);
   m_list.clear();
 }
+
+void ListModel::setSelected(ListItem *selected)
+{
+    _selected = selected;
+    emit selectedChanged(_selected);
+}
  
 bool ListModel::removeRow(int row, const QModelIndex &parent)
 {
   Q_UNUSED(parent);
+  ListItem* toRemove = NULL;
   if(row < 0 || row >= m_list.size()) return false;
   beginRemoveRows(QModelIndex(), row, row);
-  delete m_list.takeAt(row);
+  toRemove = m_list.takeAt(row);
   endRemoveRows();
+  
+  emit removed(toRemove);
+  
+  delete toRemove;
+  
   return true;
 }
  
 bool ListModel::removeRows(int row, int count, const QModelIndex &parent)
 {
   Q_UNUSED(parent);
+  QList<ListItem*> toRemove;
+  
   if(row < 0 || (row+count) >= m_list.size()) return false;
   beginRemoveRows(QModelIndex(), row, row+count-1);
   for(int i=0; i<count; ++i) {
-    delete m_list.takeAt(row);
+      toRemove.append(m_list.takeAt(row));
   }
   endRemoveRows();
+  
+  foreach(ListItem* item, toRemove) {
+      emit removed(item);
+  }
+  
+  for(int i = 0; i < toRemove.size(); i++) {
+      delete toRemove.takeAt(i);
+  }
+  
   return true;
 }
  
@@ -112,5 +141,8 @@ ListItem * ListModel::takeRow(int row)
   beginRemoveRows(QModelIndex(), row, row);
   ListItem* item = m_list.takeAt(row);
   endRemoveRows();
+  
+  emit removed(item);
+  
   return item;
 }

@@ -30,6 +30,8 @@ class ListModel : public QAbstractListModel
 {
   Q_OBJECT
  
+  // Must manually set in C++ layer
+  Q_PROPERTY(ListItem* selected READ selected WRITE setSelected NOTIFY selectedChanged)
 public:
   explicit ListModel(ListItem* prototype, QObject* parent = 0);
   ~ListModel();
@@ -46,13 +48,22 @@ public:
   void clear();
   inline QHash<int, QByteArray> roleNames() const { return m_prototype->roleNames(); }
   inline ListItem* row(int row) { return m_list.at(row); }
- 
+  inline ListItem* selected() { return _selected; }
+  void setSelected(ListItem* selected);
+  
+signals:
+  void added(ListItem* item);
+  void removed(ListItem* item);
+  
+  void selectedChanged(ListItem* selected);
+  
 private slots:
   void handleItemChange();
  
 private:
   ListItem* m_prototype;
   QList<ListItem*> m_list;
+  ListItem* _selected;
 };
  
 #endif // LISTMODEL_H

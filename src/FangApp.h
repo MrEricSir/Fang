@@ -11,7 +11,10 @@
 #include "models/NewsItem.h"
 #include "models/FeedItem.h"
 #include "models/ListModel.h"
+#include "models/FangWebView.h"
 #include "parser/Parser.h"
+#include "models/NewsWeb.h"
+
 
 class FangApp : public QObject
 {
@@ -24,21 +27,39 @@ public:
     // Returns the feed for the given index from 0..feedCount
     FeedItem *getFeed(int index);
     
+    inline NewsWeb* getNewsWeb() { return &newsWeb; }
+    
 signals:
     
 public slots:
     inline int feedCount() { return feedList->rowCount(); }
     
-private:
-    //ListModel *createNewsModel();
-    ListModel *createFeedList();
+private slots:
+    void onViewerStatusChanged(QDeclarativeView::Status);
     
+    void onOperationFinished(Operation* operation);
+    
+    void onFeedAdded(ListItem*);
+    
+    void onFeedRemoved(ListItem*);
+    
+    void onNewsWebReady();
+    
+    void onFeedSelected(ListItem *item);
+    
+    /**
+     * @brief Tells the web view to display the current feed.
+     */
+    void displayFeed();
+    
+private:
     QString htmlifyContent(const QString &content);
     
     QmlApplicationViewer* viewer;
     OperationManager manager;
     ListModel *feedList;
-    ListModel* newsModels[3];
+    NewsWeb newsWeb;
+    FeedItem* currentFeed;
 };
 
 #endif // FANGAPP_H

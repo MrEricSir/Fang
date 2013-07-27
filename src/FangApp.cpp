@@ -1,75 +1,42 @@
 #include "FangApp.h"
 #include <QDebug>
 #include "operations/UpdateFeedOperation.h"
+#include "operations/LoadAllFeedsOperation.h"
 
 FangApp::FangApp(QObject *parent, QmlApplicationViewer* viewer) :
     QObject(parent),
     viewer(viewer),
-    manager(this)
+    manager(this),
+    newsWeb(),
+    currentFeed(NULL)
 {
-}
-
-
-ListModel* FangApp::createFeedList() {
-    ListModel *model = new ListModel(new FeedItem, this);
-  
-  {
-      QString title("All News");
-      QString subtitle("");
-      QDateTime lastUpdated;
-      quint32 minUpdate = 0;
-      QUrl url("http://www.mrericsir.com/blog/feed/");// TODO QUrl url("");
-      QUrl imageUrl("");
-      
-      model->appendRow(new FeedItem(title, subtitle, lastUpdated, minUpdate, url, imageUrl, model));
-  }
-  {
-      QString title("MrEricSir.com");
-      QString subtitle("");
-      QDateTime lastUpdated;
-      quint32 minUpdate = 0;
-      QUrl url("http://www.mrericsir.com/blog/feed/");
-      QUrl imageUrl("http://www.mrericsir.com/blog/wp-content/themes/eric-cordobo-green-park-2/favicon.ico");
-      
-      model->appendRow(new FeedItem(title, subtitle, lastUpdated, minUpdate, url, imageUrl, model));
-  }
-  
-  {
-      QString title("Ars Technica");
-      QString subtitle("");
-      QDateTime lastUpdated;
-      quint32 minUpdate = 0;
-      QUrl url("http://feeds.arstechnica.com/arstechnica/index");
-      QUrl imageUrl("http://static.arstechnica.net/favicon.ico");
-      
-      model->appendRow(new FeedItem(title, subtitle, lastUpdated, minUpdate, url, imageUrl, model));
-  }
-  
-  return model;
+    // Create the list of feeds.
+    feedList = new ListModel(new FeedItem, this);
+    
+    // Setup signals.
+    QObject::connect(viewer, SIGNAL(statusChanged(QDeclarativeView::Status)),
+                     this, SLOT(onViewerStatusChanged(QDeclarativeView::Status)));
+    
+    QObject::connect(&manager, SIGNAL(operationFinished(Operation*)),
+                     this, SLOT(onOperationFinished(Operation*)));
+    
+    QObject::connect(&newsWeb, SIGNAL(ready()), this, SLOT(onNewsWebReady()));
+    
+    QObject::connect(feedList, SIGNAL(added(ListItem*)), this, SLOT(onFeedAdded(ListItem*)));
+    QObject::connect(feedList, SIGNAL(removed(ListItem*)), this, SLOT(onFeedRemoved(ListItem*)));
+    QObject::connect(feedList, SIGNAL(selectedChanged(ListItem*)), this, SLOT(onFeedSelected(ListItem*)));
 }
 
 void FangApp::init()
 {
-    // Load the feed list.
-    feedList = createFeedList();
-    
     viewer->rootContext()->setContextProperty("feedListModel", feedList);
     viewer->addImportPath(QLatin1String("modules"));
     viewer->setOrientation(QmlApplicationViewer::ScreenOrientationAuto);
     viewer->setSource(QUrl("qrc:/qml/Fang/main.qml"));
     viewer->showExpanded();
     
-    // Update each feed.
-    int i = 0;
-    while(i < feedList->rowCount()) {
-        FeedItem* feed = getFeed(i);
-        if (feed == NULL)
-            break;
-        
-        manager.add(new UpdateFeedOperation(&manager, feed));
-        
-        i++;
-    }
+    // Load feed list.
+    manager.add(new LoadAllFeedsOperation(&manager, feedList));
 }
 
 FeedItem* FangApp::getFeed(int index) {
@@ -81,5 +48,86 @@ FeedItem* FangApp::getFeed(int index) {
     }
                                 //.data();
     return (FeedItem*) item;
+}
+
+void FangApp::onViewerStatusChanged(QDeclarativeView::Status status)
+{
+    if (status == QDeclarativeView::Ready) {
+        qDebug() << "View is ready";
+        
+        QDeclarativeWebView *webView = viewer->rootObject()->findChild<QDeclarativeWebView*>("newsView");
+        if (webView == NULL) {
+            qDebug() << "Could not find newsView";
+            
+            return;
+        }
+        
+        newsWeb.init(webView);
+    }
+}
+
+void FangApp::onOperationFinished(Operation *operation)
+{
+    if (operation->metaObject() == &LoadAllFeedsOperation::staticMetaObject) {
+        // Data is loaded!
+    }
+}
+
+void FangApp::onFeedAdded(ListItem *item)
+{
+    FeedItem* feed = qobject_cast<FeedItem *>(item);
+    if (feed == NULL) {
+        qDebug() << "Null feed was added!";
+        
+        return;
+    }
+    
+    qDebug() << "Feed added: " << feed->getTitle();
+    
+    // Update the feed.
+    manager.add(new UpdateFeedOperation(&manager, feed));
+}
+
+void FangApp::onFeedRemoved(ListItem *)
+{
+    qDebug() << "Feed removed!";
+}
+
+void FangApp::onNewsWebReady()
+{
+    //qDebug() << "Your potatoes have arrived.";
+    
+    if (currentFeed != NULL)
+        displayFeed();
+}
+
+void FangApp::onFeedSelected(ListItem* _item) {
+    FeedItem* item = qobject_cast<FeedItem *>(_item);
+    if (item != NULL) {
+        currentFeed = item;
+        if (newsWeb.isReady())
+            displayFeed();
+        
+        // Connex0r the signals.
+        //qDebug() << "Selected: " << feed->getTitle();
+    } else {
+        currentFeed = NULL;
+    }
+}
+
+// Note: newsWeb MUST be ready and currentFeed MUST not be null before
+// this method is called.  Got that?  Well, do ya punk?
+void FangApp::displayFeed() {
+    if (currentFeed == NULL || !newsWeb.isReady())
+        return;
+    
+    newsWeb.clear();
+    
+    QList<NewsItem*>* list = currentFeed->getNewsList();
+    
+    for (int i = 0; i < list->size(); i++) {
+        NewsItem* item = list->at(i);
+        newsWeb.append(item);
+    }
 }
 
