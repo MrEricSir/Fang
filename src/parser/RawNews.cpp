@@ -26,5 +26,5 @@ bool RawNews::LessThan(const RawNews *left, const RawNews *right)
 
 bool RawNews::GreaterThan(const RawNews *left, const RawNews *right)
 {
-    return LessThan(left, right);
+    return !LessThan(left, right);
 }

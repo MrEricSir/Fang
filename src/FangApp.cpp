@@ -2,6 +2,9 @@
 #include <QDebug>
 #include "operations/UpdateFeedOperation.h"
 #include "operations/LoadAllFeedsOperation.h"
+#include "operations/AddFeedOperation.h"
+
+FangApp* FangApp::_instance = NULL;
 
 FangApp::FangApp(QObject *parent, QmlApplicationViewer* viewer) :
     QObject(parent),
@@ -10,6 +13,9 @@ FangApp::FangApp(QObject *parent, QmlApplicationViewer* viewer) :
     newsWeb(),
     currentFeed(NULL)
 {
+    Q_ASSERT(_instance == NULL);
+    _instance = this;
+    
     // Create the list of feeds.
     feedList = new ListModel(new FeedItem, this);
     
@@ -130,5 +136,17 @@ void FangApp::displayFeed() {
         NewsItem* item = list->at(i);
         newsWeb.append(item);
     }
+}
+
+FangApp* FangApp::instance()
+{
+    Q_ASSERT(_instance != NULL);
+    return _instance;
+}
+
+void FangApp::addFeed(const QUrl &feedURL, const QUrl &imageURL, QString siteTitle)
+{
+    qDebug() << "Add feed " << siteTitle << " " << feedURL;
+    manager.add(new AddFeedOperation(&manager, feedList, feedURL, imageURL, siteTitle));
 }
 

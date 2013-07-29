@@ -1,4 +1,5 @@
 #include "FeedValidator.h"
+#include "../FangApp.h"
 
 FeedValidator::FeedValidator(QDeclarativeItem *parent) :
     QDeclarativeItem(parent),
@@ -19,6 +20,14 @@ void FeedValidator::check()
     
     // Parser the URL.  Will call onFeedFinished when complete.
     parser.parse(QUrl(_url));
+}
+
+void FeedValidator::addFeed()
+{
+    // Assume check passed.
+    // TODO: add sanity check here.
+    
+    FangApp::instance()->addFeed(QUrl(_url), QUrl(_siteImageURL), _siteTitle);
 }
 
 

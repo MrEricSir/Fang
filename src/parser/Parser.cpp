@@ -186,14 +186,13 @@ RawFeed* Parser::getFeed() {
 
 void Parser::netFinished(QNetworkReply *reply)
  {
-    Q_UNUSED(reply);
-    
     if (result != Parser::OK)
         return; // Already emitted a finished signal.
     
     // This means we saw... something.  Do a sanity check here to make sure
     // that what we found was an actual feed.
     if (feed->items.size() > 0 || feed->title != "") {
+        feed->url = reply->url();
         emit finished();
     } else {
         // What we found must not have been an RSS/Atom feed.

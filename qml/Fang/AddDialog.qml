@@ -90,6 +90,7 @@ Dialog {
         }
     }
     
+    // Magic beans that validate & add feeds (see C++ layer.)
     FeedValidator {
         id: validator
         url: textURL.getEditText()
@@ -103,18 +104,21 @@ Dialog {
             console.log("Title? ", siteTitle)
             
             if (!result) {
+                // Uh oh, an error.
                 validationStatus.state = "error";
                 validationStatus.text = errorString;
                 validationStatus.visible = true;
-            }
-            
-            if (result) {
+            } else {
+                // We validated!
                 validationStatus.state = "ok";
                 validationStatus.text = "Success!";
                 validationStatus.visible = true;
                 
                 // Signal completion.
                 validationComplete = true;
+                
+                // Add the feed!
+                addFeed();
                 
                 // Go into final phase!
                 dismissTimer.restart();

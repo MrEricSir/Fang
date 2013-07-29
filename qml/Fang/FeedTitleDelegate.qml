@@ -38,9 +38,11 @@ Item {
                         
                         text: title
                         
+                        width: parent.width
                         anchors.verticalCenter: parent.verticalCenter
                         font.pointSize: 11
                         font.family: "Tahoma"
+                        elide: Text.ElideRight
                     }
                 }
                 

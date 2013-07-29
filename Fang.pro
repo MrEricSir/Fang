@@ -36,7 +36,8 @@ SOURCES += src/main.cpp \
     src/db/DB.cpp \
     src/models/MouseWheelArea.cpp \
     src/operations/DBOperation.cpp \
-    src/models/FeedValidator.cpp
+    src/models/FeedValidator.cpp \
+    src/operations/AddFeedOperation.cpp
 
 # Installation path
 # target.path =
@@ -72,4 +73,5 @@ HEADERS += \
     src/db/DB.h \
     src/models/MouseWheelArea.h \
     src/operations/DBOperation.h \
-    src/models/FeedValidator.h
+    src/models/FeedValidator.h \
+    src/operations/AddFeedOperation.h

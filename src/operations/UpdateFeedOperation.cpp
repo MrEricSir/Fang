@@ -3,11 +3,11 @@
 
 #include "../utilities/Utilities.h"
 
-UpdateFeedOperation::UpdateFeedOperation(QObject *parent, FeedItem *feed) :
+UpdateFeedOperation::UpdateFeedOperation(QObject *parent, FeedItem *feed, RawFeed* rawFeed) :
     Operation(parent),
     parser(),
     feed(feed),
-    rawFeed(NULL)
+    rawFeed(rawFeed)
 {
     QObject::connect(&parser, SIGNAL(finished()), this, SLOT(onFeedFinished()));
 }
@@ -21,15 +21,20 @@ UpdateFeedOperation::~UpdateFeedOperation()
 
 void UpdateFeedOperation::execute()
 {
-    // TODO: 
+    // TODO: check if update is necessary. (caching, etc.)
     
     // Send network request.
-    parser.parse(feed->getURL());
+    if (rawFeed == NULL)
+        parser.parse(feed->getURL());
+    else
+        onFeedFinished();
 }
 
 void UpdateFeedOperation::onFeedFinished()
 {
-    rawFeed = parser.getFeed();
+    if (rawFeed == NULL)
+        rawFeed = parser.getFeed();
+    
     if (rawFeed == NULL) {
         qDebug() << "Raw feed was null :(";
         

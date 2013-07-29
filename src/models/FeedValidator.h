@@ -24,6 +24,9 @@ public:
     // Performs the URL check.
     Q_INVOKABLE void check();
     
+    // If check was OK, call this to add the feed!
+    Q_INVOKABLE void addFeed();
+    
     inline bool validating() { return _validating; }
     inline QString url() { return _url; }
     inline QString siteTitle() { return _siteTitle; }

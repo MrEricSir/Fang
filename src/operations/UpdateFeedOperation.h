@@ -6,11 +6,22 @@
 #include "../models/FeedItem.h"
 #include "../models/NewsItem.h"
 
+/**
+ * @brief Updates a feed.
+ * If a feed has already been downloaded and parsed, it can be supplied
+ * directly to the constructor.
+ */
 class UpdateFeedOperation : public Operation
 {
     Q_OBJECT
 public:
-    explicit UpdateFeedOperation(QObject *parent, FeedItem* feed);
+    /**
+     * @brief UpdateFeedOperation
+     * @param parent  Set this to the manager
+     * @param feed    Feed to update
+     * @param rawFeed Optional: include this if you've already downloaded the feed and parsed it.
+     */
+    explicit UpdateFeedOperation(QObject *parent, FeedItem* feed, RawFeed* rawFeed = NULL);
     virtual ~UpdateFeedOperation();
     
 signals:

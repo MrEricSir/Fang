@@ -29,10 +29,20 @@ public:
     
     inline NewsWeb* getNewsWeb() { return &newsWeb; }
     
+    static FangApp *instance();
+    
 signals:
     
 public slots:
     inline int feedCount() { return feedList->rowCount(); }
+    
+    /**
+     * @brief Adds a feed.
+     * @param feedURL
+     * @param imageURL
+     * @param siteTitle
+     */
+    void addFeed(const QUrl& feedURL, const QUrl& imageURL, QString siteTitle);
     
 private slots:
     void onViewerStatusChanged(QDeclarativeView::Status);
@@ -53,8 +63,7 @@ private slots:
     void displayFeed();
     
 private:
-    QString htmlifyContent(const QString &content);
-    
+    static FangApp* _instance;
     QmlApplicationViewer* viewer;
     OperationManager manager;
     ListModel *feedList;
