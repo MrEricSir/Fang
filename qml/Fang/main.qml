@@ -78,6 +78,8 @@ Rectangle {
         onCloseClicked: sidebar.state = "closed"
         
         onFeedSelected: news.reload.trigger()
+        
+        onAddClicked: addFeed.open()
     }
     
     
@@ -102,7 +104,7 @@ Rectangle {
             anchors.bottomMargin: 5
             
             // Button to re-open sidebar
-            Button {
+            SidebarButton {
                 id: openSidebarButton
                 
                 imageMargin: 5
@@ -123,4 +125,14 @@ Rectangle {
         }
     }
     
+    AddDialog {
+        id: addFeed
+        
+        x: 0
+        y: 0
+        width: parent.width
+        height: parent.height
+        
+        title: "Add a Feed"
+    }
 }

@@ -66,6 +66,7 @@ public:
     inline QUrl getImageURL() const { return imageURL; }
     inline int getIsUpdating() const { return isUpdating; }
     inline FeedItem* getSelf() const { return const_cast<FeedItem*>(this); }
+    inline qint64 getDbId() const { return _id; }
     
     /**
      * @brief Appends a NewsItem to the end of the feed.

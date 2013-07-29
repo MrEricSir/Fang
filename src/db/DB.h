@@ -25,6 +25,8 @@ public slots:
     // Creates/returns singleton instance.
     static DB* instance();
     
+    inline QSqlDatabase db() { return _db; }
+    
 private:
     /**
      * @brief Performs DB init. Called by c'tor.
@@ -63,7 +65,7 @@ private:
     static DB* _instance;
     
     // Database object.
-    QSqlDatabase db;
+    QSqlDatabase _db;
 };
 
 

@@ -16,7 +16,7 @@ public:
     /**
      * @brief All operations must clean up their memory.
      */
-    virtual ~Operation() {}
+    virtual ~Operation();
     
 signals:
     

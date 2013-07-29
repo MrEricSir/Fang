@@ -34,7 +34,9 @@ SOURCES += src/main.cpp \
     src/models/NewsWeb.cpp \
     src/operations/LoadAllFeedsOperation.cpp \
     src/db/DB.cpp \
-    src/models/MouseWheelArea.cpp
+    src/models/MouseWheelArea.cpp \
+    src/operations/DBOperation.cpp \
+    src/models/FeedValidator.cpp
 
 # Installation path
 # target.path =
@@ -46,7 +48,8 @@ qtcAddDeployment()
 OTHER_FILES += \
     qml/Fang/FeedTitleDelegate.qml \
     html/NewsPage.html \
-    sql/1.sql
+    sql/1.sql \
+    qml/Fang/SidebarButton.qml
 
 RESOURCES += \
     Resources.qrc
@@ -67,4 +70,6 @@ HEADERS += \
     src/models/NewsWeb.h \
     src/operations/LoadAllFeedsOperation.h \
     src/db/DB.h \
-    src/models/MouseWheelArea.h
+    src/models/MouseWheelArea.h \
+    src/operations/DBOperation.h \
+    src/models/FeedValidator.h

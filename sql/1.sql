@@ -13,8 +13,11 @@ CREATE TABLE FeedItemTable (
     lastUpdated INTEGER DEFAULT 0,
     minutesToUpdate INTEGER DEFAULT 0,
     url TEXT NOT NULL,
-    imageURL TEXT NOT NULL
+    imageURL TEXT NOT NULL,
+    ordinal INTEGER DEFAULT 0
 );
+
+CREATE INDEX FeedItemTableOrdinalIndex ON FeedItemTable(ordinal);
 
 --
 -- NewsItemTable
@@ -32,4 +35,4 @@ CREATE TABLE NewsItemTable (
     url TEXT NOT NULL
 );
 
-CREATE INDEX FeedItemTableTableFeedIdIndex ON NewsItemTable(feed_id);
+CREATE INDEX NewsItemTableFeedIdIndex ON NewsItemTable(feed_id);

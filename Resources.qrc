@@ -1,6 +1,5 @@
 <RCC>
     <qresource prefix="/">
-        <file>qml/Fang/Button.qml</file>
         <file>qml/Fang/FeedTitleDelegate.qml</file>
         <file>qml/Fang/main.qml</file>
         <file>qml/Fang/News.qml</file>
@@ -12,5 +11,19 @@
         <file>qml/Fang/ScrollBar.qml</file>
         <file>html/NewsPage.html</file>
         <file>sql/1.sql</file>
+        <file>qml/Fang/Dialog.qml</file>
+        <file>qml/Fang/SidebarButton.qml</file>
+        <file>qml/Fang/AddDialog.qml</file>
+        <file>qml/Fang/DialogButton.qml</file>
+        <file>qml/Fang/TextEntry.qml</file>
+        <file>qml/Fang/DialogText.qml</file>
+        <file>qml/Fang/images/spinner.gif</file>
+        <file>qml/Fang/DialogSpinner.qml</file>
+        <file>qml/Fang/DialogStatus.qml</file>
+        <file>qml/Fang/images/error.png</file>
+        <file>qml/Fang/images/symbol_error.svg</file>
+        <file>qml/Fang/images/symbol_ok.svg</file>
+        <file>qml/Fang/images/symbol_question.svg</file>
+        <file>qml/Fang/images/symbol_reload.svg</file>
     </qresource>
 </RCC>

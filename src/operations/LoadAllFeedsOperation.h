@@ -1,7 +1,7 @@
 #ifndef LOADALLFEEDSOPERATION_H
 #define LOADALLFEEDSOPERATION_H
 
-#include "Operation.h"
+#include "DBOperation.h"
 
 #include <QUrl>
 #include <QString>
@@ -11,9 +11,11 @@
 #include "../models/ListModel.h"
 
 /**
- * @brief Loads all existing feeds off the disk.
+ * @brief Initializes and loads all existing feeds off the disk.
+ * Adds "all news" meta-item to the list.
+ * (Does not perform network update or any fancy shenaniganry like that.)
  */
-class LoadAllFeedsOperation : public Operation
+class LoadAllFeedsOperation : public DBOperation
 {
     Q_OBJECT
 public:

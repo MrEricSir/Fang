@@ -1,7 +1,7 @@
 import QtQuick 1.1
 
 Item {
-    id: button
+    id: sidebarButton
     
     property color color: "gray"
     property color hoverColor: "blue"
@@ -13,7 +13,7 @@ Item {
     Rectangle {
         id: buttonContainer
         
-        color: button.color
+        color: sidebarButton.color
         anchors.fill: parent
         
         Image {
@@ -28,12 +28,12 @@ Item {
                 
                 anchors.fill: parent
                 
-                onClicked: button.clicked()
+                onClicked: sidebarButton.clicked()
                 hoverEnabled: true
-                enabled: button.enabled
+                enabled: sidebarButton.enabled
                 
                 onEntered: buttonContainer.color = hoverColor
-                onExited:  buttonContainer.color = button.color
+                onExited:  buttonContainer.color = sidebarButton.color
                 onPressed: buttonContainer.color = Qt.darker(hoverColor, 1.5)
             }
         }

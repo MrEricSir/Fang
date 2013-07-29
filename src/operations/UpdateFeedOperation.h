@@ -14,7 +14,6 @@ public:
     virtual ~UpdateFeedOperation();
     
 signals:
-    //void finished(Operation* myself);
     
 public slots:
     virtual void execute();

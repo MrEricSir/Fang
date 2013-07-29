@@ -40,9 +40,9 @@ void DB::init()
     
     // Open (or create) our SQLite database.
     QFile dbFile(sDir + "/fang.sqlite");
-    db = QSqlDatabase::addDatabase("QSQLITE");
-    db.setDatabaseName(dbFile.fileName());
-    if (!db.open()) {
+    _db = QSqlDatabase::addDatabase("QSQLITE");
+    _db.setDatabaseName(dbFile.fileName());
+    if (!_db.open()) {
         qDebug() << "Could not create database.";
         return;
     }
@@ -53,7 +53,7 @@ void DB::init()
 
 int DB::getSchemaVersion()
 {
-    QSqlQuery q(db);
+    QSqlQuery q(db());
     q.exec("PRAGMA user_version"); 
     
     // SQLite should auto-init value to zero, but just in case...
@@ -71,9 +71,8 @@ void DB::setSchemaVersion(int version)
     QTextStream output(&statement);
     output << "PRAGMA user_version = " << version;
     
-    QSqlQuery q(db);
-    q.exec(statement);
-    if (!q.exec()) {
+    QSqlQuery q(db());
+    if (!q.exec(statement)) {
         qDebug() << "Couldn't set DB version to " << version;
         qDebug() << "Error: " << q.lastError().text();
     }
@@ -134,7 +133,7 @@ bool DB::executeSqlFile(QFile& sqlFile)
         if (s.isEmpty())
             continue; // Ignore empty lines.
         
-        QSqlQuery q;
+        QSqlQuery q(db());
         if (!q.exec(s)) {
             qDebug() << "Could not execute sql statement: " << q.lastError().text();
             qDebug() << s;

@@ -60,7 +60,7 @@ Item {
             anchors.margins: 5
             
             // Adds a feed.
-            Button {
+            SidebarButton {
                 id: addButton
                 
                 x: 0
@@ -77,7 +77,7 @@ Item {
             }
             
             // Removes a feed.
-            Button {
+            SidebarButton {
                 id: removeButton
                 
                 x: buttonSize + 10
@@ -96,7 +96,7 @@ Item {
             }
             
             // Closes the sidebar.
-            Button {
+            SidebarButton {
                 id: closeButton
                 
                 x: toolbar.width - buttonSize

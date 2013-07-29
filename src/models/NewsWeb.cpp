@@ -60,8 +60,8 @@ void NewsWeb::append(NewsItem *item)
     QString content = item->getContent() != "" ? item->getContent() : item->getSummary();
     newsContainer.findFirst(".content").setInnerXml(content);
     
-    qDebug();
-    qDebug() << content;
+    //qDebug();
+    //qDebug() << content;
     cleanConatiner(newsContainer);
     
     // Add to HTML.
