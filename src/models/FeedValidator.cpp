@@ -30,6 +30,11 @@ void FeedValidator::addFeed()
     FangApp::instance()->addFeed(QUrl(_url), QUrl(_siteImageURL), _siteTitle);
 }
 
+void FeedValidator::removeFeed(FeedItem *feed)
+{
+    FangApp::instance()->removeFeed(feed);
+}
+
 
 void FeedValidator::setUrl(QString url)
 {

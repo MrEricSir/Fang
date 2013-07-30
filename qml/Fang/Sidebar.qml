@@ -9,8 +9,9 @@ Item {
     signal closeClicked()
     signal feedSelected()
     
-    // Const property
+    // Read-only properties.
     property int buttonSize: 30
+    property variant listView: feedListView
     
     Item {
         id: sidebarFeedList

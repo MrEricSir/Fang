@@ -1,4 +1,5 @@
 #include "Utilities.h"
+#include <QDebug>
 
 Utilities::Utilities()
 {
@@ -20,4 +21,17 @@ FeedItem *Utilities::feedItemFromRaw(RawFeed *raw, qint64 dbId, QObject* parent)
                         QUrl(""), // TODO site URL
                         parent
                         );
+}
+
+QUrl Utilities::getHost(const QUrl& url) {
+    QUrl ret = url;
+    ret.setPath("");
+    ret.setQuery("");
+    QString sUrl = ret.toString();
+    if (sUrl.endsWith("?"))
+        sUrl = sUrl.remove(sUrl.length() - 1, 1);
+    
+    ret.setUrl(sUrl);
+    qDebug() << "Get host: " << ret.toString();
+    return ret;
 }

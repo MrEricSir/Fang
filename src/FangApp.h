@@ -30,7 +30,6 @@ public:
     inline NewsWeb* getNewsWeb() { return &newsWeb; }
     
     static FangApp *instance();
-    
 signals:
     
 public slots:
@@ -43,6 +42,12 @@ public slots:
      * @param siteTitle
      */
     void addFeed(const QUrl& feedURL, const QUrl& imageURL, QString siteTitle);
+    
+    /**
+     * @brief Removes an existing feed.
+     * @param feed
+     */
+    void removeFeed(FeedItem *feed);
     
 private slots:
     void onViewerStatusChanged(QDeclarativeView::Status);

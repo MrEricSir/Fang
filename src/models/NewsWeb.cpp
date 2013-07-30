@@ -81,11 +81,8 @@ void NewsWeb::remove(NewsItem *item)
 
 void NewsWeb::onLoadFinished(bool ok)
 {
-    if (!ok) {
-        qDebug() << "Could not load web page.";
-        
-        return;
-    }
+    if (!ok)
+        return; // This happens, just ignore it.
     
     // Initialize our vars.
     webPage = webView->page();

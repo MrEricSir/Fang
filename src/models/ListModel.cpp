@@ -6,6 +6,8 @@
  */
  
 #include "listmodel.h"
+
+#include <QDebug>
  
 ListModel::ListModel(ListItem* prototype, QObject *parent) :
     QAbstractListModel(parent), m_prototype(prototype), _selected(NULL)
@@ -134,6 +136,19 @@ bool ListModel::removeRows(int row, int count, const QModelIndex &parent)
   }
   
   return true;
+}
+
+bool ListModel::removeItem(const ListItem *item)
+{
+    QModelIndex index = indexFromItem(item);
+    int row = index.row();
+    
+    qDebug() << "Remove item at: " << row;
+    
+    if (row == -1)
+        return false; // Not found.
+    
+    return removeRow(row);
 }
  
 ListItem * ListModel::takeRow(int row)

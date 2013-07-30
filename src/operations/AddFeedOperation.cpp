@@ -16,14 +16,15 @@ AddFeedOperation::AddFeedOperation(QObject *parent, ListModel *feedList, const Q
     QObject::connect(&parser, SIGNAL(finished()), this, SLOT(onFeedFinished()));
 }
 
-
 void AddFeedOperation::execute()
 {
-    parser.parse(feedURL);
+    // Before we can do anything, we must parse the feed!
+    parser.parse(feedURL, true);
 }
 
 void AddFeedOperation::onFeedFinished()
 {
+    // Ooh, data.
     RawFeed* rawFeed = parser.getFeed();
     if (rawFeed == NULL) {
         qDebug() << "Raw feed was null :(";
@@ -33,22 +34,28 @@ void AddFeedOperation::onFeedFinished()
         return;
     }
     
+    // The user gave us this (right?)
     rawFeed->title = siteTitle;
     
+    // We'll wrap this in a transaction.  (Not really necessary at the moment.)
     db().transaction();
     
-    int ordinal = 0;
+    int ordinal = 0; // Gotta start somewhere.
     
     // Attempt to grab the highest ordinal from the DB.
     QSqlQuery queryOrdinal(db());
     if (!queryOrdinal.exec("SELECT ordinal FROM FeedItemTable ORDER BY ordinal desc LIMIT 1")) {
+        db().rollback();
         qDebug() << "Could not select ordinal.";
         // TODO: error signal
+        
         return;
     }
     
     if (queryOrdinal.next()) {
-        ordinal = queryOrdinal.value("ordinal").toInt() + 1; // Our ordinal is the highest one, plus one.
+        // Our ordinal is the highest one, plus one.  Of course, no ordinal can be higher than 24.
+        // I don't wanna hear no more arguments about it nowhere.
+        ordinal = queryOrdinal.value("ordinal").toInt() + 1;
     }
     
     // Insert feed.
@@ -65,7 +72,9 @@ void AddFeedOperation::onFeedFinished()
     query.bindValue(":ordinal", ordinal);
     
     if (!query.exec()) {
+        db().rollback();
         qDebug() << "Could not add feed: " << query.lastError().text();
+        
         // TODO : add error signal
         return;
     }
@@ -79,4 +88,3 @@ void AddFeedOperation::onFeedFinished()
     feedList->appendRow(item);
     emit finished(this);
 }
-

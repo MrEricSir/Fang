@@ -3,6 +3,7 @@
 #include "operations/UpdateFeedOperation.h"
 #include "operations/LoadAllFeedsOperation.h"
 #include "operations/AddFeedOperation.h"
+#include "operations/RemoveFeedOperation.h"
 
 FangApp* FangApp::_instance = NULL;
 
@@ -95,15 +96,15 @@ void FangApp::onFeedAdded(ListItem *item)
         manager.add(new UpdateFeedOperation(&manager, feed));
 }
 
-void FangApp::onFeedRemoved(ListItem *)
+void FangApp::onFeedRemoved(ListItem * listItem)
 {
-    qDebug() << "Feed removed!";
+    FeedItem* item = qobject_cast<FeedItem *>(listItem);
+    if (item != NULL)
+        item->deleteLater(); // Well, bye.
 }
 
 void FangApp::onNewsWebReady()
 {
-    //qDebug() << "Your potatoes have arrived.";
-    
     if (currentFeed != NULL)
         displayFeed();
 }
@@ -118,6 +119,7 @@ void FangApp::onFeedSelected(ListItem* _item) {
         // Connex0r the signals.
         //qDebug() << "Selected: " << feed->getTitle();
     } else {
+        // How did this happen?!
         currentFeed = NULL;
     }
 }
@@ -148,5 +150,12 @@ void FangApp::addFeed(const QUrl &feedURL, const QUrl &imageURL, QString siteTit
 {
     qDebug() << "Add feed " << siteTitle << " " << feedURL;
     manager.add(new AddFeedOperation(&manager, feedList, feedURL, imageURL, siteTitle));
+}
+
+void FangApp::removeFeed(FeedItem *feed)
+{
+    // Say goodbye to these (feeds), Michael.
+    qDebug() << "remove feed";
+    manager.add(new RemoveFeedOperation(&manager, feed, feedList));
 }
 

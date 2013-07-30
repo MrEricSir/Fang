@@ -42,9 +42,10 @@ public:
   void insertRow(int row, ListItem* item);
   bool removeRow(int row, const QModelIndex &parent = QModelIndex());
   bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex());
+  bool removeItem(const ListItem* item);
   ListItem* takeRow(int row);
   ListItem* find(const QString &id) const;
-  QModelIndex indexFromItem( const ListItem* item) const;
+  QModelIndex indexFromItem(const ListItem* item) const;
   void clear();
   inline QHash<int, QByteArray> roleNames() const { return m_prototype->roleNames(); }
   inline ListItem* row(int row) { return m_list.at(row); }

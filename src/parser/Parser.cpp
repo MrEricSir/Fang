@@ -4,14 +4,16 @@
 #include <QDebug>
 
 Parser::Parser(QObject *parent) :
-    QObject(parent), feed(NULL), result(OK), currentReply(NULL)
+    QObject(parent), checkFavicon(false), feed(NULL), result(OK), currentReply(NULL)
 {
     connect(&manager, SIGNAL(finished(QNetworkReply*)),
                   this, SLOT(netFinished(QNetworkReply*)));
+    connect(&favicon, SIGNAL(finished(QUrl)), this, SLOT(onFaviconFinished(QUrl)));
 }
 
-void Parser::parse(const QUrl& url) {
+void Parser::parse(const QUrl& url, bool checkFavicon) {
     result = Parser::OK;
+    this->checkFavicon = checkFavicon;
     
     resetParserVars();
     
@@ -138,7 +140,9 @@ void Parser::parseXml() {
         }
     }
     
-    if (xml.error() && xml.error() != QXmlStreamReader::PrematureEndOfDocumentError) {
+    // Standards need to be a bit lax for RSS.
+    if (xml.error() && xml.error() != QXmlStreamReader::PrematureEndOfDocumentError &&
+            xml.error() != QXmlStreamReader::NotWellFormedError) {
         result = Parser::PARSE_ERROR;
         qWarning() << "XML ERROR:" << xml.lineNumber() << ": " << xml.errorString();
         emit finished();
@@ -185,7 +189,7 @@ RawFeed* Parser::getFeed() {
 }
 
 void Parser::netFinished(QNetworkReply *reply)
- {
+{
     if (result != Parser::OK)
         return; // Already emitted a finished signal.
     
@@ -193,11 +197,25 @@ void Parser::netFinished(QNetworkReply *reply)
     // that what we found was an actual feed.
     if (feed->items.size() > 0 || feed->title != "") {
         feed->url = reply->url();
-        emit finished();
+        if (checkFavicon)
+            favicon.find(feed->url);
+        else
+            emit finished();
     } else {
         // What we found must not have been an RSS/Atom feed.
         result = Parser::PARSE_ERROR;
         emit finished();
     }
- }
+}
+
+void Parser::onFaviconFinished(const QUrl& url) {
+    // Set favicon.
+    if (url.isValid())
+        feed->imageURL = url;
+    
+    qDebug() << "Url: " << url << " feed img url " << feed->imageURL;
+    
+    // ...and we're done!
+    emit finished();
+}
 

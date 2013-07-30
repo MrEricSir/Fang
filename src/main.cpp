@@ -11,6 +11,8 @@
 #include "models/MouseWheelArea.h"
 #include "models/FeedValidator.h"
 
+#include "utilities/FaviconGrabber.h"
+
 
 
 Q_DECL_EXPORT int main(int argc, char *argv[])

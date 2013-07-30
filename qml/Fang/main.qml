@@ -80,6 +80,7 @@ Rectangle {
         onFeedSelected: news.reload.trigger()
         
         onAddClicked: addFeed.open()
+        onRemoveClicked: removeFeed.open()
     }
     
     
@@ -134,5 +135,19 @@ Rectangle {
         height: parent.height
         
         title: "Add a Feed"
+    }
+    
+    RemoveDialog {
+        id: removeFeed
+        
+        x: 0
+        y: 0
+        width: parent.width
+        height: parent.height
+        
+        title: "Remove a Feed"
+        
+        // This is how we can remove the feed, you see.
+        listView: sidebar.listView
     }
 }

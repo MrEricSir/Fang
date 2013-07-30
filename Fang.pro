@@ -37,7 +37,9 @@ SOURCES += src/main.cpp \
     src/models/MouseWheelArea.cpp \
     src/operations/DBOperation.cpp \
     src/models/FeedValidator.cpp \
-    src/operations/AddFeedOperation.cpp
+    src/operations/AddFeedOperation.cpp \
+    src/operations/RemoveFeedOperation.cpp \
+    src/utilities/FaviconGrabber.cpp
 
 # Installation path
 # target.path =
@@ -74,4 +76,6 @@ HEADERS += \
     src/models/MouseWheelArea.h \
     src/operations/DBOperation.h \
     src/models/FeedValidator.h \
-    src/operations/AddFeedOperation.h
+    src/operations/AddFeedOperation.h \
+    src/operations/RemoveFeedOperation.h \
+    src/utilities/FaviconGrabber.h

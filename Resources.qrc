@@ -25,5 +25,6 @@
         <file>qml/Fang/images/symbol_ok.svg</file>
         <file>qml/Fang/images/symbol_question.svg</file>
         <file>qml/Fang/images/symbol_reload.svg</file>
+        <file>qml/Fang/RemoveDialog.qml</file>
     </qresource>
 </RCC>

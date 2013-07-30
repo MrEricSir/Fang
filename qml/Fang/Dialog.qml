@@ -1,4 +1,5 @@
 import QtQuick 1.1
+import Fang 1.0
 
 // Dialog container.
 // Takes up the entire screen.
@@ -93,6 +94,15 @@ Rectangle {
         anchors.left: parent.left
         anchors.topMargin: 20
         anchors.leftMargin: 15
+    }
+    
+    // Catch-alls to prevent clicks under this container.
+    MouseArea {
+        anchors.fill: parent
+    }
+    
+    MouseWheelArea {
+        anchors.fill: parent
     }
     
     Item {

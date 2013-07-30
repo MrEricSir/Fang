@@ -6,6 +6,7 @@
 #include <QUrl>
 
 #include "../parser/Parser.h"
+#include "FeedItem.h"
 
 class FeedValidator : public QDeclarativeItem 
 {
@@ -26,6 +27,9 @@ public:
     
     // If check was OK, call this to add the feed!
     Q_INVOKABLE void addFeed();
+    
+    // HAHA this class has a "secret" property; it can also remove feeds. :)
+    Q_INVOKABLE void removeFeed(FeedItem* feed);
     
     inline bool validating() { return _validating; }
     inline QString url() { return _url; }
