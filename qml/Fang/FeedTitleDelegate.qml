@@ -3,6 +3,11 @@ import QtQuick 1.1
 Item {
     id: feedTitleDelegate
     height: 40
+    
+    // Read-only
+    
+    property bool isAllNews: index == 0
+    
     Row {
         id: row1
         
@@ -48,7 +53,9 @@ Item {
                 
                 Item {
                     id: feedIconCol
-                    width: index == 0 ? 0 : 40 // no icon for all news
+                    
+                    width: isAllNews ? 0 : 40 // no icon for all news
+                    visible: !isAllNews
                     
                     anchors.left: parent.left
                     anchors.top: parent.top
@@ -58,10 +65,15 @@ Item {
                     
                     Image {
                         id: feedIcon
-                        source: imageURL || ""
+                        source: imageURL != "" ? imageURL : "images/symbol_rss.svg"
                         anchors.verticalCenter: parent.verticalCenter
-                        width: 30
-                        height: 30
+                        
+                        smooth: true
+                        width: 23
+                        height: 23
+                        
+                        sourceSize.width: width
+                        sourceSize.height: height
                     }
                 }
                 
