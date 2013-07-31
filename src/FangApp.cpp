@@ -95,8 +95,6 @@ void FangApp::onFeedAdded(ListItem *item)
         return;
     }
     
-    //qDebug() << "Feed added: " << feed->getTitle();
-    
     // Update the feed.
     if (feed->getDbId() > 0) // Only real feeds, plox.
         manager.add(new UpdateFeedOperation(&manager, feed));

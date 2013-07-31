@@ -33,7 +33,6 @@ void NewsWeb::init(QDeclarativeWebView *webView)
     webView->setUrl(QUrl("qrc:html/NewsPage.html"));
 }
 
-
 void NewsWeb::clear()
 {
     Q_ASSERT(_isReady);
@@ -182,4 +181,3 @@ void NewsWeb::cleanConatiner(QWebElement& newsContainer)
     }
 }
 
-                    

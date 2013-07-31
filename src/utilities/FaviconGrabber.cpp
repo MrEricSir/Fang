@@ -32,9 +32,7 @@ void FaviconGrabber::find(const QUrl &url)
     // Check each extension.
     foreach(QString ext, extensions) {
         QUrl toCheck(host);
-        qDebug() << "Checking host: "<< toCheck.toString();
         toCheck.setPath("/favicon." + ext);
-        qDebug() << "Checking URL: "<< toCheck.toString();
         checkUrl(toCheck);
     }
 }
@@ -57,7 +55,7 @@ void FaviconGrabber::onRequestFinished(QNetworkReply * reply)
             emit finished(QUrl());
         } else {
             QUrl url = results.at(0);
-            qDebug() << "Found favicon: " << url;
+            //qDebug() << "Found favicon: " << url;
             emit finished(url);
         }
     }

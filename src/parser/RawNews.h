@@ -23,6 +23,9 @@ public:
     QDateTime timestamp;
     QUrl url;
     
+    // For convenience.
+    qint64 dbId;
+    
     // Sorting
     bool operator<(const RawNews& right);
     static bool LessThan(const RawNews* left, const RawNews* right);

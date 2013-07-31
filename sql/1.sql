@@ -25,7 +25,7 @@ CREATE INDEX FeedItemTableOrdinalIndex ON FeedItemTable(ordinal);
 
 CREATE TABLE NewsItemTable (
     id INTEGER PRIMARY KEY,
-    feed_id INTEGER REFERENCES FeedItemTable ON DELETE CASCADE,
+    feed_id INTEGER REFERENCES FeedItemTable(id) ON DELETE CASCADE,
     
     title TEXT NOT NULL,
     author TEXT NOT NULL,
@@ -36,3 +36,4 @@ CREATE TABLE NewsItemTable (
 );
 
 CREATE INDEX NewsItemTableFeedIdIndex ON NewsItemTable(feed_id);
+CREATE INDEX NewsItemTableTimestampIndex ON NewsItemTable(timestamp);

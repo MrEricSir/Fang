@@ -6,7 +6,8 @@ RawNews::RawNews(QObject *parent) :
     author(""),
     description(""),
     timestamp(),
-    url()
+    url(),
+    dbId(-1)
 {
 }
 

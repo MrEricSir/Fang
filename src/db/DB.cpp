@@ -47,6 +47,10 @@ void DB::init()
         return;
     }
     
+    // Enable foreign keys.
+    QSqlQuery q(db());
+    q.exec("PRAGMA foreign_keys = ON;");
+    
     // Create/upgrade schema.
     upgrade();
 }
@@ -54,7 +58,7 @@ void DB::init()
 int DB::getSchemaVersion()
 {
     QSqlQuery q(db());
-    q.exec("PRAGMA user_version"); 
+    q.exec("PRAGMA user_version");
     
     // SQLite should auto-init value to zero, but just in case...
     if (!q.next())

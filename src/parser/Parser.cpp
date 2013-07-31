@@ -73,12 +73,12 @@ void Parser::parseXml() {
                     //qDebug() << "Title " << title;
                     
                     // Clear all strings.
-                    title.clear();
-                    url.clear();
-                    subtitle.clear();
-                    timestamp.clear();
-                    author.clear();
-                    content.clear();
+                    title = "";
+                    url = "";
+                    subtitle = "";
+                    timestamp = "";
+                    author = "";
+                    content = "";
                 }
                 
                 currentItem = new RawNews(feed);
@@ -120,12 +120,12 @@ void Parser::parseXml() {
                 currentItem = NULL;
                 
                 // Clear all strings.
-                title.clear();
-                url.clear();
-                subtitle.clear();
-                timestamp.clear();
-                author.clear();
-                content.clear();
+                title = "";
+                url = "";
+                subtitle = "";
+                timestamp = "";
+                author = "";
+                content = "";
             }
 
         } else if (xml.isCharacters() && !xml.isWhitespace()) {

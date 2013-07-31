@@ -1,7 +1,7 @@
 #ifndef UPDATEFEEDOPERATION_H
 #define UPDATEFEEDOPERATION_H
 
-#include "Operation.h"
+#include "DBOperation.h"
 #include "../parser/Parser.h"
 #include "../models/FeedItem.h"
 #include "../models/NewsItem.h"
@@ -11,7 +11,7 @@
  * If a feed has already been downloaded and parsed, it can be supplied
  * directly to the constructor.
  */
-class UpdateFeedOperation : public Operation
+class UpdateFeedOperation : public DBOperation
 {
     Q_OBJECT
 public:

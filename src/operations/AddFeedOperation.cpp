@@ -65,7 +65,7 @@ void AddFeedOperation::onFeedFinished()
                   ":url, :imageURL, :ordinal)");
     query.bindValue(":title", rawFeed->title);
     query.bindValue(":subtitle", rawFeed->subtitle);
-    query.bindValue(":lastUpdated", rawFeed->lastUpdated);
+    query.bindValue(":lastUpdated", rawFeed->lastUpdated.toMSecsSinceEpoch());
     query.bindValue(":minutesToUpdate", rawFeed->minutesToUpdate);
     query.bindValue(":url", rawFeed->url);
     query.bindValue(":imageURL", rawFeed->imageURL);
