@@ -77,7 +77,7 @@ Rectangle {
         
         onCloseClicked: sidebar.state = "closed"
         
-        onFeedSelected: news.reload.trigger()
+        onFeedSelected: news.reset()
         
         onAddClicked: addFeed.open()
         onRemoveClicked: removeFeed.open()

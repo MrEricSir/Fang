@@ -6,6 +6,7 @@
 #include <QWebElement>
 #include <QWebFrame>
 #include <QDesktopServices>
+#include <QNetworkDiskCache>
 
 #include "FangWebView.h"
 #include "NewsItem.h"
@@ -101,6 +102,9 @@ private:
     QWebElement templateContainer;
     
     bool _isReady;
+    
+    // Disk cache.
+    QNetworkDiskCache diskCache;
 };
 
 #endif // NEWSWEB_H

@@ -24,20 +24,23 @@
         THE SOFTWARE.
 */
 
-/*
-        Usage:
-        
-        Flickable {
-          id: myFlickable
-          ...
-        }
-        ScrollBar {
-          target: myFlickable
-        }
-*/
-
 import QtQuick 1.1
 
+/*
+
+  Based on the work of Gregory Schlomoff (see license above)
+
+Example:
+
+Flickable {
+   id: exampleFlicker
+}
+
+// Place outside flickable.
+ScrollBar {
+   target: exampleFlicker
+}
+*/
 Item {
     id: scrollBar
     

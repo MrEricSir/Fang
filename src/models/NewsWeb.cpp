@@ -1,5 +1,7 @@
 #include "NewsWeb.h"
 
+#include <QStandardPaths>
+
 NewsWeb::NewsWeb(QObject *parent) :
     QObject(parent),
     webView(NULL),
@@ -7,17 +9,26 @@ NewsWeb::NewsWeb(QObject *parent) :
     webPage(NULL),
     document(),
     templateContainer(),
-    _isReady(false)
+    _isReady(false),
+    diskCache(this)
 {
+    
 }
 
 void NewsWeb::init(QDeclarativeWebView *webView)
 {
     this->webView = webView;
     
-    // Setup link delegation policy and disable context menu.
-    webView->page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
-    //webView->page()->setContextMenuPolicy(Qt::NoContextMenu);
+    // Set cache folder.
+    QString cacheDir = QStandardPaths::writableLocation(QStandardPaths::CacheLocation);
+    qDebug() << "Cache folder: " << cacheDir;
+    diskCache.setCacheDirectory(cacheDir);
+    if (!cacheDir.isEmpty())
+        webView->page()->networkAccessManager()->setCache(&diskCache); // Enable HTTP cache.
+    
+    // Settings.
+    webView->page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks); // Intercept links.
+    webView->page()->settings()->setAttribute(QWebSettings::JavascriptEnabled, false); // No scripts.
     
     // Connect signals.
     QObject::connect(webView->page(), SIGNAL(loadFinished(bool)), this, SLOT(onLoadFinished(bool)));

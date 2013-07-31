@@ -4,7 +4,12 @@ import Fang 1.0
 Item {
     id: news
     
-    property variant reload: newsView.reload
+    // Call this when a feed changes to reset the view.
+    function reset() {
+        // Reload and scroll to top.
+        newsView.reload.trigger();
+        newsFlickable.contentY = 0;
+    }
     
     Item {
         id: newsMargin

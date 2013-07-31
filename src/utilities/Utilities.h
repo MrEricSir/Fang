@@ -12,9 +12,20 @@ class Utilities
 public:
     Utilities();
     
-    static QString htmlify(const QString &content);
-    
+    /**
+     * @brief Converts a RawFeed object into a good, proper FeedItem.
+     * @param raw
+     * @param dbId
+     * @param parent
+     * @return 
+     */
     static FeedItem* feedItemFromRaw(RawFeed *raw, qint64 dbId, QObject* parent);
+    
+    /**
+     * @brief Returns just the host for a given URL.
+     * @param url
+     * @return 
+     */
     static QUrl getHost(const QUrl &url);
 };
 
