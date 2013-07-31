@@ -1,5 +1,10 @@
 #include "FangApp.h"
+
 #include <QDebug>
+#include <QDeclarativeEngine>
+
+#include "../utilities/Utilities.h"
+
 #include "operations/UpdateFeedOperation.h"
 #include "operations/LoadAllFeedsOperation.h"
 #include "operations/AddFeedOperation.h"
@@ -42,6 +47,9 @@ void FangApp::init()
     viewer->setSource(QUrl("qrc:/qml/Fang/main.qml"));
     viewer->showExpanded();
     
+    // Enable cache for remote QML elements.
+    Utilities::addNetworkAccessManagerCache(viewer->engine()->networkAccessManager());
+    
     // Load feed list.
     manager.add(new LoadAllFeedsOperation(&manager, feedList));
 }
@@ -60,8 +68,6 @@ FeedItem* FangApp::getFeed(int index) {
 void FangApp::onViewerStatusChanged(QDeclarativeView::Status status)
 {
     if (status == QDeclarativeView::Ready) {
-        qDebug() << "View is ready";
-        
         QDeclarativeWebView *webView = viewer->rootObject()->findChild<QDeclarativeWebView*>("newsView");
         if (webView == NULL) {
             qDebug() << "Could not find newsView";
@@ -69,7 +75,7 @@ void FangApp::onViewerStatusChanged(QDeclarativeView::Status status)
             return;
         }
         
-        newsWeb.init(webView);
+        newsWeb.init(webView); // Start the news!
     }
 }
 
@@ -89,7 +95,7 @@ void FangApp::onFeedAdded(ListItem *item)
         return;
     }
     
-    qDebug() << "Feed added: " << feed->getTitle();
+    //qDebug() << "Feed added: " << feed->getTitle();
     
     // Update the feed.
     if (feed->getDbId() > 0) // Only real feeds, plox.

@@ -3,9 +3,15 @@
 #include <QThread>
 #include <QDebug>
 
+#include "../utilities/Utilities.h"
+
 Parser::Parser(QObject *parent) :
     QObject(parent), checkFavicon(false), feed(NULL), result(OK), currentReply(NULL)
 {
+    // Enble cache.
+    Utilities::addNetworkAccessManagerCache(&manager);
+    
+    // Connex0r teh siganls.
     connect(&manager, SIGNAL(finished(QNetworkReply*)),
                   this, SLOT(netFinished(QNetworkReply*)));
     connect(&favicon, SIGNAL(finished(QUrl)), this, SLOT(onFaviconFinished(QUrl)));

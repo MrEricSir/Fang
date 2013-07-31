@@ -1,5 +1,8 @@
 #include "Utilities.h"
+
 #include <QDebug>
+#include <QNetworkDiskCache>
+#include <QStandardPaths>
 
 Utilities::Utilities()
 {
@@ -29,4 +32,14 @@ QUrl Utilities::getHost(const QUrl& url) {
     ret.setUrl(sUrl);
     qDebug() << "Get host: " << ret.toString();
     return ret;
+}
+
+void Utilities::addNetworkAccessManagerCache(QNetworkAccessManager *manager)
+{
+    // Set default cache dir.
+    QNetworkDiskCache* diskCache = new QNetworkDiskCache(manager);
+    QString cacheDir = QStandardPaths::writableLocation(QStandardPaths::CacheLocation);
+    diskCache->setCacheDirectory(cacheDir);
+    if (!cacheDir.isEmpty())
+        manager->setCache(diskCache);
 }

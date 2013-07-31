@@ -8,7 +8,7 @@ Item {
     function reset() {
         // Reload and scroll to top.
         newsView.reload.trigger();
-        newsFlickable.contentY = 0;
+        newsFlickable.contentY = 0; // TODO: zoom to q position of bookmark
     }
     
     Item {

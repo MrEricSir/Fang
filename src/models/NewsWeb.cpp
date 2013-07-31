@@ -1,6 +1,6 @@
 #include "NewsWeb.h"
 
-#include <QStandardPaths>
+#include "../utilities/Utilities.h"
 
 NewsWeb::NewsWeb(QObject *parent) :
     QObject(parent),
@@ -9,8 +9,7 @@ NewsWeb::NewsWeb(QObject *parent) :
     webPage(NULL),
     document(),
     templateContainer(),
-    _isReady(false),
-    diskCache(this)
+    _isReady(false)
 {
     
 }
@@ -19,12 +18,8 @@ void NewsWeb::init(QDeclarativeWebView *webView)
 {
     this->webView = webView;
     
-    // Set cache folder.
-    QString cacheDir = QStandardPaths::writableLocation(QStandardPaths::CacheLocation);
-    qDebug() << "Cache folder: " << cacheDir;
-    diskCache.setCacheDirectory(cacheDir);
-    if (!cacheDir.isEmpty())
-        webView->page()->networkAccessManager()->setCache(&diskCache); // Enable HTTP cache.
+    // Enable HTTP cache.
+    Utilities::addNetworkAccessManagerCache(webView->page()->networkAccessManager());
     
     // Settings.
     webView->page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks); // Intercept links.

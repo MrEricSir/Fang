@@ -4,6 +4,9 @@
 #include <QString>
 #include <QObject>
 #include <QDebug>
+#include <QNetworkAccessManager>
+#include <QUrl>
+
 #include "../parser/RawFeed.h"
 #include "../models/FeedItem.h"
 
@@ -27,6 +30,12 @@ public:
      * @return 
      */
     static QUrl getHost(const QUrl &url);
+    
+    /**
+     * @brief Adds an HTTP cache to a network access manager.
+     * @param manager
+     */
+    static void addNetworkAccessManagerCache(QNetworkAccessManager* manager);
 };
 
 #endif // UTILITIES_H

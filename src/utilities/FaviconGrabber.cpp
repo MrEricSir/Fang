@@ -12,6 +12,10 @@ FaviconGrabber::FaviconGrabber(QObject *parent) :
     currentReply(NULL),
     results()
 {
+    // Caching!
+    Utilities::addNetworkAccessManagerCache(&manager);
+    
+    // Signals!
     connect(&manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onRequestFinished(QNetworkReply*)));
 }
 
