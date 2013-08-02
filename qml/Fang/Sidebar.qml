@@ -22,7 +22,7 @@ Item {
         
         Rectangle {
             id: rectangle2
-            color: "#eee"
+            color: "#e5e5e5"
             anchors.fill: parent
             
             ListView {

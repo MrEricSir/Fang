@@ -98,11 +98,6 @@ Dialog {
         property bool validationComplete: false
         
         onValidationComplete: {
-            console.log("Validation complete for url:", url)
-            console.log("Result? ", result)
-            console.log("Error? ", errorString)
-            console.log("Title? ", siteTitle)
-            
             if (!result) {
                 // Uh oh, an error.
                 validationStatus.state = "error";

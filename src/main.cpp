@@ -10,6 +10,7 @@
 #include "models/FangWebView.h"
 #include "models/MouseWheelArea.h"
 #include "models/FeedValidator.h"
+#include "models/ScrollReader.h"
 
 #include "utilities/FaviconGrabber.h"
 
@@ -20,6 +21,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     qmlRegisterType<QDeclarativeWebView>("Fang", 1, 0, "FangWebView");
     qmlRegisterType<MouseWheelArea>("Fang", 1, 0, "MouseWheelArea");
     qmlRegisterType<FeedValidator>("Fang", 1, 0, "FeedValidator");
+    qmlRegisterType<ScrollReader>("Fang", 1, 0, "ScrollReader");
     
     QScopedPointer<QApplication> app(createApplication(argc, argv));
     

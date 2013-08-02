@@ -39,7 +39,8 @@ SOURCES += src/main.cpp \
     src/models/FeedValidator.cpp \
     src/operations/AddFeedOperation.cpp \
     src/operations/RemoveFeedOperation.cpp \
-    src/utilities/FaviconGrabber.cpp
+    src/utilities/FaviconGrabber.cpp \
+    src/models/ScrollReader.cpp
 
 # Installation path
 # target.path =
@@ -78,4 +79,5 @@ HEADERS += \
     src/models/FeedValidator.h \
     src/operations/AddFeedOperation.h \
     src/operations/RemoveFeedOperation.h \
-    src/utilities/FaviconGrabber.h
+    src/utilities/FaviconGrabber.h \
+    src/models/ScrollReader.h

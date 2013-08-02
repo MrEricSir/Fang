@@ -37,6 +37,7 @@ void LoadAllFeedsOperation::execute()
         return;
     }
     
+    QList<FeedItem*> tempFeedItemList;
     while (query.next()) {
         FeedItem* item = new FeedItem(
                     query.value("id").toULongLong(),
@@ -48,16 +49,13 @@ void LoadAllFeedsOperation::execute()
                     query.value("imageURL").toString()
                     );
         
-        feedList->appendRow(item);
+        tempFeedItemList.append(item);
     }
     
-    // Now load news items for each feed.
-    // Start at one since All News is not a real feed.
-    for (int i = 1; i < feedList->rowCount(); i++) {
-        FeedItem* item = (FeedItem*) feedList->row(i);
-        
+    // Load news items for each feed.
+    foreach (FeedItem* item, tempFeedItemList) {
         QSqlQuery query(db());
-        query.prepare("SELECT * FROM NewsItemTable WHERE feed_id = :feed_id ORDER BY timestamp DESC");
+        query.prepare("SELECT * FROM NewsItemTable WHERE feed_id = :feed_id ORDER BY timestamp ASC");
         query.bindValue(":feed_id", item->getDbId());
         if (!query.exec()) {
             qDebug() << "Could not load news for feed id: " << item->getDbId();
@@ -82,6 +80,10 @@ void LoadAllFeedsOperation::execute()
             item->append(newsItem);
         }
     }
+    
+    // Finally, add our feeds to the model.
+    foreach (FeedItem* item, tempFeedItemList)
+        feedList->appendRow(item);
     
     // ...and we're done!  Yay!
     emit finished(this);

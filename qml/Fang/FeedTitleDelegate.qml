@@ -2,7 +2,7 @@ import QtQuick 1.1
 
 Item {
     id: feedTitleDelegate
-    height: 40
+    height: 35
     
     // Read-only
     
@@ -20,9 +20,10 @@ Item {
                 id: rowBackground
                 
                 color: index == feedListView.currentIndex ? 
-                           "#d7d7d7" : "transparent";
+                           "white" : "transparent";
                 
                 anchors.fill: parent
+                anchors.topMargin: 5
                 anchors.leftMargin: 5
                 anchors.rightMargin: 5
                 

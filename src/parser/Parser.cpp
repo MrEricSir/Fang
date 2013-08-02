@@ -130,9 +130,9 @@ void Parser::parseXml() {
 
         } else if (xml.isCharacters() && !xml.isWhitespace()) {
             QString xmlString = xml.text().toString();//.toLower();
-            if (currentTag == "title")
+            if (currentTag == "title" && currentPrefix == "")
                 title += xmlString;
-            else if (currentTag == "link")
+            else if (currentTag == "link" && currentPrefix == "")
                 url += xmlString;
             else if (currentTag == "description" || currentTag == "summary")
                 subtitle += xmlString;

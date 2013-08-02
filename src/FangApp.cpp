@@ -10,6 +10,8 @@
 #include "operations/AddFeedOperation.h"
 #include "operations/RemoveFeedOperation.h"
 
+#include "models/ScrollReader.h"
+
 FangApp* FangApp::_instance = NULL;
 
 FangApp::FangApp(QObject *parent, QmlApplicationViewer* viewer) :
@@ -69,13 +71,14 @@ void FangApp::onViewerStatusChanged(QDeclarativeView::Status status)
 {
     if (status == QDeclarativeView::Ready) {
         QDeclarativeWebView *webView = viewer->rootObject()->findChild<QDeclarativeWebView*>("newsView");
-        if (webView == NULL) {
-            qDebug() << "Could not find newsView";
+        ScrollReader *scrollReader = viewer->rootObject()->findChild<ScrollReader*>("newsViewScrollReader");
+        if (webView == NULL || scrollReader == NULL) {
+            qDebug() << "Could not find objects: " << webView << " " << scrollReader;
             
             return;
         }
         
-        newsWeb.init(webView); // Start the news!
+        newsWeb.init(webView, scrollReader); // Start the news!
     }
 }
 

@@ -28,6 +28,13 @@ Item {
             
             flickableDirection: Flickable.VerticalFlick
             
+            ScrollReader {
+                id: newsViewScrollReader
+                objectName: "newsViewScrollReader" // MUST NOT CHANGE (used in C++)
+                
+                contentY: newsFlickable.contentY
+            }
+            
             FangWebView {
                 id: newsView
                 objectName: "newsView" // MUST NOT CHANGE (used in C++)
@@ -47,7 +54,7 @@ Item {
                     anchors.fill: parent
                     property double deltaY: 0
                     onWheel: {
-                        deltaY = delta * 1.5; // Fudge factor!
+                        deltaY = delta * 2; // Fudge factor!
                         wheelScrollAnimation.restart();
                     }
                     

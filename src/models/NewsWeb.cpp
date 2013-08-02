@@ -9,14 +9,18 @@ NewsWeb::NewsWeb(QObject *parent) :
     webPage(NULL),
     document(),
     templateContainer(),
-    _isReady(false)
+    _isReady(false),
+    scroll(NULL),
+    bookmarkedItem(NULL),
+    bookmarkTimer()
 {
     
 }
 
-void NewsWeb::init(QDeclarativeWebView *webView)
+void NewsWeb::init(QDeclarativeWebView *webView, ScrollReader* scroll)
 {
     this->webView = webView;
+    this->scroll = scroll;
     
     // Enable HTTP cache.
     Utilities::addNetworkAccessManagerCache(webView->page()->networkAccessManager());
@@ -26,8 +30,10 @@ void NewsWeb::init(QDeclarativeWebView *webView)
     webView->page()->settings()->setAttribute(QWebSettings::JavascriptEnabled, false); // No scripts.
     
     // Connect signals.
-    QObject::connect(webView->page(), SIGNAL(loadFinished(bool)), this, SLOT(onLoadFinished(bool)));
-    QObject::connect(webView->page(), SIGNAL(linkClicked(QUrl)), this, SLOT(onLinkClicked(QUrl)));
+    connect(webView->page(), SIGNAL(loadFinished(bool)), this, SLOT(onLoadFinished(bool)));
+    connect(webView->page(), SIGNAL(linkClicked(QUrl)), this, SLOT(onLinkClicked(QUrl)));
+    connect(&bookmarkTimer, SIGNAL(timeout()), this, SLOT(onBookmarkTimeout()));
+    connect(scroll, SIGNAL(contentYChanged(qreal)), this, SLOT(onContentYChanged(qreal)));
     
     // Load the news page template.
     webView->setUrl(QUrl("qrc:html/NewsPage.html"));
@@ -36,6 +42,9 @@ void NewsWeb::init(QDeclarativeWebView *webView)
 void NewsWeb::clear()
 {
     Q_ASSERT(_isReady);
+    
+    // Delete the bookmark.
+    removeBookmark();
     
     // Remove all items in the view.
     // TODO: Use a find all selector.
@@ -51,9 +60,6 @@ void NewsWeb::append(NewsItem *item)
 {
     Q_ASSERT(_isReady);
     
-    // Add to our list.
-    items.append(item);
-    
     QWebElement newsContainer = templateContainer.clone();
     newsContainer.setAttribute("id", idForItem(item));
     
@@ -63,22 +69,36 @@ void NewsWeb::append(NewsItem *item)
     newsContainer.findFirst(".date").setPlainText(item->getTimestamp().toString());
     
     QString content = item->getContent() != "" ? item->getContent() : item->getSummary();
-    newsContainer.findFirst(".content").setInnerXml(content);
+    QWebElement contentElement = newsContainer.findFirst(".content");
+    contentElement.setInnerXml(content);
     
     //qDebug();
     //qDebug() << content;
-    cleanConatiner(newsContainer);
+    cleanConatiner(contentElement);
     
     // Add to HTML.
-    // TODO: add after last item (need ids first)
-    templateContainer.appendOutside(newsContainer);
+    if (items.size() > 0)
+        elementForItem(items.last()).appendOutside(newsContainer); // Append after last
+    else
+        templateContainer.appendOutside(newsContainer); // For first item
+    
+    // Add to our internal list.
+    items.append(item);
+    
+    // Run the bookmark timer every 1.5 seconds.
+    bookmarkTimer.start(1500);
 }
 
 void NewsWeb::remove(NewsItem *item)
 {
     Q_ASSERT(_isReady);
     
-    document.findFirst("#" + idForItem(item)).removeFromDocument();
+    // If this is bookmarked, remove the bookmark.
+    if (item == this->bookmarkedItem) {
+        removeBookmark();
+    }
+    
+    elementForItem(item).removeFromDocument();
     
     // Remove from the list.
     items.removeAll(item);
@@ -94,6 +114,10 @@ void NewsWeb::onLoadFinished(bool ok)
     document = webPage->mainFrame()->documentElement();
     templateContainer = document.findFirst("#model");
     
+    QSize size = webView->page()->viewportSize();
+    qDebug() << "Viewport size" << size;
+    qDebug() << "View " << webView->page()->view();
+    
     // Ready for action!
     _isReady = true;
     emit ready();
@@ -105,15 +129,128 @@ void NewsWeb::onLinkClicked(const QUrl& url)
     QDesktopServices::openUrl(url);
 }
 
+void NewsWeb::onContentYChanged(qreal contentY)
+{
+    // TODO: somehow fire timer immediately if the user scrolls up, but only sometimes.
+    
+  //  qDebug() << "Content y: " << contentY;
+}
+
+void NewsWeb::onBookmarkTimeout()
+{
+    qreal contentY = scroll->contentY();
+    
+    //qDebug() << "y " << scroll->y();
+    //int x = 200; // TODO; half frame width
+    
+    
+   // qDebug() << "Bookmark timeout!";
+    
+    
+    int halfWidth = webView->width() / 2;
+    int fivePercentOfHeight = webView->parentItem()->parentItem()->height() / 5;
+    int yStart = fivePercentOfHeight;
+    NewsItem* item = NULL;
+    
+    //qDebug() << "Y " << contentY << " half width: " << halfWidth << " negativeHeight: " << negativeHeight;
+    
+    // Look at coordinates (halfWidth, yStart) to try to find an item.
+    // Failing that, move a couple notches down.
+    for (int i = 0; i < 2; i++) {
+        QWebHitTestResult hitTest = document.webFrame()->hitTestContent(QPoint(halfWidth, contentY + yStart));
+        item = itemForElement(hitTest.element());
+        if (item != NULL) {
+            break;
+        }
+        
+        yStart += fivePercentOfHeight; // Move down a little moar.
+    }
+    
+    // Try to bookmark the PREVIOUS item in the list, if there is one.
+    // (Otherwise, this one will do.)
+    int index = items.indexOf(item);
+    if (index > 0)
+        item = items.at(index - 1);
+    
+    // Only bookmark this one if it's newer than the current bookmark.
+    if (item != NULL && item != bookmarkedItem &&
+            (this->bookmarkedItem == NULL || item->getTimestamp() > bookmarkedItem->getTimestamp())) {
+        setBookmark(item);
+        // TODO: emit bookmarked signal, etc.
+    }
+}
+
 QString NewsWeb::idForItem(NewsItem *item)
 {
     return item->id();
+}
+
+QWebElement NewsWeb::elementForItem(NewsItem *item)
+{
+    return document.findFirst("#" + idForItem(item));
+}
+
+NewsItem* NewsWeb::itemForElement(const QWebElement& element)
+{
+    if (element.isNull())
+        return NULL; // Quick escape hatch.
+    
+    QWebElement currentElement = element;
+    QString idString = "";
+    while (!currentElement.isNull()) {
+        if (currentElement.attribute("id").startsWith(NEWS_ITEM_ID_PREIX, Qt::CaseInsensitive)) {
+            // WE FOUND IT!
+            idString = currentElement.attribute("id");
+            
+            break;
+        }
+        
+        // Climb up the DOM tree.
+        currentElement = currentElement.parent();
+    }
+    
+    if (idString == "")
+        return NULL; // We didn't find anything. :(
+    
+    // Just iterate for it!  We should probably have it at this point, so no biggie.
+    NewsItem* ret = NULL;
+    foreach(NewsItem* item, items) {
+        if (item->id().compare(idString, Qt::CaseInsensitive) == 0)
+            ret = item;
+    }
+    
+    return ret;
 }
 
 void NewsWeb::removeAll(const QString& selector, QWebElement element) {
     QWebElementCollection collection = element.findAll(selector);
     foreach (QWebElement e, collection)
         e.removeFromDocument();
+}
+
+void NewsWeb::setBookmark(NewsItem *item)
+{
+    removeBookmark();
+    
+    QWebElement stripe = document.findFirst(newsItemToBookmarkSelector(item));
+    stripe.setStyleProperty("visibility", "visible !important");
+    bookmarkedItem = item;
+}
+
+void NewsWeb::removeBookmark()
+{
+    if (bookmarkedItem == NULL)
+        return;
+    
+    QWebElement stripe = document.findFirst(newsItemToBookmarkSelector(bookmarkedItem));
+    stripe.setStyleProperty("visibility", "hidden !important");
+    
+    bookmarkedItem = NULL;
+}
+
+QString NewsWeb::newsItemToBookmarkSelector(NewsItem *item)
+{
+    return ".newsContainer#" + idForItem(item) + " > .bookmark > .stripe";
 }
 
 void NewsWeb::cleanConatiner(QWebElement& newsContainer)
@@ -123,6 +260,7 @@ void NewsWeb::cleanConatiner(QWebElement& newsContainer)
     removeAll("style", newsContainer); // Custom styles.
     removeAll("iframe", newsContainer); // Iframes!
     removeAll(".feedflare", newsContainer); // Feedburger's 37 pieces of flare
+    removeAll(".mf-viral", newsContainer); // Motherfucking viral?
     
     // Delete annoying images.
     QWebElementCollection collection = newsContainer.findAll("img");
@@ -151,7 +289,9 @@ void NewsWeb::cleanConatiner(QWebElement& newsContainer)
         if (!parentHref.isEmpty()) {
             if (parentHref.contains("twitter.com/home?status", Qt::CaseInsensitive) ||
                     parentHref.contains("plus.google.com/shar", Qt::CaseInsensitive) ||
-                    parentHref.contains("facebook.com/shar", Qt::CaseInsensitive)) {
+                    parentHref.contains("facebook.com/shar", Qt::CaseInsensitive) ||
+                    parentHref.contains("da.feedsportal.com/r", Qt::CaseInsensitive) ||
+                    parentHref.contains("share.feedsportal.com/share", Qt::CaseInsensitive)) {
                 // Social media buttons.
                 removeParent = true;
             } else if (parentHref.contains("feedsportal.com/", Qt::CaseInsensitive)) {
@@ -178,6 +318,17 @@ void NewsWeb::cleanConatiner(QWebElement& newsContainer)
             e.parent().removeFromDocument();
         else if (removeElement)
             e.removeFromDocument();
+    }
+    
+    // Sometimes they throw line breaks at the bottom.  Screw 'em.
+    while (true) {
+        QWebElement last = newsContainer.lastChild();
+        QString tag = last.tagName().toLower();
+        if (tag == "br" || tag == "hr") {
+            last.removeFromDocument();
+        } else {
+            break; // exit loop
+        }
     }
 }
 

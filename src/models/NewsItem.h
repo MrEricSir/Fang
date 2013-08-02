@@ -9,12 +9,14 @@
 
 #include "FeedItem.h"
 
+#define NEWS_ITEM_ID_PREIX "NewsItem_"
+
 class NewsItem : public QObject
 {
     Q_OBJECT
     
 public:
-  
+    
     NewsItem(QObject *parent = 0);
     
     // This is the c'tor you'll want to use.
@@ -39,7 +41,7 @@ public:
     inline QString id() const { 
         QString ret;
         QTextStream output(&ret);
-        output << "NewsItem_" << _id;
+        output << NEWS_ITEM_ID_PREIX << _id;
         return ret;
     }
     

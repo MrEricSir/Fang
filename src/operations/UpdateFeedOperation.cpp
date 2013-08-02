@@ -52,7 +52,7 @@ void UpdateFeedOperation::onFeedFinished()
     }
     
     // Sort the list oldest to newest.
-    qSort(rawFeed->items.begin(), rawFeed->items.end(), RawNews::GreaterThan);
+    qSort(rawFeed->items.begin(), rawFeed->items.end(), RawNews::LessThan);
     
     // Look for the newest feed we know about.
     QDateTime newestLocalNews = QDateTime::fromMSecsSinceEpoch(0);
@@ -64,6 +64,7 @@ void UpdateFeedOperation::onFeedFinished()
     if (newestNewNews <= newestLocalNews) {
         emit finished(this);
         qDebug() << "Feed already up to date!";
+        qDebug() << "Newest new: " << newestNewNews.toString() << " Newest local: " << newestLocalNews.toString();
         
         return;
     }
@@ -84,6 +85,9 @@ void UpdateFeedOperation::onFeedFinished()
         
         return;
     }
+    
+    //qDebug() << "UPDATE: Newest new: " << newestNewNews.toString() << " Newest local: " << newestLocalNews.toString();
+    //qDebug() << "Newest local title: " << rawFeed->items.at(newIndex)->title << " local " << feed->getNewsList()->last()->getTitle();
     
     // Add all new items to DB.
     // Items added oldest to newest.
@@ -135,6 +139,5 @@ void UpdateFeedOperation::onFeedFinished()
     }
     
     // TODO: Update DB.
-    qDebug() << "Operation finished";
     emit finished(this);
 }
