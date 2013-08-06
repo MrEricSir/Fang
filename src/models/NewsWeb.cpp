@@ -204,11 +204,12 @@ void NewsWeb::onBookmarkTimeout()
         yStart += fivePercentOfHeight; // Move down a little moar.
     }
     
-    // Try to bookmark the PREVIOUS item in the list, if there is one.
-    // (Otherwise, this one will do.)
+    // We only want to bookmark the PREVIOUS item in the list.
     int index = items.indexOf(item);
     if (index > 0)
         item = items.at(index - 1);
+    else
+        return; // It's okay to have no bookmark.  It means we start at the top.
     
     // Only bookmark this one if it's newer than the current bookmark.
     if (item != NULL && item != bookmarkedItem &&
@@ -223,7 +224,11 @@ void NewsWeb::onJumpTimeout()
     if (jumpItem == NULL)
         return;
     
-    int y = document.findFirst(".newsContainer#" + idForItem(jumpItem)).geometry().y();
+    QWebElement element = document.findFirst(".newsContainer#" + idForItem(jumpItem) + ">.bookmark");
+    if (element.isNull())
+        return;
+    
+    int y = element.geometry().y();
     //qDebug() << "Jumping to y: " << y << "  " << document.geometry().height();
     
     // Don't exceed max scroll.
@@ -252,7 +257,6 @@ QWebElement NewsWeb::createNewElementForItem(NewsItem *item)
     
     newsContainer.findFirst(".link").setAttribute("href", item->getURL().toString());
     newsContainer.findFirst(".link").setPlainText(item->getTitle());
-    newsContainer.findFirst(".jumpTarget").setAttribute("id", idForItem(item));
     newsContainer.findFirst(".siteTitle").setPlainText(item->getFeed()->getTitle());
     newsContainer.findFirst(".date").setPlainText(item->getTimestamp().toString());
     
