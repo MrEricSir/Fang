@@ -51,6 +51,7 @@ public:
     inline QString getContent() const { return content; }
     inline QDateTime getTimestamp() const { return timestamp; }
     inline QUrl getURL() const { return url; }
+    inline qint64 getDbID() const { return _id; }
    
   private:
     FeedItem* feed;

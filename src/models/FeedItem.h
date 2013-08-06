@@ -39,6 +39,7 @@ public:
             quint32 minutesToUpdate,
             const QUrl& url,
             const QUrl& imageURL,
+            NewsItem* bookmark, 
             QObject *parent = 0);
     
     virtual ~FeedItem();
@@ -82,6 +83,9 @@ public:
     
     inline QList<NewsItem*>* getNewsList() { return newsList; }
     
+    inline NewsItem* getBookmark() { return bookmark; }
+    void setBookmark(NewsItem* item);
+    
 signals:
     
     void appended(NewsItem* item);
@@ -95,6 +99,7 @@ private:
     quint32 minutesToUpdate;
     QUrl url;
     QUrl imageURL;
+    NewsItem* bookmark;
     QList<NewsItem*>* newsList;
     int isUpdating;
 };

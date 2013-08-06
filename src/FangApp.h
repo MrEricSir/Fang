@@ -60,6 +60,8 @@ private slots:
     
     void onNewsWebReady();
     
+    void onNewsItemBookmarked(NewsItem* item);
+    
     void onFeedSelected(ListItem *item);
     
     /**

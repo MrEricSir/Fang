@@ -9,6 +9,7 @@
 #include "operations/LoadAllFeedsOperation.h"
 #include "operations/AddFeedOperation.h"
 #include "operations/RemoveFeedOperation.h"
+#include "operations/SetBookmarkOperation.h"
 
 #include "models/ScrollReader.h"
 
@@ -28,17 +29,19 @@ FangApp::FangApp(QObject *parent, QmlApplicationViewer* viewer) :
     feedList = new ListModel(new FeedItem, this);
     
     // Setup signals.
-    QObject::connect(viewer, SIGNAL(statusChanged(QDeclarativeView::Status)),
+    connect(viewer, SIGNAL(statusChanged(QDeclarativeView::Status)),
                      this, SLOT(onViewerStatusChanged(QDeclarativeView::Status)));
     
-    QObject::connect(&manager, SIGNAL(operationFinished(Operation*)),
+    connect(&manager, SIGNAL(operationFinished(Operation*)),
                      this, SLOT(onOperationFinished(Operation*)));
     
-    QObject::connect(&newsWeb, SIGNAL(ready()), this, SLOT(onNewsWebReady()));
+    connect(&newsWeb, SIGNAL(ready()), this, SLOT(onNewsWebReady()));
+    connect(&newsWeb, SIGNAL(newsItemBookmarked(NewsItem*)),
+            this, SLOT(onNewsItemBookmarked(NewsItem*)));
     
-    QObject::connect(feedList, SIGNAL(added(ListItem*)), this, SLOT(onFeedAdded(ListItem*)));
-    QObject::connect(feedList, SIGNAL(removed(ListItem*)), this, SLOT(onFeedRemoved(ListItem*)));
-    QObject::connect(feedList, SIGNAL(selectedChanged(ListItem*)), this, SLOT(onFeedSelected(ListItem*)));
+    connect(feedList, SIGNAL(added(ListItem*)), this, SLOT(onFeedAdded(ListItem*)));
+    connect(feedList, SIGNAL(removed(ListItem*)), this, SLOT(onFeedRemoved(ListItem*)));
+    connect(feedList, SIGNAL(selectedChanged(ListItem*)), this, SLOT(onFeedSelected(ListItem*)));
 }
 
 void FangApp::init()
@@ -116,6 +119,17 @@ void FangApp::onNewsWebReady()
         displayFeed();
 }
 
+void FangApp::onNewsItemBookmarked(NewsItem *item)
+{
+    if (currentFeed == NULL) {
+        qDebug() << "Current feed was null, can't bookmark.";
+        return;
+    }
+    
+    manager.add(new SetBookmarkOperation(&manager, currentFeed, item));
+    qDebug() << "Item bookmarked: " << item->getTitle();
+}
+
 void FangApp::onFeedSelected(ListItem* _item) {
     FeedItem* item = qobject_cast<FeedItem *>(_item);
     if (item != NULL) {
@@ -137,14 +151,7 @@ void FangApp::displayFeed() {
     if (currentFeed == NULL || !newsWeb.isReady())
         return;
     
-    newsWeb.clear();
-    
-    QList<NewsItem*>* list = currentFeed->getNewsList();
-    
-    for (int i = 0; i < list->size(); i++) {
-        NewsItem* item = list->at(i);
-        newsWeb.append(item);
-    }
+    newsWeb.setFeed(currentFeed);
 }
 
 FangApp* FangApp::instance()

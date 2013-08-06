@@ -14,7 +14,8 @@ CREATE TABLE FeedItemTable (
     minutesToUpdate INTEGER DEFAULT 0,
     url TEXT NOT NULL,
     imageURL TEXT NOT NULL,
-    ordinal INTEGER DEFAULT 0
+    ordinal INTEGER DEFAULT 0,
+    bookmark_id INTEGER DEFAULT -1
 );
 
 CREATE INDEX FeedItemTableOrdinalIndex ON FeedItemTable(ordinal);

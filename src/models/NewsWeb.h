@@ -10,6 +10,7 @@
 
 #include "FangWebView.h"
 #include "NewsItem.h"
+#include "FeedItem.h"
 #include "ScrollReader.h"
 
 /**
@@ -28,6 +29,8 @@ public:
     void init(QDeclarativeWebView *webView, ScrollReader* scroll);
     
     
+    virtual bool eventFilter(QObject *watched, QEvent *e);
+    
 signals:
     
     /**
@@ -35,10 +38,30 @@ signals:
      */
     void ready();
     
+    /**
+     * @brief Fired when a NewsItem is bookmarked.
+     * @param item
+     */
+    void newsItemBookmarked(NewsItem* item);
+    
 public slots:
     
     /**
-     * @brief Clears the current feed.
+     * @brief Sets the feed displayed in the reader.  It will automatically
+     * update if news items are added/removed.
+     * @param feed The feed to display, or null if none.
+     */
+    void setFeed(FeedItem* feed);
+    
+    /**
+     * @return True if the page has loaded.
+     */
+    inline bool isReady() { return _isReady; }
+    
+private slots:
+    
+    /**
+     * @brief Unsets and clears the current feed.
      */
     void clear();
     
@@ -55,12 +78,6 @@ public slots:
     void remove(NewsItem* item);
     
     /**
-     * @return True if the page has loaded.
-     */
-    inline bool isReady() { return _isReady; }
-    
-private slots:
-    /**
      * @brief Called when web view is loaded.  This initializes
      * the page, document and template objects.
      * @param ok
@@ -74,6 +91,11 @@ private slots:
     void onLinkClicked(const QUrl &url);
     
     /**
+     * @brief When size of web document has hanged.
+     */
+    void onGeometryChangeRequested();
+    
+    /**
      * @brief Handler for our ScrollReader instance
      * @param contentY
      */
@@ -83,6 +105,24 @@ private slots:
      * @brief Bookmark timer.
      */
     void onBookmarkTimeout();
+    
+    /**
+     * @brief Timer for jumping (see below.)
+     */
+    void onJumpTimeout();
+    
+    /**
+     * @brief Jumps the view to the given item.  May not happen instantly.
+     * @param item
+     */
+    void jumpToItem(NewsItem* item);
+    
+    /**
+     * @brief Creates a new element for the given item, ready to be inserted.
+     * @param item
+     * @return 
+     */
+    QWebElement createNewElementForItem(NewsItem *item);
     
     /**
      * @param item
@@ -140,6 +180,9 @@ private:
     // The WebView used to display this feed.
     QDeclarativeWebView *webView;
     
+    // The current feed being displayed.
+    FeedItem* currentFeed;
+    
     // List that corresponds to the items in the view.
     QList<NewsItem*> items;
     
@@ -161,7 +204,14 @@ private:
     // The currently "bookmarked" item.
     NewsItem* bookmarkedItem;
     
+    // Used to poll page to advance bookmark.
     QTimer bookmarkTimer;
+    
+    // Used to jump to bookmark after adding the feed.
+    QTimer jumpToBookmarkTimer;
+    
+    // Item we're jumping to.
+    NewsItem* jumpItem;
 };
 
 #endif // NEWSWEB_H

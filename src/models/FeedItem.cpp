@@ -12,14 +12,16 @@ FeedItem::FeedItem(QObject *parent) :
     minutesToUpdate(0),
     url(),
     imageURL(),
+    bookmark(NULL),
     newsList(NULL),
     isUpdating(false)
+    
 {
     newsList = new QList<NewsItem*>();
 }
 
 FeedItem::FeedItem(qint64 id, const QString &title, const QString &subtitle, const QDateTime &lastUpdated, 
-                   quint32 minutesToUpdate, const QUrl &url, const QUrl &imageURL, QObject* parent) :
+                   quint32 minutesToUpdate, const QUrl &url, const QUrl &imageURL, NewsItem* bookmark, QObject* parent) :
     ListItem(parent),
     _id(id),
     title(title),
@@ -28,6 +30,7 @@ FeedItem::FeedItem(qint64 id, const QString &title, const QString &subtitle, con
     minutesToUpdate(minutesToUpdate),
     url(url),
     imageURL(imageURL),
+    bookmark(bookmark),
     newsList(NULL),
     isUpdating(false)
 {
@@ -103,4 +106,12 @@ void FeedItem::remove(NewsItem *item)
     emit removed(item);
     
     delete item;
+}
+
+void FeedItem::setBookmark(NewsItem *item)
+{
+    if (item != NULL)
+        Q_ASSERT(newsList->contains(item));
+    
+    bookmark = item;
 }

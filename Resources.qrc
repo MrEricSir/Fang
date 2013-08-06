@@ -27,5 +27,6 @@
         <file>qml/Fang/images/symbol_reload.svg</file>
         <file>qml/Fang/RemoveDialog.qml</file>
         <file>qml/Fang/images/symbol_rss.svg</file>
+        <file>html/bookmark.png</file>
     </qresource>
 </RCC>

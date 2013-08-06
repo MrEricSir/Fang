@@ -1,6 +1,7 @@
 #include "LoadAllFeedsOperation.h"
 
 #include <QDebug>
+#include <QMap>
 
 #include "../models/NewsItem.h"
 
@@ -26,7 +27,7 @@ void LoadAllFeedsOperation::execute()
         QUrl url("");
         QUrl imageUrl("");
         
-        feedList->appendRow(new FeedItem(0, title, subtitle, lastUpdated, minUpdate, url, imageUrl, feedList));
+        feedList->appendRow(new FeedItem(0, title, subtitle, lastUpdated, minUpdate, url, imageUrl, NULL, feedList));
     }
     
     // Kindly ask the database for the rest.
@@ -38,6 +39,7 @@ void LoadAllFeedsOperation::execute()
     }
     
     QList<FeedItem*> tempFeedItemList;
+    QMap<FeedItem*, qint64> bookmarkIdMap; // I hate to associate via hashmap, but...
     while (query.next()) {
         FeedItem* item = new FeedItem(
                     query.value("id").toULongLong(),
@@ -46,9 +48,11 @@ void LoadAllFeedsOperation::execute()
                     QDateTime::fromMSecsSinceEpoch(query.value("lastUpdated").toLongLong()),
                     query.value("minutesToUpdate").toUInt(),
                     query.value("url").toString(),
-                    query.value("imageURL").toString()
+                    query.value("imageURL").toString(),
+                    NULL
                     );
         
+        bookmarkIdMap.insert(item, query.value("bookmark_id").toULongLong());
         tempFeedItemList.append(item);
     }
     
@@ -62,6 +66,9 @@ void LoadAllFeedsOperation::execute()
             // TODO : add error signal
             continue;
         }
+        
+        // Lookup the bookmark id.
+        qint64 bookmarkId = bookmarkIdMap.value(item, -1);
         
         while (query.next()) {
             // Load from DB query result.
@@ -78,6 +85,10 @@ void LoadAllFeedsOperation::execute()
             
             // Add to the model.
             item->append(newsItem);
+            
+            // If this is the bookmark, link 'er up.
+            if (newsItem->getDbID() == bookmarkId)
+                item->setBookmark(newsItem);
         }
     }
     

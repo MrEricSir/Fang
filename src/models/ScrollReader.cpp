@@ -14,3 +14,12 @@ void ScrollReader::setContentY(qreal y)
     _contentY = y;
     emit contentYChanged(_contentY);
 }
+
+void ScrollReader::setJumpY(qreal y)
+{
+    if (y == _jumpY)
+        return;
+    
+    _jumpY = y;
+    emit jumpYChanged(_jumpY);
+}

@@ -7,8 +7,8 @@ Item {
     // Call this when a feed changes to reset the view.
     function reset() {
         // Reload and scroll to top.
-        newsView.reload.trigger();
-        newsFlickable.contentY = 0; // TODO: zoom to q position of bookmark
+        //newsView.reload.trigger();
+        //newsFlickable.contentY = 0; // TODO: zoom to q position of bookmark
     }
     
     Item {
@@ -32,7 +32,14 @@ Item {
                 id: newsViewScrollReader
                 objectName: "newsViewScrollReader" // MUST NOT CHANGE (used in C++)
                 
+                // Grab the current contentY
                 contentY: newsFlickable.contentY
+                
+                // Used for jumping the view to a position.
+                onJumpYChanged: {
+                    console.log("Jump: ", jumpY)
+                    newsFlickable.contentY = jumpY
+                }
             }
             
             FangWebView {

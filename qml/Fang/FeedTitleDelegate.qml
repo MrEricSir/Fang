@@ -24,8 +24,8 @@ Item {
                 
                 anchors.fill: parent
                 anchors.topMargin: 5
-                anchors.leftMargin: 5
-                anchors.rightMargin: 5
+                anchors.leftMargin: 0
+                anchors.rightMargin: 0
                 
                 Item {
                     id: feedTitleCol

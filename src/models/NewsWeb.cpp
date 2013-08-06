@@ -5,6 +5,7 @@
 NewsWeb::NewsWeb(QObject *parent) :
     QObject(parent),
     webView(NULL),
+    currentFeed(NULL),
     items(),
     webPage(NULL),
     document(),
@@ -12,9 +13,11 @@ NewsWeb::NewsWeb(QObject *parent) :
     _isReady(false),
     scroll(NULL),
     bookmarkedItem(NULL),
-    bookmarkTimer()
+    bookmarkTimer(),
+    jumpToBookmarkTimer(),
+    jumpItem(NULL)
 {
-    
+    jumpToBookmarkTimer.setSingleShot(true);
 }
 
 void NewsWeb::init(QDeclarativeWebView *webView, ScrollReader* scroll)
@@ -32,11 +35,16 @@ void NewsWeb::init(QDeclarativeWebView *webView, ScrollReader* scroll)
     // Connect signals.
     connect(webView->page(), SIGNAL(loadFinished(bool)), this, SLOT(onLoadFinished(bool)));
     connect(webView->page(), SIGNAL(linkClicked(QUrl)), this, SLOT(onLinkClicked(QUrl)));
+    connect(webView, SIGNAL(heightChanged()), this, SLOT(onGeometryChangeRequested()));
     connect(&bookmarkTimer, SIGNAL(timeout()), this, SLOT(onBookmarkTimeout()));
+    connect(&jumpToBookmarkTimer, SIGNAL(timeout()), this, SLOT(onJumpTimeout()));
     connect(scroll, SIGNAL(contentYChanged(qreal)), this, SLOT(onContentYChanged(qreal)));
     
     // Load the news page template.
     webView->setUrl(QUrl("qrc:html/NewsPage.html"));
+    
+    // Run the bookmark timer every 1.5 seconds.
+    bookmarkTimer.start(1500);
 }
 
 void NewsWeb::clear()
@@ -54,27 +62,57 @@ void NewsWeb::clear()
     
     // Clear the internal list.
     items.clear();
+    
+    // Jump the view back up to the tippy-top.
+    scroll->setJumpY(0);
+}
+
+void NewsWeb::setFeed(FeedItem *feed)
+{
+    // Unset current signals.
+    if (currentFeed != NULL) {
+        disconnect(currentFeed, SIGNAL(appended(NewsItem*)), this, SLOT(append(NewsItem*)));
+        disconnect(currentFeed, SIGNAL(removed(NewsItem*)), this, SLOT(remove(NewsItem*)));
+    }
+    
+    // Clear the view and set the new feed.
+    clear();
+    currentFeed = feed;
+    
+    // Connect signals.
+    if (currentFeed != NULL) {
+        // Append all exising items to the feed.
+        QList<NewsItem*>* list = currentFeed->getNewsList();
+        for (int i = 0; i < list->size(); i++) {
+            NewsItem* item = list->at(i);
+            append(item);
+        }
+        
+        connect(currentFeed, SIGNAL(appended(NewsItem*)), this, SLOT(append(NewsItem*)));
+        connect(currentFeed, SIGNAL(removed(NewsItem*)), this, SLOT(remove(NewsItem*)));
+        
+        // Set current bookmark and jump to it.
+        if (currentFeed->getBookmark() != NULL) {
+            setBookmark(currentFeed->getBookmark());
+            jumpToItem(currentFeed->getBookmark());
+        }
+    }
 }
 
 void NewsWeb::append(NewsItem *item)
 {
     Q_ASSERT(_isReady);
+    if (items.contains(item))
+        return; // Already seen this.
     
-    QWebElement newsContainer = templateContainer.clone();
-    newsContainer.setAttribute("id", idForItem(item));
-    
-    newsContainer.findFirst(".link").setAttribute("href", item->getURL().toString());
-    newsContainer.findFirst(".link").setPlainText(item->getTitle());
-    newsContainer.findFirst(".siteTitle").setPlainText(item->getFeed()->getTitle());
-    newsContainer.findFirst(".date").setPlainText(item->getTimestamp().toString());
-    
-    QString content = item->getContent() != "" ? item->getContent() : item->getSummary();
-    QWebElement contentElement = newsContainer.findFirst(".content");
-    contentElement.setInnerXml(content);
+    QWebElement newsContainer = createNewElementForItem(item);
     
     //qDebug();
     //qDebug() << content;
-    cleanConatiner(contentElement);
+    
+    // Scrub content.
+    QWebElement content = newsContainer.findFirst(".content");
+    cleanConatiner(content);
     
     // Add to HTML.
     if (items.size() > 0)
@@ -84,9 +122,6 @@ void NewsWeb::append(NewsItem *item)
     
     // Add to our internal list.
     items.append(item);
-    
-    // Run the bookmark timer every 1.5 seconds.
-    bookmarkTimer.start(1500);
 }
 
 void NewsWeb::remove(NewsItem *item)
@@ -109,14 +144,14 @@ void NewsWeb::onLoadFinished(bool ok)
     if (!ok)
         return; // This happens, just ignore it.
     
-    // Initialize our vars.
+    // Initialize (or re-initialize) our vars.
     webPage = webView->page();
     document = webPage->mainFrame()->documentElement();
     templateContainer = document.findFirst("#model");
     
-    QSize size = webView->page()->viewportSize();
-    qDebug() << "Viewport size" << size;
-    qDebug() << "View " << webView->page()->view();
+    //QSize size = webView->page()->viewportSize();
+    //qDebug() << "Viewport size" << size;
+    //qDebug() << "View " << webView->page()->view();
     
     // Ready for action!
     _isReady = true;
@@ -129,8 +164,18 @@ void NewsWeb::onLinkClicked(const QUrl& url)
     QDesktopServices::openUrl(url);
 }
 
+void NewsWeb::onGeometryChangeRequested()
+{
+    qDebug() << "Geom change: ";// << rect;
+    
+    // If we're preparing to jump to a bookmark, delay the timer very slightly.
+    if (jumpToBookmarkTimer.isActive())
+        jumpToBookmarkTimer.start(10);
+}
+
 void NewsWeb::onContentYChanged(qreal contentY)
 {
+    Q_UNUSED(contentY);
     // TODO: somehow fire timer immediately if the user scrolls up, but only sometimes.
     
   //  qDebug() << "Content y: " << contentY;
@@ -139,13 +184,6 @@ void NewsWeb::onContentYChanged(qreal contentY)
 void NewsWeb::onBookmarkTimeout()
 {
     qreal contentY = scroll->contentY();
-    
-    //qDebug() << "y " << scroll->y();
-    //int x = 200; // TODO; half frame width
-    
-    
-   // qDebug() << "Bookmark timeout!";
-    
     
     int halfWidth = webView->width() / 2;
     int fivePercentOfHeight = webView->parentItem()->parentItem()->height() / 5;
@@ -174,10 +212,64 @@ void NewsWeb::onBookmarkTimeout()
     
     // Only bookmark this one if it's newer than the current bookmark.
     if (item != NULL && item != bookmarkedItem &&
-            (this->bookmarkedItem == NULL || item->getTimestamp() > bookmarkedItem->getTimestamp())) {
+            (bookmarkedItem == NULL || item->getTimestamp() > bookmarkedItem->getTimestamp())) {
         setBookmark(item);
-        // TODO: emit bookmarked signal, etc.
+        emit newsItemBookmarked(item);
     }
+}
+
+void NewsWeb::onJumpTimeout()
+{
+    if (jumpItem == NULL)
+        return;
+    
+    int y = document.findFirst(".newsContainer#" + idForItem(jumpItem)).geometry().y();
+    //qDebug() << "Jumping to y: " << y << "  " << document.geometry().height();
+    
+    // Don't exceed max scroll.
+    int maxY = document.geometry().height() - webView->parentItem()->parentItem()->height();
+    if (y > maxY)
+        y = maxY;
+    
+    // Just do it.
+    scroll->setJumpY(y);
+    
+    jumpItem = NULL;
+}
+
+void NewsWeb::jumpToItem(NewsItem *item)
+{
+    jumpItem = item;
+    
+    // Set jump in 150 ms.
+    jumpToBookmarkTimer.start(150);
+}
+
+QWebElement NewsWeb::createNewElementForItem(NewsItem *item)
+{
+    QWebElement newsContainer = templateContainer.clone();
+    newsContainer.setAttribute("id", idForItem(item));
+    
+    newsContainer.findFirst(".link").setAttribute("href", item->getURL().toString());
+    newsContainer.findFirst(".link").setPlainText(item->getTitle());
+    newsContainer.findFirst(".jumpTarget").setAttribute("id", idForItem(item));
+    newsContainer.findFirst(".siteTitle").setPlainText(item->getFeed()->getTitle());
+    newsContainer.findFirst(".date").setPlainText(item->getTimestamp().toString());
+    
+    // Use HTML content if available, otherwise use the summary.
+    QString content = item->getContent() != "" ? item->getContent() : item->getSummary();
+    QWebElement contentElement = newsContainer.findFirst(".content");
+    contentElement.setInnerXml(content);
+    
+    return newsContainer;
+}
+
+bool NewsWeb::eventFilter(QObject *watched, QEvent* event)
+{
+    if (watched != NULL && event != NULL)
+        qDebug() << "Event: " << event->type() << " from " << watched;
+    
+    return QObject::eventFilter(watched, event);
 }
 
 QString NewsWeb::idForItem(NewsItem *item)

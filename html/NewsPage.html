@@ -26,6 +26,12 @@ body {
     width: 100%;
     height: 1.2em;
     visibility: hidden; /* Don't show by default */
+    
+    background-image:url(qrc:/html/bookmark.png);
+    background-size: auto 1.2em;
+    /*background-size:80px 60px;*/
+    background-repeat:no-repeat;
+    background-position:left center;
 }
 
 .newsContainer > .content {
@@ -112,7 +118,7 @@ a:active {
 <body>
 
 
-<div class="newsContainer" id="model">
+<div class="newsContainer" id="model"><a id="" class="jumpTarget"></a>
 
 <h1><a href="" class="link"></a></h1>
 <div class="divider"></div>
