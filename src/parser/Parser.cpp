@@ -40,6 +40,8 @@ void Parser::parse(const QUrl& url, bool checkFavicon) {
 }
 
 void Parser::resetParserVars() {
+    xml.clear();
+
     numItems = 0;
     currentTag = "";
     currentPrefix = "";
