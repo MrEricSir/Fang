@@ -43,3 +43,25 @@ void Utilities::addNetworkAccessManagerCache(QNetworkAccessManager *manager)
     if (!cacheDir.isEmpty())
         manager->setCache(diskCache);
 }
+
+QDateTime Utilities::dateFromFeedString(QString timestamp)
+{
+    QDateTime ret;
+    // Date time.
+    // Examples:
+    // Tue, 02 Jul 2013 01:01:24 +0000
+    
+    // TODO: figure out the time zone issue
+    // For now, we're shaving off everything after the last space.
+    timestamp = timestamp.left(timestamp.trimmed().lastIndexOf(" "));
+    //qDebug() << "Time string: " << timestamp;
+    
+    ret = QDateTime::fromString(timestamp, "ddd, dd MMM yyyy hh:mm:ss"); 
+    
+    // Try RFC 3339, normally used by Atom.
+    // Example: // 2013-08-07T16:47:54Z
+    if (!ret.isValid())
+        ret = QDateTime::fromString(timestamp.toUpper(), "yyyy-MM-ddThh:mm:ssZ"); 
+    
+    return ret;
+}

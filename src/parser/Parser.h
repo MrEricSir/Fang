@@ -20,7 +20,7 @@ class Parser : public QObject
     Q_OBJECT
     
 public:
-    enum ParseResult { OK, NETWORK_ERROR, PARSE_ERROR };
+    enum ParseResult { OK, NETWORK_ERROR, PARSE_ERROR, IN_PROGRESS };
     
     explicit Parser(QObject *parent = 0);
     
@@ -33,6 +33,7 @@ public slots:
     
     ParseResult getResult();
     RawFeed* getFeed();
+    inline QUrl getURL() { return finalFeedURL; }
     
 protected slots:
     void readyRead();
@@ -55,6 +56,8 @@ private:
 
     QNetworkAccessManager manager;
     QNetworkReply *currentReply;
+    QUrl finalFeedURL;
+    QNetworkReply *redirectReply;
     
     // Parser vars
     int numItems;
@@ -66,6 +69,7 @@ private:
     QString content;
     QString timestamp;
     QString author;
+    bool hasType;
     //
 };
 

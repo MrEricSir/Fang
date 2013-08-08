@@ -4,9 +4,11 @@
 #include <QDeclarativeItem>
 #include <QObject>
 #include <QUrl>
+#include <QWebPage>
 
 #include "../parser/Parser.h"
 #include "FeedItem.h"
+#include "../utilities/WebPageGrabber.h"
 
 class FeedValidator : public QDeclarativeItem 
 {
@@ -23,6 +25,7 @@ public:
     virtual ~FeedValidator() {}
     
     // Performs the URL check.
+    // Set the URL, then call this and wait for validationComplete().
     Q_INVOKABLE void check();
     
     // If check was OK, call this to add the feed!
@@ -49,14 +52,22 @@ signals:
 public slots:
     
 private slots:
+    void doParse(const QUrl& url);
+    
     void onFeedFinished();
+    void onPageGrabberReady(QWebPage* page);
+    void handleCompletion();
     
 private:
-    Parser parser;
+    Parser* parser;
     bool _validating;
+    QWebPage* webPage;
+    QUrl embeddedFeedURL;
     QString _url;
     QString _siteTitle;
     QString _siteImageURL;
+    WebPageGrabber pageGrabber;
+    Parser::ParseResult result;
 };
 
 QML_DECLARE_TYPE(FeedValidator)

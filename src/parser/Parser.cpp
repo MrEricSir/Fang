@@ -6,7 +6,7 @@
 #include "../utilities/Utilities.h"
 
 Parser::Parser(QObject *parent) :
-    QObject(parent), checkFavicon(false), feed(NULL), result(OK), currentReply(NULL)
+    QObject(parent), checkFavicon(false), feed(NULL), result(OK), currentReply(NULL), redirectReply(NULL)
 {
     // Enble cache.
     Utilities::addNetworkAccessManagerCache(&manager);
@@ -18,7 +18,8 @@ Parser::Parser(QObject *parent) :
 }
 
 void Parser::parse(const QUrl& url, bool checkFavicon) {
-    result = Parser::OK;
+    result = Parser::IN_PROGRESS;
+    finalFeedURL = url;
     this->checkFavicon = checkFavicon;
     
     resetParserVars();
@@ -51,6 +52,7 @@ void Parser::resetParserVars() {
     content = "";
     timestamp = "";
     author = "";
+    hasType = false;
 }
 
 // Parsed in chunks -- NOT all in one go.
@@ -89,6 +91,7 @@ void Parser::parseXml() {
             
             currentTag = xml.name().toString().toLower();
             currentPrefix = xml.prefix().toString().toLower();
+            hasType = xml.attributes().hasAttribute("type");
         } else if (xml.isEndElement()) {
             if (xml.name() == "item" || xml.name() == "entry") {
                 //qDebug() << "End element:" << xml.name().toString();
@@ -103,20 +106,15 @@ void Parser::parseXml() {
                 currentItem->title = title;
                 currentItem->description = subtitle;
                 currentItem->content = content;
-                // Examples:
-                // Tue, 02 Jul 2013 01:01:24 +0000
+                currentItem->url = QUrl(url);
+                currentItem->timestamp = Utilities::dateFromFeedString(timestamp);
                 
-                // TODO: figure out the time zone issue
-                // For now, we're shaving off everything after the last space.
-                timestamp = timestamp.left(timestamp.trimmed().lastIndexOf(" "));
-                //qDebug() << "Time string: " << timestamp;
-                
-                currentItem->timestamp = QDateTime::fromString(timestamp, "ddd, dd MMM yyyy hh:mm:ss"); 
+                // Okay, give it up. :(
                 if (!currentItem->timestamp.isValid()) {
                     qDebug() << "Time string: " << timestamp;
                     qDebug() << "invalid date!";
                 }
-                currentItem->url = QUrl(url);
+                
                 
                 feed->items.append(currentItem);
                 currentItem = NULL;
@@ -143,7 +141,8 @@ void Parser::parseXml() {
             else if (currentTag == "pubdate" || currentTag == "lastbuilddate" 
                      || currentTag == "updated")
                 timestamp += xmlString;
-            else if (currentTag == "encoded" && currentPrefix == "content")
+            else if ((currentTag == "encoded" && currentPrefix == "content")
+                     || (currentTag == "content" && hasType))
                 content += xmlString;
         }
     }
@@ -184,6 +183,7 @@ void Parser::metaDataChanged() {
     // TODO: prevent endless loooooping!!!
     if (redirectionTarget.isValid()) {
         qDebug() << "Redirect: " << redirectionTarget.toString();
+        redirectReply = currentReply;
         parse(redirectionTarget);
     }
 }
@@ -198,17 +198,22 @@ RawFeed* Parser::getFeed() {
 
 void Parser::netFinished(QNetworkReply *reply)
 {
-    if (result != Parser::OK)
+    if (redirectReply == reply)
+        return; // This was the previous redirect.
+    
+    if (result != Parser::IN_PROGRESS)
         return; // Already emitted a finished signal.
     
     // This means we saw... something.  Do a sanity check here to make sure
     // that what we found was an actual feed.
     if (feed->items.size() > 0 || feed->title != "") {
         feed->url = reply->url();
-        if (checkFavicon)
+        if (checkFavicon) {
             favicon.find(feed->url);
-        else
+        } else {
+            result = Parser::OK;
             emit finished();
+        }
     } else {
         // What we found must not have been an RSS/Atom feed.
         result = Parser::PARSE_ERROR;
@@ -221,9 +226,10 @@ void Parser::onFaviconFinished(const QUrl& url) {
     if (url.isValid())
         feed->imageURL = url;
     
-    qDebug() << "Url: " << url << " feed img url " << feed->imageURL;
+    //qDebug() << "Url: " << url << " feed img url " << feed->imageURL;
     
     // ...and we're done!
+    result = Parser::OK;
     emit finished();
 }
 
