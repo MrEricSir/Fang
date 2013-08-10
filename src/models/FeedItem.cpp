@@ -11,6 +11,7 @@ FeedItem::FeedItem(QObject *parent) :
     lastUpdated(),
     minutesToUpdate(0),
     url(),
+    siteURL(),
     imageURL(),
     bookmark(NULL),
     newsList(NULL),
@@ -20,8 +21,9 @@ FeedItem::FeedItem(QObject *parent) :
     newsList = new QList<NewsItem*>();
 }
 
-FeedItem::FeedItem(qint64 id, const QString &title, const QString &subtitle, const QDateTime &lastUpdated, 
-                   quint32 minutesToUpdate, const QUrl &url, const QUrl &imageURL, NewsItem* bookmark, QObject* parent) :
+FeedItem::FeedItem(qint64 id, const QString &title, const QString &subtitle, const QDateTime &lastUpdated,
+                   quint32 minutesToUpdate, const QUrl &url, const QUrl& siteURL, const QUrl &imageURL,
+                   NewsItem* bookmark, QObject* parent) :
     ListItem(parent),
     _id(id),
     title(title),
@@ -29,6 +31,7 @@ FeedItem::FeedItem(qint64 id, const QString &title, const QString &subtitle, con
     lastUpdated(lastUpdated),
     minutesToUpdate(minutesToUpdate),
     url(url),
+    siteURL(siteURL),
     imageURL(imageURL),
     bookmark(bookmark),
     newsList(NULL),
@@ -50,6 +53,7 @@ QHash<int, QByteArray> FeedItem::roleNames() const
     names[LastUpdatedRole] = "lastUpdated";
     names[MinutesToUpdateRole] = "minutesToUpdate";
     names[UrlRole] = "url";
+    names[SiteURLRole] = "siteURL";
     names[ImageURLRole] = "imageURL";
     names[IsUpdatingRole] = "isUpdating";
     names[SelfRole] = "self";
@@ -69,6 +73,8 @@ QVariant FeedItem::data(int role) const
         return getMinutesToUpdate();
     case UrlRole:
         return getURL();
+    case SiteURLRole:
+        return getSiteURL();
     case ImageURLRole:
         return getImageURL();
     case IsUpdatingRole:

@@ -9,9 +9,11 @@ UpdateFeedOperation::UpdateFeedOperation(QObject *parent, FeedItem *feed, RawFee
     DBOperation(parent),
     parser(),
     feed(feed),
-    rawFeed(rawFeed)
+    rawFeed(rawFeed),
+    wasDestroyed(false)
 {
-    QObject::connect(&parser, SIGNAL(finished()), this, SLOT(onFeedFinished()));
+    connect(&parser, SIGNAL(finished()), this, SLOT(onFeedFinished()));
+    connect(feed, SIGNAL(destroyed(QObject*)), this, SLOT(onFeedDestroyed));
 }
 
 UpdateFeedOperation::~UpdateFeedOperation()
@@ -47,6 +49,13 @@ void UpdateFeedOperation::onFeedFinished()
         // TODO: error signal.
         emit finished(this);
         qDebug() << "Feed list was empty!";
+        
+        return;
+    }
+    
+    if (wasDestroyed || feed->getDbId() < 0) {
+        qDebug() << "Couldn't update feed (may have been removed)";
+        emit finished(this);
         
         return;
     }
@@ -140,4 +149,9 @@ void UpdateFeedOperation::onFeedFinished()
     
     // TODO: Update DB.
     emit finished(this);
+}
+
+void UpdateFeedOperation::onFeedDestroyed()
+{
+    wasDestroyed = true;
 }

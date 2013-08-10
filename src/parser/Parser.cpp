@@ -63,16 +63,18 @@ void Parser::parseXml() {
             // Look for start of entries.
             //qDebug() << "XML node: " << xml.name().toString() << " " << xml.prefix().toString();
             if (xml.name() == "item" || xml.name() == "entry") {
-                //qDebug() << "Start element:" << xml.name().toString();
-                url = xml.attributes().value("rss:about").toString();
+                
+                if (url.isEmpty())
+                    url = xml.attributes().value("rss:about").toString();
                 
                 if (numItems == 0) {
                     // Oh, first item?  Assume we've seen the summary then.
                     
                     // Global space.
-                    feed->url = QUrl(url);
+                    feed->url = finalFeedURL;
                     feed->title = title;
                     feed->subtitle = subtitle;
+                    feed->siteURL = QUrl(url);
                     
                     //qDebug() << "Title " << title;
                     
@@ -92,6 +94,11 @@ void Parser::parseXml() {
             currentTag = xml.name().toString().toLower();
             currentPrefix = xml.prefix().toString().toLower();
             hasType = xml.attributes().hasAttribute("type");
+            
+            if (currentTag == "link" && url.isEmpty() && xml.attributes().hasAttribute("href")) {
+                // Used by atom feeds to grab the first link.
+                url = xml.attributes().value("href").toString();
+            }
         } else if (xml.isEndElement()) {
             if (xml.name() == "item" || xml.name() == "entry") {
                 //qDebug() << "End element:" << xml.name().toString();
@@ -132,9 +139,9 @@ void Parser::parseXml() {
             QString xmlString = xml.text().toString();//.toLower();
             if (currentTag == "title" && currentPrefix == "")
                 title += xmlString;
-            else if (currentTag == "link" && currentPrefix == "")
+            else if (currentTag == "link" && currentPrefix == "") {
                 url += xmlString;
-            else if (currentTag == "description" || currentTag == "summary")
+            } else if (currentTag == "description" || currentTag == "summary")
                 subtitle += xmlString;
             else if (currentTag == "name")
                 author += xmlString;

@@ -16,6 +16,7 @@ public:
     QUrl url;
     QDateTime lastUpdated;
     quint32 minutesToUpdate;
+    QUrl siteURL;
     QUrl imageURL;
     
     QList<RawNews*> items;

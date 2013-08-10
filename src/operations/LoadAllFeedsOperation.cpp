@@ -27,7 +27,8 @@ void LoadAllFeedsOperation::execute()
         QUrl url("");
         QUrl imageUrl("");
         
-        feedList->appendRow(new FeedItem(0, title, subtitle, lastUpdated, minUpdate, url, imageUrl, NULL, feedList));
+        feedList->appendRow(new FeedItem(0, title, subtitle, lastUpdated, minUpdate, url, imageUrl,
+                                         imageUrl, NULL, feedList));
     }
     
     // Kindly ask the database for the rest.
@@ -48,6 +49,7 @@ void LoadAllFeedsOperation::execute()
                     QDateTime::fromMSecsSinceEpoch(query.value("lastUpdated").toLongLong()),
                     query.value("minutesToUpdate").toUInt(),
                     query.value("url").toString(),
+                    query.value("siteURL").toString(),
                     query.value("imageURL").toString(),
                     NULL
                     );

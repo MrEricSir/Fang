@@ -61,13 +61,14 @@ void AddFeedOperation::onFeedFinished()
     // Insert feed.
     QSqlQuery query(db());
     query.prepare("INSERT INTO FeedItemTable (title, subtitle, lastUpdated, minutesToUpdate, "
-                  "url, imageURL, ordinal) VALUES (:title, :subtitle, :lastUpdated, :minutesToUpdate, "
-                  ":url, :imageURL, :ordinal)");
+                  "url, imageURL, siteURL, ordinal) VALUES (:title, :subtitle, :lastUpdated, "
+                  ":minutesToUpdate, :url, :imageURL, :siteURL, :ordinal)");
     query.bindValue(":title", rawFeed->title);
     query.bindValue(":subtitle", rawFeed->subtitle);
     query.bindValue(":lastUpdated", rawFeed->lastUpdated.toMSecsSinceEpoch());
     query.bindValue(":minutesToUpdate", rawFeed->minutesToUpdate);
     query.bindValue(":url", rawFeed->url);
+    query.bindValue(":siteURL", rawFeed->siteURL);
     query.bindValue(":imageURL", rawFeed->imageURL);
     query.bindValue(":ordinal", ordinal);
     
@@ -79,10 +80,14 @@ void AddFeedOperation::onFeedFinished()
         return;
     }
     
+    qint64 insertID = query.lastInsertId().toLongLong();
+    
     db().commit();
     
+    qDebug() << "Insert ID: " << insertID;
+    
     // Create our item.
-    FeedItem* item = Utilities::feedItemFromRaw(rawFeed, query.lastInsertId().toLongLong(), feedList);
+    FeedItem* item = Utilities::feedItemFromRaw(rawFeed, insertID, feedList);
     
     // Finally, add item to the model and signal completion.
     feedList->appendRow(item);

@@ -9,6 +9,7 @@ RawFeed::RawFeed(QObject *parent) :
     url(),
     lastUpdated(),
     minutesToUpdate(0),
+    siteURL(),
     imageURL(),
     items()
 {

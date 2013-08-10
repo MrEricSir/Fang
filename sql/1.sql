@@ -1,6 +1,10 @@
 -- Fang
 -- Create first version of our database.
 
+-- Set the database to use Write-Ahead Logging for performance.
+-- Note that SQLite prior to 3.7 does not support this, but it should fallback gracefully.
+PRAGMA journal_mode = WAL;
+
 --
 -- FeedItemTable
 --
@@ -13,6 +17,7 @@ CREATE TABLE FeedItemTable (
     lastUpdated INTEGER DEFAULT 0,
     minutesToUpdate INTEGER DEFAULT 0,
     url TEXT NOT NULL,
+    siteURL TEXT NOT NULL,
     imageURL TEXT NOT NULL,
     ordinal INTEGER DEFAULT 0,
     bookmark_id INTEGER DEFAULT -1

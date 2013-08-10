@@ -166,7 +166,7 @@ void NewsWeb::onLinkClicked(const QUrl& url)
 
 void NewsWeb::onGeometryChangeRequested()
 {
-    qDebug() << "Geom change: ";// << rect;
+    //qDebug() << "Geom change: ";// << rect;
     
     // If we're preparing to jump to a bookmark, delay the timer very slightly.
     if (jumpToBookmarkTimer.isActive())

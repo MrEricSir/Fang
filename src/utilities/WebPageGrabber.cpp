@@ -9,14 +9,15 @@ WebPageGrabber::WebPageGrabber(QObject *parent) :
     QObject(parent)
 {
     Utilities::addNetworkAccessManagerCache(webView.page()->networkAccessManager());
+    webView.page()->settings()->setAttribute(QWebSettings::JavascriptEnabled, false); // No scripts.
+    webView.page()->settings()->setAttribute(QWebSettings::AutoLoadImages, false); // No imgs
+    
     connect(webView.page()->mainFrame(), SIGNAL(loadFinished(bool)), this, SLOT(onLoadFinished(bool)));
     connect(webView.page()->mainFrame(), SIGNAL(urlChanged(QUrl)), this, SLOT(onUrlChanged(QUrl)));
 }
 
 void WebPageGrabber::load(const QUrl &url)
 {
-    //webView.setHtml("");
-    
     if (url.isRelative())
         emit ready(NULL); // We don't take kindly to relative paths (fix for crash bug)
     else

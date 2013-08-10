@@ -23,6 +23,7 @@ public:
         LastUpdatedRole,
         MinutesToUpdateRole,
         UrlRole,
+        SiteURLRole,
         ImageURLRole,
         IsUpdatingRole,
         SelfRole
@@ -38,6 +39,7 @@ public:
             const QDateTime& lastUpdated,
             quint32 minutesToUpdate,
             const QUrl& url,
+            const QUrl& siteURL,
             const QUrl& imageURL,
             NewsItem* bookmark, 
             QObject *parent = 0);
@@ -64,6 +66,7 @@ public:
     inline QDateTime getLastUpdated() const { return lastUpdated; }
     inline quint32 getMinutesToUpdate() const { return minutesToUpdate; }
     inline QUrl getURL() const { return url; }
+    inline QUrl getSiteURL() const { return siteURL; }
     inline QUrl getImageURL() const { return imageURL; }
     inline int getIsUpdating() const { return isUpdating; }
     inline FeedItem* getSelf() const { return const_cast<FeedItem*>(this); }
@@ -86,6 +89,8 @@ public:
     inline NewsItem* getBookmark() { return bookmark; }
     void setBookmark(NewsItem* item);
     
+    inline void clearDbId() { _id = -1; }
+    
 signals:
     
     void appended(NewsItem* item);
@@ -98,6 +103,7 @@ private:
     QDateTime lastUpdated;
     quint32 minutesToUpdate;
     QUrl url;
+    QUrl siteURL;
     QUrl imageURL;
     NewsItem* bookmark;
     QList<NewsItem*>* newsList;

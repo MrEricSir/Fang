@@ -30,12 +30,21 @@ public slots:
     virtual void execute();
     
 private slots:
+    /**
+     * @brief Finished downloading and parsing our news feed, time to save to DB.
+     */
     void onFeedFinished();
+    
+    /**
+     * @brief Feed was destroyed before update could complete.
+     */
+    void onFeedDestroyed();
     
 private:
     Parser parser;
     FeedItem *feed;
     RawFeed* rawFeed;
+    bool wasDestroyed;
 };
 
 #endif // UPDATEFEEDOPERATION_H

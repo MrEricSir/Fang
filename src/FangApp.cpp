@@ -169,7 +169,7 @@ void FangApp::addFeed(const QUrl &feedURL, const QUrl &imageURL, QString siteTit
 void FangApp::removeFeed(FeedItem *feed)
 {
     // Say goodbye to these (feeds), Michael.
-    qDebug() << "remove feed";
+    //qDebug() << "remove feed";
     manager.add(new RemoveFeedOperation(&manager, feed, feedList));
 }
 

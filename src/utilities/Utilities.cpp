@@ -16,6 +16,7 @@ FeedItem *Utilities::feedItemFromRaw(RawFeed *raw, qint64 dbId, QObject* parent)
                         raw->lastUpdated,
                         raw->minutesToUpdate,
                         raw->url,
+                        raw->siteURL,
                         raw->imageURL,
                         NULL,
                         parent
