@@ -20,8 +20,10 @@ body {
     padding-top: 1.0em;
 }
 
-/* Don't allocate space for the final item's bookmark. */
-.newsContainer:last-of-type > .bookmark {
+/* Don't allocate space for the first item's bookmark.
+   (Note that the first displayed item is #2, the model itself is #1.)
+ */
+.newsContainer:nth-of-type(2) > .bookmark {
     display: none;
 }
 
@@ -124,11 +126,12 @@ a:active {
 
 <div class="newsContainer" id="model">
 
+<div class="bookmark"><div class="stripe"></div></div>
+
 <h1><a href="" class="link"></a></h1>
 <div class="divider"></div>
 <div class="siteTitle"></div><div class="date"></div>
 <div class="content"></div>
-<div class="bookmark"><div class="stripe"></div></div>
 
 </div>
 

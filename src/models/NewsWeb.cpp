@@ -227,13 +227,6 @@ void NewsWeb::onBookmarkTimeout()
         yStart += fivePercentOfHeight; // Move down a little moar.
     }
     
-    // We only want to bookmark the PREVIOUS item in the list.
-    int index = items.indexOf(item);
-    if (index > 0)
-        item = items.at(index - 1);
-    else
-        return; // It's okay to have no bookmark.  It means we start at the top.
-    
     // Make sure it's not the current bookmark.
     if (item == NULL || item == bookmarkedItem)
         return;

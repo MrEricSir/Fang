@@ -112,7 +112,8 @@ quint32 FeedItem::getUnreadCount() const
     if (index < 0)
         return newsList->size();
     
-    int ret = newsList->size() - index - 2;
+    int ret = newsList->size() - index - 1;
+    
     if (ret < 0)
         return 0;
     
@@ -132,6 +133,7 @@ void FeedItem::append(NewsItem *item)
 {
     newsList->append(item);
     emit appended(item);
+    
     emit dataChanged();
 }
 
@@ -149,7 +151,7 @@ void FeedItem::setBookmark(NewsItem *item)
 {
     if (item != NULL)
         Q_ASSERT(newsList->contains(item));
-    
+    qDebug() << "Bookmarkin' " << item->getTitle();
     bookmark = item;
     emit dataChanged();
 }

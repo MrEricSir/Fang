@@ -95,23 +95,14 @@ Item {
                 Item {
                     id: feedCountCol
                     
-                    property int myCount: unreadCount
-                    
                     states: [
                         State { name: "allread" },
                         State { name: "unread" }
                     ]
                     
-                    state: "allread"
-                    opacity: 0
-                    visible: opacity != 0
-                    
-                    onMyCountChanged: {
-                        if (myCount > 0)
-                            state = "unread"
-                        else
-                            state = "allread"
-                    }
+                    state: unreadCount > 0 ? "unread" : "allread"
+                    opacity: unreadCount == 0 ? 0.0 : 1.0 // initial opacity
+                    visible: true
                     
                     transitions: [
                         Transition {
