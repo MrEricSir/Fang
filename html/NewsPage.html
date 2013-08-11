@@ -20,6 +20,11 @@ body {
     padding-top: 1.0em;
 }
 
+/* Don't allocate space for the final item's bookmark. */
+.newsContainer:last-of-type > .bookmark {
+    display: none;
+}
+
 /* Draws the bookmark's stripe. */
 .newsContainer > .bookmark > .stripe {
     background-color: #d44;

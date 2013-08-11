@@ -15,7 +15,8 @@ NewsWeb::NewsWeb(QObject *parent) :
     bookmarkedItem(NULL),
     bookmarkTimer(),
     jumpToBookmarkTimer(),
-    jumpItem(NULL)
+    jumpItem(NULL),
+    previousLastItem(NULL)
 {
     jumpToBookmarkTimer.setSingleShot(true);
 }
@@ -139,6 +140,35 @@ void NewsWeb::remove(NewsItem *item)
     items.removeAll(item);
 }
 
+void NewsWeb::updateBottomSpacer()
+{
+    if (scroll == NULL)
+        return; // Can't continue.
+    
+    qreal spacer = 0;
+    
+    if (items.size() > 0) {
+        NewsItem* lastItem = items.last();
+        if (lastItem == previousLastItem)
+            return; // Nothing has changed.
+        
+        previousLastItem = lastItem;
+        
+        // Adjust spacer height to the difference between the last item height and the view height,
+        // minus ten percent of the view height.
+        QWebElement lastElement = elementForItem(lastItem);
+        qreal lastElementHeight = lastElement.geometry().height();
+        qreal viewHeight = getViewHeight();
+        spacer = viewHeight - lastElementHeight - (viewHeight * 0.1);
+        qDebug() << "Last element's height: " << lastElement.geometry().height();
+    }
+    
+    if (spacer < 0)
+        spacer = 0;
+    
+    scroll->setBottomSpacer(spacer);
+}
+
 void NewsWeb::onLoadFinished(bool ok)
 {
     if (!ok)
@@ -167,6 +197,7 @@ void NewsWeb::onLinkClicked(const QUrl& url)
 void NewsWeb::onGeometryChangeRequested()
 {
     //qDebug() << "Geom change: ";// << rect;
+    updateBottomSpacer();
     
     // If we're preparing to jump to a bookmark, delay the timer very slightly.
     if (jumpToBookmarkTimer.isActive())
@@ -185,8 +216,8 @@ void NewsWeb::onBookmarkTimeout()
 {
     qreal contentY = scroll->contentY();
     
-    int halfWidth = webView->width() / 2;
-    int fivePercentOfHeight = webView->parentItem()->parentItem()->height() / 5;
+    int halfWidth = getViewWidth() / 2;
+    int fivePercentOfHeight = getViewWidth() / 5;
     int yStart = fivePercentOfHeight;
     NewsItem* item = NULL;
     
@@ -211,9 +242,16 @@ void NewsWeb::onBookmarkTimeout()
     else
         return; // It's okay to have no bookmark.  It means we start at the top.
     
-    // Only bookmark this one if it's newer than the current bookmark.
-    if (item != NULL && item != bookmarkedItem &&
-            (bookmarkedItem == NULL || item->getTimestamp() > bookmarkedItem->getTimestamp())) {
+    // Make sure it's not the current bookmark.
+    if (item == NULL || item == bookmarkedItem)
+        return;
+    
+    // Grab the indexes of both items in the list.
+    int currentBookmarkIndex = bookmarkedItem == NULL ? -1 : items.indexOf(bookmarkedItem);
+    int newBookmarkIndex = items.indexOf(item);
+    
+    // If the new one is later, move our bookmark!
+    if (newBookmarkIndex > currentBookmarkIndex) {
         setBookmark(item);
         emit newsItemBookmarked(item);
     }
@@ -229,10 +267,9 @@ void NewsWeb::onJumpTimeout()
         return;
     
     int y = element.geometry().y();
-    //qDebug() << "Jumping to y: " << y << "  " << document.geometry().height();
     
     // Don't exceed max scroll.
-    int maxY = document.geometry().height() - webView->parentItem()->parentItem()->height();
+    int maxY = document.geometry().height() - (getViewHeight() - scroll->bottomSpacer());
     if (y > maxY)
         y = maxY;
     
@@ -349,6 +386,11 @@ QString NewsWeb::newsItemToBookmarkSelector(NewsItem *item)
     return ".newsContainer#" + idForItem(item) + " > .bookmark > .stripe";
 }
 
+qreal NewsWeb::getViewWidth()
+{
+    return webView->width();
+}
+
 void NewsWeb::cleanConatiner(QWebElement& newsContainer)
 {
     // Remove stuff that I really hate.
@@ -428,3 +470,8 @@ void NewsWeb::cleanConatiner(QWebElement& newsContainer)
     }
 }
 
+
+qreal NewsWeb::getViewHeight()
+{
+    return webView->parentItem()->parentItem()->height();
+}

@@ -2,7 +2,9 @@
 
 ScrollReader::ScrollReader(QDeclarativeItem *parent) :
     QDeclarativeItem(parent),
-    _contentY(0)
+    _contentY(0),
+    _jumpY(0),
+    _bottomSpacer(0)
 {
 }
 
@@ -22,4 +24,13 @@ void ScrollReader::setJumpY(qreal y)
     
     _jumpY = y;
     emit jumpYChanged(_jumpY);
+}
+
+void ScrollReader::setBottomSpacer(qreal spacer)
+{
+    if (spacer == _bottomSpacer)
+        return;
+    
+    _bottomSpacer = spacer;
+    emit bottomSpacerChanged(_bottomSpacer);
 }

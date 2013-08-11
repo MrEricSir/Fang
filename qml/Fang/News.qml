@@ -24,7 +24,7 @@ Item {
             width: parent.width
             anchors.fill: parent
             contentWidth: Math.max(parent.width, newsView.width)
-            contentHeight: Math.max(parent.height, newsView.height)
+            contentHeight: Math.max(parent.height, newsView.height + bottomRect.height)
             
             flickableDirection: Flickable.VerticalFlick
             
@@ -76,6 +76,17 @@ Item {
                         easing.type: Easing.OutQuad
                     }
                 }
+            }
+            
+            // Spacer to allow the final story to scroll all the way to the top of the window.
+            Item {
+                id: bottomRect
+                
+                // Height is set by the scroll utility.
+                height: newsViewScrollReader.bottomSpacer
+                
+                anchors.top: newsView.bottom
+                width: parent.width
             }
         }
     }

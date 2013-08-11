@@ -14,6 +14,9 @@ class ScrollReader : public QDeclarativeItem
     // Used for jumping to a position.
     Q_PROPERTY(qreal jumpY READ jumpY WRITE setJumpY NOTIFY jumpYChanged)
     
+    // Controls the spacer at the bottom of the news view.
+    Q_PROPERTY(qreal bottomSpacer READ bottomSpacer WRITE setBottomSpacer NOTIFY bottomSpacerChanged)
+    
 public:
     explicit ScrollReader(QDeclarativeItem *parent = 0);
     virtual ~ScrollReader() {}
@@ -24,13 +27,18 @@ public:
     inline qreal jumpY() { return _jumpY; }
     void setJumpY(qreal y);
     
+    inline qreal bottomSpacer() { return _bottomSpacer; }
+    void setBottomSpacer(qreal spacer);
+    
 signals:
     void contentYChanged(qreal);
     void jumpYChanged(qreal);
+    void bottomSpacerChanged(qreal);
     
 private:
     qreal _contentY;
     qreal _jumpY;
+    qreal _bottomSpacer;
 };
 
 QML_DECLARE_TYPE(ScrollReader)

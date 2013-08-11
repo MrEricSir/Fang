@@ -77,6 +77,8 @@ private slots:
      */
     void remove(NewsItem* item);
     
+    void updateBottomSpacer();
+    
     /**
      * @brief Called when web view is loaded.  This initializes
      * the page, document and template objects.
@@ -176,6 +178,16 @@ private slots:
      */
     QString newsItemToBookmarkSelector(NewsItem* item);
     
+    /**
+     * @return Width of the web view.
+     */
+    qreal getViewWidth();
+    
+    /**
+     * @return Height of the web view.
+     */
+    qreal getViewHeight();
+    
 private:
     // The WebView used to display this feed.
     QDeclarativeWebView *webView;
@@ -212,6 +224,9 @@ private:
     
     // Item we're jumping to.
     NewsItem* jumpItem;
+    
+    // Previous last news item, used in setting the bottom spacer.
+    NewsItem* previousLastItem;
 };
 
 #endif // NEWSWEB_H
