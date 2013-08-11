@@ -40,6 +40,8 @@ Dialog {
                 
                 onEditTextChanged: validationStatus.visible = false
                 
+                onEnterPressed: addButton.click()
+                
                 width: parent.width
             }
             

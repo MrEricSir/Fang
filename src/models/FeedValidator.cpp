@@ -43,8 +43,8 @@ void FeedValidator::check()
         }
     }
     
-    // Parser the URL.  Will call onFeedFinished when complete.
-
+    // Parse the feed.
+    doParse(location);
     
     // If it's an HTML page, we'll check for a newsfeed link.
     pageGrabber.load(location);
@@ -132,9 +132,12 @@ void FeedValidator::onPageGrabberReady(QWebPage* page)
     
     // Find the first feed URL.
     QWebElement doc = page->mainFrame()->documentElement();
-    if (doc.isNull())
+    if (doc.isNull()) {
+        handleCompletion();
+        
         return;
-            
+    }
+    
     // Look for feeds.
     QWebElement atomLink = doc.findFirst("link[type=application\\/atom\\+xml]"); // Escape \ and +
     QWebElement rssLink = doc.findFirst("link[type=application\\/rss\\+xml]");
@@ -155,6 +158,9 @@ void FeedValidator::handleCompletion()
     
     if (webPage == NULL)
         return; // Still waiting for web page.
+    
+    if (result == Parser::IN_PROGRESS)
+        return; // Still waiting for parser.
     
     if (!embeddedFeedURL.isEmpty()) {
         // Try again with the new URL if it looks good.

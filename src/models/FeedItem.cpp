@@ -100,6 +100,15 @@ void FeedItem::setIsUpdating(bool isUpdating)
     emit dataChanged();
 }
 
+void FeedItem::setImageURL(const QUrl &url)
+{
+    if (imageURL == url)
+        return;
+    
+    imageURL = url;
+    emit dataChanged();
+}
+
 void FeedItem::append(NewsItem *item)
 {
     newsList->append(item);

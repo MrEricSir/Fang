@@ -12,8 +12,6 @@
 #include "RawFeed.h"
 #include "RawNews.h"
 
-#include "../utilities/FaviconGrabber.h"
-
 // PaRSSes RSS/Atom feeds into RawFeed/RawNews objects.
 class Parser : public QObject
 {
@@ -29,7 +27,7 @@ signals:
     void finished();
     
 public slots:
-    void parse(const QUrl& url, bool checkFavicon = false);
+    void parse(const QUrl& url);
     
     ParseResult getResult();
     RawFeed* getFeed();
@@ -40,7 +38,6 @@ protected slots:
     void metaDataChanged();
     void error(QNetworkReply::NetworkError);
     void netFinished(QNetworkReply *reply);
-    void onFaviconFinished(const QUrl& url);
     
 private:
     void parseXml();
@@ -50,7 +47,6 @@ private:
     RawFeed* feed;
     RawNews* currentItem;
     ParseResult result;
-    FaviconGrabber favicon;
     
     QXmlStreamReader xml;
 

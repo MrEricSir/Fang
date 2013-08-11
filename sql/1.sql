@@ -18,7 +18,7 @@ CREATE TABLE FeedItemTable (
     minutesToUpdate INTEGER DEFAULT 0,
     url TEXT NOT NULL,
     siteURL TEXT NOT NULL,
-    imageURL TEXT NOT NULL,
+    imageURL TEXT DEFAULT '',
     ordinal INTEGER DEFAULT 0,
     bookmark_id INTEGER DEFAULT -1
 );

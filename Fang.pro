@@ -42,7 +42,8 @@ SOURCES += src/main.cpp \
     src/utilities/FaviconGrabber.cpp \
     src/models/ScrollReader.cpp \
     src/operations/SetBookmarkOperation.cpp \
-    src/utilities/WebPageGrabber.cpp
+    src/utilities/WebPageGrabber.cpp \
+    src/operations/FaviconUpdateOperation.cpp
 
 # Installation path
 # target.path =
@@ -84,4 +85,5 @@ HEADERS += \
     src/utilities/FaviconGrabber.h \
     src/models/ScrollReader.h \
     src/operations/SetBookmarkOperation.h \
-    src/utilities/WebPageGrabber.h
+    src/utilities/WebPageGrabber.h \
+    src/operations/FaviconUpdateOperation.h

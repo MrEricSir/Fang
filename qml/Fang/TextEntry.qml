@@ -18,7 +18,11 @@ Rectangle {
         return edit.text;
     }
     
+    // Signaled on every text change.
     signal editTextChanged(string text)
+    
+    // Signaled when user hits enter/return.
+    signal enterPressed()
     
     color: "#eee"
     height: textEntryContainer.height + 12
@@ -75,6 +79,7 @@ Rectangle {
                     if (text.indexOf('\n') != -1 || text.indexOf('\r') != -1) {
                         text = text.replace("\n", "");
                         text = text.replace("\r", "");
+                        enterPressed();
                     }
                     
                     editTextChanged(text);

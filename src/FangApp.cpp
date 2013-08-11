@@ -10,6 +10,7 @@
 #include "operations/AddFeedOperation.h"
 #include "operations/RemoveFeedOperation.h"
 #include "operations/SetBookmarkOperation.h"
+#include "operations/FaviconUpdateOperation.h"
 
 #include "models/ScrollReader.h"
 
@@ -102,8 +103,10 @@ void FangApp::onFeedAdded(ListItem *item)
     }
     
     // Update the feed.
-    if (feed->getDbId() > 0) // Only real feeds, plox.
+    if (feed->getDbId() > 0) {
         manager.add(new UpdateFeedOperation(&manager, feed));
+        manager.add(new FaviconUpdateOperation(&manager, feed));
+    }
 }
 
 void FangApp::onFeedRemoved(ListItem * listItem)

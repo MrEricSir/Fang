@@ -72,6 +72,8 @@ public:
     inline FeedItem* getSelf() const { return const_cast<FeedItem*>(this); }
     inline qint64 getDbId() const { return _id; }
     
+    void setImageURL(const QUrl& url);
+    
     /**
      * @brief Appends a NewsItem to the end of the feed.
      * @param item

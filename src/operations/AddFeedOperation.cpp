@@ -19,7 +19,7 @@ AddFeedOperation::AddFeedOperation(QObject *parent, ListModel *feedList, const Q
 void AddFeedOperation::execute()
 {
     // Before we can do anything, we must parse the feed!
-    parser.parse(feedURL, true);
+    parser.parse(feedURL);
 }
 
 void AddFeedOperation::onFeedFinished()
@@ -61,15 +61,14 @@ void AddFeedOperation::onFeedFinished()
     // Insert feed.
     QSqlQuery query(db());
     query.prepare("INSERT INTO FeedItemTable (title, subtitle, lastUpdated, minutesToUpdate, "
-                  "url, imageURL, siteURL, ordinal) VALUES (:title, :subtitle, :lastUpdated, "
-                  ":minutesToUpdate, :url, :imageURL, :siteURL, :ordinal)");
+                  "url, siteURL, ordinal) VALUES (:title, :subtitle, :lastUpdated, "
+                  ":minutesToUpdate, :url, :siteURL, :ordinal)");
     query.bindValue(":title", rawFeed->title);
     query.bindValue(":subtitle", rawFeed->subtitle);
     query.bindValue(":lastUpdated", rawFeed->lastUpdated.toMSecsSinceEpoch());
     query.bindValue(":minutesToUpdate", rawFeed->minutesToUpdate);
     query.bindValue(":url", rawFeed->url);
     query.bindValue(":siteURL", rawFeed->siteURL);
-    query.bindValue(":imageURL", rawFeed->imageURL);
     query.bindValue(":ordinal", ordinal);
     
     if (!query.exec()) {

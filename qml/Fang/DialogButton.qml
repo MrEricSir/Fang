@@ -10,7 +10,14 @@ Rectangle {
     
     color: buttonColor
     
+    // Signaled on a click.
     signal clicked()
+    
+    // Fakes a click event.
+    function click() {
+        if (enabled)
+            clicked();
+    }
     
     height: buttonText.paintedHeight + 18
     

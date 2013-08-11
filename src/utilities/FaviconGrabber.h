@@ -6,6 +6,9 @@
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QList>
+#include <QWebPage>
+
+#include "WebPageGrabber.h"
 
 class FaviconGrabber : public QObject
 {
@@ -30,13 +33,30 @@ public slots:
     
 private slots:
     void checkUrl(const QUrl &url);
+    
+    /**
+     * @brief Completion for root favicon check.
+     * @param reply
+     */
     void onRequestFinished(QNetworkReply *reply);
+    
+    /**
+     * @brief Completion for HTML favicons.
+     */
+    void onWebGrabberReady(QWebPage* page);
+    
+    /**
+     * @brief Determines if we've completed yet, figures out the result, and fires the finished signal.
+     */
+    void checkCompletion();
     
 private:
     int urlsToCheck;
     QNetworkAccessManager manager;
     QNetworkReply *currentReply;
     QList<QUrl> results;
+    WebPageGrabber webGrabber;
+    QList<QUrl> webGrabberResults;
 };
 
 #endif // FAVICONGRABBER_H

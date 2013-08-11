@@ -14,13 +14,11 @@ Parser::Parser(QObject *parent) :
     // Connex0r teh siganls.
     connect(&manager, SIGNAL(finished(QNetworkReply*)),
                   this, SLOT(netFinished(QNetworkReply*)));
-    connect(&favicon, SIGNAL(finished(QUrl)), this, SLOT(onFaviconFinished(QUrl)));
 }
 
-void Parser::parse(const QUrl& url, bool checkFavicon) {
+void Parser::parse(const QUrl& url) {
     result = Parser::IN_PROGRESS;
     finalFeedURL = url;
-    this->checkFavicon = checkFavicon;
     
     resetParserVars();
     
@@ -215,28 +213,13 @@ void Parser::netFinished(QNetworkReply *reply)
     // that what we found was an actual feed.
     if (feed->items.size() > 0 || feed->title != "") {
         feed->url = reply->url();
-        if (checkFavicon) {
-            favicon.find(feed->url);
-        } else {
-            result = Parser::OK;
-            emit finished();
-        }
+        
+        result = Parser::OK;
+        emit finished();
     } else {
         // What we found must not have been an RSS/Atom feed.
         result = Parser::PARSE_ERROR;
         emit finished();
     }
-}
-
-void Parser::onFaviconFinished(const QUrl& url) {
-    // Set favicon.
-    if (url.isValid())
-        feed->imageURL = url;
-    
-    //qDebug() << "Url: " << url << " feed img url " << feed->imageURL;
-    
-    // ...and we're done!
-    result = Parser::OK;
-    emit finished();
 }
 
