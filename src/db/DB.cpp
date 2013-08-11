@@ -4,6 +4,7 @@
 #include <QDir>
 #include <QStringList>
 #include <QStandardPaths>
+#include <QSqlError>
 
 DB* DB::_instance = NULL;
 
@@ -47,12 +48,32 @@ void DB::init()
         return;
     }
     
-    // Enable foreign keys.
+    
     QSqlQuery q(db());
-    q.exec("PRAGMA foreign_keys = ON;");
+    
+    // Set database mode.
+    executeSimpleQuery("PRAGMA journal_mode = WAL");
+    executeSimpleQuery("PRAGMA synchronous = 1");
+    
+    // Enable foreign keys.
+    executeSimpleQuery("PRAGMA foreign_keys = ON");
     
     // Create/upgrade schema.
     upgrade();
+}
+
+bool DB::executeSimpleQuery(QString query)
+{
+    QSqlQuery q(db());
+    
+    // Set database mode.
+    if (!q.exec(query)) {
+        qDebug() << q.lastError().text();
+        
+        return false;
+    }
+    
+    return true;
 }
 
 int DB::getSchemaVersion()

@@ -5,6 +5,8 @@
 #include <QString>
 #include <QDebug>
 #include <QQueue>
+#include <QTimer>
+#include <QSet>
 
 #include "Operation.h"
 
@@ -29,15 +31,31 @@ public slots:
     
 private slots:
     
+    /**
+     * @brief Called by an operation when it completes.
+     * @param operation
+     */
     void onOperationFinished(Operation* operation);
+    
+    /** 
+     * @brief Executes queued operations.
+     * Never call this directly; it's invoked by the timer. Call executeOperations() instead.
+     */
+    void runNextOperations();
     
 private:
     
-    // Executes pending operations.
-    void runPending();
+    // Executes the operation queue (at some point in the future.)
+    void executeOperations();
     
     // Our queue.
     QQueue<Operation*> queue;
+    
+    // Pending operations.
+    QSet<Operation*> pending;
+    
+    // Timer to queue future operations.
+    QTimer operationTimer;
 };
 
 #endif // OPERATIONMANAGER_H

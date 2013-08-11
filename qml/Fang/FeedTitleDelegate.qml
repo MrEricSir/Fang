@@ -28,14 +28,54 @@ Item {
                 anchors.rightMargin: 0
                 
                 Item {
+                    id: feedIconCol
+                    
+                    width: isAllNews ? 0 : 40 // no icon for all news
+                    visible: !isAllNews
+                    
+                    anchors.left: parent.left
+                    anchors.top: parent.top
+                    anchors.bottom: parent.bottom
+                    
+                    anchors.leftMargin: 10
+                    
+                    Image {
+                        id: feedIcon
+                        
+                        source: imageURL != "" ? imageURL : "images/symbol_rss.svg"
+                        visible: !isUpdating
+                        
+                        anchors.verticalCenter: parent.verticalCenter
+                        
+                        smooth: true
+                        width: 23
+                        height: 23
+                        
+                        sourceSize.width: width
+                        sourceSize.height: height
+                    }
+                    
+                    Spinner {
+                        id: feedBusySpinner
+                        
+                        visible: isUpdating
+                        
+                        anchors.verticalCenter: parent.verticalCenter
+                        
+                        width: 23
+                        height: 23
+                    }
+                }
+                
+                Item {
                     id: feedTitleCol
                     
-                    anchors.right: parent.right
                     anchors.top: parent.top
                     anchors.bottom: parent.bottom
                     anchors.left: feedIconCol.right
+                    anchors.right: feedCountCol.left
                     
-                    anchors.rightMargin: 10
+                    anchors.rightMargin: 4
                     anchors.bottomMargin: 5
                     anchors.topMargin: 5
                     
@@ -53,28 +93,40 @@ Item {
                 }
                 
                 Item {
-                    id: feedIconCol
+                    id: feedCountCol
                     
-                    width: isAllNews ? 0 : 40 // no icon for all news
-                    visible: !isAllNews
+                    visible: unreadCount > 0
                     
-                    anchors.left: parent.left
+                    anchors.right: parent.right
                     anchors.top: parent.top
                     anchors.bottom: parent.bottom
+                    anchors.rightMargin: 4
                     
-                    anchors.leftMargin: 10
+                    width: childrenRect.width
+                    height: parent.height
                     
-                    Image {
-                        id: feedIcon
-                        source: imageURL != "" ? imageURL : "images/symbol_rss.svg"
+                    Rectangle {
+                        color: "#bbb"
+                        
+                        width: unreadCountText.paintedWidth + 6
+                        height: unreadCountText.paintedHeight + 4
                         anchors.verticalCenter: parent.verticalCenter
+                        radius: 4
                         
-                        smooth: true
-                        width: 23
-                        height: 23
-                        
-                        sourceSize.width: width
-                        sourceSize.height: height
+                        Text {
+                            id: unreadCountText
+                            
+                            text: unreadCount
+                            
+                            anchors.right: parent.right
+                            anchors.rightMargin: 3
+                            anchors.topMargin: 3
+                            anchors.verticalCenter: parent.verticalCenter
+                            font.pointSize: 8
+                            font.family: "Tahoma"
+                            elide: Text.ElideRight
+                            color: "white"
+                        }
                     }
                 }
                 

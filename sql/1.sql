@@ -1,10 +1,6 @@
 -- Fang
 -- Create first version of our database.
 
--- Set the database to use Write-Ahead Logging for performance.
--- Note that SQLite prior to 3.7 does not support this, but it should fallback gracefully.
-PRAGMA journal_mode = WAL;
-
 --
 -- FeedItemTable
 --

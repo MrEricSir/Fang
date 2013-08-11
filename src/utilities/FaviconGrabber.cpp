@@ -32,7 +32,7 @@ void FaviconGrabber::find(const QUrl &url)
     
     // Check for favicons embedded in the HTML.
     webGrabber.load(url);
-    qDebug() << "Sending url: " << url;
+    //qDebug() << "Sending url: " << url;
     
     // Check for "root" favicons.
     QUrl host = Utilities::getHost(url);

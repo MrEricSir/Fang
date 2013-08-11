@@ -45,7 +45,7 @@ void FaviconUpdateOperation::onGrabberFinished(const QUrl &faviconUrl)
     }
     
     if (faviconUrl == feed->getImageURL()) {
-        qDebug() << "FaviconUpdateOperation: URL has not changed.";
+        //qDebug() << "FaviconUpdateOperation: URL has not changed.";
         emit finished(this);
         
         return;

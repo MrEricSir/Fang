@@ -37,7 +37,7 @@ Item {
                 
                 // Used for jumping the view to a position.
                 onJumpYChanged: {
-                    console.log("Jump: ", jumpY)
+                    //console.log("Jump: ", jumpY)
                     newsFlickable.contentY = jumpY
                 }
             }

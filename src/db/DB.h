@@ -18,6 +18,7 @@ class DB : public QObject
 public:
     explicit DB(QObject *parent = 0);
     
+    
 signals:
     
 public slots:
@@ -26,6 +27,13 @@ public slots:
     static DB* instance();
     
     inline QSqlDatabase db() { return _db; }
+    
+    /**
+     * @brief Executes a simple DB query and logs error to debug.
+     * @param query
+     * @return 
+     */
+    bool executeSimpleQuery(QString query);
     
 private:
     /**

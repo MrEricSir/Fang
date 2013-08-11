@@ -25,6 +25,8 @@ UpdateFeedOperation::~UpdateFeedOperation()
 
 void UpdateFeedOperation::execute()
 {
+    feed->setIsUpdating(true);
+    
     // Send network request.
     if (rawFeed == NULL)
         parser.parse(feed->getURL());
@@ -34,6 +36,8 @@ void UpdateFeedOperation::execute()
 
 void UpdateFeedOperation::onFeedFinished()
 {
+    feed->setIsUpdating(false);
+    
     if (rawFeed == NULL)
         rawFeed = parser.getFeed();
     

@@ -57,6 +57,7 @@ QHash<int, QByteArray> FeedItem::roleNames() const
     names[ImageURLRole] = "imageURL";
     names[IsUpdatingRole] = "isUpdating";
     names[SelfRole] = "self";
+    names[UnreadCountRole] = "unreadCount";
     return names;
 }
 
@@ -81,6 +82,8 @@ QVariant FeedItem::data(int role) const
         return getIsUpdating();
     case SelfRole:
         return QVariant::fromValue(getSelf());
+    case UnreadCountRole:
+        return getUnreadCount();
     default:
         return QVariant();
     }
@@ -100,6 +103,22 @@ void FeedItem::setIsUpdating(bool isUpdating)
     emit dataChanged();
 }
 
+quint32 FeedItem::getUnreadCount() const
+{
+    if (bookmark == NULL)
+        return newsList->size();
+    
+    int index = newsList->indexOf(bookmark);
+    if (index < 0)
+        return newsList->size();
+    
+    int ret = newsList->size() - index - 2;
+    if (ret < 0)
+        return 0;
+    
+    return ret;
+}
+
 void FeedItem::setImageURL(const QUrl &url)
 {
     if (imageURL == url)
@@ -113,6 +132,7 @@ void FeedItem::append(NewsItem *item)
 {
     newsList->append(item);
     emit appended(item);
+    emit dataChanged();
 }
 
 void FeedItem::remove(NewsItem *item)
@@ -120,7 +140,9 @@ void FeedItem::remove(NewsItem *item)
     newsList->removeAll(item);
     emit removed(item);
     
-    delete item;
+    item->deleteLater();
+    
+    emit dataChanged();
 }
 
 void FeedItem::setBookmark(NewsItem *item)
@@ -129,4 +151,5 @@ void FeedItem::setBookmark(NewsItem *item)
         Q_ASSERT(newsList->contains(item));
     
     bookmark = item;
+    emit dataChanged();
 }

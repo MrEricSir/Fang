@@ -26,6 +26,7 @@ public:
         SiteURLRole,
         ImageURLRole,
         IsUpdatingRole,
+        UnreadCountRole,
         SelfRole
     };
     
@@ -41,7 +42,7 @@ public:
             const QUrl& url,
             const QUrl& siteURL,
             const QUrl& imageURL,
-            NewsItem* bookmark, 
+            NewsItem* bookmark,
             QObject *parent = 0);
     
     virtual ~FeedItem();
@@ -71,6 +72,7 @@ public:
     inline int getIsUpdating() const { return isUpdating; }
     inline FeedItem* getSelf() const { return const_cast<FeedItem*>(this); }
     inline qint64 getDbId() const { return _id; }
+    quint32 getUnreadCount() const;
     
     void setImageURL(const QUrl& url);
     
