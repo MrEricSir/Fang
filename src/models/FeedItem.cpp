@@ -151,7 +151,7 @@ void FeedItem::setBookmark(NewsItem *item)
 {
     if (item != NULL)
         Q_ASSERT(newsList->contains(item));
-    qDebug() << "Bookmarkin' " << item->getTitle();
+    
     bookmark = item;
     emit dataChanged();
 }
