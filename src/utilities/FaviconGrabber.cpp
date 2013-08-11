@@ -75,13 +75,18 @@ void FaviconGrabber::onWebGrabberReady(QWebPage *page)
         return;
     }
     
-    // Favicon links can either be "icon" or "shortcut icon"
+    // Several types of favicon links:
+    //     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     //     <link rel="icon" href="/favicon.ico" type="image/x-icon" />
     //     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    QWebElement touchIconElement = doc.findFirst("link[rel=apple-touch-icon]");
     QWebElement iconElement = doc.findFirst("link[rel=icon]");
     QWebElement shortcutIconElement = doc.findFirst("link[rel=shortcut\\ icon]");
     
     // If we got one, set it!
+    if (!touchIconElement.isNull() && touchIconElement.hasAttribute("href"))
+        webGrabberResults.append(QUrl(touchIconElement.attribute("href")));
+    
     if (!iconElement.isNull() && iconElement.hasAttribute("href"))
         webGrabberResults.append(QUrl(iconElement.attribute("href")));
     

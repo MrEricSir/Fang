@@ -3,10 +3,6 @@ import QtQuick 1.1
 Rectangle {
     id: mainFrame
     
-    // Initial size.  Can be stretched.
-    width: 800
-    height: 600
-    
     // Treat as const
     property int sidebarWidth: 230
 

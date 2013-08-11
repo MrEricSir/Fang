@@ -11,6 +11,7 @@
 #include "models/MouseWheelArea.h"
 #include "models/FeedValidator.h"
 #include "models/ScrollReader.h"
+#include "models/FangApplicationViewer.h"
 
 #include "utilities/FaviconGrabber.h"
 
@@ -24,8 +25,11 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     qmlRegisterType<ScrollReader>("Fang", 1, 0, "ScrollReader");
     
     QScopedPointer<QApplication> app(createApplication(argc, argv));
+    app->setOrganizationName("EricSoft");
+    app->setOrganizationDomain("EricSoft.com");
+    app->setApplicationName("Fang");
     
-    QmlApplicationViewer viewer;
+    FangApplicationViewer viewer;
     
     FangApp fang(app.data(), &viewer);
     fang.init();

@@ -28,5 +28,6 @@
         <file>qml/Fang/RemoveDialog.qml</file>
         <file>qml/Fang/images/symbol_rss.svg</file>
         <file>html/bookmark.png</file>
+        <file>qml/Fang/Spinner.qml</file>
     </qresource>
 </RCC>

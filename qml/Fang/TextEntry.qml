@@ -73,6 +73,7 @@ Rectangle {
                 color: "black"
                 font.family: "Tahoma"
                 font.pointSize: textEntry.fontSize
+                focus: true
                 
                 onTextChanged: {
                     // 1337 HAX to prevent newlines in text field.

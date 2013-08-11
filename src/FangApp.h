@@ -4,10 +4,9 @@
 #include <QObject>
 #include <QDeclarativeContext>
 
-#include "qmlapplicationviewer/qmlapplicationviewer.h"
-
 #include "operations/OperationManager.h"
 
+#include "models/FangApplicationViewer.h"
 #include "models/NewsItem.h"
 #include "models/FeedItem.h"
 #include "models/ListModel.h"
@@ -20,7 +19,7 @@ class FangApp : public QObject
 {
     Q_OBJECT
 public:
-    explicit FangApp(QObject *parent, QmlApplicationViewer* viewer);
+    explicit FangApp(QObject *parent, FangApplicationViewer* viewer);
     
     void init();
     
@@ -71,7 +70,7 @@ private slots:
     
 private:
     static FangApp* _instance;
-    QmlApplicationViewer* viewer;
+    FangApplicationViewer* viewer;
     OperationManager manager;
     ListModel *feedList;
     NewsWeb newsWeb;

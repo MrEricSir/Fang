@@ -16,7 +16,7 @@
 
 FangApp* FangApp::_instance = NULL;
 
-FangApp::FangApp(QObject *parent, QmlApplicationViewer* viewer) :
+FangApp::FangApp(QObject *parent, FangApplicationViewer* viewer) :
     QObject(parent),
     viewer(viewer),
     manager(this),
@@ -51,7 +51,7 @@ void FangApp::init()
     viewer->addImportPath(QLatin1String("modules"));
     viewer->setOrientation(QmlApplicationViewer::ScreenOrientationAuto);
     viewer->setSource(QUrl("qrc:/qml/Fang/main.qml"));
-    viewer->showExpanded();
+    viewer->displayWindow();
     
     // Enable cache for remote QML elements.
     Utilities::addNetworkAccessManagerCache(viewer->engine()->networkAccessManager());
