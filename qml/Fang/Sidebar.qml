@@ -29,6 +29,9 @@ Item {
                 id: feedListView
                 anchors.fill: parent
                 
+                // Only move if there's a need.
+                interactive: height < childrenRect.height
+                
                 delegate: FeedTitleDelegate {
                     id: titleDelegate
                     

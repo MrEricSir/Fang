@@ -15,8 +15,7 @@ NewsWeb::NewsWeb(QObject *parent) :
     bookmarkedItem(NULL),
     bookmarkTimer(),
     jumpToBookmarkTimer(),
-    jumpItem(NULL),
-    previousLastItem(NULL)
+    jumpItem(NULL)
 {
     jumpToBookmarkTimer.setSingleShot(true);
 }
@@ -44,8 +43,8 @@ void NewsWeb::init(QDeclarativeWebView *webView, ScrollReader* scroll)
     // Load the news page template.
     webView->setUrl(QUrl("qrc:html/NewsPage.html"));
     
-    // Run the bookmark timer every 1.5 seconds.
-    bookmarkTimer.start(1500);
+    // Run the bookmark timer every 1 second.
+    bookmarkTimer.start(1000);
 }
 
 void NewsWeb::clear()
@@ -148,19 +147,12 @@ void NewsWeb::updateBottomSpacer()
     qreal spacer = 0;
     
     if (items.size() > 0) {
-        NewsItem* lastItem = items.last();
-        if (lastItem == previousLastItem)
-            return; // Nothing has changed.
-        
-        previousLastItem = lastItem;
-        
         // Adjust spacer height to the difference between the last item height and the view height,
         // minus ten percent of the view height.
-        QWebElement lastElement = elementForItem(lastItem);
-        qreal lastElementHeight = lastElement.geometry().height();
+        QWebElement lastElement = elementForItem(items.last());
         qreal viewHeight = getViewHeight();
-        spacer = viewHeight - lastElementHeight - (viewHeight * 0.1);
-        qDebug() << "Last element's height: " << lastElement.geometry().height();
+        
+        spacer = viewHeight - lastElement.geometry().height() - (viewHeight * 0.1);
     }
     
     if (spacer < 0)
@@ -196,7 +188,7 @@ void NewsWeb::onLinkClicked(const QUrl& url)
 
 void NewsWeb::onGeometryChangeRequested()
 {
-    //qDebug() << "Geom change: ";// << rect;
+    // If the size of the view changed, we may need to change the size of the bottom spacer.
     updateBottomSpacer();
     
     // If we're preparing to jump to a bookmark, delay the timer very slightly.

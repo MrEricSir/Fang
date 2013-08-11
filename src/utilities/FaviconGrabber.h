@@ -57,6 +57,7 @@ private:
     QList<QUrl> results;
     WebPageGrabber webGrabber;
     QList<QUrl> webGrabberResults;
+    QUrl location;
 };
 
 #endif // FAVICONGRABBER_H

@@ -33,7 +33,7 @@ void FeedValidator::check()
         if (location.scheme() == "")
             location.setScheme("http");
         
-        qDebug() << "Location is adjusted to: " << location;
+        //qDebug() << "Location is adjusted to: " << location;
         
         // Final check!  If it's not valid, we'll set an error and bail.
         if (location.isRelative()) {

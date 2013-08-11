@@ -95,7 +95,51 @@ Item {
                 Item {
                     id: feedCountCol
                     
-                    visible: unreadCount > 0
+                    property int myCount: unreadCount
+                    
+                    states: [
+                        State { name: "allread" },
+                        State { name: "unread" }
+                    ]
+                    
+                    state: "allread"
+                    opacity: 0
+                    visible: opacity != 0
+                    
+                    onMyCountChanged: {
+                        if (myCount > 0)
+                            state = "unread"
+                        else
+                            state = "allread"
+                    }
+                    
+                    transitions: [
+                        Transition {
+                            from: "unread"
+                            to: "allread"
+                            NumberAnimation {
+                                target: feedCountCol
+                                properties: "opacity"
+                                from: 1.0
+                                to: 0.0
+                                duration: 500
+                                easing.type: Easing.InOutQuad
+                            }
+                        },
+                        
+                        Transition {
+                            from: "allread"
+                            to: "unread"
+                            NumberAnimation {
+                                target: feedCountCol
+                                properties: "opacity"
+                                from: 0.0
+                                to: 1.0
+                                duration: 500
+                                easing.type: Easing.InOutQuad
+                            }
+                        }
+                    ]
                     
                     anchors.right: parent.right
                     anchors.top: parent.top

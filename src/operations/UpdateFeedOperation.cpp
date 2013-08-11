@@ -76,8 +76,8 @@ void UpdateFeedOperation::onFeedFinished()
     QDateTime newestNewNews = rawFeed->items.last()->timestamp;
     if (newestNewNews <= newestLocalNews) {
         emit finished(this);
-        qDebug() << "Feed already up to date!";
-        qDebug() << "Newest new: " << newestNewNews.toString() << " Newest local: " << newestLocalNews.toString();
+        //qDebug() << "Feed already up to date!";
+        //qDebug() << "Newest new: " << newestNewNews.toString() << " Newest local: " << newestLocalNews.toString();
         
         return;
     }

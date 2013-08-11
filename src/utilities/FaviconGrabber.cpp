@@ -30,6 +30,8 @@ void FaviconGrabber::find(const QUrl &url)
     results.clear();
     webGrabberResults.clear();
     
+    location = url;
+    
     // Check for favicons embedded in the HTML.
     webGrabber.load(url);
     //qDebug() << "Sending url: " << url;
@@ -80,12 +82,16 @@ void FaviconGrabber::onWebGrabberReady(QWebPage *page)
     //     <link rel="icon" href="/favicon.ico" type="image/x-icon" />
     //     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
     QWebElement touchIconElement = doc.findFirst("link[rel=apple-touch-icon]");
+    QWebElement winMetroIconElement = doc.findFirst("meta[name=msapplication-TileImage]");
     QWebElement iconElement = doc.findFirst("link[rel=icon]");
     QWebElement shortcutIconElement = doc.findFirst("link[rel=shortcut\\ icon]");
     
     // If we got one, set it!
     if (!touchIconElement.isNull() && touchIconElement.hasAttribute("href"))
         webGrabberResults.append(QUrl(touchIconElement.attribute("href")));
+    
+    if (!winMetroIconElement.isNull() && winMetroIconElement.hasAttribute("content"))
+        webGrabberResults.append(QUrl(winMetroIconElement.attribute("content")));
     
     if (!iconElement.isNull() && iconElement.hasAttribute("href"))
         webGrabberResults.append(QUrl(iconElement.attribute("href")));
@@ -115,6 +121,13 @@ void FaviconGrabber::checkCompletion()
         url = webGrabberResults.at(0);
     else
         url = results.at(0);
+    
+    // If we found a relative URL, try to add it as a path to the location.
+    if (url.isValid() && url.isRelative()) {
+        QUrl newUrl = location;
+        newUrl.setPath(url.path());
+        url = newUrl;
+    }
     
     //qDebug() << "Found favicon: " << url;
     emit finished(url);

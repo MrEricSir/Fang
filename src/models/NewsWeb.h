@@ -77,6 +77,9 @@ private slots:
      */
     void remove(NewsItem* item);
     
+    /**
+     * @brief Updates the bottom spacer that lets the user scroll all the way up to the last item.
+     */
     void updateBottomSpacer();
     
     /**
@@ -224,9 +227,6 @@ private:
     
     // Item we're jumping to.
     NewsItem* jumpItem;
-    
-    // Previous last news item, used in setting the bottom spacer.
-    NewsItem* previousLastItem;
 };
 
 #endif // NEWSWEB_H
