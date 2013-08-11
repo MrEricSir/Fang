@@ -28,6 +28,7 @@ Item {
             ListView {
                 id: feedListView
                 anchors.fill: parent
+                
                 delegate: FeedTitleDelegate {
                     id: titleDelegate
                     
@@ -41,6 +42,11 @@ Item {
                 }
                 
                 model: feedListModel
+            }
+            
+            ScrollBar {
+                id: feedListViewScroll
+                target: feedListView
             }
         }
     }

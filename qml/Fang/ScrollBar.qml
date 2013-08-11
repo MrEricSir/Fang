@@ -154,7 +154,7 @@ Item {
                 anchors.left: parent.left
                 opacity: 0
                 
-                height: 100
+                height: Math.max(Math.min(target.height / target.contentHeight * track.height, track.height), 75)
                 
                 property int maxScrollbarY: track.height - height
                 

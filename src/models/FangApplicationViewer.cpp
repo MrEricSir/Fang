@@ -6,7 +6,6 @@ FangApplicationViewer::FangApplicationViewer(QWidget *parent) :
     QmlApplicationViewer(parent),
     saveTimer(),
     settings(),
-    windowRestored(false),
     maximizeOnStart(false)
 {
     saveTimer.setSingleShot(true);
@@ -16,9 +15,6 @@ FangApplicationViewer::FangApplicationViewer(QWidget *parent) :
 void FangApplicationViewer::displayWindow()
 {
     restoreWindowSettings();
-    
-    if (maximizeOnStart)
-        qDebug() << "Show do MAZ";
     
     if (maximizeOnStart)
         showMaximized();
@@ -59,8 +55,6 @@ void FangApplicationViewer::onSaveTimeout()
     }
     
     settings.endGroup();
-    
-    qDebug() << "Saved settings.";
 }
 
 void FangApplicationViewer::updateWindowSettings()
@@ -70,12 +64,6 @@ void FangApplicationViewer::updateWindowSettings()
 
 void FangApplicationViewer::restoreWindowSettings()
 {
-    qDebug() << "Restore settings";
-    if (windowRestored)
-        return; // Only do this once.
-    
-    windowRestored = true;
-    
     settings.beginGroup("FangWindow");
     
     if (!settings.contains("maximized")) {

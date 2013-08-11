@@ -46,7 +46,6 @@ private:
     
     QTimer saveTimer;
     QSettings settings;
-    bool windowRestored;
     bool maximizeOnStart;
 };
 

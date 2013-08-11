@@ -100,7 +100,7 @@ Item {
                     anchors.right: parent.right
                     anchors.top: parent.top
                     anchors.bottom: parent.bottom
-                    anchors.rightMargin: 4
+                    anchors.rightMargin: 14
                     
                     width: childrenRect.width
                     height: parent.height
