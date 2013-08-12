@@ -2,6 +2,8 @@
 #include <QDebug>
 #include <QSqlError>
 
+#include "../models/AllNewsFeedItem.h"
+
 SetBookmarkOperation::SetBookmarkOperation(QObject *parent, FeedItem* feed, NewsItem* bookmarkItem) :
     DBOperation(parent),
     feed(feed),
@@ -17,6 +19,12 @@ SetBookmarkOperation::~SetBookmarkOperation()
 void SetBookmarkOperation::execute()
 {
     feed->setBookmark(bookmarkItem);
+    
+    if (feed->metaObject() == &AllNewsFeedItem::staticMetaObject) {
+        qDebug() <<  "Cannot save  bookmark for all news";
+        emit finished(this);
+        return;
+    }
     
     QSqlQuery query(db());
     query.prepare("UPDATE FeedItemTable SET bookmark_id = :bookmark_id WHERE id = :feed_id");

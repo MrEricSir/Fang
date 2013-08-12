@@ -58,6 +58,8 @@ public slots:
      */
     inline bool isReady() { return _isReady; }
     
+    inline FeedItem* getCurrentFeed() { return currentFeed; }
+    
 private slots:
     
     /**

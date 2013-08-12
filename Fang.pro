@@ -44,7 +44,8 @@ SOURCES += src/main.cpp \
     src/operations/SetBookmarkOperation.cpp \
     src/utilities/WebPageGrabber.cpp \
     src/operations/FaviconUpdateOperation.cpp \
-    src/models/FangApplicationViewer.cpp
+    src/models/FangApplicationViewer.cpp \
+    src/models/AllNewsFeedItem.cpp
 
 # Installation path
 # target.path =
@@ -88,4 +89,5 @@ HEADERS += \
     src/operations/SetBookmarkOperation.h \
     src/utilities/WebPageGrabber.h \
     src/operations/FaviconUpdateOperation.h \
-    src/models/FangApplicationViewer.h
+    src/models/FangApplicationViewer.h \
+    src/models/AllNewsFeedItem.h

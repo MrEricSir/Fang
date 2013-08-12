@@ -69,6 +69,8 @@ void NewsWeb::clear()
 
 void NewsWeb::setFeed(FeedItem *feed)
 {
+    //qDebug() << "Set feed " << feed->getTitle() << " with items: " << feed->getNewsList()->size();
+    
     // Unset current signals.
     if (currentFeed != NULL) {
         disconnect(currentFeed, SIGNAL(appended(NewsItem*)), this, SLOT(append(NewsItem*)));
@@ -213,7 +215,7 @@ void NewsWeb::onBookmarkTimeout()
     int yStart = fivePercentOfHeight;
     NewsItem* item = NULL;
     
-    //qDebug() << "Y " << contentY << " half width: " << halfWidth << " negativeHeight: " << negativeHeight;
+    //qDebug() << "Bookmark timeout Y " << contentY;
     
     // Look at coordinates (halfWidth, yStart) to try to find an item.
     // Failing that, move a couple notches down.
@@ -231,12 +233,7 @@ void NewsWeb::onBookmarkTimeout()
     if (item == NULL || item == bookmarkedItem)
         return;
     
-    // Grab the indexes of both items in the list.
-    int currentBookmarkIndex = bookmarkedItem == NULL ? -1 : items.indexOf(bookmarkedItem);
-    int newBookmarkIndex = items.indexOf(item);
-    
-    // If the new one is later, move our bookmark!
-    if (newBookmarkIndex > currentBookmarkIndex) {
+    if (currentFeed->canBookmark(item)) {
         setBookmark(item);
         emit newsItemBookmarked(item);
     }

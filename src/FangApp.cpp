@@ -21,7 +21,8 @@ FangApp::FangApp(QObject *parent, FangApplicationViewer* viewer) :
     viewer(viewer),
     manager(this),
     newsWeb(),
-    currentFeed(NULL)
+    currentFeed(NULL),
+    loadAllFinished(false)
 {
     Q_ASSERT(_instance == NULL);
     _instance = this;
@@ -57,7 +58,9 @@ void FangApp::init()
     Utilities::addNetworkAccessManagerCache(viewer->engine()->networkAccessManager());
     
     // Load feed list.
-    manager.add(new LoadAllFeedsOperation(&manager, feedList));
+    LoadAllFeedsOperation* loadAllOp = new LoadAllFeedsOperation(&manager, feedList);
+    connect(loadAllOp, SIGNAL(finished(Operation*)), this, SLOT(onLoadAllFinished(Operation*)));
+    manager.add(loadAllOp);
 }
 
 FeedItem* FangApp::getFeed(int index) {
@@ -82,7 +85,8 @@ void FangApp::onViewerStatusChanged(QDeclarativeView::Status status)
             return;
         }
         
-        newsWeb.init(webView, scrollReader); // Start the news!
+        if (!newsWeb.isReady())
+            newsWeb.init(webView, scrollReader); // Start the news!
     }
 }
 
@@ -118,8 +122,7 @@ void FangApp::onFeedRemoved(ListItem * listItem)
 
 void FangApp::onNewsWebReady()
 {
-    if (currentFeed != NULL)
-        displayFeed();
+    displayFeed();
 }
 
 void FangApp::onNewsItemBookmarked(NewsItem *item)
@@ -129,13 +132,17 @@ void FangApp::onNewsItemBookmarked(NewsItem *item)
         return;
     }
     
-    manager.add(new SetBookmarkOperation(&manager, currentFeed, item));
+    currentFeed->setBookmark(item);
+    manager.add(new SetBookmarkOperation(&manager, item->getFeed(), item));
     qDebug() << "Item bookmarked: " << item->getTitle();
 }
 
 void FangApp::onFeedSelected(ListItem* _item) {
     FeedItem* item = qobject_cast<FeedItem *>(_item);
     if (item != NULL) {
+        if (currentFeed != NULL)
+            currentFeed->setIsCurrent(false);
+        
         currentFeed = item;
         if (newsWeb.isReady())
             displayFeed();
@@ -148,11 +155,22 @@ void FangApp::onFeedSelected(ListItem* _item) {
     }
 }
 
-// Note: newsWeb MUST be ready and currentFeed MUST not be null before
-// this method is called.  Got that?  Well, do ya punk?
-void FangApp::displayFeed() {
-    if (currentFeed == NULL || !newsWeb.isReady())
+void FangApp::onLoadAllFinished(Operation *op)
+{
+    Q_UNUSED(op);
+    loadAllFinished = true;
+    displayFeed();
+}
+
+// Note: newsWeb MUST be ready and currentFeed MUST not be null and the LoadAll operation MUST
+// be finished before this operation can do jack.  Got that?  Well, do ya punk?
+void FangApp::displayFeed()
+{
+    if (currentFeed == NULL || !newsWeb.isReady() || !loadAllFinished)
         return;
+    
+    if (newsWeb.getCurrentFeed() != currentFeed)
+        currentFeed->setIsCurrent(true);
     
     newsWeb.setFeed(currentFeed);
 }

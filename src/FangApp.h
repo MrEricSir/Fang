@@ -64,6 +64,12 @@ private slots:
     void onFeedSelected(ListItem *item);
     
     /**
+     * @brief Called when all the feeds have been pulled from the database.
+     * @param op
+     */
+    void onLoadAllFinished(Operation* op);
+    
+    /**
      * @brief Tells the web view to display the current feed.
      */
     void displayFeed();
@@ -75,6 +81,7 @@ private:
     ListModel *feedList;
     NewsWeb newsWeb;
     FeedItem* currentFeed;
+    bool loadAllFinished;
 };
 
 #endif // FANGAPP_H

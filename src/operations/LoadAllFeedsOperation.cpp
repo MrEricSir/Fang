@@ -4,6 +4,7 @@
 #include <QMap>
 
 #include "../models/NewsItem.h"
+#include "../models/AllNewsFeedItem.h"
 
 LoadAllFeedsOperation::LoadAllFeedsOperation(QObject *parent, ListModel *feedList) :
     DBOperation(parent),
@@ -15,21 +16,10 @@ LoadAllFeedsOperation::~LoadAllFeedsOperation()
 {
 }
 
-
 void LoadAllFeedsOperation::execute()
 {
     // Immediately add All News.
-    {
-        QString title("All News");
-        QString subtitle("");
-        QDateTime lastUpdated;
-        quint32 minUpdate = 0;
-        QUrl url("");
-        QUrl imageUrl("");
-        
-        feedList->appendRow(new FeedItem(0, title, subtitle, lastUpdated, minUpdate, url, imageUrl,
-                                         imageUrl, NULL, feedList));
-    }
+    AllNewsFeedItem* allNews = new AllNewsFeedItem(feedList);
     
     // Kindly ask the database for the rest.
     QSqlQuery query(db());
@@ -39,7 +29,7 @@ void LoadAllFeedsOperation::execute()
         return;
     }
     
-    QList<FeedItem*> tempFeedItemList;
+    QList<ListItem*> tempFeedItemList; // Use ListItem so we can do an appendAll later.
     QMap<FeedItem*, qint64> bookmarkIdMap; // I hate to associate via hashmap, but...
     while (query.next()) {
         FeedItem* item = new FeedItem(
@@ -59,7 +49,8 @@ void LoadAllFeedsOperation::execute()
     }
     
     // Load news items for each feed.
-    foreach (FeedItem* item, tempFeedItemList) {
+    foreach (ListItem* _item, tempFeedItemList) {
+        FeedItem* item = qobject_cast<FeedItem*>(_item);
         QSqlQuery query(db());
         query.prepare("SELECT * FROM NewsItemTable WHERE feed_id = :feed_id ORDER BY timestamp ASC");
         query.bindValue(":feed_id", item->getDbId());
@@ -94,9 +85,9 @@ void LoadAllFeedsOperation::execute()
         }
     }
     
-    // Finally, add our feeds to the model.
-    foreach (FeedItem* item, tempFeedItemList)
-        feedList->appendRow(item);
+    // Finally, put All News at the front and throw everything into the feed list.
+    tempFeedItemList.push_front(allNews);
+    feedList->appendRows(tempFeedItemList);
     
     // ...and we're done!  Yay!
     emit finished(this);

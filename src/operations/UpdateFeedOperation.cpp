@@ -4,6 +4,7 @@
 #include <QSqlError>
 
 #include "../utilities/Utilities.h"
+#include "../models/AllNewsFeedItem.h"
 
 UpdateFeedOperation::UpdateFeedOperation(QObject *parent, FeedItem *feed, RawFeed* rawFeed) :
     DBOperation(parent),
@@ -25,6 +26,12 @@ UpdateFeedOperation::~UpdateFeedOperation()
 
 void UpdateFeedOperation::execute()
 {
+    if (feed->metaObject() == &AllNewsFeedItem::staticMetaObject) {
+        qDebug() <<  "Cannot update all news";
+        emit finished(this);
+        return;
+    }
+    
     feed->setIsUpdating(true);
     
     // Send network request.

@@ -15,7 +15,8 @@ FeedItem::FeedItem(QObject *parent) :
     imageURL(),
     bookmark(NULL),
     newsList(NULL),
-    isUpdating(false)
+    isUpdating(false),
+    isCurrent(false)
     
 {
     newsList = new QList<NewsItem*>();
@@ -35,7 +36,8 @@ FeedItem::FeedItem(qint64 id, const QString &title, const QString &subtitle, con
     imageURL(imageURL),
     bookmark(bookmark),
     newsList(NULL),
-    isUpdating(false)
+    isUpdating(false),
+    isCurrent(false)
 {
     newsList = new QList<NewsItem*>();
 }
@@ -131,6 +133,9 @@ void FeedItem::setImageURL(const QUrl &url)
 
 void FeedItem::append(NewsItem *item)
 {
+    if (newsList->contains(item))
+        return;
+    
     newsList->append(item);
     emit appended(item);
     
@@ -147,11 +152,37 @@ void FeedItem::remove(NewsItem *item)
     emit dataChanged();
 }
 
+bool FeedItem::canBookmark(NewsItem *item)
+{
+    if (bookmark == NULL)
+        return true;
+    
+    if (item == NULL)
+        return false;
+    
+    int currentBookmarkIndex = newsList->indexOf(bookmark);
+    int newBookmarkIndex = newsList->indexOf(item);
+    
+    // If the new one is later in the list, we're good.
+    return newBookmarkIndex > currentBookmarkIndex;
+}
+
 void FeedItem::setBookmark(NewsItem *item)
 {
     if (item != NULL)
         Q_ASSERT(newsList->contains(item));
     
+    if (bookmark == item)
+        return; // Nothing to do.
+    
+    if (!canBookmark(item))
+        return; // Shouldn't have called this method, sir.
+    
     bookmark = item;
     emit dataChanged();
+}
+
+void FeedItem::setIsCurrent(bool current)
+{
+    isCurrent = current;
 }

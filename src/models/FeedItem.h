@@ -72,7 +72,7 @@ public:
     inline int getIsUpdating() const { return isUpdating; }
     inline FeedItem* getSelf() const { return const_cast<FeedItem*>(this); }
     inline qint64 getDbId() const { return _id; }
-    quint32 getUnreadCount() const;
+    virtual quint32 getUnreadCount() const;
     
     void setImageURL(const QUrl& url);
     
@@ -80,20 +80,40 @@ public:
      * @brief Appends a NewsItem to the end of the feed.
      * @param item
      */
-    void append(NewsItem* item);
+    virtual void append(NewsItem* item);
     
     /**
      * @brief Removes a NewsItem from the feed.
      * @param item
      */
-    void remove(NewsItem* item);
+    virtual void remove(NewsItem* item);
+    
+    /**
+     * @brief Clears all news items.  Does NOT signal.
+     * @return 
+     */
+    inline void clearNews() { newsList->clear(); }
     
     inline QList<NewsItem*>* getNewsList() { return newsList; }
     
+    /**
+     * @param item
+     * @return True if this item can be bookmarked.
+     */
+    bool canBookmark(NewsItem* item);
+    
     inline NewsItem* getBookmark() { return bookmark; }
-    void setBookmark(NewsItem* item);
+    virtual void setBookmark(NewsItem* item);
     
     inline void clearDbId() { _id = -1; }
+    
+    /**
+     * @brief This is set before the feed changes.
+     * @param current
+     */
+    virtual void setIsCurrent(bool current);
+    
+    inline bool getIsCurrent() { return isCurrent; }
     
 signals:
     
@@ -112,6 +132,7 @@ private:
     NewsItem* bookmark;
     QList<NewsItem*>* newsList;
     int isUpdating;
+    bool isCurrent;
 };
 
 #endif // FEEDITEM_H
