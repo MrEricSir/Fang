@@ -13,10 +13,6 @@
 #include "models/ScrollReader.h"
 #include "models/FangApplicationViewer.h"
 
-#include "utilities/FaviconGrabber.h"
-
-
-
 Q_DECL_EXPORT int main(int argc, char *argv[])
 {
     qmlRegisterType<QDeclarativeWebView>("Fang", 1, 0, "FangWebView");
@@ -30,7 +26,6 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     app->setApplicationName("Fang");
     
     FangApplicationViewer viewer;
-    
     FangApp fang(app.data(), &viewer);
     fang.init();
     

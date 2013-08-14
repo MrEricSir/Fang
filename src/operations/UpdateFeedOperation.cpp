@@ -11,10 +11,12 @@ UpdateFeedOperation::UpdateFeedOperation(QObject *parent, FeedItem *feed, RawFee
     parser(),
     feed(feed),
     rawFeed(rawFeed),
-    wasDestroyed(false)
+    wasDestroyed(false),
+    rewriter()
 {
     connect(&parser, SIGNAL(finished()), this, SLOT(onFeedFinished()));
     connect(feed, SIGNAL(destroyed()), this, SLOT(onFeedDestroyed()));
+    connect(&rewriter, SIGNAL(finished()), this, SLOT(onRewriterFinished()));
 }
 
 UpdateFeedOperation::~UpdateFeedOperation()
@@ -106,15 +108,19 @@ void UpdateFeedOperation::onFeedFinished()
         return;
     }
     
-    //qDebug() << "UPDATE: Newest new: " << newestNewNews.toString() << " Newest local: " << newestLocalNews.toString();
-    //qDebug() << "Newest local title: " << rawFeed->items.at(newIndex)->title << " local " << feed->getNewsList()->last()->getTitle();
+    // Add all new items to our list.
+    newsList.clear();
+    for (int i = newIndex; i < rawFeed->items.size(); i++)
+        newsList.append(rawFeed->items.at(i));
     
+    rewriter.rewrite(&newsList);
+}
+
+void UpdateFeedOperation::onRewriterFinished()
+{
     // Add all new items to DB.
-    // Items added oldest to newest.
     db().transaction(); // Prevent getting out of sync on error.
-    for (int i = newIndex; i < rawFeed->items.size(); i++) {
-        RawNews* rawNews = rawFeed->items.at(i);
-        
+    foreach (RawNews* rawNews, newsList) {
         QSqlQuery query(db());
         query.prepare("INSERT INTO NewsItemTable (feed_id, title, author, summary, content, "
                       "timestamp, url) VALUES (:feed_id, :title, :author, :summary, :content, "
@@ -144,8 +150,7 @@ void UpdateFeedOperation::onFeedFinished()
     db().commit(); // Done with db!
     
     // Update data model.
-    for (int i = newIndex; i < rawFeed->items.size(); i++) {
-        RawNews* rawNews = rawFeed->items.at(i);
+    foreach (RawNews* rawNews, newsList) {
         feed->append(
                     new NewsItem(feed,
                                  rawNews->dbId,

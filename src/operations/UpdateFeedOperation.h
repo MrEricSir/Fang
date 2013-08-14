@@ -2,6 +2,7 @@
 #define UPDATEFEEDOPERATION_H
 
 #include "DBOperation.h"
+#include "../utilities/RawFeedImageSizeRewriter.h"
 #include "../parser/Parser.h"
 #include "../models/FeedItem.h"
 #include "../models/NewsItem.h"
@@ -24,6 +25,7 @@ public:
     explicit UpdateFeedOperation(QObject *parent, FeedItem* feed, RawFeed* rawFeed = NULL);
     virtual ~UpdateFeedOperation();
     
+    
 signals:
     
 public slots:
@@ -40,11 +42,18 @@ private slots:
      */
     void onFeedDestroyed();
     
+    /**
+     * @brief When the rewriter is done with the feed
+     */
+    void onRewriterFinished();
+    
 private:
     Parser parser;
     FeedItem *feed;
     RawFeed* rawFeed;
     bool wasDestroyed;
+    RawFeedImageSizeRewriter rewriter;
+    QList<RawNews*> newsList;
 };
 
 #endif // UPDATEFEEDOPERATION_H

@@ -24,6 +24,11 @@ void WebPageGrabber::load(const QUrl &url)
         webView.load(url);
 }
 
+void WebPageGrabber::load(const QString& htmlString, const QUrl& baseUrl)
+{
+    webView.setHtml(htmlString, baseUrl);
+}
+
 void WebPageGrabber::onLoadFinished(bool ok)
 {
     if (!ok)

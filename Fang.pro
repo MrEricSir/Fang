@@ -45,7 +45,10 @@ SOURCES += src/main.cpp \
     src/utilities/WebPageGrabber.cpp \
     src/operations/FaviconUpdateOperation.cpp \
     src/models/FangApplicationViewer.cpp \
-    src/models/AllNewsFeedItem.cpp
+    src/models/AllNewsFeedItem.cpp \
+    src/utilities/WebImageSizeRewriter.cpp \
+    src/utilities/ImageGrabber.cpp \
+    src/utilities/RawFeedImageSizeRewriter.cpp
 
 # Installation path
 # target.path =
@@ -90,4 +93,7 @@ HEADERS += \
     src/utilities/WebPageGrabber.h \
     src/operations/FaviconUpdateOperation.h \
     src/models/FangApplicationViewer.h \
-    src/models/AllNewsFeedItem.h
+    src/models/AllNewsFeedItem.h \
+    src/utilities/WebImageSizeRewriter.h \
+    src/utilities/ImageGrabber.h \
+    src/utilities/RawFeedImageSizeRewriter.h

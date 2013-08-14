@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QWebView>
 #include <QWebPage>
+#include <QString>
 
 /**
  * @brief Loads a web page at a given URL and signals with the page when done.
@@ -21,6 +22,7 @@ signals:
 public slots:
     
     void load(const QUrl& url);
+    void load(const QString& htmlString, const QUrl& baseUrl = QUrl());
     
 private slots:
     
