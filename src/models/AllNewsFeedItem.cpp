@@ -84,9 +84,6 @@ void AllNewsFeedItem::onFeedAdded(ListItem* item)
     if (feed == NULL || feed == this)
         return;
     
-    // Monitor other feeds!
-    connectFeed(feed);
-    
     // The following are only to be done while this feed is current & initialized.
     if (!initialized)
         return;
@@ -100,6 +97,9 @@ void AllNewsFeedItem::onFeedAdded(ListItem* item)
         NewsItem* news = feed->getNewsList()->at(i);
         append(news);
     }
+    
+    // From here on out, monitor the feed.
+    connectFeed(feed);
     
     // TODO: Figure out what to do about read items.
 }
@@ -124,14 +124,32 @@ void AllNewsFeedItem::onFeedRemoved(ListItem* item)
     emit dataChanged();
 }
 
+void AllNewsFeedItem::onNewsAppended(NewsItem *item)
+{
+    // If this is the current feed, update the data model accordingly.
+    if (initialized)
+        append(item);
+}
+
+void AllNewsFeedItem::onNewsRemoved(NewsItem *item)
+{
+    // See above.
+    if (initialized)
+        remove(item);
+}
+
 void AllNewsFeedItem::connectFeed(FeedItem *feed)
 {
     connect(feed, SIGNAL(dataChanged()), this, SLOT(onFeedItemDataChanged()));
+    connect(feed, SIGNAL(appended(NewsItem*)), this, SLOT(onNewsAppended(NewsItem*)));
+    connect(feed, SIGNAL(removed(NewsItem*)), this, SLOT(onNewsRemoved(NewsItem*)));
 }
 
 void AllNewsFeedItem::disconnectFeed(FeedItem *feed)
 {
     disconnect(feed, SIGNAL(dataChanged()), this, SLOT(onFeedItemDataChanged()));
+    disconnect(feed, SIGNAL(appended(NewsItem*)), this, SLOT(onNewsAppended(NewsItem*)));
+    disconnect(feed, SIGNAL(removed(NewsItem*)), this, SLOT(onNewsRemoved(NewsItem*)));
 }
 
 void AllNewsFeedItem::onFeedItemDataChanged()

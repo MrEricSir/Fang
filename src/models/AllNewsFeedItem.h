@@ -35,6 +35,10 @@ private slots:
     void onFeedAdded(ListItem *item);
     void onFeedRemoved(ListItem *item);
     
+    // Called when a feed is updated.
+    void onNewsAppended(NewsItem* item);
+    void onNewsRemoved(NewsItem* item);
+    
     // Setup signals for sub-feeds.
     void connectFeed(FeedItem* feed);
     void disconnectFeed(FeedItem* feed);
