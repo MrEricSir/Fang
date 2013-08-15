@@ -72,13 +72,8 @@ void WebImageSizeRewriter::onImageGrabberFinished()
             
         QWebElementCollection elementList = document.findAll("img[src=\"" + imageUrl.toString() + "\"]");
         foreach(QWebElement imageElement, elementList) {
-            if ((width < 0 || height < 0) || (width <= 2 && height <= 2)) {
-                // Remove tiny and invalid images.
-                imageElement.removeFromDocument();
-            } else {
-                imageElement.setAttribute("width", QString::number(width));
-                imageElement.setAttribute("height", QString::number(height));
-            }
+            imageElement.setAttribute("width", QString::number(width));
+            imageElement.setAttribute("height", QString::number(height));
         }
     }
     

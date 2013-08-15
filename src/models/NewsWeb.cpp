@@ -116,6 +116,9 @@ void NewsWeb::append(NewsItem *item)
     QWebElement content = newsContainer.findFirst(".content");
     cleanConatiner(content);
     
+//    qDebug();
+//    qDebug() << content.toInnerXml();
+    
     // Add to HTML.
     if (items.size() > 0)
         elementForItem(items.last()).appendOutside(newsContainer); // Append after last
@@ -381,6 +384,7 @@ void NewsWeb::cleanConatiner(QWebElement& newsContainer)
     removeAll("iframe", newsContainer); // Iframes!
     removeAll(".feedflare", newsContainer); // Feedburger's 37 pieces of flare
     removeAll(".mf-viral", newsContainer); // Motherfucking viral?
+    removeAll(".service-links-stumbleupon", newsContainer); // StubbleUponYourFace
     
     // Delete annoying images.
     QWebElementCollection collection = newsContainer.findAll("img");
@@ -397,7 +401,7 @@ void NewsWeb::cleanConatiner(QWebElement& newsContainer)
         if (!sWidth.isEmpty() || !sHeight.isEmpty()) {
             int width = sWidth.toInt();
             int height = sWidth.toInt();
-            if (width <= 3 || height <= 3)
+            if (width <= 3 && height <= 3)
                 removeElement = true;
         }
         
@@ -407,18 +411,18 @@ void NewsWeb::cleanConatiner(QWebElement& newsContainer)
         
         // Delete social media icons.
         if (!parentHref.isEmpty()) {
+            // Social media buttons and trackers.
             if (parentHref.contains("twitter.com/home?status", Qt::CaseInsensitive) ||
                     parentHref.contains("plus.google.com/shar", Qt::CaseInsensitive) ||
                     parentHref.contains("facebook.com/shar", Qt::CaseInsensitive) ||
-                    parentHref.contains("da.feedsportal.com/r", Qt::CaseInsensitive) ||
+                    parentHref.contains("feedsportal.com/", Qt::CaseInsensitive) ||
+                    parentHref.contains("api.tweetmeme.com/", Qt::CaseInsensitive) ||
+                    parentHref.contains("stumbleupon.com/submit", Qt::CaseInsensitive) ||
                     parentHref.contains("share.feedsportal.com/share", Qt::CaseInsensitive)) {
                 // Social media buttons.
                 removeParent = true;
-            } else if (parentHref.contains("feedsportal.com/", Qt::CaseInsensitive)) {
-                // Known trackers.
-                removeParent = true;
             } else if (parentHref.length() > 200) {
-                // Big links are suspiciously re-directy, look for keywords.
+                // Big links are suspiciously re-direct-y, look for keywords.
                 if (parentHref.contains("twitter", Qt::CaseInsensitive) ||
                         parentHref.contains("facebook", Qt::CaseInsensitive) ||
                         parentHref.contains("linkedin", Qt::CaseInsensitive) ||

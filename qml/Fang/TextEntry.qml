@@ -60,30 +60,55 @@ Rectangle {
                 font.pointSize: textEntry.fontSize
             }
             
-            // Editable field
-            TextEdit {
-                id: edit
+            // Allow text to scroll.
+            // Based on: http://qt-project.org/wiki/Flickable_Wrapped_TextEdit
+            // Also note the onCursorRectangleChanged() signal in the editable field.
+            Flickable {
+                id: flick
                 
-                width: parent.width
+                width: parent.width - 5
+                height: edit.height
                 
-                text: ""
+                clip: true
+                flickableDirection: Flickable.VerticalFlick
                 
-                textFormat: TextEdit.PlainText
+                contentWidth: edit.width
+                contentHeight: edit.height
                 
-                color: "black"
-                font.family: "Tahoma"
-                font.pointSize: textEntry.fontSize
-                focus: true
+                function ensureVisible(r) {
+                    if (contentX >= r.x)
+                        contentX = r.x;
+                    else if (contentX + width <= r.x + r.width)
+                        contentX = r.x + r.width - width;
+                }
                 
-                onTextChanged: {
-                    // 1337 HAX to prevent newlines in text field.
-                    if (text.indexOf('\n') != -1 || text.indexOf('\r') != -1) {
-                        text = text.replace("\n", "");
-                        text = text.replace("\r", "");
-                        enterPressed();
-                    }
+                // Editable field
+                TextEdit {
+                    id: edit
                     
-                    editTextChanged(text);
+                    text: ""
+                    
+                    textFormat: TextEdit.PlainText
+                    
+                    color: "black"
+                    font.family: "Tahoma"
+                    font.pointSize: textEntry.fontSize
+                    focus: true
+                    wrapMode: TextEdit.NoWrap
+                    
+                    // Used with the above flickable.
+                    onCursorRectangleChanged: flick.ensureVisible(cursorRectangle)
+                    
+                    onTextChanged: {
+                        // 1337 HAX to prevent newlines in text field.
+                        if (text.indexOf('\n') != -1 || text.indexOf('\r') != -1) {
+                            text = text.replace("\n", "");
+                            text = text.replace("\r", "");
+                            enterPressed();
+                        }
+                        
+                        editTextChanged(text);
+                    }
                 }
             }
         }
