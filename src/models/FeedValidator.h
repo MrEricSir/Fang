@@ -68,6 +68,7 @@ private:
     QString _siteImageURL;
     WebPageGrabber pageGrabber;
     Parser::ParseResult result;
+    QUrl location;
 };
 
 QML_DECLARE_TYPE(FeedValidator)

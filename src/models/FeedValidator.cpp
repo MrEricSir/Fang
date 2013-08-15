@@ -25,7 +25,7 @@ void FeedValidator::check()
     _validating = true;
     emit validatingChanged(_validating);
     
-    QUrl location = QUrl(_url);
+    location = QUrl(_url);
     
     // Make sure the location isn't a "relative" (and therefore severely invalid) path.
     if (location.isRelative() || location.scheme().isEmpty()) {
@@ -163,6 +163,13 @@ void FeedValidator::handleCompletion()
         return; // Still waiting for parser.
     
     if (!embeddedFeedURL.isEmpty()) {
+        if (embeddedFeedURL.isRelative()) {
+            // Try to fixup relative paths before continuing.
+            QString path = embeddedFeedURL.path();
+            embeddedFeedURL = location;
+            embeddedFeedURL.setPath(location.path() + "/" + path);
+        }
+        
         // Try again with the new URL if it looks good.
         if (embeddedFeedURL.isValid() && !embeddedFeedURL.isRelative()) {
             qDebug() << "Parsing new URL" << embeddedFeedURL;
