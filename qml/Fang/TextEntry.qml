@@ -76,7 +76,10 @@ Rectangle {
                 contentHeight: edit.height
                 
                 function ensureVisible(r) {
-                    if (contentX >= r.x)
+                    if (edit.text == "") {
+                        contentX = 0;
+                        edit.width = width;
+                    } else if (contentX >= r.x)
                         contentX = r.x;
                     else if (contentX + width <= r.x + r.width)
                         contentX = r.x + r.width - width;
@@ -87,6 +90,7 @@ Rectangle {
                     id: edit
                     
                     text: ""
+                   // width: parent.width // Don't be TOO thin.
                     
                     textFormat: TextEdit.PlainText
                     
@@ -108,6 +112,7 @@ Rectangle {
                         }
                         
                         editTextChanged(text);
+                        flick.ensureVisible(cursorRectangle); // Used with above flickable.
                     }
                 }
             }
