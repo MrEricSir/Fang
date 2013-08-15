@@ -78,7 +78,7 @@ Rectangle {
                 function ensureVisible(r) {
                     if (edit.text == "") {
                         contentX = 0;
-                        edit.width = width;
+                        edit.width = width; // reset width to prevent it from being too narrow
                     } else if (contentX >= r.x)
                         contentX = r.x;
                     else if (contentX + width <= r.x + r.width)
@@ -90,7 +90,6 @@ Rectangle {
                     id: edit
                     
                     text: ""
-                   // width: parent.width // Don't be TOO thin.
                     
                     textFormat: TextEdit.PlainText
                     
