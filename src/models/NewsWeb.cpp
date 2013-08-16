@@ -163,11 +163,11 @@ void NewsWeb::updateBottomSpacer()
     
     if (items.size() > 0) {
         // Adjust spacer height to the difference between the last item height and the view height,
-        // minus ten percent of the view height.
+        // plus ten percent of the view height.
         QWebElement lastElement = elementForItem(items.last());
         qreal viewHeight = getViewHeight();
         
-        spacer = viewHeight - lastElement.geometry().height() - (viewHeight * 0.1);
+        spacer = viewHeight - lastElement.geometry().height() + (viewHeight * 0.1);
     }
     
     if (spacer < 0)

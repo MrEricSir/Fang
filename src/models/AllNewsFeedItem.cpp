@@ -4,7 +4,8 @@
 AllNewsFeedItem::AllNewsFeedItem(ListModel *feedList) :
     FeedItem(-1, "All News", "", QDateTime(), 0, QUrl(), QUrl(), QUrl(), NULL, feedList),
     feedList(feedList),
-    initialized(false)
+    initialized(false),
+    dirty(false)
 {
     // Do this here to avoid getting added/removed signals too early.
     connect(feedList, SIGNAL(added(ListItem*)), this, SLOT(onFeedAdded(ListItem*)));
@@ -67,6 +68,7 @@ void AllNewsFeedItem::init()
     foreach(NewsItem* newsItem, unreadNews)
         append(newsItem);
     
+    dirty = false;
     initialized = true;
 }
 
@@ -101,7 +103,7 @@ void AllNewsFeedItem::onFeedAdded(ListItem* item)
     // From here on out, monitor the feed.
     connectFeed(feed);
     
-    // TODO: Figure out what to do about read items.
+    dirty = true; // Possibly unsorted items.
 }
 
 void AllNewsFeedItem::onFeedRemoved(ListItem* item)
@@ -113,6 +115,9 @@ void AllNewsFeedItem::onFeedRemoved(ListItem* item)
     // Disconnect data change signal.
     disconnectFeed(feed);
     
+    // Update unread count.
+    emit dataChanged();
+    
     // The following are only to be done while this feed is current & initialized.
     if (!initialized)
         return;
@@ -120,8 +125,6 @@ void AllNewsFeedItem::onFeedRemoved(ListItem* item)
     // Remove 'em all from this feed.
     for(int i = 0; i < feed->getNewsList()->count(); i++)
         remove(feed->getNewsList()->at(i));
-    
-    emit dataChanged();
 }
 
 void AllNewsFeedItem::onNewsAppended(NewsItem *item)
@@ -129,6 +132,8 @@ void AllNewsFeedItem::onNewsAppended(NewsItem *item)
     // If this is the current feed, update the data model accordingly.
     if (initialized)
         append(item);
+    
+    dirty = true;
 }
 
 void AllNewsFeedItem::onNewsRemoved(NewsItem *item)
@@ -207,4 +212,38 @@ quint32 AllNewsFeedItem::getUnreadCount() const
     }
     
     return ret;
+}
+
+void AllNewsFeedItem::setVisibleItems(NewsItem *first, NewsItem *last)
+{
+    FeedItem::setVisibleItems(first, last);
+    
+    // Resort items below the visible area, if needed.
+    
+    if (!dirty || last == NULL)
+        return; // Nothing to do!
+    
+    if (getNewsList()->size() <= 1 || getNewsList()->last() == last) {
+        // Nothing to sort.
+        dirty = false;
+        
+        return;
+    }
+    
+    // Remove everything after last and add them to a new list.
+    QList<NewsItem*> toSort;
+    while (getNewsList()->last() != last) {
+        NewsItem* item = getNewsList()->last();
+        toSort.append(item);
+        remove(item);
+    }
+    
+    // Sort the list.
+    qSort(toSort.begin(), toSort.end(), NewsItem::LessThan);
+    
+    // Add 'em all back!
+    foreach(NewsItem* item, toSort)
+        append(item);
+    
+    dirty = false;
 }

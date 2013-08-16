@@ -147,8 +147,6 @@ void FeedItem::remove(NewsItem *item)
     newsList->removeAll(item);
     emit removed(item);
     
-    item->deleteLater();
-    
     emit dataChanged();
 }
 
