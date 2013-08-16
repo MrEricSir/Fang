@@ -38,8 +38,6 @@ FangApp::FangApp(QObject *parent, FangApplicationViewer* viewer) :
                      this, SLOT(onOperationFinished(Operation*)));
     
     connect(&newsWeb, SIGNAL(ready()), this, SLOT(onNewsWebReady()));
-    connect(&newsWeb, SIGNAL(newsItemBookmarked(NewsItem*)),
-            this, SLOT(onNewsItemBookmarked(NewsItem*)));
     
     connect(feedList, SIGNAL(added(ListItem*)), this, SLOT(onFeedAdded(ListItem*)));
     connect(feedList, SIGNAL(removed(ListItem*)), this, SLOT(onFeedRemoved(ListItem*)));
@@ -127,12 +125,6 @@ void FangApp::onNewsWebReady()
 
 void FangApp::onNewsItemBookmarked(NewsItem *item)
 {
-    if (currentFeed == NULL) {
-        qDebug() << "Current feed was null, can't bookmark.";
-        return;
-    }
-    
-    currentFeed->setBookmark(item);
     manager.add(new SetBookmarkOperation(&manager, item->getFeed(), item));
     qDebug() << "Item bookmarked: " << item->getTitle();
 }
@@ -143,9 +135,7 @@ void FangApp::onFeedSelected(ListItem* _item) {
         if (currentFeed != NULL)
             currentFeed->setIsCurrent(false);
         
-        currentFeed = item;
-        if (newsWeb.isReady())
-            displayFeed();
+        setCurrentFeed(item);
         
         // Connex0r the signals.
         //qDebug() << "Selected: " << feed->getTitle();
@@ -173,6 +163,24 @@ void FangApp::displayFeed()
         currentFeed->setIsCurrent(true);
     
     newsWeb.setFeed(currentFeed);
+}
+
+void FangApp::setCurrentFeed(FeedItem *feed)
+{
+    // Disconnect signals.
+    if (currentFeed != NULL) {
+        disconnect(currentFeed, SIGNAL(bookmarkChanged(NewsItem*)),
+                   this, SLOT(onNewsItemBookmarked(NewsItem*)));
+    }
+    
+    currentFeed = feed;
+    displayFeed();
+    
+    // Connect signals.
+    if (currentFeed != NULL) {
+        connect(currentFeed, SIGNAL(bookmarkChanged(NewsItem*)),
+                this, SLOT(onNewsItemBookmarked(NewsItem*)));
+    }
 }
 
 FangApp* FangApp::instance()

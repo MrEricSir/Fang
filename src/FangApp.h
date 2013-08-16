@@ -74,6 +74,12 @@ private slots:
      */
     void displayFeed();
     
+    /**
+     * @brief Used to change the current feed.
+     * @param feed
+     */
+    void setCurrentFeed(FeedItem* feed);
+    
 private:
     static FangApp* _instance;
     FangApplicationViewer* viewer;

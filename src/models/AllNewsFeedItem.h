@@ -18,7 +18,6 @@ public:
     virtual void setIsCurrent(bool current); // Override
     virtual quint32 getUnreadCount() const; // Override
     
-    
 private slots:
     
     /**

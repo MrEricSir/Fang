@@ -18,8 +18,6 @@ SetBookmarkOperation::~SetBookmarkOperation()
 
 void SetBookmarkOperation::execute()
 {
-    feed->setBookmark(bookmarkItem);
-    
     if (feed->metaObject() == &AllNewsFeedItem::staticMetaObject) {
         qDebug() <<  "Cannot save  bookmark for all news";
         emit finished(this);

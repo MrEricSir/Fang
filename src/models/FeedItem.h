@@ -97,13 +97,18 @@ public:
     inline QList<NewsItem*>* getNewsList() { return newsList; }
     
     /**
+     * @brief Used to set the bookmark internally.  External classes shouldn't need to call this.
+     * @param item
+     */
+    virtual void setBookmark(NewsItem* item);
+    
+    /**
      * @param item
      * @return True if this item can be bookmarked.
      */
     bool canBookmark(NewsItem* item);
     
     inline NewsItem* getBookmark() { return bookmark; }
-    virtual void setBookmark(NewsItem* item);
     
     inline void clearDbId() { _id = -1; }
     
@@ -115,11 +120,20 @@ public:
     
     inline bool getIsCurrent() { return isCurrent; }
     
+    /**
+     * @brief NewsWeb uses this to set the currently viewable items.
+     * This method is used to set the bookmark.
+     * @param first
+     * @param last
+     */
+    virtual void setVisibleItems(NewsItem* first, NewsItem* last);
+    
 signals:
     
     void appended(NewsItem* item);
     void removed(NewsItem* item);
-    
+    void bookmarkChanged(NewsItem* bookmark);
+        
 private:
     qint64 _id;
     QString title;

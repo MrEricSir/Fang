@@ -179,10 +179,20 @@ void FeedItem::setBookmark(NewsItem *item)
         return; // Shouldn't have called this method, sir.
     
     bookmark = item;
+    emit bookmarkChanged(bookmark);
     emit dataChanged();
 }
 
 void FeedItem::setIsCurrent(bool current)
 {
     isCurrent = current;
+}
+
+void FeedItem::setVisibleItems(NewsItem *first, NewsItem *last)
+{
+    // Bookmark the first item if it makes sense to do so.
+    if (first == NULL)
+        return;
+    
+    setBookmark(first);
 }

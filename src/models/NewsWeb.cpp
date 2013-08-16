@@ -13,7 +13,7 @@ NewsWeb::NewsWeb(QObject *parent) :
     _isReady(false),
     scroll(NULL),
     bookmarkedItem(NULL),
-    bookmarkTimer(),
+    scrollReadTimer(),
     jumpToBookmarkTimer(),
     jumpItem(NULL)
 {
@@ -36,15 +36,15 @@ void NewsWeb::init(QDeclarativeWebView *webView, ScrollReader* scroll)
     connect(webView->page(), SIGNAL(loadFinished(bool)), this, SLOT(onLoadFinished(bool)));
     connect(webView->page(), SIGNAL(linkClicked(QUrl)), this, SLOT(onLinkClicked(QUrl)));
     connect(webView, SIGNAL(heightChanged()), this, SLOT(onGeometryChangeRequested()));
-    connect(&bookmarkTimer, SIGNAL(timeout()), this, SLOT(onBookmarkTimeout()));
+    connect(&scrollReadTimer, SIGNAL(timeout()), this, SLOT(onScrollReadTimeout()));
     connect(&jumpToBookmarkTimer, SIGNAL(timeout()), this, SLOT(onJumpTimeout()));
     connect(scroll, SIGNAL(contentYChanged(qreal)), this, SLOT(onContentYChanged(qreal)));
     
     // Load the news page template.
     webView->setUrl(QUrl("qrc:html/NewsPage.html"));
     
-    // Run the bookmark timer every 1 second.
-    bookmarkTimer.start(1000);
+    // Run the scroll read timer every 1/2 second.
+    scrollReadTimer.start(500);
 }
 
 void NewsWeb::clear()
@@ -75,6 +75,8 @@ void NewsWeb::setFeed(FeedItem *feed)
     if (currentFeed != NULL) {
         disconnect(currentFeed, SIGNAL(appended(NewsItem*)), this, SLOT(append(NewsItem*)));
         disconnect(currentFeed, SIGNAL(removed(NewsItem*)), this, SLOT(remove(NewsItem*)));
+        disconnect(currentFeed, SIGNAL(bookmarkChanged(NewsItem*)),
+                   this, SLOT(setBookmark(NewsItem*)));
     }
     
     // Clear the view and set the new feed.
@@ -90,12 +92,20 @@ void NewsWeb::setFeed(FeedItem *feed)
             append(item);
         }
         
+        // Default last seen items to the top.
+        lastTopVisibleItem = lastBottomVisibleItem = NULL;
+        if (currentFeed->getNewsList()->size() >= 0)
+            lastTopVisibleItem = lastBottomVisibleItem = currentFeed->getNewsList()->first();
+        
         connect(currentFeed, SIGNAL(appended(NewsItem*)), this, SLOT(append(NewsItem*)));
         connect(currentFeed, SIGNAL(removed(NewsItem*)), this, SLOT(remove(NewsItem*)));
+        connect(currentFeed, SIGNAL(bookmarkChanged(NewsItem*)),
+                   this, SLOT(setBookmark(NewsItem*)));
         
         // Set current bookmark and jump to it.
         if (currentFeed->getBookmark() != NULL) {
             setBookmark(currentFeed->getBookmark());
+            lastTopVisibleItem = lastBottomVisibleItem = currentFeed->getBookmark();
             jumpToItem(currentFeed->getBookmark());
         }
     }
@@ -209,37 +219,81 @@ void NewsWeb::onContentYChanged(qreal contentY)
   //  qDebug() << "Content y: " << contentY;
 }
 
-void NewsWeb::onBookmarkTimeout()
+void NewsWeb::onScrollReadTimeout()
 {
-    qreal contentY = scroll->contentY();
+    if (currentFeed->getNewsList()->size() <= 0)
+        return;  // Nothing to do.
     
-    int halfWidth = getViewWidth() / 2;
-    int fivePercentOfHeight = getViewWidth() / 5;
-    int yStart = fivePercentOfHeight;
-    NewsItem* item = NULL;
-    
-    //qDebug() << "Bookmark timeout Y " << contentY;
-    
-    // Look at coordinates (halfWidth, yStart) to try to find an item.
-    // Failing that, move a couple notches down.
-    for (int i = 0; i < 2; i++) {
-        QWebHitTestResult hitTest = document.webFrame()->hitTestContent(QPoint(halfWidth, contentY + yStart));
-        item = itemForElement(hitTest.element());
-        if (item != NULL) {
-            break;
-        }
+    if (currentFeed->getNewsList()->size() == 1) {
+        // First item is the only one!
+        currentFeed->setVisibleItems(currentFeed->getNewsList()->first(),
+                                     currentFeed->getNewsList()->first());
         
-        yStart += fivePercentOfHeight; // Move down a little moar.
-    }
-    
-    // Make sure it's not the current bookmark.
-    if (item == NULL || item == bookmarkedItem)
         return;
-    
-    if (currentFeed->canBookmark(item)) {
-        setBookmark(item);
-        emit newsItemBookmarked(item);
     }
+    
+    // This method figures out which items are visible
+    qreal contentY = scroll->contentY();
+    int halfWidth = getViewWidth() / 2;
+    int viewHeight = getViewHeight();
+    int fivePercentOfHeight = viewHeight / 5;
+    
+    // Visible items.
+    NewsItem* topVisibleItem = NULL;
+    NewsItem* bottomVisibleItem = NULL;
+    
+    if (contentY <= fivePercentOfHeight) {
+        // At the top!
+        // Just grab the first item.
+        topVisibleItem = currentFeed->getNewsList()->first();
+    } else {
+        // Somewhere other than the top.
+        // Start from y = contentY, move up a few notches to grab the first item just off the screen.
+        int yStart = contentY;
+        for (int i = 0; i < 3; i++) {
+            QWebHitTestResult hitTest = document.webFrame()->hitTestContent(QPoint(halfWidth, yStart));
+            topVisibleItem = itemForElement(hitTest.element());
+            if (topVisibleItem != NULL) {
+                break;
+            }
+            
+            yStart -= fivePercentOfHeight; // Move up a little moar.
+        }
+    }
+    
+    if (contentY > getMaxScroll() - scroll->bottomSpacer()) {
+        // At the bottom!
+        // Just grab the first item.
+        bottomVisibleItem = currentFeed->getNewsList()->last();
+    } else {
+        // Not at the bottom (yet!)
+        // Start at the bottom of the viewport and look a few notches down.
+        int yStart = contentY + viewHeight;
+        for (int i = 0; i < 3; i++) {
+            QWebHitTestResult hitTest = document.webFrame()->hitTestContent(QPoint(halfWidth, yStart));
+            bottomVisibleItem = itemForElement(hitTest.element());
+            if (bottomVisibleItem != NULL) {
+                break;
+            }
+            
+            yStart += fivePercentOfHeight; // Move DOWN a couple spots.
+        }
+    }
+    
+    // SAFETY
+    // Ensure we're sending sensible results.
+    if (topVisibleItem == NULL)
+        topVisibleItem = lastTopVisibleItem;
+    
+    if (bottomVisibleItem == NULL)
+        bottomVisibleItem = lastBottomVisibleItem;
+    
+    // Set 'em!
+    currentFeed->setVisibleItems(topVisibleItem, bottomVisibleItem);
+    
+    // "Remember." -- Spock
+    lastTopVisibleItem = topVisibleItem;
+    lastBottomVisibleItem = bottomVisibleItem;
 }
 
 void NewsWeb::onJumpTimeout()
@@ -254,7 +308,7 @@ void NewsWeb::onJumpTimeout()
     int y = element.geometry().y();
     
     // Don't exceed max scroll.
-    int maxY = document.geometry().height() - (getViewHeight() - scroll->bottomSpacer());
+    int maxY = getMaxScroll();
     if (y > maxY)
         y = maxY;
     
@@ -460,4 +514,9 @@ void NewsWeb::cleanConatiner(QWebElement& newsContainer)
 qreal NewsWeb::getViewHeight()
 {
     return webView->parentItem()->parentItem()->height();
+}
+
+qreal NewsWeb::getMaxScroll()
+{
+    return document.geometry().height() - (getViewHeight() - scroll->bottomSpacer());
 }

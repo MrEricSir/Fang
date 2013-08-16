@@ -42,8 +42,14 @@ Item {
                     Image {
                         id: feedIcon
                         
-                        source: (imageURL != "" && status == Image.Ready) ? imageURL : "images/symbol_rss.svg"
+                        source: (imageURL != "") ? imageURL : "images/symbol_rss.svg"
                         visible: !isUpdating
+                        
+                        onStatusChanged: {
+                            // Show the default for errors.
+                            if (status == Image.Error)
+                                source = "images/symbol_rss.svg";
+                        }
                         
                         anchors.verticalCenter: parent.verticalCenter
                         

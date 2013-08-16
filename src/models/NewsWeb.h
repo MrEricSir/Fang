@@ -38,12 +38,6 @@ signals:
      */
     void ready();
     
-    /**
-     * @brief Fired when a NewsItem is bookmarked.
-     * @param item
-     */
-    void newsItemBookmarked(NewsItem* item);
-    
 public slots:
     
     /**
@@ -109,9 +103,9 @@ private slots:
     void onContentYChanged(qreal contentY);
     
     /**
-     * @brief Bookmark timer.
+     * @brief Scroll read timer.
      */
-    void onBookmarkTimeout();
+    void onScrollReadTimeout();
     
     /**
      * @brief Timer for jumping (see below.)
@@ -193,6 +187,12 @@ private slots:
      */
     qreal getViewHeight();
     
+    /**
+     * @brief The maximum scroll amount of the document.
+     * @return 
+     */
+    qreal getMaxScroll();
+    
 private:
     // The WebView used to display this feed.
     QDeclarativeWebView *webView;
@@ -218,17 +218,21 @@ private:
     // Our QML element for figuring out what's up (and down) with the C++ unfriendly Flickable
     ScrollReader* scroll;
     
-    // The currently "bookmarked" item.
+    // The most recently bookmarked item.
     NewsItem* bookmarkedItem;
     
     // Used to poll page to advance bookmark.
-    QTimer bookmarkTimer;
+    QTimer scrollReadTimer;
     
     // Used to jump to bookmark after adding the feed.
     QTimer jumpToBookmarkTimer;
     
     // Item we're jumping to.
     NewsItem* jumpItem;
+    
+    // For visible item tracking.
+    NewsItem* lastTopVisibleItem;
+    NewsItem* lastBottomVisibleItem;
 };
 
 #endif // NEWSWEB_H
