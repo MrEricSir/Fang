@@ -42,7 +42,7 @@ Item {
                     Image {
                         id: feedIcon
                         
-                        source: imageURL != "" ? imageURL : "images/symbol_rss.svg"
+                        source: (imageURL != "" && status == Image.Ready) ? imageURL : "images/symbol_rss.svg"
                         visible: !isUpdating
                         
                         anchors.verticalCenter: parent.verticalCenter
