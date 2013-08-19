@@ -141,7 +141,7 @@ void FangApp::onFeedSelected(ListItem* _item) {
         //qDebug() << "Selected: " << feed->getTitle();
     } else {
         // How did this happen?!
-        currentFeed = NULL;
+        setCurrentFeed(NULL);
     }
 }
 

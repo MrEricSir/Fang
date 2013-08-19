@@ -17,6 +17,7 @@ void AllNewsFeedItem::init()
     // Grab all items from each feed and add them to two lists; unread and read news items.
     QList<NewsItem*> readNews;
     QList<NewsItem*> unreadNews;
+    qDebug() << "inits! current size: " << this->getNewsList()->size();
     for (int i = 0; i < feedList->rowCount(); i++) {
         FeedItem* feed = qobject_cast<FeedItem*>(feedList->row(i));
         Q_ASSERT(feed != NULL);
@@ -26,6 +27,7 @@ void AllNewsFeedItem::init()
         
         if (feed->getBookmark() == NULL) {
             // All items in this feed are unread (optimization.)
+            qDebug() << "Oh! ain't no b'mark for this feed " << feed->getTitle();
             unreadNews.append(*feed->getNewsList());
         } else if (feed->getBookmark() == feed->getNewsList()->last()) {
             // All items in this feed are read (optimization.)
@@ -52,6 +54,8 @@ void AllNewsFeedItem::init()
         }
     }
     
+    qDebug() << "# unread items: " << unreadNews.count();
+    
     // Sort the lists.
     qSort(readNews.begin(), readNews.end(), NewsItem::LessThan);
     qSort(unreadNews.begin(), unreadNews.end(), NewsItem::LessThan);
@@ -60,13 +64,15 @@ void AllNewsFeedItem::init()
     foreach(NewsItem* newsItem, readNews)
         append(newsItem);
     
-    // Set the last read item as the bookmark.
-    if (getNewsList()->count() > 0)
-        setBookmark(getNewsList()->last());
-    
     // Add all unread items.
     foreach(NewsItem* newsItem, unreadNews)
         append(newsItem);
+    
+    // Set the last read item as the bookmark.
+    if (readNews.count() > 0) { qDebug() << "Init setting b'mark to " << readNews.last()->getTitle();
+        FeedItem::setBookmark(readNews.last()); }
+    
+    qDebug() << "...init";
     
     dirty = false;
     initialized = true;
@@ -74,10 +80,15 @@ void AllNewsFeedItem::init()
 
 void AllNewsFeedItem::deinit()
 {
+    qDebug() << "deinit";
     initialized = false; // Don't do anything when feeds are added/removed.
     
-    // Clear our news list.  It'll be rebuilt next time we init.
+    // Clear our entire state, it'll be rebuilt on next init.
     clearNews();
+    FeedItem::setBookmark(NULL);
+    
+    
+    qDebug() << "...deinit";
 }
 
 void AllNewsFeedItem::onFeedAdded(ListItem* item)
@@ -85,6 +96,9 @@ void AllNewsFeedItem::onFeedAdded(ListItem* item)
     FeedItem* feed = qobject_cast<FeedItem*>(item);
     if (feed == NULL || feed == this)
         return;
+    
+    // From here on out, monitor the feed.
+    connectFeed(feed);
     
     // The following are only to be done while this feed is current & initialized.
     if (!initialized)
@@ -99,9 +113,6 @@ void AllNewsFeedItem::onFeedAdded(ListItem* item)
         NewsItem* news = feed->getNewsList()->at(i);
         append(news);
     }
-    
-    // From here on out, monitor the feed.
-    connectFeed(feed);
     
     dirty = true; // Possibly unsorted items.
 }
@@ -132,8 +143,6 @@ void AllNewsFeedItem::onNewsAppended(NewsItem *item)
     // If this is the current feed, update the data model accordingly.
     if (initialized)
         append(item);
-    
-    dirty = true;
 }
 
 void AllNewsFeedItem::onNewsRemoved(NewsItem *item)
@@ -141,6 +150,8 @@ void AllNewsFeedItem::onNewsRemoved(NewsItem *item)
     // See above.
     if (initialized)
         remove(item);
+    
+    dirty = true;
 }
 
 void AllNewsFeedItem::connectFeed(FeedItem *feed)
@@ -165,8 +176,10 @@ void AllNewsFeedItem::onFeedItemDataChanged()
 
 void AllNewsFeedItem::setBookmark(NewsItem *item)
 {
-    if (!canBookmark(item))
+    if (!canBookmark(item) || !initialized)
         return;
+    
+    qDebug() << "All news setting bookmark to: " << item->getTitle();
     
     // Compute indexes of current and new bookmark.
     NewsItem* currentBookmark = getBookmark();
@@ -214,19 +227,23 @@ quint32 AllNewsFeedItem::getUnreadCount() const
     return ret;
 }
 
-void AllNewsFeedItem::setVisibleItems(NewsItem *first, NewsItem *last)
+void AllNewsFeedItem::setVisibleItems(NewsItem *first, NewsItem *last, bool atBottom)
 {
-    FeedItem::setVisibleItems(first, last);
+    if (!initialized)
+        return;
+    
+    FeedItem::setVisibleItems(first, last, atBottom);
     
     // Resort items below the visible area, if needed.
     
-    if (!dirty || last == NULL)
+    if (!dirty || last == NULL || atBottom)
         return; // Nothing to do!
+    qDebug() << "set vis";
     
     if (getNewsList()->size() <= 1 || getNewsList()->last() == last) {
         // Nothing to sort.
         dirty = false;
-        
+        qDebug() << "..set vis (early exit)";
         return;
     }
     
@@ -244,6 +261,6 @@ void AllNewsFeedItem::setVisibleItems(NewsItem *first, NewsItem *last)
     // Add 'em all back!
     foreach(NewsItem* item, toSort)
         append(item);
-    
+    qDebug() << "...set vis";
     dirty = false;
 }

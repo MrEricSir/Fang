@@ -89,7 +89,6 @@ QModelIndex ListModel::indexFromItem(const ListItem *item) const
  
 void ListModel::clear()
 {
-  qDeleteAll(m_list);
   m_list.clear();
 }
 
@@ -110,8 +109,6 @@ bool ListModel::removeRow(int row, const QModelIndex &parent)
   
   emit removed(toRemove);
   
-  delete toRemove;
-  
   return true;
 }
  
@@ -129,10 +126,6 @@ bool ListModel::removeRows(int row, int count, const QModelIndex &parent)
   
   foreach(ListItem* item, toRemove) {
       emit removed(item);
-  }
-  
-  for(int i = 0; i < toRemove.size(); i++) {
-      delete toRemove.takeAt(i);
   }
   
   return true;

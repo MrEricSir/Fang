@@ -17,7 +17,6 @@ NewsWeb::NewsWeb(QObject *parent) :
     jumpToBookmarkTimer(),
     jumpItem(NULL)
 {
-    jumpToBookmarkTimer.setSingleShot(true);
 }
 
 void NewsWeb::init(QDeclarativeWebView *webView, ScrollReader* scroll)
@@ -69,8 +68,6 @@ void NewsWeb::clear()
 
 void NewsWeb::setFeed(FeedItem *feed)
 {
-    //qDebug() << "Set feed " << feed->getTitle() << " with items: " << feed->getNewsList()->size();
-    
     // Unset current signals.
     if (currentFeed != NULL) {
         disconnect(currentFeed, SIGNAL(appended(NewsItem*)), this, SLOT(append(NewsItem*)));
@@ -82,9 +79,13 @@ void NewsWeb::setFeed(FeedItem *feed)
     // Clear the view and set the new feed.
     clear();
     currentFeed = feed;
+    scroll->setBottomSpacer(-1); // Signifies that the spacer hasn't bet set yet.
     
     // Connect signals.
     if (currentFeed != NULL) {
+        qDebug() << "Feed " << currentFeed->getTitle() << " has items: " << currentFeed->getNewsList()->count()
+                 << "... and bookmark: " << (currentFeed->getBookmark() == NULL ? "NULL" : currentFeed->getBookmark()->getTitle());
+        
         // Append all exising items to the feed.
         QList<NewsItem*>* list = currentFeed->getNewsList();
         for (int i = 0; i < list->size(); i++) {
@@ -92,22 +93,19 @@ void NewsWeb::setFeed(FeedItem *feed)
             append(item);
         }
         
-        // Default last seen items to the top.
-        lastTopVisibleItem = lastBottomVisibleItem = NULL;
-        if (currentFeed->getNewsList()->size() >= 0)
-            lastTopVisibleItem = lastBottomVisibleItem = currentFeed->getNewsList()->first();
+        // Set current bookmark and jump to it.
+        if (currentFeed->getBookmark() != NULL) {
+            qDebug() << "This here feed's bookmark is: " << currentFeed->getBookmark()->getTitle();
+            setBookmark(currentFeed->getBookmark());
+            jumpToItem(currentFeed->getBookmark());
+        }
         
+        // Connect the feed's signals.
         connect(currentFeed, SIGNAL(appended(NewsItem*)), this, SLOT(append(NewsItem*)));
         connect(currentFeed, SIGNAL(removed(NewsItem*)), this, SLOT(remove(NewsItem*)));
         connect(currentFeed, SIGNAL(bookmarkChanged(NewsItem*)),
                    this, SLOT(setBookmark(NewsItem*)));
         
-        // Set current bookmark and jump to it.
-        if (currentFeed->getBookmark() != NULL) {
-            setBookmark(currentFeed->getBookmark());
-            lastTopVisibleItem = lastBottomVisibleItem = currentFeed->getBookmark();
-            jumpToItem(currentFeed->getBookmark());
-        }
     }
 }
 
@@ -221,16 +219,11 @@ void NewsWeb::onContentYChanged(qreal contentY)
 
 void NewsWeb::onScrollReadTimeout()
 {
-    if (currentFeed->getNewsList()->size() <= 0)
+    if (currentFeed == NULL || currentFeed->getNewsList()->size() <= 0)
         return;  // Nothing to do.
     
-    if (currentFeed->getNewsList()->size() == 1) {
-        // First item is the only one!
-        currentFeed->setVisibleItems(currentFeed->getNewsList()->first(),
-                                     currentFeed->getNewsList()->first());
-        
-        return;
-    }
+    if (elementForItem(currentFeed->getNewsList()->last()).geometry().height() <= 0)
+        return; // Geometry hasn't been computed yet.
     
     // This method figures out which items are visible
     qreal contentY = scroll->contentY();
@@ -238,30 +231,60 @@ void NewsWeb::onScrollReadTimeout()
     int viewHeight = getViewHeight();
     int fivePercentOfHeight = viewHeight / 5;
     
-    // Visible items.
+    // We're at the bottom if there's not much more to scroll.
+    bool atBottom = contentY >= getMaxScroll() - (scroll->bottomSpacer() / 10);
+    
+    if (currentFeed->getNewsList()->size() == 1) {
+        // First item is the only one!
+        currentFeed->setVisibleItems(NULL,
+                                     currentFeed->getNewsList()->first(),
+                                     atBottom);
+        
+        return;
+    }
+    
+    // "Visible" items.
+    // Despite the name, the top item is always just above the viewport, and the bottom item
+    // may be in it or just under it.
     NewsItem* topVisibleItem = NULL;
     NewsItem* bottomVisibleItem = NULL;
     
-    if (contentY <= fivePercentOfHeight) {
+    if (contentY == 0) {
         // At the top!
-        // Just grab the first item.
-        topVisibleItem = currentFeed->getNewsList()->first();
+        topVisibleItem = NULL;
     } else {
         // Somewhere other than the top.
         // Start from y = contentY, move up a few notches to grab the first item just off the screen.
         int yStart = contentY;
+        QWebElement topItemElement;
         for (int i = 0; i < 3; i++) {
+            if (yStart < 0)
+                break; // She can't take anymore, captain.
+            
             QWebHitTestResult hitTest = document.webFrame()->hitTestContent(QPoint(halfWidth, yStart));
-            topVisibleItem = itemForElement(hitTest.element());
+            topItemElement = hitTest.element();
+            topVisibleItem = itemForElement(topItemElement);
             if (topVisibleItem != NULL) {
                 break;
             }
             
             yStart -= fivePercentOfHeight; // Move up a little moar.
         }
+        
+        // Ensure the top item is entirely outside the viewport.
+        if (topVisibleItem != NULL && topItemElement.geometry().y() +
+                topItemElement.geometry().height() > contentY) {
+            int index = currentFeed->getNewsList()->indexOf(topVisibleItem);
+            if (index > 0) {
+                topVisibleItem = currentFeed->getNewsList()->at(index - 1);
+            } else {
+                // No previous item.
+                topVisibleItem = NULL;
+            }
+        }
     }
     
-    if (contentY > getMaxScroll() - scroll->bottomSpacer()) {
+    if (contentY >= getMaxScroll() - scroll->bottomSpacer()) {
         // At the bottom!
         // Just grab the first item.
         bottomVisibleItem = currentFeed->getNewsList()->last();
@@ -280,20 +303,8 @@ void NewsWeb::onScrollReadTimeout()
         }
     }
     
-    // SAFETY
-    // Ensure we're sending sensible results.
-    if (topVisibleItem == NULL)
-        topVisibleItem = lastTopVisibleItem;
-    
-    if (bottomVisibleItem == NULL)
-        bottomVisibleItem = lastBottomVisibleItem;
-    
     // Set 'em!
-    currentFeed->setVisibleItems(topVisibleItem, bottomVisibleItem);
-    
-    // "Remember." -- Spock
-    lastTopVisibleItem = topVisibleItem;
-    lastBottomVisibleItem = bottomVisibleItem;
+    currentFeed->setVisibleItems(topVisibleItem, bottomVisibleItem, atBottom);
 }
 
 void NewsWeb::onJumpTimeout()
@@ -313,8 +324,11 @@ void NewsWeb::onJumpTimeout()
         y = maxY;
     
     // Just do it.
+    qDebug() << "Jump to!";
     scroll->setJumpY(y);
     
+    // Cool, we're done now.
+    jumpToBookmarkTimer.stop();
     jumpItem = NULL;
 }
 

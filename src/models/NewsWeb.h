@@ -229,10 +229,6 @@ private:
     
     // Item we're jumping to.
     NewsItem* jumpItem;
-    
-    // For visible item tracking.
-    NewsItem* lastTopVisibleItem;
-    NewsItem* lastBottomVisibleItem;
 };
 
 #endif // NEWSWEB_H

@@ -100,7 +100,7 @@ public:
      * @brief Used to set the bookmark internally.  External classes shouldn't need to call this.
      * @param item
      */
-    virtual void setBookmark(NewsItem* item);
+    virtual void setBookmark(NewsItem* item, bool signal = true);
     
     /**
      * @param item
@@ -126,7 +126,7 @@ public:
      * @param first
      * @param last
      */
-    virtual void setVisibleItems(NewsItem* first, NewsItem* last);
+    virtual void setVisibleItems(NewsItem* first, NewsItem* last, bool atBottom);
     
 signals:
     

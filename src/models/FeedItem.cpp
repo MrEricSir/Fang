@@ -165,7 +165,7 @@ bool FeedItem::canBookmark(NewsItem *item)
     return newBookmarkIndex > currentBookmarkIndex;
 }
 
-void FeedItem::setBookmark(NewsItem *item)
+void FeedItem::setBookmark(NewsItem *item, bool signal)
 {
     if (item != NULL)
         Q_ASSERT(newsList->contains(item));
@@ -177,8 +177,11 @@ void FeedItem::setBookmark(NewsItem *item)
         return; // Shouldn't have called this method, sir.
     
     bookmark = item;
-    emit bookmarkChanged(bookmark);
-    emit dataChanged();
+    
+    if (signal) {
+        emit bookmarkChanged(bookmark);
+        emit dataChanged();
+    }
 }
 
 void FeedItem::setIsCurrent(bool current)
@@ -186,11 +189,19 @@ void FeedItem::setIsCurrent(bool current)
     isCurrent = current;
 }
 
-void FeedItem::setVisibleItems(NewsItem *first, NewsItem *last)
+void FeedItem::setVisibleItems(NewsItem *first, NewsItem *last, bool atBottom)
 {
-    // Bookmark the first item if it makes sense to do so.
-    if (first == NULL)
-        return;
+    Q_UNUSED(last);
     
-    setBookmark(first);
+    if (newsList->count() == 0)
+        return; // Nothing to bookmark.
+    
+    if (atBottom) {
+        // Bookmark the last item.
+        qDebug() << "Bottom bookmark yo";
+        setBookmark(newsList->last());
+    } else if (first != NULL) {
+        // Bookmark the first item.
+        setBookmark(first);
+    }
 }

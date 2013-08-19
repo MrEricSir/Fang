@@ -81,7 +81,7 @@ void LoadAllFeedsOperation::execute()
             
             // If this is the bookmark, link 'er up.
             if (newsItem->getDbID() == bookmarkId)
-                item->setBookmark(newsItem);
+                item->setBookmark(newsItem, false);
         }
     }
     
