@@ -313,7 +313,7 @@ void NewsWeb::onJumpTimeout()
         return;
     
     QWebElement element = document.findFirst(".newsContainer#" + idForItem(jumpItem) + ">.bookmark");
-    if (element.isNull())
+    if (element.isNull() || element.geometry().height() <= 0)
         return;
     
     int y = element.geometry().y();
