@@ -14,7 +14,7 @@ class AllNewsFeedItem : public FeedItem
 public:
     explicit AllNewsFeedItem(ListModel *feedList);
     
-    virtual void setBookmark(NewsItem *item); // Override
+    virtual void setBookmark(NewsItem* item, bool signal = true); // Override
     virtual void setIsCurrent(bool current); // Override
     virtual quint32 getUnreadCount() const; // Override
     virtual void setVisibleItems(NewsItem* first, NewsItem* last, bool atBottom); // Override

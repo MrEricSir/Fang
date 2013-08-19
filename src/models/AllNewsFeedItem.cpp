@@ -174,12 +174,12 @@ void AllNewsFeedItem::onFeedItemDataChanged()
     emit dataChanged();
 }
 
-void AllNewsFeedItem::setBookmark(NewsItem *item)
+void AllNewsFeedItem::setBookmark(NewsItem *item, bool signal)
 {
     if (!canBookmark(item) || !initialized)
         return;
     
-    qDebug() << "All news setting bookmark to: " << item->getTitle();
+    //qDebug() << "All news setting bookmark to: " << item->getTitle();
     
     // Compute indexes of current and new bookmark.
     NewsItem* currentBookmark = getBookmark();
@@ -196,7 +196,7 @@ void AllNewsFeedItem::setBookmark(NewsItem *item)
     }
     
     // Set this feed's bookmark.
-    FeedItem::setBookmark(item);
+    FeedItem::setBookmark(item, signal);
 }
 
 void AllNewsFeedItem::setIsCurrent(bool current)

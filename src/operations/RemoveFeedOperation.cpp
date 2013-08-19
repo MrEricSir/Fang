@@ -34,7 +34,7 @@ void RemoveFeedOperation::execute()
             // *for now, fall thru to emit finished.*
         } else {
             // Good to go!
-            qDebug() << "Removal allegedly worked!";
+            //qDebug() << "Removal allegedly worked!";
             db().commit();
             feed->clearDbId(); // Remember that we did this.
         }

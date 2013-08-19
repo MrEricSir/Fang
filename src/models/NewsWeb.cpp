@@ -83,9 +83,6 @@ void NewsWeb::setFeed(FeedItem *feed)
     
     // Connect signals.
     if (currentFeed != NULL) {
-        qDebug() << "Feed " << currentFeed->getTitle() << " has items: " << currentFeed->getNewsList()->count()
-                 << "... and bookmark: " << (currentFeed->getBookmark() == NULL ? "NULL" : currentFeed->getBookmark()->getTitle());
-        
         // Append all exising items to the feed.
         QList<NewsItem*>* list = currentFeed->getNewsList();
         for (int i = 0; i < list->size(); i++) {
@@ -95,7 +92,7 @@ void NewsWeb::setFeed(FeedItem *feed)
         
         // Set current bookmark and jump to it.
         if (currentFeed->getBookmark() != NULL) {
-            qDebug() << "This here feed's bookmark is: " << currentFeed->getBookmark()->getTitle();
+            //qDebug() << "This here feed's bookmark is: " << currentFeed->getBookmark()->getTitle();
             setBookmark(currentFeed->getBookmark());
             jumpToItem(currentFeed->getBookmark());
         }
@@ -226,10 +223,10 @@ void NewsWeb::onScrollReadTimeout()
         return; // Geometry hasn't been computed yet.
     
     // This method figures out which items are visible
-    qreal contentY = scroll->contentY();
     int halfWidth = getViewWidth() / 2;
     int viewHeight = getViewHeight();
     int fivePercentOfHeight = viewHeight / 5;
+    qreal contentY = scroll->contentY();
     
     // We're at the bottom if there's not much more to scroll.
     bool atBottom = contentY >= getMaxScroll() - (scroll->bottomSpacer() / 10);
@@ -265,6 +262,9 @@ void NewsWeb::onScrollReadTimeout()
             topItemElement = hitTest.element();
             topVisibleItem = itemForElement(topItemElement);
             if (topVisibleItem != NULL) {
+                // Get the "REAL" element (This is important for geometry computations.)
+                topItemElement = elementForItem(topVisibleItem);
+                
                 break;
             }
             
@@ -324,7 +324,7 @@ void NewsWeb::onJumpTimeout()
         y = maxY;
     
     // Just do it.
-    qDebug() << "Jump to!";
+    //qDebug() << "Jump to!";
     scroll->setJumpY(y);
     
     // Cool, we're done now.
