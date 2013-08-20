@@ -134,21 +134,20 @@ void Parser::parseXml() {
             }
 
         } else if (xml.isCharacters() && !xml.isWhitespace()) {
-            QString xmlString = xml.text().toString();//.toLower();
             if (currentTag == "title" && currentPrefix == "")
-                title += xmlString;
+                title += xml.text().toString();
             else if (currentTag == "link" && currentPrefix == "") {
-                url += xmlString;
+                url += xml.text().toString();
             } else if (currentTag == "description" || currentTag == "summary")
-                subtitle += xmlString;
+                subtitle += xml.text().toString();
             else if (currentTag == "name")
-                author += xmlString;
+                author += xml.text().toString();
             else if (currentTag == "pubdate" || currentTag == "lastbuilddate" 
                      || currentTag == "updated")
-                timestamp += xmlString;
+                timestamp += xml.text().toString();
             else if ((currentTag == "encoded" && currentPrefix == "content")
                      || (currentTag == "content" && hasType))
-                content += xmlString;
+                content += xml.text().toString();
         }
     }
     

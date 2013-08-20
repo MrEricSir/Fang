@@ -198,11 +198,11 @@ void FeedItem::setVisibleItems(NewsItem *first, NewsItem *last, bool atBottom)
     
     if (atBottom) {
         // Bookmark the last item.
-        //qDebug() << "setVisibleItems Bottom bookmark yo";
+        qDebug() << "setVisibleItems Bottom bookmark yo";
         setBookmark(newsList->last());
     } else if (first != NULL) {
         // Bookmark the first item.
-        //qDebug() << "setVisibleItems Bookmark first visible item: " << first->getTitle();
+        qDebug() << "setVisibleItems Bookmark first visible item: " << first->getTitle();
         setBookmark(first);
     }
 }

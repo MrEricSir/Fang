@@ -154,6 +154,9 @@ void NewsWeb::updateBottomSpacer()
     if (scroll == NULL)
         return; // Can't continue.
     
+    if (webView->status() != QDeclarativeWebView::Ready)
+        return; // Not ready.
+    
     qreal spacer = 0;
     
     if (items.size() > 0) {
@@ -173,6 +176,8 @@ void NewsWeb::updateBottomSpacer()
 
 void NewsWeb::onLoadFinished(bool ok)
 {
+    bumpScrollReadTimer();
+    
     if (!ok)
         return; // This happens, just ignore it.
     
@@ -204,6 +209,9 @@ void NewsWeb::onGeometryChangeRequested()
     // If we're preparing to jump to a bookmark, delay the timer very slightly.
     if (jumpToBookmarkTimer.isActive())
         jumpToBookmarkTimer.start(10);
+    
+    // If the scroll timer is on, delay it.
+    bumpScrollReadTimer();
 }
 
 void NewsWeb::onContentYChanged(qreal contentY)
@@ -216,6 +224,9 @@ void NewsWeb::onContentYChanged(qreal contentY)
 
 void NewsWeb::onScrollReadTimeout()
 {
+    if (webView->status() != QDeclarativeWebView::Ready)
+        return; // Web view isn't in the right state.
+    
     if (currentFeed == NULL || currentFeed->getNewsList()->size() <= 0)
         return;  // Nothing to do.
     
@@ -311,6 +322,9 @@ void NewsWeb::onJumpTimeout()
 {
     if (jumpItem == NULL)
         return;
+    
+    if (webView->status() != QDeclarativeWebView::Ready)
+        return; // Web view isn't in the right state.
     
     QWebElement element = document.findFirst(".newsContainer#" + idForItem(jumpItem) + ">.bookmark");
     if (element.isNull() || element.geometry().height() <= 0)
@@ -533,4 +547,10 @@ qreal NewsWeb::getViewHeight()
 qreal NewsWeb::getMaxScroll()
 {
     return document.geometry().height() - (getViewHeight() - scroll->bottomSpacer());
+}
+
+void NewsWeb::bumpScrollReadTimer()
+{
+    if (scrollReadTimer.isActive())
+        scrollReadTimer.start(500);
 }

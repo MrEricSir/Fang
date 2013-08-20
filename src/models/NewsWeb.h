@@ -31,6 +31,7 @@ public:
     
     virtual bool eventFilter(QObject *watched, QEvent *e);
     
+    
 signals:
     
     /**
@@ -192,6 +193,11 @@ private slots:
      * @return 
      */
     qreal getMaxScroll();
+    
+    /**
+     * @brief Briefly delays scroll read timer.
+     */
+    void bumpScrollReadTimer();
     
 private:
     // The WebView used to display this feed.
