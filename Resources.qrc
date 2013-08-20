@@ -29,5 +29,7 @@
         <file>qml/Fang/images/symbol_rss.svg</file>
         <file>qml/Fang/Spinner.qml</file>
         <file>html/bookmark.svg</file>
+        <file>qml/Fang/images/symbol_pencil.svg</file>
+        <file>qml/Fang/EditDialog.qml</file>
     </qresource>
 </RCC>

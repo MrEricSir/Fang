@@ -23,6 +23,10 @@ Item {
             anchors.margins: imageMargin
             fillMode: Image.PreserveAspectCrop
             
+            // Make SVGs render real good like.
+            sourceSize.width: width
+            sourceSize.height: height
+            
             MouseArea {
                 id: buttonMouseArea
                 

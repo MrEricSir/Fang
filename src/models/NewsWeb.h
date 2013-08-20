@@ -120,6 +120,11 @@ private slots:
     void jumpToItem(NewsItem* item);
     
     /**
+     * @brief Same as jumpToItem(), but jumps to the current bookmark (or the top.)
+     */
+    void jumpToBookmark();
+    
+    /**
      * @brief Creates a new element for the given item, ready to be inserted.
      * @param item
      * @return 

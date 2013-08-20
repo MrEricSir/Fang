@@ -74,9 +74,10 @@ Rectangle {
         onCloseClicked: sidebar.state = "closed"
         
         onFeedSelected: news.reset()
-        
+        onFeedDoubleClicked: news.jumpToBookmark()
         onAddClicked: addFeed.open()
         onRemoveClicked: removeFeed.open()
+        onEditClicked: editFeed.open()
     }
     
     
@@ -145,5 +146,18 @@ Rectangle {
         
         // This is how we can remove the feed, you see.
         listView: sidebar.listView
+    }
+    
+    EditDialog{
+        id: editFeed
+        
+        x: 0
+        y: 0
+        width: parent.width
+        height: parent.height
+        
+        title: "Edit a Feed"
+        
+        // TODO: somehow set current item
     }
 }

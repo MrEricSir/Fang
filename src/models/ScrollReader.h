@@ -30,10 +30,15 @@ public:
     inline qreal bottomSpacer() { return _bottomSpacer; }
     void setBottomSpacer(qreal spacer);
     
+public slots:
+    
+    Q_INVOKABLE void jumpToBookmark();
+    
 signals:
     void contentYChanged(qreal);
     void jumpYChanged(qreal);
     void bottomSpacerChanged(qreal);
+    void jumpToBookmarkRequested();
     
 private:
     qreal _contentY;

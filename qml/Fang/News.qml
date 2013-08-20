@@ -11,6 +11,10 @@ Item {
         //newsFlickable.contentY = 0; // TODO: zoom to q position of bookmark
     }
     
+    function jumpToBookmark() {
+        newsViewScrollReader.jumpToBookmark();
+    }
+    
     Item {
         id: newsMargin
         
@@ -37,8 +41,11 @@ Item {
                 
                 // Used for jumping the view to a position.
                 onJumpYChanged: {
-                    //console.log("Jump: ", jumpY)
+                    if (jumpY < 0)
+                        return;
+                    
                     newsFlickable.contentY = jumpY
+                    jumpY = -1; // reset / acknowledge
                 }
             }
             

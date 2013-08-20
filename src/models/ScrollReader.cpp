@@ -34,3 +34,8 @@ void ScrollReader::setBottomSpacer(qreal spacer)
     _bottomSpacer = spacer;
     emit bottomSpacerChanged(_bottomSpacer);
 }
+
+void ScrollReader::jumpToBookmark()
+{
+    emit jumpToBookmarkRequested();
+}

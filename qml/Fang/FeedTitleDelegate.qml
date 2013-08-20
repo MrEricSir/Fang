@@ -4,8 +4,9 @@ Item {
     id: feedTitleDelegate
     height: 35
     
-    // Read-only
+    signal doubleClicked()
     
+    // Read-only
     property bool isAllNews: index == 0
     
     Row {
@@ -175,6 +176,12 @@ Item {
                     id: feedItemMouseArea
                     anchors.fill: parent
                     onClicked: feedListView.currentIndex = index
+                    
+                    onDoubleClicked: {
+                        if (feedListView.currentIndex == index)
+                            feedTitleDelegate.doubleClicked()
+                    }
+                
                 }
             }
         }

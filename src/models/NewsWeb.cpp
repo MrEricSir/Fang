@@ -38,6 +38,7 @@ void NewsWeb::init(QDeclarativeWebView *webView, ScrollReader* scroll)
     connect(&scrollReadTimer, SIGNAL(timeout()), this, SLOT(onScrollReadTimeout()));
     connect(&jumpToBookmarkTimer, SIGNAL(timeout()), this, SLOT(onJumpTimeout()));
     connect(scroll, SIGNAL(contentYChanged(qreal)), this, SLOT(onContentYChanged(qreal)));
+    connect(scroll, SIGNAL(jumpToBookmarkRequested()), this, SLOT(jumpToBookmark()));
     
     // Load the news page template.
     webView->setUrl(QUrl("qrc:html/NewsPage.html"));
@@ -94,7 +95,7 @@ void NewsWeb::setFeed(FeedItem *feed)
         if (currentFeed->getBookmark() != NULL) {
             //qDebug() << "This here feed's bookmark is: " << currentFeed->getBookmark()->getTitle();
             setBookmark(currentFeed->getBookmark());
-            jumpToItem(currentFeed->getBookmark());
+            jumpToBookmark();
         }
         
         // Connect the feed's signals.
@@ -352,6 +353,14 @@ void NewsWeb::jumpToItem(NewsItem *item)
     
     // Set jump in 150 ms.
     jumpToBookmarkTimer.start(150);
+}
+
+void NewsWeb::jumpToBookmark()
+{
+    if (bookmarkedItem == NULL)
+        scroll->setJumpY(0);
+    else
+        jumpToItem(bookmarkedItem);
 }
 
 QWebElement NewsWeb::createNewElementForItem(NewsItem *item)

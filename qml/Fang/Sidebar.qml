@@ -6,8 +6,10 @@ Item {
     
     signal addClicked()
     signal removeClicked()
+    signal editClicked()
     signal closeClicked()
     signal feedSelected()
+    signal feedDoubleClicked()
     
     // Read-only properties.
     property int buttonSize: 30
@@ -41,6 +43,10 @@ Item {
                             feedListView.model.selected = self
                         
                         sidebar.feedSelected();
+                    }
+                    
+                    onDoubleClicked: {
+                        feedDoubleClicked();
                     }
                 }
                 
@@ -86,16 +92,35 @@ Item {
                 onClicked: addClicked()
             }
             
-            // Removes a feed.
+            // Edits a feed.
             SidebarButton {
-                id: removeButton
+                id: editButton
                 
                 x: buttonSize + 10
                 
                 width: buttonSize
                 height: buttonSize
                 
-                visible: feedListView.currentIndex != 0
+                visible: feedListView.currentIndex > 0
+                
+                imageMargin: 5
+                color: "#777"
+                hoverColor: "#27a"
+                imageURL: "images/symbol_pencil.svg"
+                
+                onClicked: editClicked()
+            }
+            
+            // Removes a feed.
+            SidebarButton {
+                id: removeButton
+                
+                x: buttonSize * 2 + 20
+                
+                width: buttonSize
+                height: buttonSize
+                
+                visible: feedListView.currentIndex > 0
                 
                 imageMargin: 5
                 color: "#777"

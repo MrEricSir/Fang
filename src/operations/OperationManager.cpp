@@ -36,17 +36,17 @@ void OperationManager::runNextOperations()
     if (queue.isEmpty())
         return; // Nothing to do.
     
-    // Don't do too much at once.  Schedule another call in the future if we're busy.
+    // Don't do too much at once.  Schedule another call in the future if we're still busy.
     if (pending.size() >= 2) {
         executeOperations();
         
         return; 
     }
     
-    // Pop the next 3 ops off the queue and run 'em.
+    // Pop the next 2 ops off the queue and run 'em.
     int i = 0;
     while(!queue.isEmpty()) {
-        if (i >= 3)
+        if (i >= 2)
             break;
         
         i++;
