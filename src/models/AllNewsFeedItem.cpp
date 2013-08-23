@@ -17,7 +17,7 @@ void AllNewsFeedItem::init()
     // Grab all items from each feed and add them to two lists; unread and read news items.
     QList<NewsItem*> readNews;
     QList<NewsItem*> unreadNews;
-    qDebug() << "inits! current size: " << this->getNewsList()->size();
+    //qDebug() << "inits! current size: " << this->getNewsList()->size();
     for (int i = 0; i < feedList->rowCount(); i++) {
         FeedItem* feed = qobject_cast<FeedItem*>(feedList->row(i));
         Q_ASSERT(feed != NULL);
@@ -27,7 +27,7 @@ void AllNewsFeedItem::init()
         
         if (feed->getBookmark() == NULL) {
             // All items in this feed are unread (optimization.)
-            qDebug() << "Oh! ain't no b'mark for this feed " << feed->getTitle();
+            //qDebug() << "Oh! ain't no b'mark for this feed " << feed->getTitle();
             unreadNews.append(*feed->getNewsList());
         } else if (feed->getBookmark() == feed->getNewsList()->last()) {
             // All items in this feed are read (optimization.)
@@ -54,7 +54,7 @@ void AllNewsFeedItem::init()
         }
     }
     
-    qDebug() << "# unread items: " << unreadNews.count();
+    //qDebug() << "# unread items: " << unreadNews.count();
     
     // Sort the lists.
     qSort(readNews.begin(), readNews.end(), NewsItem::LessThan);
@@ -72,7 +72,7 @@ void AllNewsFeedItem::init()
     if (readNews.count() > 0) { qDebug() << "Init setting b'mark to " << readNews.last()->getTitle();
         FeedItem::setBookmark(readNews.last()); }
     
-    qDebug() << "...init";
+    //qDebug() << "...init";
     
     dirty = false;
     initialized = true;
@@ -80,7 +80,7 @@ void AllNewsFeedItem::init()
 
 void AllNewsFeedItem::deinit()
 {
-    qDebug() << "deinit";
+    //qDebug() << "deinit";
     initialized = false; // Don't do anything when feeds are added/removed.
     
     // Clear our entire state, it'll be rebuilt on next init.
@@ -88,7 +88,7 @@ void AllNewsFeedItem::deinit()
     FeedItem::setBookmark(NULL);
     
     
-    qDebug() << "...deinit";
+    //qDebug() << "...deinit";
 }
 
 void AllNewsFeedItem::onFeedAdded(ListItem* item)

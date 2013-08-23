@@ -95,7 +95,7 @@ Dialog {
     // Magic beans that validate & add feeds (see C++ layer.)
     FeedValidator {
         id: validator
-        url: textURL.getEditText()
+        url: textURL.editText
         
         property bool validationComplete: false
         
@@ -118,19 +118,10 @@ Dialog {
                 addFeed();
                 
                 // Go into final phase!
-                dismissTimer.restart();
+                dismiss();
             }
         }
         
-        // Timer so we give the user a glimpse of our "success" message before closing
-        // the dialog.
-        Timer {
-            id: dismissTimer
-            interval: 700
-            running: false
-            repeat: false
-            
-            onTriggered: addDialog.close()
-        }
+        
     }
 }

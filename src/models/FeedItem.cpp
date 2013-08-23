@@ -131,6 +131,16 @@ void FeedItem::setImageURL(const QUrl &url)
     emit dataChanged();
 }
 
+void FeedItem::setTitle(const QString &newTitle)
+{
+    if (title == newTitle)
+        return;
+    
+    title = newTitle;
+    emit titleChanged();
+    emit dataChanged();
+}
+
 void FeedItem::append(NewsItem *item)
 {
     if (newsList->contains(item))

@@ -148,7 +148,7 @@ Rectangle {
         listView: sidebar.listView
     }
     
-    EditDialog{
+    EditDialog {
         id: editFeed
         
         x: 0
@@ -158,6 +158,7 @@ Rectangle {
         
         title: "Edit a Feed"
         
-        // TODO: somehow set current item
+        // This lets us access the current item.
+        listView: sidebar.listView
     }
 }

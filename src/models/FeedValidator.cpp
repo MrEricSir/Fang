@@ -76,7 +76,6 @@ void FeedValidator::removeFeed(FeedItem *feed)
     FangApp::instance()->removeFeed(feed);
 }
 
-
 void FeedValidator::setUrl(QString url)
 {
     if (url == _url)

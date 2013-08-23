@@ -5,6 +5,18 @@ import Fang 1.0
 Dialog {
     id: editDialog
     
+    property variant listView
+    
+    onStateChanged: {
+        if (state == "open") {
+            reset();
+        }
+    }
+    
+    function reset() {
+        feedTitle.setEditText(listView.model.selected.getTitle());
+    }
+    
     Item {
         id: container
         
@@ -29,22 +41,22 @@ Dialog {
                 
                 hint: "Feed title"
                 
-                onEnterPressed: saveButton.click()
-                
+                onEnterPressed: saveEditButton.click()
                 width: parent.width
             }
             
             DialogButton {
-                id: saveButton
+                id: saveEditButton
                 
                 text: "Save"
                 onClicked: {
-                    // TODO actually save.
+                    // Save the new title.
+                    listView.model.selected.setTitle(feedTitle.editText);
                     
                     // Dismiss the dialog.
-                    dismissTimer.restart();
+                    dismiss();
                 }
-                enabled: !dismissTimer.running && feedTitle.editText !== ""
+                enabled: !isClosing && feedTitle.editText.trim() !== ""
                 
                 width: parent.width
                 
@@ -59,23 +71,11 @@ Dialog {
                 
                 text: "Cancel"
                 onClicked: close()
-                enabled: !dismissTimer.running
+                enabled: !isClosing
                 
                 width: parent.width
             }
         
-        }
-        
-        // Timer so we give the user a glimpse of our "success" message before closing
-        // the dialog.
-        Timer {
-            id: dismissTimer
-            
-            interval: 700
-            running: false
-            repeat: false
-            
-            onTriggered: removeDialog.close()
         }
     }
 }

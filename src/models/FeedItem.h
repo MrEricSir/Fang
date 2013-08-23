@@ -62,7 +62,7 @@ public:
         return ret;
     }
     
-    inline QString getTitle() const { return title; }
+    Q_INVOKABLE inline QString getTitle() const { return title; }
     inline QString getSubtitle() const { return subtitle; }
     inline QDateTime getLastUpdated() const { return lastUpdated; }
     inline quint32 getMinutesToUpdate() const { return minutesToUpdate; }
@@ -75,6 +75,8 @@ public:
     virtual quint32 getUnreadCount() const;
     
     void setImageURL(const QUrl& url);
+    
+    Q_INVOKABLE void setTitle(const QString& newTitle);
     
     /**
      * @brief Appends a NewsItem to the end of the feed.
@@ -133,6 +135,7 @@ signals:
     void appended(NewsItem* item);
     void removed(NewsItem* item);
     void bookmarkChanged(NewsItem* bookmark);
+    void titleChanged();
         
 private:
     qint64 _id;

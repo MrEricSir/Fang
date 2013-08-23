@@ -37,9 +37,9 @@ Dialog {
                     validator.removeFeed(listView.model.selected);
                     
                     // Dismiss the dialog.
-                    dismissTimer.restart();
+                    dismiss();
                 }
-                enabled: !dismissTimer.running
+                enabled: !isClosing
                 
                 width: parent.width
                 
@@ -54,25 +54,10 @@ Dialog {
                 
                 text: "Cancel"
                 onClicked: close()
-                enabled: !dismissTimer.running
+                enabled: !isClosing
                 
                 width: parent.width
             }
-        
-        }
-        
-        
-        
-        // Timer so we give the user a glimpse of our "success" message before closing
-        // the dialog.
-        Timer {
-            id: dismissTimer
-            
-            interval: 700
-            running: false
-            repeat: false
-            
-            onTriggered: removeDialog.close()
         }
     }
 }

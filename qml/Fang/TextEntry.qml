@@ -10,13 +10,16 @@ Rectangle {
     // The grayed-out "hint" text.
     property string hint: ""
     
-    function setEditText(editText) {
-        edit.text = editText;
+    // Set the editable text.
+    function setEditText(myText) {
+        edit.text = myText;
+        
+        // Set position to end.
+        edit.cursorPosition = edit.text.length
     }
     
-    function getEditText() {
-        return edit.text;
-    }
+    // Ready-only.
+    property string editText: edit.text
     
     // Signaled on every text change.
     signal editTextChanged(string text)
@@ -36,6 +39,11 @@ Rectangle {
         
         anchors.centerIn: parent
         
+        MouseArea {
+            anchors.fill: parent
+            onClicked: edit.forceActiveFocus()
+        }
+        
         Rectangle {
             id: textEntryContainerInnerMargin
             
@@ -52,7 +60,7 @@ Rectangle {
                 
                 text: hint
                 
-                visible: edit.text == "" && !edit.activeFocus
+                visible: edit.text == "" || !edit.activeFocus
                 
                 color: "#ccc"
                 font.italic: true
@@ -76,9 +84,12 @@ Rectangle {
                 contentHeight: edit.height
                 
                 function ensureVisible(r) {
+                    if (edit.width < width)
+                        edit.width = width;
+                    
                     if (edit.text == "") {
                         contentX = 0;
-                        edit.width = width; // reset width to prevent it from being too narrow
+                        //edit.width = width; // reset width to prevent it from being too narrow
                     } else if (contentX >= r.x)
                         contentX = r.x;
                     else if (contentX + width <= r.x + r.width)
@@ -99,6 +110,8 @@ Rectangle {
                     focus: true
                     wrapMode: TextEdit.NoWrap
                     
+                    onActiveFocusChanged: console.log("Got focus")
+                    
                     // Used with the above flickable.
                     onCursorRectangleChanged: flick.ensureVisible(cursorRectangle)
                     
@@ -112,6 +125,11 @@ Rectangle {
                         
                         editTextChanged(text);
                         flick.ensureVisible(cursorRectangle); // Used with above flickable.
+                    }
+                    
+                    onVisibleChanged: {
+                        if (visible)
+                            forceActiveFocus();
                     }
                 }
             }

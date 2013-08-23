@@ -13,6 +13,9 @@ Rectangle {
     // This allows children to be positioned within the element.
     default property alias contents: placeholder.children
     
+    // Read only.
+    property bool isClosing: state == "close" || dismissTimer.running
+    
     color: "white"
     visible: false // Managed by state transitions
     state: "closed"
@@ -22,10 +25,17 @@ Rectangle {
         State { name: "closed" }
     ]
     
+    // Opens the dialog.
     function open() {
         state = "open";
     }
     
+    // Dismisses the dialog after a short delay.  Normally it's best to use this instead of close.
+    function dismiss() {
+        dismissTimer.restart();
+    }
+    
+    // Immediately closes the dialog.
     function close() {
         state = "closed";
     }
@@ -82,6 +92,13 @@ Rectangle {
         }
     ]
     
+    focus: true
+    Keys.onPressed: {
+        if (event.key === Qt.Key_Escape) {
+            close();
+        }
+    }
+    
     Text {
         id: dialogTitle
         
@@ -114,5 +131,16 @@ Rectangle {
         anchors.left: parent.left
         anchors.leftMargin: 15
         anchors.right: parent.right
+    }
+    
+    // Timer so we give the user a glimpse of our message before closing
+    // the dialog.
+    Timer {
+        id: dismissTimer
+        interval: 700
+        running: false
+        repeat: false
+        
+        onTriggered: close()
     }
 }
