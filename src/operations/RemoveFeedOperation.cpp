@@ -1,7 +1,6 @@
 #include "RemoveFeedOperation.h"
 
 #include <QDebug>
-#include <QSqlError>
 #include <QThread>
 
 RemoveFeedOperation::RemoveFeedOperation(QObject *parent, FeedItem* feed, ListModel *feedList) :

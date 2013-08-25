@@ -1,6 +1,5 @@
 #include "SetBookmarkOperation.h"
 #include <QDebug>
-#include <QSqlError>
 
 #include "../models/AllNewsFeedItem.h"
 

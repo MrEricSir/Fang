@@ -48,7 +48,8 @@ SOURCES += src/main.cpp \
     src/models/AllNewsFeedItem.cpp \
     src/utilities/WebImageSizeRewriter.cpp \
     src/utilities/ImageGrabber.cpp \
-    src/utilities/RawFeedImageSizeRewriter.cpp
+    src/utilities/RawFeedImageSizeRewriter.cpp \
+    src/operations/UpdateTitleOperation.cpp
 
 # Installation path
 # target.path =
@@ -96,4 +97,5 @@ HEADERS += \
     src/models/AllNewsFeedItem.h \
     src/utilities/WebImageSizeRewriter.h \
     src/utilities/ImageGrabber.h \
-    src/utilities/RawFeedImageSizeRewriter.h
+    src/utilities/RawFeedImageSizeRewriter.h \
+    src/operations/UpdateTitleOperation.h

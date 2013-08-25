@@ -3,6 +3,7 @@
 
 #include <QSqlDatabase>
 #include <QSqlQuery>
+#include <QSqlError>
 
 #include "Operation.h"
 

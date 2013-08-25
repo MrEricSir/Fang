@@ -1,7 +1,6 @@
 #include "UpdateFeedOperation.h"
 #include <QtAlgorithms>
 #include <QDateTime>
-#include <QSqlError>
 
 #include "../utilities/Utilities.h"
 #include "../models/AllNewsFeedItem.h"
@@ -24,7 +23,6 @@ UpdateFeedOperation::~UpdateFeedOperation()
     if (rawFeed != NULL)
         delete rawFeed;
 }
-
 
 void UpdateFeedOperation::execute()
 {

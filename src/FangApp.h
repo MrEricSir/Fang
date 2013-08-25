@@ -64,6 +64,18 @@ private slots:
     void onFeedSelected(ListItem *item);
     
     /**
+     * @brief Monitors feed.
+     * @param feed
+     */
+    void connectFeed(FeedItem* feed);
+    
+    /**
+     * @brief Un-monitors feed.
+     * @param feed
+     */
+    void disconnectFeed(FeedItem* feed);
+    
+    /**
      * @brief Called when all the feeds have been pulled from the database.
      * @param op
      */
@@ -79,6 +91,12 @@ private slots:
      * @param feed
      */
     void setCurrentFeed(FeedItem* feed);
+    
+    /**
+     * @brief Updates the feed's title.
+     * @param feed
+     */
+    void onFeedTitleChanged();
     
 private:
     static FangApp* _instance;

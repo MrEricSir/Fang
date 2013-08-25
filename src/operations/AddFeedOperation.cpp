@@ -2,8 +2,6 @@
 #include "../models/FeedItem.h"
 #include "../utilities/Utilities.h"
 
-#include <QSqlError>
-
 AddFeedOperation::AddFeedOperation(QObject *parent, ListModel *feedList, const QUrl &feedURL,
                                    const QUrl &imageURL, QString siteTitle) :
     DBOperation(parent),

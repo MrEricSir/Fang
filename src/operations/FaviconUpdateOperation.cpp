@@ -1,6 +1,5 @@
 #include "FaviconUpdateOperation.h"
 #include <QDebug>
-#include <QSqlError>
 
 FaviconUpdateOperation::FaviconUpdateOperation(QObject *parent, FeedItem* feed) :
     DBOperation(parent),

@@ -11,6 +11,7 @@
 #include "operations/RemoveFeedOperation.h"
 #include "operations/SetBookmarkOperation.h"
 #include "operations/FaviconUpdateOperation.h"
+#include "operations/UpdateTitleOperation.h"
 
 #include "models/ScrollReader.h"
 
@@ -104,6 +105,8 @@ void FangApp::onFeedAdded(ListItem *item)
         return;
     }
     
+    connectFeed(feed);
+    
     // Update the feed.
     if (feed->getDbId() > 0) {
         manager.add(new UpdateFeedOperation(&manager, feed));
@@ -114,8 +117,10 @@ void FangApp::onFeedAdded(ListItem *item)
 void FangApp::onFeedRemoved(ListItem * listItem)
 {
     FeedItem* item = qobject_cast<FeedItem *>(listItem);
-    if (item != NULL)
+    if (item != NULL) {
+        disconnectFeed(item);
         item->deleteLater(); // Well, bye.
+    }
 }
 
 void FangApp::onNewsWebReady()
@@ -143,6 +148,16 @@ void FangApp::onFeedSelected(ListItem* _item) {
         // How did this happen?!
         setCurrentFeed(NULL);
     }
+}
+
+void FangApp::connectFeed(FeedItem *feed)
+{
+    connect(feed, SIGNAL(titleChanged()), this, SLOT(onFeedTitleChanged()));
+}
+
+void FangApp::disconnectFeed(FeedItem *feed)
+{
+    disconnect(feed, SIGNAL(titleChanged()), this, SLOT(onFeedTitleChanged()));
 }
 
 void FangApp::onLoadAllFinished(Operation *op)
@@ -183,6 +198,16 @@ void FangApp::setCurrentFeed(FeedItem *feed)
     }
 }
 
+void FangApp::onFeedTitleChanged()
+{
+    // The sender is the feed itself, so grab it and do a DB update.
+    FeedItem* feed = qobject_cast<FeedItem *>(sender());
+    if (feed == NULL)
+        return;
+    
+    manager.add(new UpdateTitleOperation(&manager, feed));
+}
+
 FangApp* FangApp::instance()
 {
     Q_ASSERT(_instance != NULL);
@@ -191,7 +216,7 @@ FangApp* FangApp::instance()
 
 void FangApp::addFeed(const QUrl &feedURL, const QUrl &imageURL, QString siteTitle)
 {
-    qDebug() << "Add feed " << siteTitle << " " << feedURL;
+    //qDebug() << "Add feed " << siteTitle << " " << feedURL;
     manager.add(new AddFeedOperation(&manager, feedList, feedURL, imageURL, siteTitle));
 }
 
