@@ -43,12 +43,12 @@ Item {
                     Image {
                         id: feedIcon
                         
-                        source: (imageURL != "") ? imageURL : "images/symbol_rss.svg"
+                        source: imageURL
                         visible: !isUpdating
                         
                         onStatusChanged: {
                             // Show the default for errors.
-                            if (status == Image.Error)
+                            if (status == Image.Error || imageURL == "")
                                 source = "images/symbol_rss.svg";
                         }
                         

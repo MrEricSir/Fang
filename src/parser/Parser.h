@@ -7,31 +7,23 @@
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QXmlStreamReader>
-#include <QUrl>
 
-#include "RawFeed.h"
-#include "RawNews.h"
+#include "ParserInterface.h"
 
 // PaRSSes RSS/Atom feeds into RawFeed/RawNews objects.
-class Parser : public QObject
+class Parser : public ParserInterface
 {
     Q_OBJECT
     
 public:
-    enum ParseResult { OK, NETWORK_ERROR, PARSE_ERROR, IN_PROGRESS };
-    
     explicit Parser(QObject *parent = 0);
     
-signals:
-    // Call getResult() and getFeed() now, yo!
-    void finished();
-    
 public slots:
-    void parse(const QUrl& url);
+    virtual void parse(const QUrl& url); // Override.
     
-    ParseResult getResult();
-    RawFeed* getFeed();
-    inline QUrl getURL() { return finalFeedURL; }
+    virtual ParseResult getResult(); // Override.
+    virtual RawFeed* getFeed(); // Override.
+    virtual inline QUrl getURL() { return finalFeedURL; } // Override.
     
 protected slots:
     void readyRead();

@@ -49,7 +49,10 @@ SOURCES += src/main.cpp \
     src/utilities/WebImageSizeRewriter.cpp \
     src/utilities/ImageGrabber.cpp \
     src/utilities/RawFeedImageSizeRewriter.cpp \
-    src/operations/UpdateTitleOperation.cpp
+    src/operations/UpdateTitleOperation.cpp \
+    src/parser/ParserInterface.cpp \
+    src/parser/BackgroundParser.cpp \
+    src/parser/BackgroundParserThread.cpp
 
 # Installation path
 # target.path =
@@ -98,4 +101,7 @@ HEADERS += \
     src/utilities/WebImageSizeRewriter.h \
     src/utilities/ImageGrabber.h \
     src/utilities/RawFeedImageSizeRewriter.h \
-    src/operations/UpdateTitleOperation.h
+    src/operations/UpdateTitleOperation.h \
+    src/parser/ParserInterface.h \
+    src/parser/BackgroundParser.h \
+    src/parser/BackgroundParserThread.h

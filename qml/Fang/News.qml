@@ -101,7 +101,7 @@ Item {
     // WebView can't handle sizes changes well, so we'll hack around it.
     property int oldWidth: 0
     onWidthChanged: {
-        if (oldWidth == 0) {
+        if (oldWidth <= 0) {
             oldWidth = width;
             return;
         }
@@ -111,7 +111,7 @@ Item {
     }
     property int oldHeight: 0
     onHeightChanged: {
-        if (oldHeight == 0) {
+        if (oldHeight <= 0) {
             oldHeight = height;
             return;
         }

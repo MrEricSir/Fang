@@ -3,7 +3,7 @@
 
 #include "DBOperation.h"
 #include "../utilities/RawFeedImageSizeRewriter.h"
-#include "../parser/Parser.h"
+#include "../parser/BackgroundParser.h"
 #include "../models/FeedItem.h"
 #include "../models/NewsItem.h"
 
@@ -48,7 +48,7 @@ private slots:
     void onRewriterFinished();
     
 private:
-    Parser parser;
+    BackgroundParser parser;
     FeedItem *feed;
     RawFeed* rawFeed;
     bool wasDestroyed;

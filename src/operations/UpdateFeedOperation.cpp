@@ -13,7 +13,7 @@ UpdateFeedOperation::UpdateFeedOperation(QObject *parent, FeedItem *feed, RawFee
     wasDestroyed(false),
     rewriter()
 {
-    connect(&parser, SIGNAL(finished()), this, SLOT(onFeedFinished()));
+    connect(&parser, SIGNAL(done()), this, SLOT(onFeedFinished()));
     connect(feed, SIGNAL(destroyed()), this, SLOT(onFeedDestroyed()));
     connect(&rewriter, SIGNAL(finished()), this, SLOT(onRewriterFinished()));
 }

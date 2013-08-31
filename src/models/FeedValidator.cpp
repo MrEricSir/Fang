@@ -57,7 +57,7 @@ void FeedValidator::doParse(const QUrl& url)
     
     // Create a new one an' hook it up.
     parser = new Parser(this);
-    connect(parser, SIGNAL(finished()), this, SLOT(onFeedFinished()));
+    connect(parser, SIGNAL(done()), this, SLOT(onFeedFinished()));
     
     // Do the parse.
     parser->parse(url);

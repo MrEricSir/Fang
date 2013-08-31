@@ -27,6 +27,15 @@ Item {
             color: "#e5e5e5"
             anchors.fill: parent
             
+            Rectangle {
+                id: sidebarRightLine
+                color: "#ccc"
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
+                anchors.right: parent.right
+                width: 1
+            }
+            
             ListView {
                 id: feedListView
                 anchors.fill: parent
@@ -39,10 +48,10 @@ Item {
                     
                     // This sets the selected item in the C++ layer.
                     ListView.onIsCurrentItemChanged: {
-                        if (ListView.isCurrentItem)
+                        if (ListView.isCurrentItem) {
                             feedListView.model.selected = self
-                        
-                        sidebar.feedSelected();
+                            sidebar.feedSelected();
+                        }
                     }
                     
                     onDoubleClicked: {
@@ -147,6 +156,5 @@ Item {
                 onClicked: closeClicked()
             }
         }
-        
     }
 }

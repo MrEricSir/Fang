@@ -11,7 +11,7 @@ AddFeedOperation::AddFeedOperation(QObject *parent, ListModel *feedList, const Q
     siteTitle(siteTitle),
     parser()
 {
-    QObject::connect(&parser, SIGNAL(finished()), this, SLOT(onFeedFinished()));
+    QObject::connect(&parser, SIGNAL(done()), this, SLOT(onFeedFinished()));
 }
 
 void AddFeedOperation::execute()

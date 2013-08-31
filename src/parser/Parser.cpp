@@ -1,12 +1,11 @@
 #include "Parser.h"
 
-#include <QThread>
 #include <QDebug>
 
 #include "../utilities/Utilities.h"
 
 Parser::Parser(QObject *parent) :
-    QObject(parent), checkFavicon(false), feed(NULL), result(OK), currentReply(NULL), redirectReply(NULL)
+    ParserInterface(parent), checkFavicon(false), feed(NULL), result(OK), currentReply(NULL), redirectReply(NULL)
 {
     // Enble cache.
     Utilities::addNetworkAccessManagerCache(&manager);
@@ -23,7 +22,7 @@ void Parser::parse(const QUrl& url) {
     resetParserVars();
     
     // Allocate our items.
-    feed = new RawFeed(this);
+    feed = new RawFeed();
     currentItem = NULL;
     
     // in with the new
@@ -156,7 +155,7 @@ void Parser::parseXml() {
             xml.error() != QXmlStreamReader::NotWellFormedError) {
         result = Parser::PARSE_ERROR;
         qWarning() << "XML ERROR:" << xml.lineNumber() << ": " << xml.errorString();
-        emit finished();
+        emit done();
     }
 }
 
@@ -167,7 +166,7 @@ void Parser::error(QNetworkReply::NetworkError ne){
     currentReply = 0;
     
     result = Parser::NETWORK_ERROR;
-    emit finished();
+    emit done();
 }
 
 
@@ -214,11 +213,11 @@ void Parser::netFinished(QNetworkReply *reply)
         feed->url = reply->url();
         
         result = Parser::OK;
-        emit finished();
+        emit done();
     } else {
         // What we found must not have been an RSS/Atom feed.
         result = Parser::PARSE_ERROR;
-        emit finished();
+        emit done();
     }
 }
 
