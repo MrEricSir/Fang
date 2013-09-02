@@ -76,8 +76,8 @@ void LoadAllFeedsOperation::execute()
                         query.value("url").toString()
                         );
             
-            // Add to the model.
-            item->append(newsItem);
+            // Add directly to the model's data structure.
+            item->getNewsList()->append(newsItem);
             
             // If this is the bookmark, link 'er up.
             if (newsItem->getDbID() == bookmarkId)

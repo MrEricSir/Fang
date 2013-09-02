@@ -44,6 +44,6 @@ QUrl BackgroundParser::getURL()
 
 void BackgroundParser::onDone()
 {
-    qDebug() << "Bg parser done!";
+    //qDebug() << "Bg parser done!";
     emit done();
 }

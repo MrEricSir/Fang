@@ -19,13 +19,13 @@ void BackgroundParserThread::run()
     parser->parse(url);
     exec();
     parser->moveToThread(QApplication::instance()->thread());
-    qDebug() << "Parser started!";
+    //qDebug() << "Parser started!";
 }
 
 
 void BackgroundParserThread::onDone()
 {
-    qDebug() << "parser done";
+    //qDebug() << "parser done";
     quit();
     wait();
     
