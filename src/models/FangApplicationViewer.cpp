@@ -33,6 +33,7 @@ void FangApplicationViewer::resizeEvent(QResizeEvent* event)
 {
     Q_UNUSED(event);
     updateWindowSettings();
+    emit windowResized();
     QmlApplicationViewer::resizeEvent(event);
 }
 

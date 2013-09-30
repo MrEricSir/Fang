@@ -34,11 +34,14 @@ public slots:
     
     Q_INVOKABLE void jumpToBookmark();
     
+    Q_INVOKABLE void forceRefresh();
+    
 signals:
     void contentYChanged(qreal);
     void jumpYChanged(qreal);
     void bottomSpacerChanged(qreal);
     void jumpToBookmarkRequested();
+    void forceRefreshRequested();
     
 private:
     qreal _contentY;

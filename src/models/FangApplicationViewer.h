@@ -21,6 +21,12 @@ public slots:
      */
     void displayWindow();
     
+signals:
+    /**
+     * @brief Fired when the main window is resized.
+     */
+    void windowResized();
+    
 protected:
     // Listen to window events from subclass.
     virtual void moveEvent(QMoveEvent * event);

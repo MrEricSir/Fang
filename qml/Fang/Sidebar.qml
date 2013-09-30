@@ -4,6 +4,7 @@ import QtQuick 1.1
 Item {
     id: sidebar
     
+    signal settingsClicked()
     signal addClicked()
     signal removeClicked()
     signal editClicked()
@@ -15,11 +16,45 @@ Item {
     property int buttonSize: 30
     property variant listView: feedListView
     
+    Rectangle {
+        id: sidebarTopControls
+        height: 40
+        
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+        color: "#535353"
+        z: 10 // higher than list
+        
+        Item {
+            id: toolbarTop
+            anchors.fill: parent
+            anchors.margins: 5
+            
+            // Adds a feed.
+            SidebarButton {
+                id: settingsButton
+                
+                anchors.right: parent.right
+                
+                width: buttonSize
+                height: buttonSize
+                
+                imageMargin: 5
+                color: "#777"
+                hoverColor: "#ccc"
+                imageURL: "images/symbol_gear.svg"
+                
+                onClicked: settingsClicked()
+            }
+        }
+    }
+    
     Item {
         id: sidebarFeedList
         anchors.right: parent.right
         anchors.left: parent.left
-        anchors.top: parent.top
+        anchors.top: sidebarTopControls.bottom
         anchors.bottom: sidebarControls.top
         
         Rectangle {

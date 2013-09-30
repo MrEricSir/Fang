@@ -25,23 +25,30 @@ Rectangle {
             Transition {
                 from: "open"
                 to: "closed"
-                ParallelAnimation {
+                SequentialAnimation {
                     // Move sidebar off screen
-                    NumberAnimation {
-                        target: sidebar
-                        properties: "x"
-                        to: -sidebarWidth
-                        duration: 200
-                        easing.type: Easing.InOutQuad
+                    ParallelAnimation {
+                        NumberAnimation {
+                            target: sidebar
+                            properties: "x"
+                            to: -sidebarWidth
+                            duration: 200
+                            easing.type: Easing.InOutQuad
+                        }
+                        
+                        NumberAnimation {
+                            target: openSidebarButton
+                            properties: "opacity"
+                            from: 0.0
+                            to: 1.0
+                            duration: 500
+                            easing.type: Easing.InOutQuad
+                        }
                     }
                     
-                    NumberAnimation {
-                        target: openSidebarButton
-                        properties: "opacity"
-                        from: 0.0
-                        to: 1.0
-                        duration: 500
-                        easing.type: Easing.InOutQuad
+                    // Refresh the news view.
+                    ScriptAction { 
+                        script: news.forceRefresh();
                     }
                 }
             },
@@ -49,23 +56,30 @@ Rectangle {
                 from: "closed"
                 to: "open"
                 
-                ParallelAnimation {
+                SequentialAnimation {
                     // Move sidebar back on screen
-                    NumberAnimation {
-                        target: sidebar
-                        properties: "x"
-                        to: 0
-                        duration: 200
-                        easing.type: Easing.InOutQuad
+                    ParallelAnimation {
+                        NumberAnimation {
+                            target: sidebar
+                            properties: "x"
+                            to: 0
+                            duration: 200
+                            easing.type: Easing.InOutQuad
+                        }
+                        
+                        NumberAnimation {
+                            target: openSidebarButton
+                            properties: "opacity"
+                            from: 1.0
+                            to: 0.0
+                            duration: 500
+                            easing.type: Easing.InOutQuad
+                        }
                     }
                     
-                    NumberAnimation {
-                        target: openSidebarButton
-                        properties: "opacity"
-                        from: 1.0
-                        to: 0.0
-                        duration: 500
-                        easing.type: Easing.InOutQuad
+                    // Refresh the news view.
+                    ScriptAction { 
+                        script: news.forceRefresh();
                     }
                 }
             }
@@ -73,7 +87,6 @@ Rectangle {
         
         onCloseClicked: sidebar.state = "closed"
         
-        onFeedSelected: news.reset()
         onFeedDoubleClicked: news.jumpToBookmark()
         onAddClicked: addFeed.open()
         onRemoveClicked: removeFeed.open()

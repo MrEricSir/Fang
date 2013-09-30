@@ -39,3 +39,8 @@ void ScrollReader::jumpToBookmark()
 {
     emit jumpToBookmarkRequested();
 }
+
+void ScrollReader::forceRefresh()
+{
+    emit forceRefreshRequested();
+}

@@ -4,13 +4,12 @@ import Fang 1.0
 Item {
     id: news
     
-    // Call this when a feed changes to reset the view.
-    function reset() {
-        // Reload and scroll to top.
-        //newsView.reload.trigger();
-        //newsFlickable.contentY = 0; // TODO: zoom to q position of bookmark
+    // Forces the web view to be repainted (but not refresh!)
+    function forceRefresh() {
+        newsViewScrollReader.forceRefresh();
     }
     
+    // Jump to the current bookmark.
     function jumpToBookmark() {
         newsViewScrollReader.jumpToBookmark();
     }
@@ -96,39 +95,6 @@ Item {
                 width: parent.width
             }
         }
-    }
-    
-    // WebView can't handle sizes changes well, so we'll hack around it.
-    property int oldWidth: 0
-    onWidthChanged: {
-        if (oldWidth <= 0) {
-            oldWidth = width;
-            return;
-        }
-        
-        reloadTimer.restart();
-        oldWidth = width;
-    }
-    property int oldHeight: 0
-    onHeightChanged: {
-        if (oldHeight <= 0) {
-            oldHeight = height;
-            return;
-        }
-        
-        reloadTimer.restart();
-        oldHeight = height;
-    }
-    
-    // Timer for reloading when the size changes.
-    Timer {
-        id: reloadTimer
-        interval: 50
-        running: false
-        repeat: false
-        
-        // Force a refresh.
-        onTriggered: newsView.reload.trigger();
     }
     
     ScrollBar {

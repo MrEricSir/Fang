@@ -55,6 +55,11 @@ public slots:
     
     inline FeedItem* getCurrentFeed() { return currentFeed; }
     
+    /**
+     * @brief Forces a qml repaint.
+     */
+    void forceRefresh();
+    
 private slots:
     
     /**
@@ -204,6 +209,11 @@ private slots:
      */
     void bumpScrollReadTimer();
     
+    /**
+     * @brief Time to force refresh.
+     */
+    void onForceRefreshTimeout();
+    
 private:
     // The WebView used to display this feed.
     QDeclarativeWebView *webView;
@@ -240,6 +250,8 @@ private:
     
     // Item we're jumping to.
     NewsItem* jumpItem;
+    
+    QTimer forceRefreshTimer;
 };
 
 #endif // NEWSWEB_H

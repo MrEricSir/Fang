@@ -51,6 +51,8 @@ public slots:
 private slots:
     void onViewerStatusChanged(QDeclarativeView::Status);
     
+    void onWindowResized();
+    
     void onOperationFinished(Operation* operation);
     
     void onFeedAdded(ListItem*);

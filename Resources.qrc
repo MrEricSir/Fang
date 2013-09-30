@@ -31,5 +31,6 @@
         <file>html/bookmark.svg</file>
         <file>qml/Fang/images/symbol_pencil.svg</file>
         <file>qml/Fang/EditDialog.qml</file>
+        <file>qml/Fang/images/symbol_gear.svg</file>
     </qresource>
 </RCC>

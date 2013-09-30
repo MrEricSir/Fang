@@ -2,6 +2,8 @@
 
 #include "../utilities/Utilities.h"
 
+#include <QDeclarativeItem>
+
 NewsWeb::NewsWeb(QObject *parent) :
     QObject(parent),
     webView(NULL),
@@ -15,7 +17,8 @@ NewsWeb::NewsWeb(QObject *parent) :
     bookmarkedItem(NULL),
     scrollReadTimer(),
     jumpToBookmarkTimer(),
-    jumpItem(NULL)
+    jumpItem(NULL),
+    forceRefreshTimer()
 {
 }
 
@@ -37,14 +40,18 @@ void NewsWeb::init(QDeclarativeWebView *webView, ScrollReader* scroll)
     connect(webView, SIGNAL(heightChanged()), this, SLOT(onGeometryChangeRequested()));
     connect(&scrollReadTimer, SIGNAL(timeout()), this, SLOT(onScrollReadTimeout()));
     connect(&jumpToBookmarkTimer, SIGNAL(timeout()), this, SLOT(onJumpTimeout()));
+    connect(&forceRefreshTimer, SIGNAL(timeout()), this, SLOT(onForceRefreshTimeout()));
     connect(scroll, SIGNAL(contentYChanged(qreal)), this, SLOT(onContentYChanged(qreal)));
     connect(scroll, SIGNAL(jumpToBookmarkRequested()), this, SLOT(jumpToBookmark()));
+    connect(scroll, SIGNAL(forceRefreshRequested()), this, SLOT(forceRefresh()));
     
     // Load the news page template.
     webView->setUrl(QUrl("qrc:html/NewsPage.html"));
     
     // Run the scroll read timer every 1/2 second.
     scrollReadTimer.start(500);
+    
+    forceRefreshTimer.setSingleShot(true);
 }
 
 void NewsWeb::clear()
@@ -93,7 +100,7 @@ void NewsWeb::setFeed(FeedItem *feed)
         
         // Set current bookmark and jump to it.
         if (currentFeed->getBookmark() != NULL) {
-            //qDebug() << "This here feed's bookmark is: " << currentFeed->getBookmark()->getTitle();
+            qDebug() << "(setfeed) This here feed's bookmark is: " << currentFeed->getBookmark()->getTitle();
             setBookmark(currentFeed->getBookmark());
             jumpToBookmark();
         }
@@ -204,12 +211,10 @@ void NewsWeb::onLinkClicked(const QUrl& url)
 
 void NewsWeb::onGeometryChangeRequested()
 {
+    //qDebug() << "Geometry change requested " << QDateTime::currentMSecsSinceEpoch();
+    
     // If the size of the view changed, we may need to change the size of the bottom spacer.
     updateBottomSpacer();
-    
-    // If we're preparing to jump to a bookmark, delay the timer very slightly.
-    if (jumpToBookmarkTimer.isActive())
-        jumpToBookmarkTimer.start(10);
     
     // If the scroll timer is on, delay it.
     bumpScrollReadTimer();
@@ -234,6 +239,9 @@ void NewsWeb::onScrollReadTimeout()
     if (elementForItem(currentFeed->getNewsList()->last()).geometry().height() <= 0)
         return; // Geometry hasn't been computed yet.
     
+    
+    //qDebug() << "Scroll timeout, status is: " << webView->status() << " "  << QDateTime::currentMSecsSinceEpoch();
+    
     // This method figures out which items are visible
     int halfWidth = getViewWidth() / 2;
     int viewHeight = getViewHeight();
@@ -243,7 +251,11 @@ void NewsWeb::onScrollReadTimeout()
     // We're at the bottom if there's not much more to scroll.
     bool atBottom = contentY >= getMaxScroll() - (scroll->bottomSpacer() / 10);
     
+//    if (atBottom)
+//        qDebug() << "At BOTTOM!";
+    
     if (currentFeed->getNewsList()->size() == 1) {
+        qDebug() << "First item is the only one!";
         // First item is the only one!
         currentFeed->setVisibleItems(NULL,
                                      currentFeed->getNewsList()->first(),
@@ -251,6 +263,9 @@ void NewsWeb::onScrollReadTimeout()
         
         return;
     }
+    
+    // Stop any jumps in progress.
+    jumpItem = NULL;
     
     // "Visible" items.
     // Despite the name, the top item is always just above the viewport, and the bottom item
@@ -337,6 +352,8 @@ void NewsWeb::onJumpTimeout()
     int maxY = getMaxScroll();
     if (y > maxY)
         y = maxY;
+    
+    //qDebug() << "Jump to y: " << y;
     
     // Just do it.
     //qDebug() << "Jump to!";
@@ -439,6 +456,7 @@ void NewsWeb::removeAll(const QString& selector, QWebElement element) {
 
 void NewsWeb::setBookmark(NewsItem *item)
 {
+    qDebug() << "News web, set bookmark to: "<< item->getTitle();
     removeBookmark();
     
     QWebElement stripe = document.findFirst(newsItemToBookmarkSelector(item));
@@ -560,6 +578,27 @@ qreal NewsWeb::getMaxScroll()
 
 void NewsWeb::bumpScrollReadTimer()
 {
-    if (scrollReadTimer.isActive())
-        scrollReadTimer.start(500);
+    if (scrollReadTimer.isActive()) {
+        //qDebug() << "Pushing back scroll timer." << QDateTime::currentMSecsSinceEpoch();
+        scrollReadTimer.start(300);
+    }
+}
+
+void NewsWeb::onForceRefreshTimeout()
+{
+    // Make the parent flickable redraw itself.
+    QDeclarativeItem* flickable = qobject_cast<QDeclarativeItem*>(webView->parent());
+    Q_ASSERT(flickable != NULL);
+    flickable->update(flickable->boundingRect());
+}
+
+void NewsWeb::forceRefresh()
+{
+    // Delay until event loop clears.
+    forceRefreshTimer.start(1);
+    
+    // After the refresh, we'll need to jump to the bookmark.  Also bump the scroll read
+    // timer so that we don't end up setting a bookmark.
+    jumpToBookmark();
+    bumpScrollReadTimer();
 }

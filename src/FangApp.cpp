@@ -34,6 +34,7 @@ FangApp::FangApp(QObject *parent, FangApplicationViewer* viewer) :
     // Setup signals.
     connect(viewer, SIGNAL(statusChanged(QDeclarativeView::Status)),
                      this, SLOT(onViewerStatusChanged(QDeclarativeView::Status)));
+    connect(viewer, SIGNAL(windowResized()), this, SLOT(onWindowResized()));
     
     connect(&manager, SIGNAL(operationFinished(Operation*)),
                      this, SLOT(onOperationFinished(Operation*)));
@@ -87,6 +88,14 @@ void FangApp::onViewerStatusChanged(QDeclarativeView::Status status)
         if (!newsWeb.isReady())
             newsWeb.init(webView, scrollReader); // Start the news!
     }
+}
+
+void FangApp::onWindowResized()
+{
+    if (currentFeed == NULL || !newsWeb.isReady())
+        return;
+    
+    newsWeb.forceRefresh();
 }
 
 void FangApp::onOperationFinished(Operation *operation)
