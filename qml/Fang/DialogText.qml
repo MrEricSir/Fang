@@ -7,13 +7,18 @@ Rectangle {
     
     height: dialogTextText.paintedHeight
     
+    Style {
+        id: style
+    }
+    
     Text {
         id: dialogTextText
         
         text: dialogText.text
         
-        font.pointSize: 12
-        font.family: "Tahoma"
+        font.pointSize: style.defaultFontSize
+        font.family: style.defaultFontFamily
+        color: style.defaultFontColor
         
         width: parent.width
     }

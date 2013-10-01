@@ -4,6 +4,10 @@ Item {
     id: feedTitleDelegate
     height: 35
     
+    Style {
+        id: style
+    }
+    
     signal doubleClicked()
     
     // Read-only
@@ -93,8 +97,11 @@ Item {
                         
                         width: parent.width
                         anchors.verticalCenter: parent.verticalCenter
-                        font.pointSize: 11
-                        font.family: "Tahoma"
+                        
+                        font.pointSize: style.defaultFontSize
+                        font.family: style.defaultFontFamily
+                        color: style.defaultFontColor
+                        
                         elide: Text.ElideRight
                     }
                 }

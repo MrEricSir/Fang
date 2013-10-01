@@ -25,6 +25,9 @@ Rectangle {
         buttonText.color = enabled ? "black" : "#999"
     }
     
+    Style {
+        id: style
+    }
     
     Text {
         id: buttonText
@@ -36,8 +39,9 @@ Rectangle {
         width: parent.width - 12
         
         anchors.centerIn: parent
-        font.pointSize: 11
-        font.family: "Tahoma"
+        font.pointSize: style.defaultFontSize
+        font.family: style.defaultFontFamily
+        color: style.defaultFontColor
     }
     
     MouseArea {

@@ -7,6 +7,10 @@ Rectangle {
     
     height: dialogSpinnerText.paintedHeight
     
+    Style {
+        id: style
+    }
+    
     Spinner {
         id: spinnerImage
         

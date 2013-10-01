@@ -25,6 +25,10 @@ Rectangle {
             return "images/symbol_error.svg";
     }
     
+    Style {
+        id: style
+    }
+    
     Image {
         id: statusImage
         
@@ -46,10 +50,9 @@ Rectangle {
         
         x: statusImage.width + 10 // margin
         
-        color: "black"
-        
-        font.pointSize: 12
-        font.family: "Tahoma"
+        font.pointSize: style.defaultFontSize
+        font.family: style.defaultFontFamily
+        color: style.defaultFontColor
         
         width: parent.width - x
     }

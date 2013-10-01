@@ -5,7 +5,12 @@ Rectangle {
     
     // Treat as const
     property int sidebarWidth: 230
-
+    
+    // Style object.
+    Style {
+        id: style
+    }
+    
     // The feed list sidebar.
     Sidebar {
         id: sidebar
