@@ -48,7 +48,8 @@ FangApp::FangApp(QObject *parent, FangApplicationViewer* viewer) :
 
 void FangApp::init()
 {
-    viewer->rootContext()->setContextProperty("feedListModel", feedList);
+    viewer->rootContext()->setContextProperty("feedListModel", feedList); // list of feeds
+    viewer->rootContext()->setContextProperty("platform", getPlatform()); // platform string ID
     viewer->addImportPath(QLatin1String("modules"));
     viewer->setOrientation(QmlApplicationViewer::ScreenOrientationAuto);
     viewer->setSource(QUrl("qrc:/qml/Fang/main.qml"));
@@ -215,6 +216,26 @@ void FangApp::onFeedTitleChanged()
         return;
     
     manager.add(new UpdateTitleOperation(&manager, feed));
+}
+
+QString FangApp::getPlatform()
+{
+#if defined(Q_OS_MAC)
+    return "MAC";
+#elif defined(Q_OS_WIN)
+    return "WIN";
+#elif defined(Q_OS_IOS)
+    return "IOS";
+#elif defined(Q_OS_ANDROID)
+    return "ANDROID";
+#elif defined(Q_OS_LINUX) // Should be near last
+    return "LINUX";
+#elif defined(Q_OS_UNIX)  // Should be next-to last
+    return "UNIX";
+#else                     // Must be last!
+    Q_ASSERT(false);
+    return "UNKNOWN";
+#endif
 }
 
 FangApp* FangApp::instance()

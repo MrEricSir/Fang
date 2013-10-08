@@ -100,6 +100,11 @@ private slots:
      */
     void onFeedTitleChanged();
     
+    /**
+     * @return String representing the platform.
+     */
+    QString getPlatform();
+    
 private:
     static FangApp* _instance;
     FangApplicationViewer* viewer;
