@@ -4,18 +4,14 @@ import QtQuick 1.1
   Style object, ala http://qt-project.org/wiki/QmlStyling
   */
 Item {
-    // Default UI font.
-    property int defaultFontSize: 11
-    property color defaultFontColor: "black"
-    property string defaultFontFamily: "Tahoma"
-    
     Component {
         id: macStyle
             
         Item {
-            property int defaultFontSize: 11
+            // Default UI font.
+            property int defaultFontSize: 13
             property color defaultFontColor: "black"
-            property string defaultFontFamily: "Tahoma"
+            property string defaultFontFamily: "Lucida Grande"
         }
     }
     
@@ -23,6 +19,7 @@ Item {
         id: winStyle
             
         Item {
+            // Default UI font.
             property int defaultFontSize: 11
             property color defaultFontColor: "black"
             property string defaultFontFamily: "Tahoma"
@@ -36,24 +33,18 @@ Item {
                 console.log("Mac!");
                 return macStyle
             }
-            break;
             case "WIN": {
                 console.log("Windows!");
                 return winStyle;
             }
-            break;
 //            case "IOS": {
 //            }
-//            break;
 //            case "ANDROID": {
 //            }
-//            break;
 //            case "LINUX": {
 //            }
-//            break;
 //            case "UNIX": {
 //            }
-//            break;
 //            }
             }
         }
