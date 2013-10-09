@@ -16,9 +16,9 @@ Rectangle {
         
         text: dialogText.text
         
-        font.pointSize: style.defaultFontSize
-        font.family: style.defaultFontFamily
-        color: style.defaultFontColor
+        font.pointSize: style.font.defaultSize
+        font.family: style.font.defaultFamily
+        color: style.font.defaultColor
         
         width: parent.width
     }

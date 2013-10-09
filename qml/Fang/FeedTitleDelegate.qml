@@ -98,9 +98,9 @@ Item {
                         width: parent.width
                         anchors.verticalCenter: parent.verticalCenter
                         
-                        font.pointSize: style.defaultFontSize
-                        font.family: style.defaultFontFamily
-                        color: style.defaultFontColor
+                        font.pointSize: style.font.defaultSize
+                        font.family: style.font.defaultFamily
+                        color: style.font.defaultColor
                         
                         elide: Text.ElideRight
                     }
