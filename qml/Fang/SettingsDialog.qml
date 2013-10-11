@@ -14,24 +14,30 @@ Dialog {
         id: themeRadioGroup
     }
     
-    DialogRadioButton {
-        id: lightTheme
-        radioGroup: themeRadioGroup
-        
-        text: "Light Theme"
-        enabled: true
-        
+    Row {
+        spacing: 10
         width: parent.width
-    }
-    
-    DialogRadioButton {
-        id: darkTheme
-        radioGroup: themeRadioGroup
+        property int buttonWidth: width / children.length - spacing / children.length
         
-        text: "Dark Theme"
-        enabled: true
+        DialogRadioButton {
+            id: lightTheme
+            radioGroup: themeRadioGroup
+            
+            text: "Light Theme"
+            enabled: true
+            
+            width: parent.buttonWidth
+        }
         
-        width: parent.width
+        DialogRadioButton {
+            id: darkTheme
+            radioGroup: themeRadioGroup
+            
+            text: "Dark Theme"
+            enabled: true
+            
+            width: parent.buttonWidth
+        }
     }
     
     DialogButton {
