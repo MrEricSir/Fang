@@ -18,15 +18,7 @@ Dialog {
         validationStatus.visible = false;
     }
     
-    Item {
-        id: container
-        
-        width: 400
-        anchors.horizontalCenter: parent.horizontalCenter
-        
-        Column {
-            width: parent.width
-            spacing: 10
+
             
             DialogText {
                 text: "What site would you like to add?"
@@ -89,8 +81,6 @@ Dialog {
                 width: parent.width
             }
         
-        }
-    }
     
     // Magic beans that validate & add feeds (see C++ layer.)
     FeedValidator {

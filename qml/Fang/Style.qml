@@ -34,6 +34,4 @@ Item {
         property color defaultColor: "black"
         property string defaultFamily: "Tahoma"
     }
-    
-    
 }

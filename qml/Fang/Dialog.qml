@@ -122,15 +122,29 @@ Rectangle {
         anchors.fill: parent
     }
     
+    // Dialog contents
     Item {
-        id: placeholder
-        
         anchors.top: dialogTitle.bottom
         anchors.topMargin: 15
         anchors.bottom: parent.bottom
         anchors.left: parent.left
         anchors.leftMargin: 15
         anchors.right: parent.right
+        
+        Item {
+            id: container
+            
+            width: 400
+            anchors.horizontalCenter: parent.horizontalCenter
+            
+            // Children go here.
+            Column {
+                id: placeholder
+                
+                width: parent.width
+                spacing: 10
+            }
+        }
     }
     
     // Timer so we give the user a glimpse of our message before closing

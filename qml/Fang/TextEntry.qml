@@ -110,7 +110,7 @@ Rectangle {
                     focus: true
                     wrapMode: TextEdit.NoWrap
                     
-                    onActiveFocusChanged: console.log("Got focus")
+                    //onActiveFocusChanged: console.log("Got focus")
                     
                     // Used with the above flickable.
                     onCursorRectangleChanged: flick.ensureVisible(cursorRectangle)

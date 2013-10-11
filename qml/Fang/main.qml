@@ -93,6 +93,8 @@ Rectangle {
         onCloseClicked: sidebar.state = "closed"
         
         onFeedDoubleClicked: news.jumpToBookmark()
+        
+        onSettingsClicked: settings.open()
         onAddClicked: addFeed.open()
         onRemoveClicked: removeFeed.open()
         onEditClicked: editFeed.open()
@@ -139,6 +141,17 @@ Rectangle {
                 onClicked: sidebar.state = "open"
             }
         }
+    }
+    
+    SettingsDialog {
+        id: settings
+        
+        x: 0
+        y: 0
+        width: parent.width
+        height: parent.height
+        
+        title: "Settings"
     }
     
     AddDialog {

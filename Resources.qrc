@@ -33,5 +33,9 @@
         <file>qml/Fang/EditDialog.qml</file>
         <file>qml/Fang/images/symbol_gear.svg</file>
         <file>qml/Fang/Style.qml</file>
+        <file>qml/Fang/SettingsDialog.qml</file>
+        <file>qml/Fang/DialogToggleButton.qml</file>
+        <file>qml/Fang/DialogRadioButton.qml</file>
+        <file>qml/Fang/RadioButtonGroup.qml</file>
     </qresource>
 </RCC>
