@@ -28,7 +28,7 @@ Rectangle {
         color: "#999"
         
         font.pointSize: 12
-        font.family: "Tahoma"
+        font.family: style.font.defaultFamily
         
         width: parent.width - x
     }

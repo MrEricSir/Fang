@@ -172,7 +172,7 @@ Item {
                             anchors.topMargin: 3
                             anchors.verticalCenter: parent.verticalCenter
                             font.pointSize: 8
-                            font.family: "Tahoma"
+                            font.family: style.font.defaultFamily
                             elide: Text.ElideRight
                             color: style.color.badgeText
                         }

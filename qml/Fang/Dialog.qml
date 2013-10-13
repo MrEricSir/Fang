@@ -105,7 +105,7 @@ Rectangle {
         text: dialog.title
         
         font.pointSize: 18
-        font.family: "Tahoma"
+        font.family: style.font.defaultFamily
         color: style.color.dialogText
         
         anchors.top: parent.top

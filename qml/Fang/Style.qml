@@ -32,7 +32,7 @@ Item {
         
         // Default UI font.
         property int defaultSize: 11
-        property string defaultFamily: "Tahoma"
+        property string defaultFamily: "Segoe UI"
     }
     
     QtObject {

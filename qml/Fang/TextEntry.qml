@@ -70,7 +70,7 @@ Rectangle {
                 
                 color: style.color.textEntryHint
                 font.italic: true
-                font.family: "Tahoma"
+                font.family: style.font.defaultFamily
                 font.pointSize: textEntry.fontSize
             }
             
@@ -111,7 +111,7 @@ Rectangle {
                     textFormat: TextEdit.PlainText
                     
                     color: style.color.textEntryText
-                    font.family: "Tahoma"
+                    font.family: style.font.defaultFamily
                     font.pointSize: textEntry.fontSize
                     focus: true
                     wrapMode: TextEdit.NoWrap
