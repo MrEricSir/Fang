@@ -23,7 +23,7 @@ Item {
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
-        color: "#535353"
+        color: style.color.sidebarToolbar
         z: 10 // higher than list
         
         Item {
@@ -31,7 +31,7 @@ Item {
             anchors.fill: parent
             anchors.margins: 5
             
-            // Adds a feed.
+            // Fang settings.
             SidebarButton {
                 id: settingsButton
                 
@@ -41,8 +41,6 @@ Item {
                 height: buttonSize
                 
                 imageMargin: 5
-                color: "#777"
-                hoverColor: "#ccc"
                 imageURL: "images/symbol_gear.svg"
                 
                 onClicked: settingsClicked()
@@ -59,12 +57,12 @@ Item {
         
         Rectangle {
             id: rectangle2
-            color: "#e5e5e5"
+            color: style.color.sidebar
             anchors.fill: parent
             
             Rectangle {
                 id: sidebarRightLine
-                color: "#ccc"
+                color: style.color.sidebarRightLine
                 anchors.top: parent.top
                 anchors.bottom: parent.bottom
                 anchors.right: parent.right
@@ -112,7 +110,7 @@ Item {
         anchors.bottom: parent.bottom
         anchors.left: parent.left
         anchors.right: parent.right
-        color: "#535353"
+        color: style.color.sidebarToolbar
         
         Item {
             id: toolbar
@@ -129,7 +127,6 @@ Item {
                 height: buttonSize
                 
                 imageMargin: 5
-                color: "#777"
                 hoverColor: "#2a2"
                 imageURL: "images/plus.png"
                 
@@ -148,7 +145,6 @@ Item {
                 visible: feedListView.currentIndex > 0
                 
                 imageMargin: 5
-                color: "#777"
                 hoverColor: "#27a"
                 imageURL: "images/symbol_pencil.svg"
                 
@@ -167,7 +163,6 @@ Item {
                 visible: feedListView.currentIndex > 0
                 
                 imageMargin: 5
-                color: "#777"
                 hoverColor: "#a22"
                 imageURL: "images/minus.png"
                 
@@ -184,8 +179,6 @@ Item {
                 height: buttonSize
                 
                 imageMargin: 5
-                color: "#777"
-                hoverColor: "#ccc"
                 imageURL: "images/arrows_left.png"
                 
                 onClicked: closeClicked()

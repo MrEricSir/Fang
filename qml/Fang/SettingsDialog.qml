@@ -5,6 +5,8 @@ import Fang 1.0
 Dialog {
     id: settingsDialog
     
+    title: "Settings"
+    
     DialogText {
         text: "Theme"
         width: parent.width
@@ -12,12 +14,19 @@ Dialog {
     
     RadioButtonGroup {
         id: themeRadioGroup
+        
+        selected: fangSettings.style == "DARK" ? darkTheme : lightTheme
+        
+        onSelectedChanged: {
+            if (selected === darkTheme)
+                fangSettings.style = "DARK";
+            else
+                fangSettings.style = "LIGHT";
+        }
     }
     
-    Row {
-        spacing: 10
+    DialogButtonGroup {
         width: parent.width
-        property int buttonWidth: width / children.length - spacing / children.length
         
         DialogRadioButton {
             id: lightTheme

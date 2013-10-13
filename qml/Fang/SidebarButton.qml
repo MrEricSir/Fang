@@ -3,8 +3,10 @@ import QtQuick 1.1
 Item {
     id: sidebarButton
     
-    property color color: "gray"
-    property color hoverColor: "blue"
+    property color color: style.color.sidebarButton
+    property color hoverColor: style.color.sidebarButtonHover
+    property color pressedColor: style.color.sidebarButtonPressed
+    
     property url imageURL: ""
     property int imageMargin: 0
     
@@ -13,8 +15,16 @@ Item {
     Rectangle {
         id: buttonContainer
         
-        color: sidebarButton.color
         anchors.fill: parent
+        
+        states: [
+            State { name: "default" },
+            State { name: "hover" },
+            State { name: "pressed" }
+        ]
+        
+        color: state === "hover" ? sidebarButton.hoverColor : state === "pressed" ?
+                                      sidebarButton.pressedColor : sidebarButton.color
         
         Image {
             source: imageURL
@@ -36,9 +46,9 @@ Item {
                 hoverEnabled: true
                 enabled: sidebarButton.enabled
                 
-                onEntered: buttonContainer.color = hoverColor
-                onExited:  buttonContainer.color = sidebarButton.color
-                onPressed: buttonContainer.color = Qt.darker(hoverColor, 1.5)
+                onEntered: buttonContainer.state = "hover"
+                onExited:  buttonContainer.state = "default"
+                onPressed: buttonContainer.state = "pressed"
             }
         }
     }

@@ -12,6 +12,7 @@
 #include "models/FeedValidator.h"
 #include "models/ScrollReader.h"
 #include "models/FangApplicationViewer.h"
+#include "models/FangSettings.h"
 
 Q_DECL_EXPORT int main(int argc, char *argv[])
 {
@@ -19,6 +20,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     qmlRegisterType<MouseWheelArea>("Fang", 1, 0, "MouseWheelArea");
     qmlRegisterType<FeedValidator>("Fang", 1, 0, "FeedValidator");
     qmlRegisterType<ScrollReader>("Fang", 1, 0, "ScrollReader");
+    qmlRegisterType<FangSettings>("Fang", 1, 0, "FangSettings");
     
     QScopedPointer<QApplication> app(createApplication(argc, argv));
     app->setOrganizationName("EricSoft");

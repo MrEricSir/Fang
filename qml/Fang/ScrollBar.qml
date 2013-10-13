@@ -148,7 +148,7 @@ Item {
             Rectangle {
                 id: slider
                 
-                color: "#999"
+                color: style.color.scrollbar
                 width: parent.width
                 radius: 5
                 anchors.left: parent.left

@@ -18,14 +18,16 @@ NewsWeb::NewsWeb(QObject *parent) :
     scrollReadTimer(),
     jumpToBookmarkTimer(),
     jumpItem(NULL),
-    forceRefreshTimer()
+    forceRefreshTimer(),
+    settings(NULL)
 {
 }
 
-void NewsWeb::init(QDeclarativeWebView *webView, ScrollReader* scroll)
+void NewsWeb::init(QDeclarativeWebView *webView, ScrollReader* scroll, FangSettings* settings)
 {
     this->webView = webView;
     this->scroll = scroll;
+    this->settings = settings;
     
     // Enable HTTP cache.
     Utilities::addNetworkAccessManagerCache(webView->page()->networkAccessManager());
@@ -44,6 +46,7 @@ void NewsWeb::init(QDeclarativeWebView *webView, ScrollReader* scroll)
     connect(scroll, SIGNAL(contentYChanged(qreal)), this, SLOT(onContentYChanged(qreal)));
     connect(scroll, SIGNAL(jumpToBookmarkRequested()), this, SLOT(jumpToBookmark()));
     connect(scroll, SIGNAL(forceRefreshRequested()), this, SLOT(forceRefresh()));
+    connect(settings, SIGNAL(styleChanged(QString)), this, SLOT(styleChanged()));
     
     // Load the news page template.
     webView->setUrl(QUrl("qrc:html/NewsPage.html"));
@@ -197,6 +200,9 @@ void NewsWeb::onLoadFinished(bool ok)
     //QSize size = webView->page()->viewportSize();
     //qDebug() << "Viewport size" << size;
     //qDebug() << "View " << webView->page()->view();
+    
+    // Set style defaults.
+    styleChanged();
     
     // Ready for action!
     _isReady = true;
@@ -601,4 +607,16 @@ void NewsWeb::forceRefresh()
     // timer so that we don't end up setting a bookmark.
     jumpToBookmark();
     bumpScrollReadTimer();
+}
+
+void NewsWeb::styleChanged()
+{
+    Q_ASSERT(settings != NULL);
+    QString style = settings->getStyle();
+    QWebElement body = document.findFirst("body");
+    
+    foreach(QString c, body.classes())
+        body.removeClass(c);
+    
+    body.addClass(style);
 }

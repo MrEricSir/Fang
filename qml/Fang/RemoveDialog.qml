@@ -5,6 +5,8 @@ import Fang 1.0
 Dialog {
     id: removeDialog
     
+    title: "Remove a Feed"
+    
     property variant listView
     
     DialogStatus {

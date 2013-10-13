@@ -12,6 +12,7 @@
 #include "NewsItem.h"
 #include "FeedItem.h"
 #include "ScrollReader.h"
+#include "FangSettings.h"
 
 /**
  * @brief Wraps a QtWebKit WebView with functions for managing the news feed.
@@ -25,8 +26,10 @@ public:
     /**
      * @brief Starts the NewsWeb interface.
      * @param webView
+     * @param scroll
+     * @param settings
      */
-    void init(QDeclarativeWebView *webView, ScrollReader* scroll);
+    void init(QDeclarativeWebView *webView, ScrollReader* scroll, FangSettings* settings);
     
     
     virtual bool eventFilter(QObject *watched, QEvent *e);
@@ -59,6 +62,11 @@ public slots:
      * @brief Forces a qml repaint.
      */
     void forceRefresh();
+    
+    /**
+     * @brief Called when the style has changed.
+     */
+    void styleChanged();
     
 private slots:
     
@@ -252,6 +260,8 @@ private:
     NewsItem* jumpItem;
     
     QTimer forceRefreshTimer;
+    
+    FangSettings* settings;
 };
 
 #endif // NEWSWEB_H

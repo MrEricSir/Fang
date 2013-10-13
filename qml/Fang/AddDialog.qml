@@ -5,6 +5,8 @@ import Fang 1.0
 Dialog {
     id: addDialog
     
+    title: "Add a Feed"
+    
     onStateChanged: {
         if (state == "open") {
             // Clear everything.
@@ -18,69 +20,66 @@ Dialog {
         validationStatus.visible = false;
     }
     
-
-            
-            DialogText {
-                text: "What site would you like to add?"
-                width: parent.width
-            }
-            
-            TextEntry {
-                id: textURL
-                
-                hint: "Website or feed URL"
-                
-                onEditTextChanged: validationStatus.visible = false
-                
-                onEnterPressed: addButton.click()
-                
-                width: parent.width
-            }
-            
-            DialogSpinner {
-                id: validationSpinner
-                
-                text: "Checking feed..."
-                visible: validator.validating
-                
-                onVisibleChanged: {
-                    // If we're spinning, kill status.
-                    if (visible)
-                        validationStatus.visible = false;
-                }
-                
-                width: parent.width
-            }
-            
-            DialogStatus {
-                id: validationStatus
-                
-                text: ""
-                visible: false
-                
-                width: parent.width
-            }
-            
-            DialogButton {
-                id: addButton
-                
-                text: "Add Feed"
-                onClicked: validator.check()
-                enabled: !validator.validating && !validator.validationComplete
-                
-                width: parent.width
-            }
-            
-            DialogButton {
-                id: cancelButton
-                
-                text: "Cancel"
-                onClicked: close()
-                enabled: !validator.validationComplete
-                
-                width: parent.width
-            }
+    DialogText {
+        text: "What site would you like to add?"
+        width: parent.width
+    }
+    
+    TextEntry {
+        id: textURL
         
+        hint: "Website or feed URL"
+        
+        onEditTextChanged: validationStatus.visible = false
+        
+        onEnterPressed: addButton.click()
+        
+        width: parent.width
+    }
+    
+    DialogSpinner {
+        id: validationSpinner
+        
+        text: "Checking feed..."
+        visible: validator.validating
+        
+        onVisibleChanged: {
+            // If we're spinning, kill status.
+            if (visible)
+                validationStatus.visible = false;
+        }
+        
+        width: parent.width
+    }
+    
+    DialogStatus {
+        id: validationStatus
+        
+        text: ""
+        visible: false
+        
+        width: parent.width
+    }
+    
+    DialogButton {
+        id: addButton
+        
+        text: "Add Feed"
+        onClicked: validator.check()
+        enabled: !validator.validating && !validator.validationComplete
+        
+        width: parent.width
+    }
+    
+    DialogButton {
+        id: cancelButton
+        
+        text: "Cancel"
+        onClicked: close()
+        enabled: !validator.validationComplete
+        
+        width: parent.width
+    }
     
     // Magic beans that validate & add feeds (see C++ layer.)
     FeedValidator {
@@ -111,7 +110,5 @@ Dialog {
                 dismiss();
             }
         }
-        
-        
     }
 }

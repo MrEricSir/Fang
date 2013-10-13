@@ -52,7 +52,8 @@ SOURCES += src/main.cpp \
     src/operations/UpdateTitleOperation.cpp \
     src/parser/ParserInterface.cpp \
     src/parser/BackgroundParser.cpp \
-    src/parser/BackgroundParserThread.cpp
+    src/parser/BackgroundParserThread.cpp \
+    src/models/FangSettings.cpp
 
 # Installation path
 # target.path =
@@ -104,4 +105,5 @@ HEADERS += \
     src/operations/UpdateTitleOperation.h \
     src/parser/ParserInterface.h \
     src/parser/BackgroundParser.h \
-    src/parser/BackgroundParserThread.h
+    src/parser/BackgroundParserThread.h \
+    src/models/FangSettings.h

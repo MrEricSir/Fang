@@ -80,14 +80,15 @@ void FangApp::onViewerStatusChanged(QDeclarativeView::Status status)
     if (status == QDeclarativeView::Ready) {
         QDeclarativeWebView *webView = viewer->rootObject()->findChild<QDeclarativeWebView*>("newsView");
         ScrollReader *scrollReader = viewer->rootObject()->findChild<ScrollReader*>("newsViewScrollReader");
-        if (webView == NULL || scrollReader == NULL) {
+        FangSettings *fangSettings = viewer->rootObject()->findChild<FangSettings*>("fangSettings");
+        if (webView == NULL || scrollReader == NULL || fangSettings == NULL) {
             qDebug() << "Could not find objects: " << webView << " " << scrollReader;
             
             return;
         }
         
         if (!newsWeb.isReady())
-            newsWeb.init(webView, scrollReader); // Start the news!
+            newsWeb.init(webView, scrollReader, fangSettings); // Start the news!
     }
 }
 

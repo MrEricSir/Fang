@@ -25,7 +25,7 @@ Item {
                 id: rowBackground
                 
                 color: index == feedListView.currentIndex ? 
-                           "white" : "transparent";
+                           style.color.sidebarSelected : "transparent";
                 
                 anchors.fill: parent
                 anchors.topMargin: 5
@@ -100,7 +100,7 @@ Item {
                         
                         font.pointSize: style.font.defaultSize
                         font.family: style.font.defaultFamily
-                        color: style.font.defaultColor
+                        color: style.color.sidebarSelectedText
                         
                         elide: Text.ElideRight
                     }
@@ -155,7 +155,7 @@ Item {
                     height: parent.height
                     
                     Rectangle {
-                        color: "#bbb"
+                        color: style.color.badge
                         
                         width: unreadCountText.paintedWidth + 6
                         height: unreadCountText.paintedHeight + 4
@@ -174,7 +174,7 @@ Item {
                             font.pointSize: 8
                             font.family: "Tahoma"
                             elide: Text.ElideRight
-                            color: "white"
+                            color: style.color.badgeText
                         }
                     }
                 }

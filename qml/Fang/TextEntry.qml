@@ -27,13 +27,17 @@ Rectangle {
     // Signaled when user hits enter/return.
     signal enterPressed()
     
-    color: "#eee"
+    Style {
+        id: style
+    }
+    
+    color: style.color.textEntryBorder
     height: textEntryContainer.height + 12
     
     Rectangle {
         id: textEntryContainer
         
-        color: "white"
+        color: style.color.textEntryBackground
         width: parent.width - 12
         height: textEntryContainerInnerMargin.height + 12
         
@@ -50,6 +54,8 @@ Rectangle {
             width: parent.width - 12
             height: Math.max(hintText.paintedHeight, edit.paintedHeight)
             
+            color: parent.color
+            
             anchors.centerIn: parent
             
             // The default "hint" text
@@ -62,7 +68,7 @@ Rectangle {
                 
                 visible: edit.text == "" || !edit.activeFocus
                 
-                color: "#ccc"
+                color: style.color.textEntryHint
                 font.italic: true
                 font.family: "Tahoma"
                 font.pointSize: textEntry.fontSize
@@ -104,7 +110,7 @@ Rectangle {
                     
                     textFormat: TextEdit.PlainText
                     
-                    color: "black"
+                    color: style.color.textEntryText
                     font.family: "Tahoma"
                     font.pointSize: textEntry.fontSize
                     focus: true

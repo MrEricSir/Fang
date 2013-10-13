@@ -16,7 +16,7 @@ Rectangle {
     // Read only.
     property bool isClosing: state == "close" || dismissTimer.running
     
-    color: "white"
+    color: style.color.dialogBackground
     visible: false // Managed by state transitions
     state: "closed"
     
@@ -106,6 +106,7 @@ Rectangle {
         
         font.pointSize: 18
         font.family: "Tahoma"
+        color: style.color.dialogText
         
         anchors.top: parent.top
         anchors.left: parent.left
@@ -156,5 +157,9 @@ Rectangle {
         repeat: false
         
         onTriggered: close()
+    }
+    
+    Style {
+        id: style
     }
 }

@@ -1,4 +1,5 @@
 import QtQuick 1.1
+import Fang 1.0
 
 Rectangle {
     id: mainFrame
@@ -10,6 +11,13 @@ Rectangle {
     Style {
         id: style
     }
+    
+    FangSettings {
+        id: fangSettings
+        objectName: "fangSettings" // Don't change this!
+    }
+    
+    color: style.color.background
     
     // The feed list sidebar.
     Sidebar {
@@ -126,8 +134,6 @@ Rectangle {
                 id: openSidebarButton
                 
                 imageMargin: 5
-                color: "#777"
-                hoverColor: "#ccc"
                 imageURL: "images/arrows_right.png"
                 
                 width: sidebar.buttonSize
@@ -150,8 +156,6 @@ Rectangle {
         y: 0
         width: parent.width
         height: parent.height
-        
-        title: "Settings"
     }
     
     AddDialog {
@@ -161,8 +165,6 @@ Rectangle {
         y: 0
         width: parent.width
         height: parent.height
-        
-        title: "Add a Feed"
     }
     
     RemoveDialog {
@@ -172,8 +174,6 @@ Rectangle {
         y: 0
         width: parent.width
         height: parent.height
-        
-        title: "Remove a Feed"
         
         // This is how we can remove the feed, you see.
         listView: sidebar.listView
@@ -186,8 +186,6 @@ Rectangle {
         y: 0
         width: parent.width
         height: parent.height
-        
-        title: "Edit a Feed"
         
         // This lets us access the current item.
         listView: sidebar.listView

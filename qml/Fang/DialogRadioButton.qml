@@ -14,10 +14,15 @@ DialogToggleButton {
     function setToggled() {
         if (radioGroup.selected != dialogRadioButton)
             toggled = false
+        else
+            toggled = true
     }
     
     Connections {
         target: radioGroup
         onSelectedChanged: setToggled();
     }
+    
+    Component.onCompleted: setToggled();
+    onRadioGroupChanged: setToggled();
 }

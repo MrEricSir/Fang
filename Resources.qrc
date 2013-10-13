@@ -37,5 +37,6 @@
         <file>qml/Fang/DialogToggleButton.qml</file>
         <file>qml/Fang/DialogRadioButton.qml</file>
         <file>qml/Fang/RadioButtonGroup.qml</file>
+        <file>qml/Fang/DialogButtonGroup.qml</file>
     </qresource>
 </RCC>

@@ -5,6 +5,8 @@ import Fang 1.0
 Dialog {
     id: editDialog
     
+    title: "Edit a Feed"
+    
     property variant listView
     
     onStateChanged: {

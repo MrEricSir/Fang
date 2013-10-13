@@ -4,11 +4,14 @@ import QtQuick 1.1
 Rectangle {
     id: dialogButton
     
-    property color buttonColor: "#eee"
-    property color hoverColor: "#d7d7d7"
     property string text: ""
     
-    color: buttonColor
+    property bool enabled: true
+    
+    property color buttonColor: style.color.dialogButton
+    property color hoverColor: style.color.dialogButtonHover
+    property color pressedColor: style.color.dialogButtonPressed
+    property color disabledColor: style.color.dialogButtonDisabled
     
     // Signaled on a click.
     signal clicked()
@@ -21,13 +24,23 @@ Rectangle {
     
     height: buttonText.paintedHeight + 18
     
-    onEnabledChanged: {
-        buttonText.color = enabled ? "black" : "#999"
-    }
+    onEnabledChanged: state = (enabled ? "default" : "disabled")
     
     Style {
         id: style
     }
+    
+    states: [
+        State { name: "default" },
+        State { name: "hover" },
+        State { name: "pressed" },
+        State { name: "disabled" }
+    ]
+    
+    color: state === "disabled" ? disabledColor :
+                                 state === "hover" ? hoverColor :
+                                 state === "pressed" ? pressedColor :
+                                                       buttonColor
     
     Text {
         id: buttonText
@@ -41,7 +54,7 @@ Rectangle {
         anchors.centerIn: parent
         font.pointSize: style.font.defaultSize
         font.family: style.font.defaultFamily
-        color: style.font.defaultColor
+        color: style.color.dialogButtonText
     }
     
     MouseArea {
@@ -53,9 +66,12 @@ Rectangle {
         hoverEnabled: true
         enabled: dialogButton.enabled
         
-        onEntered: dialogButton.color = hoverColor
-        onExited:  dialogButton.color = buttonColor
-        onPressed: dialogButton.color = Qt.darker(hoverColor, 1.5)
-        onEnabledChanged: dialogButton.color = enabled ? buttonColor : Qt.lighter(buttonColor, 1.05)
+        onEntered: dialogButton.state = "hover"
+        onExited:  dialogButton.state = "default"
+        onPressed: dialogButton.state = "pressed"
+        onEnabledChanged: {
+            if (!enabled)
+                dialogButton.state = "disabled";
+        }
     }
 }
