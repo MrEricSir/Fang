@@ -15,7 +15,7 @@ Dialog {
     RadioButtonGroup {
         id: themeRadioGroup
         
-        selected: fangSettings.style == "DARK" ? darkTheme : lightTheme
+        selected: fangSettings.style === "DARK" ? darkTheme : lightTheme
         
         onSelectedChanged: {
             if (selected === darkTheme)
@@ -32,7 +32,7 @@ Dialog {
             id: lightTheme
             radioGroup: themeRadioGroup
             
-            text: "Light Theme"
+            text: "Light"
             enabled: true
             
             width: parent.buttonWidth
@@ -42,11 +42,72 @@ Dialog {
             id: darkTheme
             radioGroup: themeRadioGroup
             
-            text: "Dark Theme"
+            text: "Dark"
             enabled: true
             
             width: parent.buttonWidth
         }
+    }
+    
+    DialogText {
+        text: "Text size"
+        width: parent.width
+    }
+    
+    RadioButtonGroup {
+        id: fontSizeRadioGroup
+        
+        selected: fangSettings.fontSize === "SMALL" ? smallFontSize : fangSettings.fontSize === "LARGE" 
+                                                                  ? largeFontSize : mediumFontSize
+        
+        onSelectedChanged: {
+            if (selected === smallFontSize)
+                fangSettings.fontSize = "SMALL";
+            else if (selected === mediumFontSize)
+                fangSettings.fontSize = "MEDIUM";
+            else
+                fangSettings.fontSize = "LARGE";
+        }
+    }
+    
+    DialogButtonGroup {
+        width: parent.width
+        
+        DialogRadioButton {
+            id: smallFontSize
+            radioGroup: fontSizeRadioGroup
+            
+            text: "Small"
+            enabled: true
+            
+            width: parent.buttonWidth
+        }
+        
+        DialogRadioButton {
+            id: mediumFontSize
+            radioGroup: fontSizeRadioGroup
+            
+            text: "Medium"
+            enabled: true
+            
+            width: parent.buttonWidth
+        }
+        
+        DialogRadioButton {
+            id: largeFontSize
+            radioGroup: fontSizeRadioGroup
+            
+            text: "Large"
+            enabled: true
+            
+            width: parent.buttonWidth
+        }
+    }
+    
+    // Spacer
+    DialogText {
+        text: ""
+        width: parent.width
     }
     
     DialogButton {

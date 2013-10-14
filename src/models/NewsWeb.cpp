@@ -49,6 +49,7 @@ void NewsWeb::init(QDeclarativeWebView *webView, ScrollReader* scroll, FangSetti
     connect(scroll, SIGNAL(jumpToBookmarkRequested()), this, SLOT(jumpToBookmark()));
     connect(scroll, SIGNAL(forceRefreshRequested()), this, SLOT(forceRefresh()));
     connect(settings, SIGNAL(styleChanged(QString)), this, SLOT(styleChanged()));
+    connect(settings, SIGNAL(fontSizeChanged(QString)), this, SLOT(styleChanged()));
     
     // Load the news page template.
     webView->setUrl(QUrl("qrc:html/NewsPage.html"));
@@ -614,12 +615,17 @@ void NewsWeb::forceRefresh()
 void NewsWeb::styleChanged()
 {
     Q_ASSERT(settings != NULL);
-    QString style = settings->getStyle();
     QWebElement body = document.findFirst("body");
     
+    // Remove existing classes.
     foreach(QString c, body.classes())
         body.removeClass(c);
     
-    body.addClass(style);    // Style
-    body.addClass(platform); // Platform identifier
+    // Add new ones.
+    body.addClass(settings->getStyle());              // Style (dark/light theme)
+    body.addClass(platform);                          // Platform identifier
+    body.addClass("FONT_" + settings->getFontSize()); // Font size
+    
+    // Since these settings can affect page layout (esp. font size) force a refresh.
+    forceRefresh();
 }
