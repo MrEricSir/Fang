@@ -2,7 +2,6 @@
 <style>
 
 body {
-    font-family: "Trebuchet MS", Helvetica, sans-serif !important;
     padding: 0;
     margin: 0;
 }
@@ -17,21 +16,17 @@ body {
     height: 3.6em;
     width: 100%;
     margin: 0;
-    padding-top: .8em;
+    padding-top: 1.0em;
 }
 
 /* Draws the bookmark's stripe. */
 .newsContainer > .bookmark > .stripe {
-    background-color: #8e0000;
-    width: 75%;
-    margin-left: 12.5%;
-    height: 2.0em;
-    visibility: hidden; /* Don't show by default */
+    width: 85%;
+    margin-left: 8.5%;
+    height: 1.0em;
+    border-radius: 0.35em;
     
-    background-image:url(qrc:/html/bookmark.svg);
-    background-size: auto 2.0em;
-    background-repeat:no-repeat;
-    background-position:right center;
+    visibility: hidden; /* Don't show by default */
 }
 
 .newsContainer > .content {
@@ -83,14 +78,16 @@ a:hover { text-decoration: underline; }
 
 .newsContainer > h1 > a:hover {
     text-decoration: none;
-    border-bottom: 2px #00f solid;
+    border-bottom-style: solid;
+    border-bottom-width: 2px;
 }
 
 a:active { text-decoration: underline; }
 
 .newsContainer > h1 > a:active {
     text-decoration: none;
-    border-bottom: 2px #00f solid;
+    border-bottom-style: solid;
+    border-bottom-width: 2px;
 }
 
 /**** Light theme ****/
@@ -103,9 +100,14 @@ body.LIGHT {
 body.LIGHT a { color: #00c; }
 body.LIGHT a:visited { color: #a33; }
 body.LIGHT a:hover, body.LIGHT a:active { color: #04f; }
+body.LIGHT > .newsContainer > h1 > a:hover,
+  body.LIGHT > .newsContainer > h1 > a:active { border-bottom-color: #00f; }
+
 body.LIGHT > .newsContainer > .siteTitle, body.LIGHT > .newsContainer > .date { color: #777; }
 body.LIGHT > .newsContainer > .divider { background-color: #ccc; }
 body.LIGHT > .newsContainer > h1, body.LIGHT > .newsContainer > h1 > a { color: black; }
+
+body.LIGHT > .newsContainer > .bookmark > .stripe { background-color: #8e0000; }
 
 /**** Dark theme ****/
 
@@ -117,9 +119,21 @@ body.DARK {
 body.DARK a { color: #6af; }
 body.DARK a:visited { color: #6af; }
 body.DARK a:hover, body.DARK a:active { color: #f10; }
+body.DARK > .newsContainer > h1 > a:hover,
+  body.DARK > .newsContainer > h1 > a:active { border-bottom-color: #f10; }
+
 body.DARK > .newsContainer > .siteTitle, body.DARK > .newsContainer > .date { color: #ccc; }
 body.DARK > .newsContainer > .divider { background-color: #888; }
 body.DARK > .newsContainer > h1, body.DARK > .newsContainer > h1 a { color: white; }
+
+body.DARK > .newsContainer > .bookmark > .stripe { background-color: #ce0000; }
+
+
+/**** Platforms ****/
+
+body.MAC { font-family: "Lucida Grande", Helvetica, sans-serif !important; }
+body.WIN { font-family: "Segoe UI", Arial, sans-serif !important; }
+
 </style>
 <body>
 

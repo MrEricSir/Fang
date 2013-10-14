@@ -29,7 +29,8 @@ public:
      * @param scroll
      * @param settings
      */
-    void init(QDeclarativeWebView *webView, ScrollReader* scroll, FangSettings* settings);
+    void init(QDeclarativeWebView *webView, ScrollReader* scroll, FangSettings* settings,
+              const QString& platform);
     
     
     virtual bool eventFilter(QObject *watched, QEvent *e);
@@ -261,7 +262,11 @@ private:
     
     QTimer forceRefreshTimer;
     
+    // User-configurable settings.
     FangSettings* settings;
+    
+    // Platform identifier.
+    QString platform;
 };
 
 #endif // NEWSWEB_H

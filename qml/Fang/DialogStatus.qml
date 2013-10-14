@@ -7,7 +7,7 @@ Rectangle {
     
     height: dialogStatusText.paintedHeight
     
-    // Set state to change grpahic.
+    // Set state to change graphic.
     state: "ok"
     
     states: [
@@ -18,11 +18,11 @@ Rectangle {
     
     function getImage(newState) {
         if (newState === "ok")
-            return "images/symbol_ok.svg";
+            return fangSettings.style === "LIGHT" ? "images/symbol_ok.svg" : "images/symbol_dark_ok.svg";
         else if (newState === "help")
-            return "images/symbol_question.svg";
+            return fangSettings.style === "LIGHT" ? "images/symbol_question.svg" : "images/symbol_dark_question.svg";
         else if (newState === "error")
-            return "images/symbol_error.svg";
+            return fangSettings.style === "LIGHT" ? "images/symbol_error.svg" : "images/symbol_dark_error.svg";
     }
     
     Style {

@@ -69,6 +69,7 @@ private:
     WebPageGrabber pageGrabber;
     Parser::ParseResult result;
     QUrl location;
+    bool pageGrabberDone;
 };
 
 QML_DECLARE_TYPE(FeedValidator)

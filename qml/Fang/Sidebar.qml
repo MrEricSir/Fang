@@ -41,7 +41,8 @@ Item {
                 height: buttonSize
                 
                 imageMargin: 5
-                imageURL: "images/symbol_gear.svg"
+                imageURL: fangSettings.style === "LIGHT" ? "images/symbol_gear.svg" :
+                                                           "images/symbol_dark_gear.svg";
                 
                 onClicked: settingsClicked()
             }
@@ -128,7 +129,7 @@ Item {
                 
                 imageMargin: 5
                 hoverColor: "#2a2"
-                imageURL: "images/plus.png"
+                imageURL: fangSettings.style === "LIGHT" ? "images/plus.png" : "images/plus_dark.png"
                 
                 onClicked: addClicked()
             }
@@ -146,7 +147,8 @@ Item {
                 
                 imageMargin: 5
                 hoverColor: "#27a"
-                imageURL: "images/symbol_pencil.svg"
+                imageURL: fangSettings.style === "LIGHT" ? "images/symbol_pencil.svg"
+                                                         : "images/symbol_dark_pencil.svg"
                 
                 onClicked: editClicked()
             }
@@ -164,7 +166,8 @@ Item {
                 
                 imageMargin: 5
                 hoverColor: "#a22"
-                imageURL: "images/minus.png"
+                imageURL: fangSettings.style === "LIGHT" ? "images/minus.png"
+                                                         : "images/minus_dark.png"
                 
                 onClicked: removeClicked()
             }
@@ -179,7 +182,9 @@ Item {
                 height: buttonSize
                 
                 imageMargin: 5
-                imageURL: "images/arrows_left.png"
+                imageURL: fangSettings.style === "LIGHT" ? "images/arrows_left.png"
+                                                         : "images/arrows_left_dark.png"
+                                                           
                 
                 onClicked: closeClicked()
             }

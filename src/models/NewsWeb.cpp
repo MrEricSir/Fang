@@ -23,11 +23,13 @@ NewsWeb::NewsWeb(QObject *parent) :
 {
 }
 
-void NewsWeb::init(QDeclarativeWebView *webView, ScrollReader* scroll, FangSettings* settings)
+void NewsWeb::init(QDeclarativeWebView *webView, ScrollReader* scroll, FangSettings* settings,
+                   const QString& platform)
 {
     this->webView = webView;
     this->scroll = scroll;
     this->settings = settings;
+    this->platform = platform;
     
     // Enable HTTP cache.
     Utilities::addNetworkAccessManagerCache(webView->page()->networkAccessManager());
@@ -618,5 +620,6 @@ void NewsWeb::styleChanged()
     foreach(QString c, body.classes())
         body.removeClass(c);
     
-    body.addClass(style);
+    body.addClass(style);    // Style
+    body.addClass(platform); // Platform identifier
 }

@@ -8,7 +8,7 @@ Image {
     sourceSize.height: height
     smooth: true
     
-    source: "images/symbol_reload.svg"
+    source: fangSettings.style === "LIGHT" ? "images/symbol_reload.svg" : "images/symbol_dark_reload.svg"
     
     onVisibleChanged: {
         if (visible)

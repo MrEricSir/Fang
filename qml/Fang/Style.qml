@@ -6,7 +6,7 @@ import Fang 1.0
   */
 Item {
     property variant font: getPlatformFont()
-    property variant color: fangSettings.style == "LIGHT" ? colorSchemeLight : colorSchemeDark;
+    property variant color: fangSettings.style === "LIGHT" ? colorSchemeLight : colorSchemeDark;
     
     function getPlatformFont() {
         switch(platform) {
@@ -99,8 +99,8 @@ Item {
         property color sidebarSelected: "black"
         property color sidebarSelectedText: "white"
         
-        property color sidebarButton: dialogButton
-        property color sidebarButtonHover: dialogButtonHover
+        property color sidebarButton: "white"
+        property color sidebarButtonHover: "#ccc"
         property color sidebarButtonPressed: Qt.lighter(colorSchemeDark.sidebarButtonHover, 1.5)
         
         property color badge: "#aaa"

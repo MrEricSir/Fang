@@ -20,7 +20,6 @@
         <file>qml/Fang/images/spinner.gif</file>
         <file>qml/Fang/DialogSpinner.qml</file>
         <file>qml/Fang/DialogStatus.qml</file>
-        <file>qml/Fang/images/error.png</file>
         <file>qml/Fang/images/symbol_error.svg</file>
         <file>qml/Fang/images/symbol_ok.svg</file>
         <file>qml/Fang/images/symbol_question.svg</file>
@@ -28,7 +27,6 @@
         <file>qml/Fang/RemoveDialog.qml</file>
         <file>qml/Fang/images/symbol_rss.svg</file>
         <file>qml/Fang/Spinner.qml</file>
-        <file>html/bookmark.svg</file>
         <file>qml/Fang/images/symbol_pencil.svg</file>
         <file>qml/Fang/EditDialog.qml</file>
         <file>qml/Fang/images/symbol_gear.svg</file>
@@ -38,5 +36,17 @@
         <file>qml/Fang/DialogRadioButton.qml</file>
         <file>qml/Fang/RadioButtonGroup.qml</file>
         <file>qml/Fang/DialogButtonGroup.qml</file>
+        <file>qml/Fang/images/plus_dark.png</file>
+        <file>qml/Fang/images/minus_dark.png</file>
+        <file>qml/Fang/images/arrows_right_dark.png</file>
+        <file>qml/Fang/images/arrows_left_dark.png</file>
+        <file>qml/Fang/images/symbol_dark_question.svg</file>
+        <file>qml/Fang/images/symbol_dark_ok.svg</file>
+        <file>qml/Fang/images/symbol_dark_pencil.svg</file>
+        <file>qml/Fang/images/symbol_dark_gear.svg</file>
+        <file>qml/Fang/images/symbol_dark_error.svg</file>
+        <file>qml/Fang/images/symbol_dark_rss.svg</file>
+        <file>qml/Fang/images/symbol_dark_reload.svg</file>
+        <file>qml/Fang/images/spinner_dark.gif</file>
     </qresource>
 </RCC>

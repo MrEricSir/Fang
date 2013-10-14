@@ -19,6 +19,7 @@ void FeedValidator::check()
     // Clear our state.
     result = Parser::IN_PROGRESS;
     webPage = NULL;
+    pageGrabberDone = false;
     embeddedFeedURL.clear();
     
     // Signal start.
@@ -127,7 +128,13 @@ void FeedValidator::onFeedFinished()
 
 void FeedValidator::onPageGrabberReady(QWebPage* page)
 {
+    pageGrabberDone = true;
     webPage = page;
+    if (page == NULL) {
+        handleCompletion();
+        
+        return;
+    }
     
     // Find the first feed URL.
     QWebElement doc = page->mainFrame()->documentElement();
@@ -155,7 +162,7 @@ void FeedValidator::handleCompletion()
     if (!_validating)
         return; // Already sent signal.
     
-    if (webPage == NULL)
+    if (!pageGrabberDone)
         return; // Still waiting for web page.
     
     if (result == Parser::IN_PROGRESS)

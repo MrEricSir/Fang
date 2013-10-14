@@ -31,8 +31,10 @@ void WebPageGrabber::load(const QString& htmlString, const QUrl& baseUrl)
 
 void WebPageGrabber::onLoadFinished(bool ok)
 {
-    if (!ok)
+    if (!ok) {
+        emit ready(NULL);
         return; // It happens!
+    }
     
     bool done = true;
     

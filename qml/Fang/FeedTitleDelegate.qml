@@ -53,7 +53,8 @@ Item {
                         onStatusChanged: {
                             // Show the default for errors.
                             if (status == Image.Error || imageURL == "")
-                                source = "images/symbol_rss.svg";
+                                source = fangSettings.style === "LIGHT" ? "images/symbol_rss.svg"
+                                                                        : "images/symbol_dark_rss.svg";
                         }
                         
                         anchors.verticalCenter: parent.verticalCenter

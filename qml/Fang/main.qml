@@ -134,7 +134,8 @@ Rectangle {
                 id: openSidebarButton
                 
                 imageMargin: 5
-                imageURL: "images/arrows_right.png"
+                imageURL: fangSettings.style === "LIGHT" ? "images/arrows_right.png"
+                                                         : "images/arrows_right_dark.png"
                 
                 width: sidebar.buttonSize
                 height: sidebar.buttonSize

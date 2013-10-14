@@ -88,7 +88,7 @@ void FangApp::onViewerStatusChanged(QDeclarativeView::Status status)
         }
         
         if (!newsWeb.isReady())
-            newsWeb.init(webView, scrollReader, fangSettings); // Start the news!
+            newsWeb.init(webView, scrollReader, fangSettings, getPlatform()); // Start the news!
     }
 }
 

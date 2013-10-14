@@ -51,10 +51,12 @@ QDateTime Utilities::dateFromFeedString(QString timestamp)
     // Date time.
     // Examples:
     // Tue, 02 Jul 2013 01:01:24 +0000
+    // Sun, 13 Oct 2013 19:15:29  PST
     
     // TODO: figure out the time zone issue
     // For now, we're shaving off everything after the last space.
     timestamp = timestamp.left(timestamp.trimmed().lastIndexOf(" "));
+    timestamp = timestamp.trimmed();
     //qDebug() << "Time string: " << timestamp;
     
     ret = QDateTime::fromString(timestamp, "ddd, dd MMM yyyy hh:mm:ss"); 
