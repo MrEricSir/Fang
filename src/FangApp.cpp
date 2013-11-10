@@ -13,15 +13,12 @@
 #include "operations/FaviconUpdateOperation.h"
 #include "operations/UpdateTitleOperation.h"
 
-#include "models/ScrollReader.h"
-
 FangApp* FangApp::_instance = NULL;
 
 FangApp::FangApp(QObject *parent, FangApplicationViewer* viewer) :
     QObject(parent),
     viewer(viewer),
     manager(this),
-    newsWeb(),
     currentFeed(NULL),
     loadAllFinished(false)
 {
@@ -38,8 +35,6 @@ FangApp::FangApp(QObject *parent, FangApplicationViewer* viewer) :
     
     connect(&manager, SIGNAL(operationFinished(Operation*)),
                      this, SLOT(onOperationFinished(Operation*)));
-    
-    connect(&newsWeb, SIGNAL(ready()), this, SLOT(onNewsWebReady()));
     
     connect(feedList, SIGNAL(added(ListItem*)), this, SLOT(onFeedAdded(ListItem*)));
     connect(feedList, SIGNAL(removed(ListItem*)), this, SLOT(onFeedRemoved(ListItem*)));
@@ -77,27 +72,12 @@ FeedItem* FangApp::getFeed(int index) {
 
 void FangApp::onViewerStatusChanged(QDeclarativeView::Status status)
 {
-    if (status == QDeclarativeView::Ready) {
-        QDeclarativeWebView *webView = viewer->rootObject()->findChild<QDeclarativeWebView*>("newsView");
-        ScrollReader *scrollReader = viewer->rootObject()->findChild<ScrollReader*>("newsViewScrollReader");
-        FangSettings *fangSettings = viewer->rootObject()->findChild<FangSettings*>("fangSettings");
-        if (webView == NULL || scrollReader == NULL || fangSettings == NULL) {
-            qDebug() << "Could not find objects: " << webView << " " << scrollReader;
-            
-            return;
-        }
-        
-        if (!newsWeb.isReady())
-            newsWeb.init(webView, scrollReader, fangSettings, getPlatform()); // Start the news!
-    }
+
 }
 
 void FangApp::onWindowResized()
 {
-    if (currentFeed == NULL || !newsWeb.isReady())
-        return;
-    
-    newsWeb.forceRefresh();
+
 }
 
 void FangApp::onOperationFinished(Operation *operation)
@@ -178,17 +158,9 @@ void FangApp::onLoadAllFinished(Operation *op)
     displayFeed();
 }
 
-// Note: newsWeb MUST be ready and currentFeed MUST not be null and the LoadAll operation MUST
-// be finished before this operation can do jack.  Got that?  Well, do ya punk?
 void FangApp::displayFeed()
 {
-    if (currentFeed == NULL || !newsWeb.isReady() || !loadAllFinished)
-        return;
-    
-    if (newsWeb.getCurrentFeed() != currentFeed)
-        currentFeed->setIsCurrent(true);
-    
-    newsWeb.setFeed(currentFeed);
+
 }
 
 void FangApp::setCurrentFeed(FeedItem *feed)

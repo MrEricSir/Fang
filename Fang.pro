@@ -30,8 +30,6 @@ SOURCES += src/main.cpp \
     src/operations/Operation.cpp \
     src/operations/UpdateFeedOperation.cpp \
     src/utilities/Utilities.cpp \
-    src/models/FangWebView.cpp \
-    src/models/NewsWeb.cpp \
     src/operations/LoadAllFeedsOperation.cpp \
     src/db/DB.cpp \
     src/models/MouseWheelArea.cpp \
@@ -40,7 +38,6 @@ SOURCES += src/main.cpp \
     src/operations/AddFeedOperation.cpp \
     src/operations/RemoveFeedOperation.cpp \
     src/utilities/FaviconGrabber.cpp \
-    src/models/ScrollReader.cpp \
     src/operations/SetBookmarkOperation.cpp \
     src/utilities/WebPageGrabber.cpp \
     src/operations/FaviconUpdateOperation.cpp \
@@ -66,7 +63,9 @@ OTHER_FILES += \
     qml/Fang/FeedTitleDelegate.qml \
     html/NewsPage.html \
     sql/1.sql \
-    qml/Fang/SidebarButton.qml
+    qml/Fang/SidebarButton.qml \
+    html/jquery-2.0.3.js \
+    html/fang.js
 
 RESOURCES += \
     Resources.qrc
@@ -83,8 +82,6 @@ HEADERS += \
     src/operations/Operation.h \
     src/operations/UpdateFeedOperation.h \
     src/utilities/Utilities.h \
-    src/models/FangWebView.h \
-    src/models/NewsWeb.h \
     src/operations/LoadAllFeedsOperation.h \
     src/db/DB.h \
     src/models/MouseWheelArea.h \
@@ -93,7 +90,6 @@ HEADERS += \
     src/operations/AddFeedOperation.h \
     src/operations/RemoveFeedOperation.h \
     src/utilities/FaviconGrabber.h \
-    src/models/ScrollReader.h \
     src/operations/SetBookmarkOperation.h \
     src/utilities/WebPageGrabber.h \
     src/operations/FaviconUpdateOperation.h \

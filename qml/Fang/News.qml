@@ -1,18 +1,9 @@
 import QtQuick 1.1
+import QtWebKit 1.0
 import Fang 1.0
 
 Item {
     id: news
-    
-    // Forces the web view to be repainted (but not refresh!)
-    function forceRefresh() {
-        newsViewScrollReader.forceRefresh();
-    }
-    
-    // Jump to the current bookmark.
-    function jumpToBookmark() {
-        newsViewScrollReader.jumpToBookmark();
-    }
     
     Item {
         id: newsMargin
@@ -27,36 +18,28 @@ Item {
             width: parent.width
             anchors.fill: parent
             contentWidth: Math.max(parent.width, newsView.width)
-            contentHeight: Math.max(parent.height, newsView.height + bottomRect.height)
+            contentHeight: Math.max(parent.height, newsView.height)
             
             flickableDirection: Flickable.VerticalFlick
             
-            ScrollReader {
-                id: newsViewScrollReader
-                objectName: "newsViewScrollReader" // MUST NOT CHANGE (used in C++)
-                
-                // Grab the current contentY
-                contentY: newsFlickable.contentY
-                
-                // Used for jumping the view to a position.
-                onJumpYChanged: {
-                    if (jumpY < 0)
-                        return;
-                    
-                    newsFlickable.contentY = jumpY
-                    jumpY = -1; // reset / acknowledge
-                }
-            }
-            
-            FangWebView {
+            // Web view for our HTML-based RSS display.
+            WebView {
                 id: newsView
-                objectName: "newsView" // MUST NOT CHANGE (used in C++)
+                
+                // Enable the web inspector by setting this to true.  You'll have to write-klik
+                // on the webview to use this handy-dandy feature.
+                property bool devMode: true
                 
                 preferredWidth: parent.parent.width
                 
                 focus: true
                 
+                url: "/html/NewsPage.html"
+                
+                // Turn the inspek0r off and on.
+                settings.developerExtrasEnabled: devMode
                 MouseArea {
+                    enabled: !newsView.devMode
                     anchors.fill: parent
                     acceptedButtons: Qt.RightButton
                 }
@@ -82,17 +65,6 @@ Item {
                         easing.type: Easing.OutQuad
                     }
                 }
-            }
-            
-            // Spacer to allow the final story to scroll all the way to the top of the window.
-            Item {
-                id: bottomRect
-                
-                // Height is set by the scroll utility.
-                height: newsViewScrollReader.bottomSpacer
-                
-                anchors.top: newsView.bottom
-                width: parent.width
             }
         }
     }

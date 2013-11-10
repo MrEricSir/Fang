@@ -1,4 +1,5 @@
 <html>
+<head>
 <style>
 
 body {
@@ -105,7 +106,7 @@ body.LIGHT > .newsContainer > .siteTitle, body.LIGHT > .newsContainer > .date { 
 body.LIGHT > .newsContainer > .divider { background-color: #ccc; }
 body.LIGHT > .newsContainer > h1, body.LIGHT > .newsContainer > h1 > a { color: black; }
 
-body.LIGHT > .newsContainer > .bookmark > .stripe { background-color: #8e0000; }
+body.LIGHT > .newsContainer #bookmarked > .bookmark > .stripe { background-color: #8e0000; }
 
 /**** Dark theme ****/
 
@@ -124,7 +125,7 @@ body.DARK > .newsContainer > .siteTitle, body.DARK > .newsContainer > .date { co
 body.DARK > .newsContainer > .divider { background-color: #888; }
 body.DARK > .newsContainer > h1, body.DARK > .newsContainer > h1 a { color: white; }
 
-body.DARK > .newsContainer > .bookmark > .stripe { background-color: #ce0000; }
+body.DARK > .newsContainer #bookmarked > .bookmark > .stripe  { background-color: #ce0000; }
 
 
 /**** Platforms ****/
@@ -144,9 +145,17 @@ body.FONT_MEDIUM > .newsContainer > h1 { font-size: 16pt; }
 body.FONT_LARGE > .newsContainer > .content { font-size: 16pt; }
 body.FONT_LARGE > .newsContainer > h1 { font-size: 26pt; }
 
+.newsContainer { border: 1px red solid; }
+
 </style>
+
+<script type="text/javascript" src="jquery-2.0.3.js"></script>
+<script type="text/javascript" src="fang.js"></script>
+
+</head>
 <body>
 
+uh... hai?<br>
 
 <div class="newsContainer" id="model">
 
