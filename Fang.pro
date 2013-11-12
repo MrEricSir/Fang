@@ -50,7 +50,9 @@ SOURCES += src/main.cpp \
     src/parser/ParserInterface.cpp \
     src/parser/BackgroundParser.cpp \
     src/parser/BackgroundParserThread.cpp \
-    src/models/FangSettings.cpp
+    src/models/FangSettings.cpp \
+    src/models/WebInteractor.cpp \
+    src/operations/LoadNews.cpp
 
 # Installation path
 # target.path =
@@ -102,4 +104,6 @@ HEADERS += \
     src/parser/ParserInterface.h \
     src/parser/BackgroundParser.h \
     src/parser/BackgroundParserThread.h \
-    src/models/FangSettings.h
+    src/models/FangSettings.h \
+    src/models/WebInteractor.h \
+    src/operations/LoadNews.h

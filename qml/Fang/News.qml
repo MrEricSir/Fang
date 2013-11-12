@@ -22,6 +22,48 @@ Item {
             
             flickableDirection: Flickable.VerticalFlick
             
+            // The "interactor" is what talks to the C++ layer.
+            WebInteractor {
+                id: webInteractor
+                objectName: "webInteractor" // Do not change!! PENALTY OF DEATH AND ELECTROCUTION
+                
+                function onAdd(append, title, url, feedTitle, timestamp, content) {
+                    console.log("You want ana append?")
+                    //newsView.evaluateJavaScript("document.getElementsByTagName('body')[0].innerHTML = '" + html + "';");
+                    //newsView.evaluateJavaScript("document.getElementsByTagName('body')[0].insertAdjacentHTML('beforeEnd', '" + html + "');");
+                    //var html2 = "<br><br>YOYO<br>"
+                    //newsView.evaluateJavaScript("document.body.insertAdjacentHTML('beforeEnd', '" + html + "');");
+                    
+               /*     newsView.evaluateJavaScript("appendNews('" 
+                                                + "ts" + "', '"
+                                                + "sfd" + "', '"
+                                                + "" + "', '"
+                                                + "feedTitle" + "', '"
+                                                + "timestamp" + "', '"
+                                                + "content" + "');"); */
+                    
+                  /*  newsView.evaluateJavaScript("appendNews('" 
+                                                + append + "', '"
+                                                + title + "', '"
+                                                + url + "', '"
+                                                + feedTitle + "', '"
+                                                + timestamp + "', '"
+                                                + content + "');");  */
+                    
+                    newsView.evaluateJavaScript("appendNews('" 
+                                                + append + "', '"
+                                                + title + "', '"
+                                                + url + "', '"
+                                                + feedTitle + "', '"
+                                                + timestamp + "', '"
+                                                + content + "');");
+                }
+                
+                Component.onCompleted: {
+                    add.connect(onAdd);
+                }
+            }
+            
             // Web view for our HTML-based RSS display.
             WebView {
                 id: newsView
@@ -36,12 +78,29 @@ Item {
                 
                 url: "/html/NewsPage.html"
                 
+                javaScriptWindowObjects: QtObject {
+                    WebView.windowObjectName: "fang"
+                    
+                    function loadNext() {
+                        webInteractor.loadNext();
+                    }
+                    
+                    function loadPrevious() {
+                        webInteractor.loadPrevious();
+                    }
+                }
+                
                 // Turn the inspek0r off and on.
                 settings.developerExtrasEnabled: devMode
                 MouseArea {
                     enabled: !newsView.devMode
                     anchors.fill: parent
                     acceptedButtons: Qt.RightButton
+                }
+                
+                // Set platform.
+                onLoadFinished: {
+                    newsView.evaluateJavaScript("setPlatform('" + platform + "');");
                 }
                 
                 MouseWheelArea {

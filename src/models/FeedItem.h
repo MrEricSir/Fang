@@ -42,7 +42,7 @@ public:
             const QUrl& url,
             const QUrl& siteURL,
             const QUrl& imageURL,
-            NewsItem* bookmark,
+            const qint64 bookmarkID,
             QObject *parent = 0);
     
     virtual ~FeedItem();
@@ -105,6 +105,11 @@ public:
     virtual void setBookmark(NewsItem* item, bool signal = true);
     
     /**
+     * @return The ID of the current bookmark.
+     */
+    inline qint64 getBookmarkID() { return bookmarkID; }
+    
+    /**
      * @param item
      * @return True if this item can be bookmarked.
      */
@@ -146,10 +151,11 @@ private:
     QUrl url;
     QUrl siteURL;
     QUrl imageURL;
-    NewsItem* bookmark;
+    qint64 bookmarkID;
     QList<NewsItem*>* newsList;
     int isUpdating;
     bool isCurrent;
+    NewsItem* bookmark;
 };
 
 #endif // FEEDITEM_H

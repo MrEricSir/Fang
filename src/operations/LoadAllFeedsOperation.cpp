@@ -48,43 +48,6 @@ void LoadAllFeedsOperation::execute()
         tempFeedItemList.append(item);
     }
     
-    // Load news items for each feed.
-    foreach (ListItem* _item, tempFeedItemList) {
-        FeedItem* item = qobject_cast<FeedItem*>(_item);
-        QSqlQuery query(db());
-        query.prepare("SELECT * FROM NewsItemTable WHERE feed_id = :feed_id ORDER BY timestamp ASC");
-        query.bindValue(":feed_id", item->getDbId());
-        if (!query.exec()) {
-            qDebug() << "Could not load news for feed id: " << item->getDbId();
-            // TODO : add error signal
-            continue;
-        }
-        
-        // Lookup the bookmark id.
-        qint64 bookmarkId = bookmarkIdMap.value(item, -1);
-        
-        while (query.next()) {
-            // Load from DB query result.
-            NewsItem* newsItem = new NewsItem(
-                        item,
-                        query.value("id").toULongLong(),
-                        query.value("title").toString(),
-                        query.value("author").toString(),
-                        query.value("summary").toString(),
-                        query.value("content").toString(),
-                        QDateTime::fromMSecsSinceEpoch(query.value("timestamp").toLongLong()), 
-                        query.value("url").toString()
-                        );
-            
-            // Add directly to the model's data structure.
-            item->getNewsList()->append(newsItem);
-            
-            // If this is the bookmark, link 'er up.
-            if (newsItem->getDbID() == bookmarkId)
-                item->setBookmark(newsItem, false);
-        }
-    }
-    
     // Finally, put All News at the front and throw everything into the feed list.
     tempFeedItemList.push_front(allNews);
     feedList->appendRows(tempFeedItemList);

@@ -13,10 +13,11 @@ FeedItem::FeedItem(QObject *parent) :
     url(),
     siteURL(),
     imageURL(),
-    bookmark(NULL),
+    bookmarkID(-1),
     newsList(NULL),
     isUpdating(false),
-    isCurrent(false)
+    isCurrent(false),
+    bookmark(NULL)
     
 {
     newsList = new QList<NewsItem*>();
@@ -24,7 +25,7 @@ FeedItem::FeedItem(QObject *parent) :
 
 FeedItem::FeedItem(qint64 id, const QString &title, const QString &subtitle, const QDateTime &lastUpdated,
                    quint32 minutesToUpdate, const QUrl &url, const QUrl& siteURL, const QUrl &imageURL,
-                   NewsItem* bookmark, QObject* parent) :
+                   const qint64 bookmarkID, QObject* parent) :
     ListItem(parent),
     _id(id),
     title(title),
@@ -34,10 +35,11 @@ FeedItem::FeedItem(qint64 id, const QString &title, const QString &subtitle, con
     url(url),
     siteURL(siteURL),
     imageURL(imageURL),
-    bookmark(bookmark),
+    bookmarkID(bookmarkID),
     newsList(NULL),
     isUpdating(false),
-    isCurrent(false)
+    isCurrent(false),
+    bookmark(NULL)
 {
     newsList = new QList<NewsItem*>();
 }
@@ -107,19 +109,7 @@ void FeedItem::setIsUpdating(bool isUpdating)
 
 quint32 FeedItem::getUnreadCount() const
 {
-    if (bookmark == NULL)
-        return newsList->size();
-    
-    int index = newsList->indexOf(bookmark);
-    if (index < 0)
-        return newsList->size();
-    
-    int ret = newsList->size() - index - 1;
-    
-    if (ret < 0)
-        return 0;
-    
-    return ret;
+    return 10; // TODO: fix it
 }
 
 void FeedItem::setImageURL(const QUrl &url)

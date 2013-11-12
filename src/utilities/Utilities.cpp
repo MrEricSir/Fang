@@ -18,7 +18,7 @@ FeedItem *Utilities::feedItemFromRaw(RawFeed *raw, qint64 dbId, QObject* parent)
                         raw->url,
                         raw->siteURL,
                         raw->imageURL,
-                        NULL,
+                        -1,
                         parent
                         );
 }

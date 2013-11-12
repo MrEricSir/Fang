@@ -10,6 +10,8 @@
 #include "models/NewsItem.h"
 #include "models/FeedItem.h"
 #include "models/ListModel.h"
+#include "models/FangSettings.h"
+#include "models/WebInteractor.h"
 #include "parser/Parser.h"
 
 
@@ -54,8 +56,6 @@ private slots:
     void onFeedAdded(ListItem*);
     
     void onFeedRemoved(ListItem*);
-    
-    void onNewsWebReady();
     
     void onNewsItemBookmarked(NewsItem* item);
     
@@ -108,6 +108,8 @@ private:
     ListModel *feedList;
     FeedItem* currentFeed;
     bool loadAllFinished;
+    FangSettings *fangSettings;
+    WebInteractor *interactor;
 };
 
 #endif // FANGAPP_H

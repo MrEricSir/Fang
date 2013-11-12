@@ -2,6 +2,33 @@
   This is Fang's Javascript logic.  But I mean, you knew that.  DUH!
   */
 
+function appendNews(append, title, url, feedTitle, timestamp, content) {
+    // Copy the model.
+    var item = $( 'body>.newsContainer#model' ).clone();
+    
+    // I'm a model, you know what I mean...
+    // (but not anymore!! HAHA!)
+    item.attr( 'id', '' );
+    
+    // Assign data.
+    item.find( '.link' ).attr( 'href', url );
+    item.find( '.link' ).html( title );
+    item.find( '.content' ).html( content );
+    item.find( '.siteTitle' ).html( feedTitle );
+    item.find( '.date' ).html( timestamp );
+    
+    // console.log(item.html());
+    
+    // Stick 'er in!
+    // TODO: prepend
+    item.insertAfter( 'body>.newsContainer:last-child' );
+}
+
+function setPlatform(p) {
+    console.log("adding class " + p);
+    $('body').addClass(p);
+}
+
 // Main method
 $(document).ready(function() {
     /**
@@ -15,7 +42,7 @@ $(document).ready(function() {
         var prevScrollTop = $window.scrollTop();
         
         var checkScrollPosition = function() {
-            console.log("Well hello")
+            //console.log("Well hello")
             // If the user hasn't scrolled, there's nothing to do.
             if (prevScrollTop == $window.scrollTop())
                 return;
@@ -40,9 +67,13 @@ $(document).ready(function() {
         setInterval(checkScrollPosition, interval);
     }
     
+    // TODO: this is currently unused
+    //
+    // 
     function atTop() {
         console.log("You're at the top!")
         // Prepend.  Must do these one at a time.
+        
         var totalHeight = $(document).scrollTop();
         for (var i = 0; i < 3; i++) {
             var newItem = $( "<div class='newsContainer'></div>" );
@@ -57,6 +88,9 @@ $(document).ready(function() {
         $(document).scrollTop( totalHeight );
     }
     
+    // TODO: this is currently unused
+    //
+    // 
     function atBottom() {
         console.log("You've hit bottom.");
         
@@ -119,7 +153,7 @@ $(document).ready(function() {
         }
     } 
     
-    watchScrollPosition(atBottom, atTop, checkBookmark, 250, 250);
+    watchScrollPosition(window.fang.loadNext, window.fang.loadPrevious, checkBookmark, 250, 250);
     
     // Scroll down a bit.
     $(document).scrollTop(300);

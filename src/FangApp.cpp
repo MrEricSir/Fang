@@ -20,7 +20,9 @@ FangApp::FangApp(QObject *parent, FangApplicationViewer* viewer) :
     viewer(viewer),
     manager(this),
     currentFeed(NULL),
-    loadAllFinished(false)
+    loadAllFinished(false),
+    fangSettings(NULL),
+    interactor(NULL)
 {
     Q_ASSERT(_instance == NULL);
     _instance = this;
@@ -72,7 +74,22 @@ FeedItem* FangApp::getFeed(int index) {
 
 void FangApp::onViewerStatusChanged(QDeclarativeView::Status status)
 {
-
+    if (status != QDeclarativeView::Ready)
+        return;
+    
+    // OH! We're ready! Well I'll be damned. Grab all the stuff from 
+    interactor = viewer->rootObject()->findChild<WebInteractor*>("webInteractor");
+    fangSettings = viewer->rootObject()->findChild<FangSettings*>("fangSettings");
+    
+    // Do a sanity check.
+    if (interactor == NULL || fangSettings == NULL) {
+        qDebug() << "Could not find QML objects!!!11";
+        
+        return;
+    }
+    
+    // Init interactor with Mr. Manager.
+    interactor->init(&manager);
 }
 
 void FangApp::onWindowResized()
@@ -112,11 +129,6 @@ void FangApp::onFeedRemoved(ListItem * listItem)
         disconnectFeed(item);
         item->deleteLater(); // Well, bye.
     }
-}
-
-void FangApp::onNewsWebReady()
-{
-    displayFeed();
 }
 
 void FangApp::onNewsItemBookmarked(NewsItem *item)
@@ -160,11 +172,14 @@ void FangApp::onLoadAllFinished(Operation *op)
 
 void FangApp::displayFeed()
 {
-
+    if (currentFeed != NULL)
+        interactor->setFeed(currentFeed);
 }
 
 void FangApp::setCurrentFeed(FeedItem *feed)
 {
+    qDebug() << "You've set the feed to "<< (feed != NULL ? feed->getTitle() : "(null)");
+    
     // Disconnect signals.
     if (currentFeed != NULL) {
         disconnect(currentFeed, SIGNAL(bookmarkChanged(NewsItem*)),
