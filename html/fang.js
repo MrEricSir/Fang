@@ -24,8 +24,12 @@ function appendNews(append, title, url, feedTitle, timestamp, content) {
     item.insertAfter( 'body>.newsContainer:last-child' );
 }
 
-function setPlatform(p) {
-    console.log("adding class " + p);
+function clearBodyClasses() {
+    $('body').removeClass();
+}
+
+function addBodyClass(p) {
+    //console.log("adding class " + p);
     $('body').addClass(p);
 }
 
@@ -36,71 +40,35 @@ $(document).ready(function() {
      * interval is how often the check will run (in milliseconds; 250-1000 is reasonable).
      */
     function watchScrollPosition(bottomCallback, topCallback, bookmarkCallback, distance, interval) {
-        var $window = $(window),
-            $document = $(document);
+        var $document = $(document);
         
-        var prevScrollTop = $window.scrollTop();
+        var prevScrollTop = 0;
         
         var checkScrollPosition = function() {
-            //console.log("Well hello")
+            var scrollTop = window.fang.getScroll();
+            
             // If the user hasn't scrolled, there's nothing to do.
-            if (prevScrollTop == $window.scrollTop())
+            if (prevScrollTop === scrollTop)
                 return;
             
             // Check top.
             var top = distance;
-            if ($window.scrollTop() <= top) {
+            if (scrollTop <= top) {
                 topCallback();
             }
-
+            
             // Check bottom (note: calculation MUST be done after topCallback()!!!!)
-            var bottom = $document.height() - $window.height() - distance;
-            if ($window.scrollTop() >= bottom) {
+            var bottom = $document.height() - window.fang.getHeight() - distance;
+            if (scrollTop >= bottom) {
                 bottomCallback();
             }
             
             bookmarkCallback();
             
-            prevScrollTop = $window.scrollTop();
+            prevScrollTop = scrollTop;
         };
 
         setInterval(checkScrollPosition, interval);
-    }
-    
-    // TODO: this is currently unused
-    //
-    // 
-    function atTop() {
-        console.log("You're at the top!")
-        // Prepend.  Must do these one at a time.
-        
-        var totalHeight = $(document).scrollTop();
-        for (var i = 0; i < 3; i++) {
-            var newItem = $( "<div class='newsContainer'></div>" );
-            newItem.insertBefore( "body>.newsContainer:first-child" );
-            
-            var verticalMargins = parseInt( newItem.css("marginBottom") ) + parseInt( newItem.css("marginTop") );
-            totalHeight += verticalMargins + newItem.height();
-        }
-        
-        // Reset scroll position so it looks like we haven't moved.
-        // This isn't *quite* right...
-        $(document).scrollTop( totalHeight );
-    }
-    
-    // TODO: this is currently unused
-    //
-    // 
-    function atBottom() {
-        console.log("You've hit bottom.");
-        
-        // Add a new batch.
-        
-        //
-        // TODO: figure out how to signal to request for more
-        //
-        
-        $( "<div class='newsContainer'></div><div class='newsContainer'></div><div class='newsContainer'></div>" ).insertAfter( "body>.newsContainer:last-child" );
     }
     
     // Returns true if the element is above the scroll position, else false.
@@ -123,37 +91,47 @@ $(document).ready(function() {
     
     // Adjust the bookmark if necessary.
     function checkBookmark() {
-        var bookmarkedItem = $( "#bookmarked" );
+//        var bookmarkedItem = $( "#bookmarked" );
         
-        // Check if the bottom of the bookmarked item is above the scroll level.
-        // If not, bail now since the bookmark won't be changed.
-        if (!isAboveScroll(bookmarkedItem))
-            return;
+//        // Check if the bottom of the bookmarked item is above the scroll level.
+//        // If not, bail now since the bookmark won't be changed.
+//        if (!isAboveScroll(bookmarkedItem))
+//            return;
         
-        //console.log("Bookmark is above scroll!  It may require changing:", bookmarkedItem.next().length);
+//        //console.log("Bookmark is above scroll!  It may require changing:", bookmarkedItem.next().length);
         
-        // Go through all the next items.
-        var nextItem = bookmarkedItem.next();
-        while (true) {
-            if (nextItem.length < 1) {
-                console.log("We've bookmarked the final item, sir.");
+//        // Go through all the next items.
+//        var nextItem = bookmarkedItem.next();
+//        while (true) {
+//            if (nextItem.length < 1) {
+//                console.log("We've bookmarked the final item, sir.");
                 
-                break;
-            }
+//                break;
+//            }
             
-            // Nothing more to do.
-            if (!isAboveScroll(nextItem))
-                break;
+//            // Nothing more to do.
+//            if (!isAboveScroll(nextItem))
+//                break;
             
-            // Move the bookmark down one.
-            setBookmark(nextItem);
+//            // Move the bookmark down one.
+//            setBookmark(nextItem);
             
-            // Continue to next item.
-            nextItem = nextItem.next();
-        }
-    } 
+//            // Continue to next item.
+//            nextItem = nextItem.next();
+//        }
+    }
     
-    watchScrollPosition(window.fang.loadNext, window.fang.loadPrevious, checkBookmark, 250, 250);
+    function loadNext() {
+        //console.log("Load nxt");
+        window.fang.loadNext();
+    }
+    
+    function loadPrevious() {
+        //console.log("load prev");
+        window.fang.loadPrevious();
+    }
+    
+    watchScrollPosition(loadNext, loadPrevious, checkBookmark, 250, 250);
     
     // Scroll down a bit.
     $(document).scrollTop(300);

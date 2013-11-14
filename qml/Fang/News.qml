@@ -28,27 +28,7 @@ Item {
                 objectName: "webInteractor" // Do not change!! PENALTY OF DEATH AND ELECTROCUTION
                 
                 function onAdd(append, title, url, feedTitle, timestamp, content) {
-                    console.log("You want ana append?")
-                    //newsView.evaluateJavaScript("document.getElementsByTagName('body')[0].innerHTML = '" + html + "';");
-                    //newsView.evaluateJavaScript("document.getElementsByTagName('body')[0].insertAdjacentHTML('beforeEnd', '" + html + "');");
-                    //var html2 = "<br><br>YOYO<br>"
-                    //newsView.evaluateJavaScript("document.body.insertAdjacentHTML('beforeEnd', '" + html + "');");
-                    
-               /*     newsView.evaluateJavaScript("appendNews('" 
-                                                + "ts" + "', '"
-                                                + "sfd" + "', '"
-                                                + "" + "', '"
-                                                + "feedTitle" + "', '"
-                                                + "timestamp" + "', '"
-                                                + "content" + "');"); */
-                    
-                  /*  newsView.evaluateJavaScript("appendNews('" 
-                                                + append + "', '"
-                                                + title + "', '"
-                                                + url + "', '"
-                                                + feedTitle + "', '"
-                                                + timestamp + "', '"
-                                                + content + "');");  */
+                    //console.log("You want ana append?")
                     
                     newsView.evaluateJavaScript("appendNews('" 
                                                 + append + "', '"
@@ -72,6 +52,14 @@ Item {
                 // on the webview to use this handy-dandy feature.
                 property bool devMode: true
                 
+                function updateCSS() {
+                    newsView.evaluateJavaScript(
+                                "clearBodyClasses(); " +
+                                "addBodyClass('" + platform + "'); " +
+                                "addBodyClass('FONT_" + fangSettings.fontSize + "'); " +
+                                "addBodyClass('" + fangSettings.style + "');");
+                }
+                
                 preferredWidth: parent.parent.width
                 
                 focus: true
@@ -81,11 +69,21 @@ Item {
                 javaScriptWindowObjects: QtObject {
                     WebView.windowObjectName: "fang"
                     
+                    function getScroll() {
+                        return newsFlickable.contentY;
+                    }
+                    
+                    function getHeight() {
+                        return newsFlickable.height;
+                    }
+                    
                     function loadNext() {
+                        //console.log("next!")
                         webInteractor.loadNext();
                     }
                     
                     function loadPrevious() {
+                        //console.log("prev!")
                         webInteractor.loadPrevious();
                     }
                 }
@@ -98,9 +96,13 @@ Item {
                     acceptedButtons: Qt.RightButton
                 }
                 
-                // Set platform.
-                onLoadFinished: {
-                    newsView.evaluateJavaScript("setPlatform('" + platform + "');");
+                // Set style, and update when needed.
+                onLoadFinished: updateCSS()
+                Connections {
+                    target: fangSettings
+                    
+                    onFontSizeChanged: newsView.updateCSS()
+                    onStyleChanged: newsView.updateCSS()
                 }
                 
                 MouseWheelArea {

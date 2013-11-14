@@ -17,11 +17,13 @@ class WebInteractor : public QDeclarativeItem
 {
     Q_OBJECT
     Q_DISABLE_COPY(WebInteractor)
+    
 public:
     explicit WebInteractor(QDeclarativeItem *parent = 0);
     virtual ~WebInteractor() {}
     
     void init(OperationManager* manager);
+    
 signals:
     
     /**
@@ -37,6 +39,7 @@ signals:
     void add(bool append, QString title, QString url, QString feedTitle, QString timestamp, QString content);
     
 public slots:
+    
     // Call this when the feed changes, g-dawg.
     void setFeed(FeedItem* feed);
     
@@ -47,14 +50,17 @@ public slots:
     Q_INVOKABLE void loadPrevious();
     
 private slots:
+    
     // Called when a load has completed.
     void onLoadNewsFinished(Operation* operation);
     
     QString escapeCharacters(const QString& string);
     
 private:
+    
     FeedItem* currentFeed;
     OperationManager* manager;
+    
 };
 
 #endif // WEBINTERACTOR_H
