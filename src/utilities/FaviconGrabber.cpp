@@ -68,6 +68,13 @@ void FaviconGrabber::onRequestFinished(QNetworkReply * reply)
 void FaviconGrabber::onWebGrabberReady(QWebPage *page)
 {
     urlsToCheck--;
+
+    // Could indicate no internet.
+    if (page == NULL) {
+        checkCompletion();
+
+        return;
+    }
     
     // Find the first feed URL.
     QWebElement doc = page->mainFrame()->documentElement();
