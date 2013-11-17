@@ -5,7 +5,8 @@
 WebInteractor::WebInteractor(QDeclarativeItem *parent) :
     QDeclarativeItem(parent),
     currentFeed(NULL),
-    manager(NULL)
+    manager(NULL),
+    isLoading(false)
 {
     
 }
@@ -17,12 +18,24 @@ void WebInteractor::init(OperationManager *manager)
 
 void WebInteractor::loadNext()
 {
+    if (isLoading)
+        return;
+    
     qDebug() << "Load next!";
+    
+    // Okay, now LOAD the damn feed, y'all.
+    LoadNews* loader = new LoadNews(manager, currentFeed, true);
+    isLoading = true;
+    connect(loader, SIGNAL(finished(Operation*)), this, SLOT(onLoadNewsFinished(Operation*)));
+    manager->add(loader);
 }
 
 void WebInteractor::loadPrevious()
 {
-    qDebug() << "Load prev!";
+//    if (isLoading)
+//        return;
+    
+//    qDebug() << "Load prev!";
 }
 
 void WebInteractor::setFeed(FeedItem *feed)
@@ -37,7 +50,8 @@ void WebInteractor::setFeed(FeedItem *feed)
     currentFeed = feed;
     
     // Okay, now LOAD the damn feed, y'all.
-    LoadNews* loader = new LoadNews(manager, currentFeed);
+    LoadNews* loader = new LoadNews(manager, currentFeed, true);
+    isLoading =  true;
     connect(loader, SIGNAL(finished(Operation*)), this, SLOT(onLoadNewsFinished(Operation*)));
     manager->add(loader);
 }
@@ -47,15 +61,17 @@ void WebInteractor::onLoadNewsFinished(Operation* operation)
     LoadNews* loader = qobject_cast<LoadNews*>(operation);
     Q_ASSERT(loader != NULL); // If this ever happens, we're fucked.
     
-    // TODO: right now we're only handling the initial load.
-    QList<NewsItem*>* newsList = loader->getFeedItem()->getNewsList();
+    if (currentFeed != loader->getFeedItem()) {
+        isLoading = false;
+        return; // Throw this away, it's from a previous load attempt.
+    }
+    
+    // Stuff the new items into our feed.
+    QList<NewsItem*>* newsList = loader->getNewsList();
     foreach(NewsItem* item, *newsList)
-        emit add(true,
-                 escapeCharacters(item->getTitle()),
-                 escapeCharacters(item->getURL().toString()),
-                 escapeCharacters(item->getFeed()->getTitle()),
-                 escapeCharacters(item->getTimestamp().toString()),
-                 escapeCharacters( item->getContent() != "" ? item->getContent() : item->getSummary()) );
+        addNewsItem(loader->getAppend(), item);
+    
+    isLoading = false;
 }
 
 QString WebInteractor::escapeCharacters(const QString& string)
@@ -80,4 +96,14 @@ QString WebInteractor::escapeCharacters(const QString& string)
     rValue = rValue.replace('\n', " ");
     
     return rValue;
+}
+
+void WebInteractor::addNewsItem(bool append, NewsItem *item)
+{
+    emit add(append,
+             escapeCharacters(item->getTitle()),
+             escapeCharacters(item->getURL().toString()),
+             escapeCharacters(item->getFeed()->getTitle()),
+             escapeCharacters(item->getTimestamp().toString()),
+             escapeCharacters( item->getContent() != "" ? item->getContent() : item->getSummary()) );
 }

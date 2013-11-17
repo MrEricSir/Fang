@@ -68,11 +68,11 @@ void FaviconGrabber::onRequestFinished(QNetworkReply * reply)
 void FaviconGrabber::onWebGrabberReady(QWebPage *page)
 {
     urlsToCheck--;
-
+    
     // Could indicate no internet.
     if (page == NULL) {
         checkCompletion();
-
+        
         return;
     }
     
