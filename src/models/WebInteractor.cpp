@@ -24,7 +24,7 @@ void WebInteractor::loadNext()
     qDebug() << "Load next!";
     
     // Okay, now LOAD the damn feed, y'all.
-    LoadNews* loader = new LoadNews(manager, currentFeed, true);
+    LoadNews* loader = new LoadNews(manager, currentFeed, LoadNews::Append);
     isLoading = true;
     connect(loader, SIGNAL(finished(Operation*)), this, SLOT(onLoadNewsFinished(Operation*)));
     manager->add(loader);
@@ -50,7 +50,7 @@ void WebInteractor::setFeed(FeedItem *feed)
     currentFeed = feed;
     
     // Okay, now LOAD the damn feed, y'all.
-    LoadNews* loader = new LoadNews(manager, currentFeed, true);
+    LoadNews* loader = new LoadNews(manager, currentFeed, LoadNews::Initial);
     isLoading =  true;
     connect(loader, SIGNAL(finished(Operation*)), this, SLOT(onLoadNewsFinished(Operation*)));
     manager->add(loader);
@@ -69,7 +69,7 @@ void WebInteractor::onLoadNewsFinished(Operation* operation)
     // Stuff the new items into our feed.
     QList<NewsItem*>* newsList = loader->getNewsList();
     foreach(NewsItem* item, *newsList)
-        addNewsItem(loader->getAppend(), item);
+        addNewsItem(loader->getMode(), item);
     
     isLoading = false;
 }
@@ -98,9 +98,9 @@ QString WebInteractor::escapeCharacters(const QString& string)
     return rValue;
 }
 
-void WebInteractor::addNewsItem(bool append, NewsItem *item)
+void WebInteractor::addNewsItem(LoadNews::LoadMode mode, NewsItem *item)
 {
-    emit add(append,
+    emit add(mode != LoadNews::Prepend,
              escapeCharacters(item->getTitle()),
              escapeCharacters(item->getURL().toString()),
              escapeCharacters(item->getFeed()->getTitle()),

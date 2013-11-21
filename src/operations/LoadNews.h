@@ -16,13 +16,19 @@ class LoadNews : public DBOperation
     Q_OBJECT
 public:
     
+    enum LoadMode {
+        Initial = 0,  // Loads loadLimit items from the bookmark, plus loadlimit items above bookmark
+        Append,       // Appends loadLimit items (load next)
+        Prepend       // Prepends loadLimit items (load previous)
+    };
+    
     /**
      * @param parent    The manager
      * @param feedItem  The feed item to grab
-     * @param append    If true, add items to the end of the list. If false, add 'em to the start.
+     * @param mode      Type of load operation (see above)
      * @param loadLimit Max number of news items to load
      */
-    explicit LoadNews(QObject *parent, FeedItem* feedItem, bool append, int loadLimit = 15);
+    explicit LoadNews(QObject *parent, FeedItem* feedItem, LoadMode mode, int loadLimit = 15);
     
 public slots:
     virtual void execute();
@@ -33,27 +39,38 @@ public slots:
     inline FeedItem* getFeedItem() { return feedItem; }
     
     /**
-     * @return True if append mode, false if prepend.
+     * @return Returns the operational mode.
      */
-    inline bool getAppend() { return append; }
+    inline LoadMode getMode() { return mode; }
     
     /**
      * @return List of items that this load appended or prepended.
      */
     inline QList<NewsItem*>* getNewsList() { return newsList; }
     
+private slots:
+    
+    /**
+     * @brief Extracts news items from a database query.
+     * @param query  Database query containing zero or more News Items.
+     */
+    void queryToNewsList(QSqlQuery& query);
+    
 private:
     // Feed we're adding to.
     FeedItem* feedItem;
     
     // True if we're appending.
-    bool append;
+    LoadMode mode;
     
     // Max # of news items to add.
     int loadLimit;
     
     // List of items we added.
     QList<NewsItem*>* newsList;
+    
+    // Used to set bookmark during load.
+    NewsItem* bookmark;
 };
 
 #endif // LOADNEWS_H

@@ -30,7 +30,6 @@ void LoadAllFeedsOperation::execute()
     }
     
     QList<ListItem*> tempFeedItemList; // Use ListItem so we can do an appendAll later.
-    QMap<FeedItem*, qint64> bookmarkIdMap; // I hate to associate via hashmap, but...
     while (query.next()) {
         FeedItem* item = new FeedItem(
                     query.value("id").toULongLong(),
@@ -41,10 +40,10 @@ void LoadAllFeedsOperation::execute()
                     query.value("url").toString(),
                     query.value("siteURL").toString(),
                     query.value("imageURL").toString(),
+                    query.value("bookmark_id").toULongLong(),
                     NULL
                     );
         
-        bookmarkIdMap.insert(item, query.value("bookmark_id").toULongLong());
         tempFeedItemList.append(item);
     }
     

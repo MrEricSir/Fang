@@ -56,7 +56,7 @@ private slots:
     
     QString escapeCharacters(const QString& string);
     
-    void addNewsItem(bool append, NewsItem* item);
+    void addNewsItem(LoadNews::LoadMode mode, NewsItem* item);
     
 private:
     // The currently selected news feed.
