@@ -38,6 +38,11 @@ signals:
      */
     void add(bool append, QString title, QString url, QString feedTitle, QString timestamp, QString content);
     
+    /**
+     * @brief Clear the curent news.
+     */
+    void clear();
+    
 public slots:
     
     // Call this when the feed changes, g-dawg.

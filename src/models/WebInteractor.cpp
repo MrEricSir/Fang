@@ -49,6 +49,9 @@ void WebInteractor::setFeed(FeedItem *feed)
     
     currentFeed = feed;
     
+    // Clear the view.
+    emit clear();
+    
     // Okay, now LOAD the damn feed, y'all.
     LoadNews* loader = new LoadNews(manager, currentFeed, LoadNews::Initial);
     isLoading =  true;

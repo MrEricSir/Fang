@@ -24,6 +24,20 @@ function appendNews(append, title, url, feedTitle, timestamp, content) {
     item.insertAfter( 'body>.newsContainer:last-child' );
 }
 
+function clearNews() {
+    //console.log("Clearing news")
+    
+    // Iterate over all news container items.
+    var newsItem = $( "body>.newsContainer" );
+    for (var i = 0; i < newsItem.length; i++) {
+        var current = newsItem[i];
+        
+        // If it's not our model, DELETE!
+        if (current.getAttribute('id') !== 'model' )
+            current.parentNode.removeChild( current );
+    }
+}
+
 function clearBodyClasses() {
     $('body').removeClass();
 }

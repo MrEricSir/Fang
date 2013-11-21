@@ -39,8 +39,15 @@ Item {
                                                 + content + "');");
                 }
                 
+                function onClear() {
+                    console.log("Clear!")
+                    newsView.evaluateJavaScript("clearNews();"); 
+                }
+                
+                // Hook up signals.
                 Component.onCompleted: {
                     add.connect(onAdd);
+                    clear.connect(onClear);
                 }
             }
             
