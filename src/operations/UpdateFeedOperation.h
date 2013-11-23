@@ -11,6 +11,10 @@
  * @brief Updates a feed.
  * If a feed has already been downloaded and parsed, it can be supplied
  * directly to the constructor.
+ *
+ * VERY IMPORTANT NOTE: When using this class, please note that it is non-reentrant on a per-feed basis.
+ *                      In other words, it's safe to call on feed x and y simultaneously, but not on
+ *                      feed x and feed x at the same time.  Bad shit will happen, man.  Don't blame me.
  */
 class UpdateFeedOperation : public DBOperation
 {
@@ -29,6 +33,9 @@ public:
 signals:
     
 public slots:
+    /**
+     * @brief VERY IMPORTANT NOTE: Non re-entrant per-feed (see above.)
+     */
     virtual void execute();
     
 private slots:

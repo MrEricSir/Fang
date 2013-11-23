@@ -30,6 +30,7 @@ public:
      */
     explicit LoadNews(QObject *parent, FeedItem* feedItem, LoadMode mode, int loadLimit = 15);
     
+    
 public slots:
     virtual void execute();
     
@@ -54,7 +55,13 @@ private slots:
      * @brief Extracts news items from a database query.
      * @param query  Database query containing zero or more News Items.
      */
-    void queryToNewsList(QSqlQuery& query);
+    void queryToNewsList(QSqlQuery& query, bool append);
+    
+    bool doAppend(qint64 startId);
+    
+    bool doPrepend(qint64 startId);
+    
+    bool executeLoadQuery(qint64 startId, bool append);
     
 private:
     // Feed we're adding to.

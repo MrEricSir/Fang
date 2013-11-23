@@ -11,7 +11,7 @@ LoadNews::LoadNews(QObject *parent, FeedItem* feedItem, LoadMode mode, int loadL
 {
 }
 
-void LoadNews::queryToNewsList(QSqlQuery& query)
+void LoadNews::queryToNewsList(QSqlQuery& query, bool append)
 {
     while (query.next()) {
         // Load from DB query result.
@@ -27,7 +27,10 @@ void LoadNews::queryToNewsList(QSqlQuery& query)
                     );
         
         // Add to our temporary list.
-        newsList->append(newsItem);
+        if (append)
+            newsList->append(newsItem);
+        else
+            newsList->prepend(newsItem);
         
         // Remember if we found the bookmark.
         if (newsItem->getDbID() == feedItem->getBookmarkID())
@@ -35,54 +38,24 @@ void LoadNews::queryToNewsList(QSqlQuery& query)
     }    
 }
 
-void LoadNews::execute()
+bool LoadNews::doAppend(qint64 startId)
 {
-    // For an initial load, make sure the feed isn't populated yet.
-    if (mode == LoadNews::Initial)
-        Q_ASSERT(feedItem->getNewsList() != NULL || feedItem->getNewsList()->isEmpty());
-    
-    // Start with lowest possible ID.
-    qint64 startId = -1;
-    
-    if (feedItem->getNewsList() != NULL && feedItem->getNewsList()->size() > 0) {
-        // If the news list already has one or more items, set the start ID to the
-        // first or last item in the list.
-        startId = (mode == LoadNews::Append) ? feedItem->getNewsList()->last()->getDbID() :
-                                               feedItem->getNewsList()->first()->getDbID();
-    } else if (mode == LoadNews::Initial) {
-        // For the initial load, start at the bookmark.
-        startId = feedItem->getBookmarkID();
-    }
-    
-    qDebug() << "start id is: " << startId;
+    return executeLoadQuery(startId + 1, true);
+}
+
+bool LoadNews::doPrepend(qint64 startId)
+{
+    return executeLoadQuery(startId, false);
+}
+
+bool LoadNews::executeLoadQuery(qint64 startId, bool append)
+{
+    QString direction = append ? ">=" : "<";
+    QString sortOrder = append ? "ASC" : "DESC";
+    QString queryString = "SELECT * FROM NewsItemTable WHERE feed_id = :feed_id AND id " + direction + " :start_id "
+            "ORDER BY timestamp " + sortOrder + " LIMIT :load_limit";
     
     QSqlQuery query(db());
-    
-    // TODO: handle init load & prepend
-    //   proally need a big ol' if else block here
-    
-    
-    // The "internal" mode exists so if there's no bookmark and you're doing an initial load, we can just do
-    // a plain ol' append instead.
-    LoadMode internalMode = mode;
-    //if (feedItem->getBookmarkID() < 0 && mode == LoadNews::Initial)
-        internalMode = LoadNews::Append;
-    
-    QString queryString;
-    switch (internalMode) {
-    case LoadNews::Initial:
-        queryString = "";
-        break;
-        
-    case LoadNews::Append:
-        queryString = "SELECT * FROM NewsItemTable WHERE feed_id = :feed_id AND id > :start_id ORDER BY timestamp ASC LIMIT :load_limit";
-        break;
-        
-    case LoadNews::Prepend:
-    default:
-        Q_ASSERT(false); // should never reach here!!!!1
-    }
-
     query.prepare(queryString);
     
     query.bindValue(":feed_id", feedItem->getDbId());
@@ -90,23 +63,107 @@ void LoadNews::execute()
     query.bindValue(":load_limit", loadLimit);
     
     if (!query.exec()) {
-        qDebug() << "Could not load news for feed id: " << feedItem->getDbId();
-        // TODO : add error signal
+       qDebug() << "Could not load news for feed id: " << feedItem->getDbId();
+       qDebug() << query.lastError();
+       
+       return false;
+    }
+    
+    // Extract the query into our news list.
+    queryToNewsList(query, append);
+    
+    return true;
+}
+
+void LoadNews::execute()
+{
+    // TODO: handle all news
+    if (feedItem->getDbId() < 0) {
         emit finished(this);
         
         return;
     }
     
+    // For an initial load, make sure the feed isn't populated yet.
+    if (mode == LoadNews::Initial)
+        Q_ASSERT(feedItem->getNewsList() != NULL || feedItem->getNewsList()->isEmpty());
+    
     // Create our list of news.
     newsList = new QList<NewsItem*>();
     
-    // Extract the query into our news list.
-    queryToNewsList(query);
+    // DB query/ies.
+    bool dbResult = true;
+    switch (mode) {
+    case Initial:
+    {
+        qint64 startId = feedItem->getBookmarkID();
+        if (startId > 0) {
+            // We have a bookmark, so try to load previous items.
+            dbResult &= doPrepend(startId);
+            
+            qDebug() << "Start id: " << startId;
+            if (newsList->size() > 0)
+            qDebug() << "prepender: from " << newsList->first()->getDbID() << " to " << newsList->last()->getDbID();
+        }
+        
+        // Load next items, if available.
+        dbResult &= doAppend(startId);
+        
+        break;
+    }
     
-    // Append all items.
-    // TODO: handle prepend
+    case Append:
+    {
+        qint64 startId = -1;
+        if (feedItem->getNewsList() != NULL && feedItem->getNewsList()->size() > 0)
+            startId = feedItem->getNewsList()->last()->getDbID();
+        
+        qDebug() << "Append from " << startId;
+        dbResult &= doAppend(startId);
+        
+        qDebug() << "Adding: " << newsList->size();
+        
+        break;
+    }
+        
+    case Prepend:
+    {
+        qint64 startId = -1;
+        if (feedItem->getNewsList() != NULL && feedItem->getNewsList()->size() > 0)
+            startId = feedItem->getNewsList()->first()->getDbID();
+        
+        dbResult &= doPrepend(startId);
+        
+        break;
+    }
+        
+    default:
+        // This means you added a new mode, but didn't add it to this switch.  Jerk.
+        Q_ASSERT(false);
+    }
+    
+    /*
+    if (mode == LoadNews::Initial || mode == LoadNews::Append) {
+        dbResult &= doAppend(startId);
+    }
+    
+    if (mode == LoadNews::Initial || mode == LoadNews::Prepend) {
+        dbResult &= doPrepend(startId);
+    }
+    
+    */
+    
+    // Check if we done goofed.
+    if (!dbResult) {
+        //TODO : add error signal
+        emit finished(this);
+        
+        return;
+    }
+    
+    // Update list with our items.
     foreach (NewsItem* newsItem, *newsList)
-        feedItem->getNewsList()->append(newsItem);
+         feedItem->getNewsList()->append(newsItem);
     
     // Set the bookmark if we found it.
     if (bookmark != NULL)

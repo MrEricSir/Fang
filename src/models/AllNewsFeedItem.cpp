@@ -2,7 +2,7 @@
 #include <QList>
 
 AllNewsFeedItem::AllNewsFeedItem(ListModel *feedList) :
-    FeedItem(-1, "All News", "", QDateTime(), 0, QUrl(), QUrl(), QUrl(), NULL, feedList),
+    FeedItem(-1, "All News", "", QDateTime(), 0, QUrl(), QUrl(), QUrl(), -1, feedList),
     feedList(feedList),
     initialized(false),
     dirty(false)

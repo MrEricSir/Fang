@@ -71,8 +71,10 @@ void WebInteractor::onLoadNewsFinished(Operation* operation)
     
     // Stuff the new items into our feed.
     QList<NewsItem*>* newsList = loader->getNewsList();
-    foreach(NewsItem* item, *newsList)
-        addNewsItem(loader->getMode(), item);
+    
+    if (newsList != NULL)
+        foreach(NewsItem* item, *newsList)
+            addNewsItem(loader->getMode(), item);
     
     isLoading = false;
 }
