@@ -110,7 +110,7 @@ $(document).ready(function() {
     
     // Returns true if the element is above the scroll position, else false.
     function isAboveScroll(element) {
-        return $(document).scrollTop() > element.offset().top + element.height();
+        return window.fang.getScroll() > element.offset().top + element.height();
     }
     
     // Sets the bookmark to the given element.
@@ -128,34 +128,37 @@ $(document).ready(function() {
     
     // Adjust the bookmark if necessary.
     function checkBookmark() {
-//        var bookmarkedItem = $( "#bookmarked" );
+        var bookmarkedItem = $( ".bookmarked" );
         
-//        // Check if the bottom of the bookmarked item is above the scroll level.
-//        // If not, bail now since the bookmark won't be changed.
-//        if (!isAboveScroll(bookmarkedItem))
-//            return;
+        if ( !bookmarkedItem.length )
+            return; // Why bother?
         
-//        //console.log("Bookmark is above scroll!  It may require changing:", bookmarkedItem.next().length);
+        // Check if the bottom of the bookmarked item is above the scroll level.
+        // If not, bail now since the bookmark won't be changed.
+        if (!isAboveScroll(bookmarkedItem))
+            return;
         
-//        // Go through all the next items.
-//        var nextItem = bookmarkedItem.next();
-//        while (true) {
-//            if (nextItem.length < 1) {
-//                console.log("We've bookmarked the final item, sir.");
+        //console.log("Bookmark is above scroll!  It may require changing:", bookmarkedItem.next().length);
+        
+        // Go through all the next items.
+        var nextItem = bookmarkedItem.next();
+        while (true) {
+            if (nextItem.length < 1) {
+                console.log("We've bookmarked the final item, sir.");
                 
-//                break;
-//            }
+                break;
+            }
             
-//            // Nothing more to do.
-//            if (!isAboveScroll(nextItem))
-//                break;
+            // Nothing more to do.
+            if (!isAboveScroll(nextItem))
+                break;
             
-//            // Move the bookmark down one.
-//            setBookmark(nextItem);
+            // Move the bookmark down one.
+            setBookmark(nextItem);
             
-//            // Continue to next item.
-//            nextItem = nextItem.next();
-//        }
+            // Continue to next item.
+            nextItem = nextItem.next();
+        }
     }
     
     function loadNext() {

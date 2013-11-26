@@ -145,17 +145,6 @@ void LoadNews::execute()
         Q_ASSERT(false);
     }
     
-    /*
-    if (mode == LoadNews::Initial || mode == LoadNews::Append) {
-        dbResult &= doAppend(startId);
-    }
-    
-    if (mode == LoadNews::Initial || mode == LoadNews::Prepend) {
-        dbResult &= doPrepend(startId);
-    }
-    
-    */
-    
     // Check if we done goofed.
     if (!dbResult) {
         //TODO : add error signal

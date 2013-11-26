@@ -77,7 +77,10 @@ void WebInteractor::onLoadNewsFinished(Operation* operation)
     
     // If this is the initial load, jump to the bookmark.
     if (loader->getMode() == LoadNews::Initial && currentFeed->getBookmark() != NULL) {
-        emit jumpTo(currentFeed->getBookmark()->id());
+        int index = currentFeed->getNewsList()->indexOf(currentFeed->getBookmark()) + 1;
+        //qDebug() << "mr index " << index;
+        emit jumpTo(index < currentFeed->getNewsList()->size() ? currentFeed->getNewsList()->at(index)->id() : currentFeed->getBookmark()->id());
+        
         emit drawBookmark(currentFeed->getBookmark()->id());
     }
     

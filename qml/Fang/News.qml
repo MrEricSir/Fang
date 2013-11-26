@@ -109,6 +109,10 @@ Item {
                         //console.log("prev!")
                         webInteractor.loadPrevious();
                     }
+                    
+                    function setBookmark(id) {
+                        console.log("bookmark: ", id)
+                    }
                 }
                 
                 // Turn the inspek0r off and on.
