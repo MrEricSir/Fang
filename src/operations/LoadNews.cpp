@@ -35,12 +35,12 @@ void LoadNews::queryToNewsList(QSqlQuery& query, bool append)
         // Remember if we found the bookmark.
         if (newsItem->getDbID() == feedItem->getBookmarkID())
             bookmark = newsItem;
-    }    
+    }
 }
 
 bool LoadNews::doAppend(qint64 startId)
 {
-    return executeLoadQuery(startId + 1, true);
+    return executeLoadQuery(startId, true);
 }
 
 bool LoadNews::doPrepend(qint64 startId)
@@ -55,6 +55,7 @@ bool LoadNews::executeLoadQuery(qint64 startId, bool append)
     QString queryString = "SELECT * FROM NewsItemTable WHERE feed_id = :feed_id AND id " + direction + " :start_id "
             "ORDER BY timestamp " + sortOrder + " LIMIT :load_limit";
     
+    //qDebug() << "Query: " << queryString;
     QSqlQuery query(db());
     query.prepare(queryString);
     
@@ -117,6 +118,8 @@ void LoadNews::execute()
         qint64 startId = -1;
         if (feedItem->getNewsList() != NULL && feedItem->getNewsList()->size() > 0)
             startId = feedItem->getNewsList()->last()->getDbID();
+        
+        startId++; // Advance to the next item.
         
         qDebug() << "Append from " << startId;
         dbResult &= doAppend(startId);

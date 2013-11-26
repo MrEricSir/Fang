@@ -177,6 +177,7 @@ void FeedItem::setBookmark(NewsItem *item, bool signal)
         return; // Shouldn't have called this method, sir.
     
     bookmark = item;
+    bookmarkID = bookmark->getDbID();
     
     if (signal) {
         emit bookmarkChanged(bookmark);

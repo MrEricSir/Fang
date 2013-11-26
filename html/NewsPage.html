@@ -30,6 +30,10 @@ body {
     visibility: hidden; /* Don't show by default */
 }
 
+.bookmarked > .bookmark > .stripe {
+    visibility: visible;
+}
+
 .newsContainer > .content {
     width: 100%;
     margin: 0;
@@ -106,7 +110,7 @@ body.LIGHT > .newsContainer > .siteTitle, body.LIGHT > .newsContainer > .date { 
 body.LIGHT > .newsContainer > .divider { background-color: #ccc; }
 body.LIGHT > .newsContainer > h1, body.LIGHT > .newsContainer > h1 > a { color: black; }
 
-body.LIGHT > .newsContainer #bookmarked > .bookmark > .stripe { background-color: #8e0000; }
+body.LIGHT > .newsContainer > .bookmark > .stripe { background-color: #8e0000; }
 
 /**** Dark theme ****/
 
@@ -125,7 +129,7 @@ body.DARK > .newsContainer > .siteTitle, body.DARK > .newsContainer > .date { co
 body.DARK > .newsContainer > .divider { background-color: #888; }
 body.DARK > .newsContainer > h1, body.DARK > .newsContainer > h1 a { color: white; }
 
-body.DARK > .newsContainer #bookmarked > .bookmark > .stripe  { background-color: #ce0000; }
+body.DARK > .newsContainer > .bookmark > .stripe  { background-color: #ce0000; }
 
 
 /**** Platforms ****/

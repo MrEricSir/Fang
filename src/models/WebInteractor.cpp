@@ -71,10 +71,15 @@ void WebInteractor::onLoadNewsFinished(Operation* operation)
     
     // Stuff the new items into our feed.
     QList<NewsItem*>* newsList = loader->getNewsList();
-    
     if (newsList != NULL)
         foreach(NewsItem* item, *newsList)
             addNewsItem(loader->getMode(), item);
+    
+    // If this is the initial load, jump to the bookmark.
+    if (loader->getMode() == LoadNews::Initial && currentFeed->getBookmark() != NULL) {
+        emit jumpTo(currentFeed->getBookmark()->id());
+        emit drawBookmark(currentFeed->getBookmark()->id());
+    }
     
     isLoading = false;
 }
@@ -106,6 +111,7 @@ QString WebInteractor::escapeCharacters(const QString& string)
 void WebInteractor::addNewsItem(LoadNews::LoadMode mode, NewsItem *item)
 {
     emit add(mode != LoadNews::Prepend,
+             item->id(),
              escapeCharacters(item->getTitle()),
              escapeCharacters(item->getURL().toString()),
              escapeCharacters(item->getFeed()->getTitle()),

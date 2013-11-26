@@ -27,11 +27,12 @@ Item {
                 id: webInteractor
                 objectName: "webInteractor" // Do not change!! PENALTY OF DEATH AND ELECTROCUTION
                 
-                function onAdd(append, title, url, feedTitle, timestamp, content) {
-                    //console.log("You want ana append?")
+                function onAdd(append, id, title, url, feedTitle, timestamp, content) {
+                    //console.log("You want ana append?", id)
                     
-                    newsView.evaluateJavaScript("appendNews('" 
+                    newsView.evaluateJavaScript("appendNews('"
                                                 + append + "', '"
+                                                + id + "', '"
                                                 + title + "', '"
                                                 + url + "', '"
                                                 + feedTitle + "', '"
@@ -40,14 +41,25 @@ Item {
                 }
                 
                 function onClear() {
-                    console.log("Clear!")
-                    newsView.evaluateJavaScript("clearNews();"); 
+                    //console.log("Clear!")
+                    newsView.evaluateJavaScript("clearNews();");
+                }
+                
+                function onJumpTo(id) {
+                    //console.log("jump!")
+                    newsView.evaluateJavaScript("jumpTo('" + id + "');");
+                }
+                
+                function onDrawBookmark(id) {
+                    newsView.evaluateJavaScript("drawBookmark('" + id + "');");
                 }
                 
                 // Hook up signals.
                 Component.onCompleted: {
                     add.connect(onAdd);
                     clear.connect(onClear);
+                    jumpTo.connect(onJumpTo);
+                    drawBookmark.connect(onDrawBookmark);
                 }
             }
             
@@ -78,6 +90,10 @@ Item {
                     
                     function getScroll() {
                         return newsFlickable.contentY;
+                    }
+                    
+                    function setScroll(y) {
+                        newsFlickable.contentY = y;
                     }
                     
                     function getHeight() {

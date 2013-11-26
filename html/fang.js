@@ -2,7 +2,8 @@
   This is Fang's Javascript logic.  But I mean, you knew that.  DUH!
   */
 
-function appendNews(append, title, url, feedTitle, timestamp, content) {
+// Appends (or prepends) a news item.
+function appendNews(append, id, title, url, feedTitle, timestamp, content) {
     // Copy the model.
     var item = $( 'body>.newsContainer#model' ).clone();
     
@@ -11,6 +12,7 @@ function appendNews(append, title, url, feedTitle, timestamp, content) {
     item.attr( 'id', '' );
     
     // Assign data.
+    item.attr( 'id', id );
     item.find( '.link' ).attr( 'href', url );
     item.find( '.link' ).html( title );
     item.find( '.content' ).html( content );
@@ -18,12 +20,14 @@ function appendNews(append, title, url, feedTitle, timestamp, content) {
     item.find( '.date' ).html( timestamp );
     
     // console.log(item.html());
+    // console.log("ID: ", id)//item.getAttribute('id' ));
     
     // Stick 'er in!
     // TODO: prepend
     item.insertAfter( 'body>.newsContainer:last-child' );
 }
 
+// Clears out all the news from the view.
 function clearNews() {
     //console.log("Clearing news")
     
@@ -38,10 +42,29 @@ function clearNews() {
     }
 }
 
+// Scrolls to the element with the given ID.
+function jumpTo(id) {
+    var elementId = '#' + id;
+    var scrollTo = $( elementId ).offset().top;
+    
+//    console.log("jump to: ", elementId, "scrolling to: ", scrollTo);
+//    console.log("element: ", $( elementId ).prop('tagName'));
+    window.fang.setScroll( scrollTo );
+}
+
+// Draws a bookmark on the given news container ID.
+function drawBookmark(id) {
+    var elementId = '#' + id;
+    console.log("Bookmark at ", elementId)
+    $( elementId ).addClass('bookmarked');
+}
+
+// Removes all existing classes on the body element.
 function clearBodyClasses() {
     $('body').removeClass();
 }
 
+// Adds a class to the body element.
 function addBodyClass(p) {
     //console.log("adding class " + p);
     $('body').addClass(p);
@@ -148,5 +171,5 @@ $(document).ready(function() {
     watchScrollPosition(loadNext, loadPrevious, checkBookmark, 250, 250);
     
     // Scroll down a bit.
-    $(document).scrollTop(300);
+    //$(document).scrollTop(300);
 });

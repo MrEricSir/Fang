@@ -30,18 +30,31 @@ signals:
      * @brief Add a little something to the web page.
      * 
      * @param append      True for appending, false for prepending.
+     * @param id          The string ID for the HTML element.
      * @param title       Title of the news item
      * @param url         URL of the story
      * @param feedTitle   Feed's title
      * @param timestamp   String timestamp
      * @param content     HTML content
      */
-    void add(bool append, QString title, QString url, QString feedTitle, QString timestamp, QString content);
+    void add(bool append, QString id, QString title, QString url, QString feedTitle, QString timestamp, QString content);
     
     /**
-     * @brief Clear the curent news.
+     * @brief Clear the current news.
      */
     void clear();
+    
+    /**
+     * @brief Jumps to a given news item by its ID.
+     * @param id      HTML ID of the element to jump to.
+     */
+    void jumpTo(QString id);
+    
+    /**
+     * @brief Draws the bookmark at the given news item.
+     * @param id   HTML ID of the news item element to draw a bookmark at.
+     */
+    void drawBookmark(QString id);
     
 public slots:
     
