@@ -2,7 +2,7 @@
 #include <QDebug>
 
 LoadNews::LoadNews(QObject *parent, FeedItem* feedItem, LoadMode mode, int loadLimit) :
-    DBOperation(parent),
+    DBOperation(IMMEDIATE, parent),
     feedItem(feedItem),
     mode(mode),
     loadLimit(loadLimit),
@@ -11,7 +11,7 @@ LoadNews::LoadNews(QObject *parent, FeedItem* feedItem, LoadMode mode, int loadL
 {
 }
 
-void LoadNews::queryToNewsList(QSqlQuery& query, bool append)
+void LoadNews::queryToNewsList(QSqlQuery& query)
 {
     while (query.next()) {
         // Load from DB query result.
@@ -27,10 +27,7 @@ void LoadNews::queryToNewsList(QSqlQuery& query, bool append)
                     );
         
         // Add to our temporary list.
-//        if (append)
-            newsList->append(newsItem);
-//        else
-//            newsList->prepend(newsItem);
+        newsList->append(newsItem);
         
         // Remember if we found the bookmark.
         if (newsItem->getDbID() == feedItem->getBookmarkID())
@@ -71,7 +68,7 @@ bool LoadNews::executeLoadQuery(qint64 startId, bool append)
     }
     
     // Extract the query into our news list.
-    queryToNewsList(query, append);
+    queryToNewsList(query);
     
     return true;
 }

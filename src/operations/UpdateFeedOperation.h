@@ -2,7 +2,7 @@
 #define UPDATEFEEDOPERATION_H
 
 #include "DBOperation.h"
-#include "../utilities/RawFeedImageSizeRewriter.h"
+#include "../utilities/RawFeedRewriter.h"
 #include "../parser/BackgroundParser.h"
 #include "../models/FeedItem.h"
 #include "../models/NewsItem.h"
@@ -59,7 +59,7 @@ private:
     FeedItem *feed;
     RawFeed* rawFeed;
     bool wasDestroyed;
-    RawFeedImageSizeRewriter rewriter;
+    RawFeedRewriter rewriter;
     QList<RawNews*> newsList;
 };
 

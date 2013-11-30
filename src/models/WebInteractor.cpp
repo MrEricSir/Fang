@@ -62,7 +62,7 @@ void WebInteractor::setBookmark(QString sId)
     
     //qDebug() << "Look where we're jumping... " << id;
     qint64 id = sId.replace(NEWS_ITEM_ID_PREIX, "").toLongLong();
-    qDebug() << "Look where we're jumping... " << id;
+    qDebug() << "Setting bookmark to... " << id;
     
     // Locate the item!
     NewsItem* bookmarkItem = NULL;
@@ -75,6 +75,7 @@ void WebInteractor::setBookmark(QString sId)
     }
     
     if (bookmarkItem == NULL) {
+        isSettingBookmark = false;
         qDebug() << "Bookmark itm was not found for the current feed!";
         
         return; // We didn't find it.  Perhaps this is an old request? Either way, fuck it.

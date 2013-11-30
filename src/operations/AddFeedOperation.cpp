@@ -4,7 +4,7 @@
 
 AddFeedOperation::AddFeedOperation(QObject *parent, ListModel *feedList, const QUrl &feedURL,
                                    const QUrl &imageURL, QString siteTitle) :
-    DBOperation(parent),
+    DBOperation(IMMEDIATE, parent),
     feedList(feedList),
     feedURL(feedURL),
     imageURL(imageURL),

@@ -6,7 +6,7 @@
 #include "../models/AllNewsFeedItem.h"
 
 UpdateFeedOperation::UpdateFeedOperation(QObject *parent, FeedItem *feed, RawFeed* rawFeed) :
-    DBOperation(parent),
+    DBOperation(BACKGROUND, parent),
     parser(),
     feed(feed),
     rawFeed(rawFeed),

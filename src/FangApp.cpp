@@ -67,7 +67,7 @@ FeedItem* FangApp::getFeed(int index) {
         
         return NULL;
     }
-                                //.data();
+    
     return (FeedItem*) item;
 }
 
@@ -172,12 +172,6 @@ void FangApp::displayFeed()
 void FangApp::setCurrentFeed(FeedItem *feed)
 {
     qDebug() << "You've set the feed to "<< (feed != NULL ? feed->getTitle() : "(null)");
-    
-    // Disconnect signals.
-    if (currentFeed != NULL) {
-        disconnect(currentFeed, SIGNAL(bookmarkChanged(NewsItem*)),
-                   this, SLOT(onNewsItemBookmarked(NewsItem*)));
-    }
     
     currentFeed = feed;
     displayFeed();

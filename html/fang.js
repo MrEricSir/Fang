@@ -27,8 +27,6 @@ function appendNews(append, id, title, url, feedTitle, timestamp, content) {
         console.log("append!")
         item.insertAfter('body>.newsContainer:last-child');
     } else {
-        var totalHeight = window.fang.getScroll();
-        
         //console.log("Prepend!")
         //$('body>.newsContainer:first-child').prepend(item);
         //console.log("item to prepend: ", item);
@@ -36,10 +34,7 @@ function appendNews(append, id, title, url, feedTitle, timestamp, content) {
         
         // Scroll down after prepend.
         var verticalMargins = parseInt( item.css("marginBottom") ) + parseInt( item.css("marginTop") );
-        totalHeight += verticalMargins + item.height();
-        
-        console.log("Scroll down to: ", totalHeight)
-        window.fang.setScroll( totalHeight );
+        window.fang.addToScroll( verticalMargins + item.height() );
     }
 }
 
@@ -142,11 +137,11 @@ $(document).ready(function() {
     // Adjust the bookmark if necessary.
     function checkBookmark() {
         // Start at the current bookmark.
-        var bookmarkedItem = $( '.bookmarked' );
+        var bookmarkedItem = $( 'body>.bookmarked' );
         
         // No bookmark?  No problem, we'll look at the first news item instead.
         if (!bookmarkedItem.length)
-            bookmarkedItem = $( 'newsContainer' );
+            bookmarkedItem = $( 'body>.newsContainer' );
         
         // Oh bother.  I guess there's nothing to do.
         if (bookmarkedItem.length < 1) {
@@ -177,7 +172,7 @@ $(document).ready(function() {
             
             // Ignore the model, she's so stuck up.
             if (nextItem[0].getAttribute('id') === 'model')
-                break;
+                continue;
             
             // Nothing more to do.
             if (!isAboveScroll(nextItem)) {

@@ -101,6 +101,15 @@ Item {
                         newsFlickable.contentY = y;
                     }
                     
+                    function addToScroll(y) {
+                        // Tell the mouse wheel to fuck off temporarily.
+                        wheelArea.active = false;
+                        
+                        newsFlickable.contentY += y;
+                        
+                        wheelArea.active = true;
+                    }
+                    
                     function getHeight() {
                         return newsFlickable.height;
                     }
@@ -140,6 +149,14 @@ Item {
                 
                 MouseWheelArea {
                     id: wheelArea
+                    
+                    // Disable this to stop the motion.
+                    property bool active: true
+                    
+                    onActiveChanged: {
+                        if (!active)
+                            wheelScrollAnimation.stop();
+                    }
                     
                     anchors.fill: parent
                     property double deltaY: 0

@@ -55,7 +55,7 @@ private slots:
      * @brief Extracts news items from a database query.
      * @param query  Database query containing zero or more News Items.
      */
-    void queryToNewsList(QSqlQuery& query, bool append);
+    void queryToNewsList(QSqlQuery& query);
     
     bool doAppend(qint64 startId);
     

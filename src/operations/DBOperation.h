@@ -11,7 +11,7 @@ class DBOperation : public Operation
 {
     Q_OBJECT
 public:
-    explicit DBOperation(QObject *parent = 0);
+    explicit DBOperation(PriorityLevel priority, QObject *parent = 0);
     virtual ~DBOperation() {}
 signals:
     

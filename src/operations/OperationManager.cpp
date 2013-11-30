@@ -12,8 +12,23 @@ OperationManager::OperationManager(QObject *parent) :
 
 void OperationManager::add(Operation *operation)
 {
-    queue.enqueue(operation);
-    executeOperations(); // TODO: add a timer so we don't run 'em one at a time
+    switch (operation->getPriority()) {
+    case Operation::BACKGROUND:
+        // Queue for the future.
+        queue.enqueue(operation);
+        executeOperations();
+        
+        break;
+        
+    case Operation::IMMEDIATE:
+        // Let's do it!
+        runNow(operation);
+        
+        break;
+        
+    default:
+        Q_ASSERT(false); // Not a valid priority level. :(
+    }
 }
 
 void OperationManager::onOperationFinished(Operation* operation)
@@ -29,6 +44,14 @@ void OperationManager::executeOperations()
 {
     // Run the next operation at 300ms+ in the future.
     operationTimer.start(300);
+}
+
+void OperationManager::runNow(Operation *operation)
+{
+    pending.insert(operation);
+    QObject::connect(operation, SIGNAL(finished(Operation*)),
+                     this, SLOT(onOperationFinished(Operation*)));
+    operation->execute();
 }
 
 void OperationManager::runNextOperations()
@@ -57,10 +80,7 @@ void OperationManager::runNextOperations()
         }
         
         // And awaaaaay we go!
-        pending.insert(operation);
-        QObject::connect(operation, SIGNAL(finished(Operation*)),
-                         this, SLOT(onOperationFinished(Operation*)));
-        operation->execute();
+        runNow(operation);
     }
     
     // Schedule the next call.

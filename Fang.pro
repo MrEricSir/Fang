@@ -45,14 +45,14 @@ SOURCES += src/main.cpp \
     src/models/AllNewsFeedItem.cpp \
     src/utilities/WebImageSizeRewriter.cpp \
     src/utilities/ImageGrabber.cpp \
-    src/utilities/RawFeedImageSizeRewriter.cpp \
     src/operations/UpdateTitleOperation.cpp \
     src/parser/ParserInterface.cpp \
     src/parser/BackgroundParser.cpp \
     src/parser/BackgroundParserThread.cpp \
     src/models/FangSettings.cpp \
     src/models/WebInteractor.cpp \
-    src/operations/LoadNews.cpp
+    src/operations/LoadNews.cpp \
+    src/utilities/RawFeedRewriter.cpp
 
 # Installation path
 # target.path =
@@ -99,11 +99,11 @@ HEADERS += \
     src/models/AllNewsFeedItem.h \
     src/utilities/WebImageSizeRewriter.h \
     src/utilities/ImageGrabber.h \
-    src/utilities/RawFeedImageSizeRewriter.h \
     src/operations/UpdateTitleOperation.h \
     src/parser/ParserInterface.h \
     src/parser/BackgroundParser.h \
     src/parser/BackgroundParserThread.h \
     src/models/FangSettings.h \
     src/models/WebInteractor.h \
-    src/operations/LoadNews.h
+    src/operations/LoadNews.h \
+    src/utilities/RawFeedRewriter.h

@@ -3,7 +3,7 @@
 #include <QDebug>
 
 UpdateTitleOperation::UpdateTitleOperation(QObject *parent, FeedItem* feed) :
-    DBOperation(parent),
+    DBOperation(IMMEDIATE, parent),
     feed(feed)
 {
 }

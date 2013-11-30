@@ -1,8 +1,9 @@
 #include "Operation.h"
 #include <QDebug>
 
-Operation::Operation(QObject *parent) :
-    QObject(parent)
+Operation::Operation(PriorityLevel priority, QObject *parent) :
+    QObject(parent),
+    priority(priority)
 {
 }
 

@@ -4,7 +4,7 @@
 #include "../models/AllNewsFeedItem.h"
 
 SetBookmarkOperation::SetBookmarkOperation(QObject *parent, FeedItem* feed, NewsItem* bookmarkItem) :
-    DBOperation(parent),
+    DBOperation(IMMEDIATE, parent),
     feed(feed),
     bookmarkItem(bookmarkItem)
 {

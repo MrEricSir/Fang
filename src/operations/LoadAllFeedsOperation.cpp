@@ -7,7 +7,7 @@
 #include "../models/AllNewsFeedItem.h"
 
 LoadAllFeedsOperation::LoadAllFeedsOperation(QObject *parent, ListModel *feedList) :
-    DBOperation(parent),
+    DBOperation(BACKGROUND, parent),
     feedList(feedList)
 {
 }

@@ -39,6 +39,7 @@ signals:
      * @param content     HTML content
      */
     void add(bool append, QString id, QString title, QString url, QString feedTitle, QString timestamp, QString content);
+
     
     /**
      * @brief Clear the current news.
