@@ -9,6 +9,7 @@
 #include "../operations/OperationManager.h"
 #include "../operations/Operation.h"
 #include "../operations/LoadNews.h"
+#include "../operations/SetBookmarkOperation.h"
 
 /**
  * @brief Passes news between the JavaScript and C++ layers, yo.
@@ -67,10 +68,19 @@ public slots:
     // Beep beep beep! http://www.youtube.com/watch?v=B_H7WZGsIjM
     Q_INVOKABLE void loadPrevious();
     
+    // Gets the current bookmark and invokes a jump to it.
+    Q_INVOKABLE void jumpToBookmark();
+    
+    // Sets the bookmark, and fires a draw event.
+    Q_INVOKABLE void setBookmark(QString sId);
+    
 private slots:
     
     // Called when a load has completed.
     void onLoadNewsFinished(Operation* operation);
+    
+    // Called when a bookmark has been set.
+    void onSetBookmarkFinished(Operation* operation);
     
     QString escapeCharacters(const QString& string);
     
@@ -83,8 +93,9 @@ private:
     // Op man!
     OperationManager* manager;
     
-    // Reentrancy guard.
+    // Reentrancy guards.
     bool isLoading;
+    bool isSettingBookmark;
     
 };
 

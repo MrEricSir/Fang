@@ -19,27 +19,46 @@ function appendNews(append, id, title, url, feedTitle, timestamp, content) {
     item.find( '.siteTitle' ).html( feedTitle );
     item.find( '.date' ).html( timestamp );
     
-    // console.log(item.html());
-    // console.log("ID: ", id)//item.getAttribute('id' ));
+    //console.log(item.html());
+    //console.log("ID: ", id, "append: ", append)
     
     // Stick 'er in!
-    // TODO: prepend
-    item.insertAfter( 'body>.newsContainer:last-child' );
+    if (append) {
+        console.log("append!")
+        item.insertAfter('body>.newsContainer:last-child');
+    } else {
+        var totalHeight = window.fang.getScroll();
+        
+        //console.log("Prepend!")
+        //$('body>.newsContainer:first-child').prepend(item);
+        //console.log("item to prepend: ", item);
+        item.insertBefore( 'body>.newsContainer:first-child' );
+        
+        // Scroll down after prepend.
+        var verticalMargins = parseInt( item.css("marginBottom") ) + parseInt( item.css("marginTop") );
+        totalHeight += verticalMargins + item.height();
+        
+        console.log("Scroll down to: ", totalHeight)
+        window.fang.setScroll( totalHeight );
+    }
+}
+
+function removeMatchingItems(item) {
+    // Iterate over all items that match.
+    for ( var i = 0; i < item.length; i++ ) {
+        var current = item[i];
+        
+        // If it's not our model, DELETE!
+        if ( current.getAttribute('id') !== 'model' )
+            current.parentNode.removeChild( current );
+    }
 }
 
 // Clears out all the news from the view.
 function clearNews() {
     //console.log("Clearing news")
     
-    // Iterate over all news container items.
-    var newsItem = $( "body>.newsContainer" );
-    for (var i = 0; i < newsItem.length; i++) {
-        var current = newsItem[i];
-        
-        // If it's not our model, DELETE!
-        if (current.getAttribute('id') !== 'model' )
-            current.parentNode.removeChild( current );
-    }
+    removeMatchingItems( $('body>.newsContainer') );
 }
 
 // Scrolls to the element with the given ID.
@@ -54,9 +73,16 @@ function jumpTo(id) {
 
 // Draws a bookmark on the given news container ID.
 function drawBookmark(id) {
+    // If we have another bookmark, remove it.
+    
+    // Remove any existing bookmark(s).
+    $( ".bookmarked" ).removeClass('bookmarked');
+    
+    // Add bookmark.
     var elementId = '#' + id;
-    console.log("Bookmark at ", elementId)
     $( elementId ).addClass('bookmarked');
+    
+    //console.log("Bookmark at ", elementId);
 }
 
 // Removes all existing classes on the body element.
@@ -113,30 +139,30 @@ $(document).ready(function() {
         return window.fang.getScroll() > element.offset().top + element.height();
     }
     
-    // Sets the bookmark to the given element.
-    function setBookmark(element) {
-        console.log("Bookmarking next item")
-        // Remove existing bookmark.
-        var bookmarkedItem = $( "#bookmarked" );
-        if (bookmarkedItem.length > 0) {
-            bookmarkedItem.removeAttr('id');
-        }
-        
-        // Set the new one.
-        element.attr("id", "bookmarked");
-    }
-    
     // Adjust the bookmark if necessary.
     function checkBookmark() {
-        var bookmarkedItem = $( ".bookmarked" );
+        // Start at the current bookmark.
+        var bookmarkedItem = $( '.bookmarked' );
         
-        if ( !bookmarkedItem.length )
-            return; // Why bother?
+        // No bookmark?  No problem, we'll look at the first news item instead.
+        if (!bookmarkedItem.length)
+            bookmarkedItem = $( 'newsContainer' );
+        
+        // Oh bother.  I guess there's nothing to do.
+        if (bookmarkedItem.length < 1) {
+            // There's *always* at least one news container (i.e. the model)
+            console.log("No bookmarks to deal with.  w00t!")
+            
+            return;
+        }
         
         // Check if the bottom of the bookmarked item is above the scroll level.
         // If not, bail now since the bookmark won't be changed.
-        if (!isAboveScroll(bookmarkedItem))
+        if (!isAboveScroll(bookmarkedItem)) {
+            console.log("not above scroll!")
+            
             return;
+        }
         
         //console.log("Bookmark is above scroll!  It may require changing:", bookmarkedItem.next().length);
         
@@ -149,12 +175,20 @@ $(document).ready(function() {
                 break;
             }
             
-            // Nothing more to do.
-            if (!isAboveScroll(nextItem))
+            // Ignore the model, she's so stuck up.
+            if (nextItem[0].getAttribute('id') === 'model')
                 break;
             
+            // Nothing more to do.
+            if (!isAboveScroll(nextItem)) {
+                console.log("item not above scroll")
+                
+                break;
+            }
+            
             // Move the bookmark down one.
-            setBookmark(nextItem);
+            //console.log("bookmark item: ", nextItem);
+            window.fang.setBookmark( nextItem[0].getAttribute('id') );
             
             // Continue to next item.
             nextItem = nextItem.next();
@@ -172,7 +206,4 @@ $(document).ready(function() {
     }
     
     watchScrollPosition(loadNext, loadPrevious, checkBookmark, 250, 250);
-    
-    // Scroll down a bit.
-    //$(document).scrollTop(300);
 });

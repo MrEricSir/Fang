@@ -5,6 +5,11 @@ import Fang 1.0
 Item {
     id: news
     
+    // Used by main for double clicking on feed titles.
+    function jumpToBookmark() {
+        webInteractor.jumpToBookmark();
+    }
+    
     Item {
         id: newsMargin
         
@@ -30,8 +35,8 @@ Item {
                 function onAdd(append, id, title, url, feedTitle, timestamp, content) {
                     //console.log("You want ana append?", id)
                     
-                    newsView.evaluateJavaScript("appendNews('"
-                                                + append + "', '"
+                    newsView.evaluateJavaScript("appendNews("
+                                                + append + ", '"
                                                 + id + "', '"
                                                 + title + "', '"
                                                 + url + "', '"
@@ -111,7 +116,8 @@ Item {
                     }
                     
                     function setBookmark(id) {
-                        console.log("bookmark: ", id)
+                        //console.log("bookmark: ", id)
+                        webInteractor.setBookmark(id);
                     }
                 }
                 

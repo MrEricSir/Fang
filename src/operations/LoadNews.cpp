@@ -27,10 +27,10 @@ void LoadNews::queryToNewsList(QSqlQuery& query, bool append)
                     );
         
         // Add to our temporary list.
-        if (append)
+//        if (append)
             newsList->append(newsItem);
-        else
-            newsList->prepend(newsItem);
+//        else
+//            newsList->prepend(newsItem);
         
         // Remember if we found the bookmark.
         if (newsItem->getDbID() == feedItem->getBookmarkID())
@@ -103,8 +103,8 @@ void LoadNews::execute()
             dbResult &= doPrepend(startId);
             
             qDebug() << "Start id: " << startId;
-            if (newsList->size() > 0)
-            qDebug() << "prepender: from " << newsList->first()->getDbID() << " to " << newsList->last()->getDbID();
+            //if (newsList->size() > 0)
+            //qDebug() << "prepender: from " << newsList->first()->getDbID() << " to " << newsList->last()->getDbID();
         }
         
         // Load next items, if available.
@@ -154,8 +154,12 @@ void LoadNews::execute()
     }
     
     // Update list with our items.
-    foreach (NewsItem* newsItem, *newsList)
-         feedItem->getNewsList()->append(newsItem);
+    foreach (NewsItem* newsItem, *newsList) {
+        if (mode != Prepend)
+            feedItem->getNewsList()->append(newsItem);
+        else
+            feedItem->getNewsList()->prepend(newsItem);
+    }
     
     // Set the bookmark if we found it.
     if (bookmark != NULL)

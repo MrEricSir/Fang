@@ -9,7 +9,6 @@
 #include "operations/LoadAllFeedsOperation.h"
 #include "operations/AddFeedOperation.h"
 #include "operations/RemoveFeedOperation.h"
-#include "operations/SetBookmarkOperation.h"
 #include "operations/FaviconUpdateOperation.h"
 #include "operations/UpdateTitleOperation.h"
 
@@ -131,12 +130,6 @@ void FangApp::onFeedRemoved(ListItem * listItem)
     }
 }
 
-void FangApp::onNewsItemBookmarked(NewsItem *item)
-{
-    manager.add(new SetBookmarkOperation(&manager, item->getFeed(), item));
-    qDebug() << "Item bookmarked: " << item->getTitle();
-}
-
 void FangApp::onFeedSelected(ListItem* _item) {
     FeedItem* item = qobject_cast<FeedItem *>(_item);
     if (item != NULL) {
@@ -188,12 +181,6 @@ void FangApp::setCurrentFeed(FeedItem *feed)
     
     currentFeed = feed;
     displayFeed();
-    
-    // Connect signals.
-    if (currentFeed != NULL) {
-        connect(currentFeed, SIGNAL(bookmarkChanged(NewsItem*)),
-                this, SLOT(onNewsItemBookmarked(NewsItem*)));
-    }
 }
 
 void FangApp::onFeedTitleChanged()

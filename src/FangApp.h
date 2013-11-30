@@ -57,8 +57,6 @@ private slots:
     
     void onFeedRemoved(ListItem*);
     
-    void onNewsItemBookmarked(NewsItem* item);
-    
     void onFeedSelected(ListItem *item);
     
     /**

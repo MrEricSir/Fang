@@ -6,7 +6,8 @@ WebInteractor::WebInteractor(QDeclarativeItem *parent) :
     QDeclarativeItem(parent),
     currentFeed(NULL),
     manager(NULL),
-    isLoading(false)
+    isLoading(false),
+    isSettingBookmark(false)
 {
     
 }
@@ -23,7 +24,7 @@ void WebInteractor::loadNext()
     
     qDebug() << "Load next!";
     
-    // Okay, now LOAD the damn feed, y'all.
+    // Load MOAR
     LoadNews* loader = new LoadNews(manager, currentFeed, LoadNews::Append);
     isLoading = true;
     connect(loader, SIGNAL(finished(Operation*)), this, SLOT(onLoadNewsFinished(Operation*)));
@@ -32,10 +33,58 @@ void WebInteractor::loadNext()
 
 void WebInteractor::loadPrevious()
 {
-//    if (isLoading)
-//        return;
+    if (isLoading)
+        return;
     
-//    qDebug() << "Load prev!";
+    qDebug() << "Load prev!";
+    
+    // Load the PREVIOUS
+    LoadNews* loader = new LoadNews(manager, currentFeed, LoadNews::Prepend);
+    isLoading = true;
+    connect(loader, SIGNAL(finished(Operation*)), this, SLOT(onLoadNewsFinished(Operation*)));
+    manager->add(loader);
+}
+
+void WebInteractor::jumpToBookmark()
+{
+    if (currentFeed->getBookmark() == NULL)
+        return; // Nothing to do!
+    
+    // Jump to the item following the bookmark, if possible.
+    int index = currentFeed->getNewsList()->indexOf(currentFeed->getBookmark()) + 1;
+    emit jumpTo(index < currentFeed->getNewsList()->size() ? currentFeed->getNewsList()->at(index)->id() : currentFeed->getBookmark()->id());
+}
+
+void WebInteractor::setBookmark(QString sId)
+{
+    if (isSettingBookmark)
+        return;
+    
+    //qDebug() << "Look where we're jumping... " << id;
+    qint64 id = sId.replace(NEWS_ITEM_ID_PREIX, "").toLongLong();
+    qDebug() << "Look where we're jumping... " << id;
+    
+    // Locate the item!
+    NewsItem* bookmarkItem = NULL;
+    foreach(NewsItem* item, *currentFeed->getNewsList()) {
+        if (item->getDbID() == id) {
+            // We found it, yo!
+            bookmarkItem = item;
+            break;
+        }
+    }
+    
+    if (bookmarkItem == NULL) {
+        qDebug() << "Bookmark itm was not found for the current feed!";
+        
+        return; // We didn't find it.  Perhaps this is an old request? Either way, fuck it.
+    }
+    
+    // I bookmark you!
+    SetBookmarkOperation* bookmarkOp = new SetBookmarkOperation(manager, currentFeed, bookmarkItem);
+    isSettingBookmark =  true;
+    connect(bookmarkOp, SIGNAL(finished(Operation*)), this, SLOT(onSetBookmarkFinished(Operation*)));
+    manager->add(bookmarkOp);
 }
 
 void WebInteractor::setFeed(FeedItem *feed)
@@ -75,16 +124,28 @@ void WebInteractor::onLoadNewsFinished(Operation* operation)
         foreach(NewsItem* item, *newsList)
             addNewsItem(loader->getMode(), item);
     
-    // If this is the initial load, jump to the bookmark.
+    // If this is the initial load, draw and jump to the bookmark.
     if (loader->getMode() == LoadNews::Initial && currentFeed->getBookmark() != NULL) {
-        int index = currentFeed->getNewsList()->indexOf(currentFeed->getBookmark()) + 1;
-        //qDebug() << "mr index " << index;
-        emit jumpTo(index < currentFeed->getNewsList()->size() ? currentFeed->getNewsList()->at(index)->id() : currentFeed->getBookmark()->id());
+        jumpToBookmark();
         
         emit drawBookmark(currentFeed->getBookmark()->id());
     }
     
     isLoading = false;
+}
+
+void WebInteractor::onSetBookmarkFinished(Operation *operation)
+{
+    SetBookmarkOperation* bookmarkOp = qobject_cast<SetBookmarkOperation*>(operation);
+    Q_ASSERT(bookmarkOp != NULL);
+    
+    isSettingBookmark = false;
+    
+    if (bookmarkOp->getFeed() != currentFeed)
+        return; // Too slow, no go, bro.
+    
+    currentFeed->setBookmark(bookmarkOp->getBookmarkItem());
+    emit drawBookmark(currentFeed->getBookmark()->id());
 }
 
 QString WebInteractor::escapeCharacters(const QString& string)
@@ -113,6 +174,7 @@ QString WebInteractor::escapeCharacters(const QString& string)
 
 void WebInteractor::addNewsItem(LoadNews::LoadMode mode, NewsItem *item)
 {
+    //qDebug() << "Add news: " << item->id();
     emit add(mode != LoadNews::Prepend,
              item->id(),
              escapeCharacters(item->getTitle()),
