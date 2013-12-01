@@ -50,6 +50,9 @@ private slots:
     // Strips all subelements of element that match the CSS selector
     void removeAll(const QString& selector, QWebElement element);
     
+    // Recursively deal with shyte.
+    void visitElement(const QWebElement &parentElement);
+    
 private:
     WebImageSizeRewriter imageSizer;
     QList<RawNews*>* newsList;

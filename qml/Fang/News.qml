@@ -48,6 +48,7 @@ Item {
                 function onClear() {
                     //console.log("Clear!")
                     newsView.evaluateJavaScript("clearNews();");
+                    newsFlickable.contentY = 0; // reset scroll
                 }
                 
                 function onJumpTo(id) {

@@ -160,4 +160,45 @@ void RawFeedRewriter::takeOutTrash(QWebElement newsContainer)
             break; // exit loop
         }
     }
+    
+    // Almost done -- next steps are recursive.
+    visitElement(newsContainer);
+}
+
+void RawFeedRewriter::visitElement(const QWebElement &parentElement)
+{
+    QWebElement e = parentElement.firstChild();
+    while (!e.isNull()) {
+        // Attempt to make links open in a browser. (TODO: does this even work?!)
+        if (e.tagName().toLower() == "a")
+            e.setAttribute("target", "_blank");
+        
+        // Kiss your Javascript goodbye.
+        e.removeAttribute("onload");
+        e.removeAttribute("onunload");
+        e.removeAttribute("onfocus");
+        e.removeAttribute("onclick");
+        e.removeAttribute("onmouseover");
+        e.removeAttribute("onmouseout");
+        e.removeAttribute("onmousedown");
+        e.removeAttribute("onmouseup");
+        e.removeAttribute("ondblclick");
+        e.removeAttribute("onkeydown");
+        e.removeAttribute("onkeypress");
+        e.removeAttribute("onkeyup");
+        e.removeAttribute("onabort");
+        e.removeAttribute("onerror");
+        e.removeAttribute("onresize");
+        e.removeAttribute("onscroll");
+        e.removeAttribute("onblur");
+        e.removeAttribute("onchange");
+        e.removeAttribute("onfocus");
+        e.removeAttribute("onreset");
+        e.removeAttribute("onselect");
+        e.removeAttribute("onsubmit");
+        
+        // Next!
+        visitElement(e);
+        e = e.nextSibling();
+    }
 }
