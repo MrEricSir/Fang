@@ -9,6 +9,7 @@
 #include "../operations/OperationManager.h"
 #include "../operations/Operation.h"
 #include "../operations/LoadNews.h"
+#include "../operations/LoadAllNewsOperation.h"
 #include "../operations/SetBookmarkOperation.h"
 
 /**
@@ -86,6 +87,9 @@ private slots:
     QString escapeCharacters(const QString& string);
     
     void addNewsItem(LoadNews::LoadMode mode, NewsItem* item);
+    
+    // Creates and executes a LoadNews operation.
+    void doLoadNews(LoadNews::LoadMode mode);
     
 private:
     // The currently selected news feed.

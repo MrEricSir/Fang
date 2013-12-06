@@ -4,10 +4,10 @@
 LoadNews::LoadNews(QObject *parent, FeedItem* feedItem, LoadMode mode, int loadLimit) :
     DBOperation(IMMEDIATE, parent),
     feedItem(feedItem),
-    mode(mode),
-    loadLimit(loadLimit),
     newsList(NULL),
-    bookmark(NULL)
+    bookmark(NULL),
+    mode(mode),
+     loadLimit(loadLimit)
 {
 }
 
@@ -75,8 +75,9 @@ bool LoadNews::executeLoadQuery(qint64 startId, bool append)
 
 void LoadNews::execute()
 {
-    // TODO: handle all news
     if (feedItem->getDbId() < 0) {
+        // This is AllNews, dumbass.  You called the wrong operation!
+        Q_ASSERT(false);
         emit finished(this);
         
         return;

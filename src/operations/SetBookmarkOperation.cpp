@@ -17,16 +17,11 @@ SetBookmarkOperation::~SetBookmarkOperation()
 
 void SetBookmarkOperation::execute()
 {
-    if (feed->metaObject() == &AllNewsFeedItem::staticMetaObject) {
-        qDebug() <<  "Cannot save  bookmark for all news";
-        emit finished(this);
-        return;
-    }
-    
     QSqlQuery query(db());
-    query.prepare("UPDATE FeedItemTable SET bookmark_id = :bookmark_id WHERE id = :feed_id");
+    query.prepare("UPDATE FeedItemTable SET bookmark_id = :bookmark_id WHERE id = "
+                  "(SELECT feed_id FROM NewsItemTable WHERE id = :bookmark_id2 )");
     query.bindValue(":bookmark_id", bookmarkItem->getDbID());
-    query.bindValue(":feed_id", feed->getDbId());
+    query.bindValue(":bookmark_id2", bookmarkItem->getDbID());
     
     if (!query.exec()) {
         qDebug() << "Unable to set bookmark.";

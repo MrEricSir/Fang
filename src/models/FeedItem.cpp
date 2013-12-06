@@ -16,7 +16,7 @@ FeedItem::FeedItem(QObject *parent) :
     bookmarkID(-1),
     newsList(NULL),
     isUpdating(false),
-    isCurrent(false),
+    unreadCount(0),
     bookmark(NULL)
     
 {
@@ -38,7 +38,7 @@ FeedItem::FeedItem(qint64 id, const QString &title, const QString &subtitle, con
     bookmarkID(bookmarkID),
     newsList(NULL),
     isUpdating(false),
-    isCurrent(false),
+    unreadCount(0),
     bookmark(NULL)
 {
     newsList = new QList<NewsItem*>();
@@ -105,11 +105,6 @@ void FeedItem::setIsUpdating(bool isUpdating)
 {
     this->isUpdating = isUpdating;
     emit dataChanged();
-}
-
-quint32 FeedItem::getUnreadCount() const
-{
-    return 10; // TODO: fix it
 }
 
 void FeedItem::setImageURL(const QUrl &url)
@@ -185,25 +180,9 @@ void FeedItem::setBookmark(NewsItem *item, bool signal)
     }
 }
 
-void FeedItem::setIsCurrent(bool current)
+void FeedItem::setUnreadCount(qint32 unreadCount)
 {
-    isCurrent = current;
-}
-
-void FeedItem::setVisibleItems(NewsItem *first, NewsItem *last, bool atBottom)
-{
-    Q_UNUSED(last);
+    this->unreadCount = unreadCount;
     
-    if (newsList->count() == 0)
-        return; // Nothing to bookmark.
-    
-    if (atBottom) {
-        // Bookmark the last item.
-        //qDebug() << "setVisibleItems Bottom bookmark yo";
-        setBookmark(newsList->last());
-    } else if (first != NULL) {
-        // Bookmark the first item.
-        //qDebug() << "setVisibleItems Bookmark first visible item: " << first->getTitle();
-        setBookmark(first);
-    }
+    emit dataChanged();
 }

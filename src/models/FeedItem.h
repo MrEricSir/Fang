@@ -70,9 +70,9 @@ public:
     inline QUrl getSiteURL() const { return siteURL; }
     inline QUrl getImageURL() const { return imageURL; }
     inline int getIsUpdating() const { return isUpdating; }
+    inline quint32 getUnreadCount() const { return unreadCount; }
     inline FeedItem* getSelf() const { return const_cast<FeedItem*>(this); }
     inline qint64 getDbId() const { return _id; }
-    virtual quint32 getUnreadCount() const;
     
     void setImageURL(const QUrl& url);
     
@@ -120,20 +120,10 @@ public:
     inline void clearDbId() { _id = -1; }
     
     /**
-     * @brief This is set before the feed changes.
-     * @param current
+     * @brief Sets the unread count to the new value and emits a change signal.
+     * @param unreadCount
      */
-    virtual void setIsCurrent(bool current);
-    
-    inline bool getIsCurrent() { return isCurrent; }
-    
-    /**
-     * @brief NewsWeb uses this to set the currently viewable items.
-     * This method is used to set the bookmark.
-     * @param first
-     * @param last
-     */
-    virtual void setVisibleItems(NewsItem* first, NewsItem* last, bool atBottom);
+    void setUnreadCount(qint32 unreadCount);
     
 signals:
     
@@ -154,7 +144,7 @@ private:
     qint64 bookmarkID;
     QList<NewsItem*>* newsList;
     int isUpdating;
-    bool isCurrent;
+    qint32 unreadCount;
     NewsItem* bookmark;
 };
 

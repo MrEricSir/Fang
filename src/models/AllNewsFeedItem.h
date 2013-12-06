@@ -15,21 +15,8 @@ public:
     explicit AllNewsFeedItem(ListModel *feedList);
     
     virtual void setBookmark(NewsItem* item, bool signal = true); // Override
-    virtual void setIsCurrent(bool current); // Override
-    virtual quint32 getUnreadCount() const; // Override
-    virtual void setVisibleItems(NewsItem* first, NewsItem* last, bool atBottom); // Override
     
 private slots:
-    
-    /**
-     * @brief Call this before displaying all news.
-     */
-    void init();
-    
-    /**
-     * @brief Stops all news when it's not the current item.
-     */
-    void deinit();
     
     // Called when a feed is added or removed from the master list.
     void onFeedAdded(ListItem *item);
@@ -48,8 +35,6 @@ private slots:
     
 private:
     ListModel* feedList;
-    bool initialized;
-    bool dirty;
 };
 
 #endif // ALLNEWSFEEDITEM_H

@@ -52,7 +52,8 @@ SOURCES += src/main.cpp \
     src/models/FangSettings.cpp \
     src/models/WebInteractor.cpp \
     src/operations/LoadNews.cpp \
-    src/utilities/RawFeedRewriter.cpp
+    src/utilities/RawFeedRewriter.cpp \
+    src/operations/LoadAllNewsOperation.cpp
 
 # Installation path
 # target.path =
@@ -106,4 +107,5 @@ HEADERS += \
     src/models/FangSettings.h \
     src/models/WebInteractor.h \
     src/operations/LoadNews.h \
-    src/utilities/RawFeedRewriter.h
+    src/utilities/RawFeedRewriter.h \
+    src/operations/LoadAllNewsOperation.h

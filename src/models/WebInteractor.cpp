@@ -25,10 +25,7 @@ void WebInteractor::loadNext()
     qDebug() << "Load next!";
     
     // Load MOAR
-    LoadNews* loader = new LoadNews(manager, currentFeed, LoadNews::Append);
-    isLoading = true;
-    connect(loader, SIGNAL(finished(Operation*)), this, SLOT(onLoadNewsFinished(Operation*)));
-    manager->add(loader);
+    doLoadNews(LoadNews::Append);
 }
 
 void WebInteractor::loadPrevious()
@@ -39,10 +36,7 @@ void WebInteractor::loadPrevious()
     qDebug() << "Load prev!";
     
     // Load the PREVIOUS
-    LoadNews* loader = new LoadNews(manager, currentFeed, LoadNews::Prepend);
-    isLoading = true;
-    connect(loader, SIGNAL(finished(Operation*)), this, SLOT(onLoadNewsFinished(Operation*)));
-    manager->add(loader);
+    doLoadNews(LoadNews::Prepend);
 }
 
 void WebInteractor::jumpToBookmark()
@@ -103,10 +97,7 @@ void WebInteractor::setFeed(FeedItem *feed)
     emit clear();
     
     // Okay, now LOAD the damn feed, y'all.
-    LoadNews* loader = new LoadNews(manager, currentFeed, LoadNews::Initial);
-    isLoading =  true;
-    connect(loader, SIGNAL(finished(Operation*)), this, SLOT(onLoadNewsFinished(Operation*)));
-    manager->add(loader);
+    doLoadNews(LoadNews::Initial);
 }
 
 void WebInteractor::onLoadNewsFinished(Operation* operation)
@@ -184,3 +175,15 @@ void WebInteractor::addNewsItem(LoadNews::LoadMode mode, NewsItem *item)
              escapeCharacters(item->getTimestamp().toString()),
              escapeCharacters( item->getContent() != "" ? item->getContent() : item->getSummary()) );
 }
+
+void WebInteractor::doLoadNews(LoadNews::LoadMode mode)
+{
+    Q_ASSERT(currentFeed != NULL);
+    
+    LoadNews* loader = (currentFeed->getDbId() < 0) ? new LoadAllNewsOperation(manager, currentFeed, mode) :
+                new LoadNews(manager, currentFeed, mode);
+    isLoading =  true;
+    connect(loader, SIGNAL(finished(Operation*)), this, SLOT(onLoadNewsFinished(Operation*)));
+    manager->add(loader);
+}
+

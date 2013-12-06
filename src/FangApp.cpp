@@ -132,18 +132,7 @@ void FangApp::onFeedRemoved(ListItem * listItem)
 
 void FangApp::onFeedSelected(ListItem* _item) {
     FeedItem* item = qobject_cast<FeedItem *>(_item);
-    if (item != NULL) {
-        if (currentFeed != NULL)
-            currentFeed->setIsCurrent(false);
-        
-        setCurrentFeed(item);
-        
-        // Connex0r the signals.
-        //qDebug() << "Selected: " << feed->getTitle();
-    } else {
-        // How did this happen?!
-        setCurrentFeed(NULL);
-    }
+    setCurrentFeed(item);
 }
 
 void FangApp::connectFeed(FeedItem *feed)

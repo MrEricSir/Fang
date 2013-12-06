@@ -49,7 +49,12 @@ public slots:
      */
     inline QList<NewsItem*>* getNewsList() { return newsList; }
     
-private slots:
+    /**
+     * @return Max number of items to load (specified as loadLimit in constructor.)
+     */
+    inline int getLoadLimit() { return loadLimit; }
+    
+protected slots:
     
     /**
      * @brief Extracts news items from a database query.
@@ -57,27 +62,31 @@ private slots:
      */
     void queryToNewsList(QSqlQuery& query);
     
+private slots:
+    
     bool doAppend(qint64 startId);
     
     bool doPrepend(qint64 startId);
     
     bool executeLoadQuery(qint64 startId, bool append);
     
-private:
+protected:
     // Feed we're adding to.
     FeedItem* feedItem;
-    
-    // True if we're appending.
-    LoadMode mode;
-    
-    // Max # of news items to add.
-    int loadLimit;
     
     // List of items we added.
     QList<NewsItem*>* newsList;
     
     // Used to set bookmark during load.
     NewsItem* bookmark;
+    
+private:
+    // True if we're appending.
+    LoadMode mode;
+    
+    // Max # of news items to add.
+    int loadLimit;
+    
 };
 
 #endif // LOADNEWS_H
