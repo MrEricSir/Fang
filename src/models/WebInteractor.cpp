@@ -22,7 +22,7 @@ void WebInteractor::loadNext()
     if (isLoading)
         return;
     
-    qDebug() << "Load next!";
+    //qDebug() << "Load next!";
     
     // Load MOAR
     doLoadNews(LoadNews::Append);
@@ -33,7 +33,7 @@ void WebInteractor::loadPrevious()
     if (isLoading)
         return;
     
-    qDebug() << "Load prev!";
+    //qDebug() << "Load prev!";
     
     // Load the PREVIOUS
     doLoadNews(LoadNews::Prepend);
@@ -54,9 +54,8 @@ void WebInteractor::setBookmark(QString sId)
     if (isSettingBookmark)
         return;
     
-    //qDebug() << "Look where we're jumping... " << id;
     qint64 id = sId.replace(NEWS_ITEM_ID_PREIX, "").toLongLong();
-    qDebug() << "Setting bookmark to... " << id;
+    //qDebug() << "Setting bookmark to... " << id;
     
     // Locate the item!
     NewsItem* bookmarkItem = NULL;
@@ -73,6 +72,13 @@ void WebInteractor::setBookmark(QString sId)
         qDebug() << "Bookmark itm was not found for the current feed!";
         
         return; // We didn't find it.  Perhaps this is an old request? Either way, fuck it.
+    }
+    
+    if (!currentFeed->canBookmark(bookmarkItem)) {
+        isSettingBookmark = false;
+        qDebug() << "Cannot set bookmark to: " << bookmarkItem->getTitle();
+        
+        return;
     }
     
     // I bookmark you!
@@ -111,10 +117,13 @@ void WebInteractor::onLoadNewsFinished(Operation* operation)
     }
     
     // Stuff the new items into our feed.
-    QList<NewsItem*>* newsList = loader->getNewsList();
-    if (newsList != NULL)
-        foreach(NewsItem* item, *newsList)
-            addNewsItem(loader->getMode(), item);
+    if (loader->getAppendList() != NULL)
+        foreach(NewsItem* item, *loader->getAppendList())
+            addNewsItem(true, item);
+    
+    if (loader->getPrependList() != NULL)
+        foreach(NewsItem* item, *loader->getPrependList())
+            addNewsItem(false, item);
     
     // If this is the initial load, draw and jump to the bookmark.
     if (loader->getMode() == LoadNews::Initial && currentFeed->getBookmark() != NULL) {
@@ -164,10 +173,10 @@ QString WebInteractor::escapeCharacters(const QString& string)
     return rValue;
 }
 
-void WebInteractor::addNewsItem(LoadNews::LoadMode mode, NewsItem *item)
+void WebInteractor::addNewsItem(bool append, NewsItem *item)
 {
     //qDebug() << "Add news: " << item->id();
-    emit add(mode != LoadNews::Prepend,
+    emit add(append,
              item->id(),
              escapeCharacters(item->getTitle()),
              escapeCharacters(item->getURL().toString()),

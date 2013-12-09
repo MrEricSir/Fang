@@ -17,6 +17,8 @@ SetBookmarkOperation::~SetBookmarkOperation()
 
 void SetBookmarkOperation::execute()
 {
+    // This always sets the bookmark in the underlying feed; the database has such concept of setting a bookmark
+    // for an aggregate feed (i.e. All News) and bookmarks are always synced.
     QSqlQuery query(db());
     query.prepare("UPDATE FeedItemTable SET bookmark_id = :bookmark_id WHERE id = "
                   "(SELECT feed_id FROM NewsItemTable WHERE id = :bookmark_id2 )");

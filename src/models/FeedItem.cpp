@@ -13,7 +13,6 @@ FeedItem::FeedItem(QObject *parent) :
     url(),
     siteURL(),
     imageURL(),
-    bookmarkID(-1),
     newsList(NULL),
     isUpdating(false),
     unreadCount(0),
@@ -25,7 +24,7 @@ FeedItem::FeedItem(QObject *parent) :
 
 FeedItem::FeedItem(qint64 id, const QString &title, const QString &subtitle, const QDateTime &lastUpdated,
                    quint32 minutesToUpdate, const QUrl &url, const QUrl& siteURL, const QUrl &imageURL,
-                   const qint64 bookmarkID, QObject* parent) :
+                   QObject* parent) :
     ListItem(parent),
     _id(id),
     title(title),
@@ -35,7 +34,6 @@ FeedItem::FeedItem(qint64 id, const QString &title, const QString &subtitle, con
     url(url),
     siteURL(siteURL),
     imageURL(imageURL),
-    bookmarkID(bookmarkID),
     newsList(NULL),
     isUpdating(false),
     unreadCount(0),
@@ -160,7 +158,7 @@ bool FeedItem::canBookmark(NewsItem *item)
     return newBookmarkIndex > currentBookmarkIndex;
 }
 
-void FeedItem::setBookmark(NewsItem *item, bool signal)
+void FeedItem::setBookmark(NewsItem *item)
 {
     if (item != NULL)
         Q_ASSERT(newsList->contains(item));
@@ -172,12 +170,7 @@ void FeedItem::setBookmark(NewsItem *item, bool signal)
         return; // Shouldn't have called this method, sir.
     
     bookmark = item;
-    bookmarkID = bookmark->getDbID();
-    
-    if (signal) {
-        emit bookmarkChanged(bookmark);
-        emit dataChanged();
-    }
+    emit dataChanged();
 }
 
 void FeedItem::setUnreadCount(qint32 unreadCount)

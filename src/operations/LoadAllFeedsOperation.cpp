@@ -40,7 +40,6 @@ void LoadAllFeedsOperation::execute()
                     query.value("url").toString(),
                     query.value("siteURL").toString(),
                     query.value("imageURL").toString(),
-                    query.value("bookmark_id").toULongLong(),
                     NULL
                     );
         

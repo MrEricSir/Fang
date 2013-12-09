@@ -42,7 +42,6 @@ public:
             const QUrl& url,
             const QUrl& siteURL,
             const QUrl& imageURL,
-            const qint64 bookmarkID,
             QObject *parent = 0);
     
     virtual ~FeedItem();
@@ -102,12 +101,7 @@ public:
      * @brief Used to set the bookmark internally.  External classes shouldn't need to call this.
      * @param item
      */
-    virtual void setBookmark(NewsItem* item, bool signal = true);
-    
-    /**
-     * @return The ID of the current bookmark.
-     */
-    inline qint64 getBookmarkID() { return bookmarkID; }
+    virtual void setBookmark(NewsItem* item);
     
     /**
      * @param item
@@ -115,6 +109,10 @@ public:
      */
     bool canBookmark(NewsItem* item);
     
+    /**
+     * @brief Returns the current bookmark.
+     * @return 
+     */
     inline NewsItem* getBookmark() { return bookmark; }
     
     inline void clearDbId() { _id = -1; }
@@ -129,7 +127,6 @@ signals:
     
     void appended(NewsItem* item);
     void removed(NewsItem* item);
-    void bookmarkChanged(NewsItem* bookmark);
     void titleChanged();
         
 private:
@@ -141,7 +138,6 @@ private:
     QUrl url;
     QUrl siteURL;
     QUrl imageURL;
-    qint64 bookmarkID;
     QList<NewsItem*>* newsList;
     int isUpdating;
     qint32 unreadCount;

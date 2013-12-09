@@ -30,6 +30,7 @@ public:
      */
     explicit LoadNews(QObject *parent, FeedItem* feedItem, LoadMode mode, int loadLimit = 15);
     
+    virtual ~LoadNews();
     
 public slots:
     virtual void execute();
@@ -45,9 +46,14 @@ public slots:
     inline LoadMode getMode() { return mode; }
     
     /**
-     * @return List of items that this load appended or prepended.
+     * @return List of items that this load appended.
      */
-    inline QList<NewsItem*>* getNewsList() { return newsList; }
+    inline QList<NewsItem*>* getAppendList() { return listAppend; }
+    
+    /**
+     * @return List of items that this load prepended.
+     */
+    inline QList<NewsItem*>* getPrependList() { return listPrepend; }
     
     /**
      * @return Max number of items to load (specified as loadLimit in constructor.)
@@ -59,8 +65,16 @@ protected slots:
     /**
      * @brief Extracts news items from a database query.
      * @param query  Database query containing zero or more News Items.
+     * @param list   The list of items items we just created.
      */
-    void queryToNewsList(QSqlQuery& query);
+    void queryToNewsList(QSqlQuery& query, QList<NewsItem*>* list);
+    
+    
+    /**
+     * @brief Call this during the initial load of a feed.
+     *@ return id of feed's bookmark.
+     */
+    qint64 getBookmarkID();
     
 private slots:
     
@@ -74,13 +88,14 @@ protected:
     // Feed we're adding to.
     FeedItem* feedItem;
     
-    // List of items we added.
-    QList<NewsItem*>* newsList;
+    // List of items we appended.
+    QList<NewsItem*>* listAppend;
     
-    // Used to set bookmark during load.
-    NewsItem* bookmark;
+    // List of items we prepended.
+    QList<NewsItem*>* listPrepend;
     
 private:
+    
     // True if we're appending.
     LoadMode mode;
     

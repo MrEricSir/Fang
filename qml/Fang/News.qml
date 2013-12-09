@@ -46,7 +46,7 @@ Item {
                 }
                 
                 function onClear() {
-                    //console.log("Clear!")
+                    console.log("Clear!")
                     newsView.evaluateJavaScript("clearNews();");
                     newsFlickable.contentY = 0; // reset scroll
                 }
@@ -57,6 +57,7 @@ Item {
                 }
                 
                 function onDrawBookmark(id) {
+                    //console.log("Draw bookmark: ", id)
                     newsView.evaluateJavaScript("drawBookmark('" + id + "');");
                 }
                 
@@ -116,7 +117,7 @@ Item {
                     }
                     
                     function loadNext() {
-                        //console.log("next!")
+                        //sconsole.log("next!")
                         webInteractor.loadNext();
                     }
                     
@@ -126,7 +127,7 @@ Item {
                     }
                     
                     function setBookmark(id) {
-                        //console.log("bookmark: ", id)
+                        //console.log("qml bookmark: ", id)
                         webInteractor.setBookmark(id);
                     }
                 }

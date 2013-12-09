@@ -14,8 +14,6 @@ class AllNewsFeedItem : public FeedItem
 public:
     explicit AllNewsFeedItem(ListModel *feedList);
     
-    virtual void setBookmark(NewsItem* item, bool signal = true); // Override
-    
 private slots:
     
     // Called when a feed is added or removed from the master list.

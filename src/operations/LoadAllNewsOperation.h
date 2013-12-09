@@ -2,6 +2,9 @@
 #define LOADALLNEWSOPERATION_H
 
 #include "LoadNews.h"
+
+#include <QString>
+
 #include "../models/AllNewsFeedItem.h"
 
 class LoadAllNewsOperation : public LoadNews
@@ -14,11 +17,16 @@ public slots:
     virtual void execute();
     
 private slots:
-    bool doInitial();
     
     bool doPrepend();
     
+    bool doAppend();
+    
+    // Returns a SQL string of all in-memory news item IDs as a SQL string.
+    QString getLoadedIDString();
+    
 private:
+    // The feed that we're using here has gotta be All News.  Like, duh.
     AllNewsFeedItem* allNews;
 };
 

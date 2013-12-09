@@ -20,16 +20,14 @@ function appendNews(append, id, title, url, feedTitle, timestamp, content) {
     item.find( '.date' ).html( timestamp );
     
     //console.log(item.html());
-    //console.log("ID: ", id, "append: ", append)
+    console.log("ID: ", id, "append: ", append)
     
     // Stick 'er in!
     if (append) {
-        console.log("append!")
+        //console.log("append!")
         item.insertAfter('body>.newsContainer:last-child');
     } else {
         //console.log("Prepend!")
-        //$('body>.newsContainer:first-child').prepend(item);
-        //console.log("item to prepend: ", item);
         item.insertBefore( 'body>.newsContainer:first-child' );
         
         // Scroll down after prepend.
@@ -77,7 +75,7 @@ function drawBookmark(id) {
     var elementId = '#' + id;
     $( elementId ).addClass('bookmarked');
     
-    //console.log("Bookmark at ", elementId);
+    //console.log("Bookmark drawn at ", elementId);
 }
 
 // Removes all existing classes on the body element.
@@ -171,8 +169,11 @@ $(document).ready(function() {
             }
             
             // Ignore the model, she's so stuck up.
-            if (nextItem[0].getAttribute('id') === 'model')
+            if (nextItem[0].getAttribute('id') === 'model') {
+                nextItem = nextItem.next();
+                
                 continue;
+            }
             
             // Nothing more to do.
             if (!isAboveScroll(nextItem)) {

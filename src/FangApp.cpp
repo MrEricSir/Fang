@@ -149,7 +149,8 @@ void FangApp::onLoadAllFinished(Operation *op)
 {
     Q_UNUSED(op);
     loadAllFinished = true;
-    displayFeed();
+    
+    // TODO: It used to be necessary to call displayFeed() here.  Is it still?
 }
 
 void FangApp::displayFeed()

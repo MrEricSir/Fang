@@ -86,7 +86,7 @@ private slots:
     
     QString escapeCharacters(const QString& string);
     
-    void addNewsItem(LoadNews::LoadMode mode, NewsItem* item);
+    void addNewsItem(bool append, NewsItem* item);
     
     // Creates and executes a LoadNews operation.
     void doLoadNews(LoadNews::LoadMode mode);

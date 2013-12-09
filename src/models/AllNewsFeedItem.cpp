@@ -2,7 +2,7 @@
 #include <QList>
 
 AllNewsFeedItem::AllNewsFeedItem(ListModel *feedList) :
-    FeedItem(-1, "All News", "", QDateTime(), 0, QUrl(), QUrl(), QUrl(), -1, feedList),
+    FeedItem(-1, "All News", "", QDateTime(), 0, QUrl(), QUrl(), QUrl(), feedList),
     feedList(feedList)
 {
     // Do this here to avoid getting added/removed signals too early.
@@ -12,7 +12,10 @@ AllNewsFeedItem::AllNewsFeedItem(ListModel *feedList) :
 
 void AllNewsFeedItem::onFeedAdded(ListItem* item)
 {
+    // TODO:
     // When a feed is added to all news, we need to append the items and update the unread count
+    
+    Q_UNUSED(item);
 }
 
 void AllNewsFeedItem::onFeedRemoved(ListItem* item)
@@ -56,11 +59,3 @@ void AllNewsFeedItem::onFeedItemDataChanged()
    // emit dataChanged();
 }
 
-void AllNewsFeedItem::setBookmark(NewsItem *item, bool signal)
-{
-    qDebug() << "All news setting bookmark to: " << item->getTitle();
-    
-    
-    // Set this feed's bookmark.
-    FeedItem::setBookmark(item, signal);
-}

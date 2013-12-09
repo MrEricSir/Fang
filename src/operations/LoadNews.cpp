@@ -4,14 +4,20 @@
 LoadNews::LoadNews(QObject *parent, FeedItem* feedItem, LoadMode mode, int loadLimit) :
     DBOperation(IMMEDIATE, parent),
     feedItem(feedItem),
-    newsList(NULL),
-    bookmark(NULL),
+    listAppend(NULL),
+    listPrepend(NULL),
     mode(mode),
-     loadLimit(loadLimit)
+    loadLimit(loadLimit)
 {
 }
 
-void LoadNews::queryToNewsList(QSqlQuery& query)
+LoadNews::~LoadNews()
+{
+    delete listAppend;
+    delete listPrepend;
+}
+
+void LoadNews::queryToNewsList(QSqlQuery& query, QList<NewsItem*>* list)
 {
     while (query.next()) {
         // Load from DB query result.
@@ -26,23 +32,53 @@ void LoadNews::queryToNewsList(QSqlQuery& query)
                     query.value("url").toString()
                     );
         
-        // Add to our temporary list.
-        newsList->append(newsItem);
-        
-        // Remember if we found the bookmark.
-        if (newsItem->getDbID() == feedItem->getBookmarkID())
-            bookmark = newsItem;
+        // Add to our list.
+        list->append(newsItem);
     }
+}
+
+qint64 LoadNews::getBookmarkID()
+{
+    QSqlQuery query(db());
+    query.prepare("SELECT bookmark_id FROM FeedItemTable WHERE id = :id");
+    query.bindValue(":id", feedItem->getDbId());
+    
+    if (!query.exec() || !query.next()) {
+       qDebug() << "Could not update bookmark for feed id: " << feedItem->getDbId();
+       qDebug() << query.lastError();
+       
+       return -1;
+    }
+    
+    return query.value("bookmark_id").toULongLong();
 }
 
 bool LoadNews::doAppend(qint64 startId)
 {
-    return executeLoadQuery(startId, true);
+    // Extract the query into our news list.
+    listAppend = new QList<NewsItem*>();
+    bool ret = executeLoadQuery(startId, true);
+    
+    if (listAppend->size() == 0) {
+        delete listAppend;
+        listAppend = NULL;
+    }
+    
+    return ret;
 }
 
 bool LoadNews::doPrepend(qint64 startId)
 {
-    return executeLoadQuery(startId, false);
+    // Extract the query into our news list.
+    listPrepend = new QList<NewsItem*>();
+    bool ret = executeLoadQuery(startId, false);
+    
+    if (listPrepend->size() == 0) {
+        delete listPrepend;
+        listPrepend = NULL;
+    }
+    
+    return ret;
 }
 
 bool LoadNews::executeLoadQuery(qint64 startId, bool append)
@@ -68,7 +104,7 @@ bool LoadNews::executeLoadQuery(qint64 startId, bool append)
     }
     
     // Extract the query into our news list.
-    queryToNewsList(query);
+    queryToNewsList(query, append ? listAppend : listPrepend);
     
     return true;
 }
@@ -87,16 +123,17 @@ void LoadNews::execute()
     if (mode == LoadNews::Initial)
         Q_ASSERT(feedItem->getNewsList() != NULL || feedItem->getNewsList()->isEmpty());
     
-    // Create our list of news.
-    newsList = new QList<NewsItem*>();
-    
     // DB query/ies.
     bool dbResult = true;
+    qint64 bookmarkID = -1;
     switch (mode) {
     case Initial:
     {
-        qint64 startId = feedItem->getBookmarkID();
+        qint64 startId = getBookmarkID();
         if (startId > 0) {
+            // We has a bookmark, yo.
+            bookmarkID = startId;
+            
             // We have a bookmark, so try to load previous items.
             dbResult &= doPrepend(startId);
             
@@ -107,6 +144,8 @@ void LoadNews::execute()
         
         // Load next items, if available.
         dbResult &= doAppend(startId);
+        
+        
         
         break;
     }
@@ -122,7 +161,7 @@ void LoadNews::execute()
         qDebug() << "Append from " << startId;
         dbResult &= doAppend(startId);
         
-        qDebug() << "Adding: " << newsList->size();
+        qDebug() << "Adding: " << listAppend->size();
         
         break;
     }
@@ -151,17 +190,26 @@ void LoadNews::execute()
         return;
     }
     
-    // Update list with our items.
-    foreach (NewsItem* newsItem, *newsList) {
-        if (mode != Prepend)
+    // Append/prepend items from our lists.
+    if (listAppend != NULL)
+        foreach (NewsItem* newsItem, *listAppend)
             feedItem->getNewsList()->append(newsItem);
-        else
-            feedItem->getNewsList()->prepend(newsItem);
-    }
     
-    // Set the bookmark if we found it.
-    if (bookmark != NULL)
-        feedItem->setBookmark(bookmark, false);
+    if (listPrepend != NULL)
+        foreach (NewsItem* newsItem, *listPrepend)
+            feedItem->getNewsList()->prepend(newsItem);
+    
+    // If we have a bookmark, find it and set it.
+    if (bookmarkID > 0) {
+        foreach (NewsItem* newsItem, *feedItem->getNewsList()) {
+            // Oh, is this the bookmark?  Rad!
+            if (newsItem->getDbID() == bookmarkID) {
+                feedItem->setBookmark(newsItem);
+                
+                break;
+            }
+        }
+    }
     
     // we r dun lol
     emit finished(this);
