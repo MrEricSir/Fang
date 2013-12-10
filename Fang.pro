@@ -53,7 +53,8 @@ SOURCES += src/main.cpp \
     src/models/WebInteractor.cpp \
     src/operations/LoadNews.cpp \
     src/utilities/RawFeedRewriter.cpp \
-    src/operations/LoadAllNewsOperation.cpp
+    src/operations/LoadAllNewsOperation.cpp \
+    src/utilities/UnreadCountReader.cpp
 
 # Installation path
 # target.path =
@@ -108,4 +109,5 @@ HEADERS += \
     src/models/WebInteractor.h \
     src/operations/LoadNews.h \
     src/utilities/RawFeedRewriter.h \
-    src/operations/LoadAllNewsOperation.h
+    src/operations/LoadAllNewsOperation.h \
+    src/utilities/UnreadCountReader.h

@@ -2,6 +2,7 @@
 #include <QDebug>
 
 #include "../models/AllNewsFeedItem.h"
+#include "../utilities/UnreadCountReader.h"
 
 SetBookmarkOperation::SetBookmarkOperation(QObject *parent, FeedItem* feed, NewsItem* bookmarkItem) :
     DBOperation(IMMEDIATE, parent),
@@ -31,6 +32,9 @@ void SetBookmarkOperation::execute()
         
         // TODO error signal.
     }
+    
+    // Update unread count.
+    UnreadCountReader::update(db(), feed);
     
     emit finished(this);
 }

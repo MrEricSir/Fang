@@ -5,6 +5,7 @@
 
 #include "../models/NewsItem.h"
 #include "../models/AllNewsFeedItem.h"
+#include "../utilities/UnreadCountReader.h"
 
 LoadAllFeedsOperation::LoadAllFeedsOperation(QObject *parent, ListModel *feedList) :
     DBOperation(BACKGROUND, parent),
@@ -44,6 +45,13 @@ void LoadAllFeedsOperation::execute()
                     );
         
         tempFeedItemList.append(item);
+    }
+    
+    // Update the unread count of each feed.
+    allNews->setUnreadCount(UnreadCountReader::forAllNews(db()));
+    foreach(ListItem* li, tempFeedItemList) {
+        FeedItem* item = qobject_cast<FeedItem*>(li);
+        item->setUnreadCount(UnreadCountReader::forFeed(db(), item->getDbId()));
     }
     
     // Finally, put All News at the front and throw everything into the feed list.

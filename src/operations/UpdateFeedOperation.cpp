@@ -4,6 +4,7 @@
 
 #include "../utilities/Utilities.h"
 #include "../models/AllNewsFeedItem.h"
+#include "../utilities/UnreadCountReader.h"
 
 UpdateFeedOperation::UpdateFeedOperation(QObject *parent, FeedItem *feed, RawFeed* rawFeed) :
     DBOperation(BACKGROUND, parent),
@@ -157,6 +158,9 @@ void UpdateFeedOperation::onRewriterFinished()
         // Store the DB id for the next loop.
         rawNews->dbId = query.lastInsertId().toLongLong();
     }
+    
+    // Update unread count.
+    UnreadCountReader::update(db(), feed);
     
     db().commit(); // Done with db!
     
