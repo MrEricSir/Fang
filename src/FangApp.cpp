@@ -71,6 +71,18 @@ FeedItem* FangApp::getFeed(int index) {
     return (FeedItem*) item;
 }
 
+FeedItem *FangApp::getFeedForID(qint64 dbID)
+{
+    for (int i = 0; i < feedList->rowCount(); i++) {
+         FeedItem* item = qobject_cast<FeedItem*>(feedList->row(i));
+         if (item != NULL && item->getDbId() == dbID)
+             return item;
+    }
+    
+    qDebug() << "Um, we didn't find a feed for id: " << dbID;
+    return NULL; // oops, we didn't find it!
+}
+
 void FangApp::onViewerStatusChanged(QDeclarativeView::Status status)
 {
     if (status != QDeclarativeView::Ready)

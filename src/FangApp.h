@@ -23,8 +23,19 @@ public:
     
     void init();
     
-    // Returns the feed for the given index from 0..feedCount
+    /**
+     * @brief Returns the feed for a given index in the global feed list.
+     * @param index   0..n-1 position in feed list
+     * @return        The associated FeedItem object, or null if invalid
+     */
     FeedItem *getFeed(int index);
+    
+    /**
+     * @brief Returns the feed associated with a given ID.
+     * @param dbID   Database ID of feed.
+     * @return       The associated FeedItem object, or null if invalid.
+     */
+    FeedItem* getFeedForID(qint64 dbID);
     
     static FangApp *instance();
 signals:

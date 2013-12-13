@@ -161,7 +161,7 @@ void LoadNews::execute()
         qDebug() << "Append from " << startId;
         dbResult &= doAppend(startId);
         
-        qDebug() << "Adding: " << listAppend->size();
+        qDebug() << "Adding: " << (listAppend != NULL ? listAppend->size() : 0);
         
         break;
     }

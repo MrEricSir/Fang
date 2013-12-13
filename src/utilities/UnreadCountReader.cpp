@@ -8,7 +8,7 @@ UnreadCountReader::UnreadCountReader()
 
 void UnreadCountReader::update(QSqlDatabase db, FeedItem *feed)
 {
-    if (feed->getDbId())
+    if (feed->getDbId() >= 0)
         feed->setUnreadCount(forFeed(db, feed->getDbId()));
     else
         feed->setUnreadCount(forAllNews(db));

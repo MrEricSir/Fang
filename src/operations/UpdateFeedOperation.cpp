@@ -5,6 +5,7 @@
 #include "../utilities/Utilities.h"
 #include "../models/AllNewsFeedItem.h"
 #include "../utilities/UnreadCountReader.h"
+#include "../FangApp.h"
 
 UpdateFeedOperation::UpdateFeedOperation(QObject *parent, FeedItem *feed, RawFeed* rawFeed) :
     DBOperation(BACKGROUND, parent),
@@ -159,8 +160,9 @@ void UpdateFeedOperation::onRewriterFinished()
         rawNews->dbId = query.lastInsertId().toLongLong();
     }
     
-    // Update unread count.
+    // Update unread count & All News's unread count.
     UnreadCountReader::update(db(), feed);
+    UnreadCountReader::update(db(), FangApp::instance()->getFeed(0));
     
     db().commit(); // Done with db!
     
