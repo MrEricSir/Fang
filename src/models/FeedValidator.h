@@ -5,6 +5,8 @@
 #include <QObject>
 #include <QUrl>
 #include <QWebPage>
+#include <QWebElement>
+#include <QWebFrame>
 
 #include "../parser/Parser.h"
 #include "FeedItem.h"

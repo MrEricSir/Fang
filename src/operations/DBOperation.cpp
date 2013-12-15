@@ -1,8 +1,8 @@
 #include "DBOperation.h"
 #include "../db/DB.h"
 
-DBOperation::DBOperation(QObject *parent) :
-    Operation(parent)
+DBOperation::DBOperation(PriorityLevel priority, QObject *parent) :
+    Operation(priority, parent)
 {
 }
 

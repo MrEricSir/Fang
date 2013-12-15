@@ -2,7 +2,7 @@
 #define UPDATEFEEDOPERATION_H
 
 #include "DBOperation.h"
-#include "../utilities/RawFeedImageSizeRewriter.h"
+#include "../utilities/RawFeedRewriter.h"
 #include "../parser/BackgroundParser.h"
 #include "../models/FeedItem.h"
 #include "../models/NewsItem.h"
@@ -11,6 +11,10 @@
  * @brief Updates a feed.
  * If a feed has already been downloaded and parsed, it can be supplied
  * directly to the constructor.
+ *
+ * VERY IMPORTANT NOTE: When using this class, please note that it is non-reentrant on a per-feed basis.
+ *                      In other words, it's safe to call on feed x and y simultaneously, but not on
+ *                      feed x and feed x at the same time.  Bad shit will happen, man.  Don't blame me.
  */
 class UpdateFeedOperation : public DBOperation
 {
@@ -29,6 +33,9 @@ public:
 signals:
     
 public slots:
+    /**
+     * @brief VERY IMPORTANT NOTE: Non re-entrant per-feed (see above.)
+     */
     virtual void execute();
     
 private slots:
@@ -52,7 +59,7 @@ private:
     FeedItem *feed;
     RawFeed* rawFeed;
     bool wasDestroyed;
-    RawFeedImageSizeRewriter rewriter;
+    RawFeedRewriter rewriter;
     QList<RawNews*> newsList;
 };
 

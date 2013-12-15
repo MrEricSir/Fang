@@ -9,11 +9,8 @@
 #include "operations/LoadAllFeedsOperation.h"
 #include "operations/AddFeedOperation.h"
 #include "operations/RemoveFeedOperation.h"
-#include "operations/SetBookmarkOperation.h"
 #include "operations/FaviconUpdateOperation.h"
 #include "operations/UpdateTitleOperation.h"
-
-#include "models/ScrollReader.h"
 
 FangApp* FangApp::_instance = NULL;
 
@@ -21,9 +18,10 @@ FangApp::FangApp(QObject *parent, FangApplicationViewer* viewer) :
     QObject(parent),
     viewer(viewer),
     manager(this),
-    newsWeb(),
     currentFeed(NULL),
-    loadAllFinished(false)
+    loadAllFinished(false),
+    fangSettings(NULL),
+    interactor(NULL)
 {
     Q_ASSERT(_instance == NULL);
     _instance = this;
@@ -38,8 +36,6 @@ FangApp::FangApp(QObject *parent, FangApplicationViewer* viewer) :
     
     connect(&manager, SIGNAL(operationFinished(Operation*)),
                      this, SLOT(onOperationFinished(Operation*)));
-    
-    connect(&newsWeb, SIGNAL(ready()), this, SLOT(onNewsWebReady()));
     
     connect(feedList, SIGNAL(added(ListItem*)), this, SLOT(onFeedAdded(ListItem*)));
     connect(feedList, SIGNAL(removed(ListItem*)), this, SLOT(onFeedRemoved(ListItem*)));
@@ -71,33 +67,45 @@ FeedItem* FangApp::getFeed(int index) {
         
         return NULL;
     }
-                                //.data();
+    
     return (FeedItem*) item;
+}
+
+FeedItem *FangApp::getFeedForID(qint64 dbID)
+{
+    for (int i = 0; i < feedList->rowCount(); i++) {
+         FeedItem* item = qobject_cast<FeedItem*>(feedList->row(i));
+         if (item != NULL && item->getDbId() == dbID)
+             return item;
+    }
+    
+    qDebug() << "Um, we didn't find a feed for id: " << dbID;
+    return NULL; // oops, we didn't find it!
 }
 
 void FangApp::onViewerStatusChanged(QDeclarativeView::Status status)
 {
-    if (status == QDeclarativeView::Ready) {
-        QDeclarativeWebView *webView = viewer->rootObject()->findChild<QDeclarativeWebView*>("newsView");
-        ScrollReader *scrollReader = viewer->rootObject()->findChild<ScrollReader*>("newsViewScrollReader");
-        FangSettings *fangSettings = viewer->rootObject()->findChild<FangSettings*>("fangSettings");
-        if (webView == NULL || scrollReader == NULL || fangSettings == NULL) {
-            qDebug() << "Could not find objects: " << webView << " " << scrollReader;
-            
-            return;
-        }
+    if (status != QDeclarativeView::Ready)
+        return;
+    
+    // OH! We're ready! Well I'll be damned. Grab all the stuff from 
+    interactor = viewer->rootObject()->findChild<WebInteractor*>("webInteractor");
+    fangSettings = viewer->rootObject()->findChild<FangSettings*>("fangSettings");
+    
+    // Do a sanity check.
+    if (interactor == NULL || fangSettings == NULL) {
+        qDebug() << "Could not find QML objects!!!11";
         
-        if (!newsWeb.isReady())
-            newsWeb.init(webView, scrollReader, fangSettings, getPlatform()); // Start the news!
+        return;
     }
+    
+    // Init interactor with Mr. Manager.
+    interactor->init(&manager);
 }
 
 void FangApp::onWindowResized()
 {
-    if (currentFeed == NULL || !newsWeb.isReady())
-        return;
-    
-    newsWeb.forceRefresh();
+
 }
 
 void FangApp::onOperationFinished(Operation *operation)
@@ -134,31 +142,9 @@ void FangApp::onFeedRemoved(ListItem * listItem)
     }
 }
 
-void FangApp::onNewsWebReady()
-{
-    displayFeed();
-}
-
-void FangApp::onNewsItemBookmarked(NewsItem *item)
-{
-    manager.add(new SetBookmarkOperation(&manager, item->getFeed(), item));
-    qDebug() << "Item bookmarked: " << item->getTitle();
-}
-
 void FangApp::onFeedSelected(ListItem* _item) {
     FeedItem* item = qobject_cast<FeedItem *>(_item);
-    if (item != NULL) {
-        if (currentFeed != NULL)
-            currentFeed->setIsCurrent(false);
-        
-        setCurrentFeed(item);
-        
-        // Connex0r the signals.
-        //qDebug() << "Selected: " << feed->getTitle();
-    } else {
-        // How did this happen?!
-        setCurrentFeed(NULL);
-    }
+    setCurrentFeed(item);
 }
 
 void FangApp::connectFeed(FeedItem *feed)
@@ -175,38 +161,22 @@ void FangApp::onLoadAllFinished(Operation *op)
 {
     Q_UNUSED(op);
     loadAllFinished = true;
-    displayFeed();
+    
+    // TODO: It used to be necessary to call displayFeed() here.  Is it still?
 }
 
-// Note: newsWeb MUST be ready and currentFeed MUST not be null and the LoadAll operation MUST
-// be finished before this operation can do jack.  Got that?  Well, do ya punk?
 void FangApp::displayFeed()
 {
-    if (currentFeed == NULL || !newsWeb.isReady() || !loadAllFinished)
-        return;
-    
-    if (newsWeb.getCurrentFeed() != currentFeed)
-        currentFeed->setIsCurrent(true);
-    
-    newsWeb.setFeed(currentFeed);
+    if (currentFeed != NULL)
+        interactor->setFeed(currentFeed);
 }
 
 void FangApp::setCurrentFeed(FeedItem *feed)
 {
-    // Disconnect signals.
-    if (currentFeed != NULL) {
-        disconnect(currentFeed, SIGNAL(bookmarkChanged(NewsItem*)),
-                   this, SLOT(onNewsItemBookmarked(NewsItem*)));
-    }
+    qDebug() << "You've set the feed to "<< (feed != NULL ? feed->getTitle() : "(null)");
     
     currentFeed = feed;
     displayFeed();
-    
-    // Connect signals.
-    if (currentFeed != NULL) {
-        connect(currentFeed, SIGNAL(bookmarkChanged(NewsItem*)),
-                this, SLOT(onNewsItemBookmarked(NewsItem*)));
-    }
 }
 
 void FangApp::onFeedTitleChanged()

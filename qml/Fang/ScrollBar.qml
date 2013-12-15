@@ -60,6 +60,8 @@ Item {
             to: "inactive"
             // Fade out
             NumberAnimation {
+                id: fadeOut
+                
                 target: slider
                 properties: "opacity"
                 to: 0
@@ -73,6 +75,8 @@ Item {
             
             // Fade in
             NumberAnimation {
+                id: fadeIn
+                
                 target: slider
                 properties: "opacity"
                 to: 1.0
@@ -178,7 +182,7 @@ Item {
                     drag.minimumY: 0
                     drag.maximumY: track.height - parent.height
                     
-                    enabled: scrollBar.state == "active"
+                    enabled: scrollBar.state == "active" || fadeOut.running || fadeIn.running
                     
                     onPositionChanged: {
                         if (pressedButtons == Qt.LeftButton) {

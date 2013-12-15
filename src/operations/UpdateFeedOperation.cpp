@@ -4,9 +4,11 @@
 
 #include "../utilities/Utilities.h"
 #include "../models/AllNewsFeedItem.h"
+#include "../utilities/UnreadCountReader.h"
+#include "../FangApp.h"
 
 UpdateFeedOperation::UpdateFeedOperation(QObject *parent, FeedItem *feed, RawFeed* rawFeed) :
-    DBOperation(parent),
+    DBOperation(BACKGROUND, parent),
     parser(),
     feed(feed),
     rawFeed(rawFeed),
@@ -74,10 +76,23 @@ void UpdateFeedOperation::onFeedFinished()
     // Sort the list oldest to newest.
     qSort(rawFeed->items.begin(), rawFeed->items.end(), RawNews::LessThan);
     
-    // Look for the newest feed we know about.
-    QDateTime newestLocalNews = QDateTime::fromMSecsSinceEpoch(0);
-    if (feed->getNewsList()->size() > 0)
-        newestLocalNews = feed->getNewsList()->last()->getTimestamp();
+    // Check for the newest news item that we know about.
+    QDateTime newestLocalNews = QDateTime::fromMSecsSinceEpoch(0); // default to epoch
+    QSqlQuery query(db());
+    query.prepare("SELECT timestamp FROM NewsItemTable WHERE feed_id = :feed_id ORDER BY timestamp DESC LIMIT 1");
+    query.bindValue(":feed_id", feed->getDbId());
+    if (!query.exec()) {
+        qDebug() << "Error: Could not read news timestamp";
+        qDebug() << "SQL error: " << query.lastError().text();
+        
+        // TODO error signal.
+        emit finished(this);
+        
+        return;
+    }
+    
+    if (query.next())
+        newestLocalNews = QDateTime::fromMSecsSinceEpoch(query.value("timestamp").toLongLong());
     
     // Check if we really need to update by comparing the dates of the most recent news items.
     QDateTime newestNewNews = rawFeed->items.last()->timestamp;
@@ -145,23 +160,14 @@ void UpdateFeedOperation::onRewriterFinished()
         rawNews->dbId = query.lastInsertId().toLongLong();
     }
     
+    // Update unread count & All News's unread count.
+    UnreadCountReader::update(db(), feed);
+    UnreadCountReader::update(db(), FangApp::instance()->getFeed(0));
+    
     db().commit(); // Done with db!
     
-    // Update data model.
-    foreach (RawNews* rawNews, newsList) {
-        feed->append(
-                    new NewsItem(feed,
-                                 rawNews->dbId,
-                                 rawNews->title,
-                                 rawNews->author,
-                                 rawNews->description,
-                                 rawNews->content,
-                                 rawNews->timestamp,
-                                 rawNews->url
-                                 ));
-    }
+    // TODO: update unread count
     
-    // TODO: Update DB.
     emit finished(this);
 }
 

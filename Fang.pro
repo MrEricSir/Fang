@@ -30,8 +30,6 @@ SOURCES += src/main.cpp \
     src/operations/Operation.cpp \
     src/operations/UpdateFeedOperation.cpp \
     src/utilities/Utilities.cpp \
-    src/models/FangWebView.cpp \
-    src/models/NewsWeb.cpp \
     src/operations/LoadAllFeedsOperation.cpp \
     src/db/DB.cpp \
     src/models/MouseWheelArea.cpp \
@@ -40,7 +38,6 @@ SOURCES += src/main.cpp \
     src/operations/AddFeedOperation.cpp \
     src/operations/RemoveFeedOperation.cpp \
     src/utilities/FaviconGrabber.cpp \
-    src/models/ScrollReader.cpp \
     src/operations/SetBookmarkOperation.cpp \
     src/utilities/WebPageGrabber.cpp \
     src/operations/FaviconUpdateOperation.cpp \
@@ -48,12 +45,16 @@ SOURCES += src/main.cpp \
     src/models/AllNewsFeedItem.cpp \
     src/utilities/WebImageSizeRewriter.cpp \
     src/utilities/ImageGrabber.cpp \
-    src/utilities/RawFeedImageSizeRewriter.cpp \
     src/operations/UpdateTitleOperation.cpp \
     src/parser/ParserInterface.cpp \
     src/parser/BackgroundParser.cpp \
     src/parser/BackgroundParserThread.cpp \
-    src/models/FangSettings.cpp
+    src/models/FangSettings.cpp \
+    src/models/WebInteractor.cpp \
+    src/operations/LoadNews.cpp \
+    src/utilities/RawFeedRewriter.cpp \
+    src/operations/LoadAllNewsOperation.cpp \
+    src/utilities/UnreadCountReader.cpp
 
 # Installation path
 # target.path =
@@ -66,7 +67,9 @@ OTHER_FILES += \
     qml/Fang/FeedTitleDelegate.qml \
     html/NewsPage.html \
     sql/1.sql \
-    qml/Fang/SidebarButton.qml
+    qml/Fang/SidebarButton.qml \
+    html/jquery-2.0.3.js \
+    html/fang.js
 
 RESOURCES += \
     Resources.qrc
@@ -83,8 +86,6 @@ HEADERS += \
     src/operations/Operation.h \
     src/operations/UpdateFeedOperation.h \
     src/utilities/Utilities.h \
-    src/models/FangWebView.h \
-    src/models/NewsWeb.h \
     src/operations/LoadAllFeedsOperation.h \
     src/db/DB.h \
     src/models/MouseWheelArea.h \
@@ -93,7 +94,6 @@ HEADERS += \
     src/operations/AddFeedOperation.h \
     src/operations/RemoveFeedOperation.h \
     src/utilities/FaviconGrabber.h \
-    src/models/ScrollReader.h \
     src/operations/SetBookmarkOperation.h \
     src/utilities/WebPageGrabber.h \
     src/operations/FaviconUpdateOperation.h \
@@ -101,9 +101,13 @@ HEADERS += \
     src/models/AllNewsFeedItem.h \
     src/utilities/WebImageSizeRewriter.h \
     src/utilities/ImageGrabber.h \
-    src/utilities/RawFeedImageSizeRewriter.h \
     src/operations/UpdateTitleOperation.h \
     src/parser/ParserInterface.h \
     src/parser/BackgroundParser.h \
     src/parser/BackgroundParserThread.h \
-    src/models/FangSettings.h
+    src/models/FangSettings.h \
+    src/models/WebInteractor.h \
+    src/operations/LoadNews.h \
+    src/utilities/RawFeedRewriter.h \
+    src/operations/LoadAllNewsOperation.h \
+    src/utilities/UnreadCountReader.h

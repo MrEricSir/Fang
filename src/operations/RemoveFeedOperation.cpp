@@ -4,7 +4,7 @@
 #include <QThread>
 
 RemoveFeedOperation::RemoveFeedOperation(QObject *parent, FeedItem* feed, ListModel *feedList) :
-    DBOperation(parent),
+    DBOperation(IMMEDIATE, parent),
     feed(feed),
     feedList(feedList)
 {

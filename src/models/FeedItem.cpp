@@ -13,10 +13,10 @@ FeedItem::FeedItem(QObject *parent) :
     url(),
     siteURL(),
     imageURL(),
-    bookmark(NULL),
     newsList(NULL),
     isUpdating(false),
-    isCurrent(false)
+    unreadCount(0),
+    bookmark(NULL)
     
 {
     newsList = new QList<NewsItem*>();
@@ -24,7 +24,7 @@ FeedItem::FeedItem(QObject *parent) :
 
 FeedItem::FeedItem(qint64 id, const QString &title, const QString &subtitle, const QDateTime &lastUpdated,
                    quint32 minutesToUpdate, const QUrl &url, const QUrl& siteURL, const QUrl &imageURL,
-                   NewsItem* bookmark, QObject* parent) :
+                   QObject* parent) :
     ListItem(parent),
     _id(id),
     title(title),
@@ -34,10 +34,10 @@ FeedItem::FeedItem(qint64 id, const QString &title, const QString &subtitle, con
     url(url),
     siteURL(siteURL),
     imageURL(imageURL),
-    bookmark(bookmark),
     newsList(NULL),
     isUpdating(false),
-    isCurrent(false)
+    unreadCount(0),
+    bookmark(NULL)
 {
     newsList = new QList<NewsItem*>();
 }
@@ -105,23 +105,6 @@ void FeedItem::setIsUpdating(bool isUpdating)
     emit dataChanged();
 }
 
-quint32 FeedItem::getUnreadCount() const
-{
-    if (bookmark == NULL)
-        return newsList->size();
-    
-    int index = newsList->indexOf(bookmark);
-    if (index < 0)
-        return newsList->size();
-    
-    int ret = newsList->size() - index - 1;
-    
-    if (ret < 0)
-        return 0;
-    
-    return ret;
-}
-
 void FeedItem::setImageURL(const QUrl &url)
 {
     if (imageURL == url)
@@ -175,7 +158,7 @@ bool FeedItem::canBookmark(NewsItem *item)
     return newBookmarkIndex > currentBookmarkIndex;
 }
 
-void FeedItem::setBookmark(NewsItem *item, bool signal)
+void FeedItem::setBookmark(NewsItem *item)
 {
     if (item != NULL)
         Q_ASSERT(newsList->contains(item));
@@ -187,32 +170,12 @@ void FeedItem::setBookmark(NewsItem *item, bool signal)
         return; // Shouldn't have called this method, sir.
     
     bookmark = item;
-    
-    if (signal) {
-        emit bookmarkChanged(bookmark);
-        emit dataChanged();
-    }
+    emit dataChanged();
 }
 
-void FeedItem::setIsCurrent(bool current)
+void FeedItem::setUnreadCount(qint32 unreadCount)
 {
-    isCurrent = current;
-}
-
-void FeedItem::setVisibleItems(NewsItem *first, NewsItem *last, bool atBottom)
-{
-    Q_UNUSED(last);
+    this->unreadCount = unreadCount;
     
-    if (newsList->count() == 0)
-        return; // Nothing to bookmark.
-    
-    if (atBottom) {
-        // Bookmark the last item.
-        //qDebug() << "setVisibleItems Bottom bookmark yo";
-        setBookmark(newsList->last());
-    } else if (first != NULL) {
-        // Bookmark the first item.
-        //qDebug() << "setVisibleItems Bookmark first visible item: " << first->getTitle();
-        setBookmark(first);
-    }
+    emit dataChanged();
 }

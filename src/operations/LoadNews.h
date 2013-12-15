@@ -1,0 +1,107 @@
+#ifndef LOADNEWS_H
+#define LOADNEWS_H
+
+#include <QObject>
+#include <QList>
+
+#include "DBOperation.h"
+#include "../models/FeedItem.h"
+#include "../models/NewsItem.h"
+
+/**
+ * @brief Loads a batch of NewsItems.
+ */
+class LoadNews : public DBOperation
+{
+    Q_OBJECT
+public:
+    
+    enum LoadMode {
+        Initial = 0,  // Loads loadLimit items from the bookmark, plus loadlimit items above bookmark
+        Append,       // Appends loadLimit items (load next)
+        Prepend       // Prepends loadLimit items (load previous)
+    };
+    
+    /**
+     * @param parent    The manager
+     * @param feedItem  The feed item to grab
+     * @param mode      Type of load operation (see above)
+     * @param loadLimit Max number of news items to load
+     */
+    explicit LoadNews(QObject *parent, FeedItem* feedItem, LoadMode mode, int loadLimit = 15);
+    
+    virtual ~LoadNews();
+    
+public slots:
+    virtual void execute();
+    
+    /**
+     * @return The Feed associated with this load.
+     */
+    inline FeedItem* getFeedItem() { return feedItem; }
+    
+    /**
+     * @return Returns the operational mode.
+     */
+    inline LoadMode getMode() { return mode; }
+    
+    /**
+     * @return List of items that this load appended.
+     */
+    inline QList<NewsItem*>* getAppendList() { return listAppend; }
+    
+    /**
+     * @return List of items that this load prepended.
+     */
+    inline QList<NewsItem*>* getPrependList() { return listPrepend; }
+    
+    /**
+     * @return Max number of items to load (specified as loadLimit in constructor.)
+     */
+    inline int getLoadLimit() { return loadLimit; }
+    
+protected slots:
+    
+    /**
+     * @brief Extracts news items from a database query.
+     * @param query  Database query containing zero or more News Items.
+     * @param list   The list of items items we just created.
+     */
+    void queryToNewsList(QSqlQuery& query, QList<NewsItem*>* list);
+    
+    
+    /**
+     * @brief Call this during the initial load of a feed.
+     *@ return id of feed's bookmark.
+     */
+    qint64 getBookmarkID();
+    
+private slots:
+    
+    bool doAppend(qint64 startId);
+    
+    bool doPrepend(qint64 startId);
+    
+    bool executeLoadQuery(qint64 startId, bool append);
+    
+protected:
+    // Feed we're adding to.
+    FeedItem* feedItem;
+    
+    // List of items we appended.
+    QList<NewsItem*>* listAppend;
+    
+    // List of items we prepended.
+    QList<NewsItem*>* listPrepend;
+    
+private:
+    
+    // True if we're appending.
+    LoadMode mode;
+    
+    // Max # of news items to add.
+    int loadLimit;
+    
+};
+
+#endif // LOADNEWS_H

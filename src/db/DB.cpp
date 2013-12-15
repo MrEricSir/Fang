@@ -43,6 +43,7 @@ void DB::init()
     QFile dbFile(sDir + "/fang.sqlite");
     _db = QSqlDatabase::addDatabase("QSQLITE");
     _db.setDatabaseName(dbFile.fileName());
+    qDebug() << "DB filename: " << dbFile.fileName();
     if (!_db.open()) {
         qDebug() << "Could not create database.";
         return;

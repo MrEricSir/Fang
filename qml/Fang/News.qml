@@ -1,17 +1,13 @@
 import QtQuick 1.1
+import QtWebKit 1.0
 import Fang 1.0
 
 Item {
     id: news
     
-    // Forces the web view to be repainted (but not refresh!)
-    function forceRefresh() {
-        newsViewScrollReader.forceRefresh();
-    }
-    
-    // Jump to the current bookmark.
+    // Used by main for double clicking on feed titles.
     function jumpToBookmark() {
-        newsViewScrollReader.jumpToBookmark();
+        webInteractor.jumpToBookmark();
     }
     
     Item {
@@ -27,42 +23,142 @@ Item {
             width: parent.width
             anchors.fill: parent
             contentWidth: Math.max(parent.width, newsView.width)
-            contentHeight: Math.max(parent.height, newsView.height + bottomRect.height)
+            contentHeight: Math.max(parent.height, newsView.height)
             
             flickableDirection: Flickable.VerticalFlick
             
-            ScrollReader {
-                id: newsViewScrollReader
-                objectName: "newsViewScrollReader" // MUST NOT CHANGE (used in C++)
+            // The "interactor" is what talks to the C++ layer.
+            WebInteractor {
+                id: webInteractor
+                objectName: "webInteractor" // Do not change!! PENALTY OF DEATH AND ELECTROCUTION
                 
-                // Grab the current contentY
-                contentY: newsFlickable.contentY
-                
-                // Used for jumping the view to a position.
-                onJumpYChanged: {
-                    if (jumpY < 0)
-                        return;
+                function onAdd(append, id, title, url, feedTitle, timestamp, content) {
+                    //console.log("You want ana append?", id)
                     
-                    newsFlickable.contentY = jumpY
-                    jumpY = -1; // reset / acknowledge
+                    newsView.evaluateJavaScript("appendNews("
+                                                + append + ", '"
+                                                + id + "', '"
+                                                + title + "', '"
+                                                + url + "', '"
+                                                + feedTitle + "', '"
+                                                + timestamp + "', '"
+                                                + content + "');");
+                }
+                
+                function onClear() {
+                    console.log("Clear!")
+                    newsView.evaluateJavaScript("clearNews();");
+                    newsFlickable.contentY = 0; // reset scroll
+                }
+                
+                function onJumpTo(id) {
+                    //console.log("jump!")
+                    newsView.evaluateJavaScript("jumpTo('" + id + "');");
+                }
+                
+                function onDrawBookmark(id) {
+                    //console.log("Draw bookmark: ", id)
+                    newsView.evaluateJavaScript("drawBookmark('" + id + "');");
+                }
+                
+                // Hook up signals.
+                Component.onCompleted: {
+                    add.connect(onAdd);
+                    clear.connect(onClear);
+                    jumpTo.connect(onJumpTo);
+                    drawBookmark.connect(onDrawBookmark);
                 }
             }
             
-            FangWebView {
+            // Web view for our HTML-based RSS display.
+            WebView {
                 id: newsView
-                objectName: "newsView" // MUST NOT CHANGE (used in C++)
+                
+                // Enable the web inspector by setting this to true.  You'll have to write-klik
+                // on the webview to use this handy-dandy feature.
+                property bool devMode: true
+                
+                function updateCSS() {
+                    newsView.evaluateJavaScript(
+                                "clearBodyClasses(); " +
+                                "addBodyClass('" + platform + "'); " +
+                                "addBodyClass('FONT_" + fangSettings.fontSize + "'); " +
+                                "addBodyClass('" + fangSettings.style + "');");
+                }
                 
                 preferredWidth: parent.parent.width
                 
                 focus: true
                 
+                url: "/html/NewsPage.html"
+                
+                javaScriptWindowObjects: QtObject {
+                    WebView.windowObjectName: "fang"
+                    
+                    function getScroll() {
+                        return newsFlickable.contentY;
+                    }
+                    
+                    function setScroll(y) {
+                        newsFlickable.contentY = y;
+                    }
+                    
+                    function addToScroll(y) {
+                        // Tell the mouse wheel to fuck off temporarily.
+                        wheelArea.active = false;
+                        
+                        newsFlickable.contentY += y;
+                        
+                        wheelArea.active = true;
+                    }
+                    
+                    function getHeight() {
+                        return newsFlickable.height;
+                    }
+                    
+                    function loadNext() {
+                        //sconsole.log("next!")
+                        webInteractor.loadNext();
+                    }
+                    
+                    function loadPrevious() {
+                        //console.log("prev!")
+                        webInteractor.loadPrevious();
+                    }
+                    
+                    function setBookmark(id) {
+                        //console.log("qml bookmark: ", id)
+                        webInteractor.setBookmark(id);
+                    }
+                }
+                
+                // Turn the inspek0r off and on.
+                settings.developerExtrasEnabled: devMode
                 MouseArea {
+                    enabled: !newsView.devMode
                     anchors.fill: parent
                     acceptedButtons: Qt.RightButton
                 }
                 
+                // Set style, and update when needed.
+                onLoadFinished: updateCSS()
+                Connections {
+                    target: fangSettings
+                    
+                    onFontSizeChanged: newsView.updateCSS()
+                    onStyleChanged: newsView.updateCSS()
+                }
+                
                 MouseWheelArea {
                     id: wheelArea
+                    
+                    // Disable this to stop the motion.
+                    property bool active: true
+                    
+                    onActiveChanged: {
+                        if (!active)
+                            wheelScrollAnimation.stop();
+                    }
                     
                     anchors.fill: parent
                     property double deltaY: 0
@@ -82,17 +178,6 @@ Item {
                         easing.type: Easing.OutQuad
                     }
                 }
-            }
-            
-            // Spacer to allow the final story to scroll all the way to the top of the window.
-            Item {
-                id: bottomRect
-                
-                // Height is set by the scroll utility.
-                height: newsViewScrollReader.bottomSpacer
-                
-                anchors.top: newsView.bottom
-                width: parent.width
             }
         }
     }

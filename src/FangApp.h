@@ -10,9 +10,9 @@
 #include "models/NewsItem.h"
 #include "models/FeedItem.h"
 #include "models/ListModel.h"
-#include "models/FangWebView.h"
+#include "models/FangSettings.h"
+#include "models/WebInteractor.h"
 #include "parser/Parser.h"
-#include "models/NewsWeb.h"
 
 
 class FangApp : public QObject
@@ -23,10 +23,19 @@ public:
     
     void init();
     
-    // Returns the feed for the given index from 0..feedCount
+    /**
+     * @brief Returns the feed for a given index in the global feed list.
+     * @param index   0..n-1 position in feed list
+     * @return        The associated FeedItem object, or null if invalid
+     */
     FeedItem *getFeed(int index);
     
-    inline NewsWeb* getNewsWeb() { return &newsWeb; }
+    /**
+     * @brief Returns the feed associated with a given ID.
+     * @param dbID   Database ID of feed.
+     * @return       The associated FeedItem object, or null if invalid.
+     */
+    FeedItem* getFeedForID(qint64 dbID);
     
     static FangApp *instance();
 signals:
@@ -58,10 +67,6 @@ private slots:
     void onFeedAdded(ListItem*);
     
     void onFeedRemoved(ListItem*);
-    
-    void onNewsWebReady();
-    
-    void onNewsItemBookmarked(NewsItem* item);
     
     void onFeedSelected(ListItem *item);
     
@@ -110,9 +115,10 @@ private:
     FangApplicationViewer* viewer;
     OperationManager manager;
     ListModel *feedList;
-    NewsWeb newsWeb;
     FeedItem* currentFeed;
     bool loadAllFinished;
+    FangSettings *fangSettings;
+    WebInteractor *interactor;
 };
 
 #endif // FANGAPP_H

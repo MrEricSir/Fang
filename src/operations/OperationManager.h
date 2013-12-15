@@ -23,8 +23,7 @@ signals:
 public slots:
     
     /**
-     * @brief Adds an operation to be performed in FIFO order.  Not guaranteed to be performed
-     * immediately.
+     * @brief Adds an operation.  Depending on the priority level, it may or may not start immediately.
      * @param operation
      */
     void add(Operation* operation);
@@ -47,6 +46,9 @@ private:
     
     // Executes the operation queue (at some point in the future.)
     void executeOperations();
+    
+    // Immediately runs an operation.
+    void runNow(Operation* operation);
     
     // Our queue.
     QQueue<Operation*> queue;

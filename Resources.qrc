@@ -48,5 +48,7 @@
         <file>qml/Fang/images/symbol_dark_rss.svg</file>
         <file>qml/Fang/images/symbol_dark_reload.svg</file>
         <file>qml/Fang/images/spinner_dark.gif</file>
+        <file>html/jquery-2.0.3.js</file>
+        <file>html/fang.js</file>
     </qresource>
 </RCC>

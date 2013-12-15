@@ -1,4 +1,5 @@
 <html>
+<head>
 <style>
 
 body {
@@ -27,6 +28,10 @@ body {
     border-radius: 0.35em;
     
     visibility: hidden; /* Don't show by default */
+}
+
+.bookmarked > .bookmark > .stripe {
+    visibility: visible;
 }
 
 .newsContainer > .content {
@@ -124,7 +129,7 @@ body.DARK > .newsContainer > .siteTitle, body.DARK > .newsContainer > .date { co
 body.DARK > .newsContainer > .divider { background-color: #888; }
 body.DARK > .newsContainer > h1, body.DARK > .newsContainer > h1 a { color: white; }
 
-body.DARK > .newsContainer > .bookmark > .stripe { background-color: #ce0000; }
+body.DARK > .newsContainer > .bookmark > .stripe  { background-color: #ce0000; }
 
 
 /**** Platforms ****/
@@ -145,8 +150,12 @@ body.FONT_LARGE > .newsContainer > .content { font-size: 16pt; }
 body.FONT_LARGE > .newsContainer > h1 { font-size: 26pt; }
 
 </style>
-<body>
 
+<script type="text/javascript" src="jquery-2.0.3.js"></script>
+<script type="text/javascript" src="fang.js"></script>
+
+</head>
+<body>
 
 <div class="newsContainer" id="model">
 

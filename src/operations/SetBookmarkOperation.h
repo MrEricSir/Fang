@@ -16,6 +16,10 @@ signals:
 public slots:
     virtual void execute();
     
+    inline FeedItem* getFeed() { return feed; }
+    
+    inline NewsItem* getBookmarkItem() { return bookmarkItem; }
+    
 private:
     FeedItem *feed;
     NewsItem* bookmarkItem;

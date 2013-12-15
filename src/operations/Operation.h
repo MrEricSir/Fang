@@ -9,9 +9,15 @@
 class Operation : public QObject
 {
     Q_OBJECT
-public:
+    
+ public:
+    enum PriorityLevel {
+        BACKGROUND,  // Will get queued up in the background
+        IMMEDIATE    // It's gotta happen now; or else!
+    };
+    
     // OperationManager is parent.
-    explicit Operation(QObject *parent = 0);
+    explicit Operation(PriorityLevel priority, QObject *parent = 0);
     
     /**
      * @brief All operations must clean up their memory.
@@ -31,6 +37,11 @@ public slots:
      * @brief Runs the operation.  When complete, finished() must be emitted.
      */
     virtual void execute() {}
+    
+    inline PriorityLevel getPriority() { return priority; }
+    
+private:
+    PriorityLevel priority;
 };
 
 #endif // OPERATION_H

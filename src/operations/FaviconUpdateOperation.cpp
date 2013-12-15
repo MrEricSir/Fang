@@ -2,7 +2,7 @@
 #include <QDebug>
 
 FaviconUpdateOperation::FaviconUpdateOperation(QObject *parent, FeedItem* feed) :
-    DBOperation(parent),
+    DBOperation(BACKGROUND, parent),
     feed(feed),
     grabber(),
     wasDestroyed(false)

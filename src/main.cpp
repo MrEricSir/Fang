@@ -7,20 +7,18 @@
 
 #include "FangApp.h"
 
-#include "models/FangWebView.h"
 #include "models/MouseWheelArea.h"
 #include "models/FeedValidator.h"
-#include "models/ScrollReader.h"
 #include "models/FangApplicationViewer.h"
 #include "models/FangSettings.h"
+#include "models/WebInteractor.h"
 
 Q_DECL_EXPORT int main(int argc, char *argv[])
 {
-    qmlRegisterType<QDeclarativeWebView>("Fang", 1, 0, "FangWebView");
     qmlRegisterType<MouseWheelArea>("Fang", 1, 0, "MouseWheelArea");
     qmlRegisterType<FeedValidator>("Fang", 1, 0, "FeedValidator");
-    qmlRegisterType<ScrollReader>("Fang", 1, 0, "ScrollReader");
     qmlRegisterType<FangSettings>("Fang", 1, 0, "FangSettings");
+    qmlRegisterType<WebInteractor>("Fang", 1, 0, "WebInteractor");
     
     QScopedPointer<QApplication> app(createApplication(argc, argv));
     app->setOrganizationName("EricSoft");
