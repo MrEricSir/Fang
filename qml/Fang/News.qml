@@ -1,5 +1,6 @@
-import QtQuick 1.1
-import QtWebKit 1.0
+import QtQuick 2.0
+import QtWebKit 3.0
+import QtWebKit.experimental 1.0
 import Fang 1.0
 
 Item {
@@ -17,81 +18,67 @@ Item {
         anchors.rightMargin: 16
         anchors.leftMargin: 12
         
-        Flickable {
-            id: newsFlickable
+        // The "interactor" is what talks to the C++ layer.
+        WebInteractor {
+            id: webInteractor
+            objectName: "webInteractor" // Do not change!! PENALTY OF DEATH AND ELECTROCUTION
             
-            width: parent.width
-            anchors.fill: parent
-            contentWidth: Math.max(parent.width, newsView.width)
-            contentHeight: Math.max(parent.height, newsView.height)
-            
-            flickableDirection: Flickable.VerticalFlick
-            
-            // The "interactor" is what talks to the C++ layer.
-            WebInteractor {
-                id: webInteractor
-                objectName: "webInteractor" // Do not change!! PENALTY OF DEATH AND ELECTROCUTION
-                
-                function onAdd(append, id, title, url, feedTitle, timestamp, content) {
-                    //console.log("You want ana append?", id)
-                    
-                    newsView.evaluateJavaScript("appendNews("
-                                                + append + ", '"
-                                                + id + "', '"
-                                                + title + "', '"
-                                                + url + "', '"
-                                                + feedTitle + "', '"
-                                                + timestamp + "', '"
-                                                + content + "');");
-                }
-                
-                function onClear() {
-                    console.log("Clear!")
-                    newsView.evaluateJavaScript("clearNews();");
-                    newsFlickable.contentY = 0; // reset scroll
-                }
-                
-                function onJumpTo(id) {
-                    //console.log("jump!")
-                    newsView.evaluateJavaScript("jumpTo('" + id + "');");
-                }
-                
-                function onDrawBookmark(id) {
-                    //console.log("Draw bookmark: ", id)
-                    newsView.evaluateJavaScript("drawBookmark('" + id + "');");
-                }
-                
-                // Hook up signals.
-                Component.onCompleted: {
-                    add.connect(onAdd);
-                    clear.connect(onClear);
-                    jumpTo.connect(onJumpTo);
-                    drawBookmark.connect(onDrawBookmark);
-                }
+            onAdd: {
+                newsView.experimental.evaluateJavaScript("appendNews("
+                                                         + append + ", '"
+                                                         + id + "', '"
+                                                         + title + "', '"
+                                                         + url + "', '"
+                                                         + feedTitle + "', '"
+                                                         + timestamp + "', '"
+                                                         + content + "');");
             }
             
-            // Web view for our HTML-based RSS display.
-            WebView {
-                id: newsView
-                
-                // Enable the web inspector by setting this to true.  You'll have to write-klik
-                // on the webview to use this handy-dandy feature.
-                property bool devMode: true
-                
-                function updateCSS() {
-                    newsView.evaluateJavaScript(
-                                "clearBodyClasses(); " +
-                                "addBodyClass('" + platform + "'); " +
-                                "addBodyClass('FONT_" + fangSettings.fontSize + "'); " +
-                                "addBodyClass('" + fangSettings.style + "');");
-                }
-                
-                preferredWidth: parent.parent.width
-                
-                focus: true
-                
-                url: "/html/NewsPage.html"
-                
+            onClear: {
+                //console.log("Clear!")
+                newsView.experimental.evaluateJavaScript("clearNews();");
+//                newsFlickable.contentY = 0; // reset scroll
+            }
+            
+            onJumpTo: {
+//                console.log("jump!")
+                newsView.experimental.evaluateJavaScript("jumpTo('" + id + "');");
+            }
+            
+            onDrawBookmark: {
+                console.log("Draw bookmark: ", id)
+                newsView.experimental.evaluateJavaScript("drawBookmark('" + id + "');");
+            }
+        }
+        
+        // Web view for our HTML-based RSS display.
+        WebView {
+            id: newsView
+            
+            // Enable the web inspector by setting this to true.  You'll have to open Chrome to: 
+            // http://127.0.0.1:9999/webkit/inspector/inspector.html?page=1
+            property bool devMode: true
+            
+            // Turn the inspek0r off and on.
+            experimental.preferences.developerExtrasEnabled: devMode
+            
+            function updateCSS() {
+                newsView.experimental.evaluateJavaScript(
+                            "clearBodyClasses(); " +
+                            "addBodyClass('" + platform + "'); " +
+                            "addBodyClass('FONT_" + fangSettings.fontSize + "'); " +
+                            "addBodyClass('" + fangSettings.style + "');");
+            }
+            
+            anchors.fill: parent
+            
+            // Resize a bit more intelligently.
+            experimental.preferredMinimumContentsWidth: 300
+            
+            focus: true
+            
+            url: "qrc:///html/NewsPage.html"
+            /*
                 javaScriptWindowObjects: QtObject {
                     WebView.windowObjectName: "fang"
                     
@@ -131,58 +118,56 @@ Item {
                         webInteractor.setBookmark(id);
                     }
                 }
-                
-                // Turn the inspek0r off and on.
-                settings.developerExtrasEnabled: devMode
-                MouseArea {
-                    enabled: !newsView.devMode
-                    anchors.fill: parent
-                    acceptedButtons: Qt.RightButton
-                }
-                
-                // Set style, and update when needed.
-                onLoadFinished: updateCSS()
-                Connections {
-                    target: fangSettings
-                    
-                    onFontSizeChanged: newsView.updateCSS()
-                    onStyleChanged: newsView.updateCSS()
-                }
-                
-                MouseWheelArea {
-                    id: wheelArea
-                    
-                    // Disable this to stop the motion.
-                    property bool active: true
-                    
-                    onActiveChanged: {
-                        if (!active)
-                            wheelScrollAnimation.stop();
-                    }
-                    
-                    anchors.fill: parent
-                    property double deltaY: 0
-                    onWheel: {
-                        deltaY = delta * 2; // Fudge factor!
-                        wheelScrollAnimation.restart();
-                    }
-                    
-                    NumberAnimation {
-                        id: wheelScrollAnimation
-                        
-                        target: newsFlickable
-                        properties: "contentY"
-                        to: Math.max(0, Math.min(newsFlickable.contentY - wheelArea.deltaY,
-                                                 newsFlickable.contentHeight - newsFlickable.height));
-                        duration: 200
-                        easing.type: Easing.OutQuad
-                    }
+                */
+            
+            // Set style, and update when needed.
+            onLoadingChanged: {
+                if (loadRequest.status === WebView.LoadSucceededStatus) {
+                    webInteractor.pageLoaded();  // tell 'em the page is loaded now.
+                    updateCSS();
                 }
             }
+            
+            Connections {
+                target: fangSettings
+                
+                onFontSizeChanged: newsView.updateCSS()
+                onStyleChanged: newsView.updateCSS()
+            }
+            
+//            MouseWheelArea {
+//                id: wheelArea
+                
+//                // Disable this to stop the motion.
+//                property bool active: true
+                
+//                onActiveChanged: {
+//                    if (!active)
+//                        wheelScrollAnimation.stop();
+//                }
+                
+//                anchors.fill: parent
+//                property double deltaY: 0
+//                onWheel: {
+//                    deltaY = delta * 2; // Fudge factor!
+//                    wheelScrollAnimation.restart();
+//                }
+                
+//                NumberAnimation {
+//                    id: wheelScrollAnimation
+                    
+//                    target: newsFlickable
+//                    properties: "contentY"
+//                    to: Math.max(0, Math.min(newsFlickable.contentY - wheelArea.deltaY,
+//                                             newsFlickable.contentHeight - newsFlickable.height));
+//                    duration: 200
+//                    easing.type: Easing.OutQuad
+//                }
+//            }
         }
     }
     
     ScrollBar {
-        target: newsFlickable
+        target: newsView
     }
 }

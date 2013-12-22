@@ -15,7 +15,7 @@ QML_IMPORT_PATH =
 # CONFIG += qdeclarative-boostable
 
 # For Fang we'll need QtCore, the network, and the built-in SQLite database.
-QT       += core network sql webkit webkitwidgets
+QT       += core network sql qml quick webkit webkitwidgets
 
 # The .cpp file which was generated for your project. Feel free to hack it.
 SOURCES += src/main.cpp \
@@ -60,7 +60,7 @@ SOURCES += src/main.cpp \
 # target.path =
 
 # Please do not modify the following two lines. Required for deployment.
-include(src/qmlapplicationviewer/qmlapplicationviewer.pri)
+include(src/qtquick2applicationviewer/qtquick2applicationviewer.pri)
 qtcAddDeployment()
 
 OTHER_FILES += \

@@ -1,4 +1,4 @@
-import QtQuick 1.1
+import QtQuick 2.0
 import Fang 1.0
 
 // Edit a feed.
@@ -33,7 +33,7 @@ Dialog {
         
         hint: "Feed title"
         
-        onEnterPressed: saveEditButton.click()
+        onEnterKeyPressed: saveEditButton.click()
         width: parent.width
     }
     

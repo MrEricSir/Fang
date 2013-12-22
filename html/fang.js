@@ -32,7 +32,12 @@ function appendNews(append, id, title, url, feedTitle, timestamp, content) {
         
         // Scroll down after prepend.
         var verticalMargins = parseInt( item.css("marginBottom") ) + parseInt( item.css("marginTop") );
-        window.fang.addToScroll( verticalMargins + item.height() );
+        
+        
+        // TODO: qt5
+        //window.fang.addToScroll( verticalMargins + item.height() );
+        
+        $(document).scrollTop( $(document).scrollTop() + verticalMargins + item.height() );
     }
 }
 
@@ -61,7 +66,12 @@ function jumpTo(id) {
     
 //    console.log("jump to: ", elementId, "scrolling to: ", scrollTo);
 //    console.log("element: ", $( elementId ).prop('tagName'));
-    window.fang.setScroll( scrollTo );
+    
+    
+    // TODO: qt5
+   // window.fang.setScroll( scrollTo );
+    
+    $(document).scrollTop( scrollTo );
 }
 
 // Draws a bookmark on the given news container ID.
@@ -75,7 +85,7 @@ function drawBookmark(id) {
     var elementId = '#' + id;
     $( elementId ).addClass('bookmarked');
     
-    //console.log("Bookmark drawn at ", elementId);
+    console.log("Bookmark drawn at ", elementId);
 }
 
 // Removes all existing classes on the body element.
@@ -101,7 +111,12 @@ $(document).ready(function() {
         var prevScrollTop = 0;
         
         var checkScrollPosition = function() {
-            var scrollTop = window.fang.getScroll();
+            
+            
+            
+            // TODO: qt5
+            //var scrollTop = window.fang.getScroll();
+            var scrollTop =  $(document).scrollTop();
             
             // If the user hasn't scrolled, there's nothing to do.
             if (prevScrollTop === scrollTop)
@@ -114,7 +129,10 @@ $(document).ready(function() {
             }
             
             // Check bottom (note: calculation MUST be done after topCallback()!!!!)
-            var bottom = $document.height() - window.fang.getHeight() - distance;
+            
+            
+            // TODO: qt5
+            var bottom = $document.height() //- window.fang.getHeight() - distance;
             if (scrollTop >= bottom) {
                 bottomCallback();
             }
@@ -129,7 +147,13 @@ $(document).ready(function() {
     
     // Returns true if the element is above the scroll position, else false.
     function isAboveScroll(element) {
-        return window.fang.getScroll() > element.offset().top + element.height();
+        
+        
+        // TODO: qt5
+        //return window.fang.getScroll() > element.offset().top + element.height();
+        //return false;
+        
+        return $(window).scrollTop() > element.offset().top + element.height();
     }
     
     // Adjust the bookmark if necessary.
@@ -184,7 +208,11 @@ $(document).ready(function() {
             
             // Move the bookmark down one.
             //console.log("bookmark item: ", nextItem);
-            window.fang.setBookmark( nextItem[0].getAttribute('id') );
+            
+            
+            
+            // TODO: qt5
+            // window.fang.setBookmark( nextItem[0].getAttribute('id') );
             
             // Continue to next item.
             nextItem = nextItem.next();
@@ -193,12 +221,19 @@ $(document).ready(function() {
     
     function loadNext() {
         //console.log("Load nxt");
-        window.fang.loadNext();
+        
+        
+        
+        // TODO: qt5
+        //window.fang.loadNext();
     }
     
     function loadPrevious() {
         //console.log("load prev");
-        window.fang.loadPrevious();
+        
+        
+        // TODO: qt5
+        //window.fang.loadPrevious();
     }
     
     watchScrollPosition(loadNext, loadPrevious, checkBookmark, 250, 250);

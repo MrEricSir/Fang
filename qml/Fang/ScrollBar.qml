@@ -24,7 +24,7 @@
         THE SOFTWARE.
 */
 
-import QtQuick 1.1
+import QtQuick 2.0
 
 /*
 
@@ -141,7 +141,7 @@ Item {
             
             // If the mouse is entered or moves, start scroll timer again.
             onEntered: showScrollbar()
-            onMousePositionChanged: showScrollbar()
+            onPositionChanged: showScrollbar()
         }
         
         Item {
@@ -167,7 +167,15 @@ Item {
                                     maxScrollbarY
                 
                 // Force y to be between 0 and max height
-                y: sliderMouseArea.drag.active || scrollAnimation.running ? y : Math.max(0, Math.min(baseY, maxScrollbarY))
+                function setY() {
+                    if (sliderMouseArea.drag.active || scrollAnimation.running)
+                        return;
+                    
+                    y = Math.max(0, Math.min(baseY, maxScrollbarY));
+                }
+                
+                onBaseYChanged: setY();
+                onMaxScrollbarYChanged: setY();
                 
                 MouseArea {
                     id: sliderMouseArea

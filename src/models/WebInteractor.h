@@ -76,6 +76,9 @@ public slots:
     // Sets the bookmark, and fires a draw event.
     Q_INVOKABLE void setBookmark(QString sId);
     
+    // The web layer has to call this to lead us know we're good to go.
+    Q_INVOKABLE void pageLoaded();
+    
 private slots:
     
     // Called when a load has completed.
@@ -102,6 +105,8 @@ private:
     bool isLoading;
     bool isSettingBookmark;
     
+    // Once we've loaded, we're READY!
+    bool isReady;
 };
 
 #endif // WEBINTERACTOR_H
