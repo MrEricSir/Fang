@@ -96,6 +96,17 @@ void ListModel::setSelected(ListItem *selected)
 {
     _selected = selected;
     emit selectedChanged(_selected);
+    emit selectedIndexChanged(selectedIndex());
+}
+
+int ListModel::selectedIndex()
+{
+    return m_list.indexOf(_selected);
+}
+
+void ListModel::setSelectedIndex(int selectedIndex)
+{
+    setSelected(m_list.at(selectedIndex));
 }
  
 bool ListModel::removeRow(int row, const QModelIndex &parent)

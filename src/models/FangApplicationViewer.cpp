@@ -2,8 +2,8 @@
 
 #include <QDebug>
 
-FangApplicationViewer::FangApplicationViewer(QWidget *parent) :
-    QmlApplicationViewer(parent),
+FangApplicationViewer::FangApplicationViewer(QWindow *parent) :
+    QtQuick2ApplicationViewer(parent),
     saveTimer(),
     settings(),
     maximizeOnStart(false)
@@ -26,7 +26,7 @@ void FangApplicationViewer::moveEvent(QMoveEvent *event)
 {
     Q_UNUSED(event);
     updateWindowSettings();
-    QmlApplicationViewer::moveEvent(event);
+    QtQuick2ApplicationViewer::moveEvent(event);
 }
 
 void FangApplicationViewer::resizeEvent(QResizeEvent* event)
@@ -34,14 +34,14 @@ void FangApplicationViewer::resizeEvent(QResizeEvent* event)
     Q_UNUSED(event);
     updateWindowSettings();
     emit windowResized();
-    QmlApplicationViewer::resizeEvent(event);
+    QtQuick2ApplicationViewer::resizeEvent(event);
 }
 
 void FangApplicationViewer::closeEvent(QCloseEvent* event)
 {
     Q_UNUSED(event);
     updateWindowSettings();
-    QmlApplicationViewer::closeEvent(event);
+   // QtQuick2ApplicationViewer::closeEvent(event);
 }
 
 void FangApplicationViewer::onSaveTimeout()
@@ -51,11 +51,16 @@ void FangApplicationViewer::onSaveTimeout()
     
     settings.setValue("maximized", isMaximized());
     if (!isMaximized()) {
-        settings.setValue("pos", pos());
+        settings.setValue("pos", position());
         settings.setValue("size", size());
     }
     
     settings.endGroup();
+}
+
+bool FangApplicationViewer::isMaximized()
+{
+    return (windowState() & Qt::WindowMaximized) > 0;
 }
 
 void FangApplicationViewer::updateWindowSettings()
@@ -74,9 +79,9 @@ void FangApplicationViewer::restoreWindowSettings()
         return; // No settings yet.
     }
     
-    move(settings.value("pos", pos()).toPoint());
+    setPosition(settings.value("pos", position()).toPoint());
     resize(settings.value("size", size()).toSize());
-    if (settings.value("maximized", isMaximized()).toBool())
+    if (settings.value("maximized", QVariant(false)).toBool())
         maximizeOnStart = true;
     
     settings.endGroup();

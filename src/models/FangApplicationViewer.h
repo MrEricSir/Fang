@@ -1,18 +1,18 @@
 #ifndef FANGAPPLICATIONVIEWER_H
 #define FANGAPPLICATIONVIEWER_H
 
-#include "../qmlapplicationviewer/qmlapplicationviewer.h"
+#include "../qtquick2applicationviewer/qtquick2applicationviewer.h"
 
 #include <QString>
 #include <QTimer>
 #include <QSettings>
 #include <QShowEvent>
 
-class FangApplicationViewer : public QmlApplicationViewer
+class FangApplicationViewer : public QtQuick2ApplicationViewer
 {
     Q_OBJECT
 public:
-    explicit FangApplicationViewer(QWidget *parent = 0);
+    explicit FangApplicationViewer(QWindow *parent = 0);
     
 public slots:
     
@@ -38,6 +38,12 @@ private slots:
      * @brief This is what performs the save.
      */
     void onSaveTimeout();
+    
+    /**
+     * @brief Quick way to find out of the window is maximized.
+     * @return 
+     */
+    bool isMaximized();
     
 private:
     /**

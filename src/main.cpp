@@ -1,9 +1,8 @@
 #include <QApplication>
 #include <QFile>
 #include <QDateTime>
-#include <QDeclarativeContext>
 
-#include "qmlapplicationviewer/qmlapplicationviewer.h"
+#include "qtquick2applicationviewer/qtquick2applicationviewer.h"
 
 #include "FangApp.h"
 
@@ -20,14 +19,14 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     qmlRegisterType<FangSettings>("Fang", 1, 0, "FangSettings");
     qmlRegisterType<WebInteractor>("Fang", 1, 0, "WebInteractor");
     
-    QScopedPointer<QApplication> app(createApplication(argc, argv));
-    app->setOrganizationName("EricSoft");
-    app->setOrganizationDomain("EricSoft.com");
-    app->setApplicationName("Fang");
+    QApplication app(argc, argv);
+    app.setOrganizationName("EricSoft");
+    app.setOrganizationDomain("EricSoft.com");
+    app.setApplicationName("Fang");
     
     FangApplicationViewer viewer;
-    FangApp fang(app.data(), &viewer);
+    FangApp fang(&app, &viewer);
     fang.init();
     
-    return app->exec();
+    return app.exec();
 }

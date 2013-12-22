@@ -1,7 +1,7 @@
 #ifndef WEBINTERACTOR_H
 #define WEBINTERACTOR_H
 
-#include <QDeclarativeItem>
+#include <QQuickItem>
 #include <QString>
 
 #include "FeedItem.h"
@@ -15,13 +15,13 @@
 /**
  * @brief Passes news between the JavaScript and C++ layers, yo.
  */
-class WebInteractor : public QDeclarativeItem
+class WebInteractor : public QQuickItem
 {
     Q_OBJECT
     Q_DISABLE_COPY(WebInteractor)
     
 public:
-    explicit WebInteractor(QDeclarativeItem *parent = 0);
+    explicit WebInteractor(QQuickItem *parent = 0);
     virtual ~WebInteractor() {}
     
     void init(OperationManager* manager);

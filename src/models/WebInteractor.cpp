@@ -2,8 +2,8 @@
 #include <QDebug>
 #include <QList>
 
-WebInteractor::WebInteractor(QDeclarativeItem *parent) :
-    QDeclarativeItem(parent),
+WebInteractor::WebInteractor(QQuickItem *parent) :
+    QQuickItem(parent),
     currentFeed(NULL),
     manager(NULL),
     isLoading(false),

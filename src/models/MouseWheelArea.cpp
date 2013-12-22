@@ -1,10 +1,10 @@
 #include "MouseWheelArea.h"
 
-MouseWheelArea::MouseWheelArea(QDeclarativeItem *parent) :
-    QDeclarativeItem(parent)
+MouseWheelArea::MouseWheelArea(QQuickItem *parent) :
+    QQuickItem(parent)
 {
     // Let touchpad events go through.
-    setAcceptTouchEvents(true);
+    //setAcceptTouchEvents(true);
 }
 
 MouseWheelArea::~MouseWheelArea()

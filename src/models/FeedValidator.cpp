@@ -1,8 +1,8 @@
 #include "FeedValidator.h"
 #include "../FangApp.h"
 
-FeedValidator::FeedValidator(QDeclarativeItem *parent) :
-    QDeclarativeItem(parent),
+FeedValidator::FeedValidator(QQuickItem *parent) :
+    QQuickItem(parent),
     parser(NULL),
     _validating(false),
     webPage(NULL),

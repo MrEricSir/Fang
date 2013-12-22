@@ -1,8 +1,8 @@
 #include "FangSettings.h"
 #include <QDebug>
 
-FangSettings::FangSettings(QDeclarativeItem *parent) :
-    QDeclarativeItem(parent)
+FangSettings::FangSettings(QQuickItem *parent) :
+    QQuickItem(parent)
 {
 }
 
