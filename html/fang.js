@@ -67,7 +67,7 @@ function jumpTo(id) {
     var elementId = '#' + id;
     var scrollTo = $( elementId ).offset().top;
     
-//    console.log("jump to: ", elementId, "scrolling to: ", scrollTo);
+    console.log("jump to: ", elementId, "scrolling to: ", scrollTo);
 //    console.log("element: ", $( elementId ).prop('tagName'));
     
     $(document).scrollTop( scrollTo );
@@ -148,7 +148,7 @@ $(document).ready(function() {
     
     // Returns true if the element is above the scroll position, else false.
     function isAboveScroll(element) {
-        
+        console.log("Is above scroll: ", element)
         
         // TODO: qt5
         //return window.fang.getScroll() > element.offset().top + element.height();
@@ -179,7 +179,7 @@ $(document).ready(function() {
         // Check if the bottom of the bookmarked item is above the scroll level.
         // If not, bail now since the bookmark won't be changed.
         if (!isAboveScroll(bookmarkedItem)) {
-            console.log("not above scroll!")
+            console.log("not above scroll!", bookmarkedItem[0].getAttribute('id'))
             
             return;
         }
@@ -204,7 +204,7 @@ $(document).ready(function() {
             
             // Nothing more to do.
             if (!isAboveScroll(nextItem)) {
-                console.log("item not above scroll:", nextItem)
+                console.log("item not above scroll:", nextItem[0].getAttribute('id'))
                 
                 break;
             }
