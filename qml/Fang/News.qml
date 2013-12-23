@@ -18,10 +18,18 @@ Item {
         anchors.rightMargin: 16
         anchors.leftMargin: 12
         
+        onHeightChanged: webInteractor.heightChanged(height);
+        
         // The "interactor" is what talks to the C++ layer.
         WebInteractor {
             id: webInteractor
             objectName: "webInteractor" // Do not change!! PENALTY OF DEATH AND ELECTROCUTION
+            
+            function heightChanged(height) {
+                newsView.experimental.evaluateJavaScript(
+                            "setWindowHeight('" + height + "')"
+                            );
+            }
             
             onAdd: {
                 newsView.experimental.evaluateJavaScript("appendNews("
@@ -78,53 +86,28 @@ Item {
             focus: true
             
             url: "qrc:///html/NewsPage.html"
-            /*
-                javaScriptWindowObjects: QtObject {
-                    WebView.windowObjectName: "fang"
-                    
-                    function getScroll() {
-                        return newsFlickable.contentY;
-                    }
-                    
-                    function setScroll(y) {
-                        newsFlickable.contentY = y;
-                    }
-                    
-                    function addToScroll(y) {
-                        // Tell the mouse wheel to fuck off temporarily.
-                        wheelArea.active = false;
-                        
-                        newsFlickable.contentY += y;
-                        
-                        wheelArea.active = true;
-                    }
-                    
-                    function getHeight() {
-                        return newsFlickable.height;
-                    }
-                    
-                    function loadNext() {
-                        //sconsole.log("next!")
-                        webInteractor.loadNext();
-                    }
-                    
-                    function loadPrevious() {
-                        //console.log("prev!")
-                        webInteractor.loadPrevious();
-                    }
-                    
-                    function setBookmark(id) {
-                        //console.log("qml bookmark: ", id)
-                        webInteractor.setBookmark(id);
-                    }
+            
+            
+            experimental.preferences.navigatorQtObjectEnabled: true
+            experimental.onMessageReceived: {
+                //console.log("get msg from javascript:", message.data)
+                if (message.data === "loadNext") {
+                    webInteractor.loadNext();
+                } else if (message.data === "loadPrevious") {
+                    webInteractor.loadPrevious();
+                } else if (message.data.substring(0, 11) === "setBookmark") {
+                    var bookmarkArray = message.data.split(" ");
+                    webInteractor.setBookmark(bookmarkArray[1]);
                 }
-                */
+                
+            }
             
             // Set style, and update when needed.
             onLoadingChanged: {
                 if (loadRequest.status === WebView.LoadSucceededStatus) {
                     webInteractor.pageLoaded();  // tell 'em the page is loaded now.
-                    updateCSS();
+                    updateCSS(); // set our page's style
+                    webInteractor.heightChanged(newsMargin.height); // update height (if not already updated)
                 }
             }
             
@@ -134,36 +117,6 @@ Item {
                 onFontSizeChanged: newsView.updateCSS()
                 onStyleChanged: newsView.updateCSS()
             }
-            
-//            MouseWheelArea {
-//                id: wheelArea
-                
-//                // Disable this to stop the motion.
-//                property bool active: true
-                
-//                onActiveChanged: {
-//                    if (!active)
-//                        wheelScrollAnimation.stop();
-//                }
-                
-//                anchors.fill: parent
-//                property double deltaY: 0
-//                onWheel: {
-//                    deltaY = delta * 2; // Fudge factor!
-//                    wheelScrollAnimation.restart();
-//                }
-                
-//                NumberAnimation {
-//                    id: wheelScrollAnimation
-                    
-//                    target: newsFlickable
-//                    properties: "contentY"
-//                    to: Math.max(0, Math.min(newsFlickable.contentY - wheelArea.deltaY,
-//                                             newsFlickable.contentHeight - newsFlickable.height));
-//                    duration: 200
-//                    easing.type: Easing.OutQuad
-//                }
-//            }
         }
     }
     

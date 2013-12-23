@@ -2,6 +2,9 @@
   This is Fang's Javascript logic.  But I mean, you knew that.  DUH!
   */
 
+// Height of window.  We can't use $(window).height() because Qt embeds WebView in a flickable.
+var windowHeight = 5000; // Large default to prevent accidental bookmarks.
+
 // Appends (or prepends) a news item.
 function appendNews(append, id, title, url, feedTitle, timestamp, content) {
     // Copy the model.
@@ -67,10 +70,6 @@ function jumpTo(id) {
 //    console.log("jump to: ", elementId, "scrolling to: ", scrollTo);
 //    console.log("element: ", $( elementId ).prop('tagName'));
     
-    
-    // TODO: qt5
-   // window.fang.setScroll( scrollTo );
-    
     $(document).scrollTop( scrollTo );
 }
 
@@ -99,6 +98,11 @@ function addBodyClass(p) {
     $('body').addClass(p);
 }
 
+function setWindowHeight(height) {
+    console.log("height is now: ", height)
+    windowHeight = height;
+}
+
 // Main method
 $(document).ready(function() {
     /**
@@ -111,11 +115,6 @@ $(document).ready(function() {
         var prevScrollTop = 0;
         
         var checkScrollPosition = function() {
-            
-            
-            
-            // TODO: qt5
-            //var scrollTop = window.fang.getScroll();
             var scrollTop =  $(document).scrollTop();
             
             // If the user hasn't scrolled, there's nothing to do.
@@ -132,7 +131,9 @@ $(document).ready(function() {
             
             
             // TODO: qt5
-            var bottom = $document.height() //- window.fang.getHeight() - distance;
+            //var bottom = $document.height() //- window.fang.getHeight() - distance;
+            
+            var bottom = $document.height() - windowHeight - distance;
             if (scrollTop >= bottom) {
                 bottomCallback();
             }
@@ -152,6 +153,8 @@ $(document).ready(function() {
         // TODO: qt5
         //return window.fang.getScroll() > element.offset().top + element.height();
         //return false;
+        
+        //console.log("Scroll top: ", $(window).scrollTop())
         
         return $(window).scrollTop() > element.offset().top + element.height();
     }
@@ -201,18 +204,20 @@ $(document).ready(function() {
             
             // Nothing more to do.
             if (!isAboveScroll(nextItem)) {
-                console.log("item not above scroll")
+                console.log("item not above scroll:", nextItem)
                 
                 break;
             }
             
             // Move the bookmark down one.
-            //console.log("bookmark item: ", nextItem);
+            console.log("bookmark item: ", nextItem);
             
             
             
             // TODO: qt5
             // window.fang.setBookmark( nextItem[0].getAttribute('id') );
+            
+            navigator.qt.postMessage( 'setBookmark ' + nextItem[0].getAttribute('id') );
             
             // Continue to next item.
             nextItem = nextItem.next();
@@ -226,6 +231,9 @@ $(document).ready(function() {
         
         // TODO: qt5
         //window.fang.loadNext();
+        
+        
+        navigator.qt.postMessage( 'loadNext' );
     }
     
     function loadPrevious() {
@@ -234,6 +242,8 @@ $(document).ready(function() {
         
         // TODO: qt5
         //window.fang.loadPrevious();
+        
+        navigator.qt.postMessage( 'loadPrevious' );
     }
     
     watchScrollPosition(loadNext, loadPrevious, checkBookmark, 250, 250);
