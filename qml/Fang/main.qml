@@ -58,11 +58,6 @@ Rectangle {
                             easing.type: Easing.InOutQuad
                         }
                     }
-                    
-                    // Refresh the news view.
-                    ScriptAction { 
-                        script: news.forceRefresh();
-                    }
                 }
             },
             Transition {
@@ -88,11 +83,6 @@ Rectangle {
                             duration: 500
                             easing.type: Easing.InOutQuad
                         }
-                    }
-                    
-                    // Refresh the news view.
-                    ScriptAction { 
-                        script: news.forceRefresh();
                     }
                 }
             }
