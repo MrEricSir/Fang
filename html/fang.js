@@ -2,8 +2,11 @@
   This is Fang's Javascript logic.  But I mean, you knew that.  DUH!
   */
 
+// Large default to prevent accidental bookmarks.
+var defaultWindowHeight = 50000;
+
 // Height of window.  We can't use $(window).height() because Qt embeds WebView in a flickable.
-var windowHeight = 5000; // Large default to prevent accidental bookmarks.
+var windowHeight = defaultWindowHeight; 
 
 // Appends (or prepends) a news item.
 function appendNews(append, id, title, url, feedTitle, timestamp, content) {
@@ -30,7 +33,7 @@ function appendNews(append, id, title, url, feedTitle, timestamp, content) {
         console.log("append! ", id)
         item.insertAfter('body>.newsContainer:last');
     } else {
-        //console.log("Prepend!")
+        console.log("Prepend!")
         item.insertBefore( 'body>.newsContainer:first' );
         
         // Scroll down after prepend.
@@ -142,8 +145,13 @@ $(document).ready(function() {
             
             // If the user hasn't scrolled, check bottom and bail.
             if (prevScrollTop === scrollTop) {
-                // We always check the bottom because new news can be new at any time.
-                bottomCallback();
+                
+                // If we're at the bottom, always trigger the callback.
+                var bottom = $document.height() - windowHeight - distance - $( '#bottom' ).height();
+                if (scrollTop >= bottom) {
+                    //console.log("at bottom!")
+                    bottomCallback();
+                }
                 
                 return;
             }
@@ -155,7 +163,7 @@ $(document).ready(function() {
             }
             
             // Check bottom (note: calculation MUST be done after topCallback()!!!!)
-            var bottom = $document.height() - windowHeight - distance;
+            var bottom = $document.height() - windowHeight - distance - $( '#bottom' ).height();
             if (scrollTop >= bottom) {
                 bottomCallback();
             }
@@ -241,6 +249,7 @@ $(document).ready(function() {
     }
     
     function loadNext() {
+        //console.log("loadNext")
         navigator.qt.postMessage( 'loadNext' );
     }
     
