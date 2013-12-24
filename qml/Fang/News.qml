@@ -11,6 +11,10 @@ Item {
         webInteractor.jumpToBookmark();
     }
     
+    // Re-jump on window resize.
+    onWidthChanged: jumpToBookmark();
+    onHeightChanged: jumpToBookmark();
+    
     Item {
         id: newsMargin
         

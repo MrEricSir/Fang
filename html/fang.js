@@ -23,20 +23,22 @@ function appendNews(append, id, title, url, feedTitle, timestamp, content) {
     item.find( '.date' ).html( timestamp );
     
     //console.log(item.html());
-    console.log("ID: ", id, "append: ", append)
+    //console.log("ID: ", id, "append: ", append)
     
     // Stick 'er in!
     if (append) {
-        //console.log("append!")
-        item.insertAfter('body>.newsContainer:last-child');
+        console.log("append! ", id)
+        item.insertAfter('body>.newsContainer:last');
     } else {
         //console.log("Prepend!")
-        item.insertBefore( 'body>.newsContainer:first-child' );
+        item.insertBefore( 'body>.newsContainer:first' );
         
         // Scroll down after prepend.
         var verticalMargins = parseInt( item.css("marginBottom") ) + parseInt( item.css("marginTop") );
         $(document).scrollTop( $(document).scrollTop() + verticalMargins + item.height() );
     }
+    
+    resizeBottomSpacer();
 }
 
 function removeMatchingItems(item) {
@@ -44,34 +46,58 @@ function removeMatchingItems(item) {
     for ( var i = 0; i < item.length; i++ ) {
         var current = item[i];
         
-        // If it's not our model, DELETE!
-        if ( current.getAttribute('id') !== 'model' )
-            current.parentNode.removeChild( current );
+        // DELETE!
+        current.parentNode.removeChild( current );
     }
 }
 
 // Clears out all the news from the view.
 function clearNews() {
-    //console.log("Clearing news")
+    removeMatchingItems( $('body>.newsContainer:not(#model)') );
+}
+
+function resizeBottomSpacer() {
+    // Grab the last (non model) news item.
+    var lastItem = $( 'body>.newsContainer' ).last();
+    //console.log("last item: ", lastItem)
     
-    removeMatchingItems( $('body>.newsContainer') );
+    // By default, bottom spacer is the window height.  This allows the user
+    // to scroll the last item off the page, bookmarking it.
+    var numPix = windowHeight;
+    
+    // If the final item is already bookmarked, collapse the bottom spacer a bit.
+    if ( lastItem.hasClass( 'bookmarked' ) ) {
+        
+        var removePix = lastItem.height();
+        if (removePix > numPix)
+            removePix = numPix; // Don't exceed window height.
+        
+        numPix -= removePix;
+    }
+    
+    $( '#bottom' ).height( numPix + 'px' );
 }
 
 // Scrolls to the element with the given ID.
 function jumpTo(id) {
+    // Append to event loop.
+    window.setTimeout(jumpToInternal, 1, id);
+}
+
+function jumpToInternal(id) {
+    console.log("Jump to: ", id)
+    
+    resizeBottomSpacer();
+    
     var elementId = '#' + id;
     var scrollTo = $( elementId ).offset().top;
     
     console.log("jump to: ", elementId, "scrolling to: ", scrollTo);
-//    console.log("element: ", $( elementId ).prop('tagName'));
-    
     $(document).scrollTop( scrollTo );
 }
 
 // Draws a bookmark on the given news container ID.
 function drawBookmark(id) {
-    // If we have another bookmark, remove it.
-    
     // Remove any existing bookmark(s).
     $( ".bookmarked" ).removeClass('bookmarked');
     
@@ -79,7 +105,7 @@ function drawBookmark(id) {
     var elementId = '#' + id;
     $( elementId ).addClass('bookmarked');
     
-    console.log("Bookmark DRAWN at ", elementId);
+    resizeBottomSpacer();
 }
 
 // Removes all existing classes on the body element.
@@ -96,6 +122,8 @@ function addBodyClass(p) {
 function setWindowHeight(height) {
     console.log("height is now: ", height)
     windowHeight = height;
+    
+    resizeBottomSpacer();
 }
 
 // Main method
@@ -112,9 +140,13 @@ $(document).ready(function() {
         var checkScrollPosition = function() {
             var scrollTop =  $(document).scrollTop();
             
-            // If the user hasn't scrolled, there's nothing to do.
-            if (prevScrollTop === scrollTop)
+            // If the user hasn't scrolled, check bottom and bail.
+            if (prevScrollTop === scrollTop) {
+                // We always check the bottom because new news can be new at any time.
+                bottomCallback();
+                
                 return;
+            }
             
             // Check top.
             var top = distance;
@@ -144,7 +176,7 @@ $(document).ready(function() {
         
         //console.log("isAboveScroll: Scroll top: ", $(window).scrollTop(), " elem offset and height: ", element.offset().top + element.height())
         
-        return $(window).scrollTop() > element.offset().top + element.height();
+        return $(window).scrollTop() >= element.offset().top + element.height() - 1;
     }
     
     // Adjust the bookmark if necessary.

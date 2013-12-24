@@ -42,7 +42,7 @@ void WebInteractor::loadPrevious()
 
 void WebInteractor::jumpToBookmark()
 {
-    if (currentFeed->getBookmark() == NULL)
+    if (currentFeed == NULL || currentFeed->getBookmark() == NULL)
         return; // Nothing to do!
     
     // Jump to the item following the bookmark, if possible.
