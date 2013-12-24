@@ -6,7 +6,17 @@
 var defaultWindowHeight = 50000;
 
 // Height of window.  We can't use $(window).height() because Qt embeds WebView in a flickable.
-var windowHeight = defaultWindowHeight; 
+var windowHeight = defaultWindowHeight;
+
+// When the window is resized, jump to bookmark after a short delay.
+$(window).resize(function() {
+    if(this.resizeTO) clearTimeout(this.resizeTO);
+        this.resizeTO = window.setTimeout(function() {
+            //console.log("RESIZE");
+            navigator.qt.postMessage( 'jumpToBookmark' );
+    }, 50);
+    
+});
 
 // Appends (or prepends) a news item.
 function appendNews(append, id, title, url, feedTitle, timestamp, content) {
@@ -83,6 +93,7 @@ function resizeBottomSpacer() {
 
 // Scrolls to the element with the given ID.
 function jumpTo(id) {
+    console.log("Jump to: ", id)
     // Append to event loop.
     window.setTimeout(jumpToInternal, 1, id);
 }
@@ -123,7 +134,7 @@ function addBodyClass(p) {
 }
 
 function setWindowHeight(height) {
-    console.log("height is now: ", height)
+    //console.log("height is now: ", height)
     windowHeight = height;
     
     resizeBottomSpacer();

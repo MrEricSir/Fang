@@ -11,10 +11,6 @@ Item {
         webInteractor.jumpToBookmark();
     }
     
-    // Re-jump on window resize.
-    onWidthChanged: jumpToBookmark();
-    onHeightChanged: jumpToBookmark();
-    
     Item {
         id: newsMargin
         
@@ -49,12 +45,11 @@ Item {
             onClear: {
                 //console.log("Clear!")
                 newsView.experimental.evaluateJavaScript("clearNews();");
-                newsView.contentY = 0;
-//                newsFlickable.contentY = 0; // reset scroll
+                newsView.contentY = 0;  // reset scroll
             }
             
             onJumpTo: {
-//                console.log("jump!")
+                console.log("jump to: ", id)
                 newsView.experimental.evaluateJavaScript("jumpTo('" + id + "');");
             }
             
@@ -92,7 +87,7 @@ Item {
             
             url: "qrc:///html/NewsPage.html"
             
-            
+            // Communication from WebKit layer to QML.
             experimental.preferences.navigatorQtObjectEnabled: true
             experimental.onMessageReceived: {
                 //console.log("get msg from javascript:", message.data)
@@ -100,6 +95,8 @@ Item {
                     webInteractor.loadNext();
                 } else if (message.data === "loadPrevious") {
                     webInteractor.loadPrevious();
+                } else if (message.data === "jumpToBookmark") {
+                    webInteractor.jumpToBookmark();
                 } else if (message.data.substring(0, 11) === "setBookmark") {
                     var bookmarkArray = message.data.split(" ");
                     webInteractor.setBookmark(bookmarkArray[1]);
