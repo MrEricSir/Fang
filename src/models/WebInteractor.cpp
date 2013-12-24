@@ -52,6 +52,7 @@ void WebInteractor::jumpToBookmark()
 
 void WebInteractor::setBookmark(QString sId)
 {
+    qDebug() << "Setting bookmark to: " << sId;
     if (isSettingBookmark)
         return;
     

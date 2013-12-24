@@ -35,11 +35,6 @@ function appendNews(append, id, title, url, feedTitle, timestamp, content) {
         
         // Scroll down after prepend.
         var verticalMargins = parseInt( item.css("marginBottom") ) + parseInt( item.css("marginTop") );
-        
-        
-        // TODO: qt5
-        //window.fang.addToScroll( verticalMargins + item.height() );
-        
         $(document).scrollTop( $(document).scrollTop() + verticalMargins + item.height() );
     }
 }
@@ -84,7 +79,7 @@ function drawBookmark(id) {
     var elementId = '#' + id;
     $( elementId ).addClass('bookmarked');
     
-    console.log("Bookmark drawn at ", elementId);
+    console.log("Bookmark DRAWN at ", elementId);
 }
 
 // Removes all existing classes on the body element.
@@ -128,11 +123,6 @@ $(document).ready(function() {
             }
             
             // Check bottom (note: calculation MUST be done after topCallback()!!!!)
-            
-            
-            // TODO: qt5
-            //var bottom = $document.height() //- window.fang.getHeight() - distance;
-            
             var bottom = $document.height() - windowHeight - distance;
             if (scrollTop >= bottom) {
                 bottomCallback();
@@ -148,13 +138,11 @@ $(document).ready(function() {
     
     // Returns true if the element is above the scroll position, else false.
     function isAboveScroll(element) {
-        console.log("Is above scroll: ", element)
+        //console.log("Is above scroll: ", element)
+        if (element.attr('id') === 'model')
+            element = element.next(); // Skip the model.
         
-        // TODO: qt5
-        //return window.fang.getScroll() > element.offset().top + element.height();
-        //return false;
-        
-        //console.log("Scroll top: ", $(window).scrollTop())
+        //console.log("isAboveScroll: Scroll top: ", $(window).scrollTop(), " elem offset and height: ", element.offset().top + element.height())
         
         return $(window).scrollTop() > element.offset().top + element.height();
     }
@@ -165,13 +153,14 @@ $(document).ready(function() {
         var bookmarkedItem = $( 'body>.bookmarked' );
         
         // No bookmark?  No problem, we'll look at the first news item instead.
-        if (!bookmarkedItem.length)
+        if (!bookmarkedItem.length) {
             bookmarkedItem = $( 'body>.newsContainer' );
+            //console.log("No bookmark found: starting with: ", bookmarkedItem)
+        }
         
         // Oh bother.  I guess there's nothing to do.
         if (bookmarkedItem.length < 1) {
-            // There's *always* at least one news container (i.e. the model)
-            console.log("No bookmarks to deal with.  w00t!")
+            //console.log("No bookmarks to deal with.  w00t!")
             
             return;
         }
@@ -179,7 +168,7 @@ $(document).ready(function() {
         // Check if the bottom of the bookmarked item is above the scroll level.
         // If not, bail now since the bookmark won't be changed.
         if (!isAboveScroll(bookmarkedItem)) {
-            console.log("not above scroll!", bookmarkedItem[0].getAttribute('id'))
+            console.log("not above scroll!", bookmarkedItem.attr('id'))
             
             return;
         }
@@ -196,7 +185,8 @@ $(document).ready(function() {
             }
             
             // Ignore the model, she's so stuck up.
-            if (nextItem[0].getAttribute('id') === 'model') {
+            if (nextItem.attr('id') === 'model') {
+                console.log("Skipping over model");
                 nextItem = nextItem.next();
                 
                 continue;
@@ -204,20 +194,14 @@ $(document).ready(function() {
             
             // Nothing more to do.
             if (!isAboveScroll(nextItem)) {
-                console.log("item not above scroll:", nextItem[0].getAttribute('id'))
+                console.log("item not above scroll:", nextItem.attr('id'))
                 
                 break;
             }
             
             // Move the bookmark down one.
-            console.log("bookmark item: ", nextItem);
-            
-            
-            
-            // TODO: qt5
-            // window.fang.setBookmark( nextItem[0].getAttribute('id') );
-            
-            navigator.qt.postMessage( 'setBookmark ' + nextItem[0].getAttribute('id') );
+            //console.log("SET BOOKMKAR! ", nextItem.attr('id'))
+            navigator.qt.postMessage( 'setBookmark ' + nextItem.attr('id') );
             
             // Continue to next item.
             nextItem = nextItem.next();
@@ -225,24 +209,10 @@ $(document).ready(function() {
     }
     
     function loadNext() {
-        //console.log("Load nxt");
-        
-        
-        
-        // TODO: qt5
-        //window.fang.loadNext();
-        
-        
         navigator.qt.postMessage( 'loadNext' );
     }
     
     function loadPrevious() {
-        //console.log("load prev");
-        
-        
-        // TODO: qt5
-        //window.fang.loadPrevious();
-        
         navigator.qt.postMessage( 'loadPrevious' );
     }
     
