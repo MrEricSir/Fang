@@ -1,4 +1,4 @@
-import QtQuick 1.1
+import QtQuick 2.0
 
 // A text entry box.
 Rectangle {
@@ -22,10 +22,10 @@ Rectangle {
     property string editText: edit.text
     
     // Signaled on every text change.
-    signal editTextChanged(string text)
+    signal textChanged(string text)
     
     // Signaled when user hits enter/return.
-    signal enterPressed()
+    signal enterKeyPressed()
     
     Style {
         id: style
@@ -122,14 +122,15 @@ Rectangle {
                     onCursorRectangleChanged: flick.ensureVisible(cursorRectangle)
                     
                     onTextChanged: {
+                        console.log("on text changed!: ", text)
                         // 1337 HAX to prevent newlines in text field.
                         if (text.indexOf('\n') != -1 || text.indexOf('\r') != -1) {
                             text = text.replace("\n", "");
                             text = text.replace("\r", "");
-                            enterPressed();
+                            enterKeyPressed();
                         }
                         
-                        editTextChanged(text);
+                        textEntry.textChanged(text);
                         flick.ensureVisible(cursorRectangle); // Used with above flickable.
                     }
                     

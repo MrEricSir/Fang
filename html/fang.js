@@ -2,6 +2,22 @@
   This is Fang's Javascript logic.  But I mean, you knew that.  DUH!
   */
 
+// Large default to prevent accidental bookmarks.
+var defaultWindowHeight = 50000;
+
+// Height of window.  We can't use $(window).height() because Qt embeds WebView in a flickable.
+var windowHeight = defaultWindowHeight;
+
+// When the window is resized, jump to bookmark after a short delay.
+$(window).resize(function() {
+    if(this.resizeTO) clearTimeout(this.resizeTO);
+        this.resizeTO = window.setTimeout(function() {
+            //console.log("RESIZE");
+            navigator.qt.postMessage( 'jumpToBookmark' );
+    }, 50);
+    
+});
+
 // Appends (or prepends) a news item.
 function appendNews(append, id, title, url, feedTitle, timestamp, content) {
     // Copy the model.
@@ -27,12 +43,12 @@ function appendNews(append, id, title, url, feedTitle, timestamp, content) {
         console.log("append! ", id)
         item.insertAfter('body>.newsContainer:last');
     } else {
-        //console.log("Prepend!")
+        console.log("Prepend!")
         item.insertBefore( 'body>.newsContainer:first' );
         
         // Scroll down after prepend.
         var verticalMargins = parseInt( item.css("marginBottom") ) + parseInt( item.css("marginTop") );
-        window.fang.addToScroll( verticalMargins + item.height() );
+        $(document).scrollTop( $(document).scrollTop() + verticalMargins + item.height() );
     }
     
     resizeBottomSpacer();
@@ -55,11 +71,12 @@ function clearNews() {
 
 function resizeBottomSpacer() {
     // Grab the last (non model) news item.
-    var lastItem = $( 'body>.newsContainer:not(#model):last' );
+    var lastItem = $( 'body>.newsContainer' ).last();
+    //console.log("last item: ", lastItem)
     
     // By default, bottom spacer is the window height.  This allows the user
     // to scroll the last item off the page, bookmarking it.
-    var numPix = window.fang.getHeight();
+    var numPix = windowHeight;
     
     // If the final item is already bookmarked, collapse the bottom spacer a bit.
     if ( lastItem.hasClass( 'bookmarked' ) ) {
@@ -76,6 +93,7 @@ function resizeBottomSpacer() {
 
 // Scrolls to the element with the given ID.
 function jumpTo(id) {
+    console.log("Jump to: ", id)
     // Append to event loop.
     window.setTimeout(jumpToInternal, 1, id);
 }
@@ -88,8 +106,8 @@ function jumpToInternal(id) {
     var elementId = '#' + id;
     var scrollTo = $( elementId ).offset().top;
     
-//    console.log("jump to: ", elementId, "scrolling to: ", scrollTo);
-    window.fang.setScroll( scrollTo );
+    console.log("jump to: ", elementId, "scrolling to: ", scrollTo);
+    $(document).scrollTop( scrollTo );
 }
 
 // Draws a bookmark on the given news container ID.
@@ -115,6 +133,13 @@ function addBodyClass(p) {
     $('body').addClass(p);
 }
 
+function setWindowHeight(height) {
+    //console.log("height is now: ", height)
+    windowHeight = height;
+    
+    resizeBottomSpacer();
+}
+
 // Main method
 $(document).ready(function() {
     /**
@@ -127,12 +152,17 @@ $(document).ready(function() {
         var prevScrollTop = 0;
         
         var checkScrollPosition = function() {
-            var scrollTop = window.fang.getScroll();
+            var scrollTop =  $(document).scrollTop();
             
             // If the user hasn't scrolled, check bottom and bail.
             if (prevScrollTop === scrollTop) {
-                // We always check the bottom because new news can be new at any time.
-                bottomCallback();
+                
+                // If we're at the bottom, always trigger the callback.
+                var bottom = $document.height() - windowHeight - distance - $( '#bottom' ).height();
+                if (scrollTop >= bottom) {
+                    //console.log("at bottom!")
+                    bottomCallback();
+                }
                 
                 return;
             }
@@ -144,7 +174,7 @@ $(document).ready(function() {
             }
             
             // Check bottom (note: calculation MUST be done after topCallback()!!!!)
-            var bottom = $document.height() - window.fang.getHeight() - distance;
+            var bottom = $document.height() - windowHeight - distance - $( '#bottom' ).height();
             if (scrollTop >= bottom) {
                 bottomCallback();
             }
@@ -159,7 +189,13 @@ $(document).ready(function() {
     
     // Returns true if the element is above the scroll position, else false.
     function isAboveScroll(element) {
-        return window.fang.getScroll() > element.offset().top + element.height();
+        //console.log("Is above scroll: ", element)
+        if (element.attr('id') === 'model')
+            element = element.next(); // Skip the model.
+        
+        //console.log("isAboveScroll: Scroll top: ", $(window).scrollTop(), " elem offset and height: ", element.offset().top + element.height())
+        
+        return $(window).scrollTop() >= element.offset().top + element.height() - 1;
     }
     
     // Adjust the bookmark if necessary.
@@ -168,13 +204,14 @@ $(document).ready(function() {
         var bookmarkedItem = $( 'body>.bookmarked' );
         
         // No bookmark?  No problem, we'll look at the first news item instead.
-        if (!bookmarkedItem.length)
+        if (!bookmarkedItem.length) {
             bookmarkedItem = $( 'body>.newsContainer' );
+            //console.log("No bookmark found: starting with: ", bookmarkedItem)
+        }
         
         // Oh bother.  I guess there's nothing to do.
         if (bookmarkedItem.length < 1) {
-            // There's *always* at least one news container (i.e. the model)
-            console.log("No bookmarks to deal with.  w00t!")
+            //console.log("No bookmarks to deal with.  w00t!")
             
             return;
         }
@@ -182,7 +219,7 @@ $(document).ready(function() {
         // Check if the bottom of the bookmarked item is above the scroll level.
         // If not, bail now since the bookmark won't be changed.
         if (!isAboveScroll(bookmarkedItem)) {
-            console.log("not above scroll!")
+            console.log("not above scroll!", bookmarkedItem.attr('id'))
             
             return;
         }
@@ -199,7 +236,8 @@ $(document).ready(function() {
             }
             
             // Ignore the model, she's so stuck up.
-            if (nextItem[0].getAttribute('id') === 'model') {
+            if (nextItem.attr('id') === 'model') {
+                console.log("Skipping over model");
                 nextItem = nextItem.next();
                 
                 continue;
@@ -207,14 +245,14 @@ $(document).ready(function() {
             
             // Nothing more to do.
             if (!isAboveScroll(nextItem)) {
-                console.log("item not above scroll")
+                console.log("item not above scroll:", nextItem.attr('id'))
                 
                 break;
             }
             
             // Move the bookmark down one.
-            //console.log("bookmark item: ", nextItem);
-            window.fang.setBookmark( nextItem[0].getAttribute('id') );
+            //console.log("SET BOOKMKAR! ", nextItem.attr('id'))
+            navigator.qt.postMessage( 'setBookmark ' + nextItem.attr('id') );
             
             // Continue to next item.
             nextItem = nextItem.next();
@@ -222,13 +260,12 @@ $(document).ready(function() {
     }
     
     function loadNext() {
-        //console.log("Load nxt");
-        window.fang.loadNext();
+        //console.log("loadNext")
+        navigator.qt.postMessage( 'loadNext' );
     }
     
     function loadPrevious() {
-        //console.log("load prev");
-        window.fang.loadPrevious();
+        navigator.qt.postMessage( 'loadPrevious' );
     }
     
     watchScrollPosition(loadNext, loadPrevious, checkBookmark, 250, 250);

@@ -2,7 +2,10 @@
 #define FANGAPP_H
 
 #include <QObject>
-#include <QDeclarativeContext>
+#include <QQmlContext>
+#include <QQuickView>
+
+#include "../qtquick2applicationviewer/qtquick2applicationviewer.h"
 
 #include "operations/OperationManager.h"
 
@@ -58,7 +61,7 @@ public slots:
     void removeFeed(FeedItem *feed);
     
 private slots:
-    void onViewerStatusChanged(QDeclarativeView::Status);
+    void onViewerStatusChanged(QQuickView::Status);
     
     void onWindowResized();
     

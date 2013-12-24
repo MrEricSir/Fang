@@ -32,6 +32,8 @@ class ListModel : public QAbstractListModel
  
   // Must manually set in C++ layer
   Q_PROPERTY(ListItem* selected READ selected WRITE setSelected NOTIFY selectedChanged)
+  Q_PROPERTY(int selectedIndex READ selectedIndex WRITE setSelectedIndex NOTIFY selectedIndexChanged)
+  
 public:
   explicit ListModel(ListItem* prototype, QObject* parent = 0);
   ~ListModel();
@@ -51,12 +53,15 @@ public:
   inline ListItem* row(int row) { return m_list.at(row); }
   inline ListItem* selected() { return _selected; }
   void setSelected(ListItem* selected);
+  int selectedIndex();
+  void setSelectedIndex(int selectedIndex);
   
 signals:
   void added(ListItem* item);
   void removed(ListItem* item);
   
   void selectedChanged(ListItem* selected);
+  void selectedIndexChanged(int selectedIndex);
   
 private slots:
   void handleItemChange();

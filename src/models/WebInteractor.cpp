@@ -2,12 +2,13 @@
 #include <QDebug>
 #include <QList>
 
-WebInteractor::WebInteractor(QDeclarativeItem *parent) :
-    QDeclarativeItem(parent),
+WebInteractor::WebInteractor(QQuickItem *parent) :
+    QQuickItem(parent),
     currentFeed(NULL),
     manager(NULL),
     isLoading(false),
-    isSettingBookmark(false)
+    isSettingBookmark(false),
+    isReady(false)
 {
     
 }
@@ -51,6 +52,7 @@ void WebInteractor::jumpToBookmark()
 
 void WebInteractor::setBookmark(QString sId)
 {
+    qDebug() << "Setting bookmark to: " << sId;
     if (isSettingBookmark)
         return;
     
@@ -88,8 +90,21 @@ void WebInteractor::setBookmark(QString sId)
     manager->add(bookmarkOp);
 }
 
+void WebInteractor::pageLoaded()
+{
+    isReady = true;
+    
+    setFeed(currentFeed);
+}
+
 void WebInteractor::setFeed(FeedItem *feed)
 {
+    /**
+      * VERY IMPORTANT!!!
+      * 
+      * Before changing any logic here, make sure it works with pageLoaded() above.
+      */
+    
     if (feed == NULL)
         return;
     
@@ -98,6 +113,9 @@ void WebInteractor::setFeed(FeedItem *feed)
         currentFeed->clearNews();
     
     currentFeed = feed;
+    
+    if (!isReady)
+        return;
     
     // Clear the view.
     emit clear();

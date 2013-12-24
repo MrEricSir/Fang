@@ -1,16 +1,16 @@
 #ifndef MOUSEWHEELAREA_H
 #define MOUSEWHEELAREA_H
 
-#include <QDeclarativeItem>
+#include <QQuickItem>
 #include <QGraphicsSceneWheelEvent>
 
-class MouseWheelArea : public QDeclarativeItem
+class MouseWheelArea : public QQuickItem
 {
     Q_OBJECT
     Q_DISABLE_COPY(MouseWheelArea)
 
 public:
-    MouseWheelArea(QDeclarativeItem *parent = 0);
+    MouseWheelArea(QQuickItem *parent = 0);
     
     virtual ~MouseWheelArea();
     

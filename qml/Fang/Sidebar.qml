@@ -1,4 +1,4 @@
-import QtQuick 1.1
+import QtQuick 2.0
 
 // Feed list sidebar
 Item {
@@ -83,7 +83,8 @@ Item {
                     // This sets the selected item in the C++ layer.
                     ListView.onIsCurrentItemChanged: {
                         if (ListView.isCurrentItem) {
-                            feedListView.model.selected = self
+                            console.log("Item selected: ", feedListView.currentIndex)
+                            feedListView.model.selectedIndex = feedListView.currentIndex
                             sidebar.feedSelected();
                         }
                     }

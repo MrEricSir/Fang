@@ -1,11 +1,11 @@
 #ifndef FANGSETTINGS_H
 #define FANGSETTINGS_H
 
-#include <QDeclarativeItem>
+#include <QQuickItem>
 #include <QString>
 #include <QSettings>
 
-class FangSettings : public QDeclarativeItem
+class FangSettings : public QQuickItem
 {
     Q_OBJECT
     Q_DISABLE_COPY(FangSettings)
@@ -17,7 +17,7 @@ class FangSettings : public QDeclarativeItem
     Q_PROPERTY(QString fontSize READ getFontSize WRITE setFontSize NOTIFY fontSizeChanged)
     
 public:
-    explicit FangSettings(QDeclarativeItem *parent = 0);
+    explicit FangSettings(QQuickItem *parent = 0);
     
     QString getStyle();
     void setStyle(QString s);

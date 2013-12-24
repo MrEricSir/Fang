@@ -1,4 +1,4 @@
-import QtQuick 1.1
+import QtQuick 2.0
 import Fang 1.0
 
 // The dialog for adding a feed!
@@ -30,9 +30,9 @@ Dialog {
         
         hint: "Website or feed URL"
         
-        onEditTextChanged: validationStatus.visible = false
+        onTextChanged: validationStatus.visible = false
         
-        onEnterPressed: addButton.click()
+        onEnterKeyPressed: addButton.click()
         
         width: parent.width
     }

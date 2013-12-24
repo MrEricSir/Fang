@@ -152,6 +152,7 @@ bool FeedItem::canBookmark(NewsItem *item)
         return false;
     
     int currentBookmarkIndex = newsList->indexOf(bookmark);
+    
     int newBookmarkIndex = newsList->indexOf(item);
     
     // If the new one is later in the list, we're good.

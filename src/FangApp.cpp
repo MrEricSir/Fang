@@ -1,7 +1,7 @@
 #include "FangApp.h"
 
 #include <QDebug>
-#include <QDeclarativeEngine>
+#include <QQmlEngine>
 
 #include "../utilities/Utilities.h"
 
@@ -30,8 +30,8 @@ FangApp::FangApp(QObject *parent, FangApplicationViewer* viewer) :
     feedList = new ListModel(new FeedItem, this);
     
     // Setup signals.
-    connect(viewer, SIGNAL(statusChanged(QDeclarativeView::Status)),
-                     this, SLOT(onViewerStatusChanged(QDeclarativeView::Status)));
+    connect(viewer, SIGNAL(statusChanged(QQuickView::Status)),
+                     this, SLOT(onViewerStatusChanged(QQuickView::Status)));
     connect(viewer, SIGNAL(windowResized()), this, SLOT(onWindowResized()));
     
     connect(&manager, SIGNAL(operationFinished(Operation*)),
@@ -47,7 +47,7 @@ void FangApp::init()
     viewer->rootContext()->setContextProperty("feedListModel", feedList); // list of feeds
     viewer->rootContext()->setContextProperty("platform", getPlatform()); // platform string ID
     viewer->addImportPath(QLatin1String("modules"));
-    viewer->setOrientation(QmlApplicationViewer::ScreenOrientationAuto);
+    //viewer->setOrientation(QtQuick2ApplicationViewer::ScreenOrientationAuto);
     viewer->setSource(QUrl("qrc:/qml/Fang/main.qml"));
     viewer->displayWindow();
     
@@ -83,9 +83,9 @@ FeedItem *FangApp::getFeedForID(qint64 dbID)
     return NULL; // oops, we didn't find it!
 }
 
-void FangApp::onViewerStatusChanged(QDeclarativeView::Status status)
+void FangApp::onViewerStatusChanged(QQuickView::Status status)
 {
-    if (status != QDeclarativeView::Ready)
+    if (status != QQuickView::Ready)
         return;
     
     // OH! We're ready! Well I'll be damned. Grab all the stuff from 
@@ -143,6 +143,7 @@ void FangApp::onFeedRemoved(ListItem * listItem)
 }
 
 void FangApp::onFeedSelected(ListItem* _item) {
+    qDebug() << "New feed selected";
     FeedItem* item = qobject_cast<FeedItem *>(_item);
     setCurrentFeed(item);
 }

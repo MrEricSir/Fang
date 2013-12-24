@@ -1,7 +1,7 @@
 #ifndef FEEDVALIDATOR_H
 #define FEEDVALIDATOR_H
 
-#include <QDeclarativeItem>
+#include <QQuickItem>
 #include <QObject>
 #include <QUrl>
 #include <QWebPage>
@@ -12,7 +12,7 @@
 #include "FeedItem.h"
 #include "../utilities/WebPageGrabber.h"
 
-class FeedValidator : public QDeclarativeItem 
+class FeedValidator : public QQuickItem 
 {
     Q_OBJECT
     Q_DISABLE_COPY(FeedValidator)
@@ -23,7 +23,7 @@ class FeedValidator : public QDeclarativeItem
     Q_PROPERTY(QString siteImageURL READ siteImageURL WRITE setSiteImageURL NOTIFY siteImageURLChanged)
     
 public:
-    explicit FeedValidator(QDeclarativeItem *parent = 0);
+    explicit FeedValidator(QQuickItem *parent = 0);
     virtual ~FeedValidator() {}
     
     // Performs the URL check.
