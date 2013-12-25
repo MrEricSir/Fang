@@ -1,6 +1,7 @@
 #include "WebInteractor.h"
 #include <QDebug>
 #include <QList>
+#include <QDesktopServices>
 
 WebInteractor::WebInteractor(QQuickItem *parent) :
     QQuickItem(parent),
@@ -23,7 +24,7 @@ void WebInteractor::loadNext()
     if (isLoading)
         return;
     
-    //qDebug() << "Load next!";
+    qDebug() << "Load next!";
     
     // Load MOAR
     doLoadNews(LoadNews::Append);
@@ -34,7 +35,7 @@ void WebInteractor::loadPrevious()
     if (isLoading)
         return;
     
-    //qDebug() << "Load prev!";
+    qDebug() << "Load prev!";
     
     // Load the PREVIOUS
     doLoadNews(LoadNews::Prepend);
@@ -95,6 +96,11 @@ void WebInteractor::pageLoaded()
     isReady = true;
     
     setFeed(currentFeed);
+}
+
+void WebInteractor::openLink(QString link)
+{
+    QDesktopServices::openUrl(QUrl(link));
 }
 
 void WebInteractor::setFeed(FeedItem *feed)

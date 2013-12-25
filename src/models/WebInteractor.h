@@ -79,6 +79,9 @@ public slots:
     // The web layer has to call this to lead us know we're good to go.
     Q_INVOKABLE void pageLoaded();
     
+    // Opens a link in the external browser.
+    Q_INVOKABLE void openLink(QString link);
+    
 private slots:
     
     // Called when a load has completed.

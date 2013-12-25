@@ -169,10 +169,6 @@ void RawFeedRewriter::visitElement(const QWebElement &parentElement)
 {
     QWebElement e = parentElement.firstChild();
     while (!e.isNull()) {
-        // Attempt to make links open in a browser. (TODO: does this even work?!)
-        if (e.tagName().toLower() == "a")
-            e.setAttribute("target", "_blank");
-        
         // Kiss your Javascript goodbye.
         e.removeAttribute("onload");
         e.removeAttribute("onunload");

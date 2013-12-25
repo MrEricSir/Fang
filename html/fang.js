@@ -18,6 +18,12 @@ $(window).resize(function() {
     
 });
 
+// Intercept clix.
+function delegateLink() {
+    navigator.qt.postMessage( 'openLink ' + $(this).attr( 'href' ) );
+    return false; // Don't propogate link.
+};
+
 // Appends (or prepends) a news item.
 function appendNews(append, id, title, url, feedTitle, timestamp, content) {
     // Copy the model.
@@ -38,12 +44,15 @@ function appendNews(append, id, title, url, feedTitle, timestamp, content) {
     //console.log(item.html());
     //console.log("ID: ", id, "append: ", append)
     
+    // Setup link delegator.
+    item.find( 'a' ).on( "click", delegateLink );
+    
     // Stick 'er in!
     if (append) {
-        console.log("append! ", id)
+        //console.log("append! ", id)
         item.insertAfter('body>.newsContainer:last');
     } else {
-        console.log("Prepend!")
+        //console.log("Prepend!")
         item.insertBefore( 'body>.newsContainer:first' );
         
         // Scroll down after prepend.
@@ -260,11 +269,12 @@ $(document).ready(function() {
     }
     
     function loadNext() {
-        //console.log("loadNext")
+        console.log("loadNext")
         navigator.qt.postMessage( 'loadNext' );
     }
     
     function loadPrevious() {
+        console.log("load prev")
         navigator.qt.postMessage( 'loadPrevious' );
     }
     

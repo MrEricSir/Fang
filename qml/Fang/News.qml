@@ -100,6 +100,9 @@ Item {
                 } else if (message.data.substring(0, 11) === "setBookmark") {
                     var bookmarkArray = message.data.split(" ");
                     webInteractor.setBookmark(bookmarkArray[1]);
+                } else if (message.data.substring(0, 8) === "openLink") {
+                    var linkArray = message.data.split(" ");
+                    webInteractor.openLink(linkArray[1]);
                 }
                 
             }
