@@ -122,7 +122,7 @@ Rectangle {
                     onCursorRectangleChanged: flick.ensureVisible(cursorRectangle)
                     
                     onTextChanged: {
-                        console.log("on text changed!: ", text)
+                        //console.log("on text changed!: ", text)
                         // 1337 HAX to prevent newlines in text field.
                         if (text.indexOf('\n') != -1 || text.indexOf('\r') != -1) {
                             text = text.replace("\n", "");

@@ -11,6 +11,7 @@
 #include "models/FangApplicationViewer.h"
 #include "models/FangSettings.h"
 #include "models/WebInteractor.h"
+#include "models/ListModel.h"
 
 Q_DECL_EXPORT int main(int argc, char *argv[])
 {
@@ -18,6 +19,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     qmlRegisterType<FeedValidator>("Fang", 1, 0, "FeedValidator");
     qmlRegisterType<FangSettings>("Fang", 1, 0, "FangSettings");
     qmlRegisterType<WebInteractor>("Fang", 1, 0, "WebInteractor");
+    qmlRegisterType<ListItem>("Fang", 1, 0, "ListItem");
     
     QApplication app(argc, argv);
     app.setOrganizationName("EricSoft");

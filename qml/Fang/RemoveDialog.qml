@@ -24,8 +24,7 @@ Dialog {
         text: "Remove Feed"
         onClicked: {
             // Remove the selected item.
-            //console.log("current index ", listView.currentIndex)
-            console.log("does this exist");
+            //console.log("current index ", listView.model.selected)
             validator.removeFeed(listView.model.selected);
             
             // Dismiss the dialog.

@@ -18,9 +18,9 @@ class ListItem: public QObject {
 public:
   ListItem(QObject* parent = 0) : QObject(parent) {}
   virtual ~ListItem() {}
-  virtual QString id() const = 0;
-  virtual QVariant data(int role) const = 0;
-  virtual QHash<int, QByteArray> roleNames() const = 0;
+  virtual QString id() const { return "invalid id"; }
+  virtual QVariant data(int role) const { Q_UNUSED(role); return QVariant(); }
+  virtual QHash<int, QByteArray> roleNames() const { return QHash<int, QByteArray>(); }
  
 signals:
   void dataChanged();
