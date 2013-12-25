@@ -117,10 +117,11 @@ Rectangle {
     // Catch-alls to prevent clicks under this container.
     MouseArea {
         anchors.fill: parent
-    }
-    
-    MouseWheelArea {
-        anchors.fill: parent
+        
+        // Capture scroll events and such from propagating to WebKit
+        hoverEnabled: true
+        preventStealing: true
+        onWheel: {}
     }
     
     // Dialog contents

@@ -32,7 +32,6 @@ SOURCES += src/main.cpp \
     src/utilities/Utilities.cpp \
     src/operations/LoadAllFeedsOperation.cpp \
     src/db/DB.cpp \
-    src/models/MouseWheelArea.cpp \
     src/operations/DBOperation.cpp \
     src/models/FeedValidator.cpp \
     src/operations/AddFeedOperation.cpp \
@@ -88,7 +87,6 @@ HEADERS += \
     src/utilities/Utilities.h \
     src/operations/LoadAllFeedsOperation.h \
     src/db/DB.h \
-    src/models/MouseWheelArea.h \
     src/operations/DBOperation.h \
     src/models/FeedValidator.h \
     src/operations/AddFeedOperation.h \
