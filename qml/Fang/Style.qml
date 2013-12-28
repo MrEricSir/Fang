@@ -63,11 +63,12 @@ Item {
         property color sidebarSelected: "white"
         property color sidebarSelectedText: "black"
         
-        property color sidebarButton: "#777"
-        property color sidebarButtonHover: "#ccc"
-        property color sidebarButtonPressed: Qt.darker(colorSchemeLight.sidebarButtonHover, 1.5)
+        property color sidebarButton: "white"
+        property color sidebarButtonBorder: "black"
+        property color sidebarButtonHover: "black"
+        property color sidebarButtonPressed: "#999"
         
-        property color badge: "#bbb"
+        property color badge: "#999"
         property color badgeText: "white"
     }
     
@@ -99,9 +100,10 @@ Item {
         property color sidebarSelected: "black"
         property color sidebarSelectedText: "white"
         
-        property color sidebarButton: "white"
-        property color sidebarButtonHover: "#ccc"
-        property color sidebarButtonPressed: Qt.lighter(colorSchemeDark.sidebarButtonHover, 1.5)
+        property color sidebarButton: "black"
+        property color sidebarButtonBorder: "white"
+        property color sidebarButtonHover: "white"
+        property color sidebarButtonPressed: "#777"
         
         property color badge: "#aaa"
         property color badgeText: "black"

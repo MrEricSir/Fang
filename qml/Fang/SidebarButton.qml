@@ -4,11 +4,15 @@ Item {
     id: sidebarButton
     
     property color color: style.color.sidebarButton
+    property color borderColor: style.color.sidebarButtonBorder
     property color hoverColor: style.color.sidebarButtonHover
     property color pressedColor: style.color.sidebarButtonPressed
     
     property url imageURL: ""
-    property int imageMargin: 0
+    property url imageHoverURL: ""
+    property url imagePressedURL: ""
+    
+    property int imageMargin: 7
     
     signal clicked()
     
@@ -16,6 +20,8 @@ Item {
         id: buttonContainer
         
         anchors.fill: parent
+        
+        radius: width * 0.5
         
         states: [
             State { name: "default" },
@@ -26,8 +32,13 @@ Item {
         color: state === "hover" ? sidebarButton.hoverColor : state === "pressed" ?
                                       sidebarButton.pressedColor : sidebarButton.color
         
+        border.color: sidebarButton.borderColor
+        border.width: 1
+        
         Image {
-            source: imageURL
+            source: buttonContainer.state === "hover" ? sidebarButton.imageHoverURL : 
+                                                        buttonContainer.state === "pressed" ?
+                                                            sidebarButton.imagePressedURL : sidebarButton.imageURL
             
             anchors.fill: parent
             anchors.margins: imageMargin

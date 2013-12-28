@@ -40,9 +40,12 @@ Item {
                 width: buttonSize
                 height: buttonSize
                 
-                imageMargin: 5
-                imageURL: fangSettings.style === "LIGHT" ? "images/symbol_gear.svg" :
-                                                           "images/symbol_dark_gear.svg";
+                imageURL: fangSettings.style === "LIGHT" ? "images/symbol_dark_gear.svg" :
+                                                           "images/symbol_gear.svg";
+                imageHoverURL: fangSettings.style === "LIGHT" ? "images/symbol_gear.svg" :
+                                                                "images/symbol_dark_gear.svg";
+                imagePressedURL: fangSettings.style === "LIGHT" ? "images/symbol_dark_gear.svg" :
+                                                                  "images/symbol_gear.svg";
                 
                 onClicked: settingsClicked()
             }
@@ -128,9 +131,9 @@ Item {
                 width: buttonSize
                 height: buttonSize
                 
-                imageMargin: 5
-                hoverColor: "#2a2"
-                imageURL: fangSettings.style === "LIGHT" ? "images/plus.png" : "images/plus_dark.png"
+                imageURL: fangSettings.style === "LIGHT" ? "images/plus_dark.png" : "images/plus.png"
+                imageHoverURL: fangSettings.style === "LIGHT" ? "images/plus.png" : "images/plus_dark.png"
+                imagePressedURL: fangSettings.style === "LIGHT" ? "images/plus.png" : "images/plus_dark.png"
                 
                 onClicked: addClicked()
             }
@@ -146,10 +149,12 @@ Item {
                 
                 visible: feedListView.currentIndex > 0
                 
-                imageMargin: 5
-                hoverColor: "#27a"
-                imageURL: fangSettings.style === "LIGHT" ? "images/symbol_pencil.svg"
-                                                         : "images/symbol_dark_pencil.svg"
+                imageURL: fangSettings.style === "LIGHT" ? "images/symbol_dark_pencil.svg"
+                                                         : "images/symbol_pencil.svg"
+                imageHoverURL: fangSettings.style === "LIGHT" ? "images/symbol_pencil.svg"
+                                                              : "images/symbol_dark_pencil.svg"
+                imagePressedURL: fangSettings.style === "LIGHT" ? "images/symbol_pencil.svg"
+                                                                : "images/symbol_dark_pencil.svg"
                 
                 onClicked: editClicked()
             }
@@ -165,10 +170,12 @@ Item {
                 
                 visible: feedListView.currentIndex > 0
                 
-                imageMargin: 5
-                hoverColor: "#a22"
-                imageURL: fangSettings.style === "LIGHT" ? "images/minus.png"
-                                                         : "images/minus_dark.png"
+                imageURL: fangSettings.style === "LIGHT" ? "images/minus_dark.png"
+                                                         : "images/minus.png"
+                imageHoverURL: fangSettings.style === "LIGHT" ? "images/minus.png"
+                                                              : "images/minus_dark.png"
+                imagePressedURL: fangSettings.style === "LIGHT" ? "images/minus.png"
+                                                                : "images/minus_dark.png"
                 
                 onClicked: removeClicked()
             }
@@ -182,10 +189,12 @@ Item {
                 width: buttonSize
                 height: buttonSize
                 
-                imageMargin: 5
-                imageURL: fangSettings.style === "LIGHT" ? "images/arrows_left.png"
-                                                         : "images/arrows_left_dark.png"
-                                                           
+                imageURL: fangSettings.style === "LIGHT" ? "images/arrows_left_dark.png"
+                                                         : "images/arrows_left.png"
+                imageHoverURL: fangSettings.style === "LIGHT" ? "images/arrows_left.png"
+                                                              : "images/arrows_left_dark.png"
+                imagePressedURL: fangSettings.style === "LIGHT" ? "images/arrows_left.png"
+                                                                : "images/arrows_left_dark.png"
                 
                 onClicked: closeClicked()
             }
