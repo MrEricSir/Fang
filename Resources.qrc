@@ -50,5 +50,6 @@
         <file>qml/Fang/images/spinner_dark.gif</file>
         <file>html/jquery-2.0.3.js</file>
         <file>html/fang.js</file>
+        <file>qml/Fang/images/fang_logo.svg</file>
     </qresource>
 </RCC>

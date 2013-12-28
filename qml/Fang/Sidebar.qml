@@ -31,6 +31,24 @@ Item {
             anchors.fill: parent
             anchors.margins: 5
             
+            Image {
+                id: fangLogo
+                
+                source: "images/fang_logo.svg"
+                
+                anchors.top: parent.top
+                anchors.topMargin: 5
+                anchors.left: parent.left
+                anchors.leftMargin: 5
+                height: 25
+                
+                
+                // Hack to make SVGs render with anti-aliasing
+                sourceSize.width: width
+                sourceSize.height: height
+                smooth: true
+            }
+            
             // Fang settings.
             SidebarButton {
                 id: settingsButton
