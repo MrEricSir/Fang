@@ -62,6 +62,12 @@ SOURCES += src/main.cpp \
 include(src/qtquick2applicationviewer/qtquick2applicationviewer.pri)
 qtcAddDeployment()
 
+# Windows icon
+RC_FILE = win32.rc
+
+# Mac icon
+ICON = icons/mac.icns
+
 OTHER_FILES += \
     qml/Fang/FeedTitleDelegate.qml \
     html/NewsPage.html \

@@ -14,6 +14,9 @@ FangApplicationViewer::FangApplicationViewer(QWindow *parent) :
 
 void FangApplicationViewer::displayWindow()
 {
+    // Set the icon!
+    setIcon(QIcon(":/icons/icon_circle.svg"));
+    
     restoreWindowSettings();
     
     if (maximizeOnStart)
