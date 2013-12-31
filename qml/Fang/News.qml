@@ -133,9 +133,9 @@ Item {
                     newsScroll.scrollUp();
                 else if (event.key === Qt.Key_Down)
                     newsScroll.scrollDown();
-                else if (event.key === Qt.Home)
+                else if (event.key === Qt.Key_Home)
                     newsScroll.scrollHome();
-                else if (event.key === Qt.End)
+                else if (event.key === Qt.Key_End)
                     newsScroll.scrollEnd();
             }
         }

@@ -92,7 +92,7 @@ Rectangle {
         }
     ]
     
-    focus: true
+    focus: state == "open";
     Keys.onPressed: {
         if (event.key === Qt.Key_Escape) {
             close();

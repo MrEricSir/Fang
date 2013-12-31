@@ -55,11 +55,11 @@ Item {
     
     // Sets the scrollbar to the given value.
     function scrollToScrollbarPosition( newY ) {
-        slider.y = newY;
+        slider.y = Math.max(0, Math.min(newY, track.height - slider.height))
         slider.slideToY();
     }
     
-    property var scrollPercentage: 0.15
+    property real scrollPercentage: 0.15
     
     
     /**
@@ -188,8 +188,6 @@ Item {
         
         MouseArea {
             anchors.fill: parent
-            focus: true
-            
             enabled: scrollBar.state == "inactive"
             hoverEnabled: true
             
