@@ -32,6 +32,7 @@ signals:
      * @brief Add a little something to the web page.
      * 
      * @param append      True for appending, false for prepending.
+     * @param isLast      True if this is the last item we're prepending.
      * @param id          The string ID for the HTML element.
      * @param title       Title of the news item
      * @param url         URL of the story
@@ -39,7 +40,7 @@ signals:
      * @param timestamp   String timestamp
      * @param content     HTML content
      */
-    void add(bool append, QString id, QString title, QString url, QString feedTitle, QString timestamp, QString content);
+    void add(bool append, bool isLast, QString id, QString title, QString url, QString feedTitle, QString timestamp, QString content);
 
     
     /**
@@ -92,7 +93,7 @@ private slots:
     
     QString escapeCharacters(const QString& string);
     
-    void addNewsItem(bool append, NewsItem* item);
+    void addNewsItem(bool append, bool isLast, NewsItem* item);
     
     // Creates and executes a LoadNews operation.
     void doLoadNews(LoadNews::LoadMode mode);

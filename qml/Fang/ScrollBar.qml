@@ -47,6 +47,60 @@ Item {
     // The flickable component to scroll.
     property variant target
     
+    // Scrolls to a given position in the document.  Will "clip" the value if it's out of bounds.
+    function scrollTo( value ) {
+        var newY = ( value /  ( target.contentHeight - target.height ) ) * slider.maxScrollbarY;
+        scrollToScrollbarPosition( newY );
+    }
+    
+    // Sets the scrollbar to the given value.
+    function scrollToScrollbarPosition( newY ) {
+        slider.y = newY;
+        slider.slideToY();
+    }
+    
+    property var scrollPercentage: 0.15
+    
+    
+    /**
+      * Functions for scrolling.
+      */
+    
+    function pageDown() {
+        //console.log("Page down");
+        scrollTo( target.contentY + target.height );
+        
+    }
+
+    function pageUp() {
+        //console.log("Page up");
+        scrollTo( target.contentY - target.height );
+    }
+
+    function scrollUp() {
+        //console.log("Scroll up");
+        scrollTo( target.contentY - ( (target.height) * scrollPercentage ) );
+    }
+
+    function scrollDown() {
+        //console.log("Scroll down");
+        scrollTo( target.contentY + ( (target.height) * scrollPercentage ) );
+    }
+
+    function scrollHome() {
+        console.log("Scroll home");
+        scrollTo( 0 );
+    }
+
+    function scrollEnd() {
+        console.log("Scroll end");
+        scrollTo( target.contentHeight );
+    }
+    
+    // The target's new contentY value
+    // NOTE: This should normally only be set by the scrollTo() function.
+    property int newContentY: 0
+    
     states: [
         State { name: "active" },
         State { name: "inactive" }
@@ -160,6 +214,7 @@ Item {
                 
                 height: Math.max(Math.min(target.height / target.contentHeight * track.height, track.height), 75)
                 
+                // Max Y value of scroll bar.
                 property int maxScrollbarY: track.height - height
                 
                 // Base y value is total scroll area scalled to scroll bar size.
@@ -177,13 +232,18 @@ Item {
                 onBaseYChanged: setY();
                 onMaxScrollbarYChanged: setY();
                 
+                function slideToY() {
+                    var newScroll = (slider.y / slider.maxScrollbarY) * (target.contentHeight - target.height);
+                    
+                    // Ensure it's within bounds.
+                    newContentY = Math.max(0, Math.min(newScroll, target.contentHeight - target.height))
+                    scrollAnimation.restart();
+                }
+                
                 MouseArea {
                     id: sliderMouseArea
                     
                     anchors.fill: parent
-                    
-                    // The target's new contentY value
-                    property int newContentY: 0
                     
                     drag.target: parent
                     drag.axis: Drag.YAxis
@@ -194,9 +254,8 @@ Item {
                     
                     onPositionChanged: {
                         if (pressedButtons == Qt.LeftButton) {
-                            newContentY = (slider.y / slider.maxScrollbarY) * (target.contentHeight - target.height)
-                            newContentY = Math.max(0, Math.min(newContentY, target.contentHeight-target.height))
-                            scrollAnimation.restart();
+                            // Convert slider position to page position.
+                            slider.slideToY();
                         }
                         
                         inactiveTimer.restart()
@@ -204,18 +263,18 @@ Item {
                     
                     // Scoot the view back it to bounds if we overshot.
                     onReleased: target.returnToBounds();
-                    
-                    NumberAnimation {
-                        id: scrollAnimation
-                        
-                        target: scrollBar.target
-                        properties: "contentY"
-                        to: sliderMouseArea.newContentY
-                        duration: 450
-                        easing.type: Easing.OutQuad
-                    }
                 }
             }
         }
+    }
+    
+    NumberAnimation {
+        id: scrollAnimation
+        
+        target: scrollBar.target
+        properties: "contentY"
+        to: newContentY // TODO: move this out of mouse area
+        duration: 450
+        easing.type: Easing.OutQuad
     }
 }

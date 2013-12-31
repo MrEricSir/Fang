@@ -33,7 +33,8 @@ Item {
             
             onAdd: {
                 newsView.experimental.evaluateJavaScript("appendNews("
-                                                         + append + ", '"
+                                                         + append + ", "
+                                                         + isLast + ", '"
                                                          + id + "', '"
                                                          + title + "', '"
                                                          + url + "', '"
@@ -91,20 +92,20 @@ Item {
             experimental.preferences.navigatorQtObjectEnabled: true
             experimental.onMessageReceived: {
                 //console.log("get msg from javascript:", message.data)
-                if (message.data === "loadNext") {
-                    webInteractor.loadNext();
-                } else if (message.data === "loadPrevious") {
-                    webInteractor.loadPrevious();
-                } else if (message.data === "jumpToBookmark") {
-                    webInteractor.jumpToBookmark();
-                } else if (message.data.substring(0, 11) === "setBookmark") {
-                    var bookmarkArray = message.data.split(" ");
-                    webInteractor.setBookmark(bookmarkArray[1]);
-                } else if (message.data.substring(0, 8) === "openLink") {
-                    var linkArray = message.data.split(" ");
-                    webInteractor.openLink(linkArray[1]);
-                }
+                var commandArray = message.data.split(" ");
+                var cmd = commandArray[0];
                 
+                if (cmd === "loadNext") {
+                    webInteractor.loadNext();
+                } else if (cmd === "loadPrevious") {
+                    webInteractor.loadPrevious();
+                } else if (cmd === "jumpToBookmark") {
+                    webInteractor.jumpToBookmark();
+                } else if (cmd === "setBookmark") {
+                    webInteractor.setBookmark(commandArray[1]);
+                } else if (cmd === "openLink") {
+                    webInteractor.openLink(commandArray[1]);
+                }
             }
             
             // Set style, and update when needed.
@@ -122,10 +123,26 @@ Item {
                 onFontSizeChanged: newsView.updateCSS()
                 onStyleChanged: newsView.updateCSS()
             }
+            
+            Keys.onPressed: {
+                if (event.key === Qt.Key_PageDown)
+                    newsScroll.pageDown();
+                else if (event.key === Qt.Key_PageUp)
+                    newsScroll.pageUp();
+                else if (event.key === Qt.Key_Up)
+                    newsScroll.scrollUp();
+                else if (event.key === Qt.Key_Down)
+                    newsScroll.scrollDown();
+                else if (event.key === Qt.Home)
+                    newsScroll.scrollHome();
+                else if (event.key === Qt.End)
+                    newsScroll.scrollEnd();
+            }
         }
     }
     
     ScrollBar {
+        id: newsScroll
         target: newsView
     }
 }

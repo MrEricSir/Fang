@@ -143,11 +143,11 @@ void WebInteractor::onLoadNewsFinished(Operation* operation)
     // Stuff the new items into our feed.
     if (loader->getAppendList() != NULL)
         foreach(NewsItem* item, *loader->getAppendList())
-            addNewsItem(true, item);
+            addNewsItem(true, false, item);
     
     if (loader->getPrependList() != NULL)
         foreach(NewsItem* item, *loader->getPrependList())
-            addNewsItem(false, item);
+            addNewsItem(false, item == loader->getPrependList()->last(), item);
     
     // If this is the initial load, draw and jump to the bookmark.
     if (loader->getMode() == LoadNews::Initial && currentFeed->getBookmark() != NULL) {
@@ -197,10 +197,11 @@ QString WebInteractor::escapeCharacters(const QString& string)
     return rValue;
 }
 
-void WebInteractor::addNewsItem(bool append, NewsItem *item)
+void WebInteractor::addNewsItem(bool append, bool isLast, NewsItem *item)
 {
     //qDebug() << "Add news: " << item->id();
     emit add(append,
+             isLast,
              item->id(),
              escapeCharacters(item->getTitle()),
              escapeCharacters(item->getURL().toString()),

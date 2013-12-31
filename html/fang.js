@@ -24,8 +24,11 @@ function delegateLink() {
     return false; // Don't propogate link.
 };
 
+// Adds the size 
+var prependScroll = 0;
+
 // Appends (or prepends) a news item.
-function appendNews(append, id, title, url, feedTitle, timestamp, content) {
+function appendNews(append, isLast, id, title, url, feedTitle, timestamp, content) {
     // Copy the model.
     var item = $( 'body>.newsContainer#model' ).clone();
     
@@ -55,9 +58,16 @@ function appendNews(append, id, title, url, feedTitle, timestamp, content) {
         //console.log("Prepend!")
         item.insertBefore( 'body>.newsContainer:first' );
         
-        // Scroll down after prepend.
+        // Calculate the size and add it to our prepend scroll tally.
         var verticalMargins = parseInt( item.css("marginBottom") ) + parseInt( item.css("marginTop") );
-        $(document).scrollTop( $(document).scrollTop() + verticalMargins + item.height() );
+        prependScroll += verticalMargins + item.height();
+        
+        // For the final prepend item, scroll downward.
+        if (isLast) {
+            $(document).scrollTop( prependScroll );
+            console.log("Prepend: scroll to: ", prependScroll);
+            prependScroll = 0; // reset
+        }
     }
     
     resizeBottomSpacer();
