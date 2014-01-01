@@ -107,6 +107,9 @@ Rectangle {
         anchors.bottom: parent.bottom
         anchors.right: parent.right
         
+        // NOTE: When adding new dialogs, they also must go here.
+        newsFocus: settings.isClosed && addFeed.isClosed && removeFeed.isClosed && editFeed.isClosed
+        
         Item {
             id: openButtonContainer
             
@@ -184,4 +187,6 @@ Rectangle {
         // This lets us access the current item.
         listView: sidebar.listView
     }
+    
+    // NOTE: When adding new dialogs, a corresponding reference must be made in newsFocus
 }

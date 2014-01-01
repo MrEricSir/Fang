@@ -113,10 +113,10 @@ Rectangle {
                     color: style.color.textEntryText
                     font.family: style.font.defaultFamily
                     font.pointSize: textEntry.fontSize
-                    focus: true
+                    focus: visible
                     wrapMode: TextEdit.NoWrap
                     
-                    //onActiveFocusChanged: console.log("Got focus")
+                    //onActiveFocusChanged: console.log("Active focus: ", activeFocus)
                     
                     // Used with the above flickable.
                     onCursorRectangleChanged: flick.ensureVisible(cursorRectangle)

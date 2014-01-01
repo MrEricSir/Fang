@@ -51,6 +51,7 @@ Item {
         property color dialogButtonTextDisabled: "#999"
         property color dialogButtonPressed: Qt.darker(colorSchemeLight.dialogButtonHover, 1.5)
         property color dialogButtonDisabled: Qt.lighter(colorSchemeLight.dialogButton, 1.5)
+        property color dialogButtonBorder: "transparent"
         
         property color textEntryBackground: "white"
         property color textEntryText: "black"
@@ -88,6 +89,7 @@ Item {
         property color dialogButtonTextDisabled: "#666"
         property color dialogButtonPressed: Qt.lighter(colorSchemeDark.dialogButtonHover, 1.5)
         property color dialogButtonDisabled: Qt.darker(colorSchemeDark.dialogButton, 1.5)
+        property color dialogButtonBorder: "transparent"
         
         property color textEntryBackground: "black"
         property color textEntryText: "white"

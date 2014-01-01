@@ -14,7 +14,8 @@ Rectangle {
     default property alias contents: placeholder.children
     
     // Read only.
-    property bool isClosing: state == "close" || dismissTimer.running
+    property bool isClosing: state === "closed" || dismissTimer.running
+    property bool isClosed: state === "closed"
     
     color: style.color.dialogBackground
     visible: false // Managed by state transitions

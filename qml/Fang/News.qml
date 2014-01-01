@@ -11,6 +11,9 @@ Item {
         webInteractor.jumpToBookmark();
     }
     
+    // Sets focus on the news view when dialogs are closed.
+    property alias newsFocus: newsView.focus
+    
     Item {
         id: newsMargin
         
@@ -84,7 +87,7 @@ Item {
             // Resize a bit more intelligently.
             experimental.preferredMinimumContentsWidth: 300
             
-            focus: true
+            focus: visible
             
             url: "qrc:///html/NewsPage.html"
             

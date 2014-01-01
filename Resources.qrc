@@ -56,5 +56,6 @@
         <file>win32.rc</file>
         <file>icons/mac.icns</file>
         <file>icons/win32.ico</file>
+        <file>qml/Fang/Button.qml</file>
     </qresource>
 </RCC>
