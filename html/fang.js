@@ -24,11 +24,35 @@ function delegateLink() {
     return false; // Don't propogate link.
 };
 
-// Adds the size 
+// Collects the size of each prepended item to use for scrolling up.
 var prependScroll = 0;
 
+// True if an operation is in progress.  Set to true by clearNews().
+var isInProgress = false;
+
+function inProgress(started, operation) {
+    if (started)
+        prependScroll = 0;
+    
+    if (!started && operation === "prepend") {
+        $(document).scrollTop( prependScroll );
+        console.log("Prepend: scroll to: ", prependScroll);
+    }
+    
+    // Let the stop go through both processes so we can ensure the view has moved.
+    if (!started) {
+        window.setTimeout(function() {
+            navigator.qt.postMessage( 'stopProgress' );
+        }, 50);
+    }
+}
+
+function stopInProgress() {
+    isInProgress = false;
+}
+
 // Appends (or prepends) a news item.
-function appendNews(append, isLast, id, title, url, feedTitle, timestamp, content) {
+function appendNews(append, id, title, url, feedTitle, timestamp, content) {
     // Copy the model.
     var item = $( 'body>.newsContainer#model' ).clone();
     
@@ -52,22 +76,15 @@ function appendNews(append, isLast, id, title, url, feedTitle, timestamp, conten
     
     // Stick 'er in!
     if (append) {
-        //console.log("append! ", id)
+        console.log("Append!")
         item.insertAfter('body>.newsContainer:last');
     } else {
-        //console.log("Prepend!")
+        console.log("Prepend!")
         item.insertBefore( 'body>.newsContainer:first' );
         
         // Calculate the size and add it to our prepend scroll tally.
         var verticalMargins = parseInt( item.css("marginBottom") ) + parseInt( item.css("marginTop") );
         prependScroll += verticalMargins + item.height();
-        
-        // For the final prepend item, scroll downward.
-        if (isLast) {
-            $(document).scrollTop( prependScroll );
-            console.log("Prepend: scroll to: ", prependScroll);
-            prependScroll = 0; // reset
-        }
     }
     
     resizeBottomSpacer();
@@ -85,6 +102,7 @@ function removeMatchingItems(item) {
 
 // Clears out all the news from the view.
 function clearNews() {
+    isInProgress = true;
     removeMatchingItems( $('body>.newsContainer:not(#model)') );
 }
 
@@ -112,12 +130,6 @@ function resizeBottomSpacer() {
 
 // Scrolls to the element with the given ID.
 function jumpTo(id) {
-    console.log("Jump to: ", id)
-    // Append to event loop.
-    window.setTimeout(jumpToInternal, 1, id);
-}
-
-function jumpToInternal(id) {
     console.log("Jump to: ", id)
     
     resizeBottomSpacer();
@@ -219,6 +231,9 @@ $(document).ready(function() {
     
     // Adjust the bookmark if necessary.
     function checkBookmark() {
+        if (isInProgress)
+            return; // Wait for news items to appear, dummy!
+        
         // Start at the current bookmark.
         var bookmarkedItem = $( 'body>.bookmarked' );
         
@@ -279,11 +294,17 @@ $(document).ready(function() {
     }
     
     function loadNext() {
+        if (isInProgress)
+            return;
+        
         console.log("loadNext")
         navigator.qt.postMessage( 'loadNext' );
     }
     
     function loadPrevious() {
+        if (isInProgress)
+            return;
+        
         console.log("load prev")
         navigator.qt.postMessage( 'loadPrevious' );
     }

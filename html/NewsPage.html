@@ -17,14 +17,14 @@ body {
     height: 3.6em;
     width: 100%;
     margin: 0;
-    padding-top: 1.0em;
 }
 
 /* Draws the bookmark's stripe. */
 .newsContainer > .bookmark > .stripe {
-    width: 85%;
-    margin-left: 8.5%;
-    height: 1.0em;
+    width: 90%;
+    margin-left: 5%;
+    margin-top: 1.7em;
+    height: 0.6em;
     border-radius: 0.35em;
     
     visibility: hidden; /* Don't show by default */
@@ -95,7 +95,17 @@ a:active { text-decoration: underline; }
 
 body > #bottom {
     height: 100%;
-    background: linear-gradient(to bottom, #ffffff 0%,#ffffff 90%,#a8a8a8 100%);
+    position: relative;
+    text-align:center;
+    font-family: Futura, "Trebuchet MS", Arial, sans-serif;
+    font-style: italic;
+}
+
+body > #bottom > #bottomText {
+    position: absolute;
+    width: 100%;
+    left: 0;
+    bottom: 1.0em;
 }
 
 /**** Light theme ****/
@@ -116,6 +126,7 @@ body.LIGHT > .newsContainer > .divider { background-color: #ccc; }
 body.LIGHT > .newsContainer > h1, body.LIGHT > .newsContainer > h1 > a { color: black; }
 
 body.LIGHT > .newsContainer > .bookmark > .stripe { background-color: #8e0000; }
+body.LIGHT > #bottom > #bottomText  { color: #777; }
 
 /**** Dark theme ****/
 
@@ -135,7 +146,7 @@ body.DARK > .newsContainer > .divider { background-color: #888; }
 body.DARK > .newsContainer > h1, body.DARK > .newsContainer > h1 a { color: white; }
 
 body.DARK > .newsContainer > .bookmark > .stripe  { background-color: #ce0000; }
-
+body.DARK > #bottom > #bottomText  { color: #ccc; }
 
 /**** Platforms ****/
 
@@ -147,12 +158,16 @@ body.WIN { font-family: "Segoe UI", Arial, sans-serif !important; }
 
 body.FONT_SMALL > .newsContainer > .content { font-size: 9pt; }
 body.FONT_SMALL > .newsContainer > h1 { font-size: 13pt; }
+body.FONT_SMALL > #bottom > #bottomText { font-size: 10pt; }
 
 body.FONT_MEDIUM > .newsContainer > .content { font-size: 12pt; }
 body.FONT_MEDIUM > .newsContainer > h1 { font-size: 16pt; }
+body.FONT_MEDIUM > #bottom > #bottomText { font-size: 14pt; }
+
 
 body.FONT_LARGE > .newsContainer > .content { font-size: 16pt; }
 body.FONT_LARGE > .newsContainer > h1 { font-size: 26pt; }
+body.FONT_LARGE > #bottom > #bottomText { font-size: 20pt; }
 
 </style>
 
@@ -174,6 +189,6 @@ body.FONT_LARGE > .newsContainer > h1 { font-size: 26pt; }
 
 </div>
 
-<div class="bottom" id="bottom"><br /></div>
+<div class="bottom" id="bottom"><span id="bottomText">~ fin ~</span><div>
 
 </body></html>

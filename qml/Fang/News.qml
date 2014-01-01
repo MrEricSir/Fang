@@ -34,10 +34,15 @@ Item {
                             );
             }
             
+            onAddInProgress: {
+                newsView.experimental.evaluateJavaScript("inProgress("
+                                                         + started + ", '"
+                                                         + operation + "');");
+            }
+            
             onAdd: {
                 newsView.experimental.evaluateJavaScript("appendNews("
-                                                         + append + ", "
-                                                         + isLast + ", '"
+                                                         + append + ", '"
                                                          + id + "', '"
                                                          + title + "', '"
                                                          + url + "', '"
@@ -108,6 +113,8 @@ Item {
                     webInteractor.setBookmark(commandArray[1]);
                 } else if (cmd === "openLink") {
                     webInteractor.openLink(commandArray[1]);
+                } else if (cmd === "stopProgress" ) {
+                    newsView.experimental.evaluateJavaScript("stopInProgress();");
                 }
             }
             
