@@ -87,6 +87,16 @@ Item {
                             "addBodyClass('" + fangSettings.style + "');");
             }
             
+            // Jumpts to the next news item.
+            function jumpNext() {
+                newsView.experimental.evaluateJavaScript("jumpNextPrev(true);");
+            }
+            
+            // Jumps to the previous news item.
+            function jumpPrevious() {
+                newsView.experimental.evaluateJavaScript("jumpNextPrev(false);");
+            }
+            
             anchors.fill: parent
             
             // Resize a bit more intelligently.
@@ -115,6 +125,9 @@ Item {
                     webInteractor.openLink(commandArray[1]);
                 } else if (cmd === "stopProgress" ) {
                     newsView.experimental.evaluateJavaScript("stopInProgress();");
+                } else if (cmd === "scrollToPosition" ) {
+                    console.log("Scroll to position: ", commandArray[1]);
+                    newsScroll.scrollTo(commandArray[1]);
                 }
             }
             
@@ -147,6 +160,10 @@ Item {
                     newsScroll.scrollHome();
                 else if (event.key === Qt.Key_End)
                     newsScroll.scrollEnd();
+                else if (event.key === Qt.Key_Left)
+                    newsView.jumpPrevious();
+                else if (event.key === Qt.Key_Right)
+                    newsView.jumpNext();
             }
         }
     }

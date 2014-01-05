@@ -30,11 +30,12 @@ var prependScroll = 0;
 // True if an operation is in progress.  Set to true by clearNews().
 var isInProgress = false;
 
+// We're either about to append, prepend, or do the initial load.
 function inProgress(started, operation) {
     if (started)
         prependScroll = 0;
     
-    if (!started && operation === "prepend") {
+    if (!started && operation === "prepend" && prependScroll > 10) {
         $(document).scrollTop( prependScroll );
         console.log("Prepend: scroll to: ", prependScroll);
     }
@@ -47,6 +48,7 @@ function inProgress(started, operation) {
     }
 }
 
+// Used above.
 function stopInProgress() {
     isInProgress = false;
 }
@@ -153,6 +155,99 @@ function drawBookmark(id) {
     resizeBottomSpacer();
 }
 
+// UTILITY: Returns true if the element is the model, else false.
+function isModel(element) {
+    return element.attr('id') === 'model';
+}
+
+// Returns the next item that is not the model.
+function nextNotModel(element) {
+    //console.log("nextNotModel for: ", element)
+    var next = element.next();
+    return isModel(next) ? next.next() : next;
+}
+
+// Just like America's nextNotModel(), this 
+function prevNotModel(element) {
+    //console.log("prevNotModel for: ", element)
+    var prev = element.prev();
+    return isModel(prev) ? prev.prev() : prev;
+}
+
+// UTILITY: Returns true if the element is above the scroll position, else false.
+function isAboveScroll(element) {
+    //console.log("Is above scroll: ", element)
+    if (isModel(element))
+        element = element.next(); // Skip the model.
+    
+    //console.log("isAboveScroll: Scroll top: ", $(window).scrollTop(), " elem offset and height: ", element.offset().top + element.height())
+    
+    return $(window).scrollTop() >= element.offset().top + element.height() - 1;
+}
+
+// UTILITY: Just like isAboveScroll(), but this only checks the top of the element.
+function isTopAboveScroll(element) {
+    //console.log("Is top above scroll: ", element)
+    if (isModel(element))
+        element = element.next(); // Skip the model.
+    
+    //console.log("isTopAboveScroll: Scroll top: ", $(window).scrollTop(), " elem offset and height: ", element.offset().top + element.height())
+    
+    return $(window).scrollTop() >= element.offset().top + 10;
+}
+
+// UTILITY: Returns the first visible news item.
+function getFirstVisible() {
+    var allNews = $( 'body>.newsContainer' );
+    
+    // Go through all the next items.
+    var item = allNews;
+    
+    // Skip over model if it's the first item.
+    if (isModel(item))
+        item = item.next();
+    
+    while (item.length >= 1) {
+        if (!isAboveScroll(item))
+            return item;
+        
+        item = nextNotModel(item);
+    }
+    
+    //console.log("GFV: it's LAST: ", item.last())
+    
+    // Just return the last item, then?
+    return allNews.last();
+}
+
+// Jumps to the next item after the bookmark.
+function jumpNextPrev(jumpNext) {
+    var current = getFirstVisible();
+    
+    //console.log("JNP: first visible: ", current)
+    
+    if (!current.length)
+        return;
+    
+    // Either go to the next item, or jump back up to the current one.
+    var jumpTo = current;
+    if (jumpNext) {
+        jumpTo = nextNotModel(jumpTo);
+    } else {
+        // Check if we're strattling the top.  If not, jump one back.
+        if (!isTopAboveScroll(jumpTo))
+            jumpTo = prevNotModel(jumpTo);
+    }
+    
+    //console.log("Jump to is: ", jumpTo)
+    
+    if (!jumpTo.length)
+        return;
+    
+    navigator.qt.postMessage( 'scrollToPosition ' + jumpTo.offset().top );
+    //$(document).scrollTop( jumpTo.scrollTop() );
+}
+
 // Removes all existing classes on the body element.
 function clearBodyClasses() {
     $('body').removeClass();
@@ -164,6 +259,8 @@ function addBodyClass(p) {
     $('body').addClass(p);
 }
 
+
+// Called by QML to tell us the height of the window.
 function setWindowHeight(height) {
     //console.log("height is now: ", height)
     windowHeight = height;
@@ -218,17 +315,6 @@ $(document).ready(function() {
         setInterval(checkScrollPosition, interval);
     }
     
-    // Returns true if the element is above the scroll position, else false.
-    function isAboveScroll(element) {
-        //console.log("Is above scroll: ", element)
-        if (element.attr('id') === 'model')
-            element = element.next(); // Skip the model.
-        
-        //console.log("isAboveScroll: Scroll top: ", $(window).scrollTop(), " elem offset and height: ", element.offset().top + element.height())
-        
-        return $(window).scrollTop() >= element.offset().top + element.height() - 1;
-    }
-    
     // Adjust the bookmark if necessary.
     function checkBookmark() {
         if (isInProgress)
@@ -239,7 +325,7 @@ $(document).ready(function() {
         
         // No bookmark?  No problem, we'll look at the first news item instead.
         if (!bookmarkedItem.length) {
-            bookmarkedItem = $( 'body>.newsContainer' );
+            bookmarkedItem = $( 'body>.newsContainer:visible' );
             //console.log("No bookmark found: starting with: ", bookmarkedItem)
         }
         
@@ -261,22 +347,9 @@ $(document).ready(function() {
         //console.log("Bookmark is above scroll!  It may require changing:", bookmarkedItem.next().length);
         
         // Go through all the next items.
-        var nextItem = bookmarkedItem.next();
-        while (true) {
-            if (nextItem.length < 1) {
-                console.log("We've bookmarked the final item, sir.");
-                
-                break;
-            }
-            
-            // Ignore the model, she's so stuck up.
-            if (nextItem.attr('id') === 'model') {
-                console.log("Skipping over model");
-                nextItem = nextItem.next();
-                
-                continue;
-            }
-            
+        var nextItem = nextNotModel(bookmarkedItem);
+        
+        while (nextItem.length >= 1) {
             // Nothing more to do.
             if (!isAboveScroll(nextItem)) {
                 console.log("item not above scroll:", nextItem.attr('id'))
@@ -289,7 +362,7 @@ $(document).ready(function() {
             navigator.qt.postMessage( 'setBookmark ' + nextItem.attr('id') );
             
             // Continue to next item.
-            nextItem = nextItem.next();
+            nextItem = nextNotModel(nextItem);
         }
     }
     
