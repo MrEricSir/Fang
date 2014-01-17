@@ -9,14 +9,16 @@ WebInteractor::WebInteractor(QQuickItem *parent) :
     manager(NULL),
     isLoading(false),
     isSettingBookmark(false),
-    isReady(false)
+    isReady(false),
+    feedList(NULL)
 {
     
 }
 
-void WebInteractor::init(OperationManager *manager)
+void WebInteractor::init(OperationManager *manager, ListModel *feedList)
 {
     this->manager = manager;
+    this->feedList = feedList;
 }
 
 void WebInteractor::loadNext()
@@ -49,6 +51,20 @@ void WebInteractor::jumpToBookmark()
     // Jump to the item following the bookmark, if possible.
     int index = currentFeed->getNewsList()->indexOf(currentFeed->getBookmark()) + 1;
     emit jumpTo(index < currentFeed->getNewsList()->size() ? currentFeed->getNewsList()->at(index)->id() : currentFeed->getBookmark()->id());
+}
+
+void WebInteractor::orderChanged()
+{
+    qDebug() << "Hey honey, the order changed";
+    
+    for (int i = 0; i < feedList->rowCount(); i++)
+    {
+        FeedItem* feed = qobject_cast<FeedItem*>(feedList->row(i));
+        Q_ASSERT(feed != NULL);
+        qDebug() << "Feed " << feed->getTitle() << " #" << feed->getOrdinal();
+    }
+    
+    qDebug();
 }
 
 void WebInteractor::setBookmark(QString sId)

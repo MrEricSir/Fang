@@ -91,6 +91,7 @@ Rectangle {
         onCloseClicked: sidebar.state = "closed"
         
         onFeedDoubleClicked: news.jumpToBookmark()
+        onOrderChanged: news.orderChanged()
         
         onSettingsClicked: settings.open()
         onAddClicked: addFeed.open()

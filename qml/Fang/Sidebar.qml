@@ -11,6 +11,7 @@ Item {
     signal closeClicked()
     signal feedSelected()
     signal feedDoubleClicked()
+    signal orderChanged()
     
     // Read-only properties.
     property int buttonSize: 30
@@ -110,12 +111,20 @@ Item {
                         }
                     }
                     
-                    onDoubleClicked: {
-                        feedDoubleClicked();
+                    onJumpToBookmark: {
+                        sidebar.feedDoubleClicked();
+                    }
+                    
+                    onOrderChanged: {
+                        sidebar.orderChanged();
                     }
                 }
                 
                 model: feedListModel
+                
+                displaced: Transition {
+                    NumberAnimation { properties: "x,y"; duration: 50 }
+                }
             }
             
             ScrollBar {

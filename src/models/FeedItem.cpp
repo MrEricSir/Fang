@@ -6,6 +6,7 @@
 FeedItem::FeedItem(QObject *parent) :
     ListItem(parent),
     _id(-1),
+    ordinal(-1),
     title(""),
     subtitle(""),
     lastUpdated(),
@@ -16,17 +17,19 @@ FeedItem::FeedItem(QObject *parent) :
     newsList(NULL),
     isUpdating(false),
     unreadCount(0),
-    bookmark(NULL)
+    bookmark(NULL),
+    dropTarget("none")
     
 {
     newsList = new QList<NewsItem*>();
 }
 
-FeedItem::FeedItem(qint64 id, const QString &title, const QString &subtitle, const QDateTime &lastUpdated,
-                   quint32 minutesToUpdate, const QUrl &url, const QUrl& siteURL, const QUrl &imageURL,
-                   QObject* parent) :
+FeedItem::FeedItem(qint64 id, const qint32 ordinal, const QString &title, const QString &subtitle,
+                   const QDateTime &lastUpdated, quint32 minutesToUpdate, const QUrl &url,
+                   const QUrl& siteURL, const QUrl &imageURL, QObject* parent) :
     ListItem(parent),
     _id(id),
+    ordinal(ordinal),
     title(title),
     subtitle(subtitle),
     lastUpdated(lastUpdated),
@@ -37,7 +40,8 @@ FeedItem::FeedItem(qint64 id, const QString &title, const QString &subtitle, con
     newsList(NULL),
     isUpdating(false),
     unreadCount(0),
-    bookmark(NULL)
+    bookmark(NULL),
+    dropTarget("none")
 {
     newsList = new QList<NewsItem*>();
 }
@@ -60,6 +64,7 @@ QHash<int, QByteArray> FeedItem::roleNames() const
     names[IsUpdatingRole] = "isUpdating";
     names[SelfRole] = "self";
     names[UnreadCountRole] = "unreadCount";
+    names[DropTargetRole] = "dropTarget";
     return names;
 }
 
@@ -86,16 +91,31 @@ QVariant FeedItem::data(int role) const
         return QVariant::fromValue(getSelf());
     case UnreadCountRole:
         return getUnreadCount();
+    case DropTargetRole:
+        return getDropTarget();
     default:
         return QVariant();
     }
 }
 
-bool FeedItem::operator<(const FeedItem& rhs) {
-    Q_UNUSED(rhs);
-    // TODO
-    // add ordinal to DB
+bool FeedItem::setData(const QVariant &value, int role)
+{
+    switch(role) {
+    case DropTargetRole:
+        setDropTarget(value.toString());
+        return true;
+    }
+    
     return false;
+}
+
+Qt::ItemFlags FeedItem::flags() const
+{
+    return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable;
+}
+
+bool FeedItem::operator<(const FeedItem& rhs) {
+    return ordinal < rhs.getOrdinal();
 }
 
 
@@ -121,6 +141,15 @@ void FeedItem::setTitle(const QString &newTitle)
     
     title = newTitle;
     emit titleChanged();
+    emit dataChanged();
+}
+
+void FeedItem::setDropTarget(const QString& newDropTarget)
+{
+    if (newDropTarget == dropTarget)
+        return;
+    
+    dropTarget = newDropTarget;
     emit dataChanged();
 }
 

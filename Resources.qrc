@@ -57,5 +57,6 @@
         <file>icons/mac.icns</file>
         <file>icons/win32.ico</file>
         <file>qml/Fang/Button.qml</file>
+        <file>qml/Fang/ListViewDragDelegate.qml</file>
     </qresource>
 </RCC>

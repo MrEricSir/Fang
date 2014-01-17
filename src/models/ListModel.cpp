@@ -27,6 +27,48 @@ QVariant ListModel::data(const QModelIndex &index, int role) const
     return QVariant();
   return m_list.at(index.row())->data(role);
 }
+
+// Added by Eric (TM)
+bool ListModel::setData(const QModelIndex &index, const QVariant &value, int role)
+{
+    if(index.row() < 0 || index.row() >= m_list.size())
+      return false;
+    
+    return m_list.at(index.row())->setData(value, role);
+}
+
+void ListModel::setData(int row, const QString &field_name, QVariant new_value)
+{
+    if (row < 0 || row >= m_list.size())
+      return;
+    
+    QHash<int, QByteArray> roleNames = m_list.at(row)->roleNames();
+    foreach(int roleIndex, roleNames.keys()) {
+        if (field_name == roleNames[roleIndex]) {
+             m_list.at(row)->setData(new_value, roleIndex);
+            
+            return;
+        }
+    }
+}
+
+Qt::ItemFlags ListModel::flags(const QModelIndex &index) const
+{
+    if(index.row() < 0 || index.row() >= m_list.size())
+      return Qt::NoItemFlags;
+    
+    return m_list.at(index.row())->flags();
+}
+
+void ListModel::move(int from, int to)
+{
+    // From: https://qt.gitorious.org/qt-labs/qml-object-model/source/7c2207640a65dc59a420ebf71a45e38350840313:qobjectlistmodel.cpp
+    if (!beginMoveRows(QModelIndex(), from, from, QModelIndex(), to > from ? to+1 : to))
+        return;
+    
+    m_list.move(from, to);
+    endMoveRows();
+}
  
 ListModel::~ListModel() {
   delete m_prototype;

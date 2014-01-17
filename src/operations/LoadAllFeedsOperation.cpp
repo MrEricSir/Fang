@@ -34,6 +34,7 @@ void LoadAllFeedsOperation::execute()
     while (query.next()) {
         FeedItem* item = new FeedItem(
                     query.value("id").toULongLong(),
+                    query.value("ordinal").toInt(),
                     query.value("title").toString(),
                     query.value("subtitle").toString(),
                     QDateTime::fromMSecsSinceEpoch(query.value("lastUpdated").toLongLong()),

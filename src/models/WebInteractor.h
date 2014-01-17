@@ -24,7 +24,7 @@ public:
     explicit WebInteractor(QQuickItem *parent = 0);
     virtual ~WebInteractor() {}
     
-    void init(OperationManager* manager);
+    void init(OperationManager* manager, ListModel *feedList);
     
 signals:
     
@@ -81,6 +81,9 @@ public slots:
     // Gets the current bookmark and invokes a jump to it.
     Q_INVOKABLE void jumpToBookmark();
     
+    // The order changed!  Better record that.
+    Q_INVOKABLE void orderChanged();
+    
     // Sets the bookmark, and fires a draw event.
     Q_INVOKABLE void setBookmark(QString sId);
     
@@ -119,6 +122,9 @@ private:
     
     // Once we've loaded, we're READY!
     bool isReady;
+    
+    // Pointer to the global feed list.
+    ListModel *feedList;
 };
 
 #endif // WEBINTERACTOR_H

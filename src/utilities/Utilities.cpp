@@ -11,6 +11,7 @@ Utilities::Utilities()
 FeedItem *Utilities::feedItemFromRaw(RawFeed *raw, qint64 dbId, QObject* parent)
 {
     return new FeedItem(dbId,
+                        0,
                         raw->title,
                         raw->subtitle,
                         raw->lastUpdated,

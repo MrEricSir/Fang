@@ -27,6 +27,7 @@ public:
         ImageURLRole,
         IsUpdatingRole,
         UnreadCountRole,
+        DropTargetRole,
         SelfRole
     };
     
@@ -35,6 +36,7 @@ public:
     // This class is immutable, so this is the c'tor you'll want to use.
     explicit FeedItem(
             const qint64 id,
+            const qint32 ordinal,
             const QString& title,
             const QString& subtitle,
             const QDateTime& lastUpdated,
@@ -46,10 +48,16 @@ public:
     
     virtual ~FeedItem();
     
-    // For sorting
+    /**
+     * @brief Ordinal-based sort, used for re-sorting the list.
+     * @param rhs
+     * @return 
+     */
     bool operator<(const FeedItem& rhs);
     
     QVariant data(int role) const;
+    bool setData(const QVariant &value, int role);
+    Qt::ItemFlags flags() const;
     QHash<int, QByteArray> roleNames() const;
     
     void setIsUpdating(bool isUpdating);
@@ -70,12 +78,15 @@ public:
     inline QUrl getImageURL() const { return imageURL; }
     inline int getIsUpdating() const { return isUpdating; }
     inline quint32 getUnreadCount() const { return unreadCount; }
+    inline QString getDropTarget() const { return dropTarget; }
     inline FeedItem* getSelf() const { return const_cast<FeedItem*>(this); }
     inline qint64 getDbId() const { return _id; }
     
     void setImageURL(const QUrl& url);
     
     Q_INVOKABLE void setTitle(const QString& newTitle);
+    
+    Q_INVOKABLE void setDropTarget(const QString& dropTarget);
     
     /**
      * @brief Appends a NewsItem to the end of the feed.
@@ -123,6 +134,12 @@ public:
      */
     void setUnreadCount(qint32 unreadCount);
     
+    /**
+     * @brief Returns the ordinal (note: only really used in resorting the list.)
+     * @return 
+     */
+    inline int getOrdinal() const { return ordinal; }
+    
 signals:
     
     void appended(NewsItem* item);
@@ -131,6 +148,7 @@ signals:
         
 private:
     qint64 _id;
+    qint32 ordinal;
     QString title;
     QString subtitle;
     QDateTime lastUpdated;
@@ -142,6 +160,7 @@ private:
     int isUpdating;
     qint32 unreadCount;
     NewsItem* bookmark;
+    QString dropTarget;
 };
 
 #endif // FEEDITEM_H

@@ -20,6 +20,8 @@ public:
   virtual ~ListItem() {}
   virtual QString id() const { return "invalid id"; }
   virtual QVariant data(int role) const { Q_UNUSED(role); return QVariant(); }
+  virtual bool setData(const QVariant &value, int role) { Q_UNUSED(value); Q_UNUSED(role); return false; }
+  virtual Qt::ItemFlags flags() const { return Qt::NoItemFlags; }
   virtual QHash<int, QByteArray> roleNames() const { return QHash<int, QByteArray>(); }
  
 signals:
@@ -33,12 +35,18 @@ class ListModel : public QAbstractListModel
   // Must manually set in C++ layer
   Q_PROPERTY(ListItem* selected READ selected WRITE setSelected NOTIFY selectedChanged)
   Q_PROPERTY(int selectedIndex READ selectedIndex WRITE setSelectedIndex NOTIFY selectedIndexChanged)
+    Q_PROPERTY(int count READ count)
   
 public:
   explicit ListModel(ListItem* prototype, QObject* parent = 0);
   ~ListModel();
   int rowCount(const QModelIndex &parent = QModelIndex()) const;
+  inline int count() const { return rowCount(); }
   QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+  bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
+  Q_INVOKABLE void setData(int row, const QString &field_name, QVariant new_value);
+  Qt::ItemFlags flags(const QModelIndex &index) const;
+  Q_INVOKABLE void move(int from, int to);
   void appendRow(ListItem* item);
   void appendRows(const QList<ListItem*> &items);
   void insertRow(int row, ListItem* item);

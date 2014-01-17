@@ -1,6 +1,6 @@
 import QtQuick 2.0
 
-Item {
+ListViewDragDelegate {
     id: feedTitleDelegate
     height: 35
     
@@ -8,10 +8,17 @@ Item {
         id: style
     }
     
-    signal doubleClicked()
+    signal jumpToBookmark()
     
     // Read-only
     property bool isAllNews: index == 0
+    
+    onClicked: feedListView.currentIndex = index
+    
+    onDoubleClicked: {
+        if (feedListView.currentIndex == index)
+            feedTitleDelegate.jumpToBookmark()
+    }
     
     Row {
         id: row1
@@ -178,18 +185,6 @@ Item {
                             color: style.color.badgeText
                         }
                     }
-                }
-                
-                MouseArea {
-                    id: feedItemMouseArea
-                    anchors.fill: parent
-                    onClicked: feedListView.currentIndex = index
-                    
-                    onDoubleClicked: {
-                        if (feedListView.currentIndex == index)
-                            feedTitleDelegate.doubleClicked()
-                    }
-                
                 }
             }
         }

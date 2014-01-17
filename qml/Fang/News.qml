@@ -11,6 +11,10 @@ Item {
         webInteractor.jumpToBookmark();
     }
     
+    function orderChanged() {
+        webInteractor.orderChanged();
+    }
+    
     // Sets focus on the news view when dialogs are closed.
     property alias newsFocus: newsView.focus
     
