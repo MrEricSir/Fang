@@ -15,6 +15,10 @@ Item {
         webInteractor.orderChanged();
     }
     
+    function refreshFeed() {
+        webInteractor.refreshCurrentFeed();
+    }
+    
     // Sets focus on the news view when dialogs are closed.
     property alias newsFocus: newsView.focus
     
@@ -166,8 +170,12 @@ Item {
                     newsScroll.scrollEnd();
                 else if (event.key === Qt.Key_Left)
                     newsView.jumpPrevious();
-                else if (event.key === Qt.Key_Right)
-                    newsView.jumpNext();
+                else if (event.key === Qt.Key_F5)
+                    news.refreshFeed();
+                else if (event.key === Qt.Key_R && (event.modifiers & Qt.ControlModifier))
+                    news.refreshFeed();
+                else if (event.key === Qt.Key_R && (event.modifiers & Qt.MetaModifier))
+                    news.refreshFeed();
             }
         }
     }

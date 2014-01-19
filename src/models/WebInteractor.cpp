@@ -60,7 +60,7 @@ void WebInteractor::orderChanged()
         FeedItem* feed = qobject_cast<FeedItem*>(feedList->row(i));
         Q_ASSERT(feed != NULL);
         
-        if (feed->getOrdinal() < 0)
+        if (feed->getDbId() < 0)
             continue; // Skip all news.
         
         // Set the new ordinal.
@@ -123,6 +123,46 @@ void WebInteractor::pageLoaded()
 void WebInteractor::openLink(QString link)
 {
     QDesktopServices::openUrl(QUrl(link));
+}
+
+void WebInteractor::refreshFeed(FeedItem *item)
+{
+    if (item == NULL)
+        return;
+    
+    QList<FeedItem*> feedsToUpdate;
+    
+    
+    // Special handling for all news.
+    // TODO: Handle folders
+    if (currentFeed->getDbId() < 0) {
+        // Update ALL the feeds!!
+        for (int i = 0; i < feedList->rowCount(); i++)
+        {
+            FeedItem* feed = qobject_cast<FeedItem*>(feedList->row(i));
+            Q_ASSERT(feed != NULL);
+            
+            // Add everything except all news.
+            if (item->getDbId() < 0)
+                feedsToUpdate.append(feed);
+        }
+    } else {
+        feedsToUpdate.append(item);
+    }
+    
+    // Update 'em all!
+    foreach(FeedItem* item, feedsToUpdate)
+        manager->add(new UpdateFeedOperation(manager, item));
+}
+
+void WebInteractor::refreshFeed(const qint64 id)
+{
+    refreshFeed(feedForId(id));
+}
+
+void WebInteractor::refreshCurrentFeed()
+{
+    refreshFeed(currentFeed);
 }
 
 void WebInteractor::setFeed(FeedItem *feed)
@@ -247,5 +287,19 @@ void WebInteractor::doLoadNews(LoadNews::LoadMode mode)
     isLoading =  true;
     connect(loader, SIGNAL(finished(Operation*)), this, SLOT(onLoadNewsFinished(Operation*)));
     manager->add(loader);
+}
+
+FeedItem *WebInteractor::feedForId(const qint64 id)
+{
+    for (int i = 0; i < feedList->rowCount(); i++)
+    {
+        FeedItem* feed = qobject_cast<FeedItem*>(feedList->row(i));
+        Q_ASSERT(feed != NULL);
+        
+        if (feed->getDbId() == id)
+            return feed;
+    }
+    
+    return NULL;
 }
 

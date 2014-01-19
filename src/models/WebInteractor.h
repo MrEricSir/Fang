@@ -12,6 +12,7 @@
 #include "../operations/LoadAllNewsOperation.h"
 #include "../operations/SetBookmarkOperation.h"
 #include "../operations/UpdateOrdinalsOperation.h"
+#include "../operations/UpdateFeedOperation.h"
 
 /**
  * @brief Passes news between the JavaScript and C++ layers, yo.
@@ -94,6 +95,14 @@ public slots:
     // Opens a link in the external browser.
     Q_INVOKABLE void openLink(QString link);
     
+    void refreshFeed(FeedItem* item);
+    
+    // Refreshes a given feed.
+    Q_INVOKABLE void refreshFeed(const qint64 id);
+    
+    // Refreshes the current feed.
+    Q_INVOKABLE void refreshCurrentFeed();
+    
 private slots:
     
     // Called when a load has completed.
@@ -109,6 +118,9 @@ private slots:
     
     // Creates and executes a LoadNews operation.
     void doLoadNews(LoadNews::LoadMode mode);
+    
+    // Fetches the feed with the given ID.
+    FeedItem* feedForId(const qint64 id);
     
 private:
     // The currently selected news feed.
