@@ -21,7 +21,8 @@ FangApp::FangApp(QObject *parent, FangApplicationViewer* viewer) :
     currentFeed(NULL),
     loadAllFinished(false),
     fangSettings(NULL),
-    interactor(NULL)
+    interactor(NULL),
+    updateTimer(new QTimer(this))
 {
     Q_ASSERT(_instance == NULL);
     _instance = this;
@@ -58,6 +59,10 @@ void FangApp::init()
     LoadAllFeedsOperation* loadAllOp = new LoadAllFeedsOperation(&manager, feedList);
     connect(loadAllOp, SIGNAL(finished(Operation*)), this, SLOT(onLoadAllFinished(Operation*)));
     manager.add(loadAllOp);
+    
+    // Set a timer to update the feeds every ten minutes (make changable later.)
+    connect(updateTimer, SIGNAL(timeout()), this, SLOT(updateAllFeeds()));
+    updateTimer->start(10 * 60 * 1000);
 }
 
 FeedItem* FangApp::getFeed(int index) {
@@ -164,6 +169,16 @@ void FangApp::onLoadAllFinished(Operation *op)
     loadAllFinished = true;
     
     // TODO: It used to be necessary to call displayFeed() here.  Is it still?
+}
+
+void FangApp::updateAllFeeds()
+{
+    if (feedList == NULL || feedList->rowCount() == 0 || interactor == NULL)
+        return; // Somehow this was called too early.
+    
+    FeedItem* allNews = qobject_cast<FeedItem*>(feedList->row(0));
+    Q_ASSERT(allNews != NULL);
+    interactor->refreshFeed(allNews);
 }
 
 void FangApp::displayFeed()

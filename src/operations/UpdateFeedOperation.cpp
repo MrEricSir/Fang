@@ -34,6 +34,8 @@ void UpdateFeedOperation::execute()
         return;
     }
     
+    //qDebug() << "Updating feed: " << feed->getTitle();
+    
     feed->setIsUpdating(true);
     
     // Send network request.

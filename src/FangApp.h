@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QQmlContext>
 #include <QQuickView>
+#include <QTimer>
 
 #include "../qtquick2applicationviewer/qtquick2applicationviewer.h"
 
@@ -92,6 +93,11 @@ private slots:
     void onLoadAllFinished(Operation* op);
     
     /**
+     * @brief Updates every single damn feed.
+     */
+    void updateAllFeeds();
+    
+    /**
      * @brief Tells the web view to display the current feed.
      */
     void displayFeed();
@@ -122,6 +128,7 @@ private:
     bool loadAllFinished;
     FangSettings *fangSettings;
     WebInteractor *interactor;
+    QTimer *updateTimer;
 };
 
 #endif // FANGAPP_H

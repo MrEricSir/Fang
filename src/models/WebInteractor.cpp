@@ -132,19 +132,15 @@ void WebInteractor::refreshFeed(FeedItem *item)
     
     QList<FeedItem*> feedsToUpdate;
     
-    
     // Special handling for all news.
     // TODO: Handle folders
     if (currentFeed->getDbId() < 0) {
-        // Update ALL the feeds!!
-        for (int i = 0; i < feedList->rowCount(); i++)
+        // Update ALL the feeds (except all news, obviously.)
+        for (int i = 1; i < feedList->rowCount(); i++)
         {
             FeedItem* feed = qobject_cast<FeedItem*>(feedList->row(i));
             Q_ASSERT(feed != NULL);
-            
-            // Add everything except all news.
-            if (item->getDbId() < 0)
-                feedsToUpdate.append(feed);
+            feedsToUpdate.append(feed);
         }
     } else {
         feedsToUpdate.append(item);
