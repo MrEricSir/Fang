@@ -11,6 +11,7 @@
 #include "../operations/LoadNews.h"
 #include "../operations/LoadAllNewsOperation.h"
 #include "../operations/SetBookmarkOperation.h"
+#include "../operations/UpdateOrdinalsOperation.h"
 
 /**
  * @brief Passes news between the JavaScript and C++ layers, yo.

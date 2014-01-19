@@ -58,7 +58,7 @@ Item {
         property color textEntryBorder: dialogButton
         property color textEntryHint: sidebarRightLine
         
-        property color sidebar: "#e5e5e5"
+        property color sidebar: "#efefef"
         property color sidebarToolbar: "#535353"
         property color sidebarRightLine: "#ccc"
         property color sidebarSelected: "white"

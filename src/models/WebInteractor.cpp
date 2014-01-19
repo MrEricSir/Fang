@@ -55,16 +55,22 @@ void WebInteractor::jumpToBookmark()
 
 void WebInteractor::orderChanged()
 {
-    qDebug() << "Hey honey, the order changed";
-    
     for (int i = 0; i < feedList->rowCount(); i++)
     {
         FeedItem* feed = qobject_cast<FeedItem*>(feedList->row(i));
         Q_ASSERT(feed != NULL);
-        qDebug() << "Feed " << feed->getTitle() << " #" << feed->getOrdinal();
+        
+        if (feed->getOrdinal() < 0)
+            continue; // Skip all news.
+        
+        // Set the new ordinal.
+        feed->setOrdinal(i);
+        //qDebug() << "Feed " << feed->getTitle() << " #" << feed->getOrdinal();
     }
     
-    qDebug();
+    // Write to DB.
+    UpdateOrdinalsOperation* updateOp = new UpdateOrdinalsOperation(manager, feedList);
+    manager->add(updateOp);
 }
 
 void WebInteractor::setBookmark(QString sId)

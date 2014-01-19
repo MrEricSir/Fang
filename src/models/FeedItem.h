@@ -140,6 +140,11 @@ public:
      */
     inline int getOrdinal() const { return ordinal; }
     
+    /**
+     * @brief Sets the ordinal.
+     */
+    void setOrdinal(int newOrdinal);
+    
 signals:
     
     void appended(NewsItem* item);

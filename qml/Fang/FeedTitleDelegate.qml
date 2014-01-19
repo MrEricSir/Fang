@@ -42,7 +42,7 @@ ListViewDragDelegate {
                 Item {
                     id: feedIconCol
                     
-                    width: isAllNews ? 0 : 40 // no icon for all news
+                    width: isAllNews ? 0 : 35 // no icon for all news
                     visible: !isAllNews
                     
                     anchors.left: parent.left
@@ -97,6 +97,7 @@ ListViewDragDelegate {
                     anchors.rightMargin: 4
                     anchors.bottomMargin: 5
                     anchors.topMargin: 5
+                    anchors.leftMargin: 0
                     
                     Text {
                         id: feedTitle

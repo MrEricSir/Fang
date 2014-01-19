@@ -58,6 +58,8 @@ void FaviconGrabber::checkUrl(const QUrl &url)
 
 void FaviconGrabber::onRequestFinished(QNetworkReply * reply)
 {
+    qDebug() << "Checked for a favicon at " << reply->url().toString() << " error: " << reply->errorString();
+    
     urlsToCheck--;
     if (!reply->error())
         results.append(QUrl(reply->url()));
