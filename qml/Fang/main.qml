@@ -17,6 +17,13 @@ Rectangle {
         objectName: "fangSettings" // Don't change this!
     }
     
+    DropboxManager {
+        id: dropboxManager
+        objectName: "dropboxManager" // Don't change this!
+        
+        onLoggedOut: dropboxConnector.loggedOut();
+    }
+    
     color: style.color.background
     
     // The feed list sidebar.
@@ -110,6 +117,7 @@ Rectangle {
         
         // NOTE: When adding new dialogs, they also must go here.
         newsFocus: settings.isClosed && addFeed.isClosed && removeFeed.isClosed && editFeed.isClosed
+                   && dropboxConnector.isClosed
         
         Item {
             id: openButtonContainer
@@ -147,31 +155,20 @@ Rectangle {
         }
     }
     
+    // Dialogs!  Please see important note at bottom when adding a new one.
+    
     SettingsDialog {
         id: settings
         
-        x: 0
-        y: 0
-        width: parent.width
-        height: parent.height
+        onOpenDropboxConnector: dropboxConnector.open();
     }
     
     AddDialog {
         id: addFeed
-        
-        x: 0
-        y: 0
-        width: parent.width
-        height: parent.height
     }
     
     RemoveDialog {
         id: removeFeed
-        
-        x: 0
-        y: 0
-        width: parent.width
-        height: parent.height
         
         // This is how we can remove the feed, you see.
         listView: sidebar.listView
@@ -180,13 +177,12 @@ Rectangle {
     EditDialog {
         id: editFeed
         
-        x: 0
-        y: 0
-        width: parent.width
-        height: parent.height
-        
         // This lets us access the current item.
         listView: sidebar.listView
+    }
+    
+    DropboxConnectDialog {
+        id: dropboxConnector
     }
     
     // NOTE: When adding new dialogs, a corresponding reference must be made in newsFocus

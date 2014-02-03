@@ -184,8 +184,7 @@ void LoadNews::execute()
     
     // Check if we done goofed.
     if (!dbResult) {
-        //TODO : add error signal
-        emit finished(this);
+        reportError("Got no DB result.");
         
         return;
     }

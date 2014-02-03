@@ -54,7 +54,11 @@ SOURCES += src/main.cpp \
     src/utilities/RawFeedRewriter.cpp \
     src/operations/LoadAllNewsOperation.cpp \
     src/utilities/UnreadCountReader.cpp \
-    src/operations/UpdateOrdinalsOperation.cpp
+    src/operations/UpdateOrdinalsOperation.cpp \
+    src/models/DropboxManager.cpp \
+    src/operations/dropbox/DropboxLoginOperation.cpp \
+    src/operations/dropbox/DropboxOperation.cpp \
+    src/operations/dropbox/DropboxVerifyToken.cpp
 
 # Installation path
 # target.path =
@@ -116,4 +120,9 @@ HEADERS += \
     src/utilities/RawFeedRewriter.h \
     src/operations/LoadAllNewsOperation.h \
     src/utilities/UnreadCountReader.h \
-    src/operations/UpdateOrdinalsOperation.h
+    src/operations/UpdateOrdinalsOperation.h \
+    src/models/DropboxManager.h \
+    src/operations/dropbox/DropboxLoginOperation.h \
+    src/DropboxConstants.h \
+    src/operations/dropbox/DropboxOperation.h \
+    src/operations/dropbox/DropboxVerifyToken.h

@@ -28,13 +28,9 @@ void SetBookmarkOperation::execute()
     query.bindValue(":bookmark_id", bookmarkItem->getDbID());
     
     if (!query.exec() || !query.next()) {
+        reportSQLError(query, "Unable to get ID of news item to set bookmark.");
         db().rollback();
         
-        qDebug() << "Unable to get ID of news item to set bookmark.";
-        qDebug() << "SQL error: " << query.lastError().text();
-        
-        // TODO error signal.
-        emit finished(this);
         return;
     }
     
@@ -48,13 +44,9 @@ void SetBookmarkOperation::execute()
     update.bindValue(":feed_id", feedItemID);
     
     if (!update.exec()) {
+        reportSQLError(query, "Unable to set bookmark to " +  QString::number(bookmarkItem->getDbID()) + " for feed id: " + QString::number(feedItemID));
         db().rollback();
         
-        qDebug() << "Unable to set bookmark to " << bookmarkItem->getDbID() << " for feed id: " << feedItemID;
-        qDebug() << "SQL error: " << query.lastError().text();
-        
-        // TODO error signal.
-        emit finished(this);
         return;
     }
     

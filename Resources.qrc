@@ -58,5 +58,7 @@
         <file>icons/win32.ico</file>
         <file>qml/Fang/Button.qml</file>
         <file>qml/Fang/ListViewDragDelegate.qml</file>
+        <file>qml/Fang/DialogSpacer.qml</file>
+        <file>qml/Fang/DropboxConnectDialog.qml</file>
     </qresource>
 </RCC>

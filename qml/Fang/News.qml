@@ -130,7 +130,7 @@ Item {
                 } else if (cmd === "setBookmark") {
                     webInteractor.setBookmark(commandArray[1]);
                 } else if (cmd === "openLink") {
-                    webInteractor.openLink(commandArray[1]);
+                    fangSettings.openLink(commandArray[1]);
                 } else if (cmd === "stopProgress" ) {
                     newsView.experimental.evaluateJavaScript("stopInProgress();");
                 } else if (cmd === "scrollToPosition" ) {

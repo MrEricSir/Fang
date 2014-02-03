@@ -7,6 +7,8 @@ Dialog {
     
     title: "Settings"
     
+    signal openDropboxConnector();
+    
     DialogText {
         text: "Theme"
         width: parent.width
@@ -48,6 +50,8 @@ Dialog {
             width: parent.buttonWidth
         }
     }
+    
+    DialogSpacer {}
     
     DialogText {
         text: "Text size"
@@ -104,11 +108,25 @@ Dialog {
         }
     }
     
-    // Spacer
+    DialogSpacer {}
+    
     DialogText {
-        text: ""
+        text: "Sync feeds with Dropbox"
         width: parent.width
     }
+    
+    // Dropbox.
+    DialogButton {
+        id: connectDropboxButton
+        
+        text: "Connect"
+        onClicked: openDropboxConnector();
+        enabled: true
+        
+        width: parent.width
+    }
+    
+    DialogSpacer {}
     
     DialogButton {
         id: closeButton

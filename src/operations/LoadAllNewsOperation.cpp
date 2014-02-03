@@ -47,8 +47,7 @@ void LoadAllNewsOperation::execute()
     
     // Check if we done goofed.
     if (!dbResult) {
-        //TODO : add error signal
-        emit finished(this);
+        reportError("DB error in LoadAllNewsOperation");
         
         return;
     }

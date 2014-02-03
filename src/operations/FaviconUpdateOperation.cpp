@@ -58,11 +58,10 @@ void FaviconUpdateOperation::onGrabberFinished(const QUrl &faviconUrl)
     query.bindValue(":imageURL", faviconUrl.toString());
     
     if (!query.exec()) {
-        qDebug() << "Unable to update favicon.";
-        qDebug() << "SQL error: " << query.lastError().text();
+        reportSQLError(query, "Unable to update favicon.");
         db().rollback();
         
-        // TODO: error signal
+        return;
     } else {
         db().commit();
         feed->setImageURL(faviconUrl);

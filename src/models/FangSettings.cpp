@@ -1,5 +1,6 @@
 #include "FangSettings.h"
 #include <QDebug>
+#include <QDesktopServices>
 
 FangSettings::FangSettings(QQuickItem *parent) :
     QQuickItem(parent)
@@ -50,4 +51,9 @@ void FangSettings::setFontSize(QString s)
     
     setStringSetting("fontSize", s);
     emit fontSizeChanged(s);
+}
+
+void FangSettings::openLink(QString link)
+{
+    QDesktopServices::openUrl(QUrl(link));
 }

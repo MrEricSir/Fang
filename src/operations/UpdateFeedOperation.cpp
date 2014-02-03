@@ -61,9 +61,8 @@ void UpdateFeedOperation::onFeedFinished()
     }
     
     if (rawFeed->items.size() == 0) {
-        // TODO: error signal.
-        emit finished(this);
         qDebug() << "Feed list was empty!";
+        emit finished(this);
         
         return;
     }
@@ -84,11 +83,7 @@ void UpdateFeedOperation::onFeedFinished()
     query.prepare("SELECT timestamp FROM NewsItemTable WHERE feed_id = :feed_id ORDER BY timestamp DESC LIMIT 1");
     query.bindValue(":feed_id", feed->getDbId());
     if (!query.exec()) {
-        qDebug() << "Error: Could not read news timestamp";
-        qDebug() << "SQL error: " << query.lastError().text();
-        
-        // TODO error signal.
-        emit finished(this);
+        reportSQLError(query, "Error: Could not read news timestamp");
         
         return;
     }
@@ -149,12 +144,9 @@ void UpdateFeedOperation::onRewriterFinished()
         query.bindValue(":url", rawNews->url);
         
         if (!query.exec()) {
-            qDebug() << "Unable to add news item.";
-            qDebug() << "SQL error: " << query.lastError().text();
+            reportSQLError(query, "Unable to add news item.");
             db().rollback();
             
-            // TODO error signal.
-            emit finished(this);
             return;
         }
         

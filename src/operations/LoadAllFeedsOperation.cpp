@@ -25,8 +25,7 @@ void LoadAllFeedsOperation::execute()
     // Kindly ask the database for the rest.
     QSqlQuery query(db());
     if (!query.exec("SELECT * FROM FeedItemTable ORDER BY ordinal ASC")) {
-        qDebug() << "Could not load feeds. :(";
-        // TODO : add error signal
+        reportError("Could not load feeds. :(");
         return;
     }
     

@@ -25,6 +25,12 @@ public:
     QString getFontSize();
     void setFontSize(QString s);
     
+    // Why is this here? It gets used all over the place, basically, just like Settings.
+    // TODO: make less hacky.
+    //
+    // Opens a link in the external browser.
+    Q_INVOKABLE void openLink(QString link);
+    
 signals:
     void styleChanged(QString);
     void fontSizeChanged(QString);

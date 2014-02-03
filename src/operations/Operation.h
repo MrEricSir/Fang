@@ -24,6 +24,14 @@ class Operation : public QObject
      */
     virtual ~Operation();
     
+protected:
+    
+    /**
+     * @brief Call this to report an error.  Automatically emits finished()
+     * @param errorString The text that will be logged along with the error.
+     */
+    void reportError(const QString& errorString);
+    
 signals:
     
     /**
@@ -38,10 +46,19 @@ public slots:
      */
     virtual void execute() {}
     
+    /**
+     * @return Priority level of this operation type.
+     */
     inline PriorityLevel getPriority() { return priority; }
+    
+    /**
+     * @return Returns true if there was an error, else false. 
+     */
+    inline bool isError() { return error; }
     
 private:
     PriorityLevel priority;
+    bool error;
 };
 
 #endif // OPERATION_H

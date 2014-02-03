@@ -18,6 +18,14 @@ signals:
 public slots:
     QSqlDatabase db();
     
+protected:
+    
+    /**
+     * @brief Call this to report a SQL error.  Automatically emits finished()
+     * @param query
+     * @param errorString The text that will be logged along with the error.
+     */
+    void reportSQLError(const QSqlQuery& query, const QString& errorString);
 };
 
 #endif // DBOPERATION_H

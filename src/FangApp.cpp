@@ -22,6 +22,7 @@ FangApp::FangApp(QObject *parent, FangApplicationViewer* viewer) :
     loadAllFinished(false),
     fangSettings(NULL),
     interactor(NULL),
+    dropboxManager(NULL),
     updateTimer(new QTimer(this))
 {
     Q_ASSERT(_instance == NULL);
@@ -93,9 +94,10 @@ void FangApp::onViewerStatusChanged(QQuickView::Status status)
     if (status != QQuickView::Ready)
         return;
     
-    // OH! We're ready! Well I'll be damned. Grab all the stuff from 
+    // OH! We're ready! Well I'll be damned. Grab all the stuff from QML.
     interactor = viewer->rootObject()->findChild<WebInteractor*>("webInteractor");
     fangSettings = viewer->rootObject()->findChild<FangSettings*>("fangSettings");
+    dropboxManager = viewer->rootObject()->findChild<DropboxManager*>("dropboxManager");
     
     // Do a sanity check.
     if (interactor == NULL || fangSettings == NULL) {
@@ -104,8 +106,9 @@ void FangApp::onViewerStatusChanged(QQuickView::Status status)
         return;
     }
     
-    // Init interactor with Mr. Manager.
+    // Init models with Mr. Manager.
     interactor->init(&manager, feedList);
+    dropboxManager->init(&manager);
 }
 
 void FangApp::onWindowResized()

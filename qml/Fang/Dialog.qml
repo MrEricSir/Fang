@@ -13,9 +13,18 @@ Rectangle {
     // This allows children to be positioned within the element.
     default property alias contents: placeholder.children
     
+    // Set this to true if you want your dialog to be extra wide.
+    property bool wideDialog: false
+    
     // Read only.
     property bool isClosing: state === "closed" || dismissTimer.running
     property bool isClosed: state === "closed"
+    
+    // Don't override these
+    x: 0
+    y: 0
+    width: parent.width
+    height: parent.height
     
     color: style.color.dialogBackground
     visible: false // Managed by state transitions
@@ -137,7 +146,7 @@ Rectangle {
         Item {
             id: container
             
-            width: 400
+            width: wideDialog ? 600 : 400
             anchors.horizontalCenter: parent.horizontalCenter
             
             // Children go here.

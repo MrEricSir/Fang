@@ -1,7 +1,6 @@
 #include "WebInteractor.h"
 #include <QDebug>
 #include <QList>
-#include <QDesktopServices>
 
 WebInteractor::WebInteractor(QQuickItem *parent) :
     QQuickItem(parent),
@@ -118,11 +117,6 @@ void WebInteractor::pageLoaded()
     isReady = true;
     
     setFeed(currentFeed);
-}
-
-void WebInteractor::openLink(QString link)
-{
-    QDesktopServices::openUrl(QUrl(link));
 }
 
 void WebInteractor::refreshFeed(FeedItem *item)

@@ -16,6 +16,7 @@
 #include "models/ListModel.h"
 #include "models/FangSettings.h"
 #include "models/WebInteractor.h"
+#include "models/DropboxManager.h"
 #include "parser/Parser.h"
 
 
@@ -128,6 +129,7 @@ private:
     bool loadAllFinished;
     FangSettings *fangSettings;
     WebInteractor *interactor;
+    DropboxManager *dropboxManager;
     QTimer *updateTimer;
 };
 
