@@ -61,15 +61,13 @@ void DropboxOperation::onNetworkFinished(QNetworkReply *reply)
 {
     QByteArray replyBuffer = reply->readAll();
     
-    qDebug() << "Error? " << reply->errorString();
-    qDebug() << replyBuffer;
-    qDebug();
-    
     if (reply->error() != QNetworkReply::NoError) {
         reportError(reply->errorString());
         
         return;
     }
+    
+    qDebug() << "Response: " << replyBuffer;
     
     // Attempt to extract the document.
     

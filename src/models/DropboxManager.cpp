@@ -2,11 +2,13 @@
 #include <QDebug>
 
 #include "../operations/dropbox/DropboxLoginOperation.h"
+#include "../operations/dropbox/DropboxLogoutOperation.h"
 #include "../operations/dropbox/DropboxVerifyToken.h"
 
 DropboxManager::DropboxManager(QQuickItem *parent) :
     QQuickItem(parent),
-    manager(NULL)
+    manager(NULL),
+    _connectedState(CONNECTED_STATE_CONNECTING)
 {
 }
 
@@ -37,7 +39,20 @@ void DropboxManager::connectAccount()
 
 void DropboxManager::logout()
 {
+    qDebug() << "Logging out!";
+    DropboxLogoutOperation* logout = new DropboxLogoutOperation(manager);
+    connect(logout, SIGNAL(finished(Operation*)), this, SLOT(onLogoutFinished(Operation*)));
+    manager->add(logout);
+}
+
+void DropboxManager::setConnectedState(QString state)
+{
+    if (state == _connectedState)
+        return;
     
+    
+    _connectedState = state;
+    emit connectedStateChanged();
 }
 
 void DropboxManager::onLoginFinished(Operation *operation)
@@ -55,6 +70,20 @@ void DropboxManager::onLoginFinished(Operation *operation)
     connectAccount();
 }
 
+void DropboxManager::onLogoutFinished(Operation *operation)
+{
+    DropboxOperation* dbOp = qobject_cast<DropboxOperation*>(operation);
+    Q_ASSERT(dbOp != NULL);
+    
+    if (dbOp->isError()) {
+        qDebug() << "Error logging out!";
+        
+        return;
+    }
+    
+    setConnectedState(CONNECTED_STATE_LOGOUT);
+}
+
 void DropboxManager::onVerifyFinished(Operation *operation)
 {
     DropboxVerifyToken* dbOp = qobject_cast<DropboxVerifyToken*>(operation);
@@ -63,10 +92,12 @@ void DropboxManager::onVerifyFinished(Operation *operation)
     if (dbOp->isError()) {
         qDebug() << "DropboxManager: Unable to connect.";
         
-        emit loggedOut();
+        // TODO: determine if it's because we're offline
+        
+        setConnectedState(CONNECTED_STATE_LOGOUT);
     } else {
         qDebug() << "DropboxManager: connected!";
         
-        emit connected();
+        setConnectedState(CONNECTED_STATE_CONNECTED);
     }
 }

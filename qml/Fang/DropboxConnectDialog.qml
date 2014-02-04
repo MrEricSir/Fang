@@ -16,22 +16,17 @@ Dialog {
         //console.log("Got me an auth code: ", code);
         dropboxManager.login(code);
         
+        // TODO: show state of auth, deal with handshake errors, offline, etc.
         close();
-    }
-    
-    // This is called by the manager when we've logged out.
-    function loggedOut() {
-        // Make the browser visible and load 'er up!
-        myView.visible = true;
-        myView.url = initialURL;
     }
     
     // Read-only.
     // 
     // These represent special and allowed URLs.
     property string initialURL: "https://www.dropbox.com/1/oauth2/authorize?client_id=" + dropboxManager.getClientCode() + "&response_type=code"
-    property string authURL: "https://www.dropbox.com/1/oauth2/authorize"
+    property string authURL: "https://www.dropbox.com/1/oauth2/authorize_submit"
     property string loginPrefix: "https://www.dropbox.com/login"
+    property string authPrefix: "https://www.dropbox.com/1/oauth2"
     
     DialogButton {
         id: cancelButton
@@ -43,6 +38,18 @@ Dialog {
         
     WebView {
         id: myView
+        
+        Connections {
+            target: dropboxManager
+            
+            onConnectedStateChanged: {
+                if (dropboxManager.connectedState == "logout") {
+                    // Make the browser visible and load 'er up!
+                    myView.visible = true;
+                    myView.url = initialURL;
+                }
+            }
+        }
         
         width: parent.width
         height: parent.width // TODO: Should this change based on text size?

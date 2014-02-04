@@ -113,6 +113,31 @@ Dialog {
     DialogText {
         text: "Sync feeds with Dropbox"
         width: parent.width
+        
+        Connections {
+            target: dropboxManager
+            
+            onConnectedStateChanged: {
+                // Make everything invisible like a ghost. BOO!
+                connectDropboxButton.visible = false;
+                logoutDropboxButton.visible = false;
+                pleaseWaitDropboxButton.visible = false;
+                offlineDropboxButton.visible = false;
+                
+                
+                if (dropboxManager.connectedState === "connecting") {
+                    pleaseWaitDropboxButton.visible = true;
+                } else if (dropboxManager.connectedState === "connected") {
+                    logoutDropboxButton.visible = true;
+                } else if (dropboxManager.connectedState === "logout") {
+                    connectDropboxButton.visible = true;
+                } else if (dropboxManager.connectedState === "offline") {
+                    offlineDropboxButton.visible = true;
+                } else {
+                    console.log("ZOMG you added a new state but forgot to account for it! state is ", dropboxManager.connectionState);
+                }
+            }
+        }
     }
     
     // Dropbox.
@@ -122,6 +147,38 @@ Dialog {
         text: "Connect"
         onClicked: openDropboxConnector();
         enabled: true
+        visible: false
+        
+        width: parent.width
+    }
+    
+    DialogButton {
+        id: logoutDropboxButton
+        
+        text: "Log out of Dropbox"
+        onClicked: dropboxManager.logout();
+        enabled: true
+        visible: false
+        
+        width: parent.width
+    }
+    
+    DialogButton {
+        id: pleaseWaitDropboxButton
+        
+        text: "Please wait..."
+        enabled: false
+        visible: false
+        
+        width: parent.width
+    }
+    
+    DialogButton {
+        id: offlineDropboxButton
+        
+        text: "Unable to access Dropbox"
+        enabled: false
+        visible: false
         
         width: parent.width
     }

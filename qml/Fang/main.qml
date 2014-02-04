@@ -21,7 +21,11 @@ Rectangle {
         id: dropboxManager
         objectName: "dropboxManager" // Don't change this!
         
-        onLoggedOut: dropboxConnector.loggedOut();
+       // onLoggedOut: dropboxConnector.loggedOut();
+        
+        onConnectedStateChanged: {
+            console.log("DBM state: ", connectedState)
+        }
     }
     
     color: style.color.background
