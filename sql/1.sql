@@ -39,3 +39,19 @@ CREATE TABLE NewsItemTable (
 
 CREATE INDEX NewsItemTableFeedIdIndex ON NewsItemTable(feed_id);
 CREATE INDEX NewsItemTableTimestampIndex ON NewsItemTable(timestamp);
+
+--
+-- DropboxConnectorTable
+-- Singleton: there will always be exactly 1 row. Use WHERE id = 0 to access it.
+--
+-- If authenticationToken is the empty string, we're not logged in.
+--
+
+CREATE TABLE DropboxConnectorTable (
+    id INTEGER PRIMARY KEY,
+    authenticationToken TEXT NOT NULL,
+    revision INTEGER default 0
+);
+
+INSERT INTO DropboxConnectorTable (id, authenticationToken, revision) VALUES (0, "", 0);
+

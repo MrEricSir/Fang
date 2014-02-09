@@ -142,8 +142,9 @@ Item {
             // Set style, and update when needed.
             onLoadingChanged: {
                 if (loadRequest.status === WebView.LoadSucceededStatus) {
+                    updateCSS(); // set our page's style (MUST DO THIS FIRST!!)
+                    
                     webInteractor.pageLoaded();  // tell 'em the page is loaded now.
-                    updateCSS(); // set our page's style
                     webInteractor.heightChanged(newsMargin.height); // update height (if not already updated)
                 }
             }
