@@ -7,7 +7,7 @@
 #include "../models/AllNewsFeedItem.h"
 #include "../utilities/UnreadCountReader.h"
 
-LoadAllFeedsOperation::LoadAllFeedsOperation(QObject *parent, ListModel *feedList) :
+LoadAllFeedsOperation::LoadAllFeedsOperation(OperationManager *parent, ListModel *feedList) :
     DBOperation(BACKGROUND, parent),
     feedList(feedList)
 {

@@ -57,6 +57,7 @@ private slots:
     void onLoginFinished(Operation* operation);
     void onLogoutFinished(Operation* operation);
     void onVerifyFinished(Operation* operation);
+    void onStartupFinished(Operation* operation);
     
 private:
     OperationManager* manager;

@@ -2,7 +2,7 @@
 
 #include <QDebug>
 
-DropboxLoginOperation::DropboxLoginOperation(QObject *parent, QString authCode) :
+DropboxLoginOperation::DropboxLoginOperation(OperationManager *parent, QString authCode) :
     DropboxOperation(IMMEDIATE, parent),
     authCode(authCode)
 {

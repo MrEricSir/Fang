@@ -1,7 +1,7 @@
 #include "FaviconUpdateOperation.h"
 #include <QDebug>
 
-FaviconUpdateOperation::FaviconUpdateOperation(QObject *parent, FeedItem* feed) :
+FaviconUpdateOperation::FaviconUpdateOperation(OperationManager *parent, FeedItem* feed) :
     DBOperation(BACKGROUND, parent),
     feed(feed),
     grabber(),

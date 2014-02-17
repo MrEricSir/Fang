@@ -15,7 +15,7 @@ class DropboxLoginOperation : public DropboxOperation
 {
     Q_OBJECT
 public:
-    explicit DropboxLoginOperation(QObject *parent, QString authCode);
+    explicit DropboxLoginOperation(OperationManager *parent, QString authCode);
     
 signals:
     

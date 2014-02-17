@@ -4,6 +4,7 @@
 #include "../operations/dropbox/DropboxLoginOperation.h"
 #include "../operations/dropbox/DropboxLogoutOperation.h"
 #include "../operations/dropbox/DropboxVerifyToken.h"
+#include "../operations/dropbox/DropboxStartupOperation.h"
 
 DropboxManager::DropboxManager(QQuickItem *parent) :
     QQuickItem(parent),
@@ -98,6 +99,31 @@ void DropboxManager::onVerifyFinished(Operation *operation)
     } else {
         qDebug() << "DropboxManager: connected!";
         
+        // Whohoo! We're there, y'all!
         setConnectedState(CONNECTED_STATE_CONNECTED);
+        
+        // Do the startup tasks like, checking if the remote is initialized and other stuff-esque junk.
+        DropboxStartupOperation* startup = new DropboxStartupOperation(manager);
+        connect(startup, SIGNAL(finished(Operation*)), this, SLOT(onStartupFinished(Operation*)));
+        manager->add(startup);
     }
+}
+
+void DropboxManager::onStartupFinished(Operation *operation)
+{
+    DropboxVerifyToken* dbOp = qobject_cast<DropboxVerifyToken*>(operation);
+    Q_ASSERT(dbOp != NULL);
+    
+    if (dbOp->isError()) {
+        qDebug() << "DropboxManager: Unable to do the whole startup shebang.";
+        setConnectedState(CONNECTED_STATE_LOGOUT);
+        
+        return;
+    }
+    
+    
+    
+    //
+    // MAJOR ASS TODO: get started with the change-checker thingie
+    //
 }

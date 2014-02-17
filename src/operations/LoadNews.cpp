@@ -1,7 +1,7 @@
 #include "LoadNews.h"
 #include <QDebug>
 
-LoadNews::LoadNews(QObject *parent, FeedItem* feedItem, LoadMode mode, int loadLimit) :
+LoadNews::LoadNews(OperationManager *parent, FeedItem* feedItem, LoadMode mode, int loadLimit) :
     DBOperation(IMMEDIATE, parent),
     feedItem(feedItem),
     listAppend(NULL),

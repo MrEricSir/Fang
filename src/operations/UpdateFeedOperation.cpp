@@ -7,7 +7,7 @@
 #include "../utilities/UnreadCountReader.h"
 #include "../FangApp.h"
 
-UpdateFeedOperation::UpdateFeedOperation(QObject *parent, FeedItem *feed, RawFeed* rawFeed) :
+UpdateFeedOperation::UpdateFeedOperation(OperationManager *parent, FeedItem *feed, RawFeed* rawFeed) :
     DBOperation(BACKGROUND, parent),
     parser(),
     feed(feed),

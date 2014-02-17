@@ -1,6 +1,6 @@
 #include "DropboxLogoutOperation.h"
 
-DropboxLogoutOperation::DropboxLogoutOperation(QObject *parent) :
+DropboxLogoutOperation::DropboxLogoutOperation(OperationManager *parent) :
     DropboxOperation(IMMEDIATE, parent)
 {
 }

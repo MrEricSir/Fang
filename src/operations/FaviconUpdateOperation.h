@@ -12,7 +12,7 @@ class FaviconUpdateOperation : public DBOperation
 {
     Q_OBJECT
 public:
-    explicit FaviconUpdateOperation(QObject *parent, FeedItem* feed);
+    explicit FaviconUpdateOperation(OperationManager *parent, FeedItem* feed);
     virtual ~FaviconUpdateOperation();
     
 signals:

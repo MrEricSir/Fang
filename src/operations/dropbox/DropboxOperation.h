@@ -19,7 +19,7 @@ class DropboxOperation : public DBOperation
 {
     Q_OBJECT
 public:
-    explicit DropboxOperation(PriorityLevel priority, QObject *parent);
+    explicit DropboxOperation(PriorityLevel priority, OperationManager* parent);
     
 protected slots:
     

@@ -3,7 +3,7 @@
 #include <QDebug>
 #include <QThread>
 
-RemoveFeedOperation::RemoveFeedOperation(QObject *parent, FeedItem* feed, ListModel *feedList) :
+RemoveFeedOperation::RemoveFeedOperation(OperationManager *parent, FeedItem* feed, ListModel *feedList) :
     DBOperation(IMMEDIATE, parent),
     feed(feed),
     feedList(feedList)

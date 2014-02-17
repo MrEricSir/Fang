@@ -13,7 +13,7 @@ class DropboxVerifyToken : public DropboxOperation
 {
     Q_OBJECT
 public:
-    DropboxVerifyToken(QObject *parent);
+    DropboxVerifyToken(OperationManager *parent);
     
 public slots:
     virtual void execute();

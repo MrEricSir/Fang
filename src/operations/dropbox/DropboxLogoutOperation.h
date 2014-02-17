@@ -8,7 +8,7 @@ class DropboxLogoutOperation : public DropboxOperation
 {
     Q_OBJECT
 public:
-    explicit DropboxLogoutOperation(QObject *parent);
+    explicit DropboxLogoutOperation(OperationManager *parent);
     
 signals:
     

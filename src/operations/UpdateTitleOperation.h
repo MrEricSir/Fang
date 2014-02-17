@@ -12,7 +12,7 @@ class UpdateTitleOperation : public DBOperation
 {
     Q_OBJECT
 public:
-    explicit UpdateTitleOperation(QObject *parent, FeedItem* feed);
+    explicit UpdateTitleOperation(OperationManager *parent, FeedItem* feed);
     
 signals:
     

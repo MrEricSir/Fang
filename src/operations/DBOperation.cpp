@@ -1,7 +1,7 @@
 #include "DBOperation.h"
 #include "../db/DB.h"
 
-DBOperation::DBOperation(PriorityLevel priority, QObject *parent) :
+DBOperation::DBOperation(PriorityLevel priority, OperationManager *parent) :
     Operation(priority, parent)
 {
 }

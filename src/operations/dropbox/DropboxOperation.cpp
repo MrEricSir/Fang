@@ -7,7 +7,7 @@
 
 QString DropboxOperation::_token = "";
 
-DropboxOperation::DropboxOperation(PriorityLevel priority, QObject *parent) :
+DropboxOperation::DropboxOperation(PriorityLevel priority, OperationManager *parent) :
     DBOperation(priority, parent),
     manager(),
     postData()
@@ -43,6 +43,9 @@ void DropboxOperation::doPost(QString queryString)
     qDebug() << "query string: " << postData.toString();
     
     getManager().post(req, postData.toString().toLocal8Bit());
+    
+    // Reset everything.
+    postData.clear();
 }
 
 void DropboxOperation::doGet(QString queryString)

@@ -3,6 +3,8 @@
 
 #include <QObject>
 
+class OperationManager;
+
 /**
  * @brief Interface for operations.
  */
@@ -17,7 +19,7 @@ class Operation : public QObject
     };
     
     // OperationManager is parent.
-    explicit Operation(PriorityLevel priority, QObject *parent = 0);
+    explicit Operation(PriorityLevel priority, OperationManager* parent);
     
     /**
      * @brief All operations must clean up their memory.
@@ -56,7 +58,15 @@ public slots:
      */
     inline bool isError() { return error; }
     
+    /**
+     * @brief If your operation needs to invoke other operations (yo dawg, I heard you like
+     * operations) then you'll want to use this.
+     * @return The operation manager used for getting/setting operations.
+     */
+    OperationManager* getOperationManager() { return operationManager; }
+    
 private:
+    OperationManager* operationManager;
     PriorityLevel priority;
     bool error;
 };

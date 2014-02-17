@@ -26,7 +26,7 @@ public:
      * @param feed    Feed to update
      * @param rawFeed Optional: include this if you've already downloaded the feed and parsed it.
      */
-    explicit UpdateFeedOperation(QObject *parent, FeedItem* feed, RawFeed* rawFeed = NULL);
+    explicit UpdateFeedOperation(OperationManager *parent, FeedItem* feed, RawFeed* rawFeed = NULL);
     virtual ~UpdateFeedOperation();
     
     

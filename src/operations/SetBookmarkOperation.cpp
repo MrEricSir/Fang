@@ -5,7 +5,7 @@
 #include "../utilities/UnreadCountReader.h"
 #include "../FangApp.h"
 
-SetBookmarkOperation::SetBookmarkOperation(QObject *parent, FeedItem* feed, NewsItem* bookmarkItem) :
+SetBookmarkOperation::SetBookmarkOperation(OperationManager *parent, FeedItem* feed, NewsItem* bookmarkItem) :
     DBOperation(IMMEDIATE, parent),
     feed(feed),
     bookmarkItem(bookmarkItem)

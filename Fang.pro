@@ -59,7 +59,8 @@ SOURCES += src/main.cpp \
     src/operations/dropbox/DropboxLoginOperation.cpp \
     src/operations/dropbox/DropboxOperation.cpp \
     src/operations/dropbox/DropboxVerifyToken.cpp \
-    src/operations/dropbox/DropboxLogoutOperation.cpp
+    src/operations/dropbox/DropboxLogoutOperation.cpp \
+    src/operations/dropbox/DropboxStartupOperation.cpp
 
 # Installation path
 # target.path =
@@ -127,4 +128,5 @@ HEADERS += \
     src/DropboxConstants.h \
     src/operations/dropbox/DropboxOperation.h \
     src/operations/dropbox/DropboxVerifyToken.h \
-    src/operations/dropbox/DropboxLogoutOperation.h
+    src/operations/dropbox/DropboxLogoutOperation.h \
+    src/operations/dropbox/DropboxStartupOperation.h

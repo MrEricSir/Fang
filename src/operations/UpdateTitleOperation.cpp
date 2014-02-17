@@ -2,7 +2,7 @@
 #include "../models/AllNewsFeedItem.h"
 #include <QDebug>
 
-UpdateTitleOperation::UpdateTitleOperation(QObject *parent, FeedItem* feed) :
+UpdateTitleOperation::UpdateTitleOperation(OperationManager *parent, FeedItem* feed) :
     DBOperation(IMMEDIATE, parent),
     feed(feed)
 {

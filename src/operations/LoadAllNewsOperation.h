@@ -11,7 +11,7 @@ class LoadAllNewsOperation : public LoadNews
 {
     Q_OBJECT
 public:
-    explicit LoadAllNewsOperation(QObject *parent, FeedItem* feedItem, LoadMode mode, int loadLimit = 15);
+    explicit LoadAllNewsOperation(OperationManager *parent, FeedItem* feedItem, LoadMode mode, int loadLimit = 15);
     
 public slots:
     virtual void execute();

@@ -4,7 +4,7 @@
 
 #include <QDebug>
 
-UpdateOrdinalsOperation::UpdateOrdinalsOperation(QObject *parent, ListModel *feedList) :
+UpdateOrdinalsOperation::UpdateOrdinalsOperation(OperationManager *parent, ListModel *feedList) :
     DBOperation(IMMEDIATE, parent),
     feedList(feedList)
 {

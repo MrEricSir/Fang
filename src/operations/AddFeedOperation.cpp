@@ -2,7 +2,7 @@
 #include "../models/FeedItem.h"
 #include "../utilities/Utilities.h"
 
-AddFeedOperation::AddFeedOperation(QObject *parent, ListModel *feedList, const QUrl &feedURL,
+AddFeedOperation::AddFeedOperation(OperationManager *parent, ListModel *feedList, const QUrl &feedURL,
                                    const QUrl &imageURL, QString siteTitle) :
     DBOperation(IMMEDIATE, parent),
     feedList(feedList),

@@ -1,6 +1,6 @@
 #include "DropboxVerifyToken.h"
 
-DropboxVerifyToken::DropboxVerifyToken(QObject *parent) :
+DropboxVerifyToken::DropboxVerifyToken(OperationManager *parent) :
     DropboxOperation(IMMEDIATE, parent)
 {
 }
