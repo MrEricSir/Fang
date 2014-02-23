@@ -6,6 +6,7 @@
 #include <QDebug>
 
 QString DropboxOperation::_token = "";
+QString DropboxOperation::_handle = "";
 
 DropboxOperation::DropboxOperation(PriorityLevel priority, OperationManager *parent) :
     DBOperation(priority, parent),

@@ -29,6 +29,12 @@ protected slots:
     // Returns the global access token.
     static QString getAccessToken() { return _token; }
     
+    // Sets the global datastore handle.
+    static void setDatastoreHandle(QString handle) { _handle = handle; }
+    
+    // REturns the global datastore handle.
+    static QString getDatastoreHandle() { return _handle; }
+    
     /**
      * @brief Implementers: this is called when you have a network
      * response to deal with.
@@ -64,7 +70,10 @@ private slots:
 private:
     QNetworkAccessManager manager;
     QUrlQuery postData;
+    
+    
     static QString _token;
+    static QString _handle;
 };
 
 #endif // DROPBOXOPERATION_H
