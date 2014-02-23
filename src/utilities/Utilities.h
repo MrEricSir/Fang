@@ -37,13 +37,6 @@ public:
      * @param manager
      */
     static void addNetworkAccessManagerCache(QNetworkAccessManager* manager);
-    
-    /**
-     * @brief Attempts to convert an unreliable RSS/Atom timestamp string into a real timestamp.
-     * @param timestamp
-     * @return 
-     */
-    static QDateTime dateFromFeedString(QString timestamp);
 };
 
 #endif // UTILITIES_H

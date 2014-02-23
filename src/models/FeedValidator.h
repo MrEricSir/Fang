@@ -62,6 +62,7 @@ private slots:
     
 private:
     Parser* parser;
+    QNetworkAccessManager manager;
     bool _validating;
     QWebPage* webPage;
     QUrl embeddedFeedURL;

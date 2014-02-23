@@ -1,29 +1,43 @@
 #include "Parser.h"
 
 #include <QDebug>
+#include <QFile>
+#include <QFileInfo>
 
-#include "../utilities/Utilities.h"
-
-Parser::Parser(QObject *parent) :
-    ParserInterface(parent), checkFavicon(false), feed(NULL), result(OK), currentReply(NULL), redirectReply(NULL)
+Parser::Parser(QObject *parent, QNetworkAccessManager* manager) :
+    ParserInterface(parent), checkFavicon(false), feed(NULL), result(OK), manager(manager), currentReply(NULL), redirectReply(NULL)
 {
-    // Enble cache.
-    Utilities::addNetworkAccessManagerCache(&manager);
-    
     // Connex0r teh siganls.
-    connect(&manager, SIGNAL(finished(QNetworkReply*)),
-                  this, SLOT(netFinished(QNetworkReply*)));
+    connect(manager, SIGNAL(finished(QNetworkReply*)),
+            this, SLOT(netFinished(QNetworkReply*)));
+}
+
+QDateTime Parser::dateFromFeedString(QString timestamp)
+{
+    QDateTime ret;
+    // Date time.
+    // Examples:
+    // Tue, 02 Jul 2013 01:01:24 +0000
+    // Sun, 13 Oct 2013 19:15:29  PST
+    
+    // TODO: figure out the time zone issue
+    // For now, we're shaving off everything after the last space.
+    timestamp = timestamp.left(timestamp.trimmed().lastIndexOf(" "));
+    timestamp = timestamp.trimmed();
+    //qDebug() << "Time string: " << timestamp;
+    
+    ret = QDateTime::fromString(timestamp, "ddd, dd MMM yyyy hh:mm:ss"); 
+    
+    // Try RFC 3339, normally used by Atom.
+    // Example: // 2013-08-07T16:47:54Z
+    if (!ret.isValid())
+        ret = QDateTime::fromString(timestamp.toUpper(), "yyyy-MM-ddThh:mm:ssZ"); 
+    
+    return ret;
 }
 
 void Parser::parse(const QUrl& url) {
-    result = Parser::IN_PROGRESS;
-    finalFeedURL = url;
-    
-    resetParserVars();
-    
-    // Allocate our items.
-    feed = new RawFeed();
-    currentItem = NULL;
+    initParse();
     
     // in with the new
     QNetworkRequest request(url);
@@ -31,10 +45,38 @@ void Parser::parse(const QUrl& url) {
         currentReply->disconnect(this);
         currentReply->deleteLater();
     }
-    currentReply = manager.get(request);
+    currentReply = manager->get(request);
     connect(currentReply, SIGNAL(readyRead()), this, SLOT(readyRead()));
     connect(currentReply, SIGNAL(metaDataChanged()), this, SLOT(metaDataChanged()));
     connect(currentReply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(error(QNetworkReply::NetworkError)));
+}
+
+void Parser::parseFile(const QString &filename)
+{
+    initParse();
+    
+    QFile file(filename);
+    
+    QFileInfo fileInfo(filename);
+    //qDebug() << "Filename: " << fileInfo.absoluteFilePath();
+    
+    Q_ASSERT(file.exists());
+    
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        Q_ASSERT(false);
+        return;
+    }
+    
+    QByteArray data = file.readAll();
+    xml.addData(data);
+    parseXml();
+    
+    // We have to do this manually for files.
+    
+    if (feed->items.size() > 0)
+        result = Parser::OK;
+    
+    emit done();
 }
 
 void Parser::resetParserVars() {
@@ -111,7 +153,7 @@ void Parser::parseXml() {
                 currentItem->description = subtitle;
                 currentItem->content = content;
                 currentItem->url = QUrl(url);
-                currentItem->timestamp = Utilities::dateFromFeedString(timestamp);
+                currentItem->timestamp = dateFromFeedString(timestamp);
                 
                 // Okay, give it up. :(
                 if (!currentItem->timestamp.isValid()) {
@@ -219,5 +261,17 @@ void Parser::netFinished(QNetworkReply *reply)
         result = Parser::PARSE_ERROR;
         emit done();
     }
+}
+
+void Parser::initParse()
+{
+    result = Parser::IN_PROGRESS;
+    finalFeedURL = url;
+    
+    resetParserVars();
+    
+    // Allocate our items.
+    feed = new RawFeed();
+    currentItem = NULL;
 }
 

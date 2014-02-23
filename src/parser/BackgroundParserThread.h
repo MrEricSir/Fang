@@ -25,6 +25,7 @@ protected slots:
 private:
     Parser* parser;
     QUrl url;
+    QNetworkAccessManager manager;
     
 };
 

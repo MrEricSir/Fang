@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+	>
+
+<channel>
+	<title>MrEricSir.com</title>
+	<atom:link href="http://www.mrericsir.com/blog/feed/" rel="self" type="application/rss+xml" />
+	<link>http://www.mrericsir.com/blog</link>
+	<description>Eric&#039;s electronic hideout</description>
+	<lastBuildDate>Thu, 20 Feb 2014 18:27:39 +0000</lastBuildDate>
+	<language>en</language>
+	<sy:updatePeriod>hourly</sy:updatePeriod>
+	<sy:updateFrequency>1</sy:updateFrequency>
+	<generator>http://wordpress.org/?v=3.1.2</generator>
+		<item>
+		<title>Space reserved for mural</title>
+		<link>http://www.mrericsir.com/blog/local/space-reserved-for-mural/</link>
+		<comments>http://www.mrericsir.com/blog/local/space-reserved-for-mural/#comments</comments>
+		<pubDate>Wed, 12 Feb 2014 23:04:49 +0000</pubDate>
+		<dc:creator>MrEricSir</dc:creator>
+				<category><![CDATA[Local]]></category>
+		<category><![CDATA[16thmission]]></category>
+		<category><![CDATA[andalu]]></category>
+		<category><![CDATA[mural]]></category>
+		<category><![CDATA[photos]]></category>
+
+		<guid isPermaLink="false">http://www.mrericsir.com/blog/?p=2831</guid>
+		<description><![CDATA[A mural recently appeared on the side of the former Andalu space at 16th and Guerrero. Apparently there&#8217;s more to come, as a large sign proclaims that the space is &#8220;reserved.&#8221; Stay tuned for further updates as the mural progresses. UPDATE: A new piece of the mural has appeared. UPDATE, part 2: Despite being aggressively [...]]]></description>
+			<content:encoded><![CDATA[<p><a href="http://www.flickr.com/photos/mrericsir/12487933195/" title="New mural by MrEricSir, on Flickr"><img src="http://farm6.staticflickr.com/5486/12487933195_46a9ff4e78.jpg" width="500" height="375" alt="New mural"></a></p>
+<p><a href="http://www.flickr.com/photos/mrericsir/12488047313/" title="This space is reserved... by MrEricSir, on Flickr"><img src="http://farm3.staticflickr.com/2830/12488047313_2119cef3d8.jpg" width="500" height="375" alt="This space is reserved..."></a></p>
+<p>A mural recently appeared on the side of the former Andalu space at 16th and Guerrero.  Apparently there&#8217;s more to come, as a large sign proclaims that the space is &#8220;reserved.&#8221;  Stay tuned for further updates as the mural progresses.</p>
+<p><strong>UPDATE</strong>: A new piece of the mural has appeared.</p>
+<p><a href="http://www.flickr.com/photos/mrericsir/12552471843/" title="image by MrEricSir, on Flickr"><img src="https://v4s.yimg.com/sk/3685/12552471843_e045a1cd85.jpg" width="500" height="375" alt="image"></a></p>
+<p><strong>UPDATE, part 2:</strong> Despite being aggressively tagged over in the past few days, the mural sprung back into action with more cutesy characters.</p>
+<p><a href="http://www.flickr.com/photos/mrericsir/12660412154/" title="image by MrEricSir, on Flickr"><img src="https://ycpi-farm3.staticflickr.com/2873/12660412154_da06c50686.jpg" width="500" height="375" alt="image"></a></p>
+]]></content:encoded>
+			<wfw:commentRss>http://www.mrericsir.com/blog/local/space-reserved-for-mural/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+		</item>
+		<item>
+		<title>Agile lunch breaks</title>
+		<link>http://www.mrericsir.com/blog/technology/agile-lunch-breaks/</link>
+		<comments>http://www.mrericsir.com/blog/technology/agile-lunch-breaks/#comments</comments>
+		<pubDate>Fri, 24 Jan 2014 18:48:53 +0000</pubDate>
+		<dc:creator>MrEricSir</dc:creator>
+				<category><![CDATA[Technology]]></category>
+		<category><![CDATA[agile]]></category>
+		<category><![CDATA[foodtrucks]]></category>
+		<category><![CDATA[scrum]]></category>
+		<category><![CDATA[streetfood]]></category>
+		<category><![CDATA[tech]]></category>
+
+		<guid isPermaLink="false">http://www.mrericsir.com/blog/?p=2825</guid>
+		<description><![CDATA[Spotted the above banner at the g-food Lounge &#160; The Product Owner added a new user story to the sprint backlog: As a human, I would like to put food in my mouth to satiate myself at lunch time. &#160; Success criteria: Feeling of hunger eliminated for the afternoon Delicious taste &#8220;In addition,&#8221; the Product [...]]]></description>
+			<content:encoded><![CDATA[<p><a href="http://www.flickr.com/photos/mrericsir/12075790286/" title="&lt;c:/lean bites. served agile&gt; by MrEricSir, on Flickr"><img src="http://farm8.staticflickr.com/7433/12075790286_aa903a1daf.jpg" width="500" height="375" alt="&lt;c:/lean bites. served agile&gt;"></a></p>
+<p><em>Spotted the above banner at the <a href="http://www.gfoodlounge.com/">g-food Lounge</a></em><br />
+&nbsp;</p>
+<p>The Product Owner added a new user story to the sprint backlog:</p>
+<blockquote><p>As a human, I would like to put food in my mouth to satiate myself at lunch time.<br />
+&nbsp;<br />
+Success criteria:</p>
+<ul>
+<li>Feeling of hunger eliminated for the afternoon</li>
+<li>Delicious taste</li>
+</ul>
+</blockquote>
+<p>&#8220;In addition,&#8221; the Product Owner added, &#8220;we&#8217;ll need to do a spike to investigate which food trucks are available today.&#8221;</p>
+]]></content:encoded>
+			<wfw:commentRss>http://www.mrericsir.com/blog/technology/agile-lunch-breaks/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+		</item>
+		<item>
+		<title>Recruiting via sidewalk sandwich board</title>
+		<link>http://www.mrericsir.com/blog/local/recruiting-via-sidewalk-sandwich-board/</link>
+		<comments>http://www.mrericsir.com/blog/local/recruiting-via-sidewalk-sandwich-board/#comments</comments>
+		<pubDate>Wed, 15 Jan 2014 07:32:17 +0000</pubDate>
+		<dc:creator>MrEricSir</dc:creator>
+				<category><![CDATA[Local]]></category>
+		<category><![CDATA[hiring]]></category>
+		<category><![CDATA[programmers]]></category>
+		<category><![CDATA[recruiting]]></category>
+		<category><![CDATA[sandwich board]]></category>
+		<category><![CDATA[south beach]]></category>
+		<category><![CDATA[tech]]></category>
+		<category><![CDATA[techies]]></category>
+		<category><![CDATA[wtf]]></category>
+
+		<guid isPermaLink="false">http://www.mrericsir.com/blog/?p=2816</guid>
+		<description><![CDATA[(Spotted on 2nd Street) &#160; Are sandwich boards a good way to hire software engineers and high-level managers? Now to be fair, Craigslist isn&#8217;t the perfect way to hire people. But this feels a little informal. Still, it&#8217;s fancier than a vinyl banner or a piece of cardboard stapled to a telephone pole. So there&#8217;s [...]]]></description>
+			<content:encoded><![CDATA[<p><a href="http://www.flickr.com/photos/mrericsir/11952260925/" title="Seriously? by MrEricSir, on Flickr"><img src="http://farm4.staticflickr.com/3742/11952260925_ca650436d2.jpg" width="375" height="500" alt="Seriously?"></a></p>
+<p><em>(Spotted on 2nd Street)</em></p>
+<p>&nbsp;</p>
+<p>Are sandwich boards a good way to hire software engineers and high-level managers?  Now to be fair, Craigslist isn&#8217;t the perfect way to hire people.  But this feels a little informal.</p>
+<p>Still, it&#8217;s fancier than a vinyl banner or a piece of cardboard stapled to a telephone pole.  So there&#8217;s that.</p>
+]]></content:encoded>
+			<wfw:commentRss>http://www.mrericsir.com/blog/local/recruiting-via-sidewalk-sandwich-board/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+		</item>
+		<item>
+		<title>Why San Francisco is not 7 by 7 miles</title>
+		<link>http://www.mrericsir.com/blog/local/why-san-francisco-is-not-7-by-7-miles/</link>
+		<comments>http://www.mrericsir.com/blog/local/why-san-francisco-is-not-7-by-7-miles/#comments</comments>
+		<pubDate>Wed, 15 Jan 2014 04:36:30 +0000</pubDate>
+		<dc:creator>MrEricSir</dc:creator>
+				<category><![CDATA[Local]]></category>
+		<category><![CDATA[geography]]></category>
+		<category><![CDATA[mythbusted]]></category>
+		<category><![CDATA[sanfrancisco]]></category>
+
+		<guid isPermaLink="false">http://www.mrericsir.com/blog/?p=2801</guid>
+		<description><![CDATA[San Francisco is seven by seven miles. Everyone who lives here knows that. There&#8217;s even a magazine named after this fact. Problem is, it&#8217;s not exactly true. While the land area is about 49 square miles, as Wikipedia points out the total area is a much larger 232 square miles when you include water. Aside [...]]]></description>
+			<content:encoded><![CDATA[<p>San Francisco is seven by seven miles.  Everyone who lives here knows that.  There&#8217;s even a <a href="http://www.7x7.com/">magazine</a> named after this fact.</p>
+<p>Problem is, it&#8217;s not exactly true.  </p>
+<p>While the <em>land </em>area is about 49 square miles, <a href="http://en.wikipedia.org/wiki/San_Francisco#Geography">as Wikipedia points out</a> the total area is a much larger 232 square miles when you include water.  Aside from a sizable portion of the bay and some of its islands, San Francisco also includes the Farallon Islands and surrounding water in the Pacific.</p>
+<p>The city&#8217;s actual borders are easy to visualize <a href="http://www.openstreetmap.org/relation/111968">using OpenStreetMap</a>:</p>
+<p><a href="http://www.mrericsir.com/blog/wp-content/uploads/sfboundary.jpg"><img src="http://www.mrericsir.com/blog/wp-content/uploads/sfboundary-1024x442.jpg" alt="" title="Boundaries of SF" width="550" height="237" class="aligncenter size-large wp-image-2802" /></a></p>
+<p>In case you&#8217;re wondering where OpenStreetMap is getting this data, it&#8217;s straight from the US Census <a href="http://tigerweb.geo.census.gov/">TIGER data</a>.  The same information can be viewed on their website, albeit with some difficulty.</p>
+<p>One more thing: (Spoiler alert!) Despite what many seem to think, SFO is not located in San Francisco; it&#8217;s entirely in San Mateo County.  So if you&#8217;re ever wondering why the airport doesn&#8217;t have SF&#8217;s trademark urine, pot, and beer smell, that&#8217;s probably why.</p>
+]]></content:encoded>
+			<wfw:commentRss>http://www.mrericsir.com/blog/local/why-san-francisco-is-not-7-by-7-miles/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+		</item>
+		<item>
+		<title>Why it&#8217;s time to shut up about &#8220;wearable tech&#8221;</title>
+		<link>http://www.mrericsir.com/blog/rant/why-its-time-to-shut-up-about-wearable-tech/</link>
+		<comments>http://www.mrericsir.com/blog/rant/why-its-time-to-shut-up-about-wearable-tech/#comments</comments>
+		<pubDate>Tue, 14 Jan 2014 00:09:13 +0000</pubDate>
+		<dc:creator>MrEricSir</dc:creator>
+				<category><![CDATA[Rant]]></category>
+		<category><![CDATA[fuck]]></category>
+		<category><![CDATA[googleglass]]></category>
+		<category><![CDATA[history]]></category>
+		<category><![CDATA[oculus]]></category>
+		<category><![CDATA[smartwatch]]></category>
+		<category><![CDATA[techies]]></category>
+		<category><![CDATA[technology]]></category>
+		<category><![CDATA[wearable tech]]></category>
+
+		<guid isPermaLink="false">http://www.mrericsir.com/blog/?p=2763</guid>
+		<description><![CDATA[(Photo by Thomas Hawk. License.) &#160; Lately we&#8217;ve heard a lot about wearable tech. It&#8217;s said to be an exciting new product category that involves smartwatches, Google Glass, and perhaps fitness trackers. But how many of the people talking about this future of wearable gadgets are wearing wristwatches, glasses, or contact lenses? And how many [...]]]></description>
+			<content:encoded><![CDATA[<p><a href="http://www.flickr.com/photos/thomashawk/7050489913/" title="Google Co-Founder Sergey Brin Sports the New Google Glasses at Dinner in the Dark, a Benefit for the Foundation Fighting Blindness -- San Francisco, CA by Thomas Hawk, on Flickr"><img src="http://farm8.staticflickr.com/7189/7050489913_0e0a968707.jpg" width="500" height="333" alt="Google Co-Founder Sergey Brin Sports the New Google Glasses at Dinner in the Dark, a Benefit for the Foundation Fighting Blindness -- San Francisco, CA"></a><br />
+<em>(<a href="http://www.flickr.com/photos/thomashawk/7050489913/">Photo</a> by Thomas Hawk. <a href="http://creativecommons.org/licenses/by-nc/2.0/deed.en">License.</a>)</em></p>
+<p>&nbsp;</p>
+<p>Lately we&#8217;ve heard a lot about wearable tech.  It&#8217;s said to be an exciting new product category that involves smartwatches, Google Glass, and perhaps fitness trackers.</p>
+<p>But how many of the people talking about this future of wearable gadgets are wearing wristwatches, glasses, or contact lenses?  And how many of them are wearing clothes and shoes made from fabrics that didn&#8217;t exist a century ago?</p>
+<p>Wearable tech isn&#8217;t the future, it&#8217;s the present.  Just because we don&#8217;t always think of elastic underwear or an old-timey wind up watch as &#8220;tech&#8221; doesn&#8217;t mean they aren&#8217;t.</p>
+<p>So what are we <em>really</em> talking about when we discuss this seemingly inevitable rise of gadgets we strap to ourselves?</p>
+<p>Essentially, we&#8217;re lumping together products designed to put on our bodies that are futuristic in the sense that they&#8217;re not very good yet.  They all suffer from one or more of the following flaws:</p>
+<ol>
+<li><strong>Uncomfortable</strong><br />Is Google Glass really something you&#8217;d be able to wear all day?  And aren&#8217;t your fingers too fat for a smartwatch touch screen?
+</li>
+<li><strong>Doesn&#8217;t work well</strong><br />Early digital watches required users <a href="http://www.pcmag.com/slideshow/story/296609/the-digital-watch-a-brief-history/2">to press a button to see the time.</a>  Existing analog watches didn&#8217;t have this problem.  Most new products take years to get right.</li>
+<li><strong>Not useful enough</strong><br />Microsoft launched a smartwatch called SPOT <a href="http://news.cnet.com/8301-17938_105-9927213-1.html">nearly ten years ago.</a>  It wasn&#8217;t on the market for long.  Why?  Most people at that time were buying cell phones that offered more features.  It&#8217;s one thing to have an extra gadget (or ten) around the house that you don&#8217;t use, but the bar for usefulness is much higher if you have to put it on when you get up in the morning.
+</li>
+<li><strong>Looks silly</strong><br />Would you wear a <a href="http://www.etsy.com/listing/93619834/unique-beadwork-beard">fake beard made out of colorful beads?</a>  While most people would have no problem wearing one on Halloween, on most days wearing something visible and unusual in public has a social stigma.
+</li>
+</ol>
+<p>Point is, we need to stop talking about HUDs and newfangled computer watches as though they belong together.  These are very different gadgets with discrete feature sets &#8212; and different problems to overcome.</p>
+<p>Even as buzzwords go, wearable tech isn&#8217;t meaningful: it&#8217;s unnecessary, not descriptive, and even if it were it still wouldn&#8217;t be a product category in and of itself.  It&#8217;s time to shut up about wearable tech and let this buzzword die.  </p>
+]]></content:encoded>
+			<wfw:commentRss>http://www.mrericsir.com/blog/rant/why-its-time-to-shut-up-about-wearable-tech/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+		</item>
+		<item>
+		<title>Techie litter</title>
+		<link>http://www.mrericsir.com/blog/local/techie-litter/</link>
+		<comments>http://www.mrericsir.com/blog/local/techie-litter/#comments</comments>
+		<pubDate>Wed, 04 Dec 2013 18:00:25 +0000</pubDate>
+		<dc:creator>MrEricSir</dc:creator>
+				<category><![CDATA[Local]]></category>
+		<category><![CDATA[16thmission]]></category>
+		<category><![CDATA[dsp]]></category>
+		<category><![CDATA[hipsters]]></category>
+		<category><![CDATA[photos]]></category>
+		<category><![CDATA[techies]]></category>
+		<category><![CDATA[vintage]]></category>
+
+		<guid isPermaLink="false">http://www.mrericsir.com/blog/?p=2747</guid>
+		<description><![CDATA[You see this? This is what happens when hipster techies in the Mission litter their vintage textbook covers. Pick up after yourselves, people!]]></description>
+			<content:encoded><![CDATA[<p><a href="http://www.flickr.com/photos/mrericsir/11209278513/" title="image by MrEricSir, on Flickr"><img src="http://farm8.staticflickr.com/7351/11209278513_e3a7471638.jpg" width="500" height="299" alt="image"></a></p>
+<p>You see this?  This is what happens when hipster techies in the Mission litter their vintage textbook covers.  Pick up after yourselves, people!</p>
+]]></content:encoded>
+			<wfw:commentRss>http://www.mrericsir.com/blog/local/techie-litter/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+		</item>
+		<item>
+		<title>New NSA wiretaps being installed at AT&amp;T</title>
+		<link>http://www.mrericsir.com/blog/local/new-nsa-wiretaps-being-installed-at-att/</link>
+		<comments>http://www.mrericsir.com/blog/local/new-nsa-wiretaps-being-installed-at-att/#comments</comments>
+		<pubDate>Mon, 25 Nov 2013 20:39:41 +0000</pubDate>
+		<dc:creator>MrEricSir</dc:creator>
+				<category><![CDATA[Local]]></category>
+		<category><![CDATA[at&t]]></category>
+		<category><![CDATA[nsa]]></category>
+		<category><![CDATA[photos]]></category>
+		<category><![CDATA[spies]]></category>
+		<category><![CDATA[wiretap]]></category>
+
+		<guid isPermaLink="false">http://www.mrericsir.com/blog/?p=2721</guid>
+		<description><![CDATA[As you may recall, back in 2006 a whistleblower exposed that AT&#038;T had allowed the NSA to wiretap their internet traffic from a secret room. Today, a massive wrapped-up package was being moved into the same windowless building via crane. Hmmm&#8230; could this be the NSA&#8217;s latest way to spy on the cat GIFs you&#8217;re [...]]]></description>
+			<content:encoded><![CDATA[<p><a href="http://www.flickr.com/photos/mrericsir/11055184333/" title="image by MrEricSir, on Flickr"><img src="http://farm3.staticflickr.com/2867/11055184333_b230080658.jpg" width="375" height="500" alt="image"></a></p>
+<p>As you may recall, back in 2006 <a href="http://www.wired.com/science/discoveries/news/2006/04/70619">a whistleblower exposed</a> that AT&#038;T had allowed the NSA to wiretap their internet traffic <a href="http://en.wikipedia.org/wiki/Room_641A">from a secret room.</a></p>
+<p>Today, a massive wrapped-up package was being moved into the same windowless building via crane.  Hmmm&#8230; could this be the NSA&#8217;s latest way to spy on the cat GIFs you&#8217;re sending your friends?  We may never find ou ** NO CARRIER **</p>
+]]></content:encoded>
+			<wfw:commentRss>http://www.mrericsir.com/blog/local/new-nsa-wiretaps-being-installed-at-att/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+		</item>
+		<item>
+		<title>Disneyland comes to The Mission</title>
+		<link>http://www.mrericsir.com/blog/local/disneyland-comes-to-the-mission/</link>
+		<comments>http://www.mrericsir.com/blog/local/disneyland-comes-to-the-mission/#comments</comments>
+		<pubDate>Sun, 24 Nov 2013 00:31:07 +0000</pubDate>
+		<dc:creator>MrEricSir</dc:creator>
+				<category><![CDATA[Local]]></category>
+		<category><![CDATA[disney]]></category>
+		<category><![CDATA[hauteyetedgy]]></category>
+		<category><![CDATA[mission]]></category>
+
+		<guid isPermaLink="false">http://www.mrericsir.com/blog/?p=2712</guid>
+		<description><![CDATA[Good news, everyone! Disneyland is coming to the Mission! A recent street stencil breaks the news. I called up Disney&#8217;s headquarters for more information. Here&#8217;s the scoop: Unlike Disney&#8217;s other parks, this one will be both &#8220;haute&#8221; and &#8220;edgy&#8221; with cast members playing hobos, hipsters, and street drunks. Keeping with the theme, a scary Tomorrowland [...]]]></description>
+			<content:encoded><![CDATA[<p><a href="http://www.flickr.com/photos/mrericsir/11017893004/" title="The New Mission: Haute, Yet Edgy by MrEricSir, on Flickr"><img src="http://farm4.staticflickr.com/3737/11017893004_e3fcf43206.jpg" width="500" height="375" alt="The New Mission: Haute, Yet Edgy"></a></p>
+<p>Good news, everyone!  Disneyland is coming to the Mission!</p>
+<p>A <a href="http://blogs.sfweekly.com/exhibitionist/2013/11/stencils_in_the_shadows_two_ar.php">recent street stencil</a> breaks the news.  I called up Disney&#8217;s headquarters for more information.  Here&#8217;s the scoop:</p>
+<ul>
+<li>Unlike Disney&#8217;s other parks, this one will be both &#8220;haute&#8221; and &#8220;edgy&#8221; with cast members playing hobos, hipsters, and street drunks.  Keeping with the theme, a scary Tomorrowland ride called BART will whisk you from one end of the park to the other.  </p>
+<p></li>
+<li>There will be plenty of places to eat, although they&#8217;re all a bit expensive for what you get.  And of course there will be numerous gift shops selling cheap junk at ridiculous prices &#8212; but you&#8217;ll buy a souvenir anyway because that&#8217;s what people do.
+<p></li>
+<li>Other attractions will include Goofy&#8217;s Art Alley, The Hunchback of San Francisco de Asis, Haunted Denim Shop&#8217;s Ghostly Price Tag Scare, and Snow White&#8217;s Naughty Vibrator Emporium.  When you&#8217;re done, why not relax in Kermit the Frog&#8217;s Dolores Park Village?
+<p></li>
+<li>Be prepared for long lines.  You might want to bring something to read, and be sure to wear comfortable shoes.</ul>
+]]></content:encoded>
+			<wfw:commentRss>http://www.mrericsir.com/blog/local/disneyland-comes-to-the-mission/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+		</item>
+		<item>
+		<title>Solar Powered Cats</title>
+		<link>http://www.mrericsir.com/blog/local/solar-powered-cats/</link>
+		<comments>http://www.mrericsir.com/blog/local/solar-powered-cats/#comments</comments>
+		<pubDate>Sat, 23 Nov 2013 23:45:33 +0000</pubDate>
+		<dc:creator>MrEricSir</dc:creator>
+				<category><![CDATA[Local]]></category>
+		<category><![CDATA[cats]]></category>
+		<category><![CDATA[green]]></category>
+		<category><![CDATA[leedcertified]]></category>
+		<category><![CDATA[meow]]></category>
+		<category><![CDATA[photos]]></category>
+		<category><![CDATA[solar]]></category>
+
+		<guid isPermaLink="false">http://www.mrericsir.com/blog/?p=2706</guid>
+		<description><![CDATA[(Spotted on Valencia) &#160; If conventional, cat food-powered cats aren&#8217;t green enough for your LEED Certified lifestyle, try a solar powered cat. Go ahead! But don&#8217;t say Philip K. Dick didn&#8217;t warn you about this particular dystopian future.]]></description>
+			<content:encoded><![CDATA[<p><a href="http://www.flickr.com/photos/mrericsir/11017828806/" title="Solar Powered Cats by MrEricSir, on Flickr"><img src="http://farm3.staticflickr.com/2871/11017828806_1d05f21f1c.jpg" width="500" height="375" alt="Solar Powered Cats"></a></p>
+<p><em>(Spotted on Valencia)</em><br />
+&nbsp;</p>
+<p>If conventional, cat food-powered cats aren&#8217;t green enough for your LEED Certified lifestyle, try a solar powered cat.  Go ahead!  But don&#8217;t say <a href="http://en.wikipedia.org/wiki/Do_Androids_Dream_of_Electric_Sheep%3F">Philip K. Dick didn&#8217;t warn you</a> about this particular dystopian future.</p>
+]]></content:encoded>
+			<wfw:commentRss>http://www.mrericsir.com/blog/local/solar-powered-cats/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+		</item>
+		<item>
+		<title>Bartfeld Sales Co.</title>
+		<link>http://www.mrericsir.com/blog/local/bartfeld-sales-co/</link>
+		<comments>http://www.mrericsir.com/blog/local/bartfeld-sales-co/#comments</comments>
+		<pubDate>Wed, 13 Nov 2013 20:48:08 +0000</pubDate>
+		<dc:creator>MrEricSir</dc:creator>
+				<category><![CDATA[Local]]></category>
+		<category><![CDATA[foodsco]]></category>
+		<category><![CDATA[photos]]></category>
+		<category><![CDATA[reclaimedwood]]></category>
+		<category><![CDATA[streetart]]></category>
+
+		<guid isPermaLink="false">http://www.mrericsir.com/blog/?p=2701</guid>
+		<description><![CDATA[Next time you&#8217;re driving out of Foods Co. with a truckload of cheap beer, be sure to stop and look across the street. The reclaimed wood exterior of 14th Street&#8217;s Bartfeld Sales Co. received a colorful makeover in recent months thanks to local artists.]]></description>
+			<content:encoded><![CDATA[<p><a href="http://www.flickr.com/photos/mrericsir/10766475574/" title="Bartfeld Sales Co. by MrEricSir, on Flickr"><img src="http://farm8.staticflickr.com/7409/10766475574_388893813a.jpg" width="500" height="375" alt="Bartfeld Sales Co."></a></p>
+<p>Next time you&#8217;re driving out of Foods Co. with a truckload of cheap beer, be sure to stop and look across the street.  The reclaimed wood exterior of 14th Street&#8217;s Bartfeld Sales Co. received a colorful makeover in recent months thanks to local artists.</p>
+]]></content:encoded>
+			<wfw:commentRss>http://www.mrericsir.com/blog/local/bartfeld-sales-co/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+		</item>
+	</channel>
+</rss>

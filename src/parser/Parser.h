@@ -16,10 +16,20 @@ class Parser : public ParserInterface
     Q_OBJECT
     
 public:
-    explicit Parser(QObject *parent = 0);
+    explicit Parser(QObject *parent, QNetworkAccessManager* manager);
+    
+    /**
+     * @brief Attempts to convert an unreliable RSS/Atom timestamp string into a real timestamp.
+     * @param timestamp
+     * @return 
+     */
+    static QDateTime dateFromFeedString(QString timestamp);
     
 public slots:
     virtual void parse(const QUrl& url); // Override.
+    
+    // For testing purposes.
+    void parseFile(const QString& filename);
     
     virtual ParseResult getResult(); // Override.
     virtual RawFeed* getFeed(); // Override.
@@ -32,6 +42,7 @@ protected slots:
     void netFinished(QNetworkReply *reply);
     
 private:
+    void initParse(); // called prior to parse.
     void parseXml();
     void resetParserVars();
     
@@ -42,7 +53,7 @@ private:
     
     QXmlStreamReader xml;
 
-    QNetworkAccessManager manager;
+    QNetworkAccessManager *manager;
     QNetworkReply *currentReply;
     QUrl finalFeedURL;
     QNetworkReply *redirectReply;
