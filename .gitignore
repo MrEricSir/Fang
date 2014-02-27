@@ -2,3 +2,4 @@ Fang.desktop
 Fang_harmattan.desktop
 Fang.pro.user
 test/build-*
+test/TestFangParser/TestFangParser.pro.user

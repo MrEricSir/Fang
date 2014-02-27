@@ -54,7 +54,8 @@ SOURCES += src/main.cpp \
     src/utilities/RawFeedRewriter.cpp \
     src/operations/LoadAllNewsOperation.cpp \
     src/utilities/UnreadCountReader.cpp \
-    src/operations/UpdateOrdinalsOperation.cpp
+    src/operations/UpdateOrdinalsOperation.cpp \
+    src/utilities/NetworkUtilities.cpp
 
 # Installation path
 # target.path =
@@ -116,4 +117,5 @@ HEADERS += \
     src/utilities/RawFeedRewriter.h \
     src/operations/LoadAllNewsOperation.h \
     src/utilities/UnreadCountReader.h \
-    src/operations/UpdateOrdinalsOperation.h
+    src/operations/UpdateOrdinalsOperation.h \
+    src/utilities/NetworkUtilities.h
