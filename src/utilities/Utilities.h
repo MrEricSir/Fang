@@ -4,8 +4,6 @@
 #include <QString>
 #include <QObject>
 #include <QDebug>
-#include <QNetworkAccessManager>
-#include <QUrl>
 #include <QDateTime>
 
 #include "../parser/RawFeed.h"
@@ -24,19 +22,6 @@ public:
      * @return 
      */
     static FeedItem* feedItemFromRaw(RawFeed *raw, qint64 dbId, QObject* parent);
-    
-    /**
-     * @brief Returns just the host for a given URL.
-     * @param url
-     * @return 
-     */
-    static QUrl getHost(const QUrl &url);
-    
-    /**
-     * @brief Adds an HTTP cache to a network access manager.
-     * @param manager
-     */
-    static void addNetworkAccessManagerCache(QNetworkAccessManager* manager);
 };
 
 #endif // UTILITIES_H

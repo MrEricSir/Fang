@@ -1,5 +1,5 @@
 #include "WebPageGrabber.h"
-#include "Utilities.h"
+#include "NetworkUtilities.h"
 #include <QDebug>
 #include <QWebFrame>
 #include <QWebPage>
@@ -8,7 +8,7 @@
 WebPageGrabber::WebPageGrabber(QObject *parent) :
     QObject(parent)
 {
-    Utilities::addNetworkAccessManagerCache(webView.page()->networkAccessManager());
+    NetworkUtilities::addNetworkAccessManagerCache(webView.page()->networkAccessManager());
     webView.page()->settings()->setAttribute(QWebSettings::JavascriptEnabled, false); // No scripts.
     webView.page()->settings()->setAttribute(QWebSettings::AutoLoadImages, false); // No imgs
     

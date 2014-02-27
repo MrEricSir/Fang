@@ -4,34 +4,64 @@
 #include <QFile>
 #include <QFileInfo>
 
-Parser::Parser(QObject *parent, QNetworkAccessManager* manager) :
-    ParserInterface(parent), checkFavicon(false), feed(NULL), result(OK), manager(manager), currentReply(NULL), redirectReply(NULL)
+#include "../utilities/NetworkUtilities.h"
+
+Parser::Parser(QObject *parent) :
+    ParserInterface(parent), checkFavicon(false), feed(NULL), result(OK), currentReply(NULL), redirectReply(NULL)
 {
+    //NetworkUtilities::addNetworkAccessManagerCache(&manager);
+    
     // Connex0r teh siganls.
-    connect(manager, SIGNAL(finished(QNetworkReply*)),
+    connect(&manager, SIGNAL(finished(QNetworkReply*)),
             this, SLOT(netFinished(QNetworkReply*)));
 }
 
-QDateTime Parser::dateFromFeedString(QString timestamp)
+QDateTime Parser::dateFromFeedString(const QString& _timestamp)
 {
-    QDateTime ret;
-    // Date time.
-    // Examples:
-    // Tue, 02 Jul 2013 01:01:24 +0000
-    // Sun, 13 Oct 2013 19:15:29  PST
+    QDateTime ret; // Defaults to invalid timestamp.
     
-    // TODO: figure out the time zone issue
-    // For now, we're shaving off everything after the last space.
-    timestamp = timestamp.left(timestamp.trimmed().lastIndexOf(" "));
-    timestamp = timestamp.trimmed();
-    //qDebug() << "Time string: " << timestamp;
+    // Come up with a few versions of the time stamp.
+    QString timestamp = _timestamp.trimmed();
+    QString whiteStrippedTimestamp = timestamp.left(timestamp.trimmed().lastIndexOf(" "));
+    QString dotStrippedTimestamp = timestamp.left(timestamp.trimmed().lastIndexOf("."));
     
-    ret = QDateTime::fromString(timestamp, "ddd, dd MMM yyyy hh:mm:ss"); 
+    // Date time.  Comes in many (ugh) different formats.
+    const int dateFormatLength = 4;
+    const QString dateFormats[] = { 
+        // Most typical RSS format
+        // Example: Tue, 02 Jul 2013 01:01:24 +0000 or Sun, 13 Oct 2013 19:15:29  PST
+        "ddd, dd MMM yyyy hh:mm:ss",
+        
+        // Same as above, but with full months.
+        "ddd, dd MMMM yyyy hh:mm:ss",
+        
+        // RFC 3339, normally used by Atom.
+        // Example: 2013-08-07T16:47:54Z
+        "yyyy-MM-ddThh:mm:ssZ",
+        
+        // Format used by some Chinese site.
+        // Example: 2014-02-27 08:26:16.995
+        "yyyy-MM-dd hh:mm:ss"
+    };
     
-    // Try RFC 3339, normally used by Atom.
-    // Example: // 2013-08-07T16:47:54Z
-    if (!ret.isValid())
-        ret = QDateTime::fromString(timestamp.toUpper(), "yyyy-MM-ddThh:mm:ssZ"); 
+    int i = 0;
+    while (!ret.isValid() && i < dateFormatLength) {
+        const QString& format = dateFormats[i];
+        
+        // Try each type of manicured timestamp against this format.
+        ret = QDateTime::fromString(timestamp, format); 
+        
+        if (!ret.isValid())
+            ret = QDateTime::fromString(whiteStrippedTimestamp, format); 
+        
+        if (!ret.isValid())
+            ret = QDateTime::fromString(dotStrippedTimestamp, format); 
+        
+        i++;
+    }
+    
+    // All times are (supposedly) in UTC.
+    ret.setTimeSpec(Qt::UTC);
     
     return ret;
 }
@@ -45,7 +75,11 @@ void Parser::parse(const QUrl& url) {
         currentReply->disconnect(this);
         currentReply->deleteLater();
     }
-    currentReply = manager->get(request);
+    
+    // We have to pretend to be Firefox in order for some stupid servers to speak with us.
+    request.setHeader(QNetworkRequest::UserAgentHeader, "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:27.0) Gecko/20100101 Firefox/27.0");
+    
+    currentReply = manager.get(request);
     connect(currentReply, SIGNAL(readyRead()), this, SLOT(readyRead()));
     connect(currentReply, SIGNAL(metaDataChanged()), this, SLOT(metaDataChanged()));
     connect(currentReply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(error(QNetworkReply::NetworkError)));
@@ -92,6 +126,16 @@ void Parser::resetParserVars() {
     timestamp = "";
     author = "";
     hasType = false;
+    tagStack.clear();
+}
+
+QString Parser::getTagStackAt(qint32 n)
+{
+    // n is from 0..size - 1
+    if (tagStack.isEmpty() || (tagStack.size() - 1) < n)
+        return "";
+    
+    return tagStack.at(tagStack.size() - 1 - n);
 }
 
 // Parsed in chunks -- NOT all in one go.
@@ -99,6 +143,9 @@ void Parser::parseXml() {
     while (!xml.atEnd()) {
         xml.readNext();
         if (xml.isStartElement()) {
+            // Add this new tag to our stack.
+            tagStack.push(xml.name().toString().toLower());
+            
             // Look for start of entries.
             //qDebug() << "XML node: " << xml.name().toString() << " " << xml.prefix().toString();
             if (xml.name() == "item" || xml.name() == "entry") {
@@ -139,6 +186,8 @@ void Parser::parseXml() {
                 url = xml.attributes().value("href").toString();
             }
         } else if (xml.isEndElement()) {
+            tagStack.pop(); // Pop our tag stack, we're through with this one!
+            
             if (xml.name() == "item" || xml.name() == "entry") {
                 //qDebug() << "End element:" << xml.name().toString();
                 if (currentItem == NULL) {
@@ -175,20 +224,22 @@ void Parser::parseXml() {
             }
 
         } else if (xml.isCharacters() && !xml.isWhitespace()) {
-            if (currentTag == "title" && currentPrefix == "")
+            if (currentTag == "title" && currentPrefix == "" && (getTagStackAt(1) != "image")) {
                 title += xml.text().toString();
-            else if (currentTag == "link" && currentPrefix == "") {
+                //qDebug() << "Title: " << title << "  tagStack top: " << getTagStackAt(0) << " " << getTagStackAt(1);
+            } else if (currentTag == "link" && currentPrefix == "") {
                 url += xml.text().toString();
-            } else if (currentTag == "description" || currentTag == "summary")
+            } else if (currentTag == "description" || currentTag == "summary") {
                 subtitle += xml.text().toString();
-            else if (currentTag == "name")
+            } else if (currentTag == "name") {
                 author += xml.text().toString();
-            else if (currentTag == "pubdate" || currentTag == "lastbuilddate" 
-                     || currentTag == "updated")
+            } else if (currentTag == "pubdate" || currentTag == "lastbuilddate" 
+                     || currentTag == "updated") {
                 timestamp += xml.text().toString();
-            else if ((currentTag == "encoded" && currentPrefix == "content")
-                     || (currentTag == "content" && hasType))
+            } else if ((currentTag == "encoded" && currentPrefix == "content")
+                     || (currentTag == "content" && hasType)) {
                 content += xml.text().toString();
+            }
         }
     }
     
@@ -202,7 +253,7 @@ void Parser::parseXml() {
 }
 
 void Parser::error(QNetworkReply::NetworkError ne){
-    qDebug() << "Error!!!!! " << ne;
+    qDebug() << "Error!!!!! " << ne << " " << currentReply->errorString();
     currentReply->disconnect(this);
     currentReply->deleteLater();
     currentReply = 0;
@@ -274,4 +325,3 @@ void Parser::initParse()
     feed = new RawFeed();
     currentItem = NULL;
 }
-

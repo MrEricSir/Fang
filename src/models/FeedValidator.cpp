@@ -1,6 +1,7 @@
 #include "FeedValidator.h"
 #include "../FangApp.h"
 #include "../utilities/Utilities.h"
+#include "../utilities/NetworkUtilities.h"
 
 FeedValidator::FeedValidator(QQuickItem *parent) :
     QQuickItem(parent),
@@ -13,7 +14,7 @@ FeedValidator::FeedValidator(QQuickItem *parent) :
     result(Parser::IN_PROGRESS)
 {
     // Enble cache.
-    Utilities::addNetworkAccessManagerCache(&manager);
+    NetworkUtilities::addNetworkAccessManagerCache(&manager);
     
     connect(&pageGrabber, SIGNAL(ready(QWebPage*)), this, SLOT(onPageGrabberReady(QWebPage*)));
 }
@@ -61,7 +62,7 @@ void FeedValidator::doParse(const QUrl& url)
     delete parser;
     
     // Create a new one an' hook it up.
-    parser = new Parser(this, &manager);
+    parser = new Parser(this);
     connect(parser, SIGNAL(done()), this, SLOT(onFeedFinished()));
     
     // Do the parse.

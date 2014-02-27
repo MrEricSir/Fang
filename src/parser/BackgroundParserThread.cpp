@@ -4,11 +4,16 @@
 #include "../utilities/Utilities.h"
 
 BackgroundParserThread::BackgroundParserThread(QObject *parent) :
-    QThread(parent), manager()
+    QThread(parent)
 {
-    // Enble cache.
-    Utilities::addNetworkAccessManagerCache(&manager);
 }
+
+BackgroundParserThread::~BackgroundParserThread()
+{
+    //delete parser; // Why can't we do this?
+}
+
+
 
 void BackgroundParserThread::setUrl(const QUrl& url)
 {
@@ -17,7 +22,7 @@ void BackgroundParserThread::setUrl(const QUrl& url)
 
 void BackgroundParserThread::run()
 {
-    parser = new Parser(this, &manager);
+    parser = new Parser();
     connect(parser, SIGNAL(done()), this, SLOT(onDone()));
     parser->parse(url);
     exec();

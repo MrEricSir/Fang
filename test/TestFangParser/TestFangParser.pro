@@ -30,4 +30,19 @@ HEADERS += \
 
 OTHER_FILES += \
     feeds/mrericsir.com.rss \
-    feeds/slashdot.org.rss
+    feeds/slashdot.org.rss \
+    feeds/sfist.com.rss \
+    feeds/theonion.com.rss \
+    feeds/fark.com.rss \
+    feeds/laughingsquid.com.rss \
+    feeds/bbc.co.uk.rss \
+    feeds/zaphos.wordpress.com.rss \
+    feeds/theregister.co.uk.atom \
+    feeds/sfweekly.com.rss \
+    feeds/sports.people.com.cn.rss \
+    feeds/science.economist.com.rss \
+    feeds/npr.org.rss \
+    feeds/thesmokinggun.com.rss \
+    feeds/lifehacker.com.rss \
+    feeds/missionmission.feedburner.rss \
+    feeds/uptownalmanac.com.rss
