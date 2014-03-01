@@ -47,4 +47,5 @@ OTHER_FILES += \
     feeds/missionmission.feedburner.rss \
     feeds/uptownalmanac.com.rss \
     feeds/mirror.co.uk.rss \
-    feeds/donga.com.rss
+    feeds/donga.com.rss \
+    feeds/lokmat.com.rss

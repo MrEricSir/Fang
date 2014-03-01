@@ -174,6 +174,11 @@ void TestFangParser::parseTest_data()
                                   << "[NBA] 필라델피아, 아이버슨 등번호 ‘3번’ 영구결번"
                                   << "http://news.donga.com/3/all/20140228/61275241/1"
                                   << QDateTime::fromString("28 Feb 2014 03:13:00", dtf);
+    
+    QTest::newRow("LokMat") << "lokmat.com.rss" << "Lokmat Marathi News : Main-Main (मुख्य-मुख्य)" << 38
+                                  << "मंत्री वगळले, घोटाळे मांडले"
+                                  << "http://onlinenews1.lokmat.com/dailynews/2014-03-02/MainEdition-1-1-02-03-2014-9152a/main.php"
+                                  << QDateTime::fromString("02 Mar 2014 00:56:28", dtf);
 }
 
 QTEST_MAIN(TestFangParser)

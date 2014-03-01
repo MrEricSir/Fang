@@ -56,7 +56,6 @@ QDateTime Parser::dateFromFeedString(const QString& _timestamp)
     }
     
     // Date time.  Comes in many (ugh) different formats.
-    const int dateFormatLength = 4;
     const QString dateFormats[] = { 
         // Most typical RSS format
         // Example: Tue, 02 Jul 2013 01:01:24 +0000 or Sun, 13 Oct 2013 19:15:29  PST
@@ -71,11 +70,19 @@ QDateTime Parser::dateFromFeedString(const QString& _timestamp)
         
         // Format used by some Chinese site.
         // Example: 2014-02-27 08:26:16.995
-        "yyyy-MM-dd hh:mm:ss"
+        "yyyy-MM-dd hh:mm:ss",
+        
+        // Lokmat uses this custom format.  I provide a single-spaced version for sanity's sake.
+        // Example: 25-02-2014  01:08:10
+        "dd-MM-yyyy  hh:mm:ss",
+        "dd-MM-yyyy hh:mm:ss",
+        
+        
+        0 // must be last!
     };
     
     int i = 0;
-    while (!ret.isValid() && i < dateFormatLength) {
+    while (!ret.isValid() && dateFormats[i] != 0) {
         const QString& format = dateFormats[i];
         
         // Try each type of manicured timestamp against this format.
@@ -257,10 +264,10 @@ void Parser::parseXml() {
             }
 
         } else if (xml.isCharacters() && !xml.isWhitespace()) {
-            if (currentTag == "title" && currentPrefix == "" && (getTagStackAt(1) != "image")) {
+            if (currentTag == "title" && currentPrefix == "" && getTagStackAt(1) != "image") {
                 title += xml.text().toString();
                 //qDebug() << "Title: " << title << "  tagStack top: " << getTagStackAt(0) << " " << getTagStackAt(1);
-            } else if (currentTag == "link" && currentPrefix == "") {
+            } else if (currentTag == "link" && currentPrefix == "" && getTagStackAt(1) != "image") {
                 url += xml.text().toString();
             } else if (currentTag == "description" || currentTag == "summary") {
                 subtitle += xml.text().toString();
