@@ -19,11 +19,41 @@ Parser::Parser(QObject *parent) :
 QDateTime Parser::dateFromFeedString(const QString& _timestamp)
 {
     QDateTime ret; // Defaults to invalid timestamp.
+    int adjustment = 0; // Adjustment in minutes;
     
     // Come up with a few versions of the time stamp.
     QString timestamp = _timestamp.trimmed();
-    QString whiteStrippedTimestamp = timestamp.left(timestamp.trimmed().lastIndexOf(" "));
-    QString dotStrippedTimestamp = timestamp.left(timestamp.trimmed().lastIndexOf("."));
+    QString whiteStrippedTimestamp = timestamp.left(timestamp.lastIndexOf(" "));
+    QString dotStrippedTimestamp = timestamp.left(timestamp.lastIndexOf("."));
+    
+    // Check if there's a time-based adjustment and/or timezone.
+    if (timestamp.lastIndexOf(" ") > 0) {
+        QString sAdjustment = timestamp.right(timestamp.length() - timestamp.lastIndexOf(" "));
+        sAdjustment = sAdjustment.trimmed();
+        //qDebug() << "Adj: " << sAdjustment;
+        
+        // TODO: timezone
+        
+        // Check for an hour/minute adjustment, in the format of -hhmm or +hhmm
+        if (sAdjustment.length() == 5 &&
+                (sAdjustment.startsWith("+") || sAdjustment.startsWith("-"))) {
+            bool isNum = false;
+            QString sNumber = sAdjustment.right(4); // Skip + or -
+            sNumber.toInt(&isNum);
+            if (isNum) {
+                // YES!  We've got an adjustment!
+                int hours = sNumber.left(2).toInt(&isNum);
+                int minutes = sNumber.right(2).toInt(&isNum);
+                
+                // Condense down to minutes.
+                minutes += (hours * 60);
+                adjustment = sAdjustment.startsWith("-") ? minutes : -minutes;
+                
+                //qDebug() << " HH MM " << sNumber << "  " << adjustment;
+            }
+            
+        }
+    }
     
     // Date time.  Comes in many (ugh) different formats.
     const int dateFormatLength = 4;
@@ -59,6 +89,9 @@ QDateTime Parser::dateFromFeedString(const QString& _timestamp)
         
         i++;
     }
+    
+    // Add in our adjustment if we need it.
+    ret = ret.addSecs(adjustment * 60 /* seconds */);
     
     // All times are (supposedly) in UTC.
     ret.setTimeSpec(Qt::UTC);

@@ -45,4 +45,6 @@ OTHER_FILES += \
     feeds/thesmokinggun.com.rss \
     feeds/lifehacker.com.rss \
     feeds/missionmission.feedburner.rss \
-    feeds/uptownalmanac.com.rss
+    feeds/uptownalmanac.com.rss \
+    feeds/mirror.co.uk.rss \
+    feeds/donga.com.rss

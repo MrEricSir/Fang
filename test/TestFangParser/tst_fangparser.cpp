@@ -110,11 +110,6 @@ void TestFangParser::parseTest_data()
                                   << "http://laughingsquid.com/the-smoking-machine-an-apparatus-that-automatically-lights-smokes-and-tosses-cigarettes-on-the-ground/"
                                   << QDateTime::fromString("23 Feb 2014 19:19:54", dtf);
     
-    QTest::newRow("Laughing Squid") << "laughingsquid.com.rss" << "Laughing Squid" << 20
-                                  << "The Smoking Machine, An Apparatus That Automatically Lights, Smokes, and Tosses Cigarettes on the Ground"
-                                  << "http://laughingsquid.com/the-smoking-machine-an-apparatus-that-automatically-lights-smokes-and-tosses-cigarettes-on-the-ground/"
-                                  << QDateTime::fromString("23 Feb 2014 19:19:54", dtf);
-    
     QTest::newRow("BBC (top) News") << "bbc.co.uk.rss" << "BBC News - Home" << 81
                                   << "Ukraine to seek European integration"
                                   << "http://www.bbc.co.uk/news/world-europe-26317912#sa-ns_mchannel=rss&ns_source=PublicRSS20-sa"
@@ -133,7 +128,7 @@ void TestFangParser::parseTest_data()
     QTest::newRow("SF Weekly") << "sfweekly.com.rss" << "SF Weekly | Complete Issue" << 31
                                   << "\"7 Boxes\": The Things People Transport for Money"
                                   << "http://www.sfweekly.com/2014-02-26/film/7-boxes-film-review/"
-                                  << QDateTime::fromString("26 Feb 2014 00:00:00", dtf);
+                                  << QDateTime::fromString("26 Feb 2014 08:00:00", dtf);
     
     QTest::newRow("People.com.cn Sports") << "sports.people.com.cn.rss" << " 体育新闻 " << 50
                                   << " 女足出征阿尔加夫杯 年轻队伍获得锻炼良机 "
@@ -148,7 +143,7 @@ void TestFangParser::parseTest_data()
     QTest::newRow("NPR News") << "npr.org.rss" << "News" << 15
                                   << "First Look: The FDA's Nutrition Label Gets A Makeover "
                                   << "http://www.npr.org/blogs/thesalt/2014/02/27/283055089/first-look-the-fdas-nutrition-label-gets-a-makeover?ft=1&f=1001"
-                                  << QDateTime::fromString("27 Feb 2014 00:02:00", dtf);
+                                  << QDateTime::fromString("27 Feb 2014 05:02:00", dtf);
     
     QTest::newRow("Smoking Gun") << "thesmokinggun.com.rss" << "The Smoking Gun RSS" << 50
                                   << "\"Breaking Bad\" Fan Collared In Meth Bust"
@@ -169,6 +164,16 @@ void TestFangParser::parseTest_data()
                                   << "How to Know When You Can Call the Cops on a Glasshole"
                                   << "http://uptownalmanac.com/2014/02/how-know-when-you-can-call-cops-glasshole"
                                   << QDateTime::fromString("26 Feb 2014 23:44:00", dtf);
+    
+    QTest::newRow("Mirror") << "mirror.co.uk.rss" << "mirror - Home" << 25
+                                  << "Arturo Licata crowned world's oldest living man - aged 111 years 302 days"
+                                  << "http://www.mirror.co.uk/news/world-news/arturo-licata-crowned-worlds-oldest-3190842"
+                                  << QDateTime::fromString("28 Feb 2014 02:27:38", dtf);
+    
+    QTest::newRow("dongA") << "donga.com.rss" << "동아닷컴 : 동아일보 전체 뉴스" << 50
+                                  << "[NBA] 필라델피아, 아이버슨 등번호 ‘3번’ 영구결번"
+                                  << "http://news.donga.com/3/all/20140228/61275241/1"
+                                  << QDateTime::fromString("28 Feb 2014 03:13:00", dtf);
 }
 
 QTEST_MAIN(TestFangParser)
