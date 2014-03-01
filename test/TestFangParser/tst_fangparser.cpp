@@ -50,6 +50,7 @@ void TestFangParser::parseTest()
     QVERIFY2(feed != NULL, "Feed was null");
     
     RawNews* firstNews = feed->items.first();
+    QVERIFY2(firstNews->timestamp.isValid(), "Invalid timestamp."); // Must check for this manually.
     
     // All the times are in UTC; it's easier to set that here for the test cases.
     firstNewsTimestamp.setTimeSpec(Qt::UTC);
@@ -179,6 +180,51 @@ void TestFangParser::parseTest_data()
                                   << "मंत्री वगळले, घोटाळे मांडले"
                                   << "http://onlinenews1.lokmat.com/dailynews/2014-03-02/MainEdition-1-1-02-03-2014-9152a/main.php"
                                   << QDateTime::fromString("02 Mar 2014 00:56:28", dtf);
+    
+    QTest::newRow("The Hindu") << "thehindu.com.rss" << "The Hindu - News" << 225
+                                  << "Modi choice may deny Advani Gandhinagar"
+                                  << "http://www.thehindu.com/news/national/modi-choice-may-deny-advani-gandhinagar/article5741440.ece"
+                                  << QDateTime::fromString("01 Mar 2014 21:02:01", dtf);
+    
+    QTest::newRow("TH Daily News") << "dailynews.co.th.rss" << "เดลินิวส์ - อ่านความจริง อ่านเดลินิวส์" << 10
+                                  << "เว็บบ์ยังนำสวิงเอชเอสบีซี"
+                                  << "http://www.dailynews.co.th/Content.do?contentId=219811"
+                                  << QDateTime::fromString("01 Mar 2014 21:05:00", dtf);
+    
+    QTest::newRow("Krone") << "krone.at.rss" << "Krone.at - Nachrichten" << 35
+                                  << "Russische Truppen kassieren die ukrainische Krim"
+                                  << "http://www.krone.at/Nachrichten/Russische_Truppen_kassieren_die_ukrainische_Krim-Kriegsangst_waechst-Story-395414?utm_source=krone.at&utm_medium=RSS-Feed&utm_campaign=Nachrichten"
+                                  << QDateTime::fromString("01 Mar 2014 19:56:27", dtf);
+    
+    QTest::newRow("Ouest-France") << "ouest-france.fr.rss" << "Ouest-France - Actualité" << 17
+                                  << "Ukraine. Menaces de la Russie, l'armée ukrainienne en état d'alerte"
+                                  << "http://www.ouest-france.fr/ukraine-suivez-les-evenements-de-ce-samedi-en-direct-1970380"
+                                  << QDateTime::fromString("01 Mar 2014 19:21:00", dtf);
+    
+    QTest::newRow("Hryx") << "hryx.net.rss" << "Hryxlog" << 20
+                                  << "hlog #23"
+                                  << "http://s.hryx.net/hlog/23"
+                                  << QDateTime::fromString("30 May 2012 19:46:42", dtf);
+    
+    QTest::newRow("Hryx's Github") << "github.hryx.atom" << "hryx's Activity" << 30
+                                  << "hryx commented on issue MrEricSir/Modipulate#60"
+                                  << "https://github.com/MrEricSir/Modipulate/issues/60#issuecomment-36418854"
+                                  << QDateTime::fromString("01 Mar 2014 07:43:19", dtf);
+    
+    QTest::newRow("KP.ru") << "life.kp.ru.rss" << "KP.RU :: Общество" << 9
+                                  << "Навального заключили под домашний арест"
+                                  << "http://www.kp.ru/daily/26200/3087261/"
+                                  << QDateTime::fromString("28 Feb 2014 10:12:00", dtf);
+    
+    QTest::newRow("Yomiuri") << "yomiuri.co.jp.rss" << "YOMIURI ONLINE（読売新聞）主要ニュース" << 7
+                                  << "ウクライナ軍事介入へ…露大統領提案、上院承認"
+                                  << "http://rss.rssad.jp/rss/artclk/z0r9SvPmQy3H/4e9b00c230a30acc524b87cfb96a1bdf?ul=dTEkp0Q.3xQ0ioSSaARBwAjEz8VQ1gEH0sy7bPSX_q8UznMPrZFmLTGR9aXbjLSM8qt3_FOOWUtVeDP_oFQdpBUFfLqOYXwcTPjvcXUmcNM7aD2J."
+                                  << QDateTime::fromString("01 Mar 2014 16:44:21", dtf);
+    
+    QTest::newRow("Times of India Sports") << "sports.timesofindia.com.rss" << "The Times of India Sports: Extensive sports coverage, key statistics and free downloads" << 25
+                                  << "Indo-Pak Express kicks up desert storm"
+                                  << "http://timesofindia.feedsportal.com/c/33039/f/533921/s/37ad9914/sc/13/l/0Ltimesofindia0Bindiatimes0N0Csports0Ctennis0Ctop0Estories0CIndo0EPak0EExpress0Ekicks0Eup0Edesert0Estorm0Carticleshow0C312375150Bcms/story01.htm"
+                                  << QDateTime::fromString("01 Mar 2014 20:15:17", dtf);
 }
 
 QTEST_MAIN(TestFangParser)

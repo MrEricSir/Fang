@@ -48,4 +48,13 @@ OTHER_FILES += \
     feeds/uptownalmanac.com.rss \
     feeds/mirror.co.uk.rss \
     feeds/donga.com.rss \
-    feeds/lokmat.com.rss
+    feeds/lokmat.com.rss \
+    feeds/thehindu.com.rss \
+    feeds/dailynews.co.th.rss \
+    feeds/krone.at.rss \
+    feeds/ouest-france.fr.rss \
+    feeds/hryx.net.rss \
+    feeds/github.hryx.atom \
+    feeds/life.kp.ru.rss \
+    feeds/yomiuri.co.jp.rss \
+    feeds/sports.timesofindia.com.rss

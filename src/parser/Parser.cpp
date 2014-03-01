@@ -64,15 +64,22 @@ QDateTime Parser::dateFromFeedString(const QString& _timestamp)
         // Same as above, but with full months.
         "ddd, dd MMMM yyyy hh:mm:ss",
         
+        // Also same as above, but with potentially single-digit days. (Used by "The Hindu".)
+        "ddd, d MMM yyyy hh:mm:ss",
+        
         // RFC 3339, normally used by Atom.
         // Example: 2013-08-07T16:47:54Z
         "yyyy-MM-ddThh:mm:ssZ",
+        
+        // Stevie's strange variant of the above.
+        // Example: 2012-05-30T19:46:42+00:00
+        "yyyy-MM-ddThh:mm:ss+00:00",
         
         // Format used by some Chinese site.
         // Example: 2014-02-27 08:26:16.995
         "yyyy-MM-dd hh:mm:ss",
         
-        // Lokmat uses this custom format.  I provide a single-spaced version for sanity's sake.
+        // "Lokmat" uses this custom format.  I provide a single-spaced version for sanity's sake.
         // Example: 25-02-2014  01:08:10
         "dd-MM-yyyy  hh:mm:ss",
         "dd-MM-yyyy hh:mm:ss",
