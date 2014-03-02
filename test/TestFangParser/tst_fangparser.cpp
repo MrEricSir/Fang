@@ -201,11 +201,6 @@ void TestFangParser::parseTest_data()
                                   << "http://www.ouest-france.fr/ukraine-suivez-les-evenements-de-ce-samedi-en-direct-1970380"
                                   << QDateTime::fromString("01 Mar 2014 19:21:00", dtf);
     
-    QTest::newRow("Hryx") << "hryx.net.rss" << "Hryxlog" << 20
-                                  << "hlog #23"
-                                  << "http://s.hryx.net/hlog/23"
-                                  << QDateTime::fromString("30 May 2012 19:46:42", dtf);
-    
     QTest::newRow("Hryx's Github") << "github.hryx.atom" << "hryx's Activity" << 30
                                   << "hryx commented on issue MrEricSir/Modipulate#60"
                                   << "https://github.com/MrEricSir/Modipulate/issues/60#issuecomment-36418854"
@@ -225,6 +220,16 @@ void TestFangParser::parseTest_data()
                                   << "Indo-Pak Express kicks up desert storm"
                                   << "http://timesofindia.feedsportal.com/c/33039/f/533921/s/37ad9914/sc/13/l/0Ltimesofindia0Bindiatimes0N0Csports0Ctennis0Ctop0Estories0CIndo0EPak0EExpress0Ekicks0Eup0Edesert0Estorm0Carticleshow0C312375150Bcms/story01.htm"
                                   << QDateTime::fromString("01 Mar 2014 20:15:17", dtf);
+    
+    QTest::newRow("Chosun") << "chosun.com.rss" << "조선닷컴 : 전체기사" << 25
+                                  << "中 92세 가정부, 주인집에서 안락한 노후…3대 잘 돌본 공로 인정"
+                                  << "http://chosun.feedsportal.com/c/34674/f/636753/s/37adf5df/l/0Lnews0Bchosun0N0Csite0Cdata0Chtml0Idir0C20A140C0A30C0A20C20A140A30A20A0A0A570Bhtml/story01.htm"
+                                  << QDateTime::fromString("01 Mar 2014 21:45:25", dtf);
+    
+    QTest::newRow("Asahi") << "asahi.com.rss" << "朝日新聞デジタル" << 49
+                                  << "（ビキニ６０年）島民診療支える広島・長崎の経験"
+                                  << "http://www.asahi.com/articles/ASG2W41VRG2WPTIL00R.html?ref=rss"
+                                  << QDateTime::fromString("01 Mar 2014 20:49:59", dtf);
 }
 
 QTEST_MAIN(TestFangParser)

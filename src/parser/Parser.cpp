@@ -19,41 +19,18 @@ Parser::Parser(QObject *parent) :
 QDateTime Parser::dateFromFeedString(const QString& _timestamp)
 {
     QDateTime ret; // Defaults to invalid timestamp.
-    int adjustment = 0; // Adjustment in minutes;
     
     // Come up with a few versions of the time stamp.
     QString timestamp = _timestamp.trimmed();
-    QString whiteStrippedTimestamp = timestamp.left(timestamp.lastIndexOf(" "));
-    QString dotStrippedTimestamp = timestamp.left(timestamp.lastIndexOf("."));
-    
-    // Check if there's a time-based adjustment and/or timezone.
-    if (timestamp.lastIndexOf(" ") > 0) {
-        QString sAdjustment = timestamp.right(timestamp.length() - timestamp.lastIndexOf(" "));
-        sAdjustment = sAdjustment.trimmed();
-        //qDebug() << "Adj: " << sAdjustment;
+    QString timestamps[] = {
+        timestamp,
+        timestamp.left(timestamp.lastIndexOf(" ")),
+        timestamp.left(timestamp.lastIndexOf(".")),
+        timestamp.left(timestamp.lastIndexOf("-")),
+        timestamp.left(timestamp.lastIndexOf("+")),
         
-        // TODO: timezone
-        
-        // Check for an hour/minute adjustment, in the format of -hhmm or +hhmm
-        if (sAdjustment.length() == 5 &&
-                (sAdjustment.startsWith("+") || sAdjustment.startsWith("-"))) {
-            bool isNum = false;
-            QString sNumber = sAdjustment.right(4); // Skip + or -
-            sNumber.toInt(&isNum);
-            if (isNum) {
-                // YES!  We've got an adjustment!
-                int hours = sNumber.left(2).toInt(&isNum);
-                int minutes = sNumber.right(2).toInt(&isNum);
-                
-                // Condense down to minutes.
-                minutes += (hours * 60);
-                adjustment = sAdjustment.startsWith("-") ? minutes : -minutes;
-                
-                //qDebug() << " HH MM " << sNumber << "  " << adjustment;
-            }
-            
-        }
-    }
+        0 // must be last
+    };
     
     // Date time.  Comes in many (ugh) different formats.
     const QString dateFormats[] = { 
@@ -71,9 +48,9 @@ QDateTime Parser::dateFromFeedString(const QString& _timestamp)
         // Example: 2013-08-07T16:47:54Z
         "yyyy-MM-ddThh:mm:ssZ",
         
-        // Stevie's strange variant of the above.
-        // Example: 2012-05-30T19:46:42+00:00
-        "yyyy-MM-ddThh:mm:ss+00:00",
+        // Variant of the above without the trailing Z.
+        // Example: 2012-05-30T19:46:42
+        "yyyy-MM-ddThh:mm:ss",
         
         // Format used by some Chinese site.
         // Example: 2014-02-27 08:26:16.995
@@ -88,24 +65,64 @@ QDateTime Parser::dateFromFeedString(const QString& _timestamp)
         0 // must be last!
     };
     
+    // Iterate over date formats.
     int i = 0;
     while (!ret.isValid() && dateFormats[i] != 0) {
         const QString& format = dateFormats[i];
         
-        // Try each type of manicured timestamp against this format.
-        ret = QDateTime::fromString(timestamp, format); 
-        
-        if (!ret.isValid())
-            ret = QDateTime::fromString(whiteStrippedTimestamp, format); 
-        
-        if (!ret.isValid())
-            ret = QDateTime::fromString(dotStrippedTimestamp, format); 
+        // Try each format against each possible manipulated timestamp.
+        int j = 0;
+        while (!ret.isValid() && timestamps[j] != 0) {
+            QString& ts = timestamps[j];
+            ret = QDateTime::fromString(ts, format); 
+            
+            j++;
+        }
         
         i++;
     }
     
-    // Add in our adjustment if we need it.
-    ret = ret.addSecs(adjustment * 60 /* seconds */);
+    // Check if there's a time-based adjustment and/or timezone.
+    // For now we only look for time identifiers in the format of -hhmm or +hhmm
+    //
+    // TODO: Three-letter time zones. (TLAs like GMT, PST, etc.)
+    //
+    int lastPlus = timestamp.lastIndexOf("+");
+    int lastMinus = timestamp.lastIndexOf("-");
+    if (lastPlus > 3 || lastMinus > 3) {
+        // We have a plus or a minus.
+        int signPos = lastPlus > 3 ? lastPlus : lastMinus;
+        QString sAdjustment = timestamp.right(timestamp.length() - signPos);
+        sAdjustment = sAdjustment.trimmed();
+        //qDebug() << "Adj: " << sAdjustment;
+        
+        // Check for an hour/minute adjustment, in the format of -hhmm or +hhmm
+        // OR in the format of -hh:mm or +hh:mm
+        if ((sAdjustment.length() == 5 || sAdjustment.length() == 6) &&
+                (sAdjustment.startsWith("+") || sAdjustment.startsWith("-"))) {
+            int adjustment = 0; // Adjustment in minutes.
+            bool containsCol = sAdjustment.contains(':');
+            bool isNum = false;
+            int hours = 0;
+            int minutes = 0;
+            
+            QString sNumber = sAdjustment.right(containsCol ? 5 : 4); // Skip + or -
+            // YES!  We've got an adjustment!
+            hours = sNumber.left(2).toInt(&isNum);
+            if (isNum)
+                minutes = sNumber.right(2).toInt(&isNum);
+            
+            // Looks like we're good!
+            if (isNum) {
+                // Condense down to minutes.
+                minutes += (hours * 60);
+                adjustment = sAdjustment.startsWith("-") ? minutes : -minutes;
+                
+                // Add in our adjustment if we need it.
+                ret = ret.addSecs(adjustment * 60 /* seconds */);
+            }
+        }
+    }
     
     // All times are (supposedly) in UTC.
     ret.setTimeSpec(Qt::UTC);
@@ -281,7 +298,7 @@ void Parser::parseXml() {
             } else if (currentTag == "name") {
                 author += xml.text().toString();
             } else if (currentTag == "pubdate" || currentTag == "lastbuilddate" 
-                     || currentTag == "updated") {
+                     || currentTag == "updated" || currentTag == "date") {
                 timestamp += xml.text().toString();
             } else if ((currentTag == "encoded" && currentPrefix == "content")
                      || (currentTag == "content" && hasType)) {

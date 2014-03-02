@@ -53,8 +53,9 @@ OTHER_FILES += \
     feeds/dailynews.co.th.rss \
     feeds/krone.at.rss \
     feeds/ouest-france.fr.rss \
-    feeds/hryx.net.rss \
     feeds/github.hryx.atom \
     feeds/life.kp.ru.rss \
     feeds/yomiuri.co.jp.rss \
-    feeds/sports.timesofindia.com.rss
+    feeds/sports.timesofindia.com.rss \
+    feeds/chosun.com.rss \
+    feeds/asahi.com.rss
