@@ -52,6 +52,10 @@ QDateTime Parser::dateFromFeedString(const QString& _timestamp)
         // Example: 2012-05-30T19:46:42
         "yyyy-MM-ddThh:mm:ss",
         
+        // Variant of the above without seconds OR a trailing Z.
+        // Example: 2012-05-30T19:46
+        "yyyy-MM-ddThh:mm",
+        
         // Format used by some Chinese site.
         // Example: 2014-02-27 08:26:16.995
         "yyyy-MM-dd hh:mm:ss",

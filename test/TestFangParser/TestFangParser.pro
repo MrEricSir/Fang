@@ -58,4 +58,7 @@ OTHER_FILES += \
     feeds/yomiuri.co.jp.rss \
     feeds/sports.timesofindia.com.rss \
     feeds/chosun.com.rss \
-    feeds/asahi.com.rss
+    feeds/asahi.com.rss \
+    feeds/youtube.com.rss \
+    feeds/bild.de.rss \
+    feeds/perezhilton.com.rss

@@ -49,8 +49,12 @@ void TestFangParser::parseTest()
     RawFeed* feed = parser.getFeed();
     QVERIFY2(feed != NULL, "Feed was null");
     
+    // Check all dates in the feed for validity, as this is a common issue.
+    foreach (RawNews* newsItem, feed->items) {
+        QVERIFY2(newsItem->timestamp.isValid(), "Invalid timestamp.");
+    }
+    
     RawNews* firstNews = feed->items.first();
-    QVERIFY2(firstNews->timestamp.isValid(), "Invalid timestamp."); // Must check for this manually.
     
     // All the times are in UTC; it's easier to set that here for the test cases.
     firstNewsTimestamp.setTimeSpec(Qt::UTC);
@@ -230,6 +234,21 @@ void TestFangParser::parseTest_data()
                                   << "（ビキニ６０年）島民診療支える広島・長崎の経験"
                                   << "http://www.asahi.com/articles/ASG2W41VRG2WPTIL00R.html?ref=rss"
                                   << QDateTime::fromString("01 Mar 2014 20:49:59", dtf);
+    
+    QTest::newRow("YouTube") << "youtube.com.rss" << "Uploads by The Onion" << 25
+                                  << "Members Of Academy Can't Imagine What Would Happen If They Ever Selected Wrong Best Picture"
+                                  << "http://www.youtube.com/watch?v=j3v35HcyEyI&feature=youtube_gdata"
+                                  << QDateTime::fromString("28 Feb 2014 20:52:26", dtf);
+    
+    QTest::newRow("Bild") << "bild.de.rss" << "Bild.de Home" << 62
+                                  << "Ösi-„Tatort“ - „Wir haben den Hang zum Abgründigen“"
+                                  << "http://www.bild.de/unterhaltung/tv/tatort/interview-mit-harald-krassnitzer-zum-tatort-abgruende-34902678.bild.html"
+                                  << QDateTime::fromString("02 Mar 2014 20:57:50", dtf);
+    
+    QTest::newRow("Perez Hilton") << "perezhilton.com.rss" << "PerezHilton" << 10
+                                  << "Once In A Blue Moon! Beck Performs On Saturday Night Live & Brings A Friend!"
+                                  << "http://perezhilton.com/2014-03-02-beck-performs-saturday-night-live-blue-moon-and-wave"
+                                  << QDateTime::fromString("02 Mar 2014 23:00:30", dtf);
 }
 
 QTEST_MAIN(TestFangParser)
