@@ -4,6 +4,7 @@
 #include <QQmlEngine>
 
 #include "../utilities/Utilities.h"
+#include "../utilities/NetworkUtilities.h"
 
 #include "operations/UpdateFeedOperation.h"
 #include "operations/LoadAllFeedsOperation.h"
@@ -53,7 +54,7 @@ void FangApp::init()
     viewer->displayWindow();
     
     // Enable cache for remote QML elements.
-    Utilities::addNetworkAccessManagerCache(viewer->engine()->networkAccessManager());
+    NetworkUtilities::addNetworkAccessManagerCache(viewer->engine()->networkAccessManager());
     
     // Load feed list.
     LoadAllFeedsOperation* loadAllOp = new LoadAllFeedsOperation(&manager, feedList);

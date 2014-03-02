@@ -6,6 +6,7 @@
 #include <QWebFrame>
 
 #include "Utilities.h"
+#include "NetworkUtilities.h"
 
 FaviconGrabber::FaviconGrabber(QObject *parent) :
     QObject(parent),
@@ -17,7 +18,7 @@ FaviconGrabber::FaviconGrabber(QObject *parent) :
     webGrabberResults()
 {
     // Caching!
-    Utilities::addNetworkAccessManagerCache(&manager);
+    NetworkUtilities::addNetworkAccessManagerCache(&manager);
     
     // Signals!
     connect(&manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onRequestFinished(QNetworkReply*)));
@@ -37,7 +38,7 @@ void FaviconGrabber::find(const QUrl &url)
     //qDebug() << "Sending url: " << url;
     
     // Check for "root" favicons.
-    QUrl host = Utilities::getHost(url);
+    QUrl host = NetworkUtilities::getHost(url);
     
     QStringList extensions;
     extensions << "ico" << "jpg" << "jpeg" << "png" << "gif";

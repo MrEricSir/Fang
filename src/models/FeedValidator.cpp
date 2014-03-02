@@ -1,5 +1,7 @@
 #include "FeedValidator.h"
 #include "../FangApp.h"
+#include "../utilities/Utilities.h"
+#include "../utilities/NetworkUtilities.h"
 
 FeedValidator::FeedValidator(QQuickItem *parent) :
     QQuickItem(parent),
@@ -11,6 +13,9 @@ FeedValidator::FeedValidator(QQuickItem *parent) :
     _siteImageURL(""),
     result(Parser::IN_PROGRESS)
 {
+    // Enble cache.
+    NetworkUtilities::addNetworkAccessManagerCache(&manager);
+    
     connect(&pageGrabber, SIGNAL(ready(QWebPage*)), this, SLOT(onPageGrabberReady(QWebPage*)));
 }
 

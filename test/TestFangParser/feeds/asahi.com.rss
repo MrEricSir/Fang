@@ -1,0 +1,405 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet href="../../../../../css/rss/feedRss1.xsl" media="screen" type="text/xsl"?>
+
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://purl.org/rss/1.0/" xmlns:taxo="http://purl.org/rss/1.0/modules/taxonomy/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:syn="http://purl.org/rss/1.0/modules/syndication/">  
+  <channel rdf:about="http://www3.asahi.com/"> 
+    <title>朝日新聞デジタル</title>  
+    <link>http://www.asahi.com/</link>  
+    <description>朝日新聞デジタル</description>  
+    <dc:language>ja</dc:language>  
+    <dc:rights>Copyright 2014 Asahi Shimbun. All rights reserved. No reproduction or republication without written permission.</dc:rights>  
+    <dc:creator>朝日新聞社</dc:creator>  
+    <dc:date>2014-03-02T05:51:17+09:00</dc:date>  
+    <dc:publisher>朝日新聞社</dc:publisher>  
+    <syn:updatePeriod>hourly</syn:updatePeriod>  
+    <syn:updateFrequency>1</syn:updateFrequency>  
+    <syn:updateBase>2014-03-02T05:51:17+09:00</syn:updateBase>  
+    <items> 
+      <rdf:Seq> 
+        <rdf:li rdf:resource="http://www.asahi.com/articles/ASG2W41VRG2WPTIL00R.html?ref=rss"/>  
+        <rdf:li rdf:resource="http://www.asahi.com/articles/ASG314WGCG31UNHB00H.html?ref=rss"/>  
+        <rdf:li rdf:resource="http://www.asahi.com/articles/ASG2X6G6SG2XIIPE03S.html?ref=rss"/>  
+        <rdf:li rdf:resource="http://www.asahi.com/articles/ASG2X74SWG2XPUZB00Y.html?ref=rss"/>  
+        <rdf:li rdf:resource="http://www.asahi.com/articles/ASG3145D9G31TZNB006.html?ref=rss"/>  
+        <rdf:li rdf:resource="http://www.asahi.com/articles/ASG314JB8G31ULBJ002.html?ref=rss"/>  
+        <rdf:li rdf:resource="http://www.asahi.com/articles/ASG2G3TNTG2GUTIL00Y.html?ref=rss"/>  
+        <rdf:li rdf:resource="http://www.asahi.com/articles/ASG314S5ZG31IIPE00C.html?ref=rss"/>  
+        <rdf:li rdf:resource="http://www.asahi.com/articles/ASG2X4K13G2XOIPE01K.html?ref=rss"/>  
+        <rdf:li rdf:resource="http://www.asahi.com/articles/ASG313522G31PTIL002.html?ref=rss"/>  
+        <rdf:li rdf:resource="http://japan.cnet.com/sp/allaboutms/35044650/?tag=as.rss"/>  
+        <rdf:li rdf:resource="http://www.asahi.com/articles/ASG313VNXG31ULOB005.html?ref=rss"/>  
+        <rdf:li rdf:resource="http://www.asahi.com/articles/ASG3152VNG31UTQP01P.html?ref=rss"/>  
+        <rdf:li rdf:resource="http://www.asahi.com/articles/ASG317RY6G31UTQP034.html?ref=rss"/>  
+        <rdf:li rdf:resource="http://www.asahi.com/articles/ASG317D17G31KTQ201P.html?ref=rss"/>  
+        <rdf:li rdf:resource="http://www.asahi.com/articles/ASG3161ZPG31UQIP01N.html?ref=rss"/>  
+        <rdf:li rdf:resource="http://japan.zdnet.com/security/analysis/35044557/?tag=as.rss"/>  
+        <rdf:li rdf:resource="http://www.asahi.com/articles/ASG2S454HG2SULFA00R.html?ref=rss"/>  
+        <rdf:li rdf:resource="http://www.asahi.com/articles/ASG2W4DZ8G2WULFA00R.html?ref=rss"/>  
+        <rdf:li rdf:resource="http://www.asahi.com/articles/ASG312VKWG31UHBI00Q.html?ref=rss"/>  
+        <rdf:li rdf:resource="http://www.asahi.com/articles/ASG312V1SG31UHBI00P.html?ref=rss"/>  
+        <rdf:li rdf:resource="http://www.asahi.com/articles/ASG312TY0G31UHBI00N.html?ref=rss"/>  
+        <rdf:li rdf:resource="http://japan.cnet.com/news/service/35044648/?tag=as.rss"/>  
+        <rdf:li rdf:resource="http://www.asahi.com/articles/ASG2X34VFG2XUTFK001.html?ref=rss"/>  
+        <rdf:li rdf:resource="http://www.asahi.com/articles/ASG315759G31PTIL00Z.html?ref=rss"/>  
+        <rdf:li rdf:resource="http://www.asahi.com/articles/ASG315WCHG31UTFK009.html?ref=rss"/>  
+        <rdf:li rdf:resource="http://www.asahi.com/articles/ASG315WP4G31UTFK00B.html?ref=rss"/>  
+        <rdf:li rdf:resource="http://www.asahi.com/articles/ASG3166J4G31UTFK00C.html?ref=rss"/>  
+        <rdf:li rdf:resource="http://www.asahi.com/articles/ASG320150G31UHBI02Y.html?ref=rss"/>  
+        <rdf:li rdf:resource="http://www.asahi.com/articles/ASG3177L1G31UHBI02M.html?ref=rss"/>  
+        <rdf:li rdf:resource="http://www.asahi.com/articles/ASG3154G9G31UHBI01M.html?ref=rss"/>  
+        <rdf:li rdf:resource="http://www.asahi.com/articles/ASG315GYTG31UHBI01X.html?ref=rss"/>  
+        <rdf:li rdf:resource="http://www.asahi.com/articles/ASG312TFGG31UHBI00L.html?ref=rss"/>  
+        <rdf:li rdf:resource="http://www.tetsudo.com/news/1018/?tag=as.rss"/>  
+        <rdf:li rdf:resource="http://www.asahi.com/articles/ASG314QJGG31PTFC00C.html?ref=rss"/>  
+        <rdf:li rdf:resource="http://www.asahi.com/articles/ASG3165X6G31UEHF00J.html?ref=rss"/>  
+        <rdf:li rdf:resource="http://www.asahi.com/articles/ASG2X71R4G2XUCLV014.html?ref=rss"/>  
+        <rdf:li rdf:resource="http://www.asahi.com/articles/ASG2X74BQG2XPTFC01N.html?ref=rss"/>  
+        <rdf:li rdf:resource="http://www.asahi.com/articles/ASG2X7F65G2XPLZU004.html?ref=rss"/>  
+        <rdf:li rdf:resource="http://www.asahi.com/articles/ASG2X647NG2XPLBJ002.html?ref=rss"/>  
+        <rdf:li rdf:resource="http://www.asahi.com/articles/ASG2X2FRSG2XTIPE004.html?ref=rss"/>  
+        <rdf:li rdf:resource="http://www.asahi.com/articles/ASG2X5DL3G2XULFA02V.html?ref=rss"/>  
+        <rdf:li rdf:resource="http://www.asahi.com/articles/ASG2W32FCG2WUCLV003.html?ref=rss"/>  
+        <rdf:li rdf:resource="http://www.asahi.com/articles/ASG2V54F3G2VUCLV00B.html?ref=rss"/> 
+      </rdf:Seq> 
+    </items>  
+    <atom:link xmlns:atom="http://www.w3.org/2005/Atom" rel="self" href="http://rss.asahi.com/rss/asahi/newsheadlines.rdf" type="application/rss+xml"/>
+  </channel>  
+  <item rdf:about="http://www.asahi.com/articles/ASG2W41VRG2WPTIL00R.html?ref=rss"> 
+    <title>（ビキニ６０年）島民診療支える広島・長崎の経験</title>  
+    <link>http://www.asahi.com/articles/ASG2W41VRG2WPTIL00R.html?ref=rss</link>  
+    <description><![CDATA[<p></p>]]></description>  
+    <dc:subject>社会</dc:subject>  
+    <dc:date>2014-03-02T05:49:59+09:00</dc:date> 
+  </item>  
+  <item rdf:about="http://www.asahi.com/articles/ASG314WGCG31UNHB00H.html?ref=rss"> 
+    <title>震災遺児の心のケアに　仙台に交流施設が完成</title>  
+    <link>http://www.asahi.com/articles/ASG314WGCG31UNHB00H.html?ref=rss</link>  
+    <description><![CDATA[<p></p>]]></description>  
+    <dc:subject>社会</dc:subject>  
+    <dc:date>2014-03-01T22:50:35+09:00</dc:date> 
+  </item>  
+  <item rdf:about="http://rss.rssad.jp/rss/ad/sV2ZfrRWcn9y/3dpAPSrddRM6?type=2&amp;ent=cdada3b418fae18ddb2f0c48bdcb809e">
+    <title><![CDATA[PR: ＦＸ短期売買派に朗報！「ウルトラＦＸ」とは？]]></title>
+    <link>http://rss.rssad.jp/rss/ad/sV2ZfrRWcn9y/3dpAPSrddRM6?type=2&amp;ent=cdada3b418fae18ddb2f0c48bdcb809e</link>
+    <description><![CDATA[<table cellspacing="0" cellpadding="0"><tbody><tr><td align="left" valign="center"><a href="http://rss.rssad.jp/rss/ad/sV2ZfrRWcn9y/3dpAPSrddRM6?type=2" target="_blank"><img alt="" style="border: 0;" border="0" src="http://rss.rssad.jp/rss/img/sV2ZfrRWcn9y/3dpAPSrddRM6?type=3&ent=cdada3b418fae18ddb2f0c48bdcb809e"/></a></td></tr><tr><td align="left" valign="top" > スプレッド０銭、マイナススプレッドもありのセントラル短資ＦＸ「ウルトラＦＸ」！ </td></tr></tbody></table><div style="font-size:10px;"><span style="padding-top:5px;"><br style="display:none"/><a href="http://www.rssad.jp/trendmatch/trendmatch.html">Ads by Trend Match</a></span><br/></div>]]></description>
+    <dc:date>2014-03-01T22:50:35+09:00</dc:date>
+  </item>
+  <item rdf:about="http://www.asahi.com/articles/ASG2X6G6SG2XIIPE03S.html?ref=rss"> 
+    <title>父の命がけの救助「思い出し涙」　暴風雪被災の少女手記</title>  
+    <link>http://www.asahi.com/articles/ASG2X6G6SG2XIIPE03S.html?ref=rss</link>  
+    <description><![CDATA[<p></p>]]></description>  
+    <dc:subject>社会</dc:subject>  
+    <dc:date>2014-03-01T21:16:03+09:00</dc:date> 
+  </item>  
+  <item rdf:about="http://www.asahi.com/articles/ASG2X74SWG2XPUZB00Y.html?ref=rss"> 
+    <title>春告げる青白い光 ホタルイカ漁解禁　富山</title>  
+    <link>http://www.asahi.com/articles/ASG2X74SWG2XPUZB00Y.html?ref=rss</link>  
+    <description><![CDATA[<p></p>]]></description>  
+    <dc:subject>社会</dc:subject>  
+    <dc:date>2014-03-01T20:31:28+09:00</dc:date> 
+  </item>  
+  <item rdf:about="http://www.asahi.com/articles/ASG3145D9G31TZNB006.html?ref=rss"> 
+    <title>背筋ピン、はかま姿で卒業式　下関の高校に４０年の伝統</title>  
+    <link>http://www.asahi.com/articles/ASG3145D9G31TZNB006.html?ref=rss</link>  
+    <description><![CDATA[<p></p>]]></description>  
+    <dc:subject>社会</dc:subject>  
+    <dc:date>2014-03-01T20:10:44+09:00</dc:date> 
+  </item>  
+  <item rdf:about="http://rss.rssad.jp/rss/ad/sV2ZfrRWcn9y/ElrBRF3Y6Xm7?type=2&amp;ent=ea0e928e0a83bc2f7625ac5d5c353fdc">
+    <title><![CDATA[PR: ＦＸ短期売買派に朗報！「ウルトラＦＸ」とは？]]></title>
+    <link>http://rss.rssad.jp/rss/ad/sV2ZfrRWcn9y/ElrBRF3Y6Xm7?type=2&amp;ent=ea0e928e0a83bc2f7625ac5d5c353fdc</link>
+    <description><![CDATA[<table cellspacing="0" cellpadding="0"><tbody><tr><td align="left" valign="center"><a href="http://rss.rssad.jp/rss/ad/sV2ZfrRWcn9y/ElrBRF3Y6Xm7?type=2" target="_blank"><img alt="" style="border: 0;" border="0" src="http://rss.rssad.jp/rss/img/sV2ZfrRWcn9y/ElrBRF3Y6Xm7?type=3&ent=ea0e928e0a83bc2f7625ac5d5c353fdc"/></a></td></tr><tr><td align="left" valign="top" > スプレッド０銭、マイナススプレッドもありのセントラル短資ＦＸ「ウルトラＦＸ」！ </td></tr></tbody></table><div style="font-size:10px;"><span style="padding-top:5px;"><br style="display:none"/><a href="http://www.rssad.jp/trendmatch/trendmatch.html">Ads by Trend Match</a></span><br/></div>]]></description>
+    <dc:date>2014-03-01T20:10:44+09:00</dc:date>
+  </item>
+  <item rdf:about="http://www.asahi.com/articles/ASG314JB8G31ULBJ002.html?ref=rss"> 
+    <title>被災３県の子ども、３割ＰＴＳＤ　被災体験ない子の９倍</title>  
+    <link>http://www.asahi.com/articles/ASG314JB8G31ULBJ002.html?ref=rss</link>  
+    <description><![CDATA[<p></p>]]></description>  
+    <dc:subject>社会</dc:subject>  
+    <dc:date>2014-03-01T20:00:27+09:00</dc:date> 
+  </item>  
+  <item rdf:about="http://www.asahi.com/articles/ASG2G3TNTG2GUTIL00Y.html?ref=rss"> 
+    <title>愛子さま学習院初等科卒業へ　４年時に積極性大きく成長</title>  
+    <link>http://www.asahi.com/articles/ASG2G3TNTG2GUTIL00Y.html?ref=rss</link>  
+    <description><![CDATA[<p></p>]]></description>  
+    <dc:subject>社会</dc:subject>  
+    <dc:date>2014-03-01T19:51:39+09:00</dc:date> 
+  </item>  
+  <item rdf:about="http://www.asahi.com/articles/ASG314S5ZG31IIPE00C.html?ref=rss"> 
+    <title>「多忙で」未配達２７００通、謝罪　ヤマト運輸メール便</title>  
+    <link>http://www.asahi.com/articles/ASG314S5ZG31IIPE00C.html?ref=rss</link>  
+    <description><![CDATA[<p></p>]]></description>  
+    <dc:subject>社会</dc:subject>  
+    <dc:date>2014-03-01T19:41:46+09:00</dc:date> 
+  </item>  
+  <item rdf:about="http://rss.rssad.jp/rss/ad/sV2ZfrRWcn9y/ElrBRF3Y6Xm7?type=2&amp;ent=aa10baeb895be2af0f5c0c438437c163">
+    <title><![CDATA[PR: ＦＸ短期売買派に朗報！「ウルトラＦＸ」とは？]]></title>
+    <link>http://rss.rssad.jp/rss/ad/sV2ZfrRWcn9y/ElrBRF3Y6Xm7?type=2&amp;ent=aa10baeb895be2af0f5c0c438437c163</link>
+    <description><![CDATA[<table cellspacing="0" cellpadding="0"><tbody><tr><td align="left" valign="center"><a href="http://rss.rssad.jp/rss/ad/sV2ZfrRWcn9y/ElrBRF3Y6Xm7?type=2" target="_blank"><img alt="" style="border: 0;" border="0" src="http://rss.rssad.jp/rss/img/sV2ZfrRWcn9y/ElrBRF3Y6Xm7?type=3&ent=aa10baeb895be2af0f5c0c438437c163"/></a></td></tr><tr><td align="left" valign="top" > スプレッド０銭、マイナススプレッドもありのセントラル短資ＦＸ「ウルトラＦＸ」！ </td></tr></tbody></table><div style="font-size:10px;"><span style="padding-top:5px;"><br style="display:none"/><a href="http://www.rssad.jp/trendmatch/trendmatch.html">Ads by Trend Match</a></span><br/></div>]]></description>
+    <dc:date>2014-03-01T19:41:46+09:00</dc:date>
+  </item>
+  <item rdf:about="http://www.asahi.com/articles/ASG2X4K13G2XOIPE01K.html?ref=rss"> 
+    <title>「私は今も青春」７１歳の高校生、首席卒業　愛知</title>  
+    <link>http://www.asahi.com/articles/ASG2X4K13G2XOIPE01K.html?ref=rss</link>  
+    <description><![CDATA[<p></p>]]></description>  
+    <dc:subject>社会</dc:subject>  
+    <dc:date>2014-03-01T19:39:55+09:00</dc:date> 
+  </item>  
+  <item rdf:about="http://www.asahi.com/articles/ASG313522G31PTIL002.html?ref=rss"> 
+    <title>中古車店の夫婦監禁、ベンツ３台強奪容疑　男を逮捕</title>  
+    <link>http://www.asahi.com/articles/ASG313522G31PTIL002.html?ref=rss</link>  
+    <description><![CDATA[<p></p>]]></description>  
+    <dc:subject>社会</dc:subject>  
+    <dc:date>2014-03-01T19:21:21+09:00</dc:date> 
+  </item>  
+  <item rdf:about="http://japan.cnet.com/sp/allaboutms/35044650/?tag=as.rss"> 
+    <title>＜CNET Japan＞MS、「Windows Enterprise」をSAライセンス契約者以外にも提供へ</title>  
+    <link>http://japan.cnet.com/sp/allaboutms/35044650/?tag=as.rss</link>  
+    <description><![CDATA[<p></p>]]></description>  
+    <dc:subject>デジタル</dc:subject>  
+    <dc:date>2014-03-01T13:02:00+09:00</dc:date> 
+  </item>  
+  <item rdf:about="http://www.asahi.com/articles/ASG313VNXG31ULOB005.html?ref=rss"> 
+    <title>松井裕樹投手、桐光学園を卒業「たくさんの仲間に感謝」</title>  
+    <link>http://www.asahi.com/articles/ASG313VNXG31ULOB005.html?ref=rss</link>  
+    <description><![CDATA[<p></p>]]></description>  
+    <dc:subject>スポーツ</dc:subject>  
+    <dc:date>2014-03-02T03:00:00+09:00</dc:date> 
+  </item>  
+  <item rdf:about="http://www.asahi.com/articles/ASG3152VNG31UTQP01P.html?ref=rss"> 
+    <title>高梨、圧巻の勝ちっぷり　男子の銅から勇気「号泣した」</title>  
+    <link>http://www.asahi.com/articles/ASG3152VNG31UTQP01P.html?ref=rss</link>  
+    <description><![CDATA[<p></p>]]></description>  
+    <dc:subject>スポーツ</dc:subject>  
+    <dc:date>2014-03-02T00:24:21+09:00</dc:date> 
+  </item>  
+  <item rdf:about="http://www.asahi.com/articles/ASG317RY6G31UTQP034.html?ref=rss"> 
+    <title>高梨沙羅、２季連続の個人総合優勝　ジャンプＷ杯</title>  
+    <link>http://www.asahi.com/articles/ASG317RY6G31UTQP034.html?ref=rss</link>  
+    <description><![CDATA[<p></p>]]></description>  
+    <dc:subject>スポーツ</dc:subject>  
+    <dc:date>2014-03-02T00:00:33+09:00</dc:date> 
+  </item>  
+  <item rdf:about="http://www.asahi.com/articles/ASG317D17G31KTQ201P.html?ref=rss"> 
+    <title>ＦＩＦＡ、試合中のベール認める　色はユニホームと同じ</title>  
+    <link>http://www.asahi.com/articles/ASG317D17G31KTQ201P.html?ref=rss</link>  
+    <description><![CDATA[<p></p>]]></description>  
+    <dc:subject>スポーツ</dc:subject>  
+    <dc:date>2014-03-01T22:46:31+09:00</dc:date> 
+  </item>  
+  <item rdf:about="http://www.asahi.com/articles/ASG3161ZPG31UQIP01N.html?ref=rss"> 
+    <title>パラリンピック、日本選手団現地入り「いよいよ始まる」</title>  
+    <link>http://www.asahi.com/articles/ASG3161ZPG31UQIP01N.html?ref=rss</link>  
+    <description><![CDATA[<p></p>]]></description>  
+    <dc:subject>スポーツ</dc:subject>  
+    <dc:date>2014-03-01T22:32:10+09:00</dc:date> 
+  </item>  
+  <item rdf:about="http://japan.zdnet.com/security/analysis/35044557/?tag=as.rss"> 
+    <title>＜ZDNet Japan＞トレンドマイクロ、年間低額で無制限のSSLサーバ証明書を一般企業向けに販売</title>  
+    <link>http://japan.zdnet.com/security/analysis/35044557/?tag=as.rss</link>  
+    <description><![CDATA[<p></p>]]></description>  
+    <dc:subject>デジタル</dc:subject>  
+    <dc:date>2014-02-28T19:38:00+09:00</dc:date> 
+  </item>  
+  <item rdf:about="http://www.asahi.com/articles/ASG2S454HG2SULFA00R.html?ref=rss"> 
+    <title>「機能性」「ミニサイズ」　野菜離れ防止に新商品続々</title>  
+    <link>http://www.asahi.com/articles/ASG2S454HG2SULFA00R.html?ref=rss</link>  
+    <description><![CDATA[<p></p>]]></description>  
+    <dc:subject>ビジネス</dc:subject>  
+    <dc:date>2014-03-01T16:13:16+09:00</dc:date> 
+  </item>  
+  <item rdf:about="http://www.asahi.com/articles/ASG2W4DZ8G2WULFA00R.html?ref=rss"> 
+    <title>パジェロ、エコにチェンジ　低迷打破へ環境対応</title>  
+    <link>http://www.asahi.com/articles/ASG2W4DZ8G2WULFA00R.html?ref=rss</link>  
+    <description><![CDATA[<p></p>]]></description>  
+    <dc:subject>ビジネス</dc:subject>  
+    <dc:date>2014-03-01T13:53:50+09:00</dc:date> 
+  </item>  
+  <item rdf:about="http://www.asahi.com/articles/ASG312VKWG31UHBI00Q.html?ref=rss"> 
+    <title>ＮＹダウ、４９ドル高　３日続けて上昇</title>  
+    <link>http://www.asahi.com/articles/ASG312VKWG31UHBI00Q.html?ref=rss</link>  
+    <description><![CDATA[<p></p>]]></description>  
+    <dc:subject>ビジネス</dc:subject>  
+    <dc:date>2014-03-01T11:13:02+09:00</dc:date> 
+  </item>  
+  <item rdf:about="http://rss.rssad.jp/rss/ad/sV2ZfrRWcn9y/DmFBwdMK6c8b?type=2&amp;ent=6ba088fce88c47eaee9e0ca1c91ad5b0">
+    <title><![CDATA[PR: 製造業TOPIC ≫「EMSは海外」の常識崩壊！？]]></title>
+    <link>http://rss.rssad.jp/rss/ad/sV2ZfrRWcn9y/DmFBwdMK6c8b?type=2&amp;ent=6ba088fce88c47eaee9e0ca1c91ad5b0</link>
+    <description><![CDATA[<table cellspacing="0" cellpadding="0"><tbody><tr><td align="left" valign="center"><a href="http://rss.rssad.jp/rss/ad/sV2ZfrRWcn9y/DmFBwdMK6c8b?type=2" target="_blank"><img alt="" style="border: 0;" border="0" src="http://rss.rssad.jp/rss/img/sV2ZfrRWcn9y/DmFBwdMK6c8b?type=2&ent=6ba088fce88c47eaee9e0ca1c91ad5b0"/></a></td></tr><tr><td align="left" valign="top" > 先進企業が「国内」という選択に至る本当の理由とは？EMSにおける新潮流を探る⇒ </td></tr></tbody></table><div style="font-size:10px;"><span style="padding-top:5px;"><br style="display:none"/><a href="http://www.rssad.jp/trendmatch/trendmatch.html">Ads by Trend Match</a></span><br/></div>]]></description>
+    <dc:date>2014-03-01T11:13:02+09:00</dc:date>
+  </item>
+  <item rdf:about="http://www.asahi.com/articles/ASG312V1SG31UHBI00P.html?ref=rss"> 
+    <title>ビットコイン相場が下落　マウント・ゴックス破綻で</title>  
+    <link>http://www.asahi.com/articles/ASG312V1SG31UHBI00P.html?ref=rss</link>  
+    <description><![CDATA[<p></p>]]></description>  
+    <dc:subject>ビジネス</dc:subject>  
+    <dc:date>2014-03-01T11:04:08+09:00</dc:date> 
+  </item>  
+  <item rdf:about="http://www.asahi.com/articles/ASG312TY0G31UHBI00N.html?ref=rss"> 
+    <title>「ユニクロ」、Ｊクルー買収を検討か　米紙報道</title>  
+    <link>http://www.asahi.com/articles/ASG312TY0G31UHBI00N.html?ref=rss</link>  
+    <description><![CDATA[<p></p>]]></description>  
+    <dc:subject>ビジネス</dc:subject>  
+    <dc:date>2014-03-01T10:21:54+09:00</dc:date> 
+  </item>  
+  <item rdf:about="http://japan.cnet.com/news/service/35044648/?tag=as.rss"> 
+    <title>＜CNET Japan＞メルセデス・ベンツ「S-Class Coupe」--美しいデザインの新型クーペ</title>  
+    <link>http://japan.cnet.com/news/service/35044648/?tag=as.rss</link>  
+    <description><![CDATA[<p></p>]]></description>  
+    <dc:subject>デジタル</dc:subject>  
+    <dc:date>2014-03-01T12:03:00+09:00</dc:date> 
+  </item>  
+  <item rdf:about="http://www.asahi.com/articles/ASG2X34VFG2XUTFK001.html?ref=rss"> 
+    <title>安倍流教育改革、狙いどこに？　首相ブレーンが語る</title>  
+    <link>http://www.asahi.com/articles/ASG2X34VFG2XUTFK001.html?ref=rss</link>  
+    <description><![CDATA[<p></p>]]></description>  
+    <dc:subject>政治</dc:subject>  
+    <dc:date>2014-03-02T05:38:01+09:00</dc:date> 
+  </item>  
+  <item rdf:about="http://www.asahi.com/articles/ASG315759G31PTIL00Z.html?ref=rss"> 
+    <title>橋下市長、街頭で初の住民対話　都構想の意義を強調</title>  
+    <link>http://www.asahi.com/articles/ASG315759G31PTIL00Z.html?ref=rss</link>  
+    <description><![CDATA[<p></p>]]></description>  
+    <dc:subject>政治</dc:subject>  
+    <dc:date>2014-03-02T02:53:59+09:00</dc:date> 
+  </item>  
+  <item rdf:about="http://www.asahi.com/articles/ASG315WCHG31UTFK009.html?ref=rss"> 
+    <title>岡田氏「与党側から激励」　集団的自衛権で首相を批判</title>  
+    <link>http://www.asahi.com/articles/ASG315WCHG31UTFK009.html?ref=rss</link>  
+    <description><![CDATA[<p></p>]]></description>  
+    <dc:subject>政治</dc:subject>  
+    <dc:date>2014-03-01T23:55:05+09:00</dc:date> 
+  </item>  
+  <item rdf:about="http://www.asahi.com/articles/ASG315WP4G31UTFK00B.html?ref=rss"> 
+    <title>民主、結いの党と連携前向き　大畠幹事長「主張に共感」</title>  
+    <link>http://www.asahi.com/articles/ASG315WP4G31UTFK00B.html?ref=rss</link>  
+    <description><![CDATA[<p></p>]]></description>  
+    <dc:subject>政治</dc:subject>  
+    <dc:date>2014-03-01T22:34:50+09:00</dc:date> 
+  </item>  
+  <item rdf:about="http://www.asahi.com/articles/ASG3166J4G31UTFK00C.html?ref=rss"> 
+    <title>首相動静―３月１日</title>  
+    <link>http://www.asahi.com/articles/ASG3166J4G31UTFK00C.html?ref=rss</link>  
+    <description><![CDATA[<p></p>]]></description>  
+    <dc:subject>政治</dc:subject>  
+    <dc:date>2014-03-01T20:34:13+09:00</dc:date> 
+  </item>  
+  <item rdf:about="http://www.asahi.com/articles/ASG320150G31UHBI02Y.html?ref=rss"> 
+    <title>中国で集団が無差別切りつけ　２７人死亡１０９人負傷</title>  
+    <link>http://www.asahi.com/articles/ASG320150G31UHBI02Y.html?ref=rss</link>  
+    <description><![CDATA[<p></p>]]></description>  
+    <dc:subject>国際</dc:subject>  
+    <dc:date>2014-03-02T02:09:36+09:00</dc:date> 
+  </item>  
+  <item rdf:about="http://www.asahi.com/articles/ASG3177L1G31UHBI02M.html?ref=rss"> 
+    <title>ロシア、ウクライナに軍事介入へ　クリミア掌握図る</title>  
+    <link>http://www.asahi.com/articles/ASG3177L1G31UHBI02M.html?ref=rss</link>  
+    <description><![CDATA[<p></p>]]></description>  
+    <dc:subject>国際</dc:subject>  
+    <dc:date>2014-03-02T01:03:28+09:00</dc:date> 
+  </item>  
+  <item rdf:about="http://www.asahi.com/articles/ASG3154G9G31UHBI01M.html?ref=rss"> 
+    <title>タイ反政府派「バンコク閉鎖」解除へ　市民の不満に配慮</title>  
+    <link>http://www.asahi.com/articles/ASG3154G9G31UHBI01M.html?ref=rss</link>  
+    <description><![CDATA[<p></p>]]></description>  
+    <dc:subject>国際</dc:subject>  
+    <dc:date>2014-03-01T22:24:49+09:00</dc:date> 
+  </item>  
+  <item rdf:about="http://www.asahi.com/articles/ASG315GYTG31UHBI01X.html?ref=rss"> 
+    <title>検問「ここから先撃たれるぞ」　クリミア半島に記者入る</title>  
+    <link>http://www.asahi.com/articles/ASG315GYTG31UHBI01X.html?ref=rss</link>  
+    <description><![CDATA[<p></p>]]></description>  
+    <dc:subject>国際</dc:subject>  
+    <dc:date>2014-03-01T20:54:37+09:00</dc:date> 
+  </item>  
+  <item rdf:about="http://www.asahi.com/articles/ASG312TFGG31UHBI00L.html?ref=rss"> 
+    <title>リオのカーニバル開幕　ジーコさん題材のパレードも</title>  
+    <link>http://www.asahi.com/articles/ASG312TFGG31UHBI00L.html?ref=rss</link>  
+    <description><![CDATA[<p></p>]]></description>  
+    <dc:subject>国際</dc:subject>  
+    <dc:date>2014-03-01T19:13:23+09:00</dc:date> 
+  </item>  
+  <item rdf:about="http://www.tetsudo.com/news/1018/?tag=as.rss"> 
+    <title>＜鉄道コム＞東海道新幹線、時速285キロ運転に</title>  
+    <link>http://www.tetsudo.com/news/1018/?tag=as.rss</link>  
+    <description><![CDATA[<p></p>]]></description>  
+    <dc:subject>デジタル</dc:subject>  
+    <dc:date>2014-02-27T18:50+09:00</dc:date> 
+  </item>  
+  <item rdf:about="http://www.asahi.com/articles/ASG314QJGG31PTFC00C.html?ref=rss"> 
+    <title>ウルフルズ、道頓堀ゲリラライブで復活　「また全力で」</title>  
+    <link>http://www.asahi.com/articles/ASG314QJGG31PTFC00C.html?ref=rss</link>  
+    <description><![CDATA[<p></p>]]></description>  
+    <dc:subject>文化芸能</dc:subject>  
+    <dc:date>2014-03-02T01:12:28+09:00</dc:date> 
+  </item>  
+  <item rdf:about="http://www.asahi.com/articles/ASG3165X6G31UEHF00J.html?ref=rss"> 
+    <title>ローラ、アンナ、テラハメンバーも登場　１８回目ＴＧＣ</title>  
+    <link>http://www.asahi.com/articles/ASG3165X6G31UEHF00J.html?ref=rss</link>  
+    <description><![CDATA[<p></p>]]></description>  
+    <dc:subject>文化芸能</dc:subject>  
+    <dc:date>2014-03-01T23:42:38+09:00</dc:date> 
+  </item>  
+  <item rdf:about="http://www.asahi.com/articles/ASG2X71R4G2XUCLV014.html?ref=rss"> 
+    <title>将棋・朝日杯、準決勝と決勝を放送　テレ朝チャンネル２</title>  
+    <link>http://www.asahi.com/articles/ASG2X71R4G2XUCLV014.html?ref=rss</link>  
+    <description><![CDATA[<p></p>]]></description>  
+    <dc:subject>文化芸能</dc:subject>  
+    <dc:date>2014-03-01T14:07:00+09:00</dc:date> 
+  </item>  
+  <item rdf:about="http://www.asahi.com/articles/ASG2X74BQG2XPTFC01N.html?ref=rss"> 
+    <title>竹本住大夫さん引退会見の一問一答〈４〉</title>  
+    <link>http://www.asahi.com/articles/ASG2X74BQG2XPTFC01N.html?ref=rss</link>  
+    <description><![CDATA[<p></p>]]></description>  
+    <dc:subject>文化芸能</dc:subject>  
+    <dc:date>2014-03-01T02:24:57+09:00</dc:date> 
+  </item>  
+  <item rdf:about="http://www.asahi.com/articles/ASG2X7F65G2XPLZU004.html?ref=rss"> 
+    <title>アルツハイマー病リスク抑えるたんぱく質、役割を解明</title>  
+    <link>http://www.asahi.com/articles/ASG2X7F65G2XPLZU004.html?ref=rss</link>  
+    <description><![CDATA[<p></p>]]></description>  
+    <dc:subject>サイエンス</dc:subject>  
+    <dc:date>2014-03-01T11:01:17+09:00</dc:date> 
+  </item>  
+  <item rdf:about="http://www.asahi.com/articles/ASG2X647NG2XPLBJ002.html?ref=rss"> 
+    <title>大阪府立大の衛星、愛称は「ＣｏｓＭｏｚ」　Ｈ２Ａ搭載</title>  
+    <link>http://www.asahi.com/articles/ASG2X647NG2XPLBJ002.html?ref=rss</link>  
+    <description><![CDATA[<p></p>]]></description>  
+    <dc:subject>サイエンス</dc:subject>  
+    <dc:date>2014-02-28T23:04:34+09:00</dc:date> 
+  </item>  
+  <item rdf:about="http://rss.rssad.jp/rss/ad/sV2ZfrRWcn9y/YteaH9p0pLsK?type=2&amp;ent=5398468c935449e2617ba89455e2bb3d">
+    <title><![CDATA[PR: 何で英語に苦労させられるの　日本人が逃れられない呪縛]]></title>
+    <link>http://rss.rssad.jp/rss/ad/sV2ZfrRWcn9y/YteaH9p0pLsK?type=2&amp;ent=5398468c935449e2617ba89455e2bb3d</link>
+    <description><![CDATA[<table cellspacing="0" cellpadding="0"><tbody><tr><td align="left" valign="center"><a href="http://rss.rssad.jp/rss/ad/sV2ZfrRWcn9y/YteaH9p0pLsK?type=2" target="_blank"><img alt="" style="border: 0;" border="0" src="http://rss.rssad.jp/rss/img/sV2ZfrRWcn9y/YteaH9p0pLsK?type=2&ent=5398468c935449e2617ba89455e2bb3d"/></a></td></tr><tr><td align="left" valign="top" > パソコンのほか、スマートフォンでの閲覧に対応「WEB新書」 </td></tr></tbody></table><div style="font-size:10px;"><span style="padding-top:5px;"><br style="display:none"/><a href="http://www.rssad.jp/trendmatch/trendmatch.html">Ads by Trend Match</a></span><br/></div>]]></description>
+    <dc:date>2014-02-28T23:04:34+09:00</dc:date>
+  </item>
+  <item rdf:about="http://www.asahi.com/articles/ASG2X2FRSG2XTIPE004.html?ref=rss"> 
+    <title>まるで火の玉　上空から見たＨ２Ａロケット</title>  
+    <link>http://www.asahi.com/articles/ASG2X2FRSG2XTIPE004.html?ref=rss</link>  
+    <description><![CDATA[<p></p>]]></description>  
+    <dc:subject>サイエンス</dc:subject>  
+    <dc:date>2014-02-28T12:13:04+09:00</dc:date> 
+  </item>  
+  <item rdf:about="http://www.asahi.com/articles/ASG2X5DL3G2XULFA02V.html?ref=rss"> 
+    <title>安川英昭・元セイコーエプソン社長死去　プリンター尽力</title>  
+    <link>http://www.asahi.com/articles/ASG2X5DL3G2XULFA02V.html?ref=rss</link>  
+    <description><![CDATA[<p></p>]]></description>  
+    <dc:subject>おくやみ</dc:subject>  
+    <dc:date>2014-02-28T20:15:31+09:00</dc:date> 
+  </item>  
+  <item rdf:about="http://www.asahi.com/articles/ASG2W32FCG2WUCLV003.html?ref=rss"> 
+    <title>「感性衰えず」「詩に宇宙観」　関係者、まどさん悼む</title>  
+    <link>http://www.asahi.com/articles/ASG2W32FCG2WUCLV003.html?ref=rss</link>  
+    <description><![CDATA[<p></p>]]></description>  
+    <dc:subject>おくやみ</dc:subject>  
+    <dc:date>2014-02-28T13:27:19+09:00</dc:date> 
+  </item>  
+  <item rdf:about="http://www.asahi.com/articles/ASG2V54F3G2VUCLV00B.html?ref=rss"> 
+    <title>詩人まど・みちおさん死去　１０４歳、「ぞうさん」など</title>  
+    <link>http://www.asahi.com/articles/ASG2V54F3G2VUCLV00B.html?ref=rss</link>  
+    <description><![CDATA[<p></p>]]></description>  
+    <dc:subject>おくやみ</dc:subject>  
+    <dc:date>2014-02-28T10:15:30+09:00</dc:date> 
+  </item> 
+</rdf:RDF>

@@ -1,11 +1,19 @@
 #include "BackgroundParserThread.h"
 #include <QApplication>
 
+#include "../utilities/Utilities.h"
+
 BackgroundParserThread::BackgroundParserThread(QObject *parent) :
     QThread(parent)
 {
-    
 }
+
+BackgroundParserThread::~BackgroundParserThread()
+{
+    //delete parser; // Why can't we do this?
+}
+
+
 
 void BackgroundParserThread::setUrl(const QUrl& url)
 {

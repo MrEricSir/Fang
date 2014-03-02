@@ -8,7 +8,7 @@
 #include <QDebug>
 
 #include "../models/ListModel.h"
-#include "../parser/Parser.h"
+#include "../parser/BackgroundParser.h"
 
 class AddFeedOperation : public DBOperation
 {
@@ -31,7 +31,7 @@ private:
     QUrl imageURL;
     QString siteTitle;
     
-    Parser parser;
+    BackgroundParser parser;
 };
 
 #endif // ADDFEEDOPERATION_H

@@ -1,0 +1,1048 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/" xml:lang="en-US">
+  <id>tag:github.com,2008:/hryx</id>
+  <link type="text/html" rel="alternate" href="https://github.com/hryx"/>
+  <link type="application/atom+xml" rel="self" href="https://github.com/hryx.atom"/>
+  <title>hryx&#39;s Activity</title>
+  <updated>2014-03-01T07:43:19Z</updated>
+  <entry>
+    <id>tag:github.com,2008:IssueCommentEvent/1999031035</id>
+    <published>2014-03-01T07:43:19Z</published>
+    <updated>2014-03-01T07:43:19Z</updated>
+    <link type="text/html" rel="alternate" href="https://github.com/MrEricSir/Modipulate/issues/60#issuecomment-36418854"/>
+    <title type="html">hryx commented on issue MrEricSir/Modipulate#60</title>
+    <author>
+      <name>hryx</name>
+      <uri>https://github.com/hryx</uri>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://avatars.githubusercontent.com/u/1066883"/>
+    <content type="html">&lt;!-- issue_comment --&gt;
+&lt;span class=&quot;mega-octicon octicon-comment-discussion&quot;&gt;&lt;/span&gt;
+
+&lt;div class=&quot;time&quot;&gt;
+  &lt;time class=&quot;js-relative-date&quot; data-title-format=&quot;YYYY-MM-DD HH:mm:ss&quot; datetime=&quot;2014-03-01T07:43:19Z&quot; title=&quot;2014-03-01 07:43:19&quot;&gt;March 01, 2014&lt;/time&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;title&quot;&gt;
+  &lt;a href=&quot;https://github.com/hryx&quot;&gt;hryx&lt;/a&gt; &lt;span&gt;commented&lt;/span&gt; on issue &lt;a href=&quot;https://github.com/MrEricSir/Modipulate/issues/60#issuecomment-36418854&quot; title=&quot;Create OSC integrated application&quot;&gt;MrEricSir/Modipulate#60&lt;/a&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;details&quot;&gt;
+  &lt;a href=&quot;https://github.com/hryx&quot;&gt;&lt;img alt=&quot;&quot; class=&quot;gravatar js-avatar&quot; data-user=&quot;1066883&quot; height=&quot;30&quot; src=&quot;https://avatars.githubusercontent.com/u/1066883&quot; width=&quot;30&quot; /&gt;&lt;/a&gt;
+  &lt;div class=&quot;message markdown-body&quot;&gt;
+    &lt;blockquote&gt;
+      &lt;p&gt;Created with branch issue-60&lt;/p&gt;
+    &lt;/blockquote&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:CreateEvent/1998926876</id>
+    <published>2014-03-01T02:13:28Z</published>
+    <updated>2014-03-01T02:13:28Z</updated>
+    <link type="text/html" rel="alternate" href="https://github.com/MrEricSir/Modipulate/compare/issue-60"/>
+    <title type="html">hryx created branch issue-60 at MrEricSir/Modipulate</title>
+    <author>
+      <name>hryx</name>
+      <uri>https://github.com/hryx</uri>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://avatars.githubusercontent.com/u/1066883"/>
+    <content type="html">&lt;!-- create --&gt;
+&lt;div class=&quot;simple&quot;&gt;
+  &lt;span class=&quot;octicon octicon-git-merge&quot;&gt;&lt;/span&gt;
+
+  &lt;div class=&quot;title&quot;&gt;
+    &lt;a href=&quot;https://github.com/hryx&quot;&gt;hryx&lt;/a&gt; &lt;span&gt;created&lt;/span&gt; branch &lt;a href=&quot;/MrEricSir/Modipulate/tree/issue-60&quot; class=&quot;css-truncate css-truncate-target branch-link&quot; title=&quot;issue-60&quot;&gt;&lt;span class=&quot;octicon octicon-git-branch&quot;&gt;&lt;/span&gt;issue-60&lt;/a&gt; at &lt;a href=&quot;https://github.com/MrEricSir/Modipulate&quot; class=&quot;css-truncate css-truncate-target&quot;&gt;MrEricSir/Modipulate&lt;/a&gt;
+  &lt;/div&gt;
+
+  &lt;div class=&quot;time&quot;&gt;
+    &lt;time class=&quot;js-relative-date&quot; data-title-format=&quot;YYYY-MM-DD HH:mm:ss&quot; datetime=&quot;2014-03-01T02:13:28Z&quot; title=&quot;2014-03-01 02:13:28&quot;&gt;March 01, 2014&lt;/time&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:IssueCommentEvent/1982087524</id>
+    <published>2014-02-16T03:28:51Z</published>
+    <updated>2014-02-16T03:28:51Z</updated>
+    <link type="text/html" rel="alternate" href="https://github.com/MrEricSir/Modipulate/issues/60#issuecomment-35176286"/>
+    <title type="html">hryx commented on issue MrEricSir/Modipulate#60</title>
+    <author>
+      <name>hryx</name>
+      <uri>https://github.com/hryx</uri>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://avatars.githubusercontent.com/u/1066883"/>
+    <content type="html">&lt;!-- issue_comment --&gt;
+&lt;span class=&quot;mega-octicon octicon-comment-discussion&quot;&gt;&lt;/span&gt;
+
+&lt;div class=&quot;time&quot;&gt;
+  &lt;time class=&quot;js-relative-date&quot; data-title-format=&quot;YYYY-MM-DD HH:mm:ss&quot; datetime=&quot;2014-02-16T03:28:51Z&quot; title=&quot;2014-02-16 03:28:51&quot;&gt;February 16, 2014&lt;/time&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;title&quot;&gt;
+  &lt;a href=&quot;https://github.com/hryx&quot;&gt;hryx&lt;/a&gt; &lt;span&gt;commented&lt;/span&gt; on issue &lt;a href=&quot;https://github.com/MrEricSir/Modipulate/issues/60#issuecomment-35176286&quot; title=&quot;Create OSC integrated application&quot;&gt;MrEricSir/Modipulate#60&lt;/a&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;details&quot;&gt;
+  &lt;a href=&quot;https://github.com/hryx&quot;&gt;&lt;img alt=&quot;&quot; class=&quot;gravatar js-avatar&quot; data-user=&quot;1066883&quot; height=&quot;30&quot; src=&quot;https://avatars.githubusercontent.com/u/1066883&quot; width=&quot;30&quot; /&gt;&lt;/a&gt;
+  &lt;div class=&quot;message markdown-body&quot;&gt;
+    &lt;blockquote&gt;
+      &lt;p&gt;This will require coming up with messaging patterns specific to the app. Examples (not necessarily good or valid): &lt;code&gt;/modipulate/init&lt;/code&gt;
+&lt;code&gt;/modipulate/loa…&lt;/code&gt;&lt;/p&gt;
+    &lt;/blockquote&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:IssuesEvent/1982080951</id>
+    <published>2014-02-16T03:03:57Z</published>
+    <updated>2014-02-16T03:03:57Z</updated>
+    <link type="text/html" rel="alternate" href="https://github.com/MrEricSir/Modipulate/issues/60"/>
+    <title type="html">hryx opened issue MrEricSir/Modipulate#60</title>
+    <author>
+      <name>hryx</name>
+      <uri>https://github.com/hryx</uri>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://avatars.githubusercontent.com/u/1066883"/>
+    <content type="html">&lt;!-- issues --&gt;
+&lt;span class=&quot;mega-octicon octicon-issue-opened&quot;&gt;&lt;/span&gt;
+
+&lt;div class=&quot;time&quot;&gt;
+  &lt;time class=&quot;js-relative-date&quot; data-title-format=&quot;YYYY-MM-DD HH:mm:ss&quot; datetime=&quot;2014-02-16T03:03:57Z&quot; title=&quot;2014-02-16 03:03:57&quot;&gt;February 16, 2014&lt;/time&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;title&quot;&gt;
+  &lt;a href=&quot;https://github.com/hryx&quot;&gt;hryx&lt;/a&gt; &lt;span&gt;opened&lt;/span&gt; issue &lt;a href=&quot;https://github.com/MrEricSir/Modipulate/issues/60&quot; title=&quot;Create OSC integrated application&quot;&gt;MrEricSir/Modipulate#60&lt;/a&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;details&quot;&gt;
+  &lt;a href=&quot;https://github.com/hryx&quot;&gt;&lt;img alt=&quot;&quot; class=&quot;gravatar js-avatar&quot; data-user=&quot;1066883&quot; height=&quot;30&quot; src=&quot;https://avatars.githubusercontent.com/u/1066883&quot; width=&quot;30&quot; /&gt;&lt;/a&gt;
+  &lt;div class=&quot;message&quot;&gt;
+    &lt;blockquote&gt;
+      Create OSC integrated application
+    &lt;/blockquote&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:IssueCommentEvent/1982040258</id>
+    <published>2014-02-16T00:46:09Z</published>
+    <updated>2014-02-16T00:46:09Z</updated>
+    <link type="text/html" rel="alternate" href="https://github.com/MrEricSir/Modipulate/issues/59#issuecomment-35173439"/>
+    <title type="html">hryx commented on issue MrEricSir/Modipulate#59</title>
+    <author>
+      <name>hryx</name>
+      <uri>https://github.com/hryx</uri>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://avatars.githubusercontent.com/u/1066883"/>
+    <content type="html">&lt;!-- issue_comment --&gt;
+&lt;span class=&quot;mega-octicon octicon-comment-discussion&quot;&gt;&lt;/span&gt;
+
+&lt;div class=&quot;time&quot;&gt;
+  &lt;time class=&quot;js-relative-date&quot; data-title-format=&quot;YYYY-MM-DD HH:mm:ss&quot; datetime=&quot;2014-02-16T00:46:09Z&quot; title=&quot;2014-02-16 00:46:09&quot;&gt;February 16, 2014&lt;/time&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;title&quot;&gt;
+  &lt;a href=&quot;https://github.com/hryx&quot;&gt;hryx&lt;/a&gt; &lt;span&gt;commented&lt;/span&gt; on issue &lt;a href=&quot;https://github.com/MrEricSir/Modipulate/issues/59#issuecomment-35173439&quot; title=&quot;Switch to libopenmpt&quot;&gt;MrEricSir/Modipulate#59&lt;/a&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;details&quot;&gt;
+  &lt;a href=&quot;https://github.com/hryx&quot;&gt;&lt;img alt=&quot;&quot; class=&quot;gravatar js-avatar&quot; data-user=&quot;1066883&quot; height=&quot;30&quot; src=&quot;https://avatars.githubusercontent.com/u/1066883&quot; width=&quot;30&quot; /&gt;&lt;/a&gt;
+  &lt;div class=&quot;message markdown-body&quot;&gt;
+    &lt;blockquote&gt;
+      &lt;p&gt;When we switch, we can change the license to MIT/BSD.&lt;/p&gt;
+    &lt;/blockquote&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:IssuesEvent/1982038965</id>
+    <published>2014-02-16T00:42:46Z</published>
+    <updated>2014-02-16T00:42:46Z</updated>
+    <link type="text/html" rel="alternate" href="https://github.com/MrEricSir/Modipulate/issues/59"/>
+    <title type="html">hryx opened issue MrEricSir/Modipulate#59</title>
+    <author>
+      <name>hryx</name>
+      <uri>https://github.com/hryx</uri>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://avatars.githubusercontent.com/u/1066883"/>
+    <content type="html">&lt;!-- issues --&gt;
+&lt;span class=&quot;mega-octicon octicon-issue-opened&quot;&gt;&lt;/span&gt;
+
+&lt;div class=&quot;time&quot;&gt;
+  &lt;time class=&quot;js-relative-date&quot; data-title-format=&quot;YYYY-MM-DD HH:mm:ss&quot; datetime=&quot;2014-02-16T00:42:46Z&quot; title=&quot;2014-02-16 00:42:46&quot;&gt;February 16, 2014&lt;/time&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;title&quot;&gt;
+  &lt;a href=&quot;https://github.com/hryx&quot;&gt;hryx&lt;/a&gt; &lt;span&gt;opened&lt;/span&gt; issue &lt;a href=&quot;https://github.com/MrEricSir/Modipulate/issues/59&quot; title=&quot;Switch to libopenmpt&quot;&gt;MrEricSir/Modipulate#59&lt;/a&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;details&quot;&gt;
+  &lt;a href=&quot;https://github.com/hryx&quot;&gt;&lt;img alt=&quot;&quot; class=&quot;gravatar js-avatar&quot; data-user=&quot;1066883&quot; height=&quot;30&quot; src=&quot;https://avatars.githubusercontent.com/u/1066883&quot; width=&quot;30&quot; /&gt;&lt;/a&gt;
+  &lt;div class=&quot;message&quot;&gt;
+    &lt;blockquote&gt;
+      Switch to libopenmpt
+    &lt;/blockquote&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:PushEvent/1931081467</id>
+    <published>2013-12-31T12:37:04Z</published>
+    <updated>2013-12-31T12:37:04Z</updated>
+    <link type="text/html" rel="alternate" href="https://github.com/vrld/Quickie/compare/b63895a2c7...52d06037d1"/>
+    <title type="html">hryx pushed to master at vrld/Quickie</title>
+    <author>
+      <name>hryx</name>
+      <uri>https://github.com/hryx</uri>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://avatars.githubusercontent.com/u/1066883"/>
+    <content type="html">&lt;!-- push --&gt;
+&lt;span class=&quot;mega-octicon octicon-git-commit&quot;&gt;&lt;/span&gt;
+
+&lt;div class=&quot;time&quot;&gt;
+  &lt;time class=&quot;js-relative-date&quot; data-title-format=&quot;YYYY-MM-DD HH:mm:ss&quot; datetime=&quot;2013-12-31T12:37:04Z&quot; title=&quot;2013-12-31 12:37:04&quot;&gt;December 31, 2013&lt;/time&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;title&quot;&gt;
+  &lt;a href=&quot;https://github.com/hryx&quot;&gt;hryx&lt;/a&gt; &lt;span&gt;pushed&lt;/span&gt; to &lt;a href=&quot;/vrld/Quickie/tree/master&quot;&gt;master&lt;/a&gt; at &lt;a href=&quot;https://github.com/vrld/Quickie&quot; class=&quot;css-truncate css-truncate-target&quot;&gt;vrld/Quickie&lt;/a&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;details&quot;&gt;
+  &lt;a href=&quot;https://github.com/hryx&quot;&gt;&lt;img alt=&quot;&quot; class=&quot;gravatar js-avatar&quot; data-user=&quot;1066883&quot; height=&quot;30&quot; src=&quot;https://avatars.githubusercontent.com/u/1066883&quot; width=&quot;30&quot; /&gt;&lt;/a&gt;
+
+    &lt;div class=&quot;commits pusher-is-only-committer&quot;&gt;
+      &lt;ul&gt;
+        &lt;li&gt;
+          &lt;span title=&quot;hryx&quot;&gt;
+            &lt;img alt=&quot;&quot; class=&quot; js-avatar&quot; data-user=&quot;1066883&quot; height=&quot;16&quot; src=&quot;https://avatars.githubusercontent.com/u/1066883&quot; width=&quot;16&quot; /&gt;
+          &lt;/span&gt;
+          &lt;code&gt;&lt;a href=&quot;/vrld/Quickie/commit/52d06037d13afdc68384f1031766ac087cb5e70e&quot;&gt;52d0603&lt;/a&gt;&lt;/code&gt;
+          &lt;div class=&quot;message&quot;&gt;
+            &lt;blockquote&gt;
+              Added utf8.encode
+            &lt;/blockquote&gt;
+          &lt;/div&gt;
+        &lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+</content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:IssueCommentEvent/1922023916</id>
+    <published>2013-12-18T04:01:11Z</published>
+    <updated>2013-12-18T04:01:11Z</updated>
+    <link type="text/html" rel="alternate" href="https://github.com/binji/love-nacl/issues/33#issuecomment-30814524"/>
+    <title type="html">hryx commented on issue binji/love-nacl#33</title>
+    <author>
+      <name>hryx</name>
+      <uri>https://github.com/hryx</uri>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://avatars.githubusercontent.com/u/1066883"/>
+    <content type="html">&lt;!-- issue_comment --&gt;
+&lt;span class=&quot;mega-octicon octicon-comment-discussion&quot;&gt;&lt;/span&gt;
+
+&lt;div class=&quot;time&quot;&gt;
+  &lt;time class=&quot;js-relative-date&quot; data-title-format=&quot;YYYY-MM-DD HH:mm:ss&quot; datetime=&quot;2013-12-18T04:01:11Z&quot; title=&quot;2013-12-18 04:01:11&quot;&gt;December 18, 2013&lt;/time&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;title&quot;&gt;
+  &lt;a href=&quot;https://github.com/hryx&quot;&gt;hryx&lt;/a&gt; &lt;span&gt;commented&lt;/span&gt; on issue &lt;a href=&quot;https://github.com/binji/love-nacl/issues/33#issuecomment-30814524&quot; title=&quot;Love 0.9.0 Support&quot;&gt;binji/love-nacl#33&lt;/a&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;details&quot;&gt;
+  &lt;a href=&quot;https://github.com/hryx&quot;&gt;&lt;img alt=&quot;&quot; class=&quot;gravatar js-avatar&quot; data-user=&quot;1066883&quot; height=&quot;30&quot; src=&quot;https://avatars.githubusercontent.com/u/1066883&quot; width=&quot;30&quot; /&gt;&lt;/a&gt;
+  &lt;div class=&quot;message markdown-body&quot;&gt;
+    &lt;blockquote&gt;
+      &lt;p&gt;Definitely a must, but there are some considerations. Knowing how the API breaks so much between versions, it would be nice to have a few LOVE vers…&lt;/p&gt;
+    &lt;/blockquote&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:IssuesEvent/1905624211</id>
+    <published>2013-12-02T20:20:07Z</published>
+    <updated>2013-12-02T20:20:07Z</updated>
+    <link type="text/html" rel="alternate" href="https://github.com/TheLinx/lao/issues/1"/>
+    <title type="html">hryx closed issue TheLinx/lao#1</title>
+    <author>
+      <name>hryx</name>
+      <uri>https://github.com/hryx</uri>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://avatars.githubusercontent.com/u/1066883"/>
+    <content type="html">&lt;!-- issues --&gt;
+&lt;span class=&quot;mega-octicon octicon-issue-closed&quot;&gt;&lt;/span&gt;
+
+&lt;div class=&quot;time&quot;&gt;
+  &lt;time class=&quot;js-relative-date&quot; data-title-format=&quot;YYYY-MM-DD HH:mm:ss&quot; datetime=&quot;2013-12-02T20:20:07Z&quot; title=&quot;2013-12-02 20:20:07&quot;&gt;December 02, 2013&lt;/time&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;title&quot;&gt;
+  &lt;a href=&quot;https://github.com/hryx&quot;&gt;hryx&lt;/a&gt; &lt;span&gt;closed&lt;/span&gt; issue &lt;a href=&quot;https://github.com/TheLinx/lao/issues/1&quot; title=&quot;ao.openLive() errs or segfaults (depending)&quot;&gt;TheLinx/lao#1&lt;/a&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;details&quot;&gt;
+  &lt;a href=&quot;https://github.com/hryx&quot;&gt;&lt;img alt=&quot;&quot; class=&quot;gravatar js-avatar&quot; data-user=&quot;1066883&quot; height=&quot;30&quot; src=&quot;https://avatars.githubusercontent.com/u/1066883&quot; width=&quot;30&quot; /&gt;&lt;/a&gt;
+  &lt;div class=&quot;message&quot;&gt;
+    &lt;blockquote&gt;
+      ao.openLive() errs or segfaults (depending)
+    &lt;/blockquote&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:IssueCommentEvent/1905624210</id>
+    <published>2013-12-02T20:20:07Z</published>
+    <updated>2013-12-02T20:20:07Z</updated>
+    <link type="text/html" rel="alternate" href="https://github.com/TheLinx/lao/issues/1#issuecomment-29653678"/>
+    <title type="html">hryx commented on issue TheLinx/lao#1</title>
+    <author>
+      <name>hryx</name>
+      <uri>https://github.com/hryx</uri>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://avatars.githubusercontent.com/u/1066883"/>
+    <content type="html">&lt;!-- issue_comment --&gt;
+&lt;span class=&quot;mega-octicon octicon-comment-discussion&quot;&gt;&lt;/span&gt;
+
+&lt;div class=&quot;time&quot;&gt;
+  &lt;time class=&quot;js-relative-date&quot; data-title-format=&quot;YYYY-MM-DD HH:mm:ss&quot; datetime=&quot;2013-12-02T20:20:07Z&quot; title=&quot;2013-12-02 20:20:07&quot;&gt;December 02, 2013&lt;/time&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;title&quot;&gt;
+  &lt;a href=&quot;https://github.com/hryx&quot;&gt;hryx&lt;/a&gt; &lt;span&gt;commented&lt;/span&gt; on issue &lt;a href=&quot;https://github.com/TheLinx/lao/issues/1#issuecomment-29653678&quot; title=&quot;ao.openLive() errs or segfaults (depending)&quot;&gt;TheLinx/lao#1&lt;/a&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;details&quot;&gt;
+  &lt;a href=&quot;https://github.com/hryx&quot;&gt;&lt;img alt=&quot;&quot; class=&quot;gravatar js-avatar&quot; data-user=&quot;1066883&quot; height=&quot;30&quot; src=&quot;https://avatars.githubusercontent.com/u/1066883&quot; width=&quot;30&quot; /&gt;&lt;/a&gt;
+  &lt;div class=&quot;message markdown-body&quot;&gt;
+    &lt;blockquote&gt;
+      &lt;p&gt;With the latest code it no longer crashes when opening a device, at least on stock Lua. It still crashes on LuaJIT but that might be worth a separa…&lt;/p&gt;
+    &lt;/blockquote&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:IssueCommentEvent/1899663403</id>
+    <published>2013-11-26T00:45:34Z</published>
+    <updated>2013-11-26T00:45:34Z</updated>
+    <link type="text/html" rel="alternate" href="https://github.com/TheLinx/lao/issues/1#issuecomment-29257835"/>
+    <title type="html">hryx commented on issue TheLinx/lao#1</title>
+    <author>
+      <name>hryx</name>
+      <uri>https://github.com/hryx</uri>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://avatars.githubusercontent.com/u/1066883"/>
+    <content type="html">&lt;!-- issue_comment --&gt;
+&lt;span class=&quot;mega-octicon octicon-comment-discussion&quot;&gt;&lt;/span&gt;
+
+&lt;div class=&quot;time&quot;&gt;
+  &lt;time class=&quot;js-relative-date&quot; data-title-format=&quot;YYYY-MM-DD HH:mm:ss&quot; datetime=&quot;2013-11-26T00:45:34Z&quot; title=&quot;2013-11-26 00:45:34&quot;&gt;November 26, 2013&lt;/time&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;title&quot;&gt;
+  &lt;a href=&quot;https://github.com/hryx&quot;&gt;hryx&lt;/a&gt; &lt;span&gt;commented&lt;/span&gt; on issue &lt;a href=&quot;https://github.com/TheLinx/lao/issues/1#issuecomment-29257835&quot; title=&quot;ao.openLive() errs or segfaults (depending)&quot;&gt;TheLinx/lao#1&lt;/a&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;details&quot;&gt;
+  &lt;a href=&quot;https://github.com/hryx&quot;&gt;&lt;img alt=&quot;&quot; class=&quot;gravatar js-avatar&quot; data-user=&quot;1066883&quot; height=&quot;30&quot; src=&quot;https://avatars.githubusercontent.com/u/1066883&quot; width=&quot;30&quot; /&gt;&lt;/a&gt;
+  &lt;div class=&quot;message markdown-body&quot;&gt;
+    &lt;blockquote&gt;
+      &lt;p&gt;Hey Bart, I was able to get it to play back with the latest update -- no crashes! This was on a different computer, though (my work laptop), so I&#39;l…&lt;/p&gt;
+    &lt;/blockquote&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:IssueCommentEvent/1896596826</id>
+    <published>2013-11-22T06:57:24Z</published>
+    <updated>2013-11-22T06:57:24Z</updated>
+    <link type="text/html" rel="alternate" href="https://github.com/TheLinx/lao/issues/1#issuecomment-29052370"/>
+    <title type="html">hryx commented on issue TheLinx/lao#1</title>
+    <author>
+      <name>hryx</name>
+      <uri>https://github.com/hryx</uri>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://avatars.githubusercontent.com/u/1066883"/>
+    <content type="html">&lt;!-- issue_comment --&gt;
+&lt;span class=&quot;mega-octicon octicon-comment-discussion&quot;&gt;&lt;/span&gt;
+
+&lt;div class=&quot;time&quot;&gt;
+  &lt;time class=&quot;js-relative-date&quot; data-title-format=&quot;YYYY-MM-DD HH:mm:ss&quot; datetime=&quot;2013-11-22T06:57:24Z&quot; title=&quot;2013-11-22 06:57:24&quot;&gt;November 22, 2013&lt;/time&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;title&quot;&gt;
+  &lt;a href=&quot;https://github.com/hryx&quot;&gt;hryx&lt;/a&gt; &lt;span&gt;commented&lt;/span&gt; on issue &lt;a href=&quot;https://github.com/TheLinx/lao/issues/1#issuecomment-29052370&quot; title=&quot;ao.openLive() errs or segfaults (depending)&quot;&gt;TheLinx/lao#1&lt;/a&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;details&quot;&gt;
+  &lt;a href=&quot;https://github.com/hryx&quot;&gt;&lt;img alt=&quot;&quot; class=&quot;gravatar js-avatar&quot; data-user=&quot;1066883&quot; height=&quot;30&quot; src=&quot;https://avatars.githubusercontent.com/u/1066883&quot; width=&quot;30&quot; /&gt;&lt;/a&gt;
+  &lt;div class=&quot;message markdown-body&quot;&gt;
+    &lt;blockquote&gt;
+      &lt;p&gt;I didn&#39;t set any breakpoints or anything (I&#39;m not experienced with debuggers/programming/life). Shouldn&#39;t these be showing each called function&#39;s a…&lt;/p&gt;
+    &lt;/blockquote&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:IssueCommentEvent/1896588395</id>
+    <published>2013-11-22T06:39:49Z</published>
+    <updated>2013-11-22T06:39:49Z</updated>
+    <link type="text/html" rel="alternate" href="https://github.com/TheLinx/lao/issues/1#issuecomment-29051829"/>
+    <title type="html">hryx commented on issue TheLinx/lao#1</title>
+    <author>
+      <name>hryx</name>
+      <uri>https://github.com/hryx</uri>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://avatars.githubusercontent.com/u/1066883"/>
+    <content type="html">&lt;!-- issue_comment --&gt;
+&lt;span class=&quot;mega-octicon octicon-comment-discussion&quot;&gt;&lt;/span&gt;
+
+&lt;div class=&quot;time&quot;&gt;
+  &lt;time class=&quot;js-relative-date&quot; data-title-format=&quot;YYYY-MM-DD HH:mm:ss&quot; datetime=&quot;2013-11-22T06:39:49Z&quot; title=&quot;2013-11-22 06:39:49&quot;&gt;November 22, 2013&lt;/time&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;title&quot;&gt;
+  &lt;a href=&quot;https://github.com/hryx&quot;&gt;hryx&lt;/a&gt; &lt;span&gt;commented&lt;/span&gt; on issue &lt;a href=&quot;https://github.com/TheLinx/lao/issues/1#issuecomment-29051829&quot; title=&quot;ao.openLive() errs or segfaults (depending)&quot;&gt;TheLinx/lao#1&lt;/a&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;details&quot;&gt;
+  &lt;a href=&quot;https://github.com/hryx&quot;&gt;&lt;img alt=&quot;&quot; class=&quot;gravatar js-avatar&quot; data-user=&quot;1066883&quot; height=&quot;30&quot; src=&quot;https://avatars.githubusercontent.com/u/1066883&quot; width=&quot;30&quot; /&gt;&lt;/a&gt;
+  &lt;div class=&quot;message markdown-body&quot;&gt;
+    &lt;blockquote&gt;
+      &lt;p&gt;I&#39;ve only been running the example. I did change &lt;code&gt;require(&#39;bit&#39;)&lt;/code&gt; --&amp;gt; &lt;code&gt;require(&#39;bit32&#39;)&lt;/code&gt; but it&#39;s unrelated -- doesn&#39;t get called before the crash. (As…&lt;/p&gt;
+    &lt;/blockquote&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:IssueCommentEvent/1895535387</id>
+    <published>2013-11-21T12:01:59Z</published>
+    <updated>2013-11-21T12:01:59Z</updated>
+    <link type="text/html" rel="alternate" href="https://github.com/TheLinx/lao/issues/1#issuecomment-28978260"/>
+    <title type="html">hryx commented on issue TheLinx/lao#1</title>
+    <author>
+      <name>hryx</name>
+      <uri>https://github.com/hryx</uri>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://avatars.githubusercontent.com/u/1066883"/>
+    <content type="html">&lt;!-- issue_comment --&gt;
+&lt;span class=&quot;mega-octicon octicon-comment-discussion&quot;&gt;&lt;/span&gt;
+
+&lt;div class=&quot;time&quot;&gt;
+  &lt;time class=&quot;js-relative-date&quot; data-title-format=&quot;YYYY-MM-DD HH:mm:ss&quot; datetime=&quot;2013-11-21T12:01:59Z&quot; title=&quot;2013-11-21 12:01:59&quot;&gt;November 21, 2013&lt;/time&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;title&quot;&gt;
+  &lt;a href=&quot;https://github.com/hryx&quot;&gt;hryx&lt;/a&gt; &lt;span&gt;commented&lt;/span&gt; on issue &lt;a href=&quot;https://github.com/TheLinx/lao/issues/1#issuecomment-28978260&quot; title=&quot;ao.openLive() errs or segfaults (depending)&quot;&gt;TheLinx/lao#1&lt;/a&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;details&quot;&gt;
+  &lt;a href=&quot;https://github.com/hryx&quot;&gt;&lt;img alt=&quot;&quot; class=&quot;gravatar js-avatar&quot; data-user=&quot;1066883&quot; height=&quot;30&quot; src=&quot;https://avatars.githubusercontent.com/u/1066883&quot; width=&quot;30&quot; /&gt;&lt;/a&gt;
+  &lt;div class=&quot;message markdown-body&quot;&gt;
+    &lt;blockquote&gt;
+      &lt;p&gt;After a spate of useless JACK-related warnings... &lt;code&gt;..................................................................... done
+Reading symbols for sh…&lt;/code&gt;&lt;/p&gt;
+    &lt;/blockquote&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:IssueCommentEvent/1895525702</id>
+    <published>2013-11-21T11:50:28Z</published>
+    <updated>2013-11-21T11:50:28Z</updated>
+    <link type="text/html" rel="alternate" href="https://github.com/TheLinx/lao/issues/1#issuecomment-28977643"/>
+    <title type="html">hryx commented on issue TheLinx/lao#1</title>
+    <author>
+      <name>hryx</name>
+      <uri>https://github.com/hryx</uri>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://avatars.githubusercontent.com/u/1066883"/>
+    <content type="html">&lt;!-- issue_comment --&gt;
+&lt;span class=&quot;mega-octicon octicon-comment-discussion&quot;&gt;&lt;/span&gt;
+
+&lt;div class=&quot;time&quot;&gt;
+  &lt;time class=&quot;js-relative-date&quot; data-title-format=&quot;YYYY-MM-DD HH:mm:ss&quot; datetime=&quot;2013-11-21T11:50:28Z&quot; title=&quot;2013-11-21 11:50:28&quot;&gt;November 21, 2013&lt;/time&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;title&quot;&gt;
+  &lt;a href=&quot;https://github.com/hryx&quot;&gt;hryx&lt;/a&gt; &lt;span&gt;commented&lt;/span&gt; on issue &lt;a href=&quot;https://github.com/TheLinx/lao/issues/1#issuecomment-28977643&quot; title=&quot;ao.openLive() errs or segfaults (depending)&quot;&gt;TheLinx/lao#1&lt;/a&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;details&quot;&gt;
+  &lt;a href=&quot;https://github.com/hryx&quot;&gt;&lt;img alt=&quot;&quot; class=&quot;gravatar js-avatar&quot; data-user=&quot;1066883&quot; height=&quot;30&quot; src=&quot;https://avatars.githubusercontent.com/u/1066883&quot; width=&quot;30&quot; /&gt;&lt;/a&gt;
+  &lt;div class=&quot;message markdown-body&quot;&gt;
+    &lt;blockquote&gt;
+      &lt;p&gt;Yep, the no plugin errors anymore. I&#39;ll give gdb a shot.&lt;/p&gt;
+    &lt;/blockquote&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:IssueCommentEvent/1895523847</id>
+    <published>2013-11-21T11:48:16Z</published>
+    <updated>2013-11-21T11:48:16Z</updated>
+    <link type="text/html" rel="alternate" href="https://github.com/TheLinx/lao/issues/1#issuecomment-28977511"/>
+    <title type="html">hryx commented on issue TheLinx/lao#1</title>
+    <author>
+      <name>hryx</name>
+      <uri>https://github.com/hryx</uri>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://avatars.githubusercontent.com/u/1066883"/>
+    <content type="html">&lt;!-- issue_comment --&gt;
+&lt;span class=&quot;mega-octicon octicon-comment-discussion&quot;&gt;&lt;/span&gt;
+
+&lt;div class=&quot;time&quot;&gt;
+  &lt;time class=&quot;js-relative-date&quot; data-title-format=&quot;YYYY-MM-DD HH:mm:ss&quot; datetime=&quot;2013-11-21T11:48:16Z&quot; title=&quot;2013-11-21 11:48:16&quot;&gt;November 21, 2013&lt;/time&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;title&quot;&gt;
+  &lt;a href=&quot;https://github.com/hryx&quot;&gt;hryx&lt;/a&gt; &lt;span&gt;commented&lt;/span&gt; on issue &lt;a href=&quot;https://github.com/TheLinx/lao/issues/1#issuecomment-28977511&quot; title=&quot;ao.openLive() errs or segfaults (depending)&quot;&gt;TheLinx/lao#1&lt;/a&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;details&quot;&gt;
+  &lt;a href=&quot;https://github.com/hryx&quot;&gt;&lt;img alt=&quot;&quot; class=&quot;gravatar js-avatar&quot; data-user=&quot;1066883&quot; height=&quot;30&quot; src=&quot;https://avatars.githubusercontent.com/u/1066883&quot; width=&quot;30&quot; /&gt;&lt;/a&gt;
+  &lt;div class=&quot;message markdown-body&quot;&gt;
+    &lt;blockquote&gt;
+      &lt;p&gt;On OS X there is still a segfault, but on the Linux VM it only fails to open the device. At least there&#39;s that! It could be that our different audi…&lt;/p&gt;
+    &lt;/blockquote&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:IssueCommentEvent/1895349967</id>
+    <published>2013-11-21T08:25:10Z</published>
+    <updated>2013-11-21T08:25:10Z</updated>
+    <link type="text/html" rel="alternate" href="https://github.com/TheLinx/lao/issues/1#issuecomment-28965328"/>
+    <title type="html">hryx commented on issue TheLinx/lao#1</title>
+    <author>
+      <name>hryx</name>
+      <uri>https://github.com/hryx</uri>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://avatars.githubusercontent.com/u/1066883"/>
+    <content type="html">&lt;!-- issue_comment --&gt;
+&lt;span class=&quot;mega-octicon octicon-comment-discussion&quot;&gt;&lt;/span&gt;
+
+&lt;div class=&quot;time&quot;&gt;
+  &lt;time class=&quot;js-relative-date&quot; data-title-format=&quot;YYYY-MM-DD HH:mm:ss&quot; datetime=&quot;2013-11-21T08:25:10Z&quot; title=&quot;2013-11-21 08:25:10&quot;&gt;November 21, 2013&lt;/time&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;title&quot;&gt;
+  &lt;a href=&quot;https://github.com/hryx&quot;&gt;hryx&lt;/a&gt; &lt;span&gt;commented&lt;/span&gt; on issue &lt;a href=&quot;https://github.com/TheLinx/lao/issues/1#issuecomment-28965328&quot; title=&quot;ao.openLive() errs or segfaults (depending)&quot;&gt;TheLinx/lao#1&lt;/a&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;details&quot;&gt;
+  &lt;a href=&quot;https://github.com/hryx&quot;&gt;&lt;img alt=&quot;&quot; class=&quot;gravatar js-avatar&quot; data-user=&quot;1066883&quot; height=&quot;30&quot; src=&quot;https://avatars.githubusercontent.com/u/1066883&quot; width=&quot;30&quot; /&gt;&lt;/a&gt;
+  &lt;div class=&quot;message markdown-body&quot;&gt;
+    &lt;blockquote&gt;
+      &lt;p&gt;Output: &lt;code&gt;lao example script
+ao_macosx ERROR: Unrecognized channel name &quot;�r��&quot; in channel matrix &quot;�r��&quot;
+ao_macosx WARNING: Input channel matrix inv…&lt;/code&gt;&lt;/p&gt;
+    &lt;/blockquote&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:IssuesEvent/1891353349</id>
+    <published>2013-11-18T07:32:10Z</published>
+    <updated>2013-11-18T07:32:10Z</updated>
+    <link type="text/html" rel="alternate" href="https://github.com/TheLinx/lao/issues/1"/>
+    <title type="html">hryx opened issue TheLinx/lao#1</title>
+    <author>
+      <name>hryx</name>
+      <uri>https://github.com/hryx</uri>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://avatars.githubusercontent.com/u/1066883"/>
+    <content type="html">&lt;!-- issues --&gt;
+&lt;span class=&quot;mega-octicon octicon-issue-opened&quot;&gt;&lt;/span&gt;
+
+&lt;div class=&quot;time&quot;&gt;
+  &lt;time class=&quot;js-relative-date&quot; data-title-format=&quot;YYYY-MM-DD HH:mm:ss&quot; datetime=&quot;2013-11-18T07:32:10Z&quot; title=&quot;2013-11-18 07:32:10&quot;&gt;November 18, 2013&lt;/time&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;title&quot;&gt;
+  &lt;a href=&quot;https://github.com/hryx&quot;&gt;hryx&lt;/a&gt; &lt;span&gt;opened&lt;/span&gt; issue &lt;a href=&quot;https://github.com/TheLinx/lao/issues/1&quot; title=&quot;ao.openLive() errs or segfaults (depending)&quot;&gt;TheLinx/lao#1&lt;/a&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;details&quot;&gt;
+  &lt;a href=&quot;https://github.com/hryx&quot;&gt;&lt;img alt=&quot;&quot; class=&quot;gravatar js-avatar&quot; data-user=&quot;1066883&quot; height=&quot;30&quot; src=&quot;https://avatars.githubusercontent.com/u/1066883&quot; width=&quot;30&quot; /&gt;&lt;/a&gt;
+  &lt;div class=&quot;message&quot;&gt;
+    &lt;blockquote&gt;
+      ao.openLive() errs or segfaults (depending)
+    &lt;/blockquote&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:IssueCommentEvent/1883776821</id>
+    <published>2013-11-10T12:25:05Z</published>
+    <updated>2013-11-10T12:25:05Z</updated>
+    <link type="text/html" rel="alternate" href="https://github.com/vrld/Quickie/issues/11#issuecomment-28149413"/>
+    <title type="html">hryx commented on issue vrld/Quickie#11</title>
+    <author>
+      <name>hryx</name>
+      <uri>https://github.com/hryx</uri>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://avatars.githubusercontent.com/u/1066883"/>
+    <content type="html">&lt;!-- issue_comment --&gt;
+&lt;span class=&quot;mega-octicon octicon-comment-discussion&quot;&gt;&lt;/span&gt;
+
+&lt;div class=&quot;time&quot;&gt;
+  &lt;time class=&quot;js-relative-date&quot; data-title-format=&quot;YYYY-MM-DD HH:mm:ss&quot; datetime=&quot;2013-11-10T12:25:05Z&quot; title=&quot;2013-11-10 12:25:05&quot;&gt;November 10, 2013&lt;/time&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;title&quot;&gt;
+  &lt;a href=&quot;https://github.com/hryx&quot;&gt;hryx&lt;/a&gt; &lt;span&gt;commented&lt;/span&gt; on issue &lt;a href=&quot;https://github.com/vrld/Quickie/issues/11#issuecomment-28149413&quot; title=&quot;Right-click support&quot;&gt;vrld/Quickie#11&lt;/a&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;details&quot;&gt;
+  &lt;a href=&quot;https://github.com/hryx&quot;&gt;&lt;img alt=&quot;&quot; class=&quot;gravatar js-avatar&quot; data-user=&quot;1066883&quot; height=&quot;30&quot; src=&quot;https://avatars.githubusercontent.com/u/1066883&quot; width=&quot;30&quot; /&gt;&lt;/a&gt;
+  &lt;div class=&quot;message markdown-body&quot;&gt;
+    &lt;blockquote&gt;
+      &lt;p&gt;This is great and is working just fine. Thanks a bunch for the quick hac--uh, fix!&lt;/p&gt;
+    &lt;/blockquote&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:IssuesEvent/1876742267</id>
+    <published>2013-11-03T05:58:58Z</published>
+    <updated>2013-11-03T05:58:58Z</updated>
+    <link type="text/html" rel="alternate" href="https://github.com/vrld/Quickie/issues/11"/>
+    <title type="html">hryx opened issue vrld/Quickie#11</title>
+    <author>
+      <name>hryx</name>
+      <uri>https://github.com/hryx</uri>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://avatars.githubusercontent.com/u/1066883"/>
+    <content type="html">&lt;!-- issues --&gt;
+&lt;span class=&quot;mega-octicon octicon-issue-opened&quot;&gt;&lt;/span&gt;
+
+&lt;div class=&quot;time&quot;&gt;
+  &lt;time class=&quot;js-relative-date&quot; data-title-format=&quot;YYYY-MM-DD HH:mm:ss&quot; datetime=&quot;2013-11-03T05:58:58Z&quot; title=&quot;2013-11-03 05:58:58&quot;&gt;November 03, 2013&lt;/time&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;title&quot;&gt;
+  &lt;a href=&quot;https://github.com/hryx&quot;&gt;hryx&lt;/a&gt; &lt;span&gt;opened&lt;/span&gt; issue &lt;a href=&quot;https://github.com/vrld/Quickie/issues/11&quot; title=&quot;Right-click support&quot;&gt;vrld/Quickie#11&lt;/a&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;details&quot;&gt;
+  &lt;a href=&quot;https://github.com/hryx&quot;&gt;&lt;img alt=&quot;&quot; class=&quot;gravatar js-avatar&quot; data-user=&quot;1066883&quot; height=&quot;30&quot; src=&quot;https://avatars.githubusercontent.com/u/1066883&quot; width=&quot;30&quot; /&gt;&lt;/a&gt;
+  &lt;div class=&quot;message&quot;&gt;
+    &lt;blockquote&gt;
+      Right-click support
+    &lt;/blockquote&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:WatchEvent/1863188741</id>
+    <published>2013-10-20T10:46:48Z</published>
+    <updated>2013-10-20T10:46:48Z</updated>
+    <link type="text/html" rel="alternate" href="https://github.com/tbuser/openscad.tmbundle"/>
+    <title type="html">hryx starred tbuser/openscad.tmbundle</title>
+    <author>
+      <name>hryx</name>
+      <uri>https://github.com/hryx</uri>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://avatars.githubusercontent.com/u/1066883"/>
+    <content type="html">&lt;!-- watch --&gt;
+&lt;div class=&quot;simple&quot;&gt;
+  &lt;span class=&quot;octicon octicon-star&quot;&gt;&lt;/span&gt;
+
+  &lt;div class=&quot;title&quot;&gt;
+    &lt;a href=&quot;https://github.com/hryx&quot;&gt;hryx&lt;/a&gt; &lt;span&gt;starred&lt;/span&gt; &lt;a href=&quot;https://github.com/tbuser/openscad.tmbundle&quot; class=&quot;css-truncate css-truncate-target&quot;&gt;tbuser/openscad.tmbundle&lt;/a&gt;
+  &lt;/div&gt;
+
+  &lt;div class=&quot;time&quot;&gt;
+    &lt;time class=&quot;js-relative-date&quot; data-title-format=&quot;YYYY-MM-DD HH:mm:ss&quot; datetime=&quot;2013-10-20T10:46:48Z&quot; title=&quot;2013-10-20 10:46:48&quot;&gt;October 20, 2013&lt;/time&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:IssuesEvent/1818865987</id>
+    <published>2013-09-01T00:54:59Z</published>
+    <updated>2013-09-01T00:54:59Z</updated>
+    <link type="text/html" rel="alternate" href="https://github.com/MrEricSir/EscarabajoRanchero/issues/2"/>
+    <title type="html">hryx closed issue MrEricSir/EscarabajoRanchero#2</title>
+    <author>
+      <name>hryx</name>
+      <uri>https://github.com/hryx</uri>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://avatars.githubusercontent.com/u/1066883"/>
+    <content type="html">&lt;!-- issues --&gt;
+&lt;span class=&quot;mega-octicon octicon-issue-closed&quot;&gt;&lt;/span&gt;
+
+&lt;div class=&quot;time&quot;&gt;
+  &lt;time class=&quot;js-relative-date&quot; data-title-format=&quot;YYYY-MM-DD HH:mm:ss&quot; datetime=&quot;2013-09-01T00:54:59Z&quot; title=&quot;2013-09-01 00:54:59&quot;&gt;September 01, 2013&lt;/time&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;title&quot;&gt;
+  &lt;a href=&quot;https://github.com/hryx&quot;&gt;hryx&lt;/a&gt; &lt;span&gt;closed&lt;/span&gt; issue &lt;a href=&quot;https://github.com/MrEricSir/EscarabajoRanchero/issues/2&quot; title=&quot;Better exit graphic&quot;&gt;MrEricSir/EscarabajoRanchero#2&lt;/a&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;details&quot;&gt;
+  &lt;a href=&quot;https://github.com/hryx&quot;&gt;&lt;img alt=&quot;&quot; class=&quot;gravatar js-avatar&quot; data-user=&quot;1066883&quot; height=&quot;30&quot; src=&quot;https://avatars.githubusercontent.com/u/1066883&quot; width=&quot;30&quot; /&gt;&lt;/a&gt;
+  &lt;div class=&quot;message&quot;&gt;
+    &lt;blockquote&gt;
+      Better exit graphic
+    &lt;/blockquote&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:IssueCommentEvent/1818865986</id>
+    <published>2013-09-01T00:54:59Z</published>
+    <updated>2013-09-01T00:54:59Z</updated>
+    <link type="text/html" rel="alternate" href="https://github.com/MrEricSir/EscarabajoRanchero/issues/2#issuecomment-23616834"/>
+    <title type="html">hryx commented on issue MrEricSir/EscarabajoRanchero#2</title>
+    <author>
+      <name>hryx</name>
+      <uri>https://github.com/hryx</uri>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://avatars.githubusercontent.com/u/1066883"/>
+    <content type="html">&lt;!-- issue_comment --&gt;
+&lt;span class=&quot;mega-octicon octicon-comment-discussion&quot;&gt;&lt;/span&gt;
+
+&lt;div class=&quot;time&quot;&gt;
+  &lt;time class=&quot;js-relative-date&quot; data-title-format=&quot;YYYY-MM-DD HH:mm:ss&quot; datetime=&quot;2013-09-01T00:54:59Z&quot; title=&quot;2013-09-01 00:54:59&quot;&gt;September 01, 2013&lt;/time&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;title&quot;&gt;
+  &lt;a href=&quot;https://github.com/hryx&quot;&gt;hryx&lt;/a&gt; &lt;span&gt;commented&lt;/span&gt; on issue &lt;a href=&quot;https://github.com/MrEricSir/EscarabajoRanchero/issues/2#issuecomment-23616834&quot; title=&quot;Better exit graphic&quot;&gt;MrEricSir/EscarabajoRanchero#2&lt;/a&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;details&quot;&gt;
+  &lt;a href=&quot;https://github.com/hryx&quot;&gt;&lt;img alt=&quot;&quot; class=&quot;gravatar js-avatar&quot; data-user=&quot;1066883&quot; height=&quot;30&quot; src=&quot;https://avatars.githubusercontent.com/u/1066883&quot; width=&quot;30&quot; /&gt;&lt;/a&gt;
+  &lt;div class=&quot;message markdown-body&quot;&gt;
+    &lt;blockquote&gt;
+      &lt;p&gt;Bunghole Be Gone&lt;/p&gt;
+    &lt;/blockquote&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:PushEvent/1818858336</id>
+    <published>2013-09-01T00:12:57Z</published>
+    <updated>2013-09-01T00:12:57Z</updated>
+    <link type="text/html" rel="alternate" href="https://github.com/MrEricSir/EscarabajoRanchero/compare/73f5962030...340330f786"/>
+    <title type="html">hryx pushed to master at MrEricSir/EscarabajoRanchero</title>
+    <author>
+      <name>hryx</name>
+      <uri>https://github.com/hryx</uri>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://avatars.githubusercontent.com/u/1066883"/>
+    <content type="html">&lt;!-- push --&gt;
+&lt;span class=&quot;mega-octicon octicon-git-commit&quot;&gt;&lt;/span&gt;
+
+&lt;div class=&quot;time&quot;&gt;
+  &lt;time class=&quot;js-relative-date&quot; data-title-format=&quot;YYYY-MM-DD HH:mm:ss&quot; datetime=&quot;2013-09-01T00:12:57Z&quot; title=&quot;2013-09-01 00:12:57&quot;&gt;September 01, 2013&lt;/time&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;title&quot;&gt;
+  &lt;a href=&quot;https://github.com/hryx&quot;&gt;hryx&lt;/a&gt; &lt;span&gt;pushed&lt;/span&gt; to &lt;a href=&quot;/MrEricSir/EscarabajoRanchero/tree/master&quot;&gt;master&lt;/a&gt; at &lt;a href=&quot;https://github.com/MrEricSir/EscarabajoRanchero&quot; class=&quot;css-truncate css-truncate-target&quot;&gt;MrEricSir/EscarabajoRanchero&lt;/a&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;details&quot;&gt;
+  &lt;a href=&quot;https://github.com/hryx&quot;&gt;&lt;img alt=&quot;&quot; class=&quot;gravatar js-avatar&quot; data-user=&quot;1066883&quot; height=&quot;30&quot; src=&quot;https://avatars.githubusercontent.com/u/1066883&quot; width=&quot;30&quot; /&gt;&lt;/a&gt;
+
+    &lt;div class=&quot;commits pusher-is-only-committer&quot;&gt;
+      &lt;ul&gt;
+        &lt;li&gt;
+          &lt;span title=&quot;hryx&quot;&gt;
+            &lt;img alt=&quot;&quot; class=&quot; js-avatar&quot; data-user=&quot;1066883&quot; height=&quot;16&quot; src=&quot;https://avatars.githubusercontent.com/u/1066883&quot; width=&quot;16&quot; /&gt;
+          &lt;/span&gt;
+          &lt;code&gt;&lt;a href=&quot;/MrEricSir/EscarabajoRanchero/commit/340330f786b03583733e1e952308e6095cf4a773&quot;&gt;340330f&lt;/a&gt;&lt;/code&gt;
+          &lt;div class=&quot;message&quot;&gt;
+            &lt;blockquote&gt;
+              Starting to add new graphics (correct branch this time..)
+            &lt;/blockquote&gt;
+          &lt;/div&gt;
+        &lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+</content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:PushEvent/1818856879</id>
+    <published>2013-09-01T00:05:00Z</published>
+    <updated>2013-09-01T00:05:00Z</updated>
+    <link type="text/html" rel="alternate" href="https://github.com/MrEricSir/EscarabajoRanchero/compare/25e03cf9f9...63ac70ae86"/>
+    <title type="html">hryx pushed to bug/1 at MrEricSir/EscarabajoRanchero</title>
+    <author>
+      <name>hryx</name>
+      <uri>https://github.com/hryx</uri>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://avatars.githubusercontent.com/u/1066883"/>
+    <content type="html">&lt;!-- push --&gt;
+&lt;span class=&quot;mega-octicon octicon-git-commit&quot;&gt;&lt;/span&gt;
+
+&lt;div class=&quot;time&quot;&gt;
+  &lt;time class=&quot;js-relative-date&quot; data-title-format=&quot;YYYY-MM-DD HH:mm:ss&quot; datetime=&quot;2013-09-01T00:05:00Z&quot; title=&quot;2013-09-01 00:05:00&quot;&gt;September 01, 2013&lt;/time&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;title&quot;&gt;
+  &lt;a href=&quot;https://github.com/hryx&quot;&gt;hryx&lt;/a&gt; &lt;span&gt;pushed&lt;/span&gt; to &lt;a href=&quot;/MrEricSir/EscarabajoRanchero/tree/bug/1&quot;&gt;bug/1&lt;/a&gt; at &lt;a href=&quot;https://github.com/MrEricSir/EscarabajoRanchero&quot; class=&quot;css-truncate css-truncate-target&quot;&gt;MrEricSir/EscarabajoRanchero&lt;/a&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;details&quot;&gt;
+  &lt;a href=&quot;https://github.com/hryx&quot;&gt;&lt;img alt=&quot;&quot; class=&quot;gravatar js-avatar&quot; data-user=&quot;1066883&quot; height=&quot;30&quot; src=&quot;https://avatars.githubusercontent.com/u/1066883&quot; width=&quot;30&quot; /&gt;&lt;/a&gt;
+
+    &lt;div class=&quot;commits pusher-is-only-committer&quot;&gt;
+      &lt;ul&gt;
+        &lt;li&gt;
+          &lt;span title=&quot;hryx&quot;&gt;
+            &lt;img alt=&quot;&quot; class=&quot; js-avatar&quot; data-user=&quot;1066883&quot; height=&quot;16&quot; src=&quot;https://avatars.githubusercontent.com/u/1066883&quot; width=&quot;16&quot; /&gt;
+          &lt;/span&gt;
+          &lt;code&gt;&lt;a href=&quot;/MrEricSir/EscarabajoRanchero/commit/63ac70ae8631c8e4de6327bd30d0b7228c888b3e&quot;&gt;63ac70a&lt;/a&gt;&lt;/code&gt;
+          &lt;div class=&quot;message&quot;&gt;
+            &lt;blockquote&gt;
+              Merge branch &#39;bug/1&#39; of &lt;a href=&quot;https://github.com/MrEricSir/EscarabajoRanchero&quot;&gt;https://github.com/MrEricSir/EscarabajoRanchero&lt;/a&gt;…
+            &lt;/blockquote&gt;
+          &lt;/div&gt;
+        &lt;/li&gt;
+        &lt;li&gt;
+          &lt;span title=&quot;hryx&quot;&gt;
+            &lt;img alt=&quot;&quot; class=&quot; js-avatar&quot; data-user=&quot;1066883&quot; height=&quot;16&quot; src=&quot;https://avatars.githubusercontent.com/u/1066883&quot; width=&quot;16&quot; /&gt;
+          &lt;/span&gt;
+          &lt;code&gt;&lt;a href=&quot;/MrEricSir/EscarabajoRanchero/commit/fd062baa2fc6b08cd88a6bfd12656a39e61111ae&quot;&gt;fd062ba&lt;/a&gt;&lt;/code&gt;
+          &lt;div class=&quot;message&quot;&gt;
+            &lt;blockquote&gt;
+              Started putting in new graphics
+            &lt;/blockquote&gt;
+          &lt;/div&gt;
+        &lt;/li&gt;
+        &lt;li class=&quot;more&quot;&gt;&lt;a href=&quot;https://github.com/MrEricSir/EscarabajoRanchero/compare/25e03cf9f9...63ac70ae86&quot;&gt;View comparison for these 2 commits &amp;raquo;&lt;/a&gt;&lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+</content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:IssueCommentEvent/1787859784</id>
+    <published>2013-07-24T17:29:02Z</published>
+    <updated>2013-07-24T17:29:02Z</updated>
+    <link type="text/html" rel="alternate" href="https://github.com/MrEricSir/EscarabajoRanchero/issues/3#issuecomment-21501463"/>
+    <title type="html">hryx commented on issue MrEricSir/EscarabajoRanchero#3</title>
+    <author>
+      <name>hryx</name>
+      <uri>https://github.com/hryx</uri>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://avatars.githubusercontent.com/u/1066883"/>
+    <content type="html">&lt;!-- issue_comment --&gt;
+&lt;span class=&quot;mega-octicon octicon-comment-discussion&quot;&gt;&lt;/span&gt;
+
+&lt;div class=&quot;time&quot;&gt;
+  &lt;time class=&quot;js-relative-date&quot; data-title-format=&quot;YYYY-MM-DD HH:mm:ss&quot; datetime=&quot;2013-07-24T17:29:02Z&quot; title=&quot;2013-07-24 17:29:02&quot;&gt;July 24, 2013&lt;/time&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;title&quot;&gt;
+  &lt;a href=&quot;https://github.com/hryx&quot;&gt;hryx&lt;/a&gt; &lt;span&gt;commented&lt;/span&gt; on issue &lt;a href=&quot;https://github.com/MrEricSir/EscarabajoRanchero/issues/3#issuecomment-21501463&quot; title=&quot;Music doesn&amp;#39;t play on OS X&quot;&gt;MrEricSir/EscarabajoRanchero#3&lt;/a&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;details&quot;&gt;
+  &lt;a href=&quot;https://github.com/hryx&quot;&gt;&lt;img alt=&quot;&quot; class=&quot;gravatar js-avatar&quot; data-user=&quot;1066883&quot; height=&quot;30&quot; src=&quot;https://avatars.githubusercontent.com/u/1066883&quot; width=&quot;30&quot; /&gt;&lt;/a&gt;
+  &lt;div class=&quot;message markdown-body&quot;&gt;
+    &lt;blockquote&gt;
+      &lt;p&gt;I swapped out the IT for the XM in music/map.txt, but that doesn&#39;t play either.&lt;/p&gt;
+    &lt;/blockquote&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:PushEvent/1785410794</id>
+    <published>2013-07-22T09:15:24Z</published>
+    <updated>2013-07-22T09:15:24Z</updated>
+    <link type="text/html" rel="alternate" href="https://github.com/MrEricSir/EscarabajoRanchero/compare/1f103e9d7f...f01deb631b"/>
+    <title type="html">hryx pushed to master at MrEricSir/EscarabajoRanchero</title>
+    <author>
+      <name>hryx</name>
+      <uri>https://github.com/hryx</uri>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://avatars.githubusercontent.com/u/1066883"/>
+    <content type="html">&lt;!-- push --&gt;
+&lt;span class=&quot;mega-octicon octicon-git-commit&quot;&gt;&lt;/span&gt;
+
+&lt;div class=&quot;time&quot;&gt;
+  &lt;time class=&quot;js-relative-date&quot; data-title-format=&quot;YYYY-MM-DD HH:mm:ss&quot; datetime=&quot;2013-07-22T09:15:24Z&quot; title=&quot;2013-07-22 09:15:24&quot;&gt;July 22, 2013&lt;/time&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;title&quot;&gt;
+  &lt;a href=&quot;https://github.com/hryx&quot;&gt;hryx&lt;/a&gt; &lt;span&gt;pushed&lt;/span&gt; to &lt;a href=&quot;/MrEricSir/EscarabajoRanchero/tree/master&quot;&gt;master&lt;/a&gt; at &lt;a href=&quot;https://github.com/MrEricSir/EscarabajoRanchero&quot; class=&quot;css-truncate css-truncate-target&quot;&gt;MrEricSir/EscarabajoRanchero&lt;/a&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;details&quot;&gt;
+  &lt;a href=&quot;https://github.com/hryx&quot;&gt;&lt;img alt=&quot;&quot; class=&quot;gravatar js-avatar&quot; data-user=&quot;1066883&quot; height=&quot;30&quot; src=&quot;https://avatars.githubusercontent.com/u/1066883&quot; width=&quot;30&quot; /&gt;&lt;/a&gt;
+
+    &lt;div class=&quot;commits pusher-is-only-committer&quot;&gt;
+      &lt;ul&gt;
+        &lt;li&gt;
+          &lt;span title=&quot;hryx&quot;&gt;
+            &lt;img alt=&quot;&quot; class=&quot; js-avatar&quot; data-user=&quot;1066883&quot; height=&quot;16&quot; src=&quot;https://avatars.githubusercontent.com/u/1066883&quot; width=&quot;16&quot; /&gt;
+          &lt;/span&gt;
+          &lt;code&gt;&lt;a href=&quot;/MrEricSir/EscarabajoRanchero/commit/f01deb631baf14c32e15947fa706d3601a561854&quot;&gt;f01deb6&lt;/a&gt;&lt;/code&gt;
+          &lt;div class=&quot;message&quot;&gt;
+            &lt;blockquote&gt;
+              poopy beetle/aphid sprites in a slightly different style (just messin…
+            &lt;/blockquote&gt;
+          &lt;/div&gt;
+        &lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+</content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:IssuesEvent/1726598051</id>
+    <published>2013-05-02T07:49:27Z</published>
+    <updated>2013-05-02T07:49:27Z</updated>
+    <link type="text/html" rel="alternate" href="https://github.com/binji/love-nacl/issues/17"/>
+    <title type="html">hryx opened issue binji/love-nacl#17</title>
+    <author>
+      <name>hryx</name>
+      <uri>https://github.com/hryx</uri>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://avatars.githubusercontent.com/u/1066883"/>
+    <content type="html">&lt;!-- issues --&gt;
+&lt;span class=&quot;mega-octicon octicon-issue-opened&quot;&gt;&lt;/span&gt;
+
+&lt;div class=&quot;time&quot;&gt;
+  &lt;time class=&quot;js-relative-date&quot; data-title-format=&quot;YYYY-MM-DD HH:mm:ss&quot; datetime=&quot;2013-05-02T07:49:27Z&quot; title=&quot;2013-05-02 07:49:27&quot;&gt;May 02, 2013&lt;/time&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;title&quot;&gt;
+  &lt;a href=&quot;https://github.com/hryx&quot;&gt;hryx&lt;/a&gt; &lt;span&gt;opened&lt;/span&gt; issue &lt;a href=&quot;https://github.com/binji/love-nacl/issues/17&quot; title=&quot;Extension does nothing on Linux Chromium&quot;&gt;binji/love-nacl#17&lt;/a&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;details&quot;&gt;
+  &lt;a href=&quot;https://github.com/hryx&quot;&gt;&lt;img alt=&quot;&quot; class=&quot;gravatar js-avatar&quot; data-user=&quot;1066883&quot; height=&quot;30&quot; src=&quot;https://avatars.githubusercontent.com/u/1066883&quot; width=&quot;30&quot; /&gt;&lt;/a&gt;
+  &lt;div class=&quot;message&quot;&gt;
+    &lt;blockquote&gt;
+      Extension does nothing on Linux Chromium
+    &lt;/blockquote&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:PushEvent/1703630522</id>
+    <published>2013-03-30T02:16:07Z</published>
+    <updated>2013-03-30T02:16:07Z</updated>
+    <link type="text/html" rel="alternate" href="https://github.com/vrld/Quickie/compare/5827cd2527...54f9222990"/>
+    <title type="html">hryx pushed to master at vrld/Quickie</title>
+    <author>
+      <name>hryx</name>
+      <uri>https://github.com/hryx</uri>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://avatars.githubusercontent.com/u/1066883"/>
+    <content type="html">&lt;!-- push --&gt;
+&lt;span class=&quot;mega-octicon octicon-git-commit&quot;&gt;&lt;/span&gt;
+
+&lt;div class=&quot;time&quot;&gt;
+  &lt;time class=&quot;js-relative-date&quot; data-title-format=&quot;YYYY-MM-DD HH:mm:ss&quot; datetime=&quot;2013-03-30T02:16:07Z&quot; title=&quot;2013-03-30 02:16:07&quot;&gt;March 30, 2013&lt;/time&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;title&quot;&gt;
+  &lt;a href=&quot;https://github.com/hryx&quot;&gt;hryx&lt;/a&gt; &lt;span&gt;pushed&lt;/span&gt; to &lt;a href=&quot;/vrld/Quickie/tree/master&quot;&gt;master&lt;/a&gt; at &lt;a href=&quot;https://github.com/vrld/Quickie&quot; class=&quot;css-truncate css-truncate-target&quot;&gt;vrld/Quickie&lt;/a&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;details&quot;&gt;
+  &lt;a href=&quot;https://github.com/hryx&quot;&gt;&lt;img alt=&quot;&quot; class=&quot;gravatar js-avatar&quot; data-user=&quot;1066883&quot; height=&quot;30&quot; src=&quot;https://avatars.githubusercontent.com/u/1066883&quot; width=&quot;30&quot; /&gt;&lt;/a&gt;
+
+    &lt;div class=&quot;commits pusher-is-only-committer&quot;&gt;
+      &lt;ul&gt;
+        &lt;li&gt;
+          &lt;span title=&quot;hryx&quot;&gt;
+            &lt;img alt=&quot;&quot; class=&quot; js-avatar&quot; data-user=&quot;1066883&quot; height=&quot;16&quot; src=&quot;https://avatars.githubusercontent.com/u/1066883&quot; width=&quot;16&quot; /&gt;
+          &lt;/span&gt;
+          &lt;code&gt;&lt;a href=&quot;/vrld/Quickie/commit/54f9222990985cec2e48ab6d41a1963d4d613141&quot;&gt;54f9222&lt;/a&gt;&lt;/code&gt;
+          &lt;div class=&quot;message&quot;&gt;
+            &lt;blockquote&gt;
+              Default Input style handles long text better
+            &lt;/blockquote&gt;
+          &lt;/div&gt;
+        &lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+</content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:PushEvent/1700533953</id>
+    <published>2013-03-26T06:57:51Z</published>
+    <updated>2013-03-26T06:57:51Z</updated>
+    <link type="text/html" rel="alternate" href="https://github.com/vrld/Quickie/compare/43265a44ca...5827cd2527"/>
+    <title type="html">hryx pushed to master at vrld/Quickie</title>
+    <author>
+      <name>hryx</name>
+      <uri>https://github.com/hryx</uri>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://avatars.githubusercontent.com/u/1066883"/>
+    <content type="html">&lt;!-- push --&gt;
+&lt;span class=&quot;mega-octicon octicon-git-commit&quot;&gt;&lt;/span&gt;
+
+&lt;div class=&quot;time&quot;&gt;
+  &lt;time class=&quot;js-relative-date&quot; data-title-format=&quot;YYYY-MM-DD HH:mm:ss&quot; datetime=&quot;2013-03-26T06:57:51Z&quot; title=&quot;2013-03-26 06:57:51&quot;&gt;March 26, 2013&lt;/time&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;title&quot;&gt;
+  &lt;a href=&quot;https://github.com/hryx&quot;&gt;hryx&lt;/a&gt; &lt;span&gt;pushed&lt;/span&gt; to &lt;a href=&quot;/vrld/Quickie/tree/master&quot;&gt;master&lt;/a&gt; at &lt;a href=&quot;https://github.com/vrld/Quickie&quot; class=&quot;css-truncate css-truncate-target&quot;&gt;vrld/Quickie&lt;/a&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;details&quot;&gt;
+  &lt;a href=&quot;https://github.com/hryx&quot;&gt;&lt;img alt=&quot;&quot; class=&quot;gravatar js-avatar&quot; data-user=&quot;1066883&quot; height=&quot;30&quot; src=&quot;https://avatars.githubusercontent.com/u/1066883&quot; width=&quot;30&quot; /&gt;&lt;/a&gt;
+
+    &lt;div class=&quot;commits pusher-is-only-committer&quot;&gt;
+      &lt;ul&gt;
+        &lt;li&gt;
+          &lt;span title=&quot;hryx&quot;&gt;
+            &lt;img alt=&quot;&quot; class=&quot; js-avatar&quot; data-user=&quot;1066883&quot; height=&quot;16&quot; src=&quot;https://avatars.githubusercontent.com/u/1066883&quot; width=&quot;16&quot; /&gt;
+          &lt;/span&gt;
+          &lt;code&gt;&lt;a href=&quot;/vrld/Quickie/commit/5827cd2527144db1711ca807e018a405743e3e5f&quot;&gt;5827cd2&lt;/a&gt;&lt;/code&gt;
+          &lt;div class=&quot;message&quot;&gt;
+            &lt;blockquote&gt;
+              Only show Input cursor when selected
+            &lt;/blockquote&gt;
+          &lt;/div&gt;
+        &lt;/li&gt;
+        &lt;li&gt;
+          &lt;span title=&quot;hryx&quot;&gt;
+            &lt;img alt=&quot;&quot; class=&quot; js-avatar&quot; data-user=&quot;1066883&quot; height=&quot;16&quot; src=&quot;https://avatars.githubusercontent.com/u/1066883&quot; width=&quot;16&quot; /&gt;
+          &lt;/span&gt;
+          &lt;code&gt;&lt;a href=&quot;/vrld/Quickie/commit/c911165c4111536d4c0c42724b07572a7adfa097&quot;&gt;c911165&lt;/a&gt;&lt;/code&gt;
+          &lt;div class=&quot;message&quot;&gt;
+            &lt;blockquote&gt;
+              Tweak Slider style
+            &lt;/blockquote&gt;
+          &lt;/div&gt;
+        &lt;/li&gt;
+        &lt;li class=&quot;more&quot;&gt;&lt;a href=&quot;https://github.com/vrld/Quickie/compare/43265a44ca...5827cd2527&quot;&gt;1 more commit &amp;raquo;&lt;/a&gt;&lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+</content>
+  </entry>
+</feed>

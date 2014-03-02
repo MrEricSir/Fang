@@ -5,7 +5,7 @@
 #include <QStringList>
 #include <QNetworkReply>
 
-#include "Utilities.h"
+#include "NetworkUtilities.h"
 
 ImageGrabber::ImageGrabber(QObject *parent) :
     QObject(parent),
@@ -14,7 +14,7 @@ ImageGrabber::ImageGrabber(QObject *parent) :
     results()
 {
     // Caching!
-    Utilities::addNetworkAccessManagerCache(&manager);
+    NetworkUtilities::addNetworkAccessManagerCache(&manager);
     
     // Signals!
     connect(&manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onRequestFinished(QNetworkReply*)));

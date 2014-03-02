@@ -7,6 +7,7 @@
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QXmlStreamReader>
+#include <QStack>
 
 #include "ParserInterface.h"
 
@@ -18,8 +19,18 @@ class Parser : public ParserInterface
 public:
     explicit Parser(QObject *parent = 0);
     
+    /**
+     * @brief Attempts to convert an unreliable RSS/Atom timestamp string into a real timestamp.
+     * @param timestamp
+     * @return 
+     */
+    static QDateTime dateFromFeedString(const QString &_timestamp);
+    
 public slots:
     virtual void parse(const QUrl& url); // Override.
+    
+    // For testing purposes.
+    void parseFile(const QString& filename);
     
     virtual ParseResult getResult(); // Override.
     virtual RawFeed* getFeed(); // Override.
@@ -32,8 +43,14 @@ protected slots:
     void netFinished(QNetworkReply *reply);
     
 private:
+    void initParse(); // called prior to parse.
     void parseXml();
     void resetParserVars();
+    
+    /**
+     * @return The nth value in the tag stack, or the empty string.
+     */
+    QString getTagStackAt(qint32 n);
     
     bool checkFavicon;
     RawFeed* feed;
@@ -58,6 +75,7 @@ private:
     QString timestamp;
     QString author;
     bool hasType;
+    QStack<QString> tagStack;
     //
 };
 

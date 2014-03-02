@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:media="http://search.yahoo.com/mrss/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:blogChannel="http://backend.userland.com/blogChannelModule" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>KP.RU :: Общество</title>
+    <link>http://www.kp.ru/daily/life/</link>
+    <atom:link href="http://www.kp.ru/rss/msk-life.xml" rel="self" type="application/rss+xml" />
+    <description>Все общественные новости</description>
+    <image>
+      <url>http://www.kp.ru/_img/logo_s.gif</url>
+      <title>KP.RU :: Общество</title>
+      <link>http://www.kp.ru/daily/life/</link>
+    </image>
+    <item>
+        <title>Навального заключили под домашний арест</title>
+        <link>http://www.kp.ru/daily/26200/3087261/</link>
+        <guid>http://www.kp.ru/daily/26200/3087261/</guid>
+        <description>А следствие по делу «Ив Роше» продлили</description>
+        <category>Общество</category>
+        <pubDate>Fri, 28 Feb 2014 14:12:00 +0400</pubDate>
+        <enclosure url="http://www.kp.ru/f/12/image/13/47/6494713.jpg" type="image/jpeg" length="1" />
+    </item>
+    <item>
+        <title>«Роснефть» построит новое жилье медведю Белому</title>
+        <link>http://www.kp.ru/daily/26200/3087063/</link>
+        <guid>http://www.kp.ru/daily/26200/3087063/</guid>
+        <description>Вчера в мире отмечался Международный день полярного медведя</description>
+        <category>Общество</category>
+        <pubDate>Fri, 28 Feb 2014 01:00:00 +0400</pubDate>
+        <enclosure url="http://www.kp.ru/f/12/image/34/19/6491934.jpg" type="image/jpeg" length="1" />
+    </item>
+    <item>
+        <title>Как отреагировал интернет на события в Украине</title>
+        <link>http://www.kp.ru/daily/26200.4/3086800/</link>
+        <guid>http://www.kp.ru/daily/26200.4/3086800/</guid>
+        <description>Публикуем самые популярные демки, описывающие последние события в стране и мире </description>
+        <category>Общество</category>
+        <pubDate>Thu, 27 Feb 2014 20:15:00 +0400</pubDate>
+        <enclosure url="http://www.kp.ru/f/12/image/50/07/6490750.jpg" type="image/jpeg" length="1" />
+    </item>
+    <item>
+        <title>Борис Ефимович, прием! Как слышишь?</title>
+        <link>http://www.kp.ru/daily/26200.4/3087014/</link>
+        <guid>http://www.kp.ru/daily/26200.4/3087014/</guid>
+        <description>Мы передали в камеру Борису Немцову радиоприемник - в надежде, что, слушая Радио «КП», он поменяет свою точку зрения на майдан и не только... </description>
+        <category>Общество</category>
+        <pubDate>Thu, 27 Feb 2014 20:21:00 +0400</pubDate>
+        <enclosure url="http://www.kp.ru/f/12/image/11/15/6491511.jpg" type="image/jpeg" length="1" />
+    </item>
+    <item>
+        <title>Спецкоры &quot;Комсомолки&quot; стали СМИротворцами</title>
+        <link>http://www.kp.ru/daily/26199/3086441/</link>
+        <guid>http://www.kp.ru/daily/26199/3086441/</guid>
+        <description>Александр Коц и Дмитрий Стешин победили в конкурсе на лучший сюжет про межэтнические отношения</description>
+        <category>Общество</category>
+        <pubDate>Wed, 26 Feb 2014 19:10:00 +0400</pubDate>
+        <enclosure url="http://www.kp.ru/f/12/image/00/55/6485500.jpg" type="image/jpeg" length="1" />
+    </item>
+    <item>
+        <title>Ксения Собчак о Плющенко: «Бедный парень! Его травма повергла меня в шок!»</title>
+        <link>http://www.kp.ru/daily/26199/3086334/</link>
+        <guid>http://www.kp.ru/daily/26199/3086334/</guid>
+        <description>Телеведущая навестила фигуриста накануне операции </description>
+        <category>Общество</category>
+        <pubDate>Wed, 26 Feb 2014 16:16:00 +0400</pubDate>
+        <enclosure url="http://www.kp.ru/f/12/image/63/45/6484563.jpg" type="image/jpeg" length="1" />
+    </item>
+    <item>
+        <title>Министр Дмитрий Ливанов рассказал об изменениях в сдаче ЕГЭ и приеме в вузы</title>
+        <link>http://www.kp.ru/daily/26199/3086445/</link>
+        <guid>http://www.kp.ru/daily/26199/3086445/</guid>
+        <description>К 1 марта все университеты и институты определятся с требованиями к абитуриентам. А судьба выпускных сочинений решится к августу</description>
+        <category>Образование</category>
+        <pubDate>Wed, 26 Feb 2014 19:20:00 +0400</pubDate>
+        <enclosure url="http://www.kp.ru/f/12/image/06/55/6485506.jpg" type="image/jpeg" length="1" />
+    </item>
+    <item>
+        <title>Вечерком айпад открыл -  глядь, и в Гарвард поступил!</title>
+        <link>http://www.kp.ru/daily/26198.5/3085129/</link>
+        <guid>http://www.kp.ru/daily/26198.5/3085129/</guid>
+        <description>...И еще в сотню лучших университетов мира. Бесплатно и не выходя из дома. Вот такая приятная революция происходит сейчас в высшем образовании</description>
+        <category>Образование</category>
+        <pubDate>Mon, 24 Feb 2014 01:30:00 +0400</pubDate>
+        <enclosure url="http://www.kp.ru/f/12/image/38/96/6469638.jpg" type="image/jpeg" length="1" />
+    </item>
+    <item>
+        <title>Минобрнауки дало задний ход</title>
+        <link>http://www.kp.ru/daily/26197/3084668/</link>
+        <guid>http://www.kp.ru/daily/26197/3084668/</guid>
+        <description>Вузы теперь на законных основаниях могут сохранить вступительные экзамены прошлого года</description>
+        <category>Образование</category>
+        <pubDate>Fri, 21 Feb 2014 14:30:00 +0400</pubDate>
+        <enclosure url="http://www.kp.ru/f/12/image/28/19/6461928.jpg" type="image/jpeg" length="1" />
+    </item>
+  </channel>
+</rss>
+

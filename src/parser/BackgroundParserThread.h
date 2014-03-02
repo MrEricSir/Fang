@@ -9,6 +9,7 @@ class BackgroundParserThread : public QThread
     Q_OBJECT
 public:
     explicit BackgroundParserThread(QObject *parent = 0);
+    virtual ~BackgroundParserThread();
     
     void setUrl(const QUrl& url);
     
@@ -25,7 +26,6 @@ protected slots:
 private:
     Parser* parser;
     QUrl url;
-    
 };
 
 #endif // BACKGROUNDPARSERTHREAD_H

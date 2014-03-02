@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+	xmlns:georss="http://www.georss.org/georss" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:media="http://search.yahoo.com/mrss/"
+	>
+
+<channel>
+	<title>oh man.</title>
+	<atom:link href="http://zaphos.wordpress.com/feed/" rel="self" type="application/rss+xml" />
+	<link>http://zaphos.wordpress.com</link>
+	<description>Jimmy&#039;s doodles and such</description>
+	<lastBuildDate>Sat, 15 Feb 2014 19:45:20 +0000</lastBuildDate>
+	<language>en</language>
+		<sy:updatePeriod>hourly</sy:updatePeriod>
+		<sy:updateFrequency>1</sy:updateFrequency>
+	<generator>http://wordpress.com/</generator>
+<cloud domain='zaphos.wordpress.com' port='80' path='/?rsscloud=notify' registerProcedure='' protocol='http-post' />
+<image>
+		<url>http://s2.wp.com/i/buttonw-com.png</url>
+		<title>oh man.</title>
+		<link>http://zaphos.wordpress.com</link>
+	</image>
+	<atom:link rel="search" type="application/opensearchdescription+xml" href="http://zaphos.wordpress.com/osd.xml" title="oh man." />
+	<atom:link rel='hub' href='http://zaphos.wordpress.com/?pushpress=hub'/>
+	<item>
+		<title>Birds birds birds</title>
+		<link>http://zaphos.wordpress.com/2014/02/15/birds-birds-birds-2/</link>
+		<comments>http://zaphos.wordpress.com/2014/02/15/birds-birds-birds-2/#comments</comments>
+		<pubDate>Sat, 15 Feb 2014 19:30:44 +0000</pubDate>
+		<dc:creator><![CDATA[zaphos]]></dc:creator>
+				<category><![CDATA[Uncategorized]]></category>
+
+		<guid isPermaLink="false">http://zaphos.wordpress.com/?p=1422</guid>
+		<description><![CDATA[I haven&#8217;t actually hooked them up to the world in a meaningful way yet; this is just a dumb animation test.<img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=zaphos.wordpress.com&#038;blog=34720555&#038;post=1422&#038;subd=zaphos&#038;ref=&#038;feed=1" width="1" height="1" />]]></description>
+				<content:encoded><![CDATA[<p><img src="http://zaphos.files.wordpress.com/2014/02/birds.gif?w=575" class="size-full" alt="Birds birds birds" /></p>
+<p>I haven&#8217;t actually hooked them up to the world in a meaningful way yet; this is just a dumb animation test.</p><br />  <a rel="nofollow" href="http://feeds.wordpress.com/1.0/gocomments/zaphos.wordpress.com/1422/"><img alt="" border="0" src="http://feeds.wordpress.com/1.0/comments/zaphos.wordpress.com/1422/" /></a> <img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=zaphos.wordpress.com&#038;blog=34720555&#038;post=1422&#038;subd=zaphos&#038;ref=&#038;feed=1" width="1" height="1" />]]></content:encoded>
+			<wfw:commentRss>http://zaphos.wordpress.com/2014/02/15/birds-birds-birds-2/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+	
+		<media:content url="http://0.gravatar.com/avatar/928632a4940f63d67d24bb792b6b2e87?s=96&#38;d=identicon&#38;r=G" medium="image">
+			<media:title type="html">zaphos</media:title>
+		</media:content>
+
+		<media:content url="http://zaphos.files.wordpress.com/2014/02/birds.gif" medium="image">
+			<media:title type="html">Birds birds birds</media:title>
+		</media:content>
+	</item>
+		<item>
+		<title>I don&#8217;t know why I added worms</title>
+		<link>http://zaphos.wordpress.com/2014/02/14/i-dont-know-why-i-added-worms/</link>
+		<comments>http://zaphos.wordpress.com/2014/02/14/i-dont-know-why-i-added-worms/#comments</comments>
+		<pubDate>Fri, 14 Feb 2014 16:27:51 +0000</pubDate>
+		<dc:creator><![CDATA[zaphos]]></dc:creator>
+				<category><![CDATA[Uncategorized]]></category>
+
+		<guid isPermaLink="false">http://zaphos.wordpress.com/?p=1418</guid>
+		<description><![CDATA[They&#8217;re kinda icky. (Also, I think maybe I should make them leave trails of slightly darkened ground &#8230;)<img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=zaphos.wordpress.com&#038;blog=34720555&#038;post=1418&#038;subd=zaphos&#038;ref=&#038;feed=1" width="1" height="1" />]]></description>
+				<content:encoded><![CDATA[<p><img src="http://zaphos.files.wordpress.com/2014/02/worm3.gif?w=575" class="size-full" alt="I don't know why I added worms" /></p>
+<p>They&#8217;re kinda icky.</p>
+<p>(Also, I think maybe I should make them leave trails of slightly darkened ground &#8230;)</p><br />  <a rel="nofollow" href="http://feeds.wordpress.com/1.0/gocomments/zaphos.wordpress.com/1418/"><img alt="" border="0" src="http://feeds.wordpress.com/1.0/comments/zaphos.wordpress.com/1418/" /></a> <img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=zaphos.wordpress.com&#038;blog=34720555&#038;post=1418&#038;subd=zaphos&#038;ref=&#038;feed=1" width="1" height="1" />]]></content:encoded>
+			<wfw:commentRss>http://zaphos.wordpress.com/2014/02/14/i-dont-know-why-i-added-worms/feed/</wfw:commentRss>
+		<slash:comments>2</slash:comments>
+	
+		<media:content url="http://0.gravatar.com/avatar/928632a4940f63d67d24bb792b6b2e87?s=96&#38;d=identicon&#38;r=G" medium="image">
+			<media:title type="html">zaphos</media:title>
+		</media:content>
+
+		<media:content url="http://zaphos.files.wordpress.com/2014/02/worm3.gif" medium="image">
+			<media:title type="html">I don&#039;t know why I added worms</media:title>
+		</media:content>
+	</item>
+		<item>
+		<title>Tank vs the tree</title>
+		<link>http://zaphos.wordpress.com/2014/02/13/tank-vs-the-tree/</link>
+		<comments>http://zaphos.wordpress.com/2014/02/13/tank-vs-the-tree/#comments</comments>
+		<pubDate>Fri, 14 Feb 2014 03:17:30 +0000</pubDate>
+		<dc:creator><![CDATA[zaphos]]></dc:creator>
+				<category><![CDATA[Uncategorized]]></category>
+
+		<guid isPermaLink="false">http://zaphos.wordpress.com/?p=1406</guid>
+		<description><![CDATA[Tank has the advantage, but the tree can sometimes flip Tank.<img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=zaphos.wordpress.com&#038;blog=34720555&#038;post=1406&#038;subd=zaphos&#038;ref=&#038;feed=1" width="1" height="1" />]]></description>
+				<content:encoded><![CDATA[<p><img src="http://zaphos.files.wordpress.com/2014/02/tanktree.gif?w=575" class="size-full" alt="Tank vs the tree" /></p>
+<p>Tank has the advantage, but <a href="http://zaphos.files.wordpress.com/2014/02/killtank3.gif">the tree can sometimes flip Tank</a>.</p><br />  <a rel="nofollow" href="http://feeds.wordpress.com/1.0/gocomments/zaphos.wordpress.com/1406/"><img alt="" border="0" src="http://feeds.wordpress.com/1.0/comments/zaphos.wordpress.com/1406/" /></a> <img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=zaphos.wordpress.com&#038;blog=34720555&#038;post=1406&#038;subd=zaphos&#038;ref=&#038;feed=1" width="1" height="1" />]]></content:encoded>
+			<wfw:commentRss>http://zaphos.wordpress.com/2014/02/13/tank-vs-the-tree/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+	
+		<media:content url="http://0.gravatar.com/avatar/928632a4940f63d67d24bb792b6b2e87?s=96&#38;d=identicon&#38;r=G" medium="image">
+			<media:title type="html">zaphos</media:title>
+		</media:content>
+
+		<media:content url="http://zaphos.files.wordpress.com/2014/02/tanktree.gif" medium="image">
+			<media:title type="html">Tank vs the tree</media:title>
+		</media:content>
+	</item>
+		<item>
+		<title>Sierpinski&#8217;s blade (tree?)</title>
+		<link>http://zaphos.wordpress.com/2014/02/05/sierpinskis-blade-tree/</link>
+		<comments>http://zaphos.wordpress.com/2014/02/05/sierpinskis-blade-tree/#comments</comments>
+		<pubDate>Thu, 06 Feb 2014 02:33:24 +0000</pubDate>
+		<dc:creator><![CDATA[zaphos]]></dc:creator>
+				<category><![CDATA[Uncategorized]]></category>
+
+		<guid isPermaLink="false">http://zaphos.wordpress.com/2014/02/05/sierpinskis-blade-tree/</guid>
+		<description><![CDATA[Testing a funky l-system-based &#8220;tree&#8221; that makes little sierpinski-shaped fractals with its branches if you pose it correctly. (here&#8217;s a longer gif of it breezing through a tiny level)<img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=zaphos.wordpress.com&#038;blog=34720555&#038;post=1402&#038;subd=zaphos&#038;ref=&#038;feed=1" width="1" height="1" />]]></description>
+				<content:encoded><![CDATA[<p><img src="http://zaphos.files.wordpress.com/2014/02/sierpinskibladetree3.gif?w=575" class="size-full" alt="Sierpinski's blade (tree?)" /></p>
+<p>Testing a funky l-system-based &#8220;tree&#8221; that makes little sierpinski-shaped fractals with its branches if you pose it correctly.</p>
+<p>  (<a href="http://zaphos.files.wordpress.com/2014/02/sierpinskibladetree2.gif?w=480">here&#8217;s a longer gif of it breezing through a tiny level</a>)</p><br />  <a rel="nofollow" href="http://feeds.wordpress.com/1.0/gocomments/zaphos.wordpress.com/1402/"><img alt="" border="0" src="http://feeds.wordpress.com/1.0/comments/zaphos.wordpress.com/1402/" /></a> <img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=zaphos.wordpress.com&#038;blog=34720555&#038;post=1402&#038;subd=zaphos&#038;ref=&#038;feed=1" width="1" height="1" />]]></content:encoded>
+			<wfw:commentRss>http://zaphos.wordpress.com/2014/02/05/sierpinskis-blade-tree/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+	
+		<media:content url="http://0.gravatar.com/avatar/928632a4940f63d67d24bb792b6b2e87?s=96&#38;d=identicon&#38;r=G" medium="image">
+			<media:title type="html">zaphos</media:title>
+		</media:content>
+
+		<media:content url="http://zaphos.files.wordpress.com/2014/02/sierpinskibladetree3.gif" medium="image">
+			<media:title type="html">Sierpinski&#039;s blade (tree?)</media:title>
+		</media:content>
+	</item>
+		<item>
+		<title>inkscape mockups!</title>
+		<link>http://zaphos.wordpress.com/2014/02/05/inkscape-mockups/</link>
+		<comments>http://zaphos.wordpress.com/2014/02/05/inkscape-mockups/#comments</comments>
+		<pubDate>Thu, 06 Feb 2014 02:29:45 +0000</pubDate>
+		<dc:creator><![CDATA[zaphos]]></dc:creator>
+				<category><![CDATA[Uncategorized]]></category>
+
+		<guid isPermaLink="false">http://zaphos.wordpress.com/?p=1392</guid>
+		<description><![CDATA[Currently I hard-code the drawing routines for everything that goes into my tree game about being a tree, but I&#8217;ve been sketching them first in Inkscape to get an idea of how they&#8217;ll look and make sure the &#8216;procedural&#8217; version is worth building. These are the characters I&#8217;ve been mocking up lately.<img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=zaphos.wordpress.com&#038;blog=34720555&#038;post=1392&#038;subd=zaphos&#038;ref=&#038;feed=1" width="1" height="1" />]]></description>
+				<content:encoded><![CDATA[<p><img src="http://zaphos.files.wordpress.com/2014/02/mockupimgssm.png?w=575" class="size-full" alt="inkscape mockups!" /></p>
+<p>Currently I hard-code the drawing routines for everything that goes into my tree game about being a tree, but I&#8217;ve been sketching them first in Inkscape to get an idea of how they&#8217;ll look and make sure the &#8216;procedural&#8217; version is worth building.  These are the characters I&#8217;ve been mocking up lately.</p><br />  <a rel="nofollow" href="http://feeds.wordpress.com/1.0/gocomments/zaphos.wordpress.com/1392/"><img alt="" border="0" src="http://feeds.wordpress.com/1.0/comments/zaphos.wordpress.com/1392/" /></a> <img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=zaphos.wordpress.com&#038;blog=34720555&#038;post=1392&#038;subd=zaphos&#038;ref=&#038;feed=1" width="1" height="1" />]]></content:encoded>
+			<wfw:commentRss>http://zaphos.wordpress.com/2014/02/05/inkscape-mockups/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+	
+		<media:content url="http://0.gravatar.com/avatar/928632a4940f63d67d24bb792b6b2e87?s=96&#38;d=identicon&#38;r=G" medium="image">
+			<media:title type="html">zaphos</media:title>
+		</media:content>
+
+		<media:content url="http://zaphos.files.wordpress.com/2014/02/mockupimgssm.png" medium="image">
+			<media:title type="html">inkscape mockups!</media:title>
+		</media:content>
+	</item>
+		<item>
+		<title>Proper Tree Etiquette</title>
+		<link>http://zaphos.wordpress.com/2014/01/29/proper-tree-etiquette/</link>
+		<comments>http://zaphos.wordpress.com/2014/01/29/proper-tree-etiquette/#comments</comments>
+		<pubDate>Wed, 29 Jan 2014 18:11:20 +0000</pubDate>
+		<dc:creator><![CDATA[zaphos]]></dc:creator>
+				<category><![CDATA[Uncategorized]]></category>
+
+		<guid isPermaLink="false">http://zaphos.wordpress.com/?p=1388</guid>
+		<description><![CDATA[Tree education camp.<img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=zaphos.wordpress.com&#038;blog=34720555&#038;post=1388&#038;subd=zaphos&#038;ref=&#038;feed=1" width="1" height="1" />]]></description>
+				<content:encoded><![CDATA[<p><img src="http://zaphos.files.wordpress.com/2014/01/eyeburn3.gif?w=575" class="size-full" alt="Proper Tree Etiquette" /></p>
+<p>Tree education camp.</p><br />  <a rel="nofollow" href="http://feeds.wordpress.com/1.0/gocomments/zaphos.wordpress.com/1388/"><img alt="" border="0" src="http://feeds.wordpress.com/1.0/comments/zaphos.wordpress.com/1388/" /></a> <img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=zaphos.wordpress.com&#038;blog=34720555&#038;post=1388&#038;subd=zaphos&#038;ref=&#038;feed=1" width="1" height="1" />]]></content:encoded>
+			<wfw:commentRss>http://zaphos.wordpress.com/2014/01/29/proper-tree-etiquette/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+	
+		<media:content url="http://0.gravatar.com/avatar/928632a4940f63d67d24bb792b6b2e87?s=96&#38;d=identicon&#38;r=G" medium="image">
+			<media:title type="html">zaphos</media:title>
+		</media:content>
+
+		<media:content url="http://zaphos.files.wordpress.com/2014/01/eyeburn3.gif" medium="image">
+			<media:title type="html">Proper Tree Etiquette</media:title>
+		</media:content>
+	</item>
+		<item>
+		<title>How to Be a Tree</title>
+		<link>http://zaphos.wordpress.com/2014/01/22/how-to-be-a-tree/</link>
+		<comments>http://zaphos.wordpress.com/2014/01/22/how-to-be-a-tree/#comments</comments>
+		<pubDate>Thu, 23 Jan 2014 00:54:50 +0000</pubDate>
+		<dc:creator><![CDATA[zaphos]]></dc:creator>
+				<category><![CDATA[Uncategorized]]></category>
+
+		<guid isPermaLink="false">http://zaphos.wordpress.com/?p=1365</guid>
+		<description><![CDATA[The eye is kind of creepy. (source: &#8220;how to be a tree&#8221; &#8212; a game I&#8217;m working on)<img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=zaphos.wordpress.com&#038;blog=34720555&#038;post=1365&#038;subd=zaphos&#038;ref=&#038;feed=1" width="1" height="1" />]]></description>
+				<content:encoded><![CDATA[<p><img src="http://zaphos.files.wordpress.com/2014/01/intro_typofix3.gif?w=575" class="size-full" alt="How to Be a Tree" /></p>
+<p><img src="http://zaphos.files.wordpress.com/2014/01/treesdontmove.gif?w=575" class="size-full" alt="Trees don't move!" /></p>
+<p>The eye is kind of creepy.</p>
+<p>(source: &#8220;how to be a tree&#8221; &#8212; a game I&#8217;m working on)</p><br />  <a rel="nofollow" href="http://feeds.wordpress.com/1.0/gocomments/zaphos.wordpress.com/1365/"><img alt="" border="0" src="http://feeds.wordpress.com/1.0/comments/zaphos.wordpress.com/1365/" /></a> <img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=zaphos.wordpress.com&#038;blog=34720555&#038;post=1365&#038;subd=zaphos&#038;ref=&#038;feed=1" width="1" height="1" />]]></content:encoded>
+			<wfw:commentRss>http://zaphos.wordpress.com/2014/01/22/how-to-be-a-tree/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+	
+		<media:content url="http://0.gravatar.com/avatar/928632a4940f63d67d24bb792b6b2e87?s=96&#38;d=identicon&#38;r=G" medium="image">
+			<media:title type="html">zaphos</media:title>
+		</media:content>
+
+		<media:content url="http://zaphos.files.wordpress.com/2014/01/intro_typofix3.gif" medium="image">
+			<media:title type="html">How to Be a Tree</media:title>
+		</media:content>
+
+		<media:content url="http://zaphos.files.wordpress.com/2014/01/treesdontmove.gif" medium="image">
+			<media:title type="html">Trees don&#039;t move!</media:title>
+		</media:content>
+	</item>
+		<item>
+		<title>Gathering</title>
+		<link>http://zaphos.wordpress.com/2013/11/19/gathering/</link>
+		<comments>http://zaphos.wordpress.com/2013/11/19/gathering/#comments</comments>
+		<pubDate>Tue, 19 Nov 2013 17:18:33 +0000</pubDate>
+		<dc:creator><![CDATA[zaphos]]></dc:creator>
+				<category><![CDATA[Uncategorized]]></category>
+
+		<guid isPermaLink="false">http://zaphos.wordpress.com/?p=1359</guid>
+		<description><![CDATA[<img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=zaphos.wordpress.com&#038;blog=34720555&#038;post=1359&#038;subd=zaphos&#038;ref=&#038;feed=1" width="1" height="1" />]]></description>
+				<content:encoded><![CDATA[<p><img src="http://zaphos.files.wordpress.com/2013/11/foxscene.png?w=575" class="size-full" alt="Gathering" /></p><br />  <a rel="nofollow" href="http://feeds.wordpress.com/1.0/gocomments/zaphos.wordpress.com/1359/"><img alt="" border="0" src="http://feeds.wordpress.com/1.0/comments/zaphos.wordpress.com/1359/" /></a> <img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=zaphos.wordpress.com&#038;blog=34720555&#038;post=1359&#038;subd=zaphos&#038;ref=&#038;feed=1" width="1" height="1" />]]></content:encoded>
+			<wfw:commentRss>http://zaphos.wordpress.com/2013/11/19/gathering/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+	
+		<media:content url="http://0.gravatar.com/avatar/928632a4940f63d67d24bb792b6b2e87?s=96&#38;d=identicon&#38;r=G" medium="image">
+			<media:title type="html">zaphos</media:title>
+		</media:content>
+
+		<media:content url="http://zaphos.files.wordpress.com/2013/11/foxscene.png" medium="image">
+			<media:title type="html">Gathering</media:title>
+		</media:content>
+	</item>
+		<item>
+		<title>Grandpa summons an old friend</title>
+		<link>http://zaphos.wordpress.com/2013/11/18/grandpa-summons-an-old-friend/</link>
+		<comments>http://zaphos.wordpress.com/2013/11/18/grandpa-summons-an-old-friend/#comments</comments>
+		<pubDate>Mon, 18 Nov 2013 19:40:04 +0000</pubDate>
+		<dc:creator><![CDATA[zaphos]]></dc:creator>
+				<category><![CDATA[Uncategorized]]></category>
+
+		<guid isPermaLink="false">http://zaphos.wordpress.com/?p=1349</guid>
+		<description><![CDATA[Grandpa just used his occult powers to reminisce about the old days. The demons, being ancient evils, shared much of his nostalgia &#8230;<img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=zaphos.wordpress.com&#038;blog=34720555&#038;post=1349&#038;subd=zaphos&#038;ref=&#038;feed=1" width="1" height="1" />]]></description>
+				<content:encoded><![CDATA[<p><img src="http://zaphos.files.wordpress.com/2013/11/grandpasummonsanoldfriend.png?w=575" class="size-full" alt="Grandpa summons an old friend" /></p>
+<p>Grandpa just used his occult powers to reminisce about the old days.  The demons, being ancient evils, shared much of his nostalgia &#8230;</p><br />  <a rel="nofollow" href="http://feeds.wordpress.com/1.0/gocomments/zaphos.wordpress.com/1349/"><img alt="" border="0" src="http://feeds.wordpress.com/1.0/comments/zaphos.wordpress.com/1349/" /></a> <img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=zaphos.wordpress.com&#038;blog=34720555&#038;post=1349&#038;subd=zaphos&#038;ref=&#038;feed=1" width="1" height="1" />]]></content:encoded>
+			<wfw:commentRss>http://zaphos.wordpress.com/2013/11/18/grandpa-summons-an-old-friend/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+	
+		<media:content url="http://0.gravatar.com/avatar/928632a4940f63d67d24bb792b6b2e87?s=96&#38;d=identicon&#38;r=G" medium="image">
+			<media:title type="html">zaphos</media:title>
+		</media:content>
+
+		<media:content url="http://zaphos.files.wordpress.com/2013/11/grandpasummonsanoldfriend.png" medium="image">
+			<media:title type="html">Grandpa summons an old friend</media:title>
+		</media:content>
+	</item>
+		<item>
+		<title>Physically-based tree simulation</title>
+		<link>http://zaphos.wordpress.com/2013/10/15/physically-based-tree-simulation/</link>
+		<comments>http://zaphos.wordpress.com/2013/10/15/physically-based-tree-simulation/#comments</comments>
+		<pubDate>Tue, 15 Oct 2013 20:01:13 +0000</pubDate>
+		<dc:creator><![CDATA[zaphos]]></dc:creator>
+				<category><![CDATA[Uncategorized]]></category>
+		<category><![CDATA[accurate]]></category>
+		<category><![CDATA[canon]]></category>
+		<category><![CDATA[games]]></category>
+		<category><![CDATA[trees]]></category>
+
+		<guid isPermaLink="false">http://zaphos.wordpress.com/?p=1343</guid>
+		<description><![CDATA[Working on a game about being a tree. I know a lot about trees so it is going to be a very accurate simulation of being a tree.<img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=zaphos.wordpress.com&#038;blog=34720555&#038;post=1343&#038;subd=zaphos&#038;ref=&#038;feed=1" width="1" height="1" />]]></description>
+				<content:encoded><![CDATA[<p><img src="http://zaphos.files.wordpress.com/2013/10/tree_sm.gif?w=575" class="size-full" alt="Physically-based tree simulation" /></p>
+<p>Working on a game about being a tree.</p>
+<p>I know a lot about trees so it is going to be a very accurate simulation of being a tree.</p><br />  <a rel="nofollow" href="http://feeds.wordpress.com/1.0/gocomments/zaphos.wordpress.com/1343/"><img alt="" border="0" src="http://feeds.wordpress.com/1.0/comments/zaphos.wordpress.com/1343/" /></a> <img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=zaphos.wordpress.com&#038;blog=34720555&#038;post=1343&#038;subd=zaphos&#038;ref=&#038;feed=1" width="1" height="1" />]]></content:encoded>
+			<wfw:commentRss>http://zaphos.wordpress.com/2013/10/15/physically-based-tree-simulation/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+	
+		<media:content url="http://0.gravatar.com/avatar/928632a4940f63d67d24bb792b6b2e87?s=96&#38;d=identicon&#38;r=G" medium="image">
+			<media:title type="html">zaphos</media:title>
+		</media:content>
+
+		<media:content url="http://zaphos.files.wordpress.com/2013/10/tree_sm.gif" medium="image">
+			<media:title type="html">Physically-based tree simulation</media:title>
+		</media:content>
+	</item>
+	</channel>
+</rss>

@@ -1,0 +1,567 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+  <id>tag:theregister.co.uk,2005:feed/theregister.co.uk/</id>
+  <title>The Register</title>
+  <link rel="self" type="application/atom+xml" href="http://www.theregister.co.uk/headlines.atom"/>
+  <link rel="alternate" type="text/html" href="http://www.theregister.co.uk/"/>
+  <rights>Copyright © 2014, Situation Publishing</rights>
+  <author>
+    <name>Team Register</name>
+    <email>webmaster@theregister.co.uk</email>
+    <uri>http://www.theregister.co.uk/odds/about/contact/</uri>
+  </author>
+  <icon>http://www.theregister.co.uk/Design/graphics/icons/favicon.png</icon>
+  <subtitle>Biting the hand that feeds IT — sci/tech news and views for the world</subtitle>
+  <logo>http://www.theregister.co.uk/Design/graphics/Reg_default/The_Register_r.png</logo>
+  <updated>2014-02-25T03:53:50Z</updated>
+  <entry>
+    <id>tag:theregister.co.uk,2005:story/2014/02/25/kim_dotcom_extradition_hearings_delayed/</id>
+    <updated>2014-02-25T04:01:10Z</updated>
+    <author>
+      <name>Richard Chirgwin</name>
+      <uri>http://search.theregister.co.uk/?author=Richard%20Chirgwin</uri>
+    </author>
+    <link rel="alternate" type="text/html" href="http://go.theregister.com/feed/www.theregister.co.uk/2014/02/25/kim_dotcom_extradition_hearings_delayed/"/>
+    <title type="html">Still hanging round: Kim Dotcom extradition hearings delayed</title>
+    <summary type="html" xml:base="http://www.theregister.co.uk/">&lt;h4&gt;Also: Internet Party in the doldrums&lt;/h4&gt; &lt;p&gt;Kim Dotcom will be waiting until nearly the end of this year to find out whether American courts will get their hands on him: an extradition hearing due in April 2014 has been delayed, with a new date yet to be set.…&lt;/p&gt;</summary>
+  </entry>
+  <entry>
+    <id>tag:theregister.co.uk,2005:story/2014/02/25/pony_up_more_bitcoins_go_missing_to_theives/</id>
+    <updated>2014-02-25T03:31:06Z</updated>
+    <author>
+      <name>Richard Chirgwin</name>
+      <uri>http://search.theregister.co.uk/?author=Richard%20Chirgwin</uri>
+    </author>
+    <link rel="alternate" type="text/html" href="http://go.theregister.com/feed/www.theregister.co.uk/2014/02/25/pony_up_more_bitcoins_go_missing_to_theives/"/>
+    <title type="html">Pony up: More Bitcoins go missing to theives</title>
+    <summary type="html" xml:base="http://www.theregister.co.uk/">&lt;h4&gt;Yet another Bitcoin heist-bot&lt;/h4&gt; &lt;p&gt;Another $200,000-plus worth of Bitcoins has been lifted, according to Trustwave, which has identified a new Pony botnet targeting crypto-currencies.…&lt;/p&gt;</summary>
+  </entry>
+  <entry>
+    <id>tag:theregister.co.uk,2005:story/2014/02/25/wilocity_debuts_wil6300_wigig_chip_at_mobile_world_congress/</id>
+    <updated>2014-02-25T02:58:11Z</updated>
+    <author>
+      <name>Rik Myslewski</name>
+      <uri>http://search.theregister.co.uk/?author=Rik%20Myslewski</uri>
+    </author>
+    <link rel="alternate" type="text/html" href="http://go.theregister.com/feed/www.theregister.co.uk/2014/02/25/wilocity_debuts_wil6300_wigig_chip_at_mobile_world_congress/"/>
+    <title type="html">Wilocity uncloaks 4.6Gb/sec Wi-Fi for next year's smartphones</title>
+    <summary type="html" xml:base="http://www.theregister.co.uk/">&lt;h4&gt;Low-power 'Sparrow' flies into Barcelona, renamed Wil6300&lt;/h4&gt; &lt;p&gt;&lt;strong&gt;MWC 2014&lt;/strong&gt;  Wilocity, pioneers of high-speed "WiGig" 60GHz Wi-Fi, has used the &lt;a href="http://www.mobileworldcongress.com" target="_blank"&gt;Mobile World Congress&lt;/a&gt; in Barcelona as the debutant ball for its 4.6Gb/sec chip for smartphones, formerly codenamed "Sparrow" and now formally dubbed Wil6300.…&lt;/p&gt;</summary>
+  </entry>
+  <entry>
+    <id>tag:theregister.co.uk,2005:story/2014/02/25/nhmrc_wind_turbines_still_cant_be_fingered_as_killers/</id>
+    <updated>2014-02-25T02:54:11Z</updated>
+    <author>
+      <name>Richard Chirgwin</name>
+      <uri>http://search.theregister.co.uk/?author=Richard%20Chirgwin</uri>
+    </author>
+    <link rel="alternate" type="text/html" href="http://go.theregister.com/feed/www.theregister.co.uk/2014/02/25/nhmrc_wind_turbines_still_cant_be_fingered_as_killers/"/>
+    <title type="html">NHMRC: wind turbines still can't be fingered as killers</title>
+    <summary type="html" xml:base="http://www.theregister.co.uk/">&lt;h4&gt;NHMRC: wind turbines still can't be fingered as killers&lt;/h4&gt; &lt;p&gt;The twentieth review of the impact of wind turbines on human health in Australia since 2003 has found the same thing that the previous 19 found: there's no evidence that wind turbines have any impact on human health.…&lt;/p&gt;</summary>
+  </entry>
+  <entry>
+    <id>tag:theregister.co.uk,2005:story/2014/02/25/mtgox_quits_bitcoin_foundation/</id>
+    <updated>2014-02-25T01:58:09Z</updated>
+    <author>
+      <name>Neil McAllister</name>
+      <uri>http://search.theregister.co.uk/?author=Neil%20McAllister</uri>
+    </author>
+    <link rel="alternate" type="text/html" href="http://go.theregister.com/feed/www.theregister.co.uk/2014/02/25/mtgox_quits_bitcoin_foundation/"/>
+    <title type="html">MtGox MELTDOWN: Quits Bitcoin Foundation board, deletes Twitter</title>
+    <summary type="html" xml:base="http://www.theregister.co.uk/">&lt;h4&gt;Second board member to resign in two months amid murky dealings&lt;/h4&gt; &lt;p&gt;Embattled Bitcoin exchange MtGox has taken steps to withdraw itself from the wider Bitcoin community, having resigned its seat on the Bitcoin Foundation board and reduced its presence in social media.…&lt;/p&gt; &lt;p&gt;&lt;!--#include virtual='/data_centre/_whitepaper_textlinks_top.html' --&gt;&lt;/p&gt;</summary>
+  </entry>
+  <entry>
+    <id>tag:theregister.co.uk,2005:story/2014/02/25/whatsapp_voice_calls/</id>
+    <updated>2014-02-25T01:18:12Z</updated>
+    <author>
+      <name>Shaun Nichols</name>
+      <uri>http://search.theregister.co.uk/?author=Shaun%20Nichols</uri>
+    </author>
+    <link rel="alternate" type="text/html" href="http://go.theregister.com/feed/www.theregister.co.uk/2014/02/25/whatsapp_voice_calls/"/>
+    <title type="html">What's up with that WhatsApp $19bn price tag? Answer: Voice calls</title>
+    <summary type="html" xml:base="http://www.theregister.co.uk/">&lt;h4&gt;Now you can text and talk on your phone! RIP the mobile network business as we know it&lt;/h4&gt; &lt;p&gt;Multibillion-dollar chat app WhatsApp will let users make voice calls, it was announced today.…&lt;/p&gt;</summary>
+  </entry>
+  <entry>
+    <id>tag:theregister.co.uk,2005:story/2014/02/25/sandisk_breaks_128gb_barrier_with_latest_microsd_card/</id>
+    <updated>2014-02-25T00:48:06Z</updated>
+    <author>
+      <name>Iain Thomson</name>
+      <uri>http://search.theregister.co.uk/?author=Iain%20Thomson</uri>
+    </author>
+    <link rel="alternate" type="text/html" href="http://go.theregister.com/feed/www.theregister.co.uk/2014/02/25/sandisk_breaks_128gb_barrier_with_latest_microsd_card/"/>
+    <title type="html">Sandisk breaks 128GB barrier with new $199 MICROSD card</title>
+    <summary type="html" xml:base="http://www.theregister.co.uk/">&lt;h4&gt;Silly amounts of storage on a fingernail-sized sliver&lt;/h4&gt; &lt;p&gt;Ten years ago SanDisk showed off its first microSD card with what was then an impressive 128MB storage. Now the company has unveiled a 128GB model, specially designed for use in Android smartphones.…&lt;/p&gt;</summary>
+  </entry>
+  <entry>
+    <id>tag:theregister.co.uk,2005:story/2014/02/25/eric_schmidt_tech_grant/</id>
+    <updated>2014-02-25T00:27:03Z</updated>
+    <author>
+      <name>Shaun Nichols</name>
+      <uri>http://search.theregister.co.uk/?author=Shaun%20Nichols</uri>
+    </author>
+    <link rel="alternate" type="text/html" href="http://go.theregister.com/feed/www.theregister.co.uk/2014/02/25/eric_schmidt_tech_grant/"/>
+    <title type="html">Wanna change the world but need cash? Fret not: Billionaire Eric Schmidt has some spare change</title>
+    <summary type="html" xml:base="http://www.theregister.co.uk/">&lt;h4&gt;A million dollars up for grabs just in time for a book launch&lt;/h4&gt; &lt;p&gt;Billionaire Google executive chairman Eric Schmidt is putting up one million dollars of his own money to fund technological innovation.…&lt;/p&gt;</summary>
+  </entry>
+  <entry>
+    <id>tag:theregister.co.uk,2005:story/2014/02/24/moon_flashes_earth_after_getting_pounding_from_massive_meteorite/</id>
+    <updated>2014-02-24T22:57:11Z</updated>
+    <author>
+      <name>Iain Thomson</name>
+      <uri>http://search.theregister.co.uk/?author=Iain%20Thomson</uri>
+    </author>
+    <link rel="alternate" type="text/html" href="http://go.theregister.com/feed/www.theregister.co.uk/2014/02/24/moon_flashes_earth_after_getting_pounding_from_massive_meteorite/"/>
+    <title type="html">Moon flashes Earth after getting pounding from MASSIVE meteorite</title>
+    <summary type="html" xml:base="http://www.theregister.co.uk/">&lt;h4&gt;Largest impact yet recorded visible from our world&lt;/h4&gt; &lt;p&gt;&lt;strong&gt;Video&lt;/strong&gt;  Scientists have reported spotting the biggest meteorite impact ever seen on the Moon's surface – after a 400kg (900lb) rock slammed into the lunar regolith at an estimated 17km/s, leaving a crater about 50 metres wide.…&lt;/p&gt;</summary>
+  </entry>
+  <entry>
+    <id>tag:theregister.co.uk,2005:story/2014/02/24/richard_clarke_csa_comments/</id>
+    <updated>2014-02-24T22:32:06Z</updated>
+    <author>
+      <name>Jack Clark</name>
+      <uri>http://search.theregister.co.uk/?author=Jack%20Clark</uri>
+    </author>
+    <link rel="alternate" type="text/html" href="http://go.theregister.com/feed/www.theregister.co.uk/2014/02/24/richard_clarke_csa_comments/"/>
+    <title type="html">Prez Obama cyber-guru: Think your data is safe in an EU cloud? The NSA will raid your servers</title>
+    <summary type="html" xml:base="http://www.theregister.co.uk/">&lt;h4&gt;But US govt shouldn't be 'f**king' with crypto algorithms&lt;/h4&gt; &lt;p&gt;A former White House security advisor has suggested that you, dear reader, are naive if you think hosting data outside of the US will protect a business from the NSA.…&lt;/p&gt; &lt;p&gt;&lt;!--#include virtual='/data_centre/_whitepaper_textlinks_top.html' --&gt;&lt;/p&gt;</summary>
+  </entry>
+  <entry>
+    <id>tag:theregister.co.uk,2005:story/2014/02/24/samsung_tizen_gear_2/</id>
+    <updated>2014-02-24T22:06:47Z</updated>
+    <author>
+      <name>Neil McAllister</name>
+      <uri>http://search.theregister.co.uk/?author=Neil%20McAllister</uri>
+    </author>
+    <link rel="alternate" type="text/html" href="http://go.theregister.com/feed/www.theregister.co.uk/2014/02/24/samsung_tizen_gear_2/"/>
+    <title type="html">Tizen devices are HERE ... and they're Samsung Gear 2 smartwatches</title>
+    <summary type="html" xml:base="http://www.theregister.co.uk/">&lt;h4&gt;Tiz phones still a no-show in Barcelona&lt;/h4&gt; &lt;p&gt;&lt;strong&gt;MWC 2014&lt;/strong&gt;  The next generation of Samsung's Gear smartwatches is based on its homegrown Tizen mobile OS, rather than Android, the Korean &lt;i&gt;chaebol&lt;/i&gt; has revealed.…&lt;/p&gt;</summary>
+  </entry>
+  <entry>
+    <id>tag:theregister.co.uk,2005:story/2014/02/24/zuckerberg_wants_free_onramp_to_internet_for_worlds_developing_economies/</id>
+    <updated>2014-02-24T21:31:06Z</updated>
+    <author>
+      <name>Iain Thomson</name>
+      <uri>http://search.theregister.co.uk/?author=Iain%20Thomson</uri>
+    </author>
+    <link rel="alternate" type="text/html" href="http://go.theregister.com/feed/www.theregister.co.uk/2014/02/24/zuckerberg_wants_free_onramp_to_internet_for_worlds_developing_economies/"/>
+    <title type="html">1bn down, 6bn to go: Zuck to grow Facebook by touting 'free internet onramp' for the poor</title>
+    <summary type="html" xml:base="http://www.theregister.co.uk/">&lt;h4&gt;WhatsApp was a bargain, NSA spying had benefits&lt;/h4&gt; &lt;p&gt;&lt;strong&gt;MWC 2014&lt;/strong&gt;  Mark Zuckerberg has used his keynote address at this year's Mobile World Congress to expound on his &lt;a href="http://www.theregister.co.uk/2013/08/21/mark_zuckerberg_internet_org/"&gt;rough plan&lt;/a&gt; to expand basic internet services to all humanity as a human right, and then sell them something on the back of them.…&lt;/p&gt;</summary>
+  </entry>
+  <entry>
+    <id>tag:theregister.co.uk,2005:story/2014/02/24/netapp_to_appear_in_australian_tafe_uni_courses/</id>
+    <updated>2014-02-24T21:05:11Z</updated>
+    <author>
+      <name>Simon Sharwood</name>
+      <uri>http://search.theregister.co.uk/?author=Simon%20Sharwood</uri>
+    </author>
+    <link rel="alternate" type="text/html" href="http://go.theregister.com/feed/www.theregister.co.uk/2014/02/24/netapp_to_appear_in_australian_tafe_uni_courses/"/>
+    <title type="html">NetApp to appear in Australian TAFE, Uni courses</title>
+    <summary type="html" xml:base="http://www.theregister.co.uk/">&lt;h4&gt;Local academic attains NCDA certification&lt;/h4&gt; &lt;p&gt;NetApp stands upon the threshold of long-held ambition: having its view of storage taught in Australian tertiary institutions.…&lt;/p&gt;</summary>
+  </entry>
+  <entry>
+    <id>tag:theregister.co.uk,2005:story/2014/02/24/intel_uncloaks_new_atoms_in_attempt_to_crack_smartphone_tablet_markets/</id>
+    <updated>2014-02-24T21:01:09Z</updated>
+    <author>
+      <name>Rik Myslewski</name>
+      <uri>http://search.theregister.co.uk/?author=Rik%20Myslewski</uri>
+    </author>
+    <link rel="alternate" type="text/html" href="http://go.theregister.com/feed/www.theregister.co.uk/2014/02/24/intel_uncloaks_new_atoms_in_attempt_to_crack_smartphone_tablet_markets/"/>
+    <title type="html">Chipzilla just won't quit: Intel touts 64-bit Atoms for Android phones, tabs</title>
+    <summary type="html" xml:base="http://www.theregister.co.uk/">&lt;h4&gt;No easy ride for Apple, ARM et al – and there's an 300Mbps LTE chip in the works&lt;/h4&gt; &lt;p&gt;&lt;strong&gt;MWC 2014&lt;/strong&gt;  Intel has launched one new 64-bit, Android-capable Atom processor platform – "Merrifield" – taken the wraps off a future one – "Moorefield" – and introduced a new LTE modem in its latest bid to crack the mobile market as well as position itself for the buzzword du jour, the Internet of Things.…&lt;/p&gt;</summary>
+  </entry>
+  <entry>
+    <id>tag:theregister.co.uk,2005:story/2014/02/24/nbnco_tells_iinet_told_to_use_broadcom_chips_in_vdsl_routers/</id>
+    <updated>2014-02-24T20:31:08Z</updated>
+    <author>
+      <name>Simon Sharwood</name>
+      <uri>http://search.theregister.co.uk/?author=Simon%20Sharwood</uri>
+    </author>
+    <link rel="alternate" type="text/html" href="http://go.theregister.com/feed/www.theregister.co.uk/2014/02/24/nbnco_tells_iinet_told_to_use_broadcom_chips_in_vdsl_routers/"/>
+    <title type="html">NBN Co tells iiNet told to use Broadcom chips in VDSL routers</title>
+    <summary type="html" xml:base="http://www.theregister.co.uk/">&lt;h4&gt;ISP also planning Zigbee-powered connected home router&lt;/h4&gt; &lt;p&gt;iiNet, Australia's third-largest internet service provider in terms of subscriber numbers, has been told by NBNCo that it should consider only Broadcom chipsets for its future VDSL modems.…&lt;/p&gt; &lt;p&gt;&lt;!--#include virtual='/data_centre/_whitepaper_textlinks_top.html' --&gt;&lt;/p&gt;</summary>
+  </entry>
+  <entry>
+    <id>tag:theregister.co.uk,2005:story/2014/02/24/firefox_os_25_dollar_smartphone/</id>
+    <updated>2014-02-24T19:58:04Z</updated>
+    <author>
+      <name>Neil McAllister</name>
+      <uri>http://search.theregister.co.uk/?author=Neil%20McAllister</uri>
+    </author>
+    <link rel="alternate" type="text/html" href="http://go.theregister.com/feed/www.theregister.co.uk/2014/02/24/firefox_os_25_dollar_smartphone/"/>
+    <title type="html">Mozilla takes wraps off 25 DOLLAR Firefox OS smartphone</title>
+    <summary type="html" xml:base="http://www.theregister.co.uk/">&lt;h4&gt;Predicts 'flood' of cheap mobes for emerging markets&lt;/h4&gt; &lt;p&gt;&lt;strong&gt;MWC 2014&lt;/strong&gt;  Ever in search of the next few billion people who will access the internet for the first time in the coming years, Mozilla has unveiled a reference design of a smartphone that it says could sell for as low as $25 (£15).…&lt;/p&gt;</summary>
+  </entry>
+  <entry>
+    <id>tag:theregister.co.uk,2005:story/2014/02/24/ibm_cloudant/</id>
+    <updated>2014-02-24T18:58:08Z</updated>
+    <author>
+      <name>Jack Clark</name>
+      <uri>http://search.theregister.co.uk/?author=Jack%20Clark</uri>
+    </author>
+    <link rel="alternate" type="text/html" href="http://go.theregister.com/feed/www.theregister.co.uk/2014/02/24/ibm_cloudant/"/>
+    <title type="html">IBM gobbles CIA-backed NoSQL database upstart Cloudant</title>
+    <summary type="html" xml:base="http://www.theregister.co.uk/">&lt;h4&gt;Big Blue furnishes cloud wing with NoSQL CouchDB system&lt;/h4&gt; &lt;p&gt;IBM is creeping towards the cloud, picking up startups on the way, including a NoSQL database company to fill in some of the perceived shortcomings of DB2.…&lt;/p&gt;</summary>
+  </entry>
+  <entry>
+    <id>tag:theregister.co.uk,2005:story/2014/02/24/weibo_ipo_rumoured/</id>
+    <updated>2014-02-24T17:33:11Z</updated>
+    <author>
+      <name>Brid-Aine Parnell</name>
+      <uri>http://search.theregister.co.uk/?author=Brid-Aine%20Parnell</uri>
+    </author>
+    <link rel="alternate" type="text/html" href="http://go.theregister.com/feed/www.theregister.co.uk/2014/02/24/weibo_ipo_rumoured/"/>
+    <title type="html">Sina rumoured to be prepping Weibo for $500m US-based IPO</title>
+    <summary type="html" xml:base="http://www.theregister.co.uk/">&lt;h4&gt;闲谈gasm to reach Middle Kingdom by mid-2014&lt;/h4&gt; &lt;p&gt;Chinese web giant Sina has picked two of the big banks to prep its Twitter-alike microblogging site Weibo for an IPO in the US.…&lt;/p&gt;</summary>
+  </entry>
+  <entry>
+    <id>tag:theregister.co.uk,2005:story/2014/02/24/assange_ghostwriter_essay/</id>
+    <updated>2014-02-24T16:55:11Z</updated>
+    <author>
+      <name>Brid-Aine Parnell</name>
+      <uri>http://search.theregister.co.uk/?author=Brid-Aine%20Parnell</uri>
+    </author>
+    <link rel="alternate" type="text/html" href="http://go.theregister.com/feed/www.theregister.co.uk/2014/02/24/assange_ghostwriter_essay/"/>
+    <title type="html">Ghostwriter: Assange™ is NARCISSISTIC and UNTRUTHFUL</title>
+    <summary type="html" xml:base="http://www.theregister.co.uk/">&lt;h4&gt;'Thin-skinned' WikiLeaker torpedoed own multi-million-dollar book deal&lt;/h4&gt; &lt;p&gt;The ghost writer hired to help Julian Assange with an autobiography deal that ultimately fell apart has described the WikiLeaker as "thin-skinned, conspiratorial, untruthful and narcissistic".…&lt;/p&gt;</summary>
+  </entry>
+  <entry>
+    <id>tag:theregister.co.uk,2005:story/2014/02/24/cabinet_office_odf_plans/</id>
+    <updated>2014-02-24T16:43:06Z</updated>
+    <author>
+      <name>Paul Kunert</name>
+      <uri>http://search.channelregister.co.uk/?author=Paul%20Kunert</uri>
+    </author>
+    <link rel="alternate" type="text/html" href="http://go.theregister.com/feed/www.channelregister.co.uk/2014/02/24/cabinet_office_odf_plans/"/>
+    <title type="html">UK citizens to Microsoft: Oi. We WANT ODF as our doc standard</title>
+    <summary type="html" xml:base="http://www.theregister.co.uk/">&lt;h4&gt;Open source zealots beat down on OOXML as consultation continues&lt;/h4&gt; &lt;p&gt;Even if Microsoft bosses collectively whistled Always Look on the Bright Side of Life they'd still struggle to drown out people backing Cabinet Office proposals to adopt the Open Document Format as the &lt;a href="http://www.channelregister.co.uk/2014/01/30/uk_picks_open_document_format_for_all_government_files/"&gt;official standard&lt;/a&gt; for UK.gov missives.…&lt;/p&gt;</summary>
+  </entry>
+  <entry>
+    <id>tag:theregister.co.uk,2005:story/2014/02/24/mobile_world_congress_its_not_about_the_handsets_anymore/</id>
+    <updated>2014-02-24T16:26:10Z</updated>
+    <author>
+      <name>Adrian Bridgwater</name>
+      <uri>http://search.theregister.co.uk/?author=Adrian%20Bridgwater</uri>
+    </author>
+    <link rel="alternate" type="text/html" href="http://go.theregister.com/feed/www.theregister.co.uk/2014/02/24/mobile_world_congress_its_not_about_the_handsets_anymore/"/>
+    <title type="html">Mobile World Congress: It's not about the SHINY SHINY anymore</title>
+    <summary type="html" xml:base="http://www.theregister.co.uk/">&lt;h4&gt;You don't put devices into containers... you put containers into devices&lt;/h4&gt; &lt;p&gt;&lt;strong&gt;Comment&lt;/strong&gt;  The industry hog roast and hoedown that is Mobile World Congress used to be all about who had the shiniest new smartphone, tablet or random mobile-related gadget. But things have changed.…&lt;/p&gt; &lt;p&gt;&lt;!--#include virtual='/data_centre/_whitepaper_textlinks_top.html' --&gt;&lt;/p&gt;</summary>
+  </entry>
+  <entry>
+    <id>tag:theregister.co.uk,2005:story/2014/02/24/cray_talks_cluster_competitions_jobs/</id>
+    <updated>2014-02-24T16:02:11Z</updated>
+    <author>
+      <name>Dan Olds, Gabriel Consulting</name>
+      <uri>http://search.theregister.co.uk/?author=Dan%20Olds%2C%20Gabriel%20Consulting</uri>
+    </author>
+    <link rel="alternate" type="text/html" href="http://go.theregister.com/feed/www.theregister.co.uk/2014/02/24/cray_talks_cluster_competitions_jobs/"/>
+    <title type="html">Supercomputer maker Cray: Jobs for HPC kids? There might be some going</title>
+    <summary type="html" xml:base="http://www.theregister.co.uk/">&lt;h4&gt;Cluster veep John Lee on SCC&lt;/h4&gt; &lt;p&gt;&lt;strong&gt;HPC blog&lt;/strong&gt;  There are some teens and kids in their twenties who skip out on university courses for a trip abroad with their friends, where they spend days and nights chugging down (caffeine) brew, losing sleep and wrestling with, er, clusters. But this isn't necessarily a bad thing...…&lt;/p&gt;</summary>
+  </entry>
+  <entry>
+    <id>tag:theregister.co.uk,2005:story/2014/02/24/zte_firefox_and_lte_tablet/</id>
+    <updated>2014-02-24T15:33:07Z</updated>
+    <author>
+      <name>Simon Rockman</name>
+      <uri>http://search.theregister.co.uk/?author=Simon%20Rockman</uri>
+    </author>
+    <link rel="alternate" type="text/html" href="http://go.theregister.com/feed/www.theregister.co.uk/2014/02/24/zte_firefox_and_lte_tablet/"/>
+    <title type="html">Cheap'n'cheerful Chinese mobesters ZTE launch Firefox phones</title>
+    <summary type="html" xml:base="http://www.theregister.co.uk/">&lt;h4&gt;Billion-unit shipment hopes for Open C and Open II&lt;/h4&gt; &lt;p&gt;&lt;strong&gt;MWC 2014&lt;/strong&gt;  As Telefonica pushes Firefox as a foil to the dominance of Apple and Android, ZTE is keen to play ball with a couple of new Firefox phones. Called the Open C and Open II, they are looking to ship more than one million devices this year. The new phones run Firefox OS 1.3.…&lt;/p&gt;</summary>
+  </entry>
+  <entry>
+    <id>tag:theregister.co.uk,2005:story/2014/02/24/david_cameron_welcomes_superfast_broadband_to_oxfordshire_village/</id>
+    <updated>2014-02-24T15:03:03Z</updated>
+    <author>
+      <name>Kelly Fiveash</name>
+      <uri>http://search.theregister.co.uk/?author=Kelly%20Fiveash</uri>
+    </author>
+    <link rel="alternate" type="text/html" href="http://go.theregister.com/feed/www.theregister.co.uk/2014/02/24/david_cameron_welcomes_superfast_broadband_to_oxfordshire_village/"/>
+    <title type="html">Stuff the delays! PM chuffed to have BT's superfast broadband in his constituency</title>
+    <summary type="html" xml:base="http://www.theregister.co.uk/">&lt;h4&gt;'It's great', says David Cameron&lt;/h4&gt; &lt;p&gt;Prime Minister David Cameron already enjoys super speedy internet connections at his constituency home in Dean, Oxfordshire, but locals in the village of Alvescot – saddled with a very slow broadband service – have waited a long time for an upgrade.…&lt;/p&gt;</summary>
+  </entry>
+  <entry>
+    <id>tag:theregister.co.uk,2005:story/2014/02/24/mwc_2014_new_nokia_android_phones_coming_europe_toikkanen/</id>
+    <updated>2014-02-24T14:28:05Z</updated>
+    <author>
+      <name>Andrew Orlowski</name>
+      <uri>http://search.theregister.co.uk/?author=Andrew%20Orlowski</uri>
+    </author>
+    <link rel="alternate" type="text/html" href="http://go.theregister.com/feed/www.theregister.co.uk/2014/02/24/mwc_2014_new_nokia_android_phones_coming_europe_toikkanen/"/>
+    <title type="html">Nokia launches Euro ANDROID invasion, quips: 'Microsoft knew what they were buying'</title>
+    <summary type="html" xml:base="http://www.theregister.co.uk/">&lt;h4&gt;Finnish moke maker pees its pants at X-series news&lt;/h4&gt; &lt;p&gt;&lt;strong&gt;MWC 2014&lt;/strong&gt;  Microsoft was aware of Nokia's plans to release a range of Android phones, the man in charge of the new range told us today. And the new Nokiadroids - of which there are more than anyone predicted - will be coming to the UK - possibly sooner than anyone realises.…&lt;/p&gt;</summary>
+  </entry>
+  <entry>
+    <id>tag:theregister.co.uk,2005:story/2014/02/24/dixons_carphone_warehouse_merger/</id>
+    <updated>2014-02-24T14:03:04Z</updated>
+    <author>
+      <name>Paul Kunert</name>
+      <uri>http://search.channelregister.co.uk/?author=Paul%20Kunert</uri>
+    </author>
+    <link rel="alternate" type="text/html" href="http://go.theregister.com/feed/www.channelregister.co.uk/2014/02/24/dixons_carphone_warehouse_merger/"/>
+    <title type="html">Dixons Retail and Carphone Warehouse mull merger</title>
+    <summary type="html" xml:base="http://www.theregister.co.uk/">&lt;h4&gt;Will Currys owner smear its badness over CW?&lt;/h4&gt; &lt;p&gt;Dixons and Carphone Warehouse (CPW) today confirmed they are locked in negotiations that may or may not lead to a merger.…&lt;/p&gt;</summary>
+  </entry>
+  <entry>
+    <id>tag:theregister.co.uk,2005:story/2014/02/24/sony_xperiia_z2_m2_tablet/</id>
+    <updated>2014-02-24T13:28:04Z</updated>
+    <author>
+      <name>Simon Rockman</name>
+      <uri>http://search.theregister.co.uk/?author=Simon%20Rockman</uri>
+    </author>
+    <link rel="alternate" type="text/html" href="http://go.theregister.com/feed/www.theregister.co.uk/2014/02/24/sony_xperiia_z2_m2_tablet/"/>
+    <title type="html">Sony enlists Michael Jackson's GHOST to flog Xperia Z2</title>
+    <summary type="html" xml:base="http://www.theregister.co.uk/">&lt;h4&gt;Er, shamone!*&lt;/h4&gt; &lt;p&gt;&lt;strong&gt;MWC 2014&lt;/strong&gt;  Sony has announced the new Xperia Z2, an Android KitKat phone, as a predictable progression on the Z1 and has enlisted the help of the its single-gloved departed partner, popstar Michael Jackson, to help pimp it out.…&lt;/p&gt; &lt;p&gt;&lt;!--#include virtual='/data_centre/_whitepaper_textlinks_top.html' --&gt;&lt;/p&gt;</summary>
+  </entry>
+  <entry>
+    <id>tag:theregister.co.uk,2005:story/2014/02/24/datacore_ceo_software_defined_storage_is_an_accelerator/</id>
+    <updated>2014-02-24T12:57:04Z</updated>
+    <author>
+      <name>Chris Mellor</name>
+      <uri>http://search.theregister.co.uk/?author=Chris%20Mellor</uri>
+    </author>
+    <link rel="alternate" type="text/html" href="http://go.theregister.com/feed/www.theregister.co.uk/2014/02/24/datacore_ceo_software_defined_storage_is_an_accelerator/"/>
+    <title type="html">Future storage tech should KILL all-in-one solutions, says CEO</title>
+    <summary type="html" xml:base="http://www.theregister.co.uk/">&lt;h4&gt;DataCore boss waxes lyrical on software-defined storage&lt;/h4&gt; &lt;p&gt;&lt;i&gt;El Reg&lt;/i&gt; had a conversation with DataCore president, CEO and co-founder George Teixeira about what’s likely to happen in 2014 with DataCore. Software-defined storage represents a trend that his company is well-positioned to take advantage of and he reckons DataCore could soar this year.…&lt;/p&gt;</summary>
+  </entry>
+  <entry>
+    <id>tag:theregister.co.uk,2005:story/2014/02/24/national_museum_of_computing_calls_for_independent_review/</id>
+    <updated>2014-02-24T12:42:03Z</updated>
+    <author>
+      <name>Jasper Hamill</name>
+      <uri>http://search.theregister.co.uk/?author=Jasper%20Hamill</uri>
+    </author>
+    <link rel="alternate" type="text/html" href="http://go.theregister.com/feed/www.theregister.co.uk/2014/02/24/national_museum_of_computing_calls_for_independent_review/"/>
+    <title type="html">Battle of Bletchley Park: TNMOC chief calls for review of museums' Mexican standoff</title>
+    <summary type="html" xml:base="http://www.theregister.co.uk/">&lt;h4&gt;Iraq dossier MI6 chief's 'Disneyland' plans blasted&lt;/h4&gt; &lt;p&gt;The National Museum of Computing has called for an independent review in a bid to solve a long-running dispute with the Bletchley Park Trust - chaired by ex-MI6 chief (or "C") Sir John Scarlett, famous for overseeing production of the dossier which took Britain to war in Iraq.…&lt;/p&gt;</summary>
+  </entry>
+  <entry>
+    <id>tag:theregister.co.uk,2005:story/2014/02/24/french_flying_car_pegasus/</id>
+    <updated>2014-02-24T12:22:11Z</updated>
+    <author>
+      <name>Lester Haines</name>
+      <uri>http://search.theregister.co.uk/?author=Lester%20Haines</uri>
+    </author>
+    <link rel="alternate" type="text/html" href="http://go.theregister.com/feed/www.theregister.co.uk/2014/02/24/french_flying_car_pegasus/"/>
+    <title type="html">Enterprising French chap cranks up €100k 'flying car'</title>
+    <summary type="html" xml:base="http://www.theregister.co.uk/">&lt;h4&gt;&lt;i&gt;Pegasus&lt;/i&gt; unlikely to satisfy the 'where's my bloody &lt;i&gt;voiture volante&lt;/i&gt;?' crowd&lt;/h4&gt; &lt;p&gt;A French entrepreneur is hoping that by 2015, those with €100,000 in spare change will slip the surly bonds of earth aboard his &lt;a target="_blank" href="http://www.vaylon.fr/"&gt;Vaylon&lt;/a&gt; &lt;i&gt;Pégase&lt;/i&gt; (&lt;i&gt;Pegasus&lt;/i&gt;) flying car.…&lt;/p&gt;</summary>
+  </entry>
+  <entry>
+    <id>tag:theregister.co.uk,2005:story/2014/02/24/gws_network_testing_app_at_mwc/</id>
+    <updated>2014-02-24T11:58:11Z</updated>
+    <author>
+      <name>Simon Rockman</name>
+      <uri>http://search.theregister.co.uk/?author=Simon%20Rockman</uri>
+    </author>
+    <link rel="alternate" type="text/html" href="http://go.theregister.com/feed/www.theregister.co.uk/2014/02/24/gws_network_testing_app_at_mwc/"/>
+    <title type="html">Mobe operators, need to check your network? There’s an app for that</title>
+    <summary type="html" xml:base="http://www.theregister.co.uk/">&lt;h4&gt;Strap a phone-filled backpack on and go for an urban stroll&lt;/h4&gt; &lt;p&gt;&lt;strong&gt;MWC 2014&lt;/strong&gt;  US mobile network checking company Global Wireless Solutions says there is a gap between its traditional way of testing mobile coverage using vans driving around with $300k of testing kit in the back and crowd-sourced reports on quality of mobile network coverage.…&lt;/p&gt;</summary>
+  </entry>
+  <entry>
+    <id>tag:theregister.co.uk,2005:story/2014/02/24/nhs_england_care_data_leaflet_not_important_enough_exceptional_circumstances_tag/</id>
+    <updated>2014-02-24T11:29:07Z</updated>
+    <author>
+      <name>Kelly Fiveash</name>
+      <uri>http://search.theregister.co.uk/?author=Kelly%20Fiveash</uri>
+    </author>
+    <link rel="alternate" type="text/html" href="http://go.theregister.com/feed/www.theregister.co.uk/2014/02/24/nhs_england_care_data_leaflet_not_important_enough_exceptional_circumstances_tag/"/>
+    <title type="html">NHS England DIDN'T tell households about GP medical data grab plan</title>
+    <summary type="html" xml:base="http://www.theregister.co.uk/">&lt;h4&gt;'Junk mail' leaflet not important enough for special attention, apparently&lt;/h4&gt; &lt;p&gt;NHS England patients who went to the trouble of opting themselves out of junk mail being crammed through their letterboxes did not receive the health service's recent leaflet about its data grab plan with GP medical records, it has been revealed.…&lt;/p&gt; &lt;p&gt;&lt;!--#include virtual='/data_centre/_whitepaper_textlinks_top.html' --&gt;&lt;/p&gt;</summary>
+  </entry>
+  <entry>
+    <id>tag:theregister.co.uk,2005:story/2014/02/24/whatsapp_outage_apology/</id>
+    <updated>2014-02-24T11:01:04Z</updated>
+    <author>
+      <name>Brid-Aine Parnell</name>
+      <uri>http://search.theregister.co.uk/?author=Brid-Aine%20Parnell</uri>
+    </author>
+    <link rel="alternate" type="text/html" href="http://go.theregister.com/feed/www.theregister.co.uk/2014/02/24/whatsapp_outage_apology/"/>
+    <title type="html">WhatsApp founder: Believe us, internet! 'Twas a DODGY network router WOT DONE IT</title>
+    <summary type="html" xml:base="http://www.theregister.co.uk/">&lt;h4&gt;Says soz for weekend outage&lt;/h4&gt; &lt;p&gt;WhatsApp founder Jan Koum has said that a network router caused the outage of the messaging service this weekend, just a few days after it was acquired by Facebook.…&lt;/p&gt;</summary>
+  </entry>
+  <entry>
+    <id>tag:theregister.co.uk,2005:story/2014/02/24/nokia_launches_android_range_x/</id>
+    <updated>2014-02-24T10:33:30Z</updated>
+    <author>
+      <name>Andrew Orlowski</name>
+      <uri>http://search.theregister.co.uk/?author=Andrew%20Orlowski</uri>
+    </author>
+    <link rel="alternate" type="text/html" href="http://go.theregister.com/feed/www.theregister.co.uk/2014/02/24/nokia_launches_android_range_x/"/>
+    <title type="html">Nokia launches Android range: X marks the growing low-cost spot</title>
+    <summary type="html" xml:base="http://www.theregister.co.uk/">&lt;h4&gt;Burning its platform all over again?&lt;/h4&gt; &lt;p&gt;&lt;strong&gt;MWC 2014&lt;/strong&gt;  Three years after it announced a switch to Windows Phone, Nokia launched a family of Android-based phones today at Mobile World Congress 2014.…&lt;/p&gt;</summary>
+  </entry>
+  <entry>
+    <id>tag:theregister.co.uk,2005:story/2014/02/24/bitcoin_atms_spring_up_in_us/</id>
+    <updated>2014-02-24T10:01:07Z</updated>
+    <author>
+      <name>Shaun Nichols</name>
+      <uri>http://search.theregister.co.uk/?author=Shaun%20Nichols</uri>
+    </author>
+    <link rel="alternate" type="text/html" href="http://go.theregister.com/feed/www.theregister.co.uk/2014/02/24/bitcoin_atms_spring_up_in_us/"/>
+    <title type="html">Pics: 'Bitcoin ATMs' spring up in the US</title>
+    <summary type="html" xml:base="http://www.theregister.co.uk/">&lt;h4&gt;Kiosks to fill digital wallets ... no cash withdrawals yet&lt;/h4&gt; &lt;p&gt;America is getting its first IRL dealing with Bitcoin as a pair of digital currency "ATMs" went online this week.…&lt;/p&gt;</summary>
+  </entry>
+  <entry>
+    <id>tag:theregister.co.uk,2005:story/2014/02/24/in_which_i_go_shopping_for_smartphones/</id>
+    <updated>2014-02-24T09:36:08Z</updated>
+    <author>
+      <name>Trevor Pott</name>
+      <uri>http://search.theregister.co.uk/?author=Trevor%20Pott</uri>
+    </author>
+    <link rel="alternate" type="text/html" href="http://go.theregister.com/feed/www.theregister.co.uk/2014/02/24/in_which_i_go_shopping_for_smartphones/"/>
+    <title type="html">Yes! New company smartphones! ... But I don't WANT one</title>
+    <summary type="html" xml:base="http://www.theregister.co.uk/">&lt;h4&gt;Since I don't have an iPhone with a worn out battery&lt;/h4&gt; &lt;p&gt;&lt;strong&gt;Sysadmin Blog&lt;/strong&gt;  It's mobile update month at my company, and that means it's time for a look at the smartphones. I've researched every single unit that will work on a Canadian cellular network and come to some interesting conclusions. For the first time I'm looking at a refresh cycle more from the standpoint of a business owner and end-user rather than as a gadget-obsessed nerd and that changes things significantly.…&lt;/p&gt;</summary>
+  </entry>
+  <entry>
+    <id>tag:theregister.co.uk,2005:story/2014/02/24/volvo_uses_the_internet_of_things_to_kill_shopping/</id>
+    <updated>2014-02-24T09:04:12Z</updated>
+    <author>
+      <name>Jasper Hamill</name>
+      <uri>http://search.theregister.co.uk/?author=Jasper%20Hamill</uri>
+    </author>
+    <link rel="alternate" type="text/html" href="http://go.theregister.com/feed/www.theregister.co.uk/2014/02/24/volvo_uses_the_internet_of_things_to_kill_shopping/"/>
+    <title type="html">Volvo tries to KILL SHOPPING with to-your-car Roam Delivery</title>
+    <summary type="html" xml:base="http://www.theregister.co.uk/">&lt;h4&gt;Swede's invention augurs demise of mall trawls&lt;/h4&gt; &lt;p&gt;There are few sadder sights than a desperate-looking shopping hostage waiting outside a changing room while their partner tries on a prospective purchase.…&lt;/p&gt; &lt;p&gt;&lt;!--#include virtual='/data_centre/_whitepaper_textlinks_top.html' --&gt;&lt;/p&gt;</summary>
+  </entry>
+  <entry>
+    <id>tag:theregister.co.uk,2005:story/2014/02/24/climate_change_will_cause_huge_increase_in_murder_robbery_and_rape/</id>
+    <updated>2014-02-24T08:31:05Z</updated>
+    <author>
+      <name>Lewis Page</name>
+      <uri>http://search.theregister.co.uk/?author=Lewis%20Page</uri>
+    </author>
+    <link rel="alternate" type="text/html" href="http://go.theregister.com/feed/www.theregister.co.uk/2014/02/24/climate_change_will_cause_huge_increase_in_murder_robbery_and_rape/"/>
+    <title type="html">Climate change will 'CAUSE huge increase in MURDER, ROBBERY and RAPE'</title>
+    <summary type="html" xml:base="http://www.theregister.co.uk/">&lt;h4&gt;Gee, Officer Krupke, the carbon was to blame&lt;/h4&gt; &lt;p&gt;An "environmental economist" has produced a study in which he claims that climate change this century will "cause" millions of violent crimes in the United States, over and above those that would have happened anyway.…&lt;/p&gt;</summary>
+  </entry>
+  <entry>
+    <id>tag:theregister.co.uk,2005:story/2014/02/24/microsoft_tries_to_reinvent_gps_with_cloudy_offloads/</id>
+    <updated>2014-02-24T07:58:07Z</updated>
+    <author>
+      <name>Simon Sharwood</name>
+      <uri>http://search.theregister.co.uk/?author=Simon%20Sharwood</uri>
+    </author>
+    <link rel="alternate" type="text/html" href="http://go.theregister.com/feed/www.theregister.co.uk/2014/02/24/microsoft_tries_to_reinvent_gps_with_cloudy_offloads/"/>
+    <title type="html">Microsoft tries to re-invent GPS with cloudy offloads</title>
+    <summary type="html" xml:base="http://www.theregister.co.uk/">&lt;h4&gt;Research project ships location satellite data to Azure for processing&lt;/h4&gt; &lt;p&gt;Microsoft has released a tool that it hopes will make it possible to add location-sensing abilities to many more devices.…&lt;/p&gt;</summary>
+  </entry>
+  <entry>
+    <id>tag:theregister.co.uk,2005:story/2014/02/24/juniper_hp_join_the_mwc_nfv_frenzy/</id>
+    <updated>2014-02-24T07:02:12Z</updated>
+    <author>
+      <name>Richard Chirgwin</name>
+      <uri>http://search.theregister.co.uk/?author=Richard%20Chirgwin</uri>
+    </author>
+    <link rel="alternate" type="text/html" href="http://go.theregister.com/feed/www.theregister.co.uk/2014/02/24/juniper_hp_join_the_mwc_nfv_frenzy/"/>
+    <title type="html">Juniper, HP join the MWC NFV frenzy</title>
+    <summary type="html" xml:base="http://www.theregister.co.uk/">&lt;h4&gt;Look who wants to add 'intelligence to the dumb network'&lt;/h4&gt; &lt;p&gt;&lt;strong&gt;MWC 2014&lt;/strong&gt;  As the countdown to Mobile World Congress in Barcelona nears zero, another two major vendors have added their names to the NFV – network function virtualisation – list: Juniper and HP.…&lt;/p&gt;</summary>
+  </entry>
+  <entry>
+    <id>tag:theregister.co.uk,2005:story/2014/02/24/rise_of_the_machines_robot_challenges_top_german_player_at_pingpong/</id>
+    <updated>2014-02-24T06:02:03Z</updated>
+    <author>
+      <name>Lewis Page</name>
+      <uri>http://search.theregister.co.uk/?author=Lewis%20Page</uri>
+    </author>
+    <link rel="alternate" type="text/html" href="http://go.theregister.com/feed/www.theregister.co.uk/2014/02/24/rise_of_the_machines_robot_challenges_top_german_player_at_pingpong/"/>
+    <title type="html">Rise of the Machines: Robot challenges top German player at ping-pong</title>
+    <summary type="html" xml:base="http://www.theregister.co.uk/">&lt;h4&gt;'Agilus' bot's bold Boll ball biff bid&lt;/h4&gt; &lt;p&gt;Everyone knows that the robots can already beat the best the human race can offer at chess, Jeopardy, probably global thermonuclear war etc. But for games of agility, until now the human athlete has in general retained his or her superiority.…&lt;/p&gt;</summary>
+  </entry>
+  <entry>
+    <id>tag:theregister.co.uk,2005:story/2014/02/24/cloud_foundry_foundation/</id>
+    <updated>2014-02-24T05:10:38Z</updated>
+    <author>
+      <name>Jack Clark</name>
+      <uri>http://search.theregister.co.uk/?author=Jack%20Clark</uri>
+    </author>
+    <link rel="alternate" type="text/html" href="http://go.theregister.com/feed/www.theregister.co.uk/2014/02/24/cloud_foundry_foundation/"/>
+    <title type="html">Cloud Foundry laps up attention in EMC, IBM, HP, Rackspace, SAP, VMware love-in</title>
+    <summary type="html" xml:base="http://www.theregister.co.uk/">&lt;h4&gt;One PaaS to rule them all, one PaaS to bind them&lt;/h4&gt; &lt;p&gt;The Cloud Foundry open-source project looks set to become a standard piece of technology in the thriving distributed systems ecosystem: its main backer, Pivotal, has persuaded IBM, HP, SAP and Rackspace to join a new foundation dedicated to the tech.…&lt;/p&gt; &lt;p&gt;&lt;!--#include virtual='/data_centre/_whitepaper_textlinks_top.html' --&gt;&lt;/p&gt;</summary>
+  </entry>
+  <entry>
+    <id>tag:theregister.co.uk,2005:story/2014/02/24/mit_wants_quasars_to_help_put_free_will_to_rest/</id>
+    <updated>2014-02-24T04:58:07Z</updated>
+    <author>
+      <name>Richard Chirgwin</name>
+      <uri>http://search.theregister.co.uk/?author=Richard%20Chirgwin</uri>
+    </author>
+    <link rel="alternate" type="text/html" href="http://go.theregister.com/feed/www.theregister.co.uk/2014/02/24/mit_wants_quasars_to_help_put_free_will_to_rest/"/>
+    <title type="html">MIT wants quasars to help put free will to rest</title>
+    <summary type="html" xml:base="http://www.theregister.co.uk/">&lt;h4&gt;Ringing the Bell on inequality&lt;/h4&gt; &lt;p&gt;The last of three loopholes held to remain in Bell's Theorem, “setting independence”, is under the spotlight with an MIT research group saying that quasars could be used as random number generators and help prove* the validity of quantum mechanics.…&lt;/p&gt;</summary>
+  </entry>
+  <entry>
+    <id>tag:theregister.co.uk,2005:story/2014/02/24/netflix_coughs_up_to_cruise_on_comcast/</id>
+    <updated>2014-02-24T03:59:07Z</updated>
+    <author>
+      <name>Simon Sharwood</name>
+      <uri>http://search.theregister.co.uk/?author=Simon%20Sharwood</uri>
+    </author>
+    <link rel="alternate" type="text/html" href="http://go.theregister.com/feed/www.theregister.co.uk/2014/02/24/netflix_coughs_up_to_cruise_on_comcast/"/>
+    <title type="html">Netflix coughs up to cruise on Comcast</title>
+    <summary type="html" xml:base="http://www.theregister.co.uk/">&lt;h4&gt;'Interconnection agreement' to provide 'high-quality video experience'&lt;/h4&gt; &lt;p&gt;Video streaming service Netflix and carrier Comcast have struck a deal to “Provide Customers With Excellent User Experience”.…&lt;/p&gt;</summary>
+  </entry>
+  <entry>
+    <id>tag:theregister.co.uk,2005:story/2014/02/24/saving_private_spying_cryptobusting_proxy_proposal_surfaces_at_ietf/</id>
+    <updated>2014-02-24T01:56:08Z</updated>
+    <author>
+      <name>Richard Chirgwin</name>
+      <uri>http://search.theregister.co.uk/?author=Richard%20Chirgwin</uri>
+    </author>
+    <link rel="alternate" type="text/html" href="http://go.theregister.com/feed/www.theregister.co.uk/2014/02/24/saving_private_spying_cryptobusting_proxy_proposal_surfaces_at_ietf/"/>
+    <title type="html">Saving private spying: IETF Draft reveals crypto-busting proxy proposal</title>
+    <summary type="html" xml:base="http://www.theregister.co.uk/">&lt;h4&gt;'Explicit Trusted Proxy' would allow carriers to decrypt data to speed transmission&lt;/h4&gt; &lt;p&gt;A draft put forward to the Internet Engineering Task Force has drawn the ire of prominent privacy activist Lauren Weinstein as “one of the most alarming Internet proposals” he's ever seen.…&lt;/p&gt;</summary>
+  </entry>
+  <entry>
+    <id>tag:theregister.co.uk,2005:story/2014/02/24/microsoft_may_slash_price_of_windows_81_on_cheap_slabs/</id>
+    <updated>2014-02-24T00:57:27Z</updated>
+    <author>
+      <name>Simon Sharwood</name>
+      <uri>http://search.theregister.co.uk/?author=Simon%20Sharwood</uri>
+    </author>
+    <link rel="alternate" type="text/html" href="http://go.theregister.com/feed/www.theregister.co.uk/2014/02/24/microsoft_may_slash_price_of_windows_81_on_cheap_slabs/"/>
+    <title type="html">Microsoft may slash price of Windows 8.1 on cheap 'slabs</title>
+    <summary type="html" xml:base="http://www.theregister.co.uk/">&lt;h4&gt;Report says 70 per cent discount for OEMs willing to make sub-$US250 devices&lt;/h4&gt; &lt;p&gt;Microsoft has reportedly slashed the price of Windows 8.1 for anyone willing to install the operating on a device that sells for fewer than $US250.…&lt;/p&gt;</summary>
+  </entry>
+  <entry>
+    <id>tag:theregister.co.uk,2005:story/2014/02/23/curiosity_now_going_backwards/</id>
+    <updated>2014-02-23T23:42:11Z</updated>
+    <author>
+      <name>Simon Sharwood</name>
+      <uri>http://search.theregister.co.uk/?author=Simon%20Sharwood</uri>
+    </author>
+    <link rel="alternate" type="text/html" href="http://go.theregister.com/feed/www.theregister.co.uk/2014/02/23/curiosity_now_going_backwards/"/>
+    <title type="html">Curiosity now going BACKWARDS</title>
+    <summary type="html" xml:base="http://www.theregister.co.uk/">&lt;h4&gt;There's no spare parts shop on Mars&lt;/h4&gt; &lt;p&gt;Putting a nuclear-powered, laser-armed space tank on Mars is one of humanity’s most remarkable achievements, and now we've even figured out how to make it go backwards!…&lt;/p&gt; &lt;p&gt;&lt;!--#include virtual='/data_centre/_whitepaper_textlinks_top.html' --&gt;&lt;/p&gt;</summary>
+  </entry>
+  <entry>
+    <id>tag:theregister.co.uk,2005:story/2014/02/23/goto_fail_a_symptom_of_softwares_cultural_malaise/</id>
+    <updated>2014-02-23T23:09:33Z</updated>
+    <author>
+      <name>Richard Chirgwin</name>
+      <uri>http://search.theregister.co.uk/?author=Richard%20Chirgwin</uri>
+    </author>
+    <link rel="alternate" type="text/html" href="http://go.theregister.com/feed/www.theregister.co.uk/2014/02/23/goto_fail_a_symptom_of_softwares_cultural_malaise/"/>
+    <title type="html">Collective SSL FAIL a symptom of software's cultural malaise</title>
+    <summary type="html" xml:base="http://www.theregister.co.uk/">&lt;h4&gt;Apple, WhatsApp and Belkin show that if you ask for bad software, you get bad software&lt;/h4&gt; &lt;p&gt;In the 19 years that have passed since the first implementation of SSL, you could be forgiven for expecting that the industry could do it right by now: and yet last week, not one but three SSL vendors were discovered to have implementation problems.…&lt;/p&gt;</summary>
+  </entry>
+  <entry>
+    <id>tag:theregister.co.uk,2005:story/2014/02/23/g20_gives_google_microsoft_apple_iet_ali_tax_deadline/</id>
+    <updated>2014-02-23T22:44:28Z</updated>
+    <author>
+      <name>Simon Sharwood</name>
+      <uri>http://search.theregister.co.uk/?author=Simon%20Sharwood</uri>
+    </author>
+    <link rel="alternate" type="text/html" href="http://go.theregister.com/feed/www.theregister.co.uk/2014/02/23/g20_gives_google_microsoft_apple_iet_ali_tax_deadline/"/>
+    <title type="html">G20 gives Google, Microsoft, Apple &lt;i&gt;et al&lt;/i&gt; tax deadline</title>
+    <summary type="html" xml:base="http://www.theregister.co.uk/">&lt;h4&gt;G20 finance ministers speak loudly, mention big stick&lt;/h4&gt; &lt;p&gt;The world's top 20 finance ministers have signalled once again that they're sick of their taxes disappearing offshore and have signalled a strong intention to get their cash back.…&lt;/p&gt;</summary>
+  </entry>
+  <entry>
+    <id>tag:theregister.co.uk,2005:story/2014/02/23/microsoft_tells_phone_makers_still_room_on_our_bus/</id>
+    <updated>2014-02-23T18:50:40Z</updated>
+    <author>
+      <name>Andrew Orlowski</name>
+      <uri>http://search.theregister.co.uk/?author=Andrew%20Orlowski</uri>
+    </author>
+    <link rel="alternate" type="text/html" href="http://go.theregister.com/feed/www.theregister.co.uk/2014/02/23/microsoft_tells_phone_makers_still_room_on_our_bus/"/>
+    <title type="html">Microsoft courts mobe-makers, tweaks Windows 8 for WIMPs</title>
+    <summary type="html" xml:base="http://www.theregister.co.uk/">&lt;h4&gt;Windows Phone rules eased to allow cheaper phones by folks other than Nokia&lt;/h4&gt; &lt;p&gt;&lt;strong&gt;MWC 2014&lt;/strong&gt;  In a pre-show presentation in Barcelona, where Mobile World Congress starts this week, Microsoft has confirmed some new features coming in Windows Phone 8.1 and the Windows 8.1 update coming this (northern) spring and assured phone makers it won't hang them out to dry.…&lt;/p&gt;</summary>
+  </entry>
+</feed>

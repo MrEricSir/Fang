@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet href="../../../../../css/rss/feedRss2.xsl" media="screen" type="text/xsl"?>
+
+<rss version="2.0"> 
+  <channel> 
+    <title>YOMIURI ONLINE（読売新聞）主要ニュース</title>  
+    <link>http://www.yomiuri.co.jp/?from=rsstop</link>  
+    <description>YOMIURI ONLINE（読売新聞）主要ニュース</description>  
+    <language>ja</language>  
+    <copyright>© 2006 The Yomiuri Shimbun. All rights reserved. No reproduction or republication without written permission.</copyright>  
+    <pubDate>Sun, 2 Mar 2014 05:12:46 +0900</pubDate>  
+    <ttl>10</ttl>  
+    <atom:link xmlns:atom="http://www.w3.org/2005/Atom" rel="self" href="http://rss.yomiuri.co.jp/rss/yol/topstories" type="application/rss+xml"/>  
+    <item> 
+      <title>ウクライナ軍事介入へ…露大統領提案、上院承認</title>  
+      <link>http://rss.rssad.jp/rss/artclk/z0r9SvPmQy3H/4e9b00c230a30acc524b87cfb96a1bdf?ul=dTEkp0Q.3xQ0ioSSaARBwAjEz8VQ1gEH0sy7bPSX_q8UznMPrZFmLTGR9aXbjLSM8qt3_FOOWUtVeDP_oFQdpBUFfLqOYXwcTPjvcXUmcNM7aD2J.</link>  
+      <description><![CDATA[<p>
+<img border="0" width="1" height="1" src="http://rss.rssad.jp/rss/artimg/z0r9SvPmQy3H/4e9b00c230a30acc524b87cfb96a1bdf"/></p>]]></description>  
+      <guid isPermaLink="false">yomiuri.co.jp/20140301-OYT1T00816</guid>  
+      <pubDate>Sun, 2 Mar 2014 01:44:21 +0900</pubDate> 
+    </item>  
+    <item> 
+      <title>中国の刃物男ら襲撃、死亡２７人負傷１０９人に</title>  
+      <link>http://rss.rssad.jp/rss/artclk/z0r9SvPmQy3H/e07119e8f636ccd44138bd28957e8dcd?ul=63JsEnt2fLXqwveBGDEEmyJgAMq1tCCZpEk0Cb1vkKA_qrnaT_4BVi6unsxe_dWptkCxzl7VrALv9xP4FTABfb_3bkuw9YzF6h.HhYVBoHolkB8Nh</link>  
+      <description><![CDATA[<p>
+<img border="0" width="1" height="1" src="http://rss.rssad.jp/rss/artimg/z0r9SvPmQy3H/e07119e8f636ccd44138bd28957e8dcd"/></p>]]></description>  
+      <guid isPermaLink="false">yomiuri.co.jp/20140302-OYT1T00115</guid>  
+      <pubDate>Sun, 2 Mar 2014 02:23:59 +0900</pubDate> 
+    </item>  
+    <item> 
+      <title>安倍首相は「みじめに、窮地に」…朴大統領批判</title>  
+      <link>http://rss.rssad.jp/rss/artclk/z0r9SvPmQy3H/6ec3dbb7d5101901823d8cb46ed1818f?ul=cFc8KsF4TRwdFdzMtEshXhlvVZvUcth_oCe38FZU2TC4jU_XMRVcLuv2MlJVNQzryB_ShkTJoYSIOS.AIu.lQxloXOSg8kjpRu2NcjbqSfYQQ8NtQ</link>  
+      <description><![CDATA[<p>
+<img border="0" width="1" height="1" src="http://rss.rssad.jp/rss/artimg/z0r9SvPmQy3H/6ec3dbb7d5101901823d8cb46ed1818f"/></p>]]></description>  
+      <guid isPermaLink="false">yomiuri.co.jp/20140301-OYT1T00610</guid>  
+      <pubDate>Sat, 1 Mar 2014 15:03:17 +0900</pubDate> 
+    </item>  
+    <item> 
+      <title>サイバー攻撃多様化、相手絞る「水飲み場型」も</title>  
+      <link>http://rss.rssad.jp/rss/artclk/z0r9SvPmQy3H/a49c5bc9569a8cfa90bc4bb39112a5f3?ul=TjVhYsCONpR0npowOYwqxgOzuRFRjflUju0Rf33M4y6xgqR4A0N0aOAYf7dbQdlDOqkcGknwGyYZpcM5CXAr3zHd4n2ncTMYfJNNLb4cGn_OcM50I_G.NqZbXkiQBEPlVzlreVE</link>  
+      <description><![CDATA[<p>
+<img border="0" width="1" height="1" src="http://rss.rssad.jp/rss/artimg/z0r9SvPmQy3H/a49c5bc9569a8cfa90bc4bb39112a5f3"/></p>]]></description>  
+      <guid isPermaLink="false">yomiuri.co.jp/20140301-OYT1T00713</guid>  
+      <pubDate>Sat, 1 Mar 2014 20:45:19 +0900</pubDate> 
+    </item>  
+    <item> 
+      <title>被害者は誰？「１１４億消失」…不自然な説明も</title>  
+      <link>http://rss.rssad.jp/rss/artclk/z0r9SvPmQy3H/96d0c804959d0ea2b33a9b36e0f5d544?ul=Kyk2RonRdd_wMONPlkfGpgsmxTulKWU8JhVUaZNWgZoj22BzVzLKZEWf1hlTxdVQJGWPxpRwLuK.MvI53Jn2SHIxFs4Jpe9YtfjTb8SgKovMfMGnyv0lALjZRUGeK7a9n3mRIba</link>  
+      <description><![CDATA[<p>
+<img border="0" width="1" height="1" src="http://rss.rssad.jp/rss/artimg/z0r9SvPmQy3H/96d0c804959d0ea2b33a9b36e0f5d544"/></p>]]></description>  
+      <guid isPermaLink="false">yomiuri.co.jp/20140301-OYT1T00624</guid>  
+      <pubDate>Sat, 1 Mar 2014 16:01:25 +0900</pubDate> 
+    </item>  
+    <item> 
+      <title>ウナギ稚魚「やっと正常」…豊漁で値下がり期待</title>  
+      <link>http://rss.rssad.jp/rss/artclk/z0r9SvPmQy3H/37859b158795e9ac518b05d4562e2611?ul=jJqooJyKlZPgtRLH0.aqdgolrEglL.PL8qIKUHTvS3BsnUDR9D8YNj4Es4zv7Kbz8zc2x051TZPZPCKHPOwwH5NE9ipTbGZ1MG9tzKwtHvySuuYmC_7V3vMknAHRLraIaQ2ZnIr</link>  
+      <description><![CDATA[<p>
+<img border="0" width="1" height="1" src="http://rss.rssad.jp/rss/artimg/z0r9SvPmQy3H/37859b158795e9ac518b05d4562e2611"/></p>]]></description>  
+      <guid isPermaLink="false">yomiuri.co.jp/20140301-OYT1T00709</guid>  
+      <pubDate>Sat, 1 Mar 2014 18:30:15 +0900</pubDate> 
+    </item>
+    <item>
+      <title><![CDATA[AD: 三菱地所レジデンス×鹿島×中央区　運河沿い免震タワー]]></title>
+      <link>http://rss.rssad.jp/rss/ad/z0r9SvPmQy3H/fvn2WphmVAHf?type=2&amp;ent=37859b158795e9ac518b05d4562e2611</link>
+      <description><![CDATA[<table cellspacing="0" cellpadding="0"><tbody><tr><td align="left" valign="center"><a href="http://rss.rssad.jp/rss/ad/z0r9SvPmQy3H/fvn2WphmVAHf?type=2" target="_blank"><img alt="" style="border: 0;" border="0" src="http://bnr.rssad.jp/rss/img/z0r9SvPmQy3H/fvn2WphmVAHf?type=3&ent=37859b158795e9ac518b05d4562e2611"/></a></td></tr><tr><td align="left" valign="top" > 全１７４４邸の大規模ツインタワー。クロノレジデンス２０１４年３月、引渡し開始！ </td></tr></tbody></table><div style="font-size:10px;"><span style="padding-top:5px;"><br style="display:none"/><a href="http://www.rssad.jp/trendmatch/trendmatch.html">Ads by Trend Match</a></span><br/></div>]]></description>
+      <pubDate>Sat, 1 Mar 2014 18:30:15 +0900</pubDate>
+    </item> 
+  </channel> 
+</rss>
