@@ -61,4 +61,8 @@ OTHER_FILES += \
     feeds/asahi.com.rss \
     feeds/youtube.com.rss \
     feeds/bild.de.rss \
-    feeds/perezhilton.com.rss
+    feeds/perezhilton.com.rss \
+    feeds/tmz.com.rss \
+    feeds/eonline.com.rss \
+    feeds/popsugar.com.rss \
+    feeds/mashable.com.rss

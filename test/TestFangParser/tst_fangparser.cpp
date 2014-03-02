@@ -249,6 +249,26 @@ void TestFangParser::parseTest_data()
                                   << "Once In A Blue Moon! Beck Performs On Saturday Night Live & Brings A Friend!"
                                   << "http://perezhilton.com/2014-03-02-beck-performs-saturday-night-live-blue-moon-and-wave"
                                   << QDateTime::fromString("02 Mar 2014 23:00:30", dtf);
+    
+    QTest::newRow("TMZ") << "tmz.com.rss" << "TMZ.com" << 20
+                                  << "Academy Awards -- Weed Biz Booming ... With Oscar Partying Celebs"
+                                  << "http://www.tmz.com/2014/03/02/academy-awards-weed-dispensary-deliver-oscars-party-celebs/"
+                                  << QDateTime::fromString("02 Mar 2014 23:02:00", dtf);
+    
+    QTest::newRow("E") << "eonline.com.rss" << "E! Online (US) - Top Stories" << 20
+                                  << "Debby Ryan Preps for 2014 Oscars Night Wearing Custom Gown--See the Pics!"
+                                  << "http://www.eonline.com/news/516429/debby-ryan-preps-for-2014-oscars-night-wearing-custom-gown-see-the-pics?cmpid=rss-000000-rssfeed-365-topstories&utm_source=eonline&utm_medium=rssfeeds&utm_campaign=rss_topstories"
+                                  << QDateTime::fromString("02 Mar 2014 22:48:00", dtf);
+    
+    QTest::newRow("Popsugar") << "popsugar.com.rss" << "POPSUGAR Celebrity" << 25
+                                  << "The Stars Come Out For the Oscars Red Carpet!"
+                                  << "http://www.popsugar.com/Celebrities-Oscars-Red-Carpet-2014-Pictures-34170716"
+                                  << QDateTime::fromString("02 Mar 2014 15:07:31", dtf);
+    
+    QTest::newRow("Mashable") << "mashable.com.rss" << "Mashable" << 30
+                                  << "Live Updates: The Oscars"
+                                  << "http://feeds.mashable.com/~r/Mashable/~3/Pm6OrtL9p1o/"
+                                  << QDateTime::fromString("02 Mar 2014 23:15:10", dtf);
 }
 
 QTEST_MAIN(TestFangParser)
