@@ -4,3 +4,5 @@ Fang.pro.user
 Fang.pro.user.*
 test/build-*
 test/TestFangParser/TestFangParser.pro.user
+.DS_Store
+
