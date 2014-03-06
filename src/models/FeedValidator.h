@@ -73,6 +73,7 @@ private:
     Parser::ParseResult result;
     QUrl location;
     bool pageGrabberDone;
+    QUrl lastParseURL;
 };
 
 QML_DECLARE_TYPE(FeedValidator)

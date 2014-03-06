@@ -22,7 +22,6 @@ FeedValidator::FeedValidator(QQuickItem *parent) :
 void FeedValidator::check()
 {
     // Clear our state.
-    result = Parser::IN_PROGRESS;
     webPage = NULL;
     pageGrabberDone = false;
     embeddedFeedURL.clear();
@@ -61,12 +60,16 @@ void FeedValidator::doParse(const QUrl& url)
     // If there's an existing parser, there won't be for long.
     delete parser;
     
+    result = Parser::IN_PROGRESS;
+    
     // Create a new one an' hook it up.
     parser = new Parser(this);
     connect(parser, SIGNAL(done()), this, SLOT(onFeedFinished()));
     
+    lastParseURL = url;
+    
     // Do the parse.
-    parser->parse(url);
+    parser->parse(lastParseURL);
 }
 
 void FeedValidator::addFeed()
@@ -74,7 +77,7 @@ void FeedValidator::addFeed()
     // Assume check passed.
     // TODO: add sanity check here.
     
-    FangApp::instance()->addFeed(QUrl(_url), QUrl(_siteImageURL), _siteTitle);
+    FangApp::instance()->addFeed(QUrl(lastParseURL), QUrl(_siteImageURL), _siteTitle);
 }
 
 void FeedValidator::removeFeed(FeedItem *feed)

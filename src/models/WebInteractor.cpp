@@ -23,7 +23,7 @@ void WebInteractor::init(OperationManager *manager, ListModel *feedList)
 
 void WebInteractor::loadNext()
 {
-    if (isLoading)
+    if (isLoading && !isReady)
         return;
     
     qDebug() << "Load next!";
@@ -34,7 +34,7 @@ void WebInteractor::loadNext()
 
 void WebInteractor::loadPrevious()
 {
-    if (isLoading)
+    if (isLoading && !isReady)
         return;
     
     qDebug() << "Load prev!";
