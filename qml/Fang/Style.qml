@@ -50,7 +50,7 @@ Item {
         property color dialogButtonText: "black"
         property color dialogButtonTextDisabled: "#999"
         property color dialogButtonPressed: Qt.darker(colorSchemeLight.dialogButtonHover, 1.5)
-        property color dialogButtonDisabled: Qt.lighter(colorSchemeLight.dialogButton, 1.5)
+        property color dialogButtonDisabled: "#ffffff" // Update in SettingsDialog manually!
         property color dialogButtonBorder: "transparent"
         
         property color textEntryBackground: "white"

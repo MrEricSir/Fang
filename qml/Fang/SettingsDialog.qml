@@ -36,6 +36,10 @@ Dialog {
             enabled: true
             
             width: parent.buttonWidth
+            
+            onClicked: {
+                transitions[0].animations[0].stop();
+            }
         }
         
         DialogRadioButton {
@@ -46,6 +50,10 @@ Dialog {
             enabled: true
             
             width: parent.buttonWidth
+            
+            onClicked: {
+                transitions[0].animations[0].stop();
+            }
         }
     }
     

@@ -26,7 +26,7 @@ void WebInteractor::loadNext()
     if (isLoading && !isReady)
         return;
     
-    qDebug() << "Load next!";
+    //qDebug() << "Load next!";
     
     // Load MOAR
     doLoadNews(LoadNews::Append);

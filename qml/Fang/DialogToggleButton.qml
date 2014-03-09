@@ -6,15 +6,13 @@ DialogButton {
     // Read/write
     property bool toggled: false
     
-    // Read-only
-    property color originalButtonColor: "#eee"
-    property color toggledButtonColor: "#777"
-    
     onClicked: {
         toggled = !toggled
     }
     
+    // Manually set state if we entered toggled mode.
     onToggledChanged: {
-        buttonColor = toggled ? toggledButtonColor : originalButtonColor
+        if (toggled)
+            state = "disabled";
     }
 }

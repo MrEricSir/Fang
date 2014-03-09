@@ -32,12 +32,19 @@ Rectangle {
     border.color: borderColor
     border.width: 1
     
-    onEnabledChanged: state = (enabled ? "default" : "disabled")
+    onEnabledChanged: {
+        if (!enabled) {
+            state = "disabled";
+        } else if (enabled && state == "disabled") {
+            state = "default";
+        }
+    }
     
     Style {
         id: style
     }
     
+    state: "default";
     states: [
         State { name: "default" },
         State { name: "hover" },
@@ -45,15 +52,32 @@ Rectangle {
         State { name: "disabled" }
     ]
     
-    // Initial color state: will be changed by transitions below.
-    color: state === "disabled" ? disabledColor : buttonColor
+    function getColorForState() {
+        switch (state) {
+        case "default":
+            return buttonColor;
+        case "hover":
+            return hoverColor;
+        case "pressed":
+            return pressedColor;
+        case "disabled":
+            return disabledColor;
+        }
+    }
     
-    /*
-    color: state === "disabled" ? disabledColor :
-                                 state === "hover" ? hoverColor :
-                                 state === "pressed" ? pressedColor :
-                                                       buttonColor
-    */
+    Component.onCompleted: {
+        // Sets the load-time color.
+        color = getColorForState();
+    }
+    
+    Connections {
+        target: fangSettings
+        
+        // Reset color when style changes.
+        onStyleChanged: {
+            color = getColorForState();
+        }
+    }
     
     transitions: [
         Transition {
@@ -63,9 +87,17 @@ Rectangle {
             ColorAnimation {
                 target: baseButton
                 properties: "color"
-                to: disabledColor
+                to: getColorForState()
                 duration: 100
                 easing.type: Easing.InOutQuad
+            }
+            
+            // Hack to ensure correct button color in color selector.
+            onRunningChanged: {
+                if (!running) {
+                    color = getColorForState();
+                }
+                
             }
         },
         Transition {
@@ -75,7 +107,7 @@ Rectangle {
             ColorAnimation {
                 target: baseButton
                 properties: "color"
-                to: hoverColor
+                to: getColorForState()
                 duration: 300
                 easing.type: Easing.InOutQuad
             }
@@ -87,7 +119,7 @@ Rectangle {
             ColorAnimation {
                 target: baseButton
                 properties: "color"
-                to: buttonColor
+                to: getColorForState()
                 duration: 300
                 easing.type: Easing.InOutQuad
             }
@@ -99,7 +131,7 @@ Rectangle {
             ColorAnimation {
                 target: baseButton
                 properties: "color"
-                to: pressedColor
+                to: getColorForState()
                 duration: 300
                 easing.type: Easing.InOutQuad
             }
