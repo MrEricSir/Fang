@@ -26,15 +26,9 @@ private slots:
      */
     void onGrabberFinished(const QUrl& faviconUrl);
     
-    /**
-     * @brief Feed was destroyed before update could complete.
-     */
-    void onFeedDestroyed();
-    
 private:
     FeedItem* feed;
     FaviconGrabber grabber;
-    bool wasDestroyed;
 };
 
 #endif // FAVICONUPDATEOPERATION_H

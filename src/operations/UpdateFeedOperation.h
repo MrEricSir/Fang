@@ -45,11 +45,6 @@ private slots:
     void onFeedFinished();
     
     /**
-     * @brief Feed was destroyed before update could complete.
-     */
-    void onFeedDestroyed();
-    
-    /**
      * @brief When the rewriter is done with the feed
      */
     void onRewriterFinished();
@@ -58,7 +53,6 @@ private:
     BackgroundParser parser;
     FeedItem *feed;
     RawFeed* rawFeed;
-    bool wasDestroyed;
     RawFeedRewriter rewriter;
     QList<RawNews*> newsList;
 };

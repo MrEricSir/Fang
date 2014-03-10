@@ -4,11 +4,11 @@
 FaviconUpdateOperation::FaviconUpdateOperation(OperationManager *parent, FeedItem* feed) :
     DBOperation(BACKGROUND, parent),
     feed(feed),
-    grabber(),
-    wasDestroyed(false)
+    grabber()
 {
-    connect(feed, SIGNAL(destroyed()), this, SLOT(onFeedDestroyed()));
     connect(&grabber, SIGNAL(finished(QUrl)), this, SLOT(onGrabberFinished(QUrl)));
+    
+    requireObject(feed);
 }
 
 FaviconUpdateOperation::~FaviconUpdateOperation()
@@ -17,6 +17,8 @@ FaviconUpdateOperation::~FaviconUpdateOperation()
 
 void FaviconUpdateOperation::execute()
 {
+    FANG_BACKGROUND_CHECK;
+    
     if (feed->getSiteURL().isValid() && !feed->getSiteURL().isRelative()) {
         grabber.find(feed->getSiteURL());
     } else {
@@ -27,24 +29,17 @@ void FaviconUpdateOperation::execute()
 
 void FaviconUpdateOperation::onGrabberFinished(const QUrl &faviconUrl)
 {
-    if (wasDestroyed || feed->getDbId() < 0) {
-        // Nothing more to do!
-        //qDebug() << "FaviconUpdateOperation: Feed was destroyed, nothing to update.";
-        emit finished(this);
-        
-        return;
-    }
+    FANG_BACKGROUND_CHECK;
     
     if (!faviconUrl.isValid() || faviconUrl.isRelative()) {
         // Not a valid URL.
-        //qDebug() << "FaviconUpdateOperation: No valid URL to update.";
-        emit finished(this);
+        reportError("No valid URL to update.");
         
         return;
     }
     
     if (faviconUrl == feed->getImageURL()) {
-        //qDebug() << "FaviconUpdateOperation: URL has not changed.";
+        //qDebug() << "FaviconUpdateOperation: Nothing to do: URL has not changed.";
         emit finished(this);
         
         return;
@@ -68,9 +63,4 @@ void FaviconUpdateOperation::onGrabberFinished(const QUrl &faviconUrl)
     }
     
     emit finished(this);
-}
-
-void FaviconUpdateOperation::onFeedDestroyed()
-{
-    wasDestroyed = true;
 }

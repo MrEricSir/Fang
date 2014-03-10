@@ -3,6 +3,8 @@
 
 #include <QObject>
 
+#define FANG_BACKGROUND_CHECK do { if (shouldTerminate()) return; } while(0)
+
 class OperationManager;
 
 /**
@@ -26,13 +28,27 @@ class Operation : public QObject
      */
     virtual ~Operation();
     
-protected:
+protected slots:
     
     /**
      * @brief Call this to report an error.  Automatically emits finished()
      * @param errorString The text that will be logged along with the error.
      */
     void reportError(const QString& errorString);
+    
+    /**
+     * @brief Pass any QObjects that might be deleted during the run into this method.
+     * It will cause the operation to be canceled gracefully, emitting done().
+     * See also: FANG_BACKGROUND_CHECK macro.
+     * @param object
+     */
+    void requireObject(QObject* object);
+    
+    /**
+     * @brief Used by the FANG_BACKGROUND_CHECK macro.
+     * @return 
+     */
+    bool shouldTerminate() { return terminate; }
     
 signals:
     
@@ -65,10 +81,16 @@ public slots:
      */
     OperationManager* getOperationManager() { return operationManager; }
     
+private slots:
+    
+    // Called when a required object is destroyed.
+    void onRequiredQObjectDestroyed(QObject* object);
+    
 private:
     OperationManager* operationManager;
     PriorityLevel priority;
     bool error;
+    bool terminate;
 };
 
 #endif // OPERATION_H

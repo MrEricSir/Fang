@@ -12,12 +12,12 @@ UpdateFeedOperation::UpdateFeedOperation(OperationManager *parent, FeedItem *fee
     parser(),
     feed(feed),
     rawFeed(rawFeed),
-    wasDestroyed(false),
     rewriter()
 {
     connect(&parser, SIGNAL(done()), this, SLOT(onFeedFinished()));
-    connect(feed, SIGNAL(destroyed()), this, SLOT(onFeedDestroyed()));
     connect(&rewriter, SIGNAL(finished()), this, SLOT(onRewriterFinished()));
+    
+    requireObject(feed);
 }
 
 UpdateFeedOperation::~UpdateFeedOperation()
@@ -28,6 +28,8 @@ UpdateFeedOperation::~UpdateFeedOperation()
 
 void UpdateFeedOperation::execute()
 {
+    FANG_BACKGROUND_CHECK;
+    
     if (feed->metaObject() == &AllNewsFeedItem::staticMetaObject) {
         qDebug() <<  "Cannot update all news";
         emit finished(this);
@@ -47,6 +49,8 @@ void UpdateFeedOperation::execute()
 
 void UpdateFeedOperation::onFeedFinished()
 {
+    FANG_BACKGROUND_CHECK;
+    
     feed->setIsUpdating(false);
     
     if (rawFeed == NULL)
@@ -62,13 +66,6 @@ void UpdateFeedOperation::onFeedFinished()
     
     if (rawFeed->items.size() == 0) {
         qDebug() << "Feed list was empty!";
-        emit finished(this);
-        
-        return;
-    }
-    
-    if (wasDestroyed || feed->getDbId() < 0) {
-        qDebug() << "Couldn't update feed (may have been removed)";
         emit finished(this);
         
         return;
@@ -128,6 +125,8 @@ void UpdateFeedOperation::onFeedFinished()
 
 void UpdateFeedOperation::onRewriterFinished()
 {
+    FANG_BACKGROUND_CHECK;
+    
     // Add all new items to DB.
     db().transaction(); // Prevent getting out of sync on error.
     foreach (RawNews* rawNews, newsList) {
@@ -163,9 +162,4 @@ void UpdateFeedOperation::onRewriterFinished()
     // TODO: update unread count
     
     emit finished(this);
-}
-
-void UpdateFeedOperation::onFeedDestroyed()
-{
-    wasDestroyed = true;
 }
