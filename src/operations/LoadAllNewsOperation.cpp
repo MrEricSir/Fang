@@ -1,6 +1,6 @@
 #include "LoadAllNewsOperation.h"
 
-LoadAllNewsOperation::LoadAllNewsOperation(QObject *parent, FeedItem* feedItem, LoadMode mode, int loadLimit) :
+LoadAllNewsOperation::LoadAllNewsOperation(OperationManager *parent, FeedItem* feedItem, LoadMode mode, int loadLimit) :
     LoadNews(parent, feedItem, mode, loadLimit),
     allNews(NULL)
 {
@@ -47,8 +47,7 @@ void LoadAllNewsOperation::execute()
     
     // Check if we done goofed.
     if (!dbResult) {
-        //TODO : add error signal
-        emit finished(this);
+        reportError("DB error in LoadAllNewsOperation");
         
         return;
     }

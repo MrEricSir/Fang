@@ -14,7 +14,7 @@ class RemoveFeedOperation : public DBOperation
 {
     Q_OBJECT
 public:
-    explicit RemoveFeedOperation(QObject *parent, FeedItem* feed, ListModel *feedList);
+    explicit RemoveFeedOperation(OperationManager *parent, FeedItem* feed, ListModel *feedList);
     
 public slots:
     virtual void execute();

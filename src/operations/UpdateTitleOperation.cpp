@@ -2,7 +2,7 @@
 #include "../models/AllNewsFeedItem.h"
 #include <QDebug>
 
-UpdateTitleOperation::UpdateTitleOperation(QObject *parent, FeedItem* feed) :
+UpdateTitleOperation::UpdateTitleOperation(OperationManager *parent, FeedItem* feed) :
     DBOperation(IMMEDIATE, parent),
     feed(feed)
 {
@@ -23,10 +23,9 @@ void UpdateTitleOperation::execute()
     query.bindValue(":feed_id", feed->getDbId());
     
     if (!query.exec()) {
-        qDebug() << "Unable to set title.";
-        qDebug() << "SQL error: " << query.lastError().text();
+        reportSQLError(query, "Unable to set title.");
         
-        // TODO error signal.
+        return;
     }
     
     emit finished(this);

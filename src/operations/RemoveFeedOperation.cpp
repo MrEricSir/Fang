@@ -3,7 +3,7 @@
 #include <QDebug>
 #include <QThread>
 
-RemoveFeedOperation::RemoveFeedOperation(QObject *parent, FeedItem* feed, ListModel *feedList) :
+RemoveFeedOperation::RemoveFeedOperation(OperationManager *parent, FeedItem* feed, ListModel *feedList) :
     DBOperation(IMMEDIATE, parent),
     feed(feed),
     feedList(feedList)
@@ -21,16 +21,17 @@ void RemoveFeedOperation::execute()
         db().transaction();
         QSqlQuery query(db());
         if (!query.prepare("DELETE FROM FeedItemTable WHERE id = :feed_id")) {
-            qDebug() << "Error preparing SQL query: " << query.lastError().text();
+            reportSQLError(query, "Error preping SQL statement to remove a feed");
+                    
+            return;
         }
         query.bindValue(":feed_id", feed->getDbId());
         
         if (!query.exec()) {
-            qDebug() << "Unable to remove feed.";
-            qDebug() << "SQL error: " << query.lastError().text();
+            reportSQLError(query, "Unable to remove feed.");
             db().rollback();
-            // TODO error signal.
-            // *for now, fall thru to emit finished.*
+            
+            return;
         } else {
             // Good to go!
             //qDebug() << "Removal allegedly worked!";

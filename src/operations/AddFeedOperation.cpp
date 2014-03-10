@@ -2,7 +2,7 @@
 #include "../models/FeedItem.h"
 #include "../utilities/Utilities.h"
 
-AddFeedOperation::AddFeedOperation(QObject *parent, ListModel *feedList, const QUrl &feedURL,
+AddFeedOperation::AddFeedOperation(OperationManager *parent, ListModel *feedList, const QUrl &feedURL,
                                    const QUrl &imageURL, QString siteTitle) :
     DBOperation(IMMEDIATE, parent),
     feedList(feedList),
@@ -43,9 +43,8 @@ void AddFeedOperation::onFeedFinished()
     // Attempt to grab the highest ordinal from the DB.
     QSqlQuery queryOrdinal(db());
     if (!queryOrdinal.exec("SELECT ordinal FROM FeedItemTable ORDER BY ordinal desc LIMIT 1")) {
+        reportSQLError(queryOrdinal,"Could not select ordinal.");
         db().rollback();
-        qDebug() << "Could not select ordinal.";
-        // TODO: error signal
         
         return;
     }
@@ -70,10 +69,9 @@ void AddFeedOperation::onFeedFinished()
     query.bindValue(":ordinal", ordinal);
     
     if (!query.exec()) {
+        reportSQLError(query, "Could not add feed");
         db().rollback();
-        qDebug() << "Could not add feed: " << query.lastError().text();
         
-        // TODO : add error signal
         return;
     }
     

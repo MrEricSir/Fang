@@ -14,7 +14,7 @@ class AddFeedOperation : public DBOperation
 {
     Q_OBJECT
 public:
-    explicit AddFeedOperation(QObject *parent, ListModel *feedList, const QUrl &feedURL,
+    explicit AddFeedOperation(OperationManager *parent, ListModel *feedList, const QUrl &feedURL,
                               const QUrl &imageURL, QString siteTitle);
     
 signals:

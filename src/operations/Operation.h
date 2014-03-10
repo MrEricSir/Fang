@@ -3,6 +3,8 @@
 
 #include <QObject>
 
+class OperationManager;
+
 /**
  * @brief Interface for operations.
  */
@@ -17,12 +19,20 @@ class Operation : public QObject
     };
     
     // OperationManager is parent.
-    explicit Operation(PriorityLevel priority, QObject *parent = 0);
+    explicit Operation(PriorityLevel priority, OperationManager* parent);
     
     /**
      * @brief All operations must clean up their memory.
      */
     virtual ~Operation();
+    
+protected:
+    
+    /**
+     * @brief Call this to report an error.  Automatically emits finished()
+     * @param errorString The text that will be logged along with the error.
+     */
+    void reportError(const QString& errorString);
     
 signals:
     
@@ -38,10 +48,27 @@ public slots:
      */
     virtual void execute() {}
     
+    /**
+     * @return Priority level of this operation type.
+     */
     inline PriorityLevel getPriority() { return priority; }
     
+    /**
+     * @return Returns true if there was an error, else false. 
+     */
+    inline bool isError() { return error; }
+    
+    /**
+     * @brief If your operation needs to invoke other operations (yo dawg, I heard you like
+     * operations) then you'll want to use this.
+     * @return The operation manager used for getting/setting operations.
+     */
+    OperationManager* getOperationManager() { return operationManager; }
+    
 private:
+    OperationManager* operationManager;
     PriorityLevel priority;
+    bool error;
 };
 
 #endif // OPERATION_H

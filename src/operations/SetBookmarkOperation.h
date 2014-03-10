@@ -9,7 +9,7 @@ class SetBookmarkOperation : public DBOperation
 {
     Q_OBJECT
 public:
-    explicit SetBookmarkOperation(QObject *parent, FeedItem* feed, NewsItem* bookmarkItem);
+    explicit SetBookmarkOperation(OperationManager *parent, FeedItem* feed, NewsItem* bookmarkItem);
     virtual ~SetBookmarkOperation();
 signals:
     

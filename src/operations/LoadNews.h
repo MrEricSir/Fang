@@ -28,7 +28,7 @@ public:
      * @param mode      Type of load operation (see above)
      * @param loadLimit Max number of news items to load
      */
-    explicit LoadNews(QObject *parent, FeedItem* feedItem, LoadMode mode, int loadLimit = 15);
+    explicit LoadNews(OperationManager *parent, FeedItem* feedItem, LoadMode mode, int loadLimit = 15);
     
     virtual ~LoadNews();
     

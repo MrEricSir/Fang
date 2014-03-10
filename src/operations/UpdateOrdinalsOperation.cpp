@@ -4,7 +4,7 @@
 
 #include <QDebug>
 
-UpdateOrdinalsOperation::UpdateOrdinalsOperation(QObject *parent, ListModel *feedList) :
+UpdateOrdinalsOperation::UpdateOrdinalsOperation(OperationManager *parent, ListModel *feedList) :
     DBOperation(IMMEDIATE, parent),
     feedList(feedList)
 {
@@ -24,13 +24,9 @@ void UpdateOrdinalsOperation::execute()
         update.bindValue(":feed_id", feedItem->getDbId());
         
         if (!update.exec()) {
+            reportSQLError(update, "Unable to update ordinal for feed id " + QString::number(feedItem->getDbId()));
             db().rollback();
             
-            qDebug() << "Unable to update ordinal for feed id " << feedItem->getDbId();
-            qDebug() << "SQL error: " << update.lastError().text();
-            
-            // TODO error signal.
-            emit finished(this);
             return;
         }
     }

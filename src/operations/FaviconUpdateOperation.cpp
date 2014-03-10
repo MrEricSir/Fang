@@ -1,7 +1,7 @@
 #include "FaviconUpdateOperation.h"
 #include <QDebug>
 
-FaviconUpdateOperation::FaviconUpdateOperation(QObject *parent, FeedItem* feed) :
+FaviconUpdateOperation::FaviconUpdateOperation(OperationManager *parent, FeedItem* feed) :
     DBOperation(BACKGROUND, parent),
     feed(feed),
     grabber(),
@@ -58,11 +58,10 @@ void FaviconUpdateOperation::onGrabberFinished(const QUrl &faviconUrl)
     query.bindValue(":imageURL", faviconUrl.toString());
     
     if (!query.exec()) {
-        qDebug() << "Unable to update favicon.";
-        qDebug() << "SQL error: " << query.lastError().text();
+        reportSQLError(query, "Unable to update favicon.");
         db().rollback();
         
-        // TODO: error signal
+        return;
     } else {
         db().commit();
         feed->setImageURL(faviconUrl);

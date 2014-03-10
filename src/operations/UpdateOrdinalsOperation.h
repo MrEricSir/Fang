@@ -12,7 +12,7 @@ class UpdateOrdinalsOperation : public DBOperation
 {
     Q_OBJECT
 public:
-    explicit UpdateOrdinalsOperation(QObject *parent, ListModel *feedList);
+    explicit UpdateOrdinalsOperation(OperationManager *parent, ListModel *feedList);
     
 public slots:
     virtual void execute();
