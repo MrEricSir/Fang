@@ -3,19 +3,20 @@
 #include <QDebug>
 #include <QThread>
 
+#include "../utilities/UnreadCountReader.h"
+#include "../FangApp.h"
+
 RemoveFeedOperation::RemoveFeedOperation(OperationManager *parent, FeedItem* feed, ListModel *feedList) :
     DBOperation(IMMEDIATE, parent),
     feed(feed),
     feedList(feedList)
 {
-    
+    Q_ASSERT(feed != NULL);
+    Q_ASSERT(feedList != NULL);
 }
 
 void RemoveFeedOperation::execute()
 {
-    Q_ASSERT(feed != NULL);
-    Q_ASSERT(feedList != NULL);
-    
     if (feed->getDbId() >= 0) {
         // Delete that feed, bro.
         db().transaction();
@@ -45,8 +46,11 @@ void RemoveFeedOperation::execute()
         qDebug() << "Could not delete feed from database, id is: " << feed->getDbId();
     }
     
-    // Remove from the model.
+    // Remove from the model (if it hasn't been already!)
     feedList->removeItem(feed);
+    
+    // Update All News's unread count.
+    UnreadCountReader::update(db(), FangApp::instance()->getFeed(0));
     
     emit finished(this);
 }

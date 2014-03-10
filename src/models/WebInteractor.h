@@ -122,6 +122,8 @@ private slots:
     // Fetches the feed with the given ID.
     FeedItem* feedForId(const qint64 id);
     
+    void onFeedRemoved(ListItem* listItem);
+    
 private:
     // The currently selected news feed.
     FeedItem* currentFeed;

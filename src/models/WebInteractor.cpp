@@ -19,6 +19,8 @@ void WebInteractor::init(OperationManager *manager, ListModel *feedList)
 {
     this->manager = manager;
     this->feedList = feedList;
+    
+    connect(feedList, SIGNAL(removed(ListItem*)), this, SLOT(onFeedRemoved(ListItem*)));
 }
 
 void WebInteractor::loadNext()
@@ -45,8 +47,9 @@ void WebInteractor::loadPrevious()
 
 void WebInteractor::jumpToBookmark()
 {
-    if (currentFeed == NULL || currentFeed->getBookmark() == NULL)
+    if (NULL == currentFeed || currentFeed->getBookmark() == NULL) {
         return; // Nothing to do!
+    }
     
     // Jump to the item following the bookmark, if possible.
     int index = currentFeed->getNewsList()->indexOf(currentFeed->getBookmark()) + 1;
@@ -75,12 +78,13 @@ void WebInteractor::orderChanged()
 
 void WebInteractor::setBookmark(QString sId)
 {
-    qDebug() << "Setting bookmark to: " << sId;
-    if (isSettingBookmark)
+    if (isSettingBookmark || NULL == currentFeed) {
         return;
+    }
+    
+    // qDebug() << "Setting bookmark to: " << sId;
     
     qint64 id = sId.replace(NEWS_ITEM_ID_PREIX, "").toLongLong();
-    //qDebug() << "Setting bookmark to... " << id;
     
     // Locate the item!
     NewsItem* bookmarkItem = NULL;
@@ -127,8 +131,9 @@ void WebInteractor::openLink(QString link)
 
 void WebInteractor::refreshFeed(FeedItem *item)
 {
-    if (item == NULL)
+    if (NULL == item || NULL == currentFeed) {
         return;
+    }
     
     QList<FeedItem*> feedsToUpdate;
     
@@ -158,6 +163,10 @@ void WebInteractor::refreshFeed(const qint64 id)
 
 void WebInteractor::refreshCurrentFeed()
 {
+    if (NULL == currentFeed) {
+        return;
+    }
+    
     refreshFeed(currentFeed);
 }
 
@@ -173,8 +182,9 @@ void WebInteractor::setFeed(FeedItem *feed)
         return;
     
     // To save memory, clean up the old feed before continuing.
-    if (currentFeed != NULL)
+    if (currentFeed != NULL) {
         currentFeed->clearNews();
+    }
     
     currentFeed = feed;
     
@@ -190,6 +200,10 @@ void WebInteractor::setFeed(FeedItem *feed)
 
 void WebInteractor::onLoadNewsFinished(Operation* operation)
 {
+    if (NULL == currentFeed) {
+        return;
+    }
+    
     LoadNews* loader = qobject_cast<LoadNews*>(operation);
     Q_ASSERT(loader != NULL); // If this ever happens, we're fucked.
     
@@ -226,6 +240,10 @@ void WebInteractor::onLoadNewsFinished(Operation* operation)
 
 void WebInteractor::onSetBookmarkFinished(Operation *operation)
 {
+    if (NULL == currentFeed) {
+        return;
+    }
+    
     SetBookmarkOperation* bookmarkOp = qobject_cast<SetBookmarkOperation*>(operation);
     Q_ASSERT(bookmarkOp != NULL);
     
@@ -276,7 +294,9 @@ void WebInteractor::addNewsItem(bool append, NewsItem *item)
 
 void WebInteractor::doLoadNews(LoadNews::LoadMode mode)
 {
-    Q_ASSERT(currentFeed != NULL);
+    if (currentFeed == NULL) {
+        return;
+    }
     
     LoadNews* loader = (currentFeed->getDbId() < 0) ? new LoadAllNewsOperation(manager, currentFeed, mode) :
                 new LoadNews(manager, currentFeed, mode);
@@ -297,5 +317,13 @@ FeedItem *WebInteractor::feedForId(const qint64 id)
     }
     
     return NULL;
+}
+
+void WebInteractor::onFeedRemoved(ListItem *listItem)
+{
+    if (listItem == currentFeed) {
+        // Feed is being removed, don't try to use this pointer.  I mean, duh.
+        currentFeed = NULL;
+    }
 }
 
