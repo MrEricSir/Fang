@@ -15,7 +15,7 @@ class ParserInterface : public QObject
     Q_OBJECT
     
 public:
-    enum ParseResult { OK, NETWORK_ERROR, PARSE_ERROR, IN_PROGRESS };
+    enum ParseResult { OK, NETWORK_ERROR, FILE_ERROR, PARSE_ERROR, EMPTY_DOCUMENT, IN_PROGRESS };
     
     explicit ParserInterface(QObject *parent = 0);
     

@@ -55,7 +55,8 @@ SOURCES += src/main.cpp \
     src/operations/LoadAllNewsOperation.cpp \
     src/utilities/UnreadCountReader.cpp \
     src/operations/UpdateOrdinalsOperation.cpp \
-    src/utilities/NetworkUtilities.cpp
+    src/utilities/NetworkUtilities.cpp \
+    src/parser/OPMLParser.cpp
 
 # Installation path
 # target.path =
@@ -118,4 +119,5 @@ HEADERS += \
     src/operations/LoadAllNewsOperation.h \
     src/utilities/UnreadCountReader.h \
     src/operations/UpdateOrdinalsOperation.h \
-    src/utilities/NetworkUtilities.h
+    src/utilities/NetworkUtilities.h \
+    src/parser/OPMLParser.h
