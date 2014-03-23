@@ -28,4 +28,5 @@ HEADERS += \
 
 OTHER_FILES += \
     opml/feeddeemon.opml \
-    opml/rssowl.opml
+    opml/rssowl.opml \
+    opml/feedly.opml

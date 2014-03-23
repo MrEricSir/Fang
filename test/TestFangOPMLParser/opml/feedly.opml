@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<opml version="1.0">
+    <head>
+        <title>Eric subscriptions in feedly Cloud</title>
+    </head>
+    <body>
+        <outline type="rss" text="MrEricSir.com" title="MrEricSir.com" xmlUrl="http://www.mrericsir.com/blog/feed/" htmlUrl="http://www.mrericsir.com/blog"/>
+        <outline type="rss" text="SFist" title="SFist" xmlUrl="http://www.sfist.com/index.rdf" htmlUrl="http://sfist.com/"/>
+        <outline type="rss" text="Mission Mission" title="Mission Mission" xmlUrl="http://missionmission.wordpress.com/feed/" htmlUrl="http://www.missionmission.org"/>
+    </body>
+</opml>
