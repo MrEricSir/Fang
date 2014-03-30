@@ -23,19 +23,28 @@ void SimpleStateMachine::setState(int state)
     
     // Find the method name.
     QPair<int, int> pair(oldState, currentState);
-    Q_ASSERT(stateMap.contains(pair));
+    if (!stateMap.contains(pair)) {
+        // Default to -1 (all) state.
+        pair = QPair<int, int>(-1, currentState);
+        if (!stateMap.contains(pair)) {
+            qDebug() << "State transition from " << oldState << " to " << currentState << " not avaliable!";
+            Q_ASSERT(false);
+        }
+    }
+    
     const char* method = stateMap[pair];
     ++method; // Skip first character.
     
     int methodNumber = methodNumber = receiver->metaObject()->indexOfSlot(QMetaObject::normalizedSignature(method));
     //qDebug() << "Method #: " << methodNumber;
-    Q_ASSERT(methodNumber > 0);
+    Q_ASSERT(methodNumber > 0 || methodNumber == -1);
     
     // Emit the signal.
     emit stateChanged(oldState, currentState);
     
     // Run the method.
     QMetaMethod metaMethod = receiver->metaObject()->method(methodNumber);
+    Q_ASSERT(metaMethod.isValid()); // Ensures the method exists.
     metaMethod.invoke(receiver);
 }
 

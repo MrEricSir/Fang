@@ -57,7 +57,8 @@ SOURCES += src/main.cpp \
     src/operations/UpdateOrdinalsOperation.cpp \
     src/utilities/NetworkUtilities.cpp \
     src/parser/OPMLParser.cpp \
-    src/utilities/SimpleStateMachine.cpp
+    src/utilities/SimpleStateMachine.cpp \
+    src/utilities/FeedDiscovery.cpp
 
 # Installation path
 # target.path =
@@ -122,4 +123,5 @@ HEADERS += \
     src/operations/UpdateOrdinalsOperation.h \
     src/utilities/NetworkUtilities.h \
     src/parser/OPMLParser.h \
-    src/utilities/SimpleStateMachine.h
+    src/utilities/SimpleStateMachine.h \
+    src/utilities/FeedDiscovery.h

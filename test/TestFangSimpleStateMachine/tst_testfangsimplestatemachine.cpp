@@ -45,8 +45,7 @@ TestFangSimpleStateMachine::TestFangSimpleStateMachine()
     machine.setReceiver(this);
     machine.addStateChange(START, STATE_A, SLOT(onStateA()));
     machine.addStateChange(STATE_A, STATE_B, SLOT(onStateB()));
-    machine.addStateChange(STATE_A, COMPLETE, SLOT(onStateComplete()));
-    machine.addStateChange(STATE_B, COMPLETE, SLOT(onStateComplete()));
+    machine.addStateChange(-1, COMPLETE, SLOT(onStateComplete()));
 }
 
 void TestFangSimpleStateMachine::initTestCase()

@@ -18,12 +18,15 @@
  * };
  * 
  * // Transitions are handled via slots on an object you provide.
- * StateMachine machine;
+ * SimpleStateMachine machine;
  * machine.setReceiver(myObject); // Object the slots will be called on.
  * machine.addStateChange(START, STATE_A, SLOT(startToStateA()));
  * machine.addStateChange(START, STATE_B, SLOT(startToStateB()));
  * machine.addStateChange(STATE_A, STATE_B, SLOT(stateAToStateB()));
  * // ... etc.
+ * 
+ * // To switch from any state to a specific state, use -1
+ * machine.addStateChange(-1, COMPLETE, SLOT(onComplete()));
  * 
  * // Set the start state, then call setState() as needed.
  * machine.start(START);
