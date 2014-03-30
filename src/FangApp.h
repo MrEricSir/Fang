@@ -50,10 +50,15 @@ public slots:
     /**
      * @brief Adds a feed.
      * @param feedURL
-     * @param imageURL
-     * @param siteTitle
      */
-    void addFeed(const QUrl& feedURL, const QUrl& imageURL, QString siteTitle);
+    void addFeed(const QUrl& feedURL);
+    
+    /**
+     * @brief Adds a known, pre-processed feed.
+     * @param feedURL
+     * @param rawFeed
+     */
+    void addFeed(const QUrl &feedURL, const RawFeed* rawFeed);
     
     /**
      * @brief Removes an existing feed.

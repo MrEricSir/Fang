@@ -7,10 +7,15 @@
 
 #include "SimpleStateMachine.h"
 #include "../parser/BackgroundParser.h"
+#include "../parser/RawFeed.h"
 #include "../utilities/WebPageGrabber.h"
 
 /**
- * @brief Checks a feed.
+ * @brief Attempts to match a user-submitted, URL like "bob.com" to an actual news feed.
+ * This is done by massaging the URL, then attempting to parse it.  If that fails we 
+ * treat it as a web page and look for a feed URL embedded in it, then try to parse that.
+ * 
+ * Both the feed and final URL are returned if the error flag is not set.
  * 
  * State machine diagram:
  * 
@@ -40,7 +45,7 @@ private:
         WEB_GRABBER,
         TRY_FEED_AGAIN,
         FEED_FOUND,
-        ERROR
+        FEED_ERROR
     };
     
 public:
@@ -56,7 +61,15 @@ public:
      */
     QString errorString() { return _errorString; }
     
+    /**
+     * @return The feed URL, or an empty URL if there was an error.
+     */
     QUrl feedURL() { return _error ? QUrl("") : _feedURL; }
+    
+    /**
+     * @return A copy of the raw feed or null if there was an error.
+     */
+    const RawFeed* feedResult() { return _error ? NULL : _feedResult; }
     
 signals:
     
@@ -104,6 +117,8 @@ private:
     BackgroundParser parserSecondTry;
     
     WebPageGrabber pageGrabber;
+    
+    RawFeed* _feedResult;
 };
 
 #endif // FEEDDISCOVERY_H

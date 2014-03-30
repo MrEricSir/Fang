@@ -232,11 +232,18 @@ FangApp* FangApp::instance()
     return _instance;
 }
 
-void FangApp::addFeed(const QUrl &feedURL, const QUrl &imageURL, QString siteTitle)
+void FangApp::addFeed(const QUrl &feedURL)
 {
     //qDebug() << "Add feed " << siteTitle << " " << feedURL;
-    manager.add(new AddFeedOperation(&manager, feedList, feedURL, imageURL, siteTitle));
+    manager.add(new AddFeedOperation(&manager, feedList, feedURL));
 }
+
+void FangApp::addFeed(const QUrl &feedURL, const RawFeed* rawFeed)
+{
+    //qDebug() << "Add feed " << siteTitle << " " << feedURL;
+    manager.add(new AddFeedOperation(&manager, feedList, feedURL, rawFeed));
+}
+
 
 void FangApp::removeFeed(FeedItem *feed)
 {

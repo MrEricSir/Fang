@@ -6,7 +6,7 @@ Utilities::Utilities()
 {
 }
 
-FeedItem *Utilities::feedItemFromRaw(RawFeed *raw, qint64 dbId, QObject* parent)
+FeedItem *Utilities::feedItemFromRaw(const RawFeed *raw, qint64 dbId, QObject* parent)
 {
     return new FeedItem(dbId,
                         0,

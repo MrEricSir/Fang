@@ -21,7 +21,7 @@ public:
      * @param parent
      * @return 
      */
-    static FeedItem* feedItemFromRaw(RawFeed *raw, qint64 dbId, QObject* parent);
+    static FeedItem* feedItemFromRaw(const RawFeed *raw, qint64 dbId, QObject* parent);
 };
 
 #endif // UTILITIES_H

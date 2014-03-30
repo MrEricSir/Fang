@@ -14,8 +14,12 @@ class AddFeedOperation : public DBOperation
 {
     Q_OBJECT
 public:
+    // Attempts to add a feed based on an RSS/Atom URL.
+    explicit AddFeedOperation(OperationManager *parent, ListModel *feedList, const QUrl &feedURL);
+    
+    // Adds a feed that's already been parsed.
     explicit AddFeedOperation(OperationManager *parent, ListModel *feedList, const QUrl &feedURL,
-                              const QUrl &imageURL, QString siteTitle);
+                              const RawFeed* rawFeed);
     
 signals:
     
@@ -25,11 +29,13 @@ public slots:
 private slots:
     void onFeedFinished();
     
+    // Commits whatever's in rawFeed.
+    void commitRawFeed();
+    
 private:
     ListModel *feedList;
     QUrl feedURL;
-    QUrl imageURL;
-    QString siteTitle;
+    const RawFeed* rawFeed;
     
     BackgroundParser parser;
 };

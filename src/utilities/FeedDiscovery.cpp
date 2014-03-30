@@ -8,7 +8,8 @@ FeedDiscovery::FeedDiscovery(QObject *parent) :
     QObject(parent),
     machine(),
     _error(false),
-    _errorString("")
+    _errorString(""),
+    _feedResult(NULL)
 {
     // Set up our state machine.
     machine.setReceiver(this);
@@ -19,7 +20,7 @@ FeedDiscovery::FeedDiscovery(QObject *parent) :
     machine.addStateChange(WEB_GRABBER, TRY_FEED_AGAIN, SLOT(onTryFeedAgain()));
     machine.addStateChange(TRY_FEED_AGAIN, FEED_FOUND, SLOT(onFeedFound()));
     
-    machine.addStateChange(-1, ERROR, SLOT(onError())); // Many errors, one slot.
+    machine.addStateChange(-1, FEED_ERROR, SLOT(onError())); // Many errors, one slot.
     
     // Parser signals.
     connect(&parserFirstTry, SIGNAL(done()), this, SLOT(onFirstParseDone()));
@@ -95,6 +96,7 @@ void FeedDiscovery::onFirstParseDone()
     case ParserInterface::OK:
         // We got it on the first try!
         _feedURL = parserFirstTry.getURL();
+        _feedResult = parserFirstTry.getFeed();
         machine.setState(FEED_FOUND);
         
         break;
@@ -120,6 +122,7 @@ void FeedDiscovery::onSecondParseDone()
     case ParserInterface::OK:
         // We got it!
         _feedURL = parserSecondTry.getURL();
+        _feedResult = parserSecondTry.getFeed();
         machine.setState(FEED_FOUND);
         
         break;
@@ -187,5 +190,5 @@ void FeedDiscovery::reportError(QString errorString)
     _error = true;
     _errorString = errorString;
     
-    machine.setState(ERROR);
+    machine.setState(FEED_ERROR);
 }

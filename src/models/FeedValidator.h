@@ -4,13 +4,9 @@
 #include <QQuickItem>
 #include <QObject>
 #include <QUrl>
-#include <QWebPage>
-#include <QWebElement>
-#include <QWebFrame>
 
-#include "../parser/Parser.h"
 #include "FeedItem.h"
-#include "../utilities/WebPageGrabber.h"
+#include "../utilities/FeedDiscovery.h"
 
 class FeedValidator : public QQuickItem 
 {
@@ -54,26 +50,16 @@ signals:
 public slots:
     
 private slots:
-    void doParse(const QUrl& url);
-    
-    void onFeedFinished();
-    void onPageGrabberReady(QWebPage* page);
-    void handleCompletion();
+    // Feed discovered!  Yay!
+    void onFeedDiscoveryDone(FeedDiscovery *discovery);
     
 private:
-    Parser* parser;
-    QNetworkAccessManager manager;
     bool _validating;
-    QWebPage* webPage;
-    QUrl embeddedFeedURL;
     QString _url;
     QString _siteTitle;
     QString _siteImageURL;
-    WebPageGrabber pageGrabber;
-    Parser::ParseResult result;
-    QUrl location;
-    bool pageGrabberDone;
-    QUrl lastParseURL;
+    
+    FeedDiscovery feedDiscovery;
 };
 
 QML_DECLARE_TYPE(FeedValidator)
