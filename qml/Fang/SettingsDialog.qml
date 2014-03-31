@@ -112,6 +112,41 @@ Dialog {
         }
     }
     
+    DialogText {
+        text: "OPML feed list"
+        width: parent.width
+    }
+    
+    OPMLInteractor {
+        id: opml
+    }
+    
+    DialogButtonGroup {
+        width: parent.width
+        
+        DialogButton {
+            id: importOPML
+            
+            text: "Import"
+            enabled: true
+            
+            onClicked: opml.importFile()
+            
+            width: parent.buttonWidth
+        }
+        
+        DialogButton {
+            id: exportOPML
+            
+            text: "Export"
+            enabled: true
+            
+            onClicked: opml.exportFile()
+            
+            width: parent.buttonWidth
+        }
+    }
+    
     // Spacer
     DialogText {
         text: ""

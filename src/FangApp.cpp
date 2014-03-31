@@ -89,6 +89,11 @@ FeedItem *FangApp::getFeedForID(qint64 dbID)
     return NULL; // oops, we didn't find it!
 }
 
+void FangApp::focusApp()
+{
+    viewer->requestActivate();
+}
+
 void FangApp::onViewerStatusChanged(QQuickView::Status status)
 {
     if (status != QQuickView::Ready)

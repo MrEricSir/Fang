@@ -58,7 +58,9 @@ SOURCES += src/main.cpp \
     src/utilities/NetworkUtilities.cpp \
     src/parser/OPMLParser.cpp \
     src/utilities/SimpleStateMachine.cpp \
-    src/utilities/FeedDiscovery.cpp
+    src/utilities/FeedDiscovery.cpp \
+    src/models/OPMLInteractor.cpp \
+    src/utilities/OPMLExport.cpp
 
 # Installation path
 # target.path =
@@ -124,4 +126,6 @@ HEADERS += \
     src/utilities/NetworkUtilities.h \
     src/parser/OPMLParser.h \
     src/utilities/SimpleStateMachine.h \
-    src/utilities/FeedDiscovery.h
+    src/utilities/FeedDiscovery.h \
+    src/models/OPMLInteractor.h \
+    src/utilities/OPMLExport.h

@@ -41,7 +41,21 @@ public:
      */
     FeedItem* getFeedForID(qint64 dbID);
     
+    /**
+     * @return A (read-only) list of teh feedz.
+     */
+    ListModel* getFeedList() const { return feedList; }
+    
+    /**
+     * @brief Sets the focus on the app window.
+     */
+    void focusApp();
+    
+    /**
+     * @return Singleton instance of FangApp
+     */
     static FangApp *instance();
+    
 signals:
     
 public slots:

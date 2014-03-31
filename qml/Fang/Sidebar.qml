@@ -43,11 +43,9 @@ Item {
                 anchors.leftMargin: 5
                 height: 25
                 
-                
                 // Hack to make SVGs render with anti-aliasing
                 sourceSize.width: width
                 sourceSize.height: height
-                smooth: true
             }
             
             // Fang settings.
