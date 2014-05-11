@@ -42,6 +42,7 @@ Item {
                 anchors.left: parent.left
                 anchors.leftMargin: 5
                 height: 25
+                asynchronous: true
                 
                 // Hack to make SVGs render with anti-aliasing
                 sourceSize.width: width

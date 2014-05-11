@@ -38,6 +38,7 @@ Rectangle {
         // Hack to make SVGs render with anti-aliasing
         sourceSize.width: width
         sourceSize.height: height
+        asynchronous: true
         
         source: getImage(dialogStatus.state);
     }

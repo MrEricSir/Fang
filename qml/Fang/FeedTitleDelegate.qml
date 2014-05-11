@@ -71,6 +71,7 @@ ListViewDragDelegate {
                         
                         sourceSize.width: width
                         sourceSize.height: height
+                        asynchronous: true
                     }
                     
                     Spinner {
