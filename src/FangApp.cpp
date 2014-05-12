@@ -46,13 +46,6 @@ FangApp::FangApp(QObject *parent, FangApplicationViewer* viewer) :
 
 void FangApp::init()
 {
-    viewer->rootContext()->setContextProperty("feedListModel", feedList); // list of feeds
-    viewer->rootContext()->setContextProperty("platform", getPlatform()); // platform string ID
-    viewer->addImportPath(QLatin1String("modules"));
-    //viewer->setOrientation(QtQuick2ApplicationViewer::ScreenOrientationAuto);
-    viewer->setSource(QUrl("qrc:/qml/Fang/main.qml"));
-    viewer->displayWindow();
-    
     // Enable cache for remote QML elements.
     NetworkUtilities::addNetworkAccessManagerCache(viewer->engine()->networkAccessManager());
     
@@ -60,6 +53,13 @@ void FangApp::init()
     LoadAllFeedsOperation* loadAllOp = new LoadAllFeedsOperation(&manager, feedList);
     connect(loadAllOp, SIGNAL(finished(Operation*)), this, SLOT(onLoadAllFinished(Operation*)));
     manager.add(loadAllOp);
+    
+    viewer->rootContext()->setContextProperty("feedListModel", feedList); // list of feeds
+    viewer->rootContext()->setContextProperty("platform", getPlatform()); // platform string ID
+    viewer->addImportPath(QLatin1String("modules"));
+    //viewer->setOrientation(QtQuick2ApplicationViewer::ScreenOrientationAuto);
+    viewer->setSource(QUrl("qrc:/qml/Fang/main.qml"));
+    viewer->displayWindow();
     
     // Set a timer to update the feeds every ten minutes (make changable later.)
     connect(updateTimer, SIGNAL(timeout()), this, SLOT(updateAllFeeds()));
@@ -173,8 +173,6 @@ void FangApp::onLoadAllFinished(Operation *op)
 {
     Q_UNUSED(op);
     loadAllFinished = true;
-    
-    // TODO: It used to be necessary to call displayFeed() here.  Is it still?
 }
 
 void FangApp::updateAllFeeds()

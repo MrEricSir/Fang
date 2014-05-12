@@ -19,6 +19,40 @@ Rectangle {
     
     color: style.color.background
     
+    // Read-only: List of all open dialogs
+    property var openDialogs: []
+    
+    // Creates and opens a dialog.
+    function openDialog(dialogName) {
+        var component = Qt.createComponent(dialogName);
+        var dialog = component.createObject(
+                    mainFrame, {"x": 0, "y": 0, "width": mainFrame.width, 
+                        "height": mainFrame.height, "listView": sidebar.listView});
+        
+        if (dialog === null) {
+            // Error Handling
+            console.log("Error creating dialog: " + dialogName);
+        }
+        
+        // Pop 'er open!
+        openDialogs.push(dialog);
+        news.newsFocus = false;
+        dialog.onDialogClosed.connect(onDialogClosed);
+        dialog.open();
+    }
+    
+    // Called when a dialog is closed.
+    function onDialogClosed(dialog) {
+        // Remove the entry.
+        openDialogs.splice(openDialogs.indexOf(dialog), 1);
+        delete dialog;
+        
+        // If it was the last one, give focus back to news
+        if (openDialogs.length === 0) {
+            news.newsFocus = true;
+        }
+    }
+    
     // The feed list sidebar.
     Sidebar {
         id: sidebar
@@ -93,12 +127,11 @@ Rectangle {
         onFeedDoubleClicked: news.jumpToBookmark()
         onOrderChanged: news.orderChanged()
         
-        onSettingsClicked: settings.open()
-        onAddClicked: addFeed.open()
-        onRemoveClicked: removeFeed.open()
-        onEditClicked: editFeed.open()
+        onSettingsClicked: openDialog("SettingsDialog.qml");
+        onAddClicked: openDialog("AddDialog.qml");
+        onRemoveClicked: openDialog("RemoveDialog.qml");
+        onEditClicked: openDialog("EditDialog.qml");
     }
-    
     
     News {
         id: news
@@ -108,8 +141,7 @@ Rectangle {
         anchors.bottom: parent.bottom
         anchors.right: parent.right
         
-        // NOTE: When adding new dialogs, they also must go here.
-        newsFocus: settings.isClosed && addFeed.isClosed && removeFeed.isClosed && editFeed.isClosed
+        newsFocus: true // set by dialog system
         
         Item {
             id: openButtonContainer
@@ -146,48 +178,4 @@ Rectangle {
             }
         }
     }
-    
-    SettingsDialog {
-        id: settings
-        
-        x: 0
-        y: 0
-        width: parent.width
-        height: parent.height
-    }
-    
-    AddDialog {
-        id: addFeed
-        
-        x: 0
-        y: 0
-        width: parent.width
-        height: parent.height
-    }
-    
-    RemoveDialog {
-        id: removeFeed
-        
-        x: 0
-        y: 0
-        width: parent.width
-        height: parent.height
-        
-        // This is how we can remove the feed, you see.
-        listView: sidebar.listView
-    }
-    
-    EditDialog {
-        id: editFeed
-        
-        x: 0
-        y: 0
-        width: parent.width
-        height: parent.height
-        
-        // This lets us access the current item.
-        listView: sidebar.listView
-    }
-    
-    // NOTE: When adding new dialogs, a corresponding reference must be made in newsFocus
 }

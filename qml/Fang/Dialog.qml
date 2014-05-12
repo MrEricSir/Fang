@@ -7,6 +7,8 @@ import Fang 1.0
 Rectangle {
     id: dialog
     
+    signal onDialogClosed(var self)
+    
     // Dialog title text.
     property string title
     
@@ -39,6 +41,12 @@ Rectangle {
     // Immediately closes the dialog.
     function close() {
         state = "closed";
+    }
+    
+    // Send closed signal
+    onIsClosedChanged: {
+        if (isClosed)
+            onDialogClosed(dialog)
     }
     
     transitions: [
