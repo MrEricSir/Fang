@@ -6,8 +6,8 @@ AddFeedOperation::AddFeedOperation(OperationManager *parent, ListModel *feedList
     DBOperation(IMMEDIATE, parent),
     feedList(feedList),
     feedURL(feedURL),
-    parser(),
-    rawFeed(NULL)
+    rawFeed(NULL),
+    parser()
 {
     QObject::connect(&parser, SIGNAL(done()), this, SLOT(onFeedFinished()));
 }
@@ -17,8 +17,8 @@ AddFeedOperation::AddFeedOperation(OperationManager *parent, ListModel *feedList
     DBOperation(IMMEDIATE, parent),
     feedList(feedList),
     feedURL(feedURL),
-    parser(),
-    rawFeed(rawFeed)
+    rawFeed(rawFeed),
+    parser()
 {
 }
 
