@@ -26,8 +26,7 @@ Rectangle {
     function openDialog(dialogName) {
         var component = Qt.createComponent(dialogName);
         var dialog = component.createObject(
-                    mainFrame, {"x": 0, "y": 0, "width": mainFrame.width, 
-                        "height": mainFrame.height, "listView": sidebar.listView});
+                    mainFrame, {"x": 0, "y": 0, "listView": sidebar.listView});
         
         if (dialog === null) {
             // Error Handling

@@ -23,6 +23,9 @@ Rectangle {
     visible: false // Managed by state transitions
     state: "closed"
     
+    width: parent.width
+    height: parent.height
+    
     states: [
         State { name: "open" },
         State { name: "closed" }
@@ -142,19 +145,33 @@ Rectangle {
         anchors.leftMargin: 15
         anchors.right: parent.right
         
-        Item {
-            id: container
+        Flickable {
+            id: placeholderFlickable
+            anchors.fill: parent
             
-            width: 400
-            anchors.horizontalCenter: parent.horizontalCenter
+            contentWidth: width
+            contentHeight: container.childrenRect.height
+            flickableDirection: Flickable.VerticalFlick
             
-            // Children go here.
-            Column {
-                id: placeholder
+            Item {
+                id: container
                 
-                width: parent.width
-                spacing: 10
+                width: 400
+                anchors.horizontalCenter: parent.horizontalCenter
+                
+                // Children go here.
+                Column {
+                    id: placeholder
+                    
+                    width: parent.width
+                    spacing: 10
+                }
             }
+        }
+        
+        ScrollBar {
+            id: dialogScroll
+            target: placeholderFlickable
         }
     }
     
