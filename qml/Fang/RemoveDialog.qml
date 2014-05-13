@@ -14,8 +14,6 @@ Dialog {
         
         state: "help"
         text: "Are you sure you want to delete this feed?"
-        
-        width: parent.width
     }
     
     DialogButton {
@@ -32,8 +30,6 @@ Dialog {
         }
         enabled: !isClosing
         
-        width: parent.width
-        
         // Yes this is cheating, but so what?
         FeedValidator {
             id: validator
@@ -46,7 +42,5 @@ Dialog {
         text: "Cancel"
         onClicked: close()
         enabled: !isClosing
-        
-        width: parent.width
     }
 }

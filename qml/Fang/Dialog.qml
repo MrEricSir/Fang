@@ -113,7 +113,7 @@ Rectangle {
         
         text: dialog.title
         
-        font.pointSize: 18
+        font.pointSize: style.font.titleSize
         font.family: style.font.defaultFamily
         color: style.color.dialogText
         

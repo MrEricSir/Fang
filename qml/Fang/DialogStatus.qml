@@ -5,6 +5,7 @@ Rectangle {
     property string text: ""
     color: "transparent"
     
+    width: parent.width
     height: dialogStatusText.paintedHeight
     
     // Set state to change graphic.

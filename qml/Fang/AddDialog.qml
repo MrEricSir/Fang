@@ -22,7 +22,6 @@ Dialog {
     
     DialogText {
         text: "What site would you like to add?"
-        width: parent.width
     }
     
     TextEntry {
@@ -67,8 +66,6 @@ Dialog {
         text: "Add Feed"
         onClicked: validator.check()
         enabled: !validator.validating && !validator.validationComplete
-        
-        width: parent.width
     }
     
     DialogButton {
@@ -77,8 +74,6 @@ Dialog {
         text: "Cancel"
         onClicked: close()
         enabled: !validator.validationComplete
-        
-        width: parent.width
     }
     
     // Magic beans that validate & add feeds (see C++ layer.)

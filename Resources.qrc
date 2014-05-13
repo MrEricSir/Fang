@@ -58,5 +58,8 @@
         <file>icons/win32.ico</file>
         <file>qml/Fang/Button.qml</file>
         <file>qml/Fang/ListViewDragDelegate.qml</file>
+        <file>qml/Fang/AboutDialog.qml</file>
+        <file>qml/Fang/images/fang_logo_color.svg</file>
+        <file>qml/Fang/DialogSpacer.qml</file>
     </qresource>
 </RCC>

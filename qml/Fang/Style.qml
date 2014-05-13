@@ -24,6 +24,7 @@ Item {
         
         // Default UI font.
         property int defaultSize: 13
+        property int titleSize: 20
         property string defaultFamily: "Lucida Grande"
     }
     
@@ -32,6 +33,7 @@ Item {
         
         // Default UI font.
         property int defaultSize: 11
+        property int titleSize: 20
         property string defaultFamily: "Segoe UI"
     }
     

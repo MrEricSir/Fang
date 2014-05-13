@@ -9,7 +9,6 @@ Dialog {
     
     DialogText {
         text: "Theme"
-        width: parent.width
     }
     
     RadioButtonGroup {
@@ -59,7 +58,6 @@ Dialog {
     
     DialogText {
         text: "Text size"
-        width: parent.width
     }
     
     RadioButtonGroup {
@@ -114,7 +112,6 @@ Dialog {
     
     DialogText {
         text: "OPML feed list"
-        width: parent.width
     }
     
     OPMLInteractor {
@@ -147,11 +144,15 @@ Dialog {
         }
     }
     
-    // Spacer
-    DialogText {
-        text: ""
-        width: parent.width
+    DialogSpacer {}
+    
+    DialogButton {
+        id: aboutBox
+        text: "About"
+        onClicked: mainFrame.openDialog("AboutDialog.qml")
     }
+    
+    DialogSpacer {}
     
     DialogButton {
         id: closeButton
@@ -159,7 +160,5 @@ Dialog {
         text: "Close"
         onClicked: close()
         enabled: !isClosing
-        
-        width: parent.width
     }
 }

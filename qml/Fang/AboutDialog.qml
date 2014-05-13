@@ -1,0 +1,53 @@
+import QtQuick 2.0
+import Fang 1.0
+
+Dialog {
+    id: aboutDialog
+    
+    title: "About"
+    
+    Image {
+        source: "images/fang_logo_color.svg"
+        
+        width: parent.width
+        fillMode: Image.PreserveAspectCrop
+        
+        // Make SVGs render real good like.
+        sourceSize.width: width
+        sourceSize.height: height
+    }
+    
+    DialogText {
+        text: "Feed on news"
+        horizontalAlignment: Text.AlignHCenter
+        fontPointSize: style.font.titleSize
+    }
+    
+    DialogSpacer {}
+    
+    DialogText {
+        text: "Credits:\n\n" +
+              "Software & design\n" +
+              "Eric Gregory\n\n" +
+              "Logo design\n" +
+              "studyou";
+        
+        horizontalAlignment: Text.AlignHCenter 
+    }
+    
+    DialogSpacer {}
+    
+    DialogText {
+        text: "Copyright 2013-2014 Eric P. Gregory.  All rights reserved.  " +
+              "Designed in San Francisco, California";
+    }
+    
+    DialogSpacer {}
+    
+    DialogButton {
+        id: dismissButton
+        
+        text: "Dismiss"
+        onClicked: close()
+    }
+}

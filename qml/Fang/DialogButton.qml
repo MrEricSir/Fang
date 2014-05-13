@@ -6,6 +6,7 @@ Button {
     
     property string text: ""
     
+    width: parent.width
     height: buttonText.paintedHeight + 18
     
     buttonColor: style.color.dialogButton
