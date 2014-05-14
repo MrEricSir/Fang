@@ -27,6 +27,7 @@ TestFangFeedDiscovery::TestFangFeedDiscovery()
 void TestFangFeedDiscovery::testCase1()
 {
     QFETCH(QString, url);
+    QFETCH(bool, isValid);
     
     FeedDiscovery fd;
     QSignalSpy spy(&fd, SIGNAL(done(FeedDiscovery*)));
@@ -36,20 +37,29 @@ void TestFangFeedDiscovery::testCase1()
     QVERIFY(spy.wait());  // default: up to 5 seconds
     QCOMPARE(spy.count(), 1);
     
-    QVERIFY(!fd.error());
-    
-    qDebug() << "URL: " << fd.feedURL();
+    if (isValid) {
+        QVERIFY(!fd.error());
+        qDebug() << "URL: " << fd.feedURL();
+    } else {
+        QVERIFY(fd.error());
+    }
 }
 
 void TestFangFeedDiscovery::testCase1_data()
 {
     QTest::addColumn<QString>("url");
+    QTest::addColumn<bool>("isValid");
     
-    //QTest::newRow("MrEricSir") << "http://www.mrericsir.com/blog/feed/";  // broken?!
-    QTest::newRow("SFist") << "http://feeds.gothamistllc.com/SFist";
-    QTest::newRow("SFist Minimal") << "sfist.com";
-    QTest::newRow("LaughingSquid Minimal") << "laughingsquid.com";
-    QTest::newRow("Fark Minimal") << "fark.com";
+    // Errorz.
+    QTest::newRow("Bullshit URL") << "asfaw3f" << false;
+    QTest::newRow("No RSS feed") << "http://www.google.com" << false;
+    
+    // Truly good sites.
+    QTest::newRow("MrEricSir") << "http://www.mrericsir.com/blog/feed/" << true;
+    QTest::newRow("SFist") << "http://feeds.gothamistllc.com/SFist" << true;
+    QTest::newRow("SFist Minimal") << "sfist.com" << true;
+    QTest::newRow("LaughingSquid Minimal") << "laughingsquid.com" << true;
+    QTest::newRow("Fark Minimal") << "fark.com" << true;
 }
 
 QTEST_MAIN(TestFangFeedDiscovery)

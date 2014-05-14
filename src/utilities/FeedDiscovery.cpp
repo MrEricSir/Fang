@@ -147,6 +147,12 @@ void FeedDiscovery::onSecondParseDone()
 
 void FeedDiscovery::onPageGrabberReady(QWebPage *page)
 {
+    if (NULL == page) {
+        reportError("No page found");
+        
+        return;
+    }
+    
     // Find the first feed URL.
     QWebElement doc = page->mainFrame()->documentElement();
     if (doc.isNull()) {
