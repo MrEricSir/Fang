@@ -1,8 +1,8 @@
 import QtQuick 2.0
 import Fang 1.0
 
-Rectangle {
-    id: mainFrame
+Item {
+    id: globals
     
     // Treat as const
     property int sidebarWidth: 230
@@ -16,8 +16,6 @@ Rectangle {
         id: fangSettings
         objectName: "fangSettings" // Don't change this!
     }
-    
-    color: style.color.background
     
     // Read-only: List of all open dialogs
     property var openDialogs: []
@@ -33,15 +31,40 @@ Rectangle {
             console.log("Error creating dialog: " + dialogName);
         }
         
+        // Fade out current screen.
+        if (openDialogs.length > 0) {
+            // Current screen is dialog.
+            openDialogs[openDialogs.length - 1].fadeOut();
+        } else {
+            // Current screen is mainFrame
+            mainFrame.fadeOut();
+        }
+        
         // Pop 'er open!
         openDialogs.push(dialog);
         news.newsFocus = false;
+        dialog.index = openDialogs.length
         dialog.onDialogClosed.connect(onDialogClosed);
+        dialog.onDialogClosing.connect(onDialogClosing);
         dialog.open();
+    }
+    
+    // Called when a dialog is starting to close.
+    function onDialogClosing(dialog) {
+        // The previous screen will either be a dialog or the main frame.
+        // Find it and fade it in!
+        var i = openDialogs.indexOf(dialog) - 1;
+        if (i >= 0) {
+            openDialogs[i].fadeIn();
+        } else {
+            mainFrame.fadeIn();
+        }
+        
     }
     
     // Called when a dialog is closed.
     function onDialogClosed(dialog) {
+        console.log("CloseD: " + dialog)
         // Remove the entry.
         openDialogs.splice(openDialogs.indexOf(dialog), 1);
         delete dialog;
@@ -52,128 +75,145 @@ Rectangle {
         }
     }
     
-    // The feed list sidebar.
-    Sidebar {
-        id: sidebar
+    /**
+     * Operator: mainFrame turn on.
+     *
+     * Captain: It's you!!
+     * CATS: How are you gentlemen!!
+     * CATS: All your base are belong to us.
+     * CATS: You are on the way to destruction.
+     * Captain: What you say!!
+     * CATS: You have no chance to survive make your time.
+     * CATS: Ha ha ha ha ....
+     */
+    Screen {
+        id: mainFrame
         
-        width: sidebarWidth
-        x: 0
-        anchors.top: parent.top
-        anchors.bottom: parent.bottom
-        state: "open"
+        anchors.fill: parent
         
-        states: [
-            State { name: "open" },
-            State { name: "closed" }
-        ]
-        
-        transitions: [
-            Transition {
-                from: "open"
-                to: "closed"
-                SequentialAnimation {
-                    // Move sidebar off screen
-                    ParallelAnimation {
-                        NumberAnimation {
-                            target: sidebar
-                            properties: "x"
-                            to: -sidebarWidth
-                            duration: 200
-                            easing.type: Easing.InOutQuad
-                        }
-                        
-                        NumberAnimation {
-                            target: openSidebarButton
-                            properties: "opacity"
-                            from: 0.0
-                            to: 1.0
-                            duration: 500
-                            easing.type: Easing.InOutQuad
-                        }
-                    }
-                }
-            },
-            Transition {
-                from: "closed"
-                to: "open"
-                
-                SequentialAnimation {
-                    // Move sidebar back on screen
-                    ParallelAnimation {
-                        NumberAnimation {
-                            target: sidebar
-                            properties: "x"
-                            to: 0
-                            duration: 200
-                            easing.type: Easing.InOutQuad
-                        }
-                        
-                        NumberAnimation {
-                            target: openSidebarButton
-                            properties: "opacity"
-                            from: 1.0
-                            to: 0.0
-                            duration: 500
-                            easing.type: Easing.InOutQuad
-                        }
-                    }
-                }
-            }
-        ]
-        
-        onCloseClicked: sidebar.state = "closed"
-        
-        onFeedDoubleClicked: news.jumpToBookmark()
-        onOrderChanged: news.orderChanged()
-        
-        onSettingsClicked: openDialog("SettingsDialog.qml");
-        onAddClicked: openDialog("AddDialog.qml");
-        onRemoveClicked: openDialog("RemoveDialog.qml");
-        onEditClicked: openDialog("EditDialog.qml");
-    }
-    
-    News {
-        id: news
-        
-        anchors.left: sidebar.right
-        anchors.top: parent.top
-        anchors.bottom: parent.bottom
-        anchors.right: parent.right
-        
-        newsFocus: true // set by dialog system
-        
-        Item {
-            id: openButtonContainer
+        // The feed list sidebar.
+        Sidebar {
+            id: sidebar
             
-            anchors.left: parent.left
+            width: sidebarWidth
+            x: 0
+            anchors.top: parent.top
             anchors.bottom: parent.bottom
+            state: "open"
             
-            height: sidebar.buttonSize
-            width: sidebar.buttonSize
+            states: [
+                State { name: "open" },
+                State { name: "closed" }
+            ]
             
-            anchors.leftMargin: 5
-            anchors.bottomMargin: 5
+            transitions: [
+                Transition {
+                    from: "open"
+                    to: "closed"
+                    SequentialAnimation {
+                        // Move sidebar off screen
+                        ParallelAnimation {
+                            NumberAnimation {
+                                target: sidebar
+                                properties: "x"
+                                to: -sidebarWidth
+                                duration: 200
+                                easing.type: Easing.InOutQuad
+                            }
+                            
+                            NumberAnimation {
+                                target: openSidebarButton
+                                properties: "opacity"
+                                from: 0.0
+                                to: 1.0
+                                duration: 500
+                                easing.type: Easing.InOutQuad
+                            }
+                        }
+                    }
+                },
+                Transition {
+                    from: "closed"
+                    to: "open"
+                    
+                    SequentialAnimation {
+                        // Move sidebar back on screen
+                        ParallelAnimation {
+                            NumberAnimation {
+                                target: sidebar
+                                properties: "x"
+                                to: 0
+                                duration: 200
+                                easing.type: Easing.InOutQuad
+                            }
+                            
+                            NumberAnimation {
+                                target: openSidebarButton
+                                properties: "opacity"
+                                from: 1.0
+                                to: 0.0
+                                duration: 500
+                                easing.type: Easing.InOutQuad
+                            }
+                        }
+                    }
+                }
+            ]
             
-            // Button to re-open sidebar
-            SidebarButton {
-                id: openSidebarButton
+            onCloseClicked: sidebar.state = "closed"
+            
+            onFeedDoubleClicked: news.jumpToBookmark()
+            onOrderChanged: news.orderChanged()
+            
+            onSettingsClicked: openDialog("SettingsDialog.qml");
+            onAddClicked: openDialog("AddDialog.qml");
+            onRemoveClicked: openDialog("RemoveDialog.qml");
+            onEditClicked: openDialog("EditDialog.qml");
+        }
+        
+        News {
+            id: news
+            
+            anchors.left: sidebar.right
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            anchors.right: parent.right
+            
+            newsFocus: true // set by dialog system
+            
+            Item {
+                id: openButtonContainer
                 
-                imageURL: fangSettings.style === "LIGHT" ? "images/arrows_right_dark.png"
-                                                         : "images/arrows_right.png"
-                imageHoverURL: fangSettings.style === "LIGHT" ? "images/arrows_right.png"
-                                                              : "images/arrows_right_dark.png"
-                imagePressedURL: fangSettings.style === "LIGHT" ? "images/arrows_right.png"
-                                                                : "images/arrows_right_dark.png"
+                anchors.left: parent.left
+                anchors.bottom: parent.bottom
                 
-                width: sidebar.buttonSize
                 height: sidebar.buttonSize
+                width: sidebar.buttonSize
                 
-                opacity: 0
-                enabled: sidebar.state == "closed"
+                anchors.leftMargin: 5
+                anchors.bottomMargin: 5
                 
-                anchors.margins: 5
-                
-                onClicked: sidebar.state = "open"
+                // Button to re-open sidebar
+                SidebarButton {
+                    id: openSidebarButton
+                    
+                    imageURL: fangSettings.style === "LIGHT" ? "images/arrows_right_dark.png"
+                                                             : "images/arrows_right.png"
+                    imageHoverURL: fangSettings.style === "LIGHT" ? "images/arrows_right.png"
+                                                                  : "images/arrows_right_dark.png"
+                    imagePressedURL: fangSettings.style === "LIGHT" ? "images/arrows_right.png"
+                                                                    : "images/arrows_right_dark.png"
+                    
+                    width: sidebar.buttonSize
+                    height: sidebar.buttonSize
+                    
+                    opacity: 0
+                    enabled: sidebar.state == "closed"
+                    
+                    anchors.margins: 5
+                    
+                    onClicked: sidebar.state = "open"
+                }
             }
         }
     }

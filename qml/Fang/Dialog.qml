@@ -4,10 +4,11 @@ import Fang 1.0
 // Dialog container.
 // Takes up the entire screen.
 // Note: Mr. T. pitties the fool who uses this with anchors!  Specify x, y, width, height, please.
-Rectangle {
+Screen {
     id: dialog
     
     signal onDialogClosed(var self)
+    signal onDialogClosing(var self)
     
     // Dialog title text.
     property string title
@@ -16,24 +17,15 @@ Rectangle {
     default property alias contents: placeholder.children
     
     // Read only.
-    property bool isClosing: state === "closed" || dismissTimer.running
-    property bool isClosed: state === "closed"
+    property bool isClosing: dialogMainContainer.state === "closed" || dismissTimer.running
+    property bool isClosed: dialogMainContainer.state === "closed"
     
     color: style.color.dialogBackground
     visible: false // Managed by state transitions
-    state: "closed"
-    
-    width: parent.width
-    height: parent.height
-    
-    states: [
-        State { name: "open" },
-        State { name: "closed" }
-    ]
     
     // Opens the dialog.
     function open() {
-        state = "open";
+        dialogMainContainer.state = "open";
     }
     
     // Dismisses the dialog after a short delay.  Normally it's best to use this instead of close.
@@ -43,7 +35,10 @@ Rectangle {
     
     // Immediately closes the dialog.
     function close() {
-        state = "closed";
+        if (dialogMainContainer.state === "open")
+            onDialogClosing(dialog)
+        
+        dialogMainContainer.state = "closed";
     }
     
     // Send closed signal
@@ -52,141 +47,154 @@ Rectangle {
             onDialogClosed(dialog)
     }
     
-    transitions: [
-        Transition {
-            from: "open"
-            to: "closed"
-            SequentialAnimation {
-                // Move dialog off screen
-                NumberAnimation {
-                    id: closeAnimation
-                    
-                    target: dialog
-                    properties: "y"
-                    from: 0
-                    to: parent.height
-                    duration: 300
-                    easing.type: Easing.InOutQuad
-                }
-                
-                // Make it invisible.
-                PropertyAction {
-                    target: dialog
-                    property: "visible"
-                    value: "false"
-                }
-            }
-        },
-        Transition {
-            from: "closed"
-            to: "open"
-           
-            SequentialAnimation {
-                // Show the dialog.
-                PropertyAction {
-                    target: dialog
-                    property: "visible"
-                    value: "true"
-                }
-                
-                 // Move dialog back on screen
-                NumberAnimation {
-                    id: openAnimation
-                    
-                    target: dialog
-                    properties: "y"
-                    from: parent.height
-                    to: 0
-                    duration: 300
-                    easing.type: Easing.InOutQuad
-                }
-            }
-        }
-    ]
-    
-    focus: state == "open";
+    focus: dialogMainContainer.state == "open";
     Keys.onPressed: {
         if (event.key === Qt.Key_Escape) {
             close();
         }
     }
     
-    Text {
-        id: dialogTitle
+    Item {
+        id: dialogMainContainer
         
-        text: dialog.title
+        state: "closed"
         
-        font.pointSize: style.font.titleSize
-        font.family: style.font.defaultFamily
-        color: style.color.dialogText
+        states: [
+            State { name: "open" },
+            State { name: "closed" }
+        ]
         
-        anchors.top: parent.top
-        anchors.left: parent.left
-        anchors.topMargin: 20
-        anchors.leftMargin: 15
-    }
-    
-    // Catch-alls to prevent clicks under this container.
-    MouseArea {
         anchors.fill: parent
         
-        // Capture scroll events and such from propagating to WebKit
-        hoverEnabled: true
-        preventStealing: true
-        onWheel: {}
-    }
-    
-    // Dialog contents
-    Item {
-        anchors.top: dialogTitle.bottom
-        anchors.topMargin: 15
-        anchors.bottom: parent.bottom
-        anchors.left: parent.left
-        anchors.leftMargin: 15
-        anchors.right: parent.right
+        transitions: [
+            Transition {
+                from: "open"
+                to: "closed"
+                SequentialAnimation {
+                    // Move dialog off screen
+                    NumberAnimation {
+                        id: closeAnimation
+                        
+                        target: dialog
+                        properties: "y"
+                        from: 0
+                        to: parent.height
+                        duration: 300
+                        easing.type: Easing.InOutQuad
+                    }
+                    
+                    // Make it invisible.
+                    PropertyAction {
+                        target: dialog
+                        property: "visible"
+                        value: "false"
+                    }
+                }
+            },
+            Transition {
+                from: "closed"
+                to: "open"
+               
+                SequentialAnimation {
+                    // Show the dialog.
+                    PropertyAction {
+                        target: dialog
+                        property: "visible"
+                        value: "true"
+                    }
+                    
+                     // Move dialog back on screen
+                    NumberAnimation {
+                        id: openAnimation
+                        
+                        target: dialog
+                        properties: "y"
+                        from: parent.height
+                        to: 0
+                        duration: 300
+                        easing.type: Easing.InOutQuad
+                    }
+                }
+            }
+        ]
         
-        Flickable {
-            id: placeholderFlickable
+        Text {
+            id: dialogTitle
+            
+            text: dialog.title
+            
+            font.pointSize: style.font.titleSize
+            font.family: style.font.defaultFamily
+            color: style.color.dialogText
+            
+            anchors.top: parent.top
+            anchors.left: parent.left
+            anchors.topMargin: 20
+            anchors.leftMargin: 15
+        }
+        
+        // Catch-alls to prevent clicks under this container.
+        MouseArea {
             anchors.fill: parent
             
-            contentWidth: width
-            contentHeight: container.childrenRect.height
-            flickableDirection: Flickable.VerticalFlick
+            // Capture scroll events and such from propagating to WebKit
+            hoverEnabled: true
+            preventStealing: true
+            onWheel: {}
+        }
+        
+        // Dialog contents
+        Item {
+            anchors.top: dialogTitle.bottom
+            anchors.topMargin: 15
+            anchors.bottom: parent.bottom
+            anchors.left: parent.left
+            anchors.leftMargin: 15
+            anchors.right: parent.right
             
-            Item {
-                id: container
+            Flickable {
+                id: placeholderFlickable
+                anchors.fill: parent
                 
-                width: 400
-                anchors.horizontalCenter: parent.horizontalCenter
+                contentWidth: width
+                contentHeight: container.childrenRect.height
+                flickableDirection: Flickable.VerticalFlick
                 
-                // Children go here.
-                Column {
-                    id: placeholder
+                Item {
+                    id: container
                     
-                    width: parent.width
-                    spacing: 10
+                    width: 400
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    
+                    // Children go here.
+                    Column {
+                        id: placeholder
+                        
+                        width: parent.width
+                        spacing: 10
+                    }
                 }
+            }
+            
+            ScrollBar {
+                id: dialogScroll
+                target: placeholderFlickable
             }
         }
         
-        ScrollBar {
-            id: dialogScroll
-            target: placeholderFlickable
+        // Timer so we give the user a glimpse of our message before closing
+        // the dialog.
+        Timer {
+            id: dismissTimer
+            interval: 700
+            running: false
+            repeat: false
+            
+            onTriggered: close()
         }
-    }
-    
-    // Timer so we give the user a glimpse of our message before closing
-    // the dialog.
-    Timer {
-        id: dismissTimer
-        interval: 700
-        running: false
-        repeat: false
         
-        onTriggered: close()
-    }
-    
-    Style {
-        id: style
+        Style {
+            id: style
+        }
     }
 }

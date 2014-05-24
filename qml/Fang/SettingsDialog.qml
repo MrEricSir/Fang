@@ -149,7 +149,7 @@ Dialog {
     DialogButton {
         id: aboutBox
         text: "About"
-        onClicked: mainFrame.openDialog("AboutDialog.qml")
+        onClicked: globals.openDialog("AboutDialog.qml")
     }
     
     DialogSpacer {}

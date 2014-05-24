@@ -61,5 +61,6 @@
         <file>qml/Fang/AboutDialog.qml</file>
         <file>qml/Fang/images/fang_logo_color.svg</file>
         <file>qml/Fang/DialogSpacer.qml</file>
+        <file>qml/Fang/Screen.qml</file>
     </qresource>
 </RCC>
