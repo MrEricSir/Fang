@@ -9,10 +9,12 @@ Rectangle {
     // Index of this screen (used for z transitions)
     property double index: 0
     
+    // Fades the screen out, man.
     function fadeOut() {
         state = "out"
     }
     
+    // Whoa fade back in!
     function fadeIn() {
         state = "in"
     }
@@ -22,6 +24,16 @@ Rectangle {
     height: parent.height
     z: index
     
+    transform: Scale {
+        id: scaleTransform
+        property real scale: 1.0
+        
+        xScale: scale
+        yScale: scale
+        origin.x: parent.width / 2
+        origin.y: parent.height / 2
+    }
+    
     states: [
         State { name: "in" },
         State { name: "out" }
@@ -29,16 +41,6 @@ Rectangle {
     
     // Default state is faded in
     state: "in"
-    
-    onStateChanged: {
-        console.log("For  change state: " + state)
-    }
-    
-    Item {
-        id: placeholderScreen
-        
-        anchors.fill: parent
-    }
     
     Rectangle {
         id: blocker
@@ -53,7 +55,7 @@ Rectangle {
         Transition {
             from: "in"
             to: "out"
-            SequentialAnimation {
+            ParallelAnimation {
                 // Fade out
                 ColorAnimation {
                     id: fadeOut
@@ -65,13 +67,21 @@ Rectangle {
                     duration: 300
                     easing.type: Easing.InOutQuad
                 }
+                PropertyAnimation {
+                    target: scaleTransform
+                    properties: "scale"
+                    from: 1.0
+                    to: 0.8
+                    duration: 300
+                    easing.type: Easing.InOutQuad
+                }
             }
         },
         Transition {
             from: "out"
             to: "in"
            
-            SequentialAnimation {
+            ParallelAnimation {
                 // Show the dialog.
                 ColorAnimation {
                     id: fadeIn
@@ -80,6 +90,15 @@ Rectangle {
                     properties: "color"
                     to: "transparent"
                     from: "black"
+                    duration: 300
+                    easing.type: Easing.InOutQuad
+                }
+                
+                PropertyAnimation {
+                    target: scaleTransform
+                    properties: "scale"
+                    to: 1.0
+                    from: 0.8
                     duration: 300
                     easing.type: Easing.InOutQuad
                 }

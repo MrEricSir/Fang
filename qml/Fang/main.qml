@@ -1,7 +1,7 @@
 import QtQuick 2.0
 import Fang 1.0
 
-Item {
+Rectangle {
     id: globals
     
     // Treat as const
@@ -24,7 +24,7 @@ Item {
     function openDialog(dialogName) {
         var component = Qt.createComponent(dialogName);
         var dialog = component.createObject(
-                    mainFrame, {"x": 0, "y": 0, "listView": sidebar.listView});
+                    globals, {"x": 0, "y": 0, "listView": sidebar.listView});
         
         if (dialog === null) {
             // Error Handling
@@ -64,7 +64,6 @@ Item {
     
     // Called when a dialog is closed.
     function onDialogClosed(dialog) {
-        console.log("CloseD: " + dialog)
         // Remove the entry.
         openDialogs.splice(openDialogs.indexOf(dialog), 1);
         delete dialog;
@@ -74,6 +73,8 @@ Item {
             news.newsFocus = true;
         }
     }
+    
+    color: "black"
     
     /**
      * Operator: mainFrame turn on.
