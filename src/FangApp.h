@@ -80,6 +80,12 @@ public slots:
      */
     void removeFeed(FeedItem *feed);
     
+    /**
+     * @brief Updates every single damn feed.
+     */
+    void updateAllFeeds();
+    
+    
 private slots:
     void onViewerStatusChanged(QQuickView::Status);
     
@@ -110,11 +116,6 @@ private slots:
      * @param op
      */
     void onLoadAllFinished(Operation* op);
-    
-    /**
-     * @brief Updates every single damn feed.
-     */
-    void updateAllFeeds();
     
     /**
      * @brief Tells the web view to display the current feed.

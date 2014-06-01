@@ -116,6 +116,11 @@ Dialog {
     
     OPMLInteractor {
         id: opml
+        
+        onImportStarted: {
+            var dialog = globals.openDialog("OPMLImportDialog.qml");
+            dialog.setInteractor(opml)
+        }
     }
     
     DialogButtonGroup {

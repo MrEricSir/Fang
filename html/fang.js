@@ -325,7 +325,7 @@ $(document).ready(function() {
         
         // No bookmark?  No problem, we'll look at the first news item instead.
         if (!bookmarkedItem.length) {
-            bookmarkedItem = $( 'body>.newsContainer:visible' );
+            bookmarkedItem = $( 'body>.newsContainer' );
             //console.log("No bookmark found: starting with: ", bookmarkedItem)
         }
         
@@ -339,7 +339,7 @@ $(document).ready(function() {
         // Check if the bottom of the bookmarked item is above the scroll level.
         // If not, bail now since the bookmark won't be changed.
         if (!isAboveScroll(bookmarkedItem)) {
-            console.log("not above scroll!", bookmarkedItem.attr('id'))
+            //console.log("not above scroll!", bookmarkedItem.attr('id'))
             
             return;
         }

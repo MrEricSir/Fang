@@ -10,7 +10,6 @@
 #include "operations/LoadAllFeedsOperation.h"
 #include "operations/AddFeedOperation.h"
 #include "operations/RemoveFeedOperation.h"
-#include "operations/FaviconUpdateOperation.h"
 #include "operations/UpdateTitleOperation.h"
 
 FangApp* FangApp::_instance = NULL;
@@ -49,11 +48,7 @@ void FangApp::init()
     // Enable cache for remote QML elements.
     NetworkUtilities::addNetworkAccessManagerCache(viewer->engine()->networkAccessManager());
     
-    // Load feed list.
-    LoadAllFeedsOperation* loadAllOp = new LoadAllFeedsOperation(&manager, feedList);
-    connect(loadAllOp, SIGNAL(finished(Operation*)), this, SLOT(onLoadAllFinished(Operation*)));
-    manager.add(loadAllOp);
-    
+    // Setup our QML.
     viewer->rootContext()->setContextProperty("feedListModel", feedList); // list of feeds
     viewer->rootContext()->setContextProperty("platform", getPlatform()); // platform string ID
     viewer->addImportPath(QLatin1String("modules"));
@@ -61,7 +56,13 @@ void FangApp::init()
     viewer->setSource(QUrl("qrc:/qml/Fang/main.qml"));
     viewer->displayWindow();
     
-    // Set a timer to update the feeds every ten minutes (make changable later.)
+    // Load feed list.
+    LoadAllFeedsOperation* loadAllOp = new LoadAllFeedsOperation(&manager, feedList);
+    connect(loadAllOp, SIGNAL(finished(Operation*)), this, SLOT(onLoadAllFinished(Operation*)));
+    manager.add(loadAllOp);
+    
+    // Set a timer to update the feeds every ten minutes.
+    // TODO: Customize news update timer
     connect(updateTimer, SIGNAL(timeout()), this, SLOT(updateAllFeeds()));
     updateTimer->start(10 * 60 * 1000);
 }
@@ -135,12 +136,13 @@ void FangApp::onFeedAdded(ListItem *item)
         return;
     }
     
+    // Hook up signals.
     connectFeed(feed);
     
-    // Update the feed.
-    if (feed->getDbId() > 0) {
-        manager.add(new UpdateFeedOperation(&manager, feed));
-        manager.add(new FaviconUpdateOperation(&manager, feed));
+    if (!feed->isAllNews()) {
+        // Not all news, so trigger an update.
+        // TODO: Handle folders.
+        interactor->refreshFeed(feed);
     }
 }
 
@@ -180,9 +182,7 @@ void FangApp::updateAllFeeds()
     if (feedList == NULL || feedList->rowCount() == 0 || interactor == NULL)
         return; // Somehow this was called too early.
     
-    FeedItem* allNews = qobject_cast<FeedItem*>(feedList->row(0));
-    Q_ASSERT(allNews != NULL);
-    interactor->refreshFeed(allNews);
+    interactor->refreshAllFeeds();
 }
 
 void FangApp::displayFeed()

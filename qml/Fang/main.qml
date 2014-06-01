@@ -20,7 +20,8 @@ Rectangle {
     // Read-only: List of all open dialogs
     property var openDialogs: []
     
-    // Creates and opens a dialog.
+    // Creates and opens a dialog.  The dialog is returned in case you wanna mess with
+    // it and shit.
     function openDialog(dialogName) {
         var component = Qt.createComponent(dialogName);
         var dialog = component.createObject(
@@ -29,6 +30,8 @@ Rectangle {
         if (dialog === null) {
             // Error Handling
             console.log("Error creating dialog: " + dialogName);
+            
+            return null;
         }
         
         // Fade out current screen.
@@ -47,6 +50,8 @@ Rectangle {
         dialog.onDialogClosed.connect(onDialogClosed);
         dialog.onDialogClosing.connect(onDialogClosing);
         dialog.open();
+        
+        return dialog;
     }
     
     // Called when a dialog is starting to close.

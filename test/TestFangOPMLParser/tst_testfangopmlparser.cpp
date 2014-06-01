@@ -51,7 +51,7 @@ void TestFangOPMLParser::testCase1()
     // Verify the signal is only emitted once.
     QCOMPARE(spy.count(), 1);
     
-    QList<RawFeed*> feedList = parser.getResult();
+    QList<RawFeed*> feedList = parser.getFeedList();
     QVERIFY2(feedList.size() > 0, "No feeds found. :(");
     
     // Grab the last feed.

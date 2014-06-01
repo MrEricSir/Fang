@@ -95,7 +95,11 @@ public slots:
     // Opens a link in the external browser.
     Q_INVOKABLE void openLink(QString link);
     
-    void refreshFeed(FeedItem* item);
+    // Refresh a single feed.
+    void refreshFeed(FeedItem* feed);
+    
+    // Refresh ALL feeds.
+    void refreshAllFeeds();
     
     // Refreshes a given feed.
     Q_INVOKABLE void refreshFeed(const qint64 id);

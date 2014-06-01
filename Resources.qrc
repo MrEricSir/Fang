@@ -62,5 +62,6 @@
         <file>qml/Fang/images/fang_logo_color.svg</file>
         <file>qml/Fang/DialogSpacer.qml</file>
         <file>qml/Fang/Screen.qml</file>
+        <file>qml/Fang/OPMLImportDialog.qml</file>
     </qresource>
 </RCC>

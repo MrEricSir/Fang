@@ -9,20 +9,33 @@
 #include "ParserInterface.h"
 #include "RawFeed.h"
 
+/**
+ * @brief Parses an OPML document containing an RSS list.  The feeds are
+ *        validated and can be added immediately.
+ */
 class OPMLParser : public QObject
 {
     Q_OBJECT
 public:
     explicit OPMLParser(QObject *parent = 0);
     virtual ~OPMLParser();
+    
 signals:
-    // Call getResult() and getFeed() now, yo!
+    // Call getResult() and getFeedList() now, yo!
     void done();
     
 public slots:
+    
+    // Starts parsing a file.
     void parseFile(QString filename);
     
-    QList<RawFeed*> getResult() { return feedList; }
+    // Gets the result status.
+    ParserInterface::ParseResult getResult() { return result; }
+    
+    // Returns the feed list, assuming there is one.
+    QList<RawFeed*> getFeedList() { return feedList; }
+    
+    // Returns the file you passed in parseFile()
     QFile* getFile() { return &file; }
     
 private:
