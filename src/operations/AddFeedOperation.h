@@ -15,7 +15,8 @@ class AddFeedOperation : public DBOperation
     Q_OBJECT
 public:
     // Attempts to add a feed based on an RSS/Atom URL.
-    explicit AddFeedOperation(OperationManager *parent, ListModel *feedList, const QUrl &feedURL);
+    explicit AddFeedOperation(OperationManager *parent, ListModel *feedList, const QUrl &feedURL,
+                              QString title = "");
     
     // Adds a feed that's already been parsed.
     explicit AddFeedOperation(OperationManager *parent, ListModel *feedList, const QUrl &feedURL,
@@ -38,6 +39,8 @@ private:
     const RawFeed* rawFeed;
     
     BackgroundParser parser;
+    
+    QString title;
 };
 
 #endif // ADDFEEDOPERATION_H

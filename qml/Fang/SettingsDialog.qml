@@ -117,9 +117,14 @@ Dialog {
     OPMLInteractor {
         id: opml
         
-        onImportStarted: {
-            var dialog = globals.openDialog("OPMLImportDialog.qml");
-            dialog.setInteractor(opml)
+        onImportReady: {
+            var importDialog = globals.openDialog("OPMLImportDialog.qml");
+            importDialog.interactor = opml;
+            importDialog.onParentClose.connect(close);
+        }
+        
+        onImportInProgressChanged: {
+            console.log("Import in progress? ", importInProgress)
         }
     }
     

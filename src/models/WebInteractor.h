@@ -69,6 +69,12 @@ signals:
      */
     void drawBookmark(QString id);
     
+    /**
+     * @brief Not only draws the bookmark, but also issues a jump.
+     * @param id   HTML ID of the news item blah blah see above.
+     */
+    void drawBookmarkAndJumpTo(QString id);
+    
 public slots:
     
     // Call this when the feed changes, g-dawg.
@@ -79,9 +85,6 @@ public slots:
     
     // Beep beep beep! http://www.youtube.com/watch?v=B_H7WZGsIjM
     Q_INVOKABLE void loadPrevious();
-    
-    // Gets the current bookmark and invokes a jump to it.
-    Q_INVOKABLE void jumpToBookmark();
     
     // The order changed!  Better record that.
     Q_INVOKABLE void orderChanged();

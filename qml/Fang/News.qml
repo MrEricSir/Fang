@@ -8,7 +8,7 @@ Item {
     
     // Used by main for double clicking on feed titles.
     function jumpToBookmark() {
-        webInteractor.jumpToBookmark();
+        newsView.experimental.evaluateJavaScript("jumpToBookmark();");
     }
     
     function orderChanged() {
@@ -74,6 +74,11 @@ Item {
                 console.log("Draw bookmark: ", id)
                 newsView.experimental.evaluateJavaScript("drawBookmark('" + id + "');");
             }
+            
+            onDrawBookmarkAndJumpTo: {
+                console.log("Draw bookmark and jump to: ", id)
+                newsView.experimental.evaluateJavaScript("drawBookmarkAndJumpTo('" + id + "');");
+            }
         }
         
         // Web view for our HTML-based RSS display.
@@ -125,18 +130,18 @@ Item {
                     webInteractor.loadNext();
                 } else if (cmd === "loadPrevious") {
                     webInteractor.loadPrevious();
-                } else if (cmd === "jumpToBookmark") {
-                    webInteractor.jumpToBookmark();
                 } else if (cmd === "setBookmark") {
                     webInteractor.setBookmark(commandArray[1]);
                 } else if (cmd === "openLink") {
                     webInteractor.openLink(commandArray[1]);
                 } else if (cmd === "stopProgress" ) {
                     newsView.experimental.evaluateJavaScript("stopInProgress();");
-                } else if (cmd === "scrollToPosition" ) {
-                    console.log("Scroll to position: ", commandArray[1]);
-                    newsScroll.scrollTo(commandArray[1]);
                 }
+                
+                // Not used in Qt 5.3
+//                } else if (cmd === "scrollToPosition" ) {
+//                    console.log("Scroll to position: ", commandArray[1]);
+//                    newsScroll.scrollTo(commandArray[1]);
             }
             
             // Set style, and update when needed.

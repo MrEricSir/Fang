@@ -20,4 +20,3 @@ FeedItem *Utilities::feedItemFromRaw(const RawFeed *raw, qint64 dbId, QObject* p
                         parent
                         );
 }
-

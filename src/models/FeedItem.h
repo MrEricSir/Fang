@@ -28,6 +28,8 @@ public:
         IsUpdatingRole,
         UnreadCountRole,
         DropTargetRole,
+        ErrorFlagRole,
+        IsSelectedRole,
         SelfRole
     };
     
@@ -89,6 +91,8 @@ public:
     
     Q_INVOKABLE void setDropTarget(const QString& dropTarget);
     
+    Q_INVOKABLE void setIsSelected(bool s);
+    
     /**
      * @brief Appends a NewsItem to the end of the feed.
      * @param item
@@ -146,6 +150,28 @@ public:
      */
     void setOrdinal(int newOrdinal);
     
+    /**
+     * @brief Sets the optional error flag.  Used in batch import.
+     * @param errorFlag
+     */
+    void setErrorFlag(bool errorFlag);
+    
+    /**
+     * @return True if error flag is set, else false.
+     */
+    inline bool getErrorFlag() const { return _errorFlag; }
+    
+    /**
+     * @brief Changes the URL.
+     * @param url
+     */
+    void setURL(QUrl url);
+    
+    /**
+     * @return True if this item is selected.
+     */
+    inline bool getIsSelected() const { return isSelected; }
+    
 signals:
     
     void appended(NewsItem* item);
@@ -167,6 +193,8 @@ private:
     qint32 unreadCount;
     NewsItem* bookmark;
     QString dropTarget;
+    bool _errorFlag;
+    bool isSelected;
 };
 
 #endif // FEEDITEM_H

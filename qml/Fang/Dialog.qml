@@ -7,8 +7,9 @@ import Fang 1.0
 Screen {
     id: dialog
     
-    signal onDialogClosed(var self)
-    signal onDialogClosing(var self)
+    signal dialogOpened() // Open has completed
+    signal dialogClosed(var self)
+    signal dialogClosing(var self)
     
     // Dialog title text.
     property string title
@@ -36,7 +37,7 @@ Screen {
     // Immediately closes the dialog.
     function close() {
         if (dialogMainContainer.state === "open")
-            onDialogClosing(dialog)
+            dialogClosing(dialog)
         
         dialogMainContainer.state = "closed";
     }
@@ -44,7 +45,7 @@ Screen {
     // Send closed signal
     onIsClosedChanged: {
         if (isClosed)
-            onDialogClosed(dialog)
+            dialogClosed(dialog)
     }
     
     focus: dialogMainContainer.state == "open";
@@ -113,6 +114,10 @@ Screen {
                         to: 0
                         duration: 300
                         easing.type: Easing.InOutQuad
+                    }
+                    
+                    ScriptAction {
+                        script: dialog.dialogOpened();
                     }
                 }
             }

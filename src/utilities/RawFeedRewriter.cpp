@@ -88,6 +88,7 @@ void RawFeedRewriter::takeOutTrash(QWebElement newsContainer)
     removeAll("script", newsContainer); // Javascript
     removeAll("style", newsContainer); // Custom styles.
     removeAll("iframe", newsContainer); // Iframes!
+    removeAll("hr", newsContainer); // No horizontals allowed; they're ugly.
     removeAll(".feedflare", newsContainer); // Feedburger's 37 pieces of flare
     removeAll(".mf-viral", newsContainer); // Motherfucking viral?
     removeAll(".service-links-stumbleupon", newsContainer); // StubbleUponYourFace

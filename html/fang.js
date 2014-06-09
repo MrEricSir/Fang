@@ -13,7 +13,7 @@ $(window).resize(function() {
     if(this.resizeTO) clearTimeout(this.resizeTO);
         this.resizeTO = window.setTimeout(function() {
             //console.log("RESIZE");
-            navigator.qt.postMessage( 'jumpToBookmark' );
+            jumpToBookmark();
     }, 50);
     
 });
@@ -110,8 +110,8 @@ function clearNews() {
 
 function resizeBottomSpacer() {
     // Grab the last (non model) news item.
-    var lastItem = $( 'body>.newsContainer' ).last();
-    //console.log("last item: ", lastItem)
+    var lastItem = $( 'body>.newsContainer:not(#model)' ).last();
+    console.log("Reszie bottom spacer. last item: ", lastItem)
     
     // By default, bottom spacer is the window height.  This allows the user
     // to scroll the last item off the page, bookmarking it.
@@ -127,6 +127,7 @@ function resizeBottomSpacer() {
         numPix -= removePix;
     }
     
+    console.log("Bottom spacer is now: ", numPix)
     $( '#bottom' ).height( numPix + 'px' );
 }
 
@@ -140,6 +141,8 @@ function jumpTo(id) {
     var scrollTo = $( elementId ).offset().top;
     
     console.log("jump to: ", elementId, "scrolling to: ", scrollTo);
+    
+    //navigator.qt.postMessage( 'scrollToPosition ' + scrollTo );
     $(document).scrollTop( scrollTo );
 }
 
@@ -153,6 +156,56 @@ function drawBookmark(id) {
     $( elementId ).addClass('bookmarked');
     
     resizeBottomSpacer();
+}
+
+var bookmarkIdWeAreJumpingTo = "";
+
+// Both draw the bookmark AND jump to it!
+function drawBookmarkAndJumpTo(id) {
+    if (!id || id === "")
+        return;
+    
+    bookmarkIdWeAreJumpingTo = id;
+    drawBookmarkAndJumpToJumpingToId();
+}
+
+// Internal method for above function.
+function drawBookmarkAndJumpToJumpingToId() {
+    console.log("Draw and jumping to jump jump")
+    if (isInProgress) {
+        window.setTimeout(function() {
+            drawBookmarkAndJumpToJumpingToId();
+        }, 1);
+        
+        return;
+    }
+    
+    console.log("Jump out complete: ", bookmarkIdWeAreJumpingTo)
+    
+    // Draw our bookmark and jump to it!
+    drawBookmark(bookmarkIdWeAreJumpingTo);
+    jumpToBookmark();
+}
+
+function jumpToBookmark() {
+    console.log("Jump to bookmark");
+    
+    resizeBottomSpacer();
+    
+    // If there's a bookmark, this will jump to it.
+    var element = $( ".bookmarked > .bookmark" );
+    if (!element || element.length === 0)
+        return;
+    
+    var scrollTo = element.offset().top - 10;
+    
+    //console.log("Scroll to: ", scrollTo, " window height: ", windowHeight, " document h: ", $(document).height());
+    
+    // Set max jump. (It overshoots on first load.)
+    if (scrollTo > $(document).height() - windowHeight)
+        scrollTo = $(document).height() - windowHeight;
+    
+    $(document).scrollTop( scrollTo );
 }
 
 // UTILITY: Returns true if the element is the model, else false.
@@ -224,7 +277,7 @@ function getFirstVisible() {
 function jumpNextPrev(jumpNext) {
     var current = getFirstVisible();
     
-    //console.log("JNP: first visible: ", current)
+    console.log("JNP: first visible: ", current)
     
     if (!current.length)
         return;
@@ -239,13 +292,13 @@ function jumpNextPrev(jumpNext) {
             jumpTo = prevNotModel(jumpTo);
     }
     
-    //console.log("Jump to is: ", jumpTo)
+    console.log("Jump to is: ", jumpTo)
     
     if (!jumpTo.length)
         return;
     
-    navigator.qt.postMessage( 'scrollToPosition ' + jumpTo.offset().top );
-    //$(document).scrollTop( jumpTo.scrollTop() );
+    //navigator.qt.postMessage( 'scrollToPosition ' + jumpTo.offset().top );
+    $(document).scrollTop( jumpTo.scrollTop() );
 }
 
 // Removes all existing classes on the body element.

@@ -47,17 +47,6 @@ void WebInteractor::loadPrevious()
     doLoadNews(LoadNews::Prepend);
 }
 
-void WebInteractor::jumpToBookmark()
-{
-    if (NULL == currentFeed || currentFeed->getBookmark() == NULL) {
-        return; // Nothing to do!
-    }
-    
-    // Jump to the item following the bookmark, if possible.
-    int index = currentFeed->getNewsList()->indexOf(currentFeed->getBookmark()) + 1;
-    emit jumpTo(index < currentFeed->getNewsList()->size() ? currentFeed->getNewsList()->at(index)->id() : currentFeed->getBookmark()->id());
-}
-
 void WebInteractor::orderChanged()
 {
     for (int i = 0; i < feedList->rowCount(); i++)
@@ -239,9 +228,7 @@ void WebInteractor::onLoadNewsFinished(Operation* operation)
     
     // If this is the initial load, draw and jump to the bookmark.
     if (loader->getMode() == LoadNews::Initial && currentFeed->getBookmark() != NULL) {
-        jumpToBookmark();
-        
-        emit drawBookmark(currentFeed->getBookmark()->id());
+        emit drawBookmarkAndJumpTo(currentFeed->getBookmark()->id());
     }
     
     emit addInProgress(false, operationName);

@@ -2,12 +2,14 @@
 #include "../models/FeedItem.h"
 #include "../utilities/Utilities.h"
 
-AddFeedOperation::AddFeedOperation(OperationManager *parent, ListModel *feedList, const QUrl &feedURL) :
+AddFeedOperation::AddFeedOperation(OperationManager *parent, ListModel *feedList,
+                                   const QUrl &feedURL, QString title) :
     DBOperation(IMMEDIATE, parent),
     feedList(feedList),
     feedURL(feedURL),
     rawFeed(NULL),
-    parser()
+    parser(),
+    title(title)
 {
     QObject::connect(&parser, SIGNAL(done()), this, SLOT(onFeedFinished()));
 }
@@ -77,7 +79,7 @@ void AddFeedOperation::commitRawFeed() {
     query.prepare("INSERT INTO FeedItemTable (title, subtitle, lastUpdated, minutesToUpdate, "
                   "url, siteURL, ordinal) VALUES (:title, :subtitle, :lastUpdated, "
                   ":minutesToUpdate, :url, :siteURL, :ordinal)");
-    query.bindValue(":title", rawFeed->title);
+    query.bindValue(":title", !title.isEmpty() ? title : rawFeed->title);
     query.bindValue(":subtitle", rawFeed->subtitle);
     query.bindValue(":lastUpdated", rawFeed->lastUpdated.toMSecsSinceEpoch());
     query.bindValue(":minutesToUpdate", rawFeed->minutesToUpdate);

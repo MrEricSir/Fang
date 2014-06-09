@@ -5,6 +5,7 @@
 
 FeedValidator::FeedValidator(QQuickItem *parent) :
     QQuickItem(parent),
+    _validating(false),
     _url(""),
     _siteTitle(""),
     _siteImageURL("")

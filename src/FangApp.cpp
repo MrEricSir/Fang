@@ -18,6 +18,8 @@ FangApp::FangApp(QObject *parent, FangApplicationViewer* viewer) :
     QObject(parent),
     viewer(viewer),
     manager(this),
+    feedList(new ListModel(new FeedItem, this)),
+    importList(new ListModel(new FeedItem, this)),
     currentFeed(NULL),
     loadAllFinished(false),
     fangSettings(NULL),
@@ -26,9 +28,6 @@ FangApp::FangApp(QObject *parent, FangApplicationViewer* viewer) :
 {
     Q_ASSERT(_instance == NULL);
     _instance = this;
-    
-    // Create the list of feeds.
-    feedList = new ListModel(new FeedItem, this);
     
     // Setup signals.
     connect(viewer, SIGNAL(statusChanged(QQuickView::Status)),
@@ -50,6 +49,7 @@ void FangApp::init()
     
     // Setup our QML.
     viewer->rootContext()->setContextProperty("feedListModel", feedList); // list of feeds
+    viewer->rootContext()->setContextProperty("importListModel", importList); // list of feeds to be batch imported
     viewer->rootContext()->setContextProperty("platform", getPlatform()); // platform string ID
     viewer->addImportPath(QLatin1String("modules"));
     //viewer->setOrientation(QtQuick2ApplicationViewer::ScreenOrientationAuto);
@@ -235,10 +235,10 @@ FangApp* FangApp::instance()
     return _instance;
 }
 
-void FangApp::addFeed(const QUrl &feedURL)
+void FangApp::addFeed(const QUrl &feedURL, QString title)
 {
     //qDebug() << "Add feed " << siteTitle << " " << feedURL;
-    manager.add(new AddFeedOperation(&manager, feedList, feedURL));
+    manager.add(new AddFeedOperation(&manager, feedList, feedURL, title));
 }
 
 void FangApp::addFeed(const QUrl &feedURL, const RawFeed* rawFeed)

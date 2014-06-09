@@ -60,7 +60,8 @@ SOURCES += src/main.cpp \
     src/utilities/SimpleStateMachine.cpp \
     src/utilities/FeedDiscovery.cpp \
     src/models/OPMLInteractor.cpp \
-    src/utilities/OPMLExport.cpp
+    src/utilities/OPMLExport.cpp \
+    src/utilities/BatchFeedDiscovery.cpp
 
 # Installation path
 # target.path =
@@ -128,4 +129,5 @@ HEADERS += \
     src/utilities/SimpleStateMachine.h \
     src/utilities/FeedDiscovery.h \
     src/models/OPMLInteractor.h \
-    src/utilities/OPMLExport.h
+    src/utilities/OPMLExport.h \
+    src/utilities/BatchFeedDiscovery.h

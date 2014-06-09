@@ -64,8 +64,9 @@ public slots:
     /**
      * @brief Adds a feed.
      * @param feedURL
+     * @param title [Optional] Set your own feed title! Cannot be empty string.
      */
-    void addFeed(const QUrl& feedURL);
+    void addFeed(const QUrl& feedURL, QString title = "");
     
     /**
      * @brief Adds a known, pre-processed feed.
@@ -84,6 +85,11 @@ public slots:
      * @brief Updates every single damn feed.
      */
     void updateAllFeeds();
+    
+    /**
+     * @return Our special list for batch imports.
+     */
+    ListModel* getImportList() { return importList; }
     
     
 private slots:
@@ -144,6 +150,7 @@ private:
     FangApplicationViewer* viewer;
     OperationManager manager;
     ListModel *feedList;
+    ListModel *importList;
     FeedItem* currentFeed;
     bool loadAllFinished;
     FangSettings *fangSettings;

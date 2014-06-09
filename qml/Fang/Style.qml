@@ -47,6 +47,8 @@ Item {
         property color dialogBackground: "white"
         property color dialogText: "black"
         
+        property color fadedText: "#999"
+        
         property color dialogButton: "#eee"
         property color dialogButtonHover: "#d7d7d7"
         property color dialogButtonText: "black"
@@ -84,6 +86,8 @@ Item {
         
         property color dialogBackground: "black"
         property color dialogText: "white"
+        
+        property color fadedText: "#999"
         
         property color dialogButton: "#555"
         property color dialogButtonHover: "#454545"
