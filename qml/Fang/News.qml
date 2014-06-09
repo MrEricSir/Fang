@@ -175,6 +175,8 @@ Item {
                     newsScroll.scrollEnd();
                 else if (event.key === Qt.Key_Left)
                     newsView.jumpPrevious();
+                else if (event.key === Qt.Key_Right)
+                    newsView.jumpNext();
                 else if (event.key === Qt.Key_F5)
                     news.refreshFeed();
                 else if (event.key === Qt.Key_R && (event.modifiers & Qt.ControlModifier))

@@ -235,7 +235,7 @@ function isAboveScroll(element) {
     
     //console.log("isAboveScroll: Scroll top: ", $(window).scrollTop(), " elem offset and height: ", element.offset().top + element.height())
     
-    return $(window).scrollTop() >= element.offset().top + element.height() - 1;
+    return $(document).scrollTop() >= element.offset().top + element.height() - 1;
 }
 
 // UTILITY: Just like isAboveScroll(), but this only checks the top of the element.
@@ -298,7 +298,7 @@ function jumpNextPrev(jumpNext) {
         return;
     
     //navigator.qt.postMessage( 'scrollToPosition ' + jumpTo.offset().top );
-    $(document).scrollTop( jumpTo.scrollTop() );
+    $(document).scrollTop( jumpTo.offset().top );
 }
 
 // Removes all existing classes on the body element.
