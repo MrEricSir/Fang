@@ -66,12 +66,12 @@ ListViewDragDelegate {
                         
                         anchors.verticalCenter: parent.verticalCenter
                         
-                        smooth: true
                         width: 23
                         height: 23
                         
                         sourceSize.width: width
                         sourceSize.height: height
+                        asynchronous: true
                     }
                     
                     Spinner {

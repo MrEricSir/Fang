@@ -2,6 +2,8 @@
 #include <QDebug>
 #include <QList>
 #include <QDesktopServices>
+#include "../FangApp.h"
+#include "../operations/FaviconUpdateOperation.h"
 
 WebInteractor::WebInteractor(QQuickItem *parent) :
     QQuickItem(parent),
@@ -43,17 +45,6 @@ void WebInteractor::loadPrevious()
     
     // Load the PREVIOUS
     doLoadNews(LoadNews::Prepend);
-}
-
-void WebInteractor::jumpToBookmark()
-{
-    if (NULL == currentFeed || currentFeed->getBookmark() == NULL) {
-        return; // Nothing to do!
-    }
-    
-    // Jump to the item following the bookmark, if possible.
-    int index = currentFeed->getNewsList()->indexOf(currentFeed->getBookmark()) + 1;
-    emit jumpTo(index < currentFeed->getNewsList()->size() ? currentFeed->getNewsList()->at(index)->id() : currentFeed->getBookmark()->id());
 }
 
 void WebInteractor::orderChanged()
@@ -129,31 +120,40 @@ void WebInteractor::openLink(QString link)
     QDesktopServices::openUrl(QUrl(link));
 }
 
-void WebInteractor::refreshFeed(FeedItem *item)
+void WebInteractor::refreshFeed(FeedItem *feed)
 {
-    if (NULL == item || NULL == currentFeed) {
-        return;
-    }
+    Q_ASSERT(feed != NULL);
     
     QList<FeedItem*> feedsToUpdate;
     
     // Special handling for all news.
     // TODO: Handle folders
-    if (currentFeed->getDbId() < 0) {
+    if (feed->isAllNews()) {
         // Update ALL the feeds (except all news, obviously.)
         for (int i = 1; i < feedList->rowCount(); i++)
         {
-            FeedItem* feed = qobject_cast<FeedItem*>(feedList->row(i));
-            Q_ASSERT(feed != NULL);
-            feedsToUpdate.append(feed);
+            FeedItem* item = qobject_cast<FeedItem*>(feedList->row(i));
+            Q_ASSERT(item != NULL);
+            feedsToUpdate.append(item);
         }
     } else {
-        feedsToUpdate.append(item);
+        feedsToUpdate.append(feed);
     }
     
     // Update 'em all!
-    foreach(FeedItem* item, feedsToUpdate)
+    foreach(FeedItem* item, feedsToUpdate) {
         manager->add(new UpdateFeedOperation(manager, item));
+        manager->add(new FaviconUpdateOperation(manager, item));
+    }
+}
+
+void WebInteractor::refreshAllFeeds()
+{
+    // Use the "all news" trick (see above)
+    FeedItem* allNews = qobject_cast<FeedItem*>(feedList->row(0));
+    Q_ASSERT(allNews != NULL);
+    Q_ASSERT(allNews->isAllNews());
+    refreshFeed(allNews);
 }
 
 void WebInteractor::refreshFeed(const qint64 id)
@@ -228,9 +228,7 @@ void WebInteractor::onLoadNewsFinished(Operation* operation)
     
     // If this is the initial load, draw and jump to the bookmark.
     if (loader->getMode() == LoadNews::Initial && currentFeed->getBookmark() != NULL) {
-        jumpToBookmark();
-        
-        emit drawBookmark(currentFeed->getBookmark()->id());
+        emit drawBookmarkAndJumpTo(currentFeed->getBookmark()->id());
     }
     
     emit addInProgress(false, operationName);

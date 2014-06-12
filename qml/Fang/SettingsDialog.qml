@@ -9,7 +9,6 @@ Dialog {
     
     DialogText {
         text: "Theme"
-        width: parent.width
     }
     
     RadioButtonGroup {
@@ -59,7 +58,6 @@ Dialog {
     
     DialogText {
         text: "Text size"
-        width: parent.width
     }
     
     RadioButtonGroup {
@@ -112,11 +110,59 @@ Dialog {
         }
     }
     
-    // Spacer
     DialogText {
-        text: ""
-        width: parent.width
+        text: "OPML feed list"
     }
+    
+    OPMLInteractor {
+        id: opml
+        
+        onImportReady: {
+            var importDialog = globals.openDialog("OPMLImportDialog.qml");
+            importDialog.interactor = opml;
+            importDialog.onParentClose.connect(close);
+        }
+        
+        onImportInProgressChanged: {
+            console.log("Import in progress? ", importInProgress)
+        }
+    }
+    
+    DialogButtonGroup {
+        width: parent.width
+        
+        DialogButton {
+            id: importOPML
+            
+            text: "Import"
+            enabled: true
+            
+            onClicked: opml.importFile()
+            
+            width: parent.buttonWidth
+        }
+        
+        DialogButton {
+            id: exportOPML
+            
+            text: "Export"
+            enabled: true
+            
+            onClicked: opml.exportFile()
+            
+            width: parent.buttonWidth
+        }
+    }
+    
+    DialogSpacer {}
+    
+    DialogButton {
+        id: aboutBox
+        text: "About"
+        onClicked: globals.openDialog("AboutDialog.qml")
+    }
+    
+    DialogSpacer {}
     
     DialogButton {
         id: closeButton
@@ -124,7 +170,5 @@ Dialog {
         text: "Close"
         onClicked: close()
         enabled: !isClosing
-        
-        width: parent.width
     }
 }

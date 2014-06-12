@@ -6,7 +6,8 @@ Image {
     // Hack to make SVGs render with anti-aliasing
     sourceSize.width: width
     sourceSize.height: height
-    smooth: true
+    smooth: true // Since this is used in animation
+    asynchronous: true
     
     source: fangSettings.style === "LIGHT" ? "images/symbol_reload.svg" : "images/symbol_dark_reload.svg"
     

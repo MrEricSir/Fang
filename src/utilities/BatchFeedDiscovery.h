@@ -1,0 +1,65 @@
+#ifndef BATCHFEEDDISCOVERY_H
+#define BATCHFEEDDISCOVERY_H
+
+#include "../models/FeedItem.h"
+#include "../models/ListModel.h"
+#include "FeedDiscovery.h"
+
+#include <QObject>
+#include <QMap>
+#include <QQueue>
+
+/**
+ * @brief Calls FeedDiscovery on a bunch of feeds at once in a list.
+ * 
+ * Each FeedItem will have IsUpdating and HasError set:
+ *   IsUpdating: The feed discovery is in progress
+ *   IsError: The feed discovery completed with an error
+ * 
+ * If both are false at the time done() is emitted, you're hella
+ * ready to rock and roll!
+ * 
+ * 
+ * TODO: Need a way to safely cancel this operation since it
+ *       can take a while.
+ * 
+ *       UNIT TEST!!
+ */
+class BatchFeedDiscovery : public QObject
+{
+    Q_OBJECT
+public:
+    explicit BatchFeedDiscovery(QObject *parent = 0);
+    
+signals:
+    
+    /**
+     * @brief Completion signal.
+     */
+    void done();
+    
+public slots:
+    
+    /**
+     * @brief Checks an entire feed list.
+     */
+    void checkFeedList(ListModel* feedList, int maxConcurrent = 3);
+    
+    /**
+     * @return The list of feeds you asked me to check?  Here they are.
+     */
+    ListModel* getFeedList() { return feedList; }
+    
+private slots:
+    
+    void onFeedDiscoveryFinished(FeedDiscovery* discovery);
+    
+    void runDiscovery(FeedDiscovery* discovery, FeedItem* item);
+    
+private:
+    ListModel* feedList;
+    QQueue<FeedItem*> queue;
+    QMap<FeedDiscovery*, FeedItem*> lookup;
+};
+
+#endif // BATCHFEEDDISCOVERY_H

@@ -16,6 +16,11 @@ WebPageGrabber::WebPageGrabber(QObject *parent) :
     connect(webView.page()->mainFrame(), SIGNAL(urlChanged(QUrl)), this, SLOT(onUrlChanged(QUrl)));
 }
 
+WebPageGrabber::~WebPageGrabber()
+{
+    
+}
+
 void WebPageGrabber::load(const QUrl &url)
 {
     if (url.isRelative())

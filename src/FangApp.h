@@ -41,7 +41,21 @@ public:
      */
     FeedItem* getFeedForID(qint64 dbID);
     
+    /**
+     * @return A (read-only) list of teh feedz.
+     */
+    ListModel* getFeedList() const { return feedList; }
+    
+    /**
+     * @brief Sets the focus on the app window.
+     */
+    void focusApp();
+    
+    /**
+     * @return Singleton instance of FangApp
+     */
     static FangApp *instance();
+    
 signals:
     
 public slots:
@@ -50,16 +64,33 @@ public slots:
     /**
      * @brief Adds a feed.
      * @param feedURL
-     * @param imageURL
-     * @param siteTitle
+     * @param title [Optional] Set your own feed title! Cannot be empty string.
      */
-    void addFeed(const QUrl& feedURL, const QUrl& imageURL, QString siteTitle);
+    void addFeed(const QUrl& feedURL, QString title = "");
+    
+    /**
+     * @brief Adds a known, pre-processed feed.
+     * @param feedURL
+     * @param rawFeed
+     */
+    void addFeed(const QUrl &feedURL, const RawFeed* rawFeed);
     
     /**
      * @brief Removes an existing feed.
      * @param feed
      */
     void removeFeed(FeedItem *feed);
+    
+    /**
+     * @brief Updates every single damn feed.
+     */
+    void updateAllFeeds();
+    
+    /**
+     * @return Our special list for batch imports.
+     */
+    ListModel* getImportList() { return importList; }
+    
     
 private slots:
     void onViewerStatusChanged(QQuickView::Status);
@@ -93,11 +124,6 @@ private slots:
     void onLoadAllFinished(Operation* op);
     
     /**
-     * @brief Updates every single damn feed.
-     */
-    void updateAllFeeds();
-    
-    /**
      * @brief Tells the web view to display the current feed.
      */
     void displayFeed();
@@ -124,6 +150,7 @@ private:
     FangApplicationViewer* viewer;
     OperationManager manager;
     ListModel *feedList;
+    ListModel *importList;
     FeedItem* currentFeed;
     bool loadAllFinished;
     FangSettings *fangSettings;

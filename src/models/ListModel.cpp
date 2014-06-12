@@ -131,7 +131,11 @@ QModelIndex ListModel::indexFromItem(const ListItem *item) const
  
 void ListModel::clear()
 {
-  m_list.clear();
+    foreach(ListItem* item, m_list) {
+        emit removed(item);
+    }
+    
+    m_list.clear();
 }
 
 void ListModel::setSelected(ListItem *selected)

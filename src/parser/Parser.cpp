@@ -135,7 +135,7 @@ QDateTime Parser::dateFromFeedString(const QString& _timestamp)
 }
 
 void Parser::parse(const QUrl& url) {
-    initParse();
+    initParse(url);
     
     // in with the new
     QNetworkRequest request(url);
@@ -321,7 +321,8 @@ void Parser::parseXml() {
 }
 
 void Parser::error(QNetworkReply::NetworkError ne){
-    qDebug() << "Error!!!!! " << ne << " " << currentReply->errorString();
+    Q_UNUSED(ne);
+    //qDebug() << "Error!!!!! " << ne << " " << currentReply->errorString();
     currentReply->disconnect(this);
     currentReply->deleteLater();
     currentReply = 0;
@@ -382,7 +383,7 @@ void Parser::netFinished(QNetworkReply *reply)
     }
 }
 
-void Parser::initParse()
+void Parser::initParse(const QUrl& url)
 {
     result = Parser::IN_PROGRESS;
     finalFeedURL = url;

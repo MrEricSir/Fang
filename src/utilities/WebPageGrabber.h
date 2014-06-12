@@ -14,6 +14,7 @@ class WebPageGrabber : public QObject
     Q_OBJECT
 public:
     explicit WebPageGrabber(QObject *parent = 0);
+    virtual ~WebPageGrabber();
     
 signals:
     

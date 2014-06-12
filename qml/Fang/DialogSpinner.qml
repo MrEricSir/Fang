@@ -25,9 +25,9 @@ Rectangle {
         
         x: spinnerImage.width + 10 // margin
         
-        color: "#999"
+        color: style.color.fadedText
         
-        font.pointSize: 12
+        font.pointSize: style.font.defaultSize
         font.family: style.font.defaultFamily
         
         width: parent.width - x

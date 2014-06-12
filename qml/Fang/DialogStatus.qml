@@ -5,6 +5,7 @@ Rectangle {
     property string text: ""
     color: "transparent"
     
+    width: parent.width
     height: dialogStatusText.paintedHeight
     
     // Set state to change graphic.
@@ -38,7 +39,7 @@ Rectangle {
         // Hack to make SVGs render with anti-aliasing
         sourceSize.width: width
         sourceSize.height: height
-        smooth: true
+        asynchronous: true
         
         source: getImage(dialogStatus.state);
     }

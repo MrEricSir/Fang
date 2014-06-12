@@ -43,7 +43,7 @@ protected slots:
     void netFinished(QNetworkReply *reply);
     
 private:
-    void initParse(); // called prior to parse.
+    void initParse(const QUrl& url = QUrl("")); // called prior to parse.
     void parseXml();
     void resetParserVars();
     

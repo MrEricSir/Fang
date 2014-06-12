@@ -10,7 +10,6 @@
 #include "operations/LoadAllFeedsOperation.h"
 #include "operations/AddFeedOperation.h"
 #include "operations/RemoveFeedOperation.h"
-#include "operations/FaviconUpdateOperation.h"
 #include "operations/UpdateTitleOperation.h"
 
 FangApp* FangApp::_instance = NULL;
@@ -19,6 +18,8 @@ FangApp::FangApp(QObject *parent, FangApplicationViewer* viewer) :
     QObject(parent),
     viewer(viewer),
     manager(this),
+    feedList(new ListModel(new FeedItem, this)),
+    importList(new ListModel(new FeedItem, this)),
     currentFeed(NULL),
     loadAllFinished(false),
     fangSettings(NULL),
@@ -27,9 +28,6 @@ FangApp::FangApp(QObject *parent, FangApplicationViewer* viewer) :
 {
     Q_ASSERT(_instance == NULL);
     _instance = this;
-    
-    // Create the list of feeds.
-    feedList = new ListModel(new FeedItem, this);
     
     // Setup signals.
     connect(viewer, SIGNAL(statusChanged(QQuickView::Status)),
@@ -46,22 +44,25 @@ FangApp::FangApp(QObject *parent, FangApplicationViewer* viewer) :
 
 void FangApp::init()
 {
+    // Enable cache for remote QML elements.
+    NetworkUtilities::addNetworkAccessManagerCache(viewer->engine()->networkAccessManager());
+    
+    // Setup our QML.
     viewer->rootContext()->setContextProperty("feedListModel", feedList); // list of feeds
+    viewer->rootContext()->setContextProperty("importListModel", importList); // list of feeds to be batch imported
     viewer->rootContext()->setContextProperty("platform", getPlatform()); // platform string ID
     viewer->addImportPath(QLatin1String("modules"));
     //viewer->setOrientation(QtQuick2ApplicationViewer::ScreenOrientationAuto);
     viewer->setSource(QUrl("qrc:/qml/Fang/main.qml"));
     viewer->displayWindow();
     
-    // Enable cache for remote QML elements.
-    NetworkUtilities::addNetworkAccessManagerCache(viewer->engine()->networkAccessManager());
-    
     // Load feed list.
     LoadAllFeedsOperation* loadAllOp = new LoadAllFeedsOperation(&manager, feedList);
     connect(loadAllOp, SIGNAL(finished(Operation*)), this, SLOT(onLoadAllFinished(Operation*)));
     manager.add(loadAllOp);
     
-    // Set a timer to update the feeds every ten minutes (make changable later.)
+    // Set a timer to update the feeds every ten minutes.
+    // TODO: Customize news update timer
     connect(updateTimer, SIGNAL(timeout()), this, SLOT(updateAllFeeds()));
     updateTimer->start(10 * 60 * 1000);
 }
@@ -87,6 +88,11 @@ FeedItem *FangApp::getFeedForID(qint64 dbID)
     
     qDebug() << "Um, we didn't find a feed for id: " << dbID;
     return NULL; // oops, we didn't find it!
+}
+
+void FangApp::focusApp()
+{
+    viewer->requestActivate();
 }
 
 void FangApp::onViewerStatusChanged(QQuickView::Status status)
@@ -130,12 +136,13 @@ void FangApp::onFeedAdded(ListItem *item)
         return;
     }
     
+    // Hook up signals.
     connectFeed(feed);
     
-    // Update the feed.
-    if (feed->getDbId() > 0) {
-        manager.add(new UpdateFeedOperation(&manager, feed));
-        manager.add(new FaviconUpdateOperation(&manager, feed));
+    if (!feed->isAllNews()) {
+        // Not all news, so trigger an update.
+        // TODO: Handle folders.
+        interactor->refreshFeed(feed);
     }
 }
 
@@ -168,8 +175,6 @@ void FangApp::onLoadAllFinished(Operation *op)
 {
     Q_UNUSED(op);
     loadAllFinished = true;
-    
-    // TODO: It used to be necessary to call displayFeed() here.  Is it still?
 }
 
 void FangApp::updateAllFeeds()
@@ -177,9 +182,7 @@ void FangApp::updateAllFeeds()
     if (feedList == NULL || feedList->rowCount() == 0 || interactor == NULL)
         return; // Somehow this was called too early.
     
-    FeedItem* allNews = qobject_cast<FeedItem*>(feedList->row(0));
-    Q_ASSERT(allNews != NULL);
-    interactor->refreshFeed(allNews);
+    interactor->refreshAllFeeds();
 }
 
 void FangApp::displayFeed()
@@ -232,11 +235,18 @@ FangApp* FangApp::instance()
     return _instance;
 }
 
-void FangApp::addFeed(const QUrl &feedURL, const QUrl &imageURL, QString siteTitle)
+void FangApp::addFeed(const QUrl &feedURL, QString title)
 {
     //qDebug() << "Add feed " << siteTitle << " " << feedURL;
-    manager.add(new AddFeedOperation(&manager, feedList, feedURL, imageURL, siteTitle));
+    manager.add(new AddFeedOperation(&manager, feedList, feedURL, title));
 }
+
+void FangApp::addFeed(const QUrl &feedURL, const RawFeed* rawFeed)
+{
+    //qDebug() << "Add feed " << siteTitle << " " << feedURL;
+    manager.add(new AddFeedOperation(&manager, feedList, feedURL, rawFeed));
+}
+
 
 void FangApp::removeFeed(FeedItem *feed)
 {

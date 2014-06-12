@@ -1,8 +1,6 @@
 Fang.desktop
 Fang_harmattan.desktop
-Fang.pro.user
-Fang.pro.user.*
+*.pro.user
+*.pro.user.*
 test/build-*
-test/TestFangParser/TestFangParser.pro.user
-.DS_Store
-
+*.DS_Store

@@ -8,7 +8,7 @@
 #include "../utilities/UnreadCountReader.h"
 
 LoadAllFeedsOperation::LoadAllFeedsOperation(OperationManager *parent, ListModel *feedList) :
-    DBOperation(BACKGROUND, parent),
+    DBOperation(IMMEDIATE, parent),
     feedList(feedList)
 {
 }

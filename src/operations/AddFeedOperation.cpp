@@ -2,38 +2,57 @@
 #include "../models/FeedItem.h"
 #include "../utilities/Utilities.h"
 
-AddFeedOperation::AddFeedOperation(OperationManager *parent, ListModel *feedList, const QUrl &feedURL,
-                                   const QUrl &imageURL, QString siteTitle) :
+AddFeedOperation::AddFeedOperation(OperationManager *parent, ListModel *feedList,
+                                   const QUrl &feedURL, QString title) :
     DBOperation(IMMEDIATE, parent),
     feedList(feedList),
     feedURL(feedURL),
-    imageURL(imageURL),
-    siteTitle(siteTitle),
-    parser()
+    rawFeed(NULL),
+    parser(),
+    title(title)
 {
     QObject::connect(&parser, SIGNAL(done()), this, SLOT(onFeedFinished()));
 }
 
+AddFeedOperation::AddFeedOperation(OperationManager *parent, ListModel *feedList, const QUrl &feedURL,
+                                   const RawFeed* rawFeed) :
+    DBOperation(IMMEDIATE, parent),
+    feedList(feedList),
+    feedURL(feedURL),
+    rawFeed(rawFeed),
+    parser()
+{
+}
+
 void AddFeedOperation::execute()
 {
-    // Before we can do anything, we must parse the feed!
-    parser.parse(feedURL);
+    if (rawFeed != NULL) {
+        commitRawFeed();
+    } else {
+        // Need to fetch the feed first.
+        parser.parse(feedURL);
+    }
 }
 
 void AddFeedOperation::onFeedFinished()
 {
     // Ooh, data.
-    RawFeed* rawFeed = parser.getFeed();
+    rawFeed = parser.getFeed();
     if (rawFeed == NULL) {
-        qDebug() << "Raw feed was null :(";
-        
-        emit finished(this);
+        reportError("Parse error");
         
         return;
     }
     
-    // The user gave us this (right?)
-    rawFeed->title = siteTitle;
+    commitRawFeed();
+}
+
+void AddFeedOperation::commitRawFeed() {
+    if (rawFeed == NULL) {
+        reportError("RawFeed not provided");
+        
+        return;
+    }
     
     // We'll wrap this in a transaction.  (Not really necessary at the moment.)
     db().transaction();
@@ -60,7 +79,7 @@ void AddFeedOperation::onFeedFinished()
     query.prepare("INSERT INTO FeedItemTable (title, subtitle, lastUpdated, minutesToUpdate, "
                   "url, siteURL, ordinal) VALUES (:title, :subtitle, :lastUpdated, "
                   ":minutesToUpdate, :url, :siteURL, :ordinal)");
-    query.bindValue(":title", rawFeed->title);
+    query.bindValue(":title", !title.isEmpty() ? title : rawFeed->title);
     query.bindValue(":subtitle", rawFeed->subtitle);
     query.bindValue(":lastUpdated", rawFeed->lastUpdated.toMSecsSinceEpoch());
     query.bindValue(":minutesToUpdate", rawFeed->minutesToUpdate);

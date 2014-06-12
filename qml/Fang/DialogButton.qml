@@ -1,11 +1,11 @@
 import QtQuick 2.0
 
-// Implementers: specify width!
 Button {
     id: dialogButton
     
     property string text: ""
     
+    width: parent.width
     height: buttonText.paintedHeight + 18
     
     buttonColor: style.color.dialogButton

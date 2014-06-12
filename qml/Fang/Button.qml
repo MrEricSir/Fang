@@ -1,7 +1,5 @@
 import QtQuick 2.0
 
-import QtQuick 2.0
-
 /**
   * This class exists to keep the basic button functionality, including colors, transitions,
   * and button click events in one place.

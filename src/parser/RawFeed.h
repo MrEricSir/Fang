@@ -8,6 +8,7 @@
 class RawFeed : public QObject
 {
     Q_OBJECT
+    
 public:
     explicit RawFeed(QObject *parent = 0);
     

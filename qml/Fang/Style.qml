@@ -24,6 +24,7 @@ Item {
         
         // Default UI font.
         property int defaultSize: 13
+        property int titleSize: 20
         property string defaultFamily: "Lucida Grande"
     }
     
@@ -32,6 +33,7 @@ Item {
         
         // Default UI font.
         property int defaultSize: 11
+        property int titleSize: 20
         property string defaultFamily: "Segoe UI"
     }
     
@@ -44,6 +46,8 @@ Item {
         
         property color dialogBackground: "white"
         property color dialogText: "black"
+        
+        property color fadedText: "#999"
         
         property color dialogButton: "#eee"
         property color dialogButtonHover: "#d7d7d7"
@@ -82,6 +86,8 @@ Item {
         
         property color dialogBackground: "black"
         property color dialogText: "white"
+        
+        property color fadedText: "#999"
         
         property color dialogButton: "#555"
         property color dialogButtonHover: "#454545"

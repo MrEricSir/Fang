@@ -25,6 +25,7 @@ Button {
         anchors.fill: parent
         anchors.margins: imageMargin
         fillMode: Image.PreserveAspectCrop
+        asynchronous: true
         
         // Make SVGs render real good like.
         sourceSize.width: width

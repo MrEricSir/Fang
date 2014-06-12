@@ -24,8 +24,6 @@ Dialog {
         
         state: "help"
         text: "Edit a feed"
-        
-        width: parent.width
     }
     
     TextEntry {
@@ -50,8 +48,6 @@ Dialog {
         }
         enabled: !isClosing && feedTitle.editText.trim() !== ""
         
-        width: parent.width
-        
         // Yes this is cheating, but so what?
         FeedValidator {
             id: validator
@@ -64,7 +60,5 @@ Dialog {
         text: "Cancel"
         onClicked: close()
         enabled: !isClosing
-        
-        width: parent.width
     }
 }

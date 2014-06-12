@@ -55,7 +55,13 @@ SOURCES += src/main.cpp \
     src/operations/LoadAllNewsOperation.cpp \
     src/utilities/UnreadCountReader.cpp \
     src/operations/UpdateOrdinalsOperation.cpp \
-    src/utilities/NetworkUtilities.cpp
+    src/utilities/NetworkUtilities.cpp \
+    src/parser/OPMLParser.cpp \
+    src/utilities/SimpleStateMachine.cpp \
+    src/utilities/FeedDiscovery.cpp \
+    src/models/OPMLInteractor.cpp \
+    src/utilities/OPMLExport.cpp \
+    src/utilities/BatchFeedDiscovery.cpp
 
 # Installation path
 # target.path =
@@ -118,4 +124,10 @@ HEADERS += \
     src/operations/LoadAllNewsOperation.h \
     src/utilities/UnreadCountReader.h \
     src/operations/UpdateOrdinalsOperation.h \
-    src/utilities/NetworkUtilities.h
+    src/utilities/NetworkUtilities.h \
+    src/parser/OPMLParser.h \
+    src/utilities/SimpleStateMachine.h \
+    src/utilities/FeedDiscovery.h \
+    src/models/OPMLInteractor.h \
+    src/utilities/OPMLExport.h \
+    src/utilities/BatchFeedDiscovery.h

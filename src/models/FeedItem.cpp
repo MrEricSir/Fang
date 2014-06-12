@@ -18,7 +18,9 @@ FeedItem::FeedItem(QObject *parent) :
     isUpdating(false),
     unreadCount(0),
     bookmark(NULL),
-    dropTarget("none")
+    dropTarget("none"),
+    _errorFlag(false),
+    isSelected(false)
     
 {
     newsList = new QList<NewsItem*>();
@@ -41,7 +43,9 @@ FeedItem::FeedItem(qint64 id, const qint32 ordinal, const QString &title, const 
     isUpdating(false),
     unreadCount(0),
     bookmark(NULL),
-    dropTarget("none")
+    dropTarget("none"),
+    _errorFlag(false),
+    isSelected(false)
 {
     newsList = new QList<NewsItem*>();
 }
@@ -65,36 +69,42 @@ QHash<int, QByteArray> FeedItem::roleNames() const
     names[SelfRole] = "self";
     names[UnreadCountRole] = "unreadCount";
     names[DropTargetRole] = "dropTarget";
+    names[ErrorFlagRole] = "errorFlag";
+    names[IsSelectedRole] = "isSelected";
     return names;
 }
 
 QVariant FeedItem::data(int role) const
 {
     switch(role) {
-    case TitleRole:
-        return getTitle();
-    case SubtitleRole:
-        return getSubtitle();
-    case LastUpdatedRole:
-        return getLastUpdated();
-    case MinutesToUpdateRole:
-        return getMinutesToUpdate();
-    case UrlRole:
-        return getURL();
-    case SiteURLRole:
-        return getSiteURL();
-    case ImageURLRole:
-        return getImageURL();
-    case IsUpdatingRole:
-        return getIsUpdating();
-    case SelfRole:
-        return QVariant::fromValue(getSelf());
-    case UnreadCountRole:
-        return getUnreadCount();
-    case DropTargetRole:
-        return getDropTarget();
-    default:
-        return QVariant();
+        case TitleRole:
+            return getTitle();
+        case SubtitleRole:
+            return getSubtitle();
+        case LastUpdatedRole:
+            return getLastUpdated();
+        case MinutesToUpdateRole:
+            return getMinutesToUpdate();
+        case UrlRole:
+            return getURL();
+        case SiteURLRole:
+            return getSiteURL();
+        case ImageURLRole:
+            return getImageURL();
+        case IsUpdatingRole:
+            return getIsUpdating();
+        case SelfRole:
+            return QVariant::fromValue(getSelf());
+        case UnreadCountRole:
+            return getUnreadCount();
+        case DropTargetRole:
+            return getDropTarget();
+        case ErrorFlagRole:
+            return getErrorFlag();
+        case IsSelectedRole:
+            return getIsSelected();
+        default:
+            return QVariant();
     }
 }
 
@@ -103,6 +113,9 @@ bool FeedItem::setData(const QVariant &value, int role)
     switch(role) {
     case DropTargetRole:
         setDropTarget(value.toString());
+        return true;
+    case IsSelectedRole:
+        setIsSelected(value.toBool());
         return true;
     }
     
@@ -150,6 +163,15 @@ void FeedItem::setDropTarget(const QString& newDropTarget)
         return;
     
     dropTarget = newDropTarget;
+    emit dataChanged();
+}
+
+void FeedItem::setIsSelected(bool s)
+{
+    if (isSelected == s)
+        return;
+    
+    isSelected = s;
     emit dataChanged();
 }
 
@@ -205,12 +227,32 @@ void FeedItem::setBookmark(NewsItem *item)
 
 void FeedItem::setUnreadCount(qint32 unreadCount)
 {
-    this->unreadCount = unreadCount;
+    if (this->unreadCount == unreadCount)
+        return;
     
+    this->unreadCount = unreadCount;
     emit dataChanged();
 }
 
 void FeedItem::setOrdinal(int newOrdinal)
 {
     ordinal = newOrdinal;
+}
+
+void FeedItem::setErrorFlag(bool errorFlag)
+{
+    if (_errorFlag == errorFlag)
+        return;
+    
+    _errorFlag = errorFlag;
+    emit dataChanged();
+}
+
+void FeedItem::setURL(QUrl url)
+{
+    if (this->url == url)
+        return;
+    
+    this->url = url;
+    emit dataChanged();
 }
