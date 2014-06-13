@@ -82,7 +82,8 @@ OTHER_FILES += \
     sql/1.sql \
     qml/Fang/SidebarButton.qml \
     html/jquery-2.0.3.js \
-    html/fang.js
+    html/fang.js \
+    html/formatDateSimply.js
 
 RESOURCES += \
     Resources.qrc

@@ -64,5 +64,6 @@
         <file>qml/Fang/Screen.qml</file>
         <file>qml/Fang/OPMLImportDialog.qml</file>
         <file>qml/Fang/CheckBox.qml</file>
+        <file>html/formatDateSimply.js</file>
     </qresource>
 </RCC>

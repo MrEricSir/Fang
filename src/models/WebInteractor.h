@@ -46,10 +46,10 @@ signals:
      * @param title       Title of the news item
      * @param url         URL of the story
      * @param feedTitle   Feed's title
-     * @param timestamp   String timestamp
+     * @param timestamp   Timestamp (in ms since epoch)
      * @param content     HTML content
      */
-    void add(bool append, QString id, QString title, QString url, QString feedTitle, QString timestamp, QString content);
+    void add(bool append, QString id, QString title, QString url, QString feedTitle, qint64 timestamp, QString content);
 
     
     /**

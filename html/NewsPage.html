@@ -63,6 +63,10 @@ body {
     text-overflow: ellipsis-word;
 }
 
+.newsContainer > .timestamp {
+    display: none;
+}
+
 .newsContainer > .divider {
     height: 1px;
     width: 100%;
@@ -172,6 +176,7 @@ body.FONT_LARGE > #bottom > #bottomText { font-size: 20pt; }
 </style>
 
 <script type="text/javascript" src="jquery-2.0.3.js"></script>
+<script type="text/javascript" src="formatDateSimply.js"></script>
 <script type="text/javascript" src="fang.js"></script>
 
 
@@ -183,6 +188,7 @@ body.FONT_LARGE > #bottom > #bottomText { font-size: 20pt; }
 <h1><a href="" class="link"></a></h1>
 <div class="divider"></div>
 <div class="siteTitle"></div><div class="date"></div>
+<span class="timestamp"></span>
 <div class="content"></div>
 
 <div class="bookmark"><div class="stripe"></div></div>

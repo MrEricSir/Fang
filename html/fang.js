@@ -39,7 +39,7 @@ function inProgress(started, operation) {
     
     if (!started && operation === "prepend" && prependScroll > 10) {
         $(document).scrollTop( prependScroll );
-        console.log("Prepend: scroll to: ", prependScroll);
+        //console.log("Prepend: scroll to: ", prependScroll);
     }
     
     // Let the stop go through both processes so we can ensure the view has moved.
@@ -70,7 +70,8 @@ function appendNews(append, id, title, url, feedTitle, timestamp, content) {
     item.find( '.link' ).html( title );
     item.find( '.content' ).html( content );
     item.find( '.siteTitle' ).html( feedTitle );
-    item.find( '.date' ).html( timestamp );
+    item.find( '.timestamp' ).html( timestamp ); // Hidden timestamp (shh)
+    item.find( '.date' ).html( formatDateSimply(timestamp) );
     
     //console.log(item.html());
     //console.log("ID: ", id, "append: ", append)
@@ -110,10 +111,16 @@ function clearNews() {
     removeMatchingItems( $(newsContainerSelector) );
 }
 
+// Returns the last news container.
+function getLastNewsContainer() {
+    return $(newsContainerSelector).last();
+}
+
+// Resizes the bottom spacer to allow the last item to be bookmarked.
 function resizeBottomSpacer() {
     // Grab the last (non model) news item.
-    var lastItem = $( newsContainerSelector ).last();
-    console.log("Reszie bottom spacer. last item: ", lastItem)
+    var lastItem = getLastNewsContainer();
+    //console.log("Reszie bottom spacer. last item: ", lastItem)
     
     // By default, bottom spacer is the window height.  This allows the user
     // to scroll the last item off the page, bookmarking it.
@@ -129,20 +136,20 @@ function resizeBottomSpacer() {
         numPix -= removePix;
     }
     
-    console.log("Bottom spacer is now: ", numPix)
+    //console.log("Bottom spacer is now: ", numPix)
     $( '#bottom' ).height( numPix + 'px' );
 }
 
 // Scrolls to the element with the given ID.
 function jumpTo(id) {
-    console.log("Jump to: ", id)
+    //console.log("Jump to: ", id)
     
     resizeBottomSpacer();
     
     var elementId = '#' + id;
     var scrollTo = $( elementId ).offset().top;
     
-    console.log("jump to: ", elementId, "scrolling to: ", scrollTo);
+    //console.log("jump to: ", elementId, "scrolling to: ", scrollTo);
     
     //navigator.qt.postMessage( 'scrollToPosition ' + scrollTo );
     $(document).scrollTop( scrollTo );
@@ -160,9 +167,9 @@ function drawBookmark(id) {
     resizeBottomSpacer();
 }
 
-var bookmarkIdWeAreJumpingTo = "";
 
-// Both draw the bookmark AND jump to it!
+// Both draw the bookmark AND jump to it!  In ONE SHOT!!  WOW!
+var bookmarkIdWeAreJumpingTo = "";
 function drawBookmarkAndJumpTo(id) {
     if (!id || id === "")
         return;
@@ -173,7 +180,7 @@ function drawBookmarkAndJumpTo(id) {
 
 // Internal method for above function.
 function drawBookmarkAndJumpToJumpingToId() {
-    console.log("Draw and jumping to jump jump")
+    //console.log("Draw and jumping to jump jump")
     if (isInProgress) {
         window.setTimeout(function() {
             drawBookmarkAndJumpToJumpingToId();
@@ -257,8 +264,14 @@ function prevNewsContainer(element) {
 // UTILITY: Returns true if the element is above the scroll position, else false.
 function isAboveScroll(element) {
     //console.log("Is above scroll: ", element)
+    var delta = 1;
     
-    var ret = $(window).scrollTop() >= element.offset().top + element.height() + 1;
+    // For the last item, apply a negative delta to let it flow off the screen.
+    if (element.attr('id') === getLastNewsContainer().attr('id')) {
+        delta = -10;
+    }
+    
+    var ret = $(window).scrollTop() >= element.offset().top + element.height() + delta;
     //console.log("isAboveScroll: Scroll top: ", $(window).scrollTop(), " elem offset and height: ", element.offset().top + element.height(), " ret: ", ret)
     return ret;
 }
@@ -273,11 +286,8 @@ function isTopAboveScroll(element) {
 
 // UTILITY: Returns the first visible news item.
 function getFirstVisible() {
-    var allNews = $(newsContainerSelector);
-    
     // Go through all the next items.
-    var item = allNews;
-    
+    var item = $(newsContainerSelector);
     while (item.length) {
         if (!isAboveScroll(item))
             return item;
@@ -288,16 +298,16 @@ function getFirstVisible() {
     //console.log("GFV: it's LAST: ", item.last())
     
     // Just return the last item, then?
-    return allNews.last();
+    return getLastNewsContainer();
 }
 
 // Jumps to the next or previous item on the screen.
 function jumpNextPrev(jumpNext) {
     var current = getFirstVisible();
     
-    console.log("JNP: first visible: ", current)
+    //console.log("JNP: first visible: ", current)
     
-    console.log("Is above scroll: ", isAboveScroll(current))
+    //console.log("Is above scroll: ", isAboveScroll(current))
     
     if (!current.length)
         return;
@@ -413,7 +423,7 @@ $(document).ready(function() {
         
         // Oh bother.  I guess there's nothing to do.
         if (!bookmarkedItem.length) {
-            //console.log("No bookmarks to deal with.  w00t!")
+           //console.log("No bookmarks to deal with.  w00t!")
             
             return;
         }
@@ -441,7 +451,7 @@ $(document).ready(function() {
             }
             
             // Move the bookmark down one.
-            console.log("SET BOOKMKAR! ", nextItem.attr('id'))
+            //console.log("SET BOOKMKAR! ", nextItem.attr('id'))
             navigator.qt.postMessage( 'setBookmark ' + nextItem.attr('id') );
             
             // Continue to next item.
@@ -453,7 +463,7 @@ $(document).ready(function() {
         if (isInProgress)
             return;
         
-        console.log("loadNext")
+        //console.log("loadNext")
         navigator.qt.postMessage( 'loadNext' );
     }
     
@@ -461,9 +471,41 @@ $(document).ready(function() {
         if (isInProgress)
             return;
         
-        console.log("load prev")
+        //console.log("load prev")
         navigator.qt.postMessage( 'loadPrevious' );
     }
     
+    
+    /**
+     * Timestamp update timer.
+     */
+    function updateTimestamps(interval) {
+        var $document = $(document);
+        
+        // Grab each timestamp, then re-call formatDateSimply() on it.
+        var updateTimestampsCallback = function() {
+            var item = $(newsContainerSelector);
+            while (item.length) {
+                //console.log("Examining item: ", item.attr('id'))
+                if (isNewsContainer(item)) {
+                    // Hidden timestamp!  (Shh.)
+                    var timestamp = item.find( '.timestamp' ).html();
+                    item.find( '.date' ).html( formatDateSimply(timestamp) );
+                }
+                item = item.next();
+            }
+        };
+
+        setInterval(updateTimestampsCallback, interval);
+    }
+    
+    /**
+     * Touch off all the timers we just defined.
+     */
+    
+    // Poll for scroll position every 250 ms.
     watchScrollPosition(loadNext, loadPrevious, checkBookmark, 250, 250);
+    
+    // Update timestamps every 10 seconds.
+    updateTimestamps(10000);
 });

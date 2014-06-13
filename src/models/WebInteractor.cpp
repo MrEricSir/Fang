@@ -286,7 +286,7 @@ void WebInteractor::addNewsItem(bool append, NewsItem *item)
              escapeCharacters(item->getTitle()),
              escapeCharacters(item->getURL().toString()),
              escapeCharacters(item->getFeed()->getTitle()),
-             escapeCharacters(item->getTimestamp().toString()),
+             item->getTimestamp().toMSecsSinceEpoch(),
              escapeCharacters( item->getContent() != "" ? item->getContent() : item->getSummary()) );
 }
 
