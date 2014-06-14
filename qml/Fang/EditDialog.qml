@@ -9,10 +9,8 @@ Dialog {
     
     property variant listView
     
-    onStateChanged: {
-        if (state == "open") {
-            reset();
-        }
+    onDialogOpened: {
+        reset();
     }
     
     function reset() {

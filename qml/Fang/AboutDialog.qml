@@ -29,8 +29,8 @@ Dialog {
         text: "Credits:\n\n" +
               "Software & design\n" +
               "Eric Gregory\n\n" +
-              "Logo design\n" +
-              "studyou";
+              "Logo\n" +
+              "Studyou Design";
         
         horizontalAlignment: Text.AlignHCenter 
     }
