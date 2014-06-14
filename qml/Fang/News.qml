@@ -8,6 +8,7 @@ Item {
     
     // Used by main for double clicking on feed titles.
     function jumpToBookmark() {
+        console.log("Jump to bmark")
         newsView.experimental.evaluateJavaScript("jumpToBookmark();");
     }
     
@@ -63,6 +64,9 @@ Item {
                 //console.log("Clear!")
                 newsView.experimental.evaluateJavaScript("clearNews();");
                 newsView.contentY = 0;  // reset scroll
+                
+                // Wipe the view clean; it will be set to visible again when ready.
+                newsView.visible = false;
             }
             
             onJumpTo: {
@@ -79,6 +83,17 @@ Item {
                 console.log("Draw bookmark and jump to: ", id)
                 newsView.experimental.evaluateJavaScript("drawBookmarkAndJumpTo('" + id + "');");
             }
+            
+            onFontSizeChanged: {
+                console.log("Font size changed, alert!  Need to jump to bookmark!")
+                newsView.updateCSS();
+                newsView.experimental.evaluateJavaScript("jumpToBookmark();");
+            }
+            
+            onStyleChanged: {
+                console.log("I was told to update the css?")
+                newsView.updateCSS();
+            }
         }
         
         // Web view for our HTML-based RSS display.
@@ -89,8 +104,28 @@ Item {
             // http://127.0.0.1:9999/webkit/inspector/inspector.html?page=1
             property bool devMode: true
             
+            // Start invisible
+            visible: false
+            
             // Turn the inspek0r off and on.
             experimental.preferences.developerExtrasEnabled: devMode
+            
+            property bool firstRun: true        // On first run, we need to wait for both.
+            property bool cssUpdated: false     // Check for this on first run.
+            // Whether the bookmark has been jumped to
+            property bool drawBookmarkAndJumpToFinished: false
+            
+            // Checks if we should become visible or not.  (Internal)
+            function checkReady() {
+                if (firstRun) {
+                    if (drawBookmarkAndJumpToFinished && cssUpdated) {
+                        visible = true;
+                    }
+                } else {
+                    if (drawBookmarkAndJumpToFinished)
+                        visible = true;
+                }
+            }
             
             function updateCSS() {
                 newsView.experimental.evaluateJavaScript(
@@ -98,6 +133,9 @@ Item {
                             "addBodyClass('" + platform + "'); " +
                             "addBodyClass('FONT_" + fangSettings.fontSize + "'); " +
                             "addBodyClass('" + fangSettings.style + "');");
+                
+                cssUpdated = true;
+                checkReady();
             }
             
             // Jumpts to the next news item.
@@ -136,6 +174,10 @@ Item {
                     webInteractor.openLink(commandArray[1]);
                 } else if (cmd === "stopProgress" ) {
                     newsView.experimental.evaluateJavaScript("stopInProgress();");
+                } else if (cmd === "drawBookmarkAndJumpToFinished" ) {
+                    // Check if it's time to become visible again.
+                    newsView.drawBookmarkAndJumpToFinished = true;
+                    checkReady();
                 }
                 
                 // Not used in Qt 5.3
@@ -151,13 +193,6 @@ Item {
                     updateCSS(); // set our page's style
                     webInteractor.heightChanged(newsMargin.height); // update height (if not already updated)
                 }
-            }
-            
-            Connections {
-                target: fangSettings
-                
-                onFontSizeChanged: newsView.updateCSS()
-                onStyleChanged: newsView.updateCSS()
             }
             
             Keys.onPressed: {

@@ -6,6 +6,7 @@
 
 #include "FeedItem.h"
 #include "NewsItem.h"
+#include "FangSettings.h"
 #include "../operations/OperationManager.h"
 #include "../operations/Operation.h"
 #include "../operations/LoadNews.h"
@@ -26,7 +27,13 @@ public:
     explicit WebInteractor(QQuickItem *parent = 0);
     virtual ~WebInteractor() {}
     
-    void init(OperationManager* manager, ListModel *feedList);
+    /**
+     * @brief The stuff the interactor needs to do its job properly.
+     * @param manager
+     * @param feedList
+     * @param fangSettings
+     */
+    void init(OperationManager* manager, ListModel *feedList, FangSettings *fangSettings);
     
 signals:
     
@@ -74,6 +81,16 @@ signals:
      * @param id   HTML ID of the news item blah blah see above.
      */
     void drawBookmarkAndJumpTo(QString id);
+    
+    /**
+     * @brief The style has changed in FangSettings, so the news viewer needs to refresh its css.
+     */
+    void styleChanged();
+    
+    /**
+     * @brief The font size has changed, so to a jump to bookmark.
+     */
+    void fontSizeChanged();
     
 public slots:
     
@@ -131,6 +148,12 @@ private slots:
     
     void onFeedRemoved(ListItem* listItem);
     
+    // Alert us to style changes.
+    void onStyleChanged(QString style);
+    
+    // Alert us to font size changes.
+    void onFontSizeChanged(QString font);
+    
 private:
     // The currently selected news feed.
     FeedItem* currentFeed;
@@ -147,6 +170,9 @@ private:
     
     // Pointer to the global feed list.
     ListModel *feedList;
+    
+    // Pointer to the global settings object.
+    FangSettings *fangSettings;
 };
 
 #endif // WEBINTERACTOR_H

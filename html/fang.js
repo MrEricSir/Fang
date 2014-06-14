@@ -194,6 +194,9 @@ function drawBookmarkAndJumpToJumpingToId() {
     // Draw our bookmark and jump to it!
     drawBookmark(bookmarkIdWeAreJumpingTo);
     jumpToBookmark();
+    
+    // Tell NewsView that we're ready to ROCK and ROLL.
+    navigator.qt.postMessage( 'drawBookmarkAndJumpToFinished' );
 }
 
 function jumpToBookmark() {

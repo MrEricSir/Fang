@@ -12,17 +12,21 @@ WebInteractor::WebInteractor(QQuickItem *parent) :
     isLoading(false),
     isSettingBookmark(false),
     isReady(false),
-    feedList(NULL)
+    feedList(NULL),
+    fangSettings(NULL)
 {
     
 }
 
-void WebInteractor::init(OperationManager *manager, ListModel *feedList)
+void WebInteractor::init(OperationManager *manager, ListModel *feedList, FangSettings *fangSettings)
 {
     this->manager = manager;
     this->feedList = feedList;
+    this->fangSettings = fangSettings;
     
     connect(feedList, SIGNAL(removed(ListItem*)), this, SLOT(onFeedRemoved(ListItem*)));
+    connect(fangSettings, SIGNAL(styleChanged(QString)), this, SLOT(onStyleChanged(QString)));
+    connect(fangSettings, SIGNAL(fontSizeChanged(QString)), this, SLOT(onFontSizeChanged(QString)));
 }
 
 void WebInteractor::loadNext()
@@ -323,5 +327,17 @@ void WebInteractor::onFeedRemoved(ListItem *listItem)
         // Feed is being removed, don't try to use this pointer.  I mean, duh.
         currentFeed = NULL;
     }
+}
+
+void WebInteractor::onStyleChanged(QString style)
+{
+    Q_UNUSED(style);
+    emit styleChanged();
+}
+
+void WebInteractor::onFontSizeChanged(QString font)
+{
+    Q_UNUSED(font);
+    emit fontSizeChanged();
 }
 

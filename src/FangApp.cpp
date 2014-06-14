@@ -111,8 +111,8 @@ void FangApp::onViewerStatusChanged(QQuickView::Status status)
         return;
     }
     
-    // Init interactor with Mr. Manager.
-    interactor->init(&manager, feedList);
+    // Init interactor with Mr. Manager, our list of feeds, and the settings.
+    interactor->init(&manager, feedList, fangSettings);
 }
 
 void FangApp::onWindowResized()

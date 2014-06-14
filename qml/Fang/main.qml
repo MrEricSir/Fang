@@ -79,7 +79,7 @@ Rectangle {
         }
     }
     
-    color: "black"
+    color: style.color.background
     
     /**
      * Operator: mainFrame turn on.
