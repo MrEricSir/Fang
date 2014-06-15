@@ -33,6 +33,7 @@ Item {
         onHeightChanged: webInteractor.heightChanged(height);
         
         // The "interactor" is what talks to the C++ layer.
+        // See WebInteractor.h and .cpp
         WebInteractor {
             id: webInteractor
             objectName: "webInteractor" // Do not change!! PENALTY OF DEATH AND ELECTROCUTION

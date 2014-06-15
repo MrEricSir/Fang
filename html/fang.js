@@ -267,15 +267,20 @@ function prevNewsContainer(element) {
 // UTILITY: Returns true if the element is above the scroll position, else false.
 function isAboveScroll(element) {
     //console.log("Is above scroll: ", element)
-    var delta = 1;
     
-    // For the last item, apply a negative delta to let it flow off the screen.
-    if (element.attr('id') === getLastNewsContainer().attr('id')) {
-        delta = -10;
+    // We don't want to include the bookmark space this calculation.
+    var bookmarkHeight = 0;
+    var bookmark = element.find('.bookmark');
+    if (bookmark.length) {
+        bookmarkHeight = bookmark.height();
     }
     
-    var ret = $(window).scrollTop() >= element.offset().top + element.height() + delta;
-    //console.log("isAboveScroll: Scroll top: ", $(window).scrollTop(), " elem offset and height: ", element.offset().top + element.height(), " ret: ", ret)
+    //console.log("Bookmark Height: ", bookmarkHeight);
+     
+    var allHeight = element.offset().top + element.height() - bookmarkHeight;
+    var ret = $(window).scrollTop() >= allHeight;
+    
+    //console.log("isAboveScroll: Scroll top: ", $(window).scrollTop(), " elem offset and height: ", allHeight, " ret: ", ret)
     return ret;
 }
 
@@ -298,7 +303,7 @@ function getFirstVisible() {
         item = nextNewsContainer(item);
     }
     
-    //console.log("GFV: it's LAST: ", item.last())
+    console.log("GFV: it's LAST: ", item.last())
     
     // Just return the last item, then?
     return getLastNewsContainer();
@@ -309,7 +314,6 @@ function jumpNextPrev(jumpNext) {
     var current = getFirstVisible();
     
     //console.log("JNP: first visible: ", current)
-    
     //console.log("Is above scroll: ", isAboveScroll(current))
     
     if (!current.length)
@@ -319,7 +323,7 @@ function jumpNextPrev(jumpNext) {
     var jumpTo = current;
     if (jumpNext) {
         jumpTo = nextNewsContainer(jumpTo);
-        //console.log("Next not model: ", jumpTo);
+        //console.log("Next valid news container: ", jumpTo);
     } else {
         // Check if we're strattling the top.  If not, jump one back.
         if (!isTopAboveScroll(jumpTo)) {
