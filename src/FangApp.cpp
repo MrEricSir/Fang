@@ -67,7 +67,8 @@ void FangApp::init()
     updateTimer->start(10 * 60 * 1000);
 }
 
-FeedItem* FangApp::getFeed(int index) {
+FeedItem* FangApp::getFeed(int index)
+{
     void* item = feedList->row(index);
     if (item == NULL) {
         qDebug() << "Feed #" << index << " was NULL";
@@ -157,7 +158,8 @@ void FangApp::onFeedRemoved(ListItem * listItem)
     }
 }
 
-void FangApp::onFeedSelected(ListItem* _item) {
+void FangApp::onFeedSelected(ListItem* _item)
+{
     qDebug() << "New feed selected";
     FeedItem* item = qobject_cast<FeedItem *>(_item);
     setCurrentFeed(item);

@@ -213,7 +213,14 @@ void WebInteractor::onLoadNewsFinished(Operation* operation)
     
     if (currentFeed != loader->getFeedItem()) {
         isLoading = false;
+        
         return; // Throw this away, it's from a previous load attempt.
+    }
+    
+    if (!loader->getAppendList() && !loader->getPrependList()) {
+        isLoading = false;
+        
+        return; // Nothing to do.
     }
     
     QString operationName = loader->getMode() == LoadNews::Initial ? "initial" : 
