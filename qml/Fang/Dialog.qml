@@ -131,6 +131,7 @@ Screen {
             font.pointSize: style.font.titleSize
             font.family: style.font.defaultFamily
             color: style.color.dialogText
+            renderType: Text.NativeRendering
             
             anchors.top: parent.top
             anchors.left: parent.left

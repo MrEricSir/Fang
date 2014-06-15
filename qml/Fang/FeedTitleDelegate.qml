@@ -110,6 +110,7 @@ ListViewDragDelegate {
                         font.pointSize: style.font.defaultSize
                         font.family: style.font.defaultFamily
                         color: style.color.sidebarSelectedText
+                        renderType: Text.NativeRendering
                         
                         elide: Text.ElideRight
                     }
@@ -184,6 +185,7 @@ ListViewDragDelegate {
                             font.family: style.font.defaultFamily
                             elide: Text.ElideRight
                             color: style.color.badgeText
+                            renderType: Text.NativeRendering
                         }
                     }
                 }

@@ -24,6 +24,7 @@ Rectangle {
         font.family: style.font.defaultFamily
         color: style.color.dialogText
         wrapMode: Text.WordWrap
+        renderType: Text.NativeRendering
         
         width: parent.width
     }

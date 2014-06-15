@@ -1,20 +1,22 @@
 import QtQuick 2.0
 import Fang 1.0
+import QtQuick.Controls 1.2
+import QtQuick.Controls.Styles 1.2
 
 Rectangle {
-    id: globals
+    id: globals;
     
     // Treat as const
-    property int sidebarWidth: 230
+    property int sidebarWidth: 230;
     
     // Style object.
     Style {
-        id: style
+        id: style;
     }
     
     FangSettings {
-        id: fangSettings
-        objectName: "fangSettings" // Don't change this!
+        id: fangSettings;
+        objectName: "fangSettings"; // Don't change this!
     }
     
     // Read-only: List of all open dialogs
@@ -93,83 +95,83 @@ Rectangle {
      * CATS: Ha ha ha ha ....
      */
     Screen {
-        id: mainFrame
+        id: mainFrame;
         
-        anchors.fill: parent
+        anchors.fill: parent;
         
         // The feed list sidebar.
         Sidebar {
-            id: sidebar
+            id: sidebar;
             
-            width: sidebarWidth
-            x: 0
-            anchors.top: parent.top
-            anchors.bottom: parent.bottom
-            state: "open"
+            width: sidebarWidth;
+            x: 0;
+            anchors.top: parent.top;
+            anchors.bottom: parent.bottom;
+            state: "open";
             
             states: [
-                State { name: "open" },
-                State { name: "closed" }
+                State { name: "open"; },
+                State { name: "closed"; }
             ]
             
             transitions: [
                 Transition {
-                    from: "open"
-                    to: "closed"
+                    from: "open";
+                    to: "closed";
                     SequentialAnimation {
                         // Move sidebar off screen
                         ParallelAnimation {
                             NumberAnimation {
-                                target: sidebar
-                                properties: "x"
-                                to: -sidebarWidth
-                                duration: 200
-                                easing.type: Easing.InOutQuad
+                                target: sidebar;
+                                properties: "x";
+                                to: -sidebarWidth;
+                                duration: 200;
+                                easing.type: Easing.InOutQuad;
                             }
                             
                             NumberAnimation {
-                                target: openSidebarButton
-                                properties: "opacity"
-                                from: 0.0
-                                to: 1.0
-                                duration: 500
-                                easing.type: Easing.InOutQuad
+                                target: openSidebarButton;
+                                properties: "opacity";
+                                from: 0.0;
+                                to: 1.0;
+                                duration: 500;
+                                easing.type: Easing.InOutQuad;
                             }
                         }
                     }
                 },
                 Transition {
-                    from: "closed"
-                    to: "open"
+                    from: "closed";
+                    to: "open";
                     
                     SequentialAnimation {
                         // Move sidebar back on screen
                         ParallelAnimation {
                             NumberAnimation {
-                                target: sidebar
-                                properties: "x"
-                                to: 0
-                                duration: 200
-                                easing.type: Easing.InOutQuad
+                                target: sidebar;
+                                properties: "x";
+                                to: 0;
+                                duration: 200;
+                                easing.type: Easing.InOutQuad;
                             }
                             
                             NumberAnimation {
-                                target: openSidebarButton
-                                properties: "opacity"
-                                from: 1.0
-                                to: 0.0
-                                duration: 500
-                                easing.type: Easing.InOutQuad
+                                target: openSidebarButton;
+                                properties: "opacity";
+                                from: 1.0;
+                                to: 0.0;
+                                duration: 500;
+                                easing.type: Easing.InOutQuad;
                             }
                         }
                     }
                 }
             ]
             
-            onCloseClicked: sidebar.state = "closed"
+            onCloseClicked: sidebar.state = "closed";
             
-            onFeedDoubleClicked: news.jumpToBookmark()
-            onOrderChanged: news.orderChanged()
+            onFeedDoubleClicked: news.jumpToBookmark();
+            onOrderChanged: news.orderChanged();
             
             onSettingsClicked: openDialog("SettingsDialog.qml");
             onAddClicked: openDialog("AddDialog.qml");
@@ -178,47 +180,47 @@ Rectangle {
         }
         
         News {
-            id: news
+            id: news;
             
-            anchors.left: sidebar.right
-            anchors.top: parent.top
-            anchors.bottom: parent.bottom
-            anchors.right: parent.right
+            anchors.left: sidebar.right;
+            anchors.top: parent.top;
+            anchors.bottom: parent.bottom;
+            anchors.right: parent.right;
             
             newsFocus: true // set by dialog system
             
             Item {
-                id: openButtonContainer
+                id: openButtonContainer;
                 
-                anchors.left: parent.left
-                anchors.bottom: parent.bottom
+                anchors.left: parent.left;
+                anchors.bottom: parent.bottom;
                 
-                height: sidebar.buttonSize
-                width: sidebar.buttonSize
+                height: sidebar.buttonSize;
+                width: sidebar.buttonSize;
                 
-                anchors.leftMargin: 5
-                anchors.bottomMargin: 5
+                anchors.leftMargin: 5;
+                anchors.bottomMargin: 5;
                 
                 // Button to re-open sidebar
                 SidebarButton {
                     id: openSidebarButton
                     
                     imageURL: fangSettings.style === "LIGHT" ? "images/arrows_right_dark.png"
-                                                             : "images/arrows_right.png"
+                                                             : "images/arrows_right.png";
                     imageHoverURL: fangSettings.style === "LIGHT" ? "images/arrows_right.png"
-                                                                  : "images/arrows_right_dark.png"
+                                                                  : "images/arrows_right_dark.png";
                     imagePressedURL: fangSettings.style === "LIGHT" ? "images/arrows_right.png"
-                                                                    : "images/arrows_right_dark.png"
+                                                                    : "images/arrows_right_dark.png";
                     
-                    width: sidebar.buttonSize
-                    height: sidebar.buttonSize
+                    width: sidebar.buttonSize;
+                    height: sidebar.buttonSize;
                     
-                    opacity: 0
-                    enabled: sidebar.state == "closed"
+                    opacity: 0;
+                    enabled: sidebar.state == "closed";
                     
-                    anchors.margins: 5
+                    anchors.margins: 5;
                     
-                    onClicked: sidebar.state = "open"
+                    onClicked: sidebar.state = "open";
                 }
             }
         }

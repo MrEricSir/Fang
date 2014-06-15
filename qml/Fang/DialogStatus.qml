@@ -54,6 +54,7 @@ Rectangle {
         font.pointSize: style.font.defaultSize
         font.family: style.font.defaultFamily
         color: style.color.dialogText
+        renderType: Text.NativeRendering
         
         width: parent.width - x
     }

@@ -173,6 +173,7 @@ Dialog {
                                 color: style.color.dialogText
 
                                 elide: Text.ElideRight
+                                renderType: Text.NativeRendering
                             }
 
                             Text {
@@ -186,6 +187,7 @@ Dialog {
                                 color: style.color.fadedText
 
                                 elide: Text.ElideRight
+                                renderType: Text.NativeRendering
                             }
                         }
                         

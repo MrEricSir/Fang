@@ -8,7 +8,7 @@ Item {
     
     // Used by main for double clicking on feed titles.
     function jumpToBookmark() {
-        console.log("Jump to bmark")
+        //console.log("Jump to bmark");
         newsView.experimental.evaluateJavaScript("jumpToBookmark();");
     }
     
@@ -23,22 +23,18 @@ Item {
     // Sets focus on the news view when dialogs are closed.
     property alias newsFocus: newsScrollView.focus
     
-    onNewsFocusChanged: {
-        console.log("NEws focus: ", newsFocus)
-    }
-    
     Item {
-        id: newsMargin
+        id: newsMargin;
         
-        anchors.fill: parent
+        anchors.fill: parent;
         
         onHeightChanged: webInteractor.heightChanged(height);
         
         // The "interactor" is what talks to the C++ layer.
         // See WebInteractor.h and .cpp
         WebInteractor {
-            id: webInteractor
-            objectName: "webInteractor" // Do not change!! PENALTY OF DEATH AND ELECTROCUTION
+            id: webInteractor;
+            objectName: "webInteractor"; // Do not change!! PENALTY OF DEATH AND ELECTROCUTION
             
             function heightChanged(height) {
                 newsView.experimental.evaluateJavaScript(
@@ -64,7 +60,7 @@ Item {
             }
             
             onClear: {
-                //console.log("Clear!")
+                //console.log("Clear!");
                 newsView.experimental.evaluateJavaScript("clearNews();");
                 newsView.contentY = 0;  // reset scroll
                 
@@ -73,55 +69,55 @@ Item {
             }
             
             onJumpTo: {
-                console.log("jump to: ", id)
+                //console.log("jump to: ", id);
                 newsView.experimental.evaluateJavaScript("jumpTo('" + id + "');");
             }
             
             onDrawBookmark: {
-                console.log("Draw bookmark: ", id)
+                //console.log("Draw bookmark: ", id);
                 newsView.experimental.evaluateJavaScript("drawBookmark('" + id + "');");
             }
             
             onDrawBookmarkAndJumpTo: {
-                console.log("Draw bookmark and jump to: ", id)
+                //console.log("Draw bookmark and jump to: ", id);
                 newsView.experimental.evaluateJavaScript("drawBookmarkAndJumpTo('" + id + "');");
             }
             
             onFontSizeChanged: {
-                console.log("Font size changed, alert!  Need to jump to bookmark!")
+                //console.log("Font size changed, alert!  Need to jump to bookmark!")
                 newsView.updateCSS();
                 newsView.experimental.evaluateJavaScript("jumpToBookmark();");
             }
             
             onStyleChanged: {
-                console.log("I was told to update the css?")
+                //console.log("I was told to update the css?");
                 newsView.updateCSS();
             }
         }
         
         // Web view for our HTML-based RSS display.
         FangScrollView {
-            id: newsScrollView
+            id: newsScrollView;
             
-            anchors.fill: parent
+            anchors.fill: parent;
 
             WebView {
-                id: newsView
+                id: newsView;
                 
                 // Enable the web inspector by setting this to true.  You'll have to open Chrome to: 
                 // http://127.0.0.1:9999/webkit/inspector/inspector.html?page=1
-                property bool devMode: true
+                property bool devMode: true;
                 
                 // Start invisible
-                visible: false
+                visible: false;
                 
                 // Turn the inspek0r off and on.
-                experimental.preferences.developerExtrasEnabled: devMode
+                experimental.preferences.developerExtrasEnabled: devMode;
                 
-                property bool firstRun: true        // On first run, we need to wait for both.
-                property bool cssUpdated: false     // Check for this on first run.
+                property bool firstRun: true;        // On first run, we need to wait for both.
+                property bool cssUpdated: false;     // Check for this on first run.
                 // Whether the bookmark has been jumped to
-                property bool drawBookmarkAndJumpToFinished: false
+                property bool drawBookmarkAndJumpToFinished: false;
                 
                 // Checks if we should become visible or not.  (Internal)
                 function checkReady() {
@@ -135,7 +131,7 @@ Item {
                     }
                 }
                 
-                focus: true
+                focus: true;
                 
                 function updateCSS() {
                     newsView.experimental.evaluateJavaScript(
@@ -159,17 +155,17 @@ Item {
                 }
                 
                 // Leave margin for scroll bar.
-                anchors.fill: parent
-                anchors.rightMargin: 16
-                anchors.leftMargin: 12
+                anchors.fill: parent;
+                anchors.rightMargin: 16;
+                anchors.leftMargin: 12;
                 
                 // Resize a bit more intelligently.
-                experimental.preferredMinimumContentsWidth: 300
+                experimental.preferredMinimumContentsWidth: 300;
                 
                 url: "qrc:///html/NewsPage.html"
                 
                 // Communication from WebKit layer to QML.
-                experimental.preferences.navigatorQtObjectEnabled: true
+                experimental.preferences.navigatorQtObjectEnabled: true;
                 experimental.onMessageReceived: {
                     //console.log("get msg from javascript:", message.data)
                     var commandArray = message.data.split(" ");
@@ -219,7 +215,6 @@ Item {
                         news.refreshFeed();
                 }
             }
-        
         }
     }
 }

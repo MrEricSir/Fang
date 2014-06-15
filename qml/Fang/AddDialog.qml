@@ -27,13 +27,15 @@ Dialog {
     TextEntry {
         id: textURL
         
-        hint: "Website or feed URL"
+        placeholderText: "Website or feed URL"
         
         onTextChanged: validationStatus.visible = false
-        
-        onEnterKeyPressed: addButton.click()
+        onAccepted: addButton.click()
         
         width: parent.width
+        
+        // Don't allow editing while we're checking the feed.
+        readOnly: validator.validating
     }
     
     DialogSpinner {
@@ -65,7 +67,7 @@ Dialog {
         
         text: "Add Feed"
         onClicked: validator.check()
-        enabled: !validator.validating && !validator.validationComplete
+        enabled: textURL.text && !validator.validating && !validator.validationComplete
     }
     
     DialogButton {
@@ -79,7 +81,7 @@ Dialog {
     // Magic beans that validate & add feeds (see C++ layer.)
     FeedValidator {
         id: validator
-        url: textURL.editText
+        url: textURL.text
         
         property bool validationComplete: false
         

@@ -4,12 +4,15 @@ import QtQuick.Controls.Styles 1.2
 
 /**
  * Custom styled scrollview for Fang.
+ *
+ * TODO: Optimize.  It really sucks right now (run the QML profiler, see for yourself!)
  */
 ScrollView {
-    id: fangScrollView
+    id: fangScrollView;
     
-    anchors.fill: parent
+    anchors.fill: parent;
+    
     style: ScrollViewStyle {
-        transientScrollBars: true
+        transientScrollBars: true;
     }
 }

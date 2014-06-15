@@ -14,7 +14,7 @@ Dialog {
     }
     
     function reset() {
-        feedTitle.setEditText(listView.model.selected.getTitle());
+        feedTitle.text = listView.model.selected.getTitle();
     }
 
     DialogStatus {
@@ -27,9 +27,9 @@ Dialog {
     TextEntry {
         id: feedTitle
         
-        hint: "Feed title"
+        placeholderText: "Feed title"
         
-        onEnterKeyPressed: saveEditButton.click()
+        onAccepted: saveEditButton.click()
         width: parent.width
     }
     
@@ -39,12 +39,12 @@ Dialog {
         text: "Save"
         onClicked: {
             // Save the new title.
-            listView.model.selected.setTitle(feedTitle.editText);
+            listView.model.selected.setTitle(feedTitle.text);
             
             // Dismiss the dialog.
             dismiss();
         }
-        enabled: !isClosing && feedTitle.editText.trim() !== ""
+        enabled: !isClosing && feedTitle.text.trim() !== ""
         
         // Yes this is cheating, but so what?
         FeedValidator {
