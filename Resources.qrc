@@ -8,7 +8,6 @@
         <file>qml/Fang/images/arrows_right.png</file>
         <file>qml/Fang/images/minus.png</file>
         <file>qml/Fang/images/plus.png</file>
-        <file>qml/Fang/ScrollBar.qml</file>
         <file>html/NewsPage.html</file>
         <file>sql/1.sql</file>
         <file>qml/Fang/Dialog.qml</file>
@@ -65,5 +64,6 @@
         <file>qml/Fang/OPMLImportDialog.qml</file>
         <file>qml/Fang/CheckBox.qml</file>
         <file>html/formatDateSimply.js</file>
+        <file>qml/Fang/FangScrollView.qml</file>
     </qresource>
 </RCC>

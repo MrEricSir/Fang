@@ -21,14 +21,16 @@ Item {
     }
     
     // Sets focus on the news view when dialogs are closed.
-    property alias newsFocus: newsView.focus
+    property alias newsFocus: newsScrollView.focus
+    
+    onNewsFocusChanged: {
+        console.log("NEws focus: ", newsFocus)
+    }
     
     Item {
         id: newsMargin
         
         anchors.fill: parent
-        anchors.rightMargin: 16
-        anchors.leftMargin: 12
         
         onHeightChanged: webInteractor.heightChanged(height);
         
@@ -98,133 +100,126 @@ Item {
         }
         
         // Web view for our HTML-based RSS display.
-        WebView {
-            id: newsView
-            
-            // Enable the web inspector by setting this to true.  You'll have to open Chrome to: 
-            // http://127.0.0.1:9999/webkit/inspector/inspector.html?page=1
-            property bool devMode: true
-            
-            // Start invisible
-            visible: false
-            
-            // Turn the inspek0r off and on.
-            experimental.preferences.developerExtrasEnabled: devMode
-            
-            property bool firstRun: true        // On first run, we need to wait for both.
-            property bool cssUpdated: false     // Check for this on first run.
-            // Whether the bookmark has been jumped to
-            property bool drawBookmarkAndJumpToFinished: false
-            
-            // Checks if we should become visible or not.  (Internal)
-            function checkReady() {
-                if (firstRun) {
-                    if (drawBookmarkAndJumpToFinished && cssUpdated) {
-                        visible = true;
-                    }
-                } else {
-                    if (drawBookmarkAndJumpToFinished)
-                        visible = true;
-                }
-            }
-            
-            function updateCSS() {
-                newsView.experimental.evaluateJavaScript(
-                            "clearBodyClasses(); " +
-                            "addBodyClass('" + platform + "'); " +
-                            "addBodyClass('FONT_" + fangSettings.fontSize + "'); " +
-                            "addBodyClass('" + fangSettings.style + "');");
-                
-                cssUpdated = true;
-                checkReady();
-            }
-            
-            // Jumpts to the next news item.
-            function jumpNext() {
-                newsView.experimental.evaluateJavaScript("jumpNextPrev(true);");
-            }
-            
-            // Jumps to the previous news item.
-            function jumpPrevious() {
-                newsView.experimental.evaluateJavaScript("jumpNextPrev(false);");
-            }
+        FangScrollView {
+            id: newsScrollView
             
             anchors.fill: parent
-            
-            // Resize a bit more intelligently.
-            experimental.preferredMinimumContentsWidth: 300
-            
-            focus: visible
-            
-            url: "qrc:///html/NewsPage.html"
-            
-            // Communication from WebKit layer to QML.
-            experimental.preferences.navigatorQtObjectEnabled: true
-            experimental.onMessageReceived: {
-                //console.log("get msg from javascript:", message.data)
-                var commandArray = message.data.split(" ");
-                var cmd = commandArray[0];
+
+            WebView {
+                id: newsView
                 
-                if (cmd === "loadNext") {
-                    webInteractor.loadNext();
-                } else if (cmd === "loadPrevious") {
-                    webInteractor.loadPrevious();
-                } else if (cmd === "setBookmark") {
-                    webInteractor.setBookmark(commandArray[1]);
-                } else if (cmd === "openLink") {
-                    webInteractor.openLink(commandArray[1]);
-                } else if (cmd === "stopProgress" ) {
-                    newsView.experimental.evaluateJavaScript("stopInProgress();");
-                } else if (cmd === "drawBookmarkAndJumpToFinished" ) {
-                    // Check if it's time to become visible again.
-                    newsView.drawBookmarkAndJumpToFinished = true;
+                // Enable the web inspector by setting this to true.  You'll have to open Chrome to: 
+                // http://127.0.0.1:9999/webkit/inspector/inspector.html?page=1
+                property bool devMode: true
+                
+                // Start invisible
+                visible: false
+                
+                // Turn the inspek0r off and on.
+                experimental.preferences.developerExtrasEnabled: devMode
+                
+                property bool firstRun: true        // On first run, we need to wait for both.
+                property bool cssUpdated: false     // Check for this on first run.
+                // Whether the bookmark has been jumped to
+                property bool drawBookmarkAndJumpToFinished: false
+                
+                // Checks if we should become visible or not.  (Internal)
+                function checkReady() {
+                    if (firstRun) {
+                        if (drawBookmarkAndJumpToFinished && cssUpdated) {
+                            visible = true;
+                        }
+                    } else {
+                        if (drawBookmarkAndJumpToFinished)
+                            visible = true;
+                    }
+                }
+                
+                focus: true
+                
+                function updateCSS() {
+                    newsView.experimental.evaluateJavaScript(
+                                "clearBodyClasses(); " +
+                                "addBodyClass('" + platform + "'); " +
+                                "addBodyClass('FONT_" + fangSettings.fontSize + "'); " +
+                                "addBodyClass('" + fangSettings.style + "');");
+                    
+                    cssUpdated = true;
                     checkReady();
                 }
                 
-                // Not used in Qt 5.3
-//                } else if (cmd === "scrollToPosition" ) {
-//                    console.log("Scroll to position: ", commandArray[1]);
-//                    newsScroll.scrollTo(commandArray[1]);
-            }
-            
-            // Set style, and update when needed.
-            onLoadingChanged: {
-                if (loadRequest.status === WebView.LoadSucceededStatus) {
-                    webInteractor.pageLoaded();  // tell 'em the page is loaded now.
-                    updateCSS(); // set our page's style
-                    webInteractor.heightChanged(newsMargin.height); // update height (if not already updated)
+                // Jumpts to the next news item.
+                function jumpNext() {
+                    newsView.experimental.evaluateJavaScript("jumpNextPrev(true);");
+                }
+                
+                // Jumps to the previous news item.
+                function jumpPrevious() {
+                    newsView.experimental.evaluateJavaScript("jumpNextPrev(false);");
+                }
+                
+                // Leave margin for scroll bar.
+                anchors.fill: parent
+                anchors.rightMargin: 16
+                anchors.leftMargin: 12
+                
+                // Resize a bit more intelligently.
+                experimental.preferredMinimumContentsWidth: 300
+                
+                url: "qrc:///html/NewsPage.html"
+                
+                // Communication from WebKit layer to QML.
+                experimental.preferences.navigatorQtObjectEnabled: true
+                experimental.onMessageReceived: {
+                    //console.log("get msg from javascript:", message.data)
+                    var commandArray = message.data.split(" ");
+                    var cmd = commandArray[0];
+                    
+                    if (cmd === "loadNext") {
+                        webInteractor.loadNext();
+                    } else if (cmd === "loadPrevious") {
+                        webInteractor.loadPrevious();
+                    } else if (cmd === "setBookmark") {
+                        webInteractor.setBookmark(commandArray[1]);
+                    } else if (cmd === "openLink") {
+                        webInteractor.openLink(commandArray[1]);
+                    } else if (cmd === "stopProgress" ) {
+                        newsView.experimental.evaluateJavaScript("stopInProgress();");
+                    } else if (cmd === "drawBookmarkAndJumpToFinished" ) {
+                        // Check if it's time to become visible again.
+                        newsView.drawBookmarkAndJumpToFinished = true;
+                        checkReady();
+                    }
+                    
+                    // Not used in Qt 5.3
+                    //                } else if (cmd === "scrollToPosition" ) {
+                    //                    console.log("Scroll to position: ", commandArray[1]);
+                    //                    newsScroll.scrollTo(commandArray[1]);
+                }
+                
+                // Set style, and update when needed.
+                onLoadingChanged: {
+                    if (loadRequest.status === WebView.LoadSucceededStatus) {
+                        webInteractor.pageLoaded();  // tell 'em the page is loaded now.
+                        updateCSS(); // set our page's style
+                        webInteractor.heightChanged(newsMargin.height); // update height (if not already updated)
+                    }
+                }
+                
+                Keys.onPressed: {
+                    if (event.key === Qt.Key_Left)
+                        newsView.jumpPrevious();
+                    else if (event.key === Qt.Key_Right)
+                        newsView.jumpNext();
+                    else if (event.key === Qt.Key_F5)
+                        news.refreshFeed();
+                    else if (event.key === Qt.Key_R && (event.modifiers & Qt.ControlModifier))
+                        news.refreshFeed();
+                    else if (event.key === Qt.Key_R && (event.modifiers & Qt.MetaModifier))
+                        news.refreshFeed();
                 }
             }
-            
-            Keys.onPressed: {
-                if (event.key === Qt.Key_PageDown)
-                    newsScroll.pageDown();
-                else if (event.key === Qt.Key_PageUp)
-                    newsScroll.pageUp();
-                else if (event.key === Qt.Key_Up)
-                    newsScroll.scrollUp();
-                else if (event.key === Qt.Key_Down)
-                    newsScroll.scrollDown();
-                else if (event.key === Qt.Key_Home)
-                    newsScroll.scrollHome();
-                else if (event.key === Qt.Key_End)
-                    newsScroll.scrollEnd();
-                else if (event.key === Qt.Key_Left)
-                    newsView.jumpPrevious();
-                else if (event.key === Qt.Key_Right)
-                    newsView.jumpNext();
-                else if (event.key === Qt.Key_F5)
-                    news.refreshFeed();
-                else if (event.key === Qt.Key_R && (event.modifiers & Qt.ControlModifier))
-                    news.refreshFeed();
-                else if (event.key === Qt.Key_R && (event.modifiers & Qt.MetaModifier))
-                    news.refreshFeed();
-            }
+        
         }
-    }
-    
-    ScrollBar {
-        id: newsScroll
-        target: newsView
     }
 }

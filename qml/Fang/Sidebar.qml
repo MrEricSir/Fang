@@ -91,44 +91,43 @@ Item {
                 width: 1
             }
             
-            ListView {
-                id: feedListView
+            FangScrollView {
                 anchors.fill: parent
                 
-                // Only move if there's a need.
-                interactive: height < childrenRect.height
-                
-                delegate: FeedTitleDelegate {
-                    id: titleDelegate
+                ListView {
+                    id: feedListView
+                    anchors.fill: parent
                     
-                    // This sets the selected item in the C++ layer.
-                    ListView.onIsCurrentItemChanged: {
-                        if (ListView.isCurrentItem) {
-                            console.log("Item selected: ", feedListView.currentIndex)
-                            feedListView.model.selectedIndex = feedListView.currentIndex
-                            sidebar.feedSelected();
+                    // Only move if there's a need.
+                    interactive: height < childrenRect.height
+                    
+                    delegate: FeedTitleDelegate {
+                        id: titleDelegate
+                        
+                        // This sets the selected item in the C++ layer.
+                        ListView.onIsCurrentItemChanged: {
+                            if (ListView.isCurrentItem) {
+                                console.log("Item selected: ", feedListView.currentIndex)
+                                feedListView.model.selectedIndex = feedListView.currentIndex
+                                sidebar.feedSelected();
+                            }
+                        }
+                        
+                        onJumpToBookmark: {
+                            sidebar.feedDoubleClicked();
+                        }
+                        
+                        onOrderChanged: {
+                            sidebar.orderChanged();
                         }
                     }
                     
-                    onJumpToBookmark: {
-                        sidebar.feedDoubleClicked();
-                    }
+                    model: feedListModel
                     
-                    onOrderChanged: {
-                        sidebar.orderChanged();
+                    displaced: Transition {
+                        NumberAnimation { properties: "x,y"; duration: 50 }
                     }
                 }
-                
-                model: feedListModel
-                
-                displaced: Transition {
-                    NumberAnimation { properties: "x,y"; duration: 50 }
-                }
-            }
-            
-            ScrollBar {
-                id: feedListViewScroll
-                target: feedListView
             }
         }
     }
