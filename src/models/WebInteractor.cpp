@@ -231,9 +231,11 @@ void WebInteractor::onLoadNewsFinished(Operation* operation)
             addNewsItem(false, item);
     
     // If this is the initial load, draw and jump to the bookmark.
+    QString idOfBookmark = "";
     if (loader->getMode() == LoadNews::Initial && currentFeed->getBookmark() != NULL) {
-        emit drawBookmarkAndJumpTo(currentFeed->getBookmark()->id());
+        idOfBookmark = currentFeed->getBookmark()->id();
     }
+    emit drawBookmarkAndJumpTo(idOfBookmark);
     
     emit addInProgress(false, operationName);
     

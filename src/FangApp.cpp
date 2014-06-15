@@ -80,15 +80,13 @@ FeedItem* FangApp::getFeed(int index) {
 
 FeedItem *FangApp::getFeedForID(qint64 dbID)
 {
-    // TODO: optimize this with a map
-    for (int i = 0; i < feedList->rowCount(); i++) {
-         FeedItem* item = qobject_cast<FeedItem*>(feedList->row(i));
-         if (item != NULL && item->getDbId() == dbID)
-             return item;
+    QMap<qint64, FeedItem*>::iterator it = feedIdMap.find(dbID);
+    if (it == feedIdMap.end()) {
+        qDebug() << "Um, we didn't find a feed for id: " << dbID;
+        return NULL;
     }
     
-    qDebug() << "Um, we didn't find a feed for id: " << dbID;
-    return NULL; // oops, we didn't find it!
+    return it.value();
 }
 
 void FangApp::focusApp()
@@ -137,6 +135,8 @@ void FangApp::onFeedAdded(ListItem *item)
         return;
     }
     
+    feedIdMap.insert(feed->getDbId(), feed);
+    
     // Hook up signals.
     connectFeed(feed);
     
@@ -152,6 +152,7 @@ void FangApp::onFeedRemoved(ListItem * listItem)
     FeedItem* item = qobject_cast<FeedItem *>(listItem);
     if (item != NULL) {
         disconnectFeed(item);
+        feedIdMap.take(item->getDbId());
         item->deleteLater(); // Well, bye.
     }
 }

@@ -78,7 +78,7 @@ signals:
     
     /**
      * @brief Not only draws the bookmark, but also issues a jump.
-     * @param id   HTML ID of the news item blah blah see above.
+     * @param id   HTML ID of the news item blah blah see above.  Or "" if we just want to indicate that we're ready to go!
      */
     void drawBookmarkAndJumpTo(QString id);
     

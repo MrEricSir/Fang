@@ -5,6 +5,7 @@
 #include <QQmlContext>
 #include <QQuickView>
 #include <QTimer>
+#include <QMap>
 
 #include "../qtquick2applicationviewer/qtquick2applicationviewer.h"
 
@@ -156,6 +157,7 @@ private:
     FangSettings *fangSettings;
     WebInteractor *interactor;
     QTimer *updateTimer;
+    QMap<qint64, FeedItem*> feedIdMap;
 };
 
 #endif // FANGAPP_H

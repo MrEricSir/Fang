@@ -171,9 +171,6 @@ function drawBookmark(id) {
 // Both draw the bookmark AND jump to it!  In ONE SHOT!!  WOW!
 var bookmarkIdWeAreJumpingTo = "";
 function drawBookmarkAndJumpTo(id) {
-    if (!id || id === "")
-        return;
-    
     bookmarkIdWeAreJumpingTo = id;
     drawBookmarkAndJumpToJumpingToId();
 }
@@ -191,9 +188,12 @@ function drawBookmarkAndJumpToJumpingToId() {
     
     //console.log("Jump out complete: ", bookmarkIdWeAreJumpingTo)
     
-    // Draw our bookmark and jump to it!
-    drawBookmark(bookmarkIdWeAreJumpingTo);
-    jumpToBookmark();
+    // If there's a bookmark, jump to it!
+    if (bookmarkIdWeAreJumpingTo !== '') {
+        // Draw our bookmark and jump to it!
+        drawBookmark(bookmarkIdWeAreJumpingTo);
+        jumpToBookmark();
+    }
     
     // Tell NewsView that we're ready to ROCK and ROLL.
     navigator.qt.postMessage( 'drawBookmarkAndJumpToFinished' );
