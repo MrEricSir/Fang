@@ -285,11 +285,17 @@ QString WebInteractor::escapeCharacters(const QString& string)
 void WebInteractor::addNewsItem(bool append, NewsItem *item)
 {
     //qDebug() << "Add news: " << item->id();
+    
+    // Make sure we get the real feed title for All News.
+    QString feedTitle = !item->getFeed()->isAllNews() ? 
+                            item->getFeed()->getTitle() :
+                            FangApp::instance()->getFeedForID(item->getFeedId())->getTitle();
+    
     emit add(append,
              item->id(),
              escapeCharacters(item->getTitle()),
              escapeCharacters(item->getURL().toString()),
-             escapeCharacters(item->getFeed()->getTitle()),
+             escapeCharacters(feedTitle),
              item->getTimestamp().toMSecsSinceEpoch(),
              escapeCharacters( item->getContent() != "" ? item->getContent() : item->getSummary()) );
 }
@@ -300,8 +306,9 @@ void WebInteractor::doLoadNews(LoadNews::LoadMode mode)
         return;
     }
     
-    LoadNews* loader = (currentFeed->getDbId() < 0) ? new LoadAllNewsOperation(manager, currentFeed, mode) :
-                new LoadNews(manager, currentFeed, mode);
+    LoadNews* loader = (currentFeed->getDbId() < 0) ? 
+                           new LoadAllNewsOperation(manager, currentFeed, mode) :
+                           new LoadNews(manager, currentFeed, mode);
     isLoading =  true;
     connect(loader, SIGNAL(finished(Operation*)), this, SLOT(onLoadNewsFinished(Operation*)));
     manager->add(loader);

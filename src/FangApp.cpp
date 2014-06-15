@@ -80,6 +80,7 @@ FeedItem* FangApp::getFeed(int index) {
 
 FeedItem *FangApp::getFeedForID(qint64 dbID)
 {
+    // TODO: optimize this with a map
     for (int i = 0; i < feedList->rowCount(); i++) {
          FeedItem* item = qobject_cast<FeedItem*>(feedList->row(i));
          if (item != NULL && item->getDbId() == dbID)

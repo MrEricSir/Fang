@@ -23,6 +23,7 @@ public:
     explicit NewsItem(
             FeedItem* feed,
             qint64 id,
+            qint64 feedId,
             const QString& title,
             const QString& author,
             const QString& summary,
@@ -45,6 +46,9 @@ public:
         return ret;
     }
     
+    // This returns the actual feed database ID
+    inline qint64 getFeedId() const { return _feedId; }
+    
     inline QString getTitle() const { return title; }
     inline QString getAuthor() const { return author; }
     inline QString getSummary() const { return summary; }
@@ -56,6 +60,7 @@ public:
   private:
     FeedItem* feed;
     qint64 _id;
+    qint64 _feedId;
     QString title;
     QString author;
     QString summary;

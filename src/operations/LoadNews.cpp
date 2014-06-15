@@ -24,6 +24,7 @@ void LoadNews::queryToNewsList(QSqlQuery& query, QList<NewsItem*>* list)
         NewsItem* newsItem = new NewsItem(
                     feedItem,
                     query.value("id").toULongLong(),
+                    query.value("feed_id").toULongLong(),
                     query.value("title").toString(),
                     query.value("author").toString(),
                     query.value("summary").toString(),
