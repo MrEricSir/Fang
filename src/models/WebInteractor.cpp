@@ -220,6 +220,11 @@ void WebInteractor::onLoadNewsFinished(Operation* operation)
     if (!loader->getAppendList() && !loader->getPrependList()) {
         isLoading = false;
         
+        if (loader->getMode() == LoadNews::Initial) {
+            emit nothingToAdd();
+            emit drawBookmarkAndJumpTo("");
+        }
+        
         return; // Nothing to do.
     }
     

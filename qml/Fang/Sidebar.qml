@@ -124,6 +124,16 @@ Item {
                     
                     model: feedListModel
                     
+                    Connections {
+                        target: feedListModel
+                        
+                        // This allows C++ to set the selected item.
+                        onSelectedIndexChanged: {
+                            if (selectedIndex !== feedListView.currentIndex)
+                                feedListView.currentIndex = selectedIndex;
+                        }
+                    }
+                    
                     displaced: Transition {
                         NumberAnimation { properties: "x,y"; duration: 50 }
                     }

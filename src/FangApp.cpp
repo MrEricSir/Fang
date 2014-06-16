@@ -165,6 +165,16 @@ void FangApp::onFeedSelected(ListItem* _item)
     setCurrentFeed(item);
 }
 
+void FangApp::onNewFeedAddedSelect(Operation* addFeedOperation)
+{
+    AddFeedOperation* op = qobject_cast<AddFeedOperation*>(addFeedOperation);
+    Q_ASSERT(op != NULL);
+    
+    // Tell me about it.
+    //qDebug() << "You should select: " << op->getFeedItem()->getTitle();
+    feedList->setSelected(op->getFeedItem());
+}
+
 void FangApp::connectFeed(FeedItem *feed)
 {
     connect(feed, SIGNAL(titleChanged()), this, SLOT(onFeedTitleChanged()));
@@ -239,18 +249,19 @@ FangApp* FangApp::instance()
     return _instance;
 }
 
-void FangApp::addFeed(const QUrl &feedURL, QString title)
+void FangApp::addFeed(const QUrl &feedURL, const RawFeed* rawFeed, bool switchTo)
 {
     //qDebug() << "Add feed " << siteTitle << " " << feedURL;
-    manager.add(new AddFeedOperation(&manager, feedList, feedURL, title));
+    AddFeedOperation* addOp = new AddFeedOperation(
+                                  &manager, feedList, feedURL, rawFeed);
+    
+    if (switchTo) {
+        connect(addOp, SIGNAL(finished(Operation*)),
+                this, SLOT(onNewFeedAddedSelect(Operation*)));
+    }
+    
+    manager.add(addOp);
 }
-
-void FangApp::addFeed(const QUrl &feedURL, const RawFeed* rawFeed)
-{
-    //qDebug() << "Add feed " << siteTitle << " " << feedURL;
-    manager.add(new AddFeedOperation(&manager, feedList, feedURL, rawFeed));
-}
-
 
 void FangApp::removeFeed(FeedItem *feed)
 {

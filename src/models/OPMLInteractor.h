@@ -6,6 +6,7 @@
 #include <QQuickItem>
 #include <QFileDialog>
 #include <QString>
+#include <QMap>
 
 #include "../parser/OPMLParser.h"
 #include "../parser/RawFeed.h"
@@ -42,6 +43,8 @@ class OPMLInteractor : public QQuickItem
     
 public:
     explicit OPMLInteractor(QQuickItem *parent = 0);
+    
+    virtual ~OPMLInteractor();
     
 signals:
     
@@ -117,6 +120,9 @@ private slots:
     // The import list had a data change.
     void onImportListDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
     
+    // Clear internal data to save memory and such.
+    void clear();
+    
 private:
     
     QFileDialog importDialog;
@@ -127,6 +133,7 @@ private:
     BatchFeedDiscovery batchFeedDiscovery;
     QString filename;
     bool _isAnyFeedSelected;
+    QMap<FeedItem*, RawFeed*> feedToRaw;
 };
 
 #endif // OPMLINTERACTOR_H

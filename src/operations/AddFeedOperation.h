@@ -8,6 +8,7 @@
 #include <QDebug>
 
 #include "../models/ListModel.h"
+#include "../models/FeedItem.h"
 #include "../parser/BackgroundParser.h"
 
 class AddFeedOperation : public DBOperation
@@ -27,6 +28,8 @@ signals:
 public slots:
     virtual void execute();
     
+    FeedItem* getFeedItem() { return item; }
+    
 private slots:
     void onFeedFinished();
     
@@ -41,6 +44,9 @@ private:
     BackgroundParser parser;
     
     QString title;
+    
+    // The resulting item;
+    FeedItem* item;
 };
 
 #endif // ADDFEEDOPERATION_H

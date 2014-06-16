@@ -52,6 +52,7 @@ void OPMLParser::parseFile(QString filename)
 //                    qDebug();
                     
                     QString xmlUrl = xml.attributes().value("xmlUrl").toString();
+                    QString htmlUrl = xml.attributes().value("htmlUrl").toString();
                     QString title;
                     
                     title = xml.attributes().value("title").toString();
@@ -63,8 +64,9 @@ void OPMLParser::parseFile(QString filename)
                     if (!xmlUrl.isEmpty() && !title.isEmpty()) {
                         RawFeed* feed = new RawFeed();
                         
-                        feed->title = title;
-                        feed->url   = QUrl(xmlUrl);
+                        feed->title   = title;
+                        feed->url     = QUrl(xmlUrl);
+                        feed->siteURL = QUrl(htmlUrl);
                         
                         feedList.append(feed);
                     }

@@ -63,18 +63,12 @@ public slots:
     inline int feedCount() { return feedList->rowCount(); }
     
     /**
-     * @brief Adds a feed.
-     * @param feedURL
-     * @param title [Optional] Set your own feed title! Cannot be empty string.
-     */
-    void addFeed(const QUrl& feedURL, QString title = "");
-    
-    /**
      * @brief Adds a known, pre-processed feed.
      * @param feedURL
      * @param rawFeed
+     * @param switchTo  If true, switch to the feed after adding it.
      */
-    void addFeed(const QUrl &feedURL, const RawFeed* rawFeed);
+    void addFeed(const QUrl &feedURL, const RawFeed* rawFeed, bool switchTo);
     
     /**
      * @brief Removes an existing feed.
@@ -105,6 +99,9 @@ private slots:
     void onFeedRemoved(ListItem*);
     
     void onFeedSelected(ListItem *item);
+    
+    // When a new feed is added, and we want to immediately select it.
+    void onNewFeedAddedSelect(Operation* addFeedOperation);
     
     /**
      * @brief Monitors feed.

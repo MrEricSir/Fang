@@ -43,6 +43,11 @@ OPMLInteractor::OPMLInteractor(QQuickItem *parent) :
             this, SLOT(onImportListDataChanged(QModelIndex,QModelIndex)));
 }
 
+OPMLInteractor::~OPMLInteractor()
+{
+    clear();
+}
+
 void OPMLInteractor::importFile()
 {
     importDialog.exec();
@@ -54,12 +59,15 @@ void OPMLInteractor::importStart()
     emit importStarted();
     emit importInProgressChanged();
     
-    // Nuke the global batch import list.
+    // Nuke the existing global batch import list.
     ListModel* importList = FangApp::instance()->getImportList();
     while (importList->count() > 0) {
         FeedItem* item = qobject_cast<FeedItem*>(importList->takeRow(0));
         delete item; // Need to delete the items themselves.
     }
+    
+    // Clear internal map.
+    clear();
     
     qDebug() << "Import: " << filename;
     parser.parseFile(filename);
@@ -77,6 +85,7 @@ void OPMLInteractor::exportFile()
 
 void OPMLInteractor::addSelected()
 {
+    bool first = true;
     ListModel* importList = FangApp::instance()->getImportList();
     for (int i = 0; i < importList->count(); i++) {
         FeedItem* item = qobject_cast<FeedItem*>(importList->row(i));
@@ -86,7 +95,8 @@ void OPMLInteractor::addSelected()
         //qDebug() << "Add feed " << item->getTitle() << " " << item->getURL();
         
         // Add it!
-        FangApp::instance()->addFeed(item->getURL(), item->getTitle());
+        FangApp::instance()->addFeed(item->getURL(), feedToRaw[item], first);
+        first = false;
     }
 }
 
@@ -120,7 +130,9 @@ void OPMLInteractor::onParserDone()
     
     // Convert and append our news items.
     foreach (RawFeed* rawFeed, list) {
-        importList->appendRow(Utilities::feedItemFromRaw(rawFeed, 0, this));
+        FeedItem* feedItem = Utilities::feedItemFromRaw(rawFeed, 0, NULL);
+        feedToRaw.insert(feedItem, rawFeed);
+        importList->appendRow(feedItem);
     }
     
     _importInProgress = false;
@@ -161,7 +173,7 @@ void OPMLInteractor::startValidation(ListModel* importList)
     _validationInProgress = true;
     emit validationInProgressChanged();
     
-    batchFeedDiscovery.checkFeedList(importList, 2);
+    batchFeedDiscovery.checkFeedList(importList);
 }
 
 void OPMLInteractor::onImportListDataChanged(const QModelIndex& topLeft,
@@ -188,4 +200,13 @@ void OPMLInteractor::onImportListDataChanged(const QModelIndex& topLeft,
         _isAnyFeedSelected = anySelected;
         emit isAnyFeedSelectedChanged();
     }
+}
+
+void OPMLInteractor::clear()
+{
+    foreach(RawFeed* raw, feedToRaw) {
+        raw->deleteLater();
+    }
+    
+    feedToRaw.clear();
 }

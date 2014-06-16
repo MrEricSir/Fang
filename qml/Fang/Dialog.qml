@@ -48,7 +48,6 @@ Screen {
             dialogClosed(dialog)
     }
     
-    focus: dialogMainContainer.state == "open";
     Keys.onPressed: {
         if (event.key === Qt.Key_Escape) {
             close();

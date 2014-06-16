@@ -25,7 +25,7 @@ void FeedValidator::check()
 
 void FeedValidator::addFeed()
 {
-    FangApp::instance()->addFeed(feedDiscovery.feedURL(), feedDiscovery.feedResult());
+    FangApp::instance()->addFeed(feedDiscovery.feedURL(), feedDiscovery.feedResult(), true);
 }
 
 void FeedValidator::removeFeed(FeedItem *feed)

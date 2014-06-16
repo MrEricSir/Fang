@@ -38,7 +38,7 @@ public:
 signals:
     
     /**
-     * @brief This is called before and after a batch of adds.
+     * @brief This is called before and after a batch of append/prepends.
      * 
      * @param started    True if this is the start, false if it's the end.
      * @param operation  Name of the operation (initial, append, prepend)
@@ -58,6 +58,10 @@ signals:
      */
     void add(bool append, QString id, QString title, QString url, QString feedTitle, qint64 timestamp, QString content);
 
+    /**
+     * @brief If you loaded a feed with no news items, this will be called instead of the above.
+     */
+    void nothingToAdd();
     
     /**
      * @brief Clear the current news.

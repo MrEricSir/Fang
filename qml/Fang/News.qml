@@ -59,6 +59,10 @@ Item {
                                                          + content + "');");
             }
             
+            onNothingToAdd: {
+                newsView.experimental.evaluateJavaScript("stopInProgress();");
+            }
+            
             onClear: {
                 //console.log("Clear!");
                 newsView.experimental.evaluateJavaScript("clearNews();");
@@ -183,6 +187,7 @@ Item {
                         newsView.experimental.evaluateJavaScript("stopInProgress();");
                     } else if (cmd === "drawBookmarkAndJumpToFinished" ) {
                         // Check if it's time to become visible again.
+                        //console.log("draw book jump to finished");
                         newsView.drawBookmarkAndJumpToFinished = true;
                         checkReady();
                     }

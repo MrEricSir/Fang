@@ -3,40 +3,37 @@ import Fang 1.0
 
 // Edit a feed.
 Dialog {
-    id: editDialog
+    id: editDialog;
     
-    title: "Edit a Feed"
+    title: "Edit a Feed";
     
-    property variant listView
+    property variant listView;
     
     onDialogOpened: {
-        reset();
-    }
-    
-    function reset() {
+        feedTitle.forceActiveFocus();
         feedTitle.text = listView.model.selected.getTitle();
     }
 
     DialogStatus {
-        id: validationStatus
+        id: validationStatus;
         
-        state: "help"
-        text: "Edit a feed"
+        state: "help";
+        text: "Edit a feed";
     }
     
     TextEntry {
-        id: feedTitle
+        id: feedTitle;
         
-        placeholderText: "Feed title"
+        placeholderText: "Feed title";
         
-        onAccepted: saveEditButton.click()
-        width: parent.width
+        onAccepted: saveEditButton.click();
+        width: parent.width;
     }
     
     DialogButton {
-        id: saveEditButton
+        id: saveEditButton;
         
-        text: "Save"
+        text: "Save";
         onClicked: {
             // Save the new title.
             listView.model.selected.setTitle(feedTitle.text);
@@ -44,19 +41,19 @@ Dialog {
             // Dismiss the dialog.
             dismiss();
         }
-        enabled: !isClosing && feedTitle.text.trim() !== ""
+        enabled: !isClosing && feedTitle.text.trim() !== "";
         
         // Yes this is cheating, but so what?
         FeedValidator {
-            id: validator
+            id: validator;
         }
     }
     
     DialogButton {
-        id: cancelButton
+        id: cancelButton;
         
-        text: "Cancel"
-        onClicked: close()
-        enabled: !isClosing
+        text: "Cancel";
+        onClicked: close();
+        enabled: !isClosing;
     }
 }

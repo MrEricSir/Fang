@@ -1,5 +1,4 @@
 #include "AddFeedOperation.h"
-#include "../models/FeedItem.h"
 #include "../utilities/Utilities.h"
 
 AddFeedOperation::AddFeedOperation(OperationManager *parent, ListModel *feedList,
@@ -101,7 +100,7 @@ void AddFeedOperation::commitRawFeed() {
     qDebug() << "Insert ID: " << insertID;
     
     // Create our item.
-    FeedItem* item = Utilities::feedItemFromRaw(rawFeed, insertID, feedList);
+    item = Utilities::feedItemFromRaw(rawFeed, insertID, feedList);
     
     // Finally, add item to the model and signal completion.
     feedList->appendRow(item);

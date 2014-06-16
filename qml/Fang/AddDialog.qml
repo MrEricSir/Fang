@@ -3,46 +3,37 @@ import Fang 1.0
 
 // The dialog for adding a feed!
 Dialog {
-    id: addDialog
+    id: addDialog;
     
-    title: "Add a Feed"
+    title: "Add a Feed";
     
-    onStateChanged: {
-        if (state == "open") {
-            // Clear everything.
-            reset();
-        }
-    }
-    
-    function reset() {
-        textURL.setEditText("");
-        validator.validationComplete = false;
-        validationStatus.visible = false;
+    onDialogOpened: {
+        textURL.forceActiveFocus();
     }
     
     DialogText {
-        text: "What site would you like to add?"
+        text: "What site would you like to add?";
     }
     
     TextEntry {
-        id: textURL
+        id: textURL;
         
-        placeholderText: "Website or feed URL"
+        placeholderText: "Website or feed URL";
         
-        onTextChanged: validationStatus.visible = false
-        onAccepted: addButton.click()
+        onTextChanged: validationStatus.visible = false;
+        onAccepted: addButton.click();
         
-        width: parent.width
+        width: parent.width;
         
         // Don't allow editing while we're checking the feed.
-        readOnly: validator.validating
+        readOnly: validator.validating;
     }
     
     DialogSpinner {
-        id: validationSpinner
+        id: validationSpinner;
         
-        text: "Checking feed..."
-        visible: validator.validating
+        text: "Checking feed...";
+        visible: validator.validating;
         
         onVisibleChanged: {
             // If we're spinning, kill status.
@@ -50,40 +41,41 @@ Dialog {
                 validationStatus.visible = false;
         }
         
-        width: parent.width
+        width: parent.width;
     }
     
     DialogStatus {
-        id: validationStatus
+        id: validationStatus;
         
-        text: ""
-        visible: false
+        text: "";
+        visible: false;
         
-        width: parent.width
+        width: parent.width;
     }
     
     DialogButton {
-        id: addButton
+        id: addButton;
         
-        text: "Add Feed"
-        onClicked: validator.check()
-        enabled: textURL.text && !validator.validating && !validator.validationComplete
+        text: "Add Feed";
+        onClicked: validator.check();
+        enabled: textURL.text && !validator.validating &&
+                 !validator.validationComplete;
     }
     
     DialogButton {
-        id: cancelButton
+        id: cancelButton;
         
-        text: "Cancel"
-        onClicked: close()
-        enabled: !validator.validationComplete
+        text: "Cancel";
+        onClicked: close();
+        enabled: !validator.validationComplete;
     }
     
     // Magic beans that validate & add feeds (see C++ layer.)
     FeedValidator {
-        id: validator
-        url: textURL.text
+        id: validator;
+        url: textURL.text;
         
-        property bool validationComplete: false
+        property bool validationComplete: false;
         
         onValidationComplete: {
             if (!result) {
