@@ -10,15 +10,21 @@
 
 FaviconGrabber::FaviconGrabber(QObject *parent) :
     QObject(parent),
-    urlsToCheck(0),
+    repliesWaiting(0),
     manager(),
-    currentReply(NULL),
-    results(),
-    webGrabber(),
-    webGrabberResults()
+    webGrabber()
 {
     // Caching!
     NetworkUtilities::addNetworkAccessManagerCache(&manager);
+    
+    // Set up our state machine.
+    machine.setReceiver(this);
+    
+    machine.addStateChange(START, WEB_GRABBER, SLOT(onWebGrabber()));
+    machine.addStateChange(WEB_GRABBER, CHECK_ICONS, SLOT(onCheckIcons()));
+    machine.addStateChange(CHECK_ICONS, PICK_BEST, SLOT(onPickBest()));
+    
+    machine.addStateChange(-1, GRAB_ERROR, SLOT(onError())); // Many errors, one slot.
     
     // Signals!
     connect(&manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onRequestFinished(QNetworkReply*)));
@@ -27,54 +33,127 @@ FaviconGrabber::FaviconGrabber(QObject *parent) :
 
 void FaviconGrabber::find(const QUrl &url)
 {
-    // Clear both result lists.
-    results.clear();
-    webGrabberResults.clear();
-    
+    urlsToCheck.clear();
     location = url;
+    machine.start(START);
     
-    // Check for favicons embedded in the HTML.
-    webGrabber.load(url);
-    //qDebug() << "Sending url: " << url;
-    
-    // Check for "root" favicons.
-    QUrl host = NetworkUtilities::getHost(url);
-    
+    // Make a list of "root" favicons.
+    QUrl host = NetworkUtilities::getHost(location);
     QStringList extensions;
     extensions << "ico" << "jpg" << "jpeg" << "png" << "gif";
-    urlsToCheck = extensions.size() + 1; // The +1 is for the webGrabber above.
     
-    // Check each extension.
+    // Add each extension to our list.
     foreach(QString ext, extensions) {
         QUrl toCheck(host);
         toCheck.setPath("/favicon." + ext);
-        checkUrl(toCheck);
+        urlsToCheck << toCheck;
+    }
+    
+    machine.setState(WEB_GRABBER);
+}
+
+void FaviconGrabber::onWebGrabber()
+{
+    qDebug() << "onWebGrabber";
+    
+    // Check for favicons embedded in the HTML.
+    webGrabber.load(location);
+}
+
+void FaviconGrabber::onCheckIcons()
+{
+    qDebug() << "onCheckIcons";
+    if (urlsToCheck.size() == 0) {
+        machine.setState(GRAB_ERROR);
+        
+        return;
+    }
+    
+    // Pop each URL off the list and check it, g.
+    repliesWaiting = 0;
+    while (urlsToCheck.size()) {
+        repliesWaiting++;
+        
+        QUrl url = urlsToCheck.takeFirst();
+        
+        // If it's not a fully formed URL, fill it out.
+        if (url.isValid() && url.isRelative()) {
+            QUrl newUrl = location;
+            newUrl.setPath(url.path());
+            url = newUrl;
+        }
+        
+        manager.get(QNetworkRequest(url));
     }
 }
 
-void FaviconGrabber::checkUrl(const QUrl &url)
+void FaviconGrabber::onPickBest()
 {
-    manager.get(QNetworkRequest(url));
+    qDebug() << "onPickBest";
+    if (imagesToCheck.size() == 0) {
+        machine.setState(GRAB_ERROR);
+        
+        return;
+    }
+    
+    int topTotalPixels = 0;
+    QImage topImage;
+    QUrl topURL;
+    
+    // Go over all the images.  Find the one with the max total pixels.
+    for (int i = 0; i < imagesToCheck.size(); i++) {
+        QPair<QUrl, QImage> pair = imagesToCheck.at(i);
+        QImage img = pair.second;
+        int totalPixels = img.width() * img.height();
+        if (totalPixels > topTotalPixels) {
+            topTotalPixels = totalPixels;
+            topImage = img;
+            topURL = pair.first;
+        }
+    }
+    
+    if (topTotalPixels) {
+        // We got one!
+        emit finished(topURL);
+        
+        return;
+    }
+    
+    machine.setState(GRAB_ERROR);
+}
+
+void FaviconGrabber::onError()
+{
+    qDebug() << "onError";
+    emit finished(QUrl()); // invalid URL
 }
 
 void FaviconGrabber::onRequestFinished(QNetworkReply * reply)
 {
     //qDebug() << "Checked for a favicon at " << reply->url().toString() << " error: " << reply->errorString();
     
-    urlsToCheck--;
-    if (!reply->error())
-        results.append(QUrl(reply->url()));
+    if (!reply->error()) {
+        QImage img;
+        
+        // Try to determine format from filename.
+        
+        // Read in the image, if possible.
+        if (img.loadFromData(reply->readAll())) {
+            imagesToCheck << QPair<QUrl, QImage>(reply->url(), img);
+        }
+    }
     
-    checkCompletion();
+    repliesWaiting--;
+    if (!repliesWaiting) {
+        machine.setState(PICK_BEST);
+    }
 }
 
 void FaviconGrabber::onWebGrabberReady(QWebPage *page)
 {
-    urlsToCheck--;
-    
     // Could indicate no internet.
     if (page == NULL) {
-        checkCompletion();
+        machine.setState(CHECK_ICONS);
         
         return;
     }
@@ -82,7 +161,7 @@ void FaviconGrabber::onWebGrabberReady(QWebPage *page)
     // Find the first feed URL.
     QWebElement doc = page->mainFrame()->documentElement();
     if (doc.isNull()) {
-        checkCompletion();
+        machine.setState(CHECK_ICONS);
         
         return;
     }
@@ -98,48 +177,16 @@ void FaviconGrabber::onWebGrabberReady(QWebPage *page)
     
     // If we got one, set it!
     if (!touchIconElement.isNull() && touchIconElement.hasAttribute("href"))
-        webGrabberResults.append(QUrl(touchIconElement.attribute("href")));
+        urlsToCheck << QUrl(touchIconElement.attribute("href"));
     
     if (!winMetroIconElement.isNull() && winMetroIconElement.hasAttribute("content"))
-        webGrabberResults.append(QUrl(winMetroIconElement.attribute("content")));
+        urlsToCheck << QUrl(winMetroIconElement.attribute("content"));
     
     if (!iconElement.isNull() && iconElement.hasAttribute("href"))
-        webGrabberResults.append(QUrl(iconElement.attribute("href")));
+        urlsToCheck << QUrl(iconElement.attribute("href"));
     
     if (!shortcutIconElement.isNull() && shortcutIconElement.hasAttribute("href"))
-        webGrabberResults.append(QUrl(shortcutIconElement.attribute("href")));
+        urlsToCheck << QUrl(shortcutIconElement.attribute("href"));
     
-    checkCompletion();
+    machine.setState(CHECK_ICONS);
 }
-
-void FaviconGrabber::checkCompletion()
-{
-    // Only continue if we're done.
-    if (urlsToCheck != 0)
-        return;
-    
-    // If we didn't find anything, signal with an invalid URL.
-    if (results.size() == 0 && webGrabberResults.size() == 0) {
-        emit finished(QUrl());
-        
-        return;
-    }
-    
-    // Great!  We found a URL.  Give a preference to the HTML version, if available.
-    QUrl url;
-    if (webGrabberResults.size() > 0)
-        url = webGrabberResults.at(0);
-    else
-        url = results.at(0);
-    
-    // If we found a relative URL, try to add it as a path to the location.
-    if (url.isValid() && url.isRelative()) {
-        QUrl newUrl = location;
-        newUrl.setPath(url.path());
-        url = newUrl;
-    }
-    
-    //qDebug() << "Found favicon: " << url;
-    emit finished(url);
-}
-

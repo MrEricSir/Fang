@@ -156,13 +156,13 @@ ListViewDragDelegate {
                         }
                     ]
                     
-                    anchors.right: parent.right
-                    anchors.top: parent.top
-                    anchors.bottom: parent.bottom
-                    anchors.rightMargin: 14
+                    anchors.right: parent.right;
+                    anchors.top: parent.top;
+                    anchors.bottom: parent.bottom;
+                    anchors.rightMargin: 7;
                     
-                    width: childrenRect.width
-                    height: parent.height
+                    width: childrenRect.width;
+                    height: parent.height;
                     
                     Rectangle {
                         color: style.color.badge

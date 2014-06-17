@@ -81,7 +81,7 @@ Rectangle {
         }
     }
     
-    color: style.color.background
+    color: "black"; // For transitions.
     
     /**
      * Operator: mainFrame turn on.

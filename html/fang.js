@@ -418,33 +418,25 @@ $(document).ready(function() {
         if (isInProgress)
             return; // Wait for news items to appear, dummy!
         
+        if ($(newsContainerSelector).length === 0) {
+            //console.log("NO NEWS CONTAINERS to deal with, no need to set bmkar")
+            
+            return;
+        }
+        
         // Start at the current bookmark.
         var bookmarkedItem = $( 'body>.bookmarked' );
         //console.log("Current bookmark: ", bookmarkedItem)
         
-        // No bookmark?  No problem, we'll look at the first news item instead.
-        if (!bookmarkedItem.length) {
-            bookmarkedItem = $(newsContainerSelector);
-            //console.log("No bookmark found: starting with: ", bookmarkedItem)
-        }
-        
-        // Oh bother.  I guess there's nothing to do.
-        if (!bookmarkedItem.length) {
-           //console.log("No bookmarks to deal with.  w00t!")
+        // Check if the current bookmark is valid.
+        if (bookmarkedItem.length && !isAboveScroll(bookmarkedItem)) {
+            //console.log("Currently bookmarked item is not above scroll.  Goodbye!", bookmarkedItem.attr('id'));
             
             return;
         }
         
-        // Check if the bottom of the bookmarked item is above the scroll level.
-        // If not, bail now since the bookmark won't be changed.
-        if (!isAboveScroll(bookmarkedItem)) {
-            //console.log("Currently bookmarked item is not above scroll.", bookmarkedItem.attr('id'));
-            
-            return;
-        }
-        
-        // Go through all the next items.
-        var nextItem = nextNewsContainer(bookmarkedItem);
+        // If there's a bookmark, get the next item.  Otherwise, get the first news container.
+        var nextItem = bookmarkedItem.length ? nextNewsContainer(bookmarkedItem) : $(newsContainerSelector);
         
         //console.log("Bookmark is above scroll! ", bookmarkedItem);
         //console.log("Next available news item is: ", nextItem);

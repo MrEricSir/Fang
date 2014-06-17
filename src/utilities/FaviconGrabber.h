@@ -6,13 +6,27 @@
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QList>
+#include <QPair>
 #include <QWebPage>
+#include <QImage>
 
 #include "WebPageGrabber.h"
+#include "SimpleStateMachine.h"
 
 class FaviconGrabber : public QObject
 {
     Q_OBJECT
+    
+private:
+    
+    enum FaviconGrabberState {
+        START,           // Starts off our list by checking standard /favicon.* urls.
+        WEB_GRABBER,     // Checks the webpage for links to favicons.
+        CHECK_ICONS,     // Try downloading all of the icons.
+        PICK_BEST,       // Determine which icon is best. (Emits finished() signal)
+        GRAB_ERROR       // We're done, but there was a problemo.
+    };
+    
 public:
     explicit FaviconGrabber(QObject *parent = 0);
     
@@ -32,31 +46,37 @@ public slots:
     void find(const QUrl& url);
     
 private slots:
-    void checkUrl(const QUrl &url);
+    
+    // WEB_GRABBER
+    void onWebGrabber();
+    
+    // CHECK_ICONS
+    void onCheckIcons();
+    
+    // PICK_BEST
+    void onPickBest();
+    
+    // ERROR
+    void onError();
     
     /**
-     * @brief Completion for root favicon check.
+     * @brief Completion for CHECK_ICONS
      * @param reply
      */
     void onRequestFinished(QNetworkReply *reply);
     
     /**
-     * @brief Completion for HTML favicons.
+     * @brief Completion for WEB_GRABBER
      */
     void onWebGrabberReady(QWebPage* page);
     
-    /**
-     * @brief Determines if we've completed yet, figures out the result, and fires the finished signal.
-     */
-    void checkCompletion();
-    
 private:
-    int urlsToCheck;
+    SimpleStateMachine machine;
+    QList<QUrl> urlsToCheck;
+    int repliesWaiting;
+    QList<QPair<QUrl, QImage> > imagesToCheck;
     QNetworkAccessManager manager;
-    QNetworkReply *currentReply;
-    QList<QUrl> results;
     WebPageGrabber webGrabber;
-    QList<QUrl> webGrabberResults;
     QUrl location;
 };
 
