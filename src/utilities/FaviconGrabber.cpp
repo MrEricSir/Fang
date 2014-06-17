@@ -54,7 +54,7 @@ void FaviconGrabber::find(const QUrl &url)
 
 void FaviconGrabber::onWebGrabber()
 {
-    qDebug() << "onWebGrabber";
+    //qDebug() << "onWebGrabber";
     
     // Check for favicons embedded in the HTML.
     webGrabber.load(location);
@@ -62,7 +62,7 @@ void FaviconGrabber::onWebGrabber()
 
 void FaviconGrabber::onCheckIcons()
 {
-    qDebug() << "onCheckIcons";
+    //qDebug() << "onCheckIcons";
     if (urlsToCheck.size() == 0) {
         machine.setState(GRAB_ERROR);
         
@@ -89,7 +89,7 @@ void FaviconGrabber::onCheckIcons()
 
 void FaviconGrabber::onPickBest()
 {
-    qDebug() << "onPickBest";
+    //qDebug() << "onPickBest";
     if (imagesToCheck.size() == 0) {
         machine.setState(GRAB_ERROR);
         
@@ -124,7 +124,7 @@ void FaviconGrabber::onPickBest()
 
 void FaviconGrabber::onError()
 {
-    qDebug() << "onError";
+    //qDebug() << "onError";
     emit finished(QUrl()); // invalid URL
 }
 
