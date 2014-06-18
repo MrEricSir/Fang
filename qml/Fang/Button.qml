@@ -152,5 +152,8 @@ Rectangle {
             if (!enabled)
                 baseButton.state = "disabled";
         }
+        
+        // Prevent double click from issuing two presses
+        onDoubleClicked: {}
     }
 }
