@@ -208,16 +208,25 @@ Item {
                 }
                 
                 Keys.onPressed: {
-                    if (event.key === Qt.Key_Left)
+                    switch (event.key) {
+                    case Qt.Key_Left:
                         newsView.jumpPrevious();
-                    else if (event.key === Qt.Key_Right)
+                        
+                        break;
+                    case Qt.Key_Right:
                         newsView.jumpNext();
-                    else if (event.key === Qt.Key_F5)
+                        
+                        break;
+                    case Qt.Key_F5:
                         news.refreshFeed();
-                    else if (event.key === Qt.Key_R && (event.modifiers & Qt.ControlModifier))
-                        news.refreshFeed();
-                    else if (event.key === Qt.Key_R && (event.modifiers & Qt.MetaModifier))
-                        news.refreshFeed();
+                        
+                        break;
+                    case Qt.Key_R:
+                        if (event.modifiers & Qt.ControlModifier)
+                            news.refreshFeed();
+                        
+                        break;
+                    }
                 }
             }
         }
