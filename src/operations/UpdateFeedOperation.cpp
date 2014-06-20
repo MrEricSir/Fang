@@ -43,11 +43,13 @@ void UpdateFeedOperation::execute()
     feed->setIsUpdating(true);
     timestamp = QDateTime::currentDateTime();
     
-    // Send network request.
-    if (rawFeed == NULL)
+    
+    if (rawFeed == NULL) {
+        // Send network request.
         parser.parse(feed->getURL(), true);
-    else
+    } else {
         onFeedFinished();
+    }
 }
 
 void UpdateFeedOperation::onFeedFinished()

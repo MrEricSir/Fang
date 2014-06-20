@@ -25,7 +25,9 @@ void FeedValidator::check()
 
 void FeedValidator::addFeed()
 {
-    FangApp::instance()->addFeed(feedDiscovery.feedURL(), feedDiscovery.feedResult(), true);
+    RawFeed* feed = feedDiscovery.feedResult();
+    feed->title = siteTitle();
+    FangApp::instance()->addFeed(feedDiscovery.feedURL(), feed, true);
 }
 
 void FeedValidator::removeFeed(FeedItem *feed)
@@ -67,6 +69,11 @@ void FeedValidator::onFeedDiscoveryDone(FeedDiscovery* discovery)
     // Validation is done.
     _validating = false;
     emit validatingChanged(_validating);
+    
+    // Set the TITLE.
+    if (feedDiscovery.feedResult()) {
+        setSiteTitle(feedDiscovery.feedResult()->title);
+    }
     
     // Completion!
     emit validationComplete(!feedDiscovery.error(), feedDiscovery.errorString());

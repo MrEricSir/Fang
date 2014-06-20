@@ -11,6 +11,15 @@ Dialog {
         textURL.forceActiveFocus();
     }
     
+    state: "start";
+    states: [
+        State { name: "start" },
+        State { name: "validating" },
+        State { name: "add" }
+    ]
+    
+    onStateChanged: console.log("State is now: ", state)
+    
     DialogText {
         text: "What site would you like to add?";
     }
@@ -21,19 +30,31 @@ Dialog {
         placeholderText: "Website or feed URL";
         
         onTextChanged: validationStatus.visible = false;
-        onAccepted: addButton.click();
+        onAccepted: continueButton.click();
         
         width: parent.width;
         
         // Don't allow editing while we're checking the feed.
-        readOnly: validator.validating;
+        readOnly: addDialog.state === "validating" || addDialog.state === "add"
+    }
+    
+    TextEntry {
+        id: textSiteTitle;
+        
+        placeholderText: "Feed name";
+        
+        onAccepted: addButton.click();
+        
+        visible: addDialog.state === "add"
+        
+        width: parent.width;
     }
     
     DialogSpinner {
         id: validationSpinner;
         
         text: "Checking feed...";
-        visible: validator.validating;
+        visible: addDialog.state === "validating";
         
         onVisibleChanged: {
             // If we're spinning, kill status.
@@ -54,12 +75,34 @@ Dialog {
     }
     
     DialogButton {
+        id: continueButton;
+        
+        text: "Continue";
+        onClicked: {
+            validator.check();
+            addDialog.state = "validating";
+        }
+        visible: addDialog.state !== "add";
+        enabled: textURL.text && addDialog.state !== "validating";
+            //textURL.text && !validator.validating &&
+              //   !validator.validationComplete;
+    }
+    
+    DialogButton {
         id: addButton;
         
         text: "Add Feed";
-        onClicked: validator.check();
-        enabled: textURL.text && !validator.validating &&
-                 !validator.validationComplete;
+        onClicked: {
+            // Set the title.
+            validator.siteTitle = textSiteTitle.text;
+            textSiteTitle.readOnly = true;
+            
+            // Add the feed and dismiss.
+            validator.addFeed();
+            addDialog.dismiss();
+        }
+        visible: addDialog.state === "add";
+        enabled: textSiteTitle.text; 
     }
     
     DialogButton {
@@ -67,7 +110,7 @@ Dialog {
         
         text: "Cancel";
         onClicked: close();
-        enabled: !validator.validationComplete;
+        //enabled: !validator.validationComplete;
     }
     
     // Magic beans that validate & add feeds (see C++ layer.)
@@ -83,20 +126,21 @@ Dialog {
                 validationStatus.state = "error";
                 validationStatus.text = errorString;
                 validationStatus.visible = true;
+                
+                // Main state.
+                addDialog.state = "start";
             } else {
                 // We validated!
                 validationStatus.state = "ok";
                 validationStatus.text = "Success!";
                 validationStatus.visible = true;
                 
+                textSiteTitle.text = validator.siteTitle;
+                
                 // Signal completion.
                 validationComplete = true;
                 
-                // Add the feed!
-                addFeed();
-                
-                // Go into final phase!
-                dismiss();
+                addDialog.state = "add";
             }
         }
     }

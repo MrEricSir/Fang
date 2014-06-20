@@ -67,9 +67,9 @@ public:
     QUrl feedURL() { return _error ? QUrl("") : _feedURL; }
     
     /**
-     * @return A copy of the raw feed or null if there was an error.
+     * @return The raw feed or null if there was an error.
      */
-    const RawFeed* feedResult() { return _error ? NULL : _feedResult; }
+    RawFeed* feedResult() { return _error ? NULL : _feedResult; }
     
 signals:
     
