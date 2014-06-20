@@ -15,16 +15,17 @@ BackgroundParserThread::~BackgroundParserThread()
 
 
 
-void BackgroundParserThread::setUrl(const QUrl& url)
+void BackgroundParserThread::setVars(const QUrl& url, bool noParseIfCached)
 {
     this->url = url;
+    this->noParseIfCached = noParseIfCached;
 }
 
 void BackgroundParserThread::run()
 {
     parser = new Parser();
     connect(parser, SIGNAL(done()), this, SLOT(onDone()));
-    parser->parse(url);
+    parser->parse(url, noParseIfCached);
     exec();
     parser->moveToThread(QApplication::instance()->thread());
     //qDebug() << "Parser started!";

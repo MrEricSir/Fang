@@ -11,7 +11,7 @@ public:
     explicit BackgroundParserThread(QObject *parent = 0);
     virtual ~BackgroundParserThread();
     
-    void setUrl(const QUrl& url);
+    void setVars(const QUrl& url, bool noParseIfCached = false);
     
     void run() Q_DECL_OVERRIDE;
     
@@ -26,6 +26,7 @@ protected slots:
 private:
     Parser* parser;
     QUrl url;
+    bool noParseIfCached;
 };
 
 #endif // BACKGROUNDPARSERTHREAD_H

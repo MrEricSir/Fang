@@ -7,9 +7,9 @@
 #include "../utilities/NetworkUtilities.h"
 
 Parser::Parser(QObject *parent) :
-    ParserInterface(parent), checkFavicon(false), feed(NULL), result(OK), currentReply(NULL), redirectReply(NULL)
+    ParserInterface(parent), checkFavicon(false), feed(NULL), result(OK), currentReply(NULL), redirectReply(NULL), fromCache(false), noParseIfCached(false)
 {
-    //NetworkUtilities::addNetworkAccessManagerCache(&manager);
+    NetworkUtilities::addCache(&manager);
     
     // Connex0r teh siganls.
     connect(&manager, SIGNAL(finished(QNetworkReply*)),
@@ -134,8 +134,10 @@ QDateTime Parser::dateFromFeedString(const QString& _timestamp)
     return ret;
 }
 
-void Parser::parse(const QUrl& url) {
+void Parser::parse(const QUrl& url, bool noParseIfCached) {
     initParse(url);
+    
+    this->noParseIfCached = noParseIfCached;
     
     // in with the new
     QNetworkRequest request(url);
@@ -146,6 +148,9 @@ void Parser::parse(const QUrl& url) {
     
     // We have to pretend to be Firefox in order for some stupid servers to speak with us.
     request.setHeader(QNetworkRequest::UserAgentHeader, "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:27.0) Gecko/20100101 Firefox/27.0");
+    
+    // Use the cache, luke.
+    NetworkUtilities::useCache(&request);
     
     currentReply = manager.get(request);
     connect(currentReply, SIGNAL(readyRead()), this, SLOT(readyRead()));
@@ -349,7 +354,25 @@ void Parser::metaDataChanged() {
     if (redirectionTarget.isValid()) {
         qDebug() << "Redirect: " << redirectionTarget.toString();
         redirectReply = currentReply;
-        parse(redirectionTarget);
+        parse(redirectionTarget, noParseIfCached);
+    }
+    
+    if (currentReply->attribute(
+                QNetworkRequest::SourceIsFromCacheAttribute).isValid()) {
+        if (currentReply->attribute(
+                    QNetworkRequest::SourceIsFromCacheAttribute).toBool()) {
+            if (noParseIfCached) {
+                // Early exit for cache.
+                currentReply->disconnect(this);
+                currentReply->deleteLater();
+                currentReply = 0;
+                
+                result = Parser::OK;
+                emit done();
+                
+                return;
+            }
+        }
     }
 }
 

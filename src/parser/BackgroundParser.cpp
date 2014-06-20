@@ -13,9 +13,9 @@ BackgroundParser::~BackgroundParser()
   
 }
 
-void BackgroundParser::parse(const QUrl &url)
+void BackgroundParser::parse(const QUrl &url, bool noParseIfCached)
 {
-    workerThread.setUrl(url);
+    workerThread.setVars(url, noParseIfCached);
     workerThread.start();
 }
 
@@ -40,6 +40,15 @@ QUrl BackgroundParser::getURL()
 {
     Parser* parser = workerThread.getParser();
     return parser != NULL ? parser->getURL() : QUrl();
+}
+
+bool BackgroundParser::isFromCache()
+{
+    Parser* parser = workerThread.getParser();
+    if (parser == NULL)
+        return false;
+    
+    return parser->isFromCache();
 }
 
 void BackgroundParser::onDone()

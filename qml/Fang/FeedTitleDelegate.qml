@@ -1,4 +1,4 @@
-import QtQuick 2.0
+import QtQuick 2.2
 
 ListViewDragDelegate {
     id: feedTitleDelegate
@@ -66,8 +66,8 @@ ListViewDragDelegate {
                         
                         anchors.verticalCenter: parent.verticalCenter
                         
-                        width: 23
-                        height: 23
+                        width: 24
+                        height: 24
                         
                         sourceSize.width: width
                         sourceSize.height: height

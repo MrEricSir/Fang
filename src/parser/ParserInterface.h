@@ -24,11 +24,21 @@ signals:
     void done();
     
 public slots:
-    virtual void parse(const QUrl& url) =0;
+    
+    /**
+     * @brief Contacts URL and parses the RSS/Atom feed, if it exists.
+     * @param url               The URL
+     * @param noParseIfCached   If true, this won't bother with the 
+     *                          parse if the content was cached.
+     */
+    virtual void parse(const QUrl& url, bool noParseIfCached = false) =0;
     
     virtual ParseResult getResult() =0;
     virtual RawFeed* getFeed() =0;
     virtual QUrl getURL() =0;
+    
+    // Whether or not the response was cached.
+    virtual bool isFromCache() =0;
     
 };
 

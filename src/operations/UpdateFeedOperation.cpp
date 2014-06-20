@@ -12,7 +12,8 @@ UpdateFeedOperation::UpdateFeedOperation(OperationManager *parent, FeedItem *fee
     parser(),
     feed(feed),
     rawFeed(rawFeed),
-    rewriter()
+    rewriter(),
+    timestamp()
 {
     connect(&parser, SIGNAL(done()), this, SLOT(onFeedFinished()));
     connect(&rewriter, SIGNAL(finished()), this, SLOT(onRewriterFinished()));
@@ -38,11 +39,13 @@ void UpdateFeedOperation::execute()
     
     //qDebug() << "Updating feed: " << feed->getTitle();
     
+    // Setup.
     feed->setIsUpdating(true);
+    timestamp = QDateTime::currentDateTime();
     
     // Send network request.
     if (rawFeed == NULL)
-        parser.parse(feed->getURL());
+        parser.parse(feed->getURL(), true);
     else
         onFeedFinished();
 }
@@ -65,7 +68,7 @@ void UpdateFeedOperation::onFeedFinished()
     }
     
     if (rawFeed->items.size() == 0) {
-        qDebug() << "Feed list was empty!";
+        qDebug() << "Feed list was empty! (Could be cache.)";
         emit finished(this);
         
         return;
@@ -151,6 +154,19 @@ void UpdateFeedOperation::onRewriterFinished()
         
         // Store the DB id for the next loop.
         rawNews->dbId = query.lastInsertId().toLongLong();
+    }
+    
+    // Update feed update timestamp.
+    QSqlQuery query(db());
+    query.prepare("UPDATE FeedItemTable SET lastUpdated = :lastUpdated WHERE id = :feed_id");
+    query.bindValue(":feed_id", feed->getDbId());
+    query.bindValue(":lastUpdated", timestamp.toMSecsSinceEpoch());
+    
+    if (!query.exec()) {
+        reportSQLError(query, "Unable to update the feed's timestamp.");
+        db().rollback();
+        
+        return;
     }
     
     // Update unread count & All News's unread count.

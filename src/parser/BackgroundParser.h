@@ -17,11 +17,13 @@ public:
 signals:
     
 public slots:
-    virtual void parse(const QUrl& url);
+    virtual void parse(const QUrl& url, bool noParseIfCached = false);
     
     virtual ParseResult getResult();
     virtual RawFeed* getFeed();
     virtual QUrl getURL();
+    
+    virtual bool isFromCache();
     
 private slots:
     void onDone();

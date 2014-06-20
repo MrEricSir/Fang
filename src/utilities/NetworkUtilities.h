@@ -22,7 +22,13 @@ public:
      * @brief Adds an HTTP cache to a network access manager.
      * @param manager
      */
-    static void addNetworkAccessManagerCache(QNetworkAccessManager* manager);
+    static void addCache(QNetworkAccessManager* manager);
+    
+    /**
+     * @brief Give me a network request, and I'll set it to use the cache.
+     * @param request
+     */
+    static void useCache(QNetworkRequest* request);
 };
 
 #endif // NETWORKUTILITIES_H

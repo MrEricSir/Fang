@@ -20,7 +20,7 @@ QUrl NetworkUtilities::getHost(const QUrl& url) {
     return ret;
 }
 
-void NetworkUtilities::addNetworkAccessManagerCache(QNetworkAccessManager *manager)
+void NetworkUtilities::addCache(QNetworkAccessManager *manager)
 {
     // Set default cache dir.
     QNetworkDiskCache* diskCache = new QNetworkDiskCache(manager);
@@ -28,4 +28,11 @@ void NetworkUtilities::addNetworkAccessManagerCache(QNetworkAccessManager *manag
     diskCache->setCacheDirectory(cacheDir);
     if (!cacheDir.isEmpty())
         manager->setCache(diskCache);
+}
+
+void NetworkUtilities::useCache(QNetworkRequest* request)
+{
+    // This SHOULD be the default, but just in case.
+    request->setAttribute(QNetworkRequest::CacheLoadControlAttribute,
+                          QNetworkRequest::PreferNetwork);
 }

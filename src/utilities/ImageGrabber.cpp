@@ -14,7 +14,7 @@ ImageGrabber::ImageGrabber(QObject *parent) :
     results()
 {
     // Caching!
-    NetworkUtilities::addNetworkAccessManagerCache(&manager);
+    NetworkUtilities::addCache(&manager);
     
     // Signals!
     connect(&manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onRequestFinished(QNetworkReply*)));
@@ -44,7 +44,10 @@ void ImageGrabber::checkUrl(const QUrl &url)
         return; // Already workin' on this one.
     
     urlsToCheck.append(url);
-    manager.get(QNetworkRequest(url));
+    
+    QNetworkRequest request(url);
+    NetworkUtilities::useCache(&request);
+    manager.get(request);
 }
 
 void ImageGrabber::onRequestFinished(QNetworkReply * reply)

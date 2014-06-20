@@ -45,7 +45,7 @@ FangApp::FangApp(QObject *parent, FangApplicationViewer* viewer) :
 void FangApp::init()
 {
     // Enable cache for remote QML elements.
-    NetworkUtilities::addNetworkAccessManagerCache(viewer->engine()->networkAccessManager());
+    NetworkUtilities::addCache(viewer->engine()->networkAccessManager());
     
     // Setup our QML.
     viewer->rootContext()->setContextProperty("feedListModel", feedList); // list of feeds

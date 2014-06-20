@@ -2,6 +2,9 @@
 #define UPDATEFEEDOPERATION_H
 
 #include "DBOperation.h"
+
+#include <QDateTime>
+
 #include "../utilities/RawFeedRewriter.h"
 #include "../parser/BackgroundParser.h"
 #include "../models/FeedItem.h"
@@ -55,6 +58,7 @@ private:
     RawFeed* rawFeed;
     RawFeedRewriter rewriter;
     QList<RawNews*> newsList;
+    QDateTime timestamp;
 };
 
 #endif // UPDATEFEEDOPERATION_H

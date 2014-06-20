@@ -27,7 +27,7 @@ public:
     static QDateTime dateFromFeedString(const QString &_timestamp);
     
 public slots:
-    virtual void parse(const QUrl& url); // Override.
+    virtual void parse(const QUrl& url, bool noParseIfCached = false); // Override.
     
     // For testing purposes.
     void parseFile(const QString& filename);
@@ -35,6 +35,8 @@ public slots:
     virtual ParseResult getResult(); // Override.
     virtual RawFeed* getFeed(); // Override.
     virtual inline QUrl getURL() { return finalFeedURL; } // Override.
+    
+    virtual bool isFromCache() { return fromCache; } // Override
     
 protected slots:
     void readyRead();
@@ -77,6 +79,9 @@ private:
     bool hasType;
     QStack<QString> tagStack;
     //
+    
+    bool fromCache;
+    bool noParseIfCached;
 };
 
 #endif // PARSER_H

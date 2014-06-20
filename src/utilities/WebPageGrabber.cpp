@@ -8,7 +8,7 @@
 WebPageGrabber::WebPageGrabber(QObject *parent) :
     QObject(parent)
 {
-    NetworkUtilities::addNetworkAccessManagerCache(webView.page()->networkAccessManager());
+    NetworkUtilities::addCache(webView.page()->networkAccessManager());
     webView.page()->settings()->setAttribute(QWebSettings::JavascriptEnabled, false); // No scripts.
     webView.page()->settings()->setAttribute(QWebSettings::AutoLoadImages, false); // No imgs
     
