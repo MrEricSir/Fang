@@ -129,6 +129,7 @@ void WebInteractor::refreshFeed(FeedItem *feed)
     Q_ASSERT(feed != NULL);
     
     QList<FeedItem*> feedsToUpdate;
+    bool useCache = true; // Use cache by default.
     
     // Special handling for all news.
     // TODO: Handle folders
@@ -142,11 +143,12 @@ void WebInteractor::refreshFeed(FeedItem *feed)
         }
     } else {
         feedsToUpdate.append(feed);
+        useCache = false; // Don't check cache if we're just checking a single feed.
     }
     
     // Update 'em all!
     foreach(FeedItem* item, feedsToUpdate) {
-        manager->add(new UpdateFeedOperation(manager, item));
+        manager->add(new UpdateFeedOperation(manager, item, NULL, useCache));
         manager->add(new FaviconUpdateOperation(manager, item));
     }
 }

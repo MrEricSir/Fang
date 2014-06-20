@@ -7,13 +7,14 @@
 #include "../utilities/UnreadCountReader.h"
 #include "../FangApp.h"
 
-UpdateFeedOperation::UpdateFeedOperation(OperationManager *parent, FeedItem *feed, RawFeed* rawFeed) :
+UpdateFeedOperation::UpdateFeedOperation(OperationManager *parent, FeedItem *feed, RawFeed* rawFeed, bool useCache) :
     DBOperation(BACKGROUND, parent),
     parser(),
     feed(feed),
     rawFeed(rawFeed),
     rewriter(),
-    timestamp()
+    timestamp(),
+    useCache(useCache)
 {
     connect(&parser, SIGNAL(done()), this, SLOT(onFeedFinished()));
     connect(&rewriter, SIGNAL(finished()), this, SLOT(onRewriterFinished()));
@@ -46,7 +47,7 @@ void UpdateFeedOperation::execute()
     
     if (rawFeed == NULL) {
         // Send network request.
-        parser.parse(feed->getURL(), true);
+        parser.parse(feed->getURL(), useCache);
     } else {
         onFeedFinished();
     }

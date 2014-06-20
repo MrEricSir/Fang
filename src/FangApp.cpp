@@ -141,7 +141,7 @@ void FangApp::onFeedAdded(ListItem *item)
     // Hook up signals.
     connectFeed(feed);
     
-    if (!feed->isAllNews()) {
+    if (!feed->isAllNews() && loadAllFinished) {
         // Not all news, so trigger an update.
         // TODO: Handle folders.
         interactor->refreshFeed(feed);
@@ -189,6 +189,9 @@ void FangApp::onLoadAllFinished(Operation *op)
 {
     Q_UNUSED(op);
     loadAllFinished = true;
+    
+    // Update!.
+    updateAllFeeds();
 }
 
 void FangApp::updateAllFeeds()
