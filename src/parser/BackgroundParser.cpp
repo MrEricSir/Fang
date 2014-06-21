@@ -10,7 +10,7 @@ BackgroundParser::BackgroundParser(QObject *parent) :
 
 BackgroundParser::~BackgroundParser()
 {
-  
+    
 }
 
 void BackgroundParser::parse(const QUrl &url, bool noParseIfCached)

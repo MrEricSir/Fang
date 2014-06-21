@@ -18,6 +18,7 @@ class Parser : public ParserInterface
     
 public:
     explicit Parser(QObject *parent = 0);
+    virtual ~Parser();
     
     /**
      * @brief Attempts to convert an unreliable RSS/Atom timestamp string into a real timestamp.

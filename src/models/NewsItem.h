@@ -9,9 +9,11 @@
 
 #include "FeedItem.h"
 
+#include "../FangObject.h"
+
 #define NEWS_ITEM_ID_PREIX "NewsItem_"
 
-class NewsItem : public QObject
+class NewsItem : public FangObject
 {
     Q_OBJECT
     

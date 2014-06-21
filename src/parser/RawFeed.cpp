@@ -1,9 +1,10 @@
 #include "RawFeed.h"
 #include <QString>
 #include <QTextStream>
+#include <QDebug>
 
 RawFeed::RawFeed(QObject *parent) :
-    QObject(parent),
+    FangObject(parent),
     title(""),
     subtitle(""),
     url(),
@@ -12,6 +13,10 @@ RawFeed::RawFeed(QObject *parent) :
     siteURL(),
     imageURL(),
     items()
+{
+}
+
+RawFeed::~RawFeed()
 {
 }
 

@@ -4,7 +4,8 @@
 #include "../utilities/Utilities.h"
 
 BackgroundParserThread::BackgroundParserThread(QObject *parent) :
-    QThread(parent)
+    QThread(parent),
+    parser(NULL)
 {
 }
 

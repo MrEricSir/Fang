@@ -194,6 +194,14 @@ void FeedItem::remove(NewsItem *item)
     emit dataChanged();
 }
 
+void FeedItem::clearNews()
+{
+    // Delete each and every news item.
+    while(newsList->size() > 0) {
+        newsList->takeFirst()->deleteLater();
+    }
+}
+
 bool FeedItem::canBookmark(NewsItem *item)
 {
     if (bookmark == NULL)

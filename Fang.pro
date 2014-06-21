@@ -61,7 +61,8 @@ SOURCES += src/main.cpp \
     src/utilities/FeedDiscovery.cpp \
     src/models/OPMLInteractor.cpp \
     src/utilities/OPMLExport.cpp \
-    src/utilities/BatchFeedDiscovery.cpp
+    src/utilities/BatchFeedDiscovery.cpp \
+    src/FangObject.cpp
 
 # Installation path
 # target.path =
@@ -131,4 +132,5 @@ HEADERS += \
     src/utilities/FeedDiscovery.h \
     src/models/OPMLInteractor.h \
     src/utilities/OPMLExport.h \
-    src/utilities/BatchFeedDiscovery.h
+    src/utilities/BatchFeedDiscovery.h \
+    src/FangObject.h

@@ -16,6 +16,12 @@ Parser::Parser(QObject *parent) :
             this, SLOT(netFinished(QNetworkReply*)));
 }
 
+Parser::~Parser()
+{
+    delete feed;
+    delete currentReply;
+}
+
 QDateTime Parser::dateFromFeedString(const QString& _timestamp)
 {
     QDateTime ret; // Defaults to invalid timestamp.
@@ -414,6 +420,7 @@ void Parser::initParse(const QUrl& url)
     resetParserVars();
     
     // Allocate our items.
+    delete feed;
     feed = new RawFeed();
     currentItem = NULL;
 }

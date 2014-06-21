@@ -3,14 +3,16 @@
 
 #include <QObject>
 
+#include "../FangObject.h"
 #include "RawNews.h"
 
-class RawFeed : public QObject
+class RawFeed : public FangObject
 {
     Q_OBJECT
     
 public:
     explicit RawFeed(QObject *parent = 0);
+    virtual ~RawFeed();
     
     QString title;
     QString subtitle;

@@ -13,6 +13,8 @@
 #include "models/ListModel.h"
 #include "models/OPMLInteractor.h"
 
+#include "FangObject.h"
+
 Q_DECL_EXPORT int main(int argc, char *argv[])
 {
     qmlRegisterType<FeedValidator>("Fang", 1, 0, "FeedValidator");
@@ -30,5 +32,8 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     FangApp fang(&app, &viewer);
     fang.init();
     
-    return app.exec();
+    int ret = app.exec();
+    FangObject::printRemainingObjects();
+    
+    return ret;
 }

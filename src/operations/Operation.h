@@ -3,6 +3,8 @@
 
 #include <QObject>
 
+#include "../FangObject.h"
+
 #define FANG_BACKGROUND_CHECK do { if (shouldTerminate()) return; } while(0)
 
 class OperationManager;
@@ -10,7 +12,7 @@ class OperationManager;
 /**
  * @brief Interface for operations.
  */
-class Operation : public QObject
+class Operation : public FangObject
 {
     Q_OBJECT
     

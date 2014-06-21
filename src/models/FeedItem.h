@@ -109,7 +109,7 @@ public:
      * @brief Clears all news items.  Does NOT signal.
      * @return 
      */
-    inline void clearNews() { newsList->clear(); }
+    void clearNews();
     
     inline QList<NewsItem*>* getNewsList() { return newsList; }
     
