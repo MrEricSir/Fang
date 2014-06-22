@@ -40,8 +40,8 @@ void TestFangParser::parseTest()
     // Parse the file, with a timeout of 1 second.
     parser.parseFile("../TestFangParser/feeds/" + filename);
     
-    // Note: at this point the main thread switches to the parser.  We don't need to do
-    //       any waiting here because control returns only after emitting the done() signal.
+    // We *may* need to wait here.
+    spy.wait(500); // Lame, but just wait 500 ms
     
     // Verify the signal is only emitted once.
     QCOMPARE(spy.count(), 1);

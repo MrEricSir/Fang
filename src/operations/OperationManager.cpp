@@ -1,7 +1,7 @@
 #include "OperationManager.h"
 
 OperationManager::OperationManager(QObject *parent) :
-    QObject(parent),
+    FangObject(parent),
     queue(),
     pending(),
     operationTimer()

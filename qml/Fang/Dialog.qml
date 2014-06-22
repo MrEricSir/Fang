@@ -20,12 +20,14 @@ Screen {
     // Read only.
     property bool isClosing: dialogMainContainer.state === "closed" || dismissTimer.running
     property bool isClosed: dialogMainContainer.state === "closed"
+    property bool wasOpened: false
     
     color: style.color.dialogBackground
     visible: false // Managed by state transitions
     
     // Opens the dialog.
     function open() {
+        wasOpened = true;
         dialogMainContainer.state = "open";
     }
     
@@ -44,7 +46,7 @@ Screen {
     
     // Send closed signal
     onIsClosedChanged: {
-        if (isClosed)
+        if (isClosed && wasOpened)
             dialogClosed(dialog)
     }
     

@@ -24,8 +24,6 @@ UpdateFeedOperation::UpdateFeedOperation(OperationManager *parent, FeedItem *fee
 
 UpdateFeedOperation::~UpdateFeedOperation()
 {
-    if (rawFeed != NULL)
-        delete rawFeed;
 }
 
 void UpdateFeedOperation::execute()

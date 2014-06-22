@@ -5,7 +5,7 @@
 #include <QDebug>
 
 RawFeedRewriter::RawFeedRewriter(QObject *parent) :
-    QObject(parent),
+    FangObject(parent),
     imageSizer(),
     newsList(NULL)
 {

@@ -9,7 +9,7 @@
 #include "NetworkUtilities.h"
 
 FaviconGrabber::FaviconGrabber(QObject *parent) :
-    QObject(parent),
+    FangObject(parent),
     repliesWaiting(0),
     manager(),
     webGrabber()

@@ -7,10 +7,12 @@
 #include "RawFeed.h"
 #include "RawNews.h"
 
+#include "../FangObject.h"
+
 /**
  * @brief Interface for RSS/Atom parser.
  */
-class ParserInterface : public QObject
+class ParserInterface : public FangObject
 {
     Q_OBJECT
     
@@ -18,6 +20,7 @@ public:
     enum ParseResult { OK, NETWORK_ERROR, FILE_ERROR, PARSE_ERROR, EMPTY_DOCUMENT, IN_PROGRESS };
     
     explicit ParserInterface(QObject *parent = 0);
+    virtual ~ParserInterface() {}
     
 signals:
     // Call getResult() and getFeed() now, yo!

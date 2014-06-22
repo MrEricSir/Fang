@@ -9,7 +9,7 @@
 
 #include "../models/ListModel.h"
 #include "../models/FeedItem.h"
-#include "../parser/BackgroundParser.h"
+#include "../parser/Parser.h"
 
 class AddFeedOperation : public DBOperation
 {
@@ -41,7 +41,7 @@ private:
     QUrl feedURL;
     const RawFeed* rawFeed;
     
-    BackgroundParser parser;
+    Parser parser;
     
     QString title;
     

@@ -9,7 +9,7 @@
 DB* DB::_instance = NULL;
 
 DB::DB(QObject *parent) :
-    QObject(parent)
+    FangObject(parent)
 {
     init();
 }

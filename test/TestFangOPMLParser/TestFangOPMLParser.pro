@@ -18,13 +18,15 @@ TEMPLATE = app
 SOURCES += tst_testfangopmlparser.cpp \
     ../../src/parser/OPMLParser.cpp \
     ../../src/parser/RawFeed.cpp \
-    ../../src/parser/RawNews.cpp
+    ../../src/parser/RawNews.cpp \
+    ../../src/FangObject.cpp
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
 HEADERS += \
     ../../src/parser/OPMLParser.h \
     ../../src/parser/RawFeed.h \
-    ../../src/parser/RawNews.h
+    ../../src/parser/RawNews.h \
+    ../../src/FangObject.h
 
 OTHER_FILES += \
     opml/feeddeemon.opml \

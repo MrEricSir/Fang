@@ -5,6 +5,8 @@
 #include <QMap>
 #include <QPair>
 
+#include "../FangObject.h"
+
 /**
  * @brief This class provides a stupidly simple state machine with few dependencies.
  * To use:
@@ -36,7 +38,7 @@
  * 
  * That's it!
  */
-class SimpleStateMachine : public QObject
+class SimpleStateMachine : public FangObject
 {
     Q_OBJECT
     

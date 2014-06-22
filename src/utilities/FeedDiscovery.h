@@ -6,9 +6,10 @@
 #include <QUrl>
 
 #include "SimpleStateMachine.h"
-#include "../parser/BackgroundParser.h"
+#include "../parser/Parser.h"
 #include "../parser/RawFeed.h"
 #include "../utilities/WebPageGrabber.h"
+#include "../FangObject.h"
 
 /**
  * @brief Attempts to match a user-submitted, URL like "bob.com" to an actual news feed.
@@ -33,7 +34,7 @@
  *     |
  *  FEED_FOUND
  */
-class FeedDiscovery : public QObject
+class FeedDiscovery : public FangObject
 {
     Q_OBJECT
     
@@ -113,8 +114,8 @@ private:
     bool _error;
     QString _errorString;
     
-    BackgroundParser parserFirstTry;
-    BackgroundParser parserSecondTry;
+    Parser parserFirstTry;
+    Parser parserSecondTry;
     
     WebPageGrabber pageGrabber;
     

@@ -4,6 +4,7 @@
 #include "../models/FeedItem.h"
 #include "../models/ListModel.h"
 #include "FeedDiscovery.h"
+#include "../FangObject.h"
 
 #include <QObject>
 #include <QMap>
@@ -25,7 +26,7 @@
  * 
  *       UNIT TEST!!
  */
-class BatchFeedDiscovery : public QObject
+class BatchFeedDiscovery : public FangObject
 {
     Q_OBJECT
 public:

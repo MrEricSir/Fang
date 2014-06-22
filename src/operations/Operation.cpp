@@ -2,7 +2,7 @@
 #include <QDebug>
 
 Operation::Operation(PriorityLevel priority, OperationManager* parent) :
-    QObject((QObject*)parent),
+    FangObject((QObject*)parent),
     operationManager(parent),
     priority(priority),
     error(false),

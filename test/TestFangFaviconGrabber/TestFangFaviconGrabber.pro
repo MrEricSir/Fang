@@ -19,11 +19,13 @@ SOURCES += tst_testfangfavicongrabbertest.cpp \
     ../../src/utilities/FaviconGrabber.cpp \
     ../../src/utilities/NetworkUtilities.cpp \
     ../../src/utilities/WebPageGrabber.cpp \
-    ../../src/utilities/SimpleStateMachine.cpp
+    ../../src/utilities/SimpleStateMachine.cpp \
+    ../../src/FangObject.cpp
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
 HEADERS += \
     ../../src/utilities/FaviconGrabber.h \
     ../../src/utilities/NetworkUtilities.h \
     ../../src/utilities/WebPageGrabber.h \
-    ../../src/utilities/SimpleStateMachine.h
+    ../../src/utilities/SimpleStateMachine.h \
+    ../../src/FangObject.h

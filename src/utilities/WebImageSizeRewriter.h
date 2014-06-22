@@ -11,6 +11,8 @@
 #include "WebPageGrabber.h"
 #include "ImageGrabber.h"
 
+#include "../FangObject.h"
+
 /**
  * @brief Given an HTML string, this class fetches images that are missing inline dimension
  * attributes.
@@ -20,7 +22,7 @@
  *
  * Oops, I just turned into a goat.  Gotta go.
  */
-class WebImageSizeRewriter : public QObject
+class WebImageSizeRewriter : public FangObject
 {
     Q_OBJECT
 public:

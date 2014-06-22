@@ -9,10 +9,12 @@
 #include <QSqlQuery>
 #include <QFile>
 
+#include "../FangObject.h"
+
 /**
  * @brief Singleton database for DB.
  */
-class DB : public QObject
+class DB : public FangObject
 {
     Q_OBJECT
 public:

@@ -4,7 +4,7 @@
 #include <QDebug>
 
 SimpleStateMachine::SimpleStateMachine(QObject *parent) :
-    QObject(parent),
+    FangObject(parent),
     currentState(-1),
     receiver(NULL)
 {

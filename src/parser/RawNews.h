@@ -8,7 +8,9 @@
 
 #include <QDebug>
 
-class RawNews : public QObject
+#include "../FangObject.h"
+
+class RawNews : public FangObject
 {
     Q_OBJECT
 public:

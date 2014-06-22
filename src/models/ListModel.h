@@ -11,12 +11,13 @@
 #include <QAbstractListModel>
 #include <QList>
 #include <QVariant>
+#include "../FangObject.h"
  
-class ListItem: public QObject {
+class ListItem: public FangObject {
   Q_OBJECT
  
 public:
-  ListItem(QObject* parent = 0) : QObject(parent) {}
+  ListItem(QObject* parent = 0) : FangObject(parent) {}
   virtual ~ListItem() {}
   virtual QString id() const { return "invalid id"; }
   virtual QVariant data(int role) const { Q_UNUSED(role); return QVariant(); }

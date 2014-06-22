@@ -79,6 +79,7 @@ void TestFangOPMLParser::testCase1_data()
     QTest::newRow("FeedDeemon") << "feeddeemon.opml" << 3 << "Mission Mission" << "http://feeds.feedburner.com/MissionMission";
     QTest::newRow("RSSOwl") << "rssowl.opml" << 3 << "Mission Mission" << "http://missionmission.org";
     QTest::newRow("Feedly") << "feedly.opml" << 3 << "Mission Mission" << "http://missionmission.wordpress.com/feed/";
+    QTest::newRow("Fang") << "Fang.opml" << 3 << "Mission Mission" << "http://feeds.feedburner.com/MissionMission";
 }
 
 QTEST_APPLESS_MAIN(TestFangOPMLParser)

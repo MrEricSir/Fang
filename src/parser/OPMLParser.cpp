@@ -3,7 +3,7 @@
 #include <QByteArray>
 
 OPMLParser::OPMLParser(QObject *parent) :
-    QObject(parent),
+    FangObject(parent),
     file(),
     feedList(),
     result(ParserInterface::IN_PROGRESS)

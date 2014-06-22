@@ -4,7 +4,7 @@
 #include <QDebug>
 
 WebImageSizeRewriter::WebImageSizeRewriter(QObject *parent) :
-    QObject(parent),
+    FangObject(parent),
     webGrabber(),
     imageGrabber()
 {
