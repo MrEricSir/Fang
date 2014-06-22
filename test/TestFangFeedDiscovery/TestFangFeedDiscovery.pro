@@ -19,8 +19,6 @@ SOURCES += tst_testfangfeeddiscovery.cpp \
     ../../src/utilities/FeedDiscovery.cpp \
     ../../src/utilities/SimpleStateMachine.cpp \
     ../../src/utilities/WebPageGrabber.cpp \
-    ../../src/parser/BackgroundParser.cpp \
-    ../../src/parser/BackgroundParserThread.cpp \
     ../../src/parser/OPMLParser.cpp \
     ../../src/parser/Parser.cpp \
     ../../src/parser/ParserInterface.cpp \
@@ -33,8 +31,6 @@ HEADERS += \
     ../../src/utilities/FeedDiscovery.h \
     ../../src/utilities/SimpleStateMachine.h \
     ../../src/utilities/WebPageGrabber.h \
-    ../../src/parser/BackgroundParser.h \
-    ../../src/parser/BackgroundParserThread.h \
     ../../src/parser/OPMLParser.h \
     ../../src/parser/Parser.h \
     ../../src/parser/ParserInterface.h \

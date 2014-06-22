@@ -6,10 +6,10 @@
 #include <QString>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
-#include <QXmlStreamReader>
-#include <QStack>
+#include <QThread>
 
 #include "ParserInterface.h"
+#include "ParserXMLWorker.h"
 
 // PaRSSes RSS/Atom feeds into RawFeed/RawNews objects.
 class Parser : public ParserInterface
@@ -19,13 +19,6 @@ class Parser : public ParserInterface
 public:
     explicit Parser(QObject *parent = 0);
     virtual ~Parser();
-    
-    /**
-     * @brief Attempts to convert an unreliable RSS/Atom timestamp string into a real timestamp.
-     * @param timestamp
-     * @return 
-     */
-    static QDateTime dateFromFeedString(const QString &_timestamp);
     
 public slots:
     virtual void parse(const QUrl& url, bool noParseIfCached = false); // Override.
@@ -39,50 +32,42 @@ public slots:
     
     virtual bool isFromCache() { return fromCache; } // Override
     
+    // These are used internally.
+signals:
+    
+    // Call this prior to adding XML.
+    void triggerDocStart();
+    
+    // Call this when you're done adding XML.
+    void triggerDocEnd();
+    
+    // Add a blurb of XML to parse.
+    void triggerAddXML(QByteArray data);
+    
 protected slots:
     void readyRead();
     void metaDataChanged();
     void error(QNetworkReply::NetworkError);
     void netFinished(QNetworkReply *reply);
     
+    // When the worker thread thinks the document is complete, or an error occured.
+    void workerDone(RawFeed* rawFeed);
+    
 private:
     void initParse(const QUrl& url = QUrl("")); // called prior to parse.
-    void parseXml();
-    void resetParserVars();
     
-    /**
-     * @return The nth value in the tag stack, or the empty string.
-     */
-    QString getTagStackAt(qint32 n);
-    
-    bool checkFavicon;
     RawFeed* feed;
-    RawNews* currentItem;
     ParseResult result;
     
-    QXmlStreamReader xml;
-
     QNetworkAccessManager manager;
     QNetworkReply *currentReply;
     QUrl finalFeedURL;
     QNetworkReply *redirectReply;
     
-    // Parser vars
-    int numItems;
-    QString currentTag;
-    QString currentPrefix;
-    QString url;
-    QString title;
-    QString subtitle;
-    QString content;
-    QString timestamp;
-    QString author;
-    bool hasType;
-    QStack<QString> tagStack;
-    //
-    
     bool fromCache;
     bool noParseIfCached;
+    
+    QThread workerThread;
 };
 
 #endif // PARSER_H

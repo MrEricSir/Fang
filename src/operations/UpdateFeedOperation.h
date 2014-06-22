@@ -6,7 +6,7 @@
 #include <QDateTime>
 
 #include "../utilities/RawFeedRewriter.h"
-#include "../parser/BackgroundParser.h"
+#include "../parser/Parser.h"
 #include "../models/FeedItem.h"
 #include "../models/NewsItem.h"
 
@@ -54,7 +54,7 @@ private slots:
     void onRewriterFinished();
     
 private:
-    BackgroundParser parser;
+    Parser parser;
     FeedItem *feed;
     RawFeed* rawFeed;
     RawFeedRewriter rewriter;

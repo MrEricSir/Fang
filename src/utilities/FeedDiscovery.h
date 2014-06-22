@@ -6,7 +6,7 @@
 #include <QUrl>
 
 #include "SimpleStateMachine.h"
-#include "../parser/BackgroundParser.h"
+#include "../parser/Parser.h"
 #include "../parser/RawFeed.h"
 #include "../utilities/WebPageGrabber.h"
 
@@ -113,8 +113,8 @@ private:
     bool _error;
     QString _errorString;
     
-    BackgroundParser parserFirstTry;
-    BackgroundParser parserSecondTry;
+    Parser parserFirstTry;
+    Parser parserSecondTry;
     
     WebPageGrabber pageGrabber;
     
