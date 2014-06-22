@@ -6,7 +6,7 @@
 #include <QWebElement>
 
 WebPageGrabber::WebPageGrabber(QObject *parent) :
-    QObject(parent)
+    FangObject(parent)
 {
     NetworkUtilities::addCache(webView.page()->networkAccessManager());
     webView.page()->settings()->setAttribute(QWebSettings::JavascriptEnabled, false); // No scripts.

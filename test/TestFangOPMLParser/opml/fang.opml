@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<opml version="1.1">
+    <head>
+        <title>Fang OPML export</title>
+        <dateModified>Sun, 22 Jun 2014 05:54:04 GMT</dateModified>
+    </head>
+    <body>
+        <outline text="MrEricSir.com" title="MrEricSir.com" type="rss" xmlUrl="http://www.mrericsir.com/blog/feed/" htmlUrl="http://www.mrericsir.com/blog"/>
+        <outline text="SFist" title="SFist" type="rss" xmlUrl="http://sfist.com/index.rdf" htmlUrl="http://sfist.com/"/>
+        <outline text="Mission Mission" title="Mission Mission" type="rss" xmlUrl="http://feeds.feedburner.com/MissionMission" htmlUrl="http://www.missionmission.org"/>
+    </body>
+</opml>

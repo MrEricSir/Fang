@@ -6,6 +6,7 @@
 
 #include "WebImageSizeRewriter.h"
 #include "../parser/RawNews.h"
+#include "../FangObject.h"
 
 /**
  * @brief Takes in a "raw" HTML feed and processes it in the following ways:
@@ -14,7 +15,7 @@
  *          - Those fucking "share this on social media!!11" buttons are removed
  *          - Tracking images?  Nope.
  */
-class RawFeedRewriter : public QObject
+class RawFeedRewriter : public FangObject
 {
     Q_OBJECT
 public:

@@ -12,8 +12,9 @@
 
 #include "WebPageGrabber.h"
 #include "SimpleStateMachine.h"
+#include "../FangObject.h"
 
-class FaviconGrabber : public QObject
+class FaviconGrabber : public FangObject
 {
     Q_OBJECT
     

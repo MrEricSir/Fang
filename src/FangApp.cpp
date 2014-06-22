@@ -15,7 +15,7 @@
 FangApp* FangApp::_instance = NULL;
 
 FangApp::FangApp(QObject *parent, FangApplicationViewer* viewer) :
-    QObject(parent),
+    FangObject(parent),
     viewer(viewer),
     manager(this),
     feedList(new ListModel(new FeedItem, this)),

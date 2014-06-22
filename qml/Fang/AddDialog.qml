@@ -113,6 +113,10 @@ Dialog {
         //enabled: !validator.validationComplete;
     }
     
+    onDialogClosed: {
+        validator.destroy();
+    }
+    
     // Magic beans that validate & add feeds (see C++ layer.)
     FeedValidator {
         id: validator;

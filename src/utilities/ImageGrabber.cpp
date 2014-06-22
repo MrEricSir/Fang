@@ -8,7 +8,7 @@
 #include "NetworkUtilities.h"
 
 ImageGrabber::ImageGrabber(QObject *parent) :
-    QObject(parent),
+    FangObject(parent),
     manager(),
     urlsToCheck(),
     results()

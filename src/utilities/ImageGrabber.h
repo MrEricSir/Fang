@@ -8,7 +8,9 @@
 #include <QUrl>
 #include <QMap>
 
-class ImageGrabber : public QObject
+#include "../FangObject.h"
+
+class ImageGrabber : public FangObject
 {
     Q_OBJECT
 public:

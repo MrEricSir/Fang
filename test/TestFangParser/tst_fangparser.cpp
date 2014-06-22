@@ -41,7 +41,7 @@ void TestFangParser::parseTest()
     parser.parseFile("../TestFangParser/feeds/" + filename);
     
     // We *may* need to wait here.
-    spy.wait(100); // Lame, but just wait 100 ms
+    spy.wait(500); // Lame, but just wait 500 ms
     
     // Verify the signal is only emitted once.
     QCOMPARE(spy.count(), 1);
@@ -90,7 +90,6 @@ void TestFangParser::parseTest_data()
                                << "http://www.mrericsir.com/blog/local/space-reserved-for-mural/"
                                << QDateTime::fromString("12 Feb 2014 23:04:49", dtf);
     
-    /*
     QTest::newRow("Slashdot.org") << "slashdot.org.rss" << "Slashdot" << 25
                                   << "Internet Shutdown Adds To Venezuela's Woes" 
                                   << "http://rss.slashdot.org/~r/Slashdot/slashdot/~3/WNpqP5TfVss/story01.htm"
@@ -270,7 +269,6 @@ void TestFangParser::parseTest_data()
                                   << "Live Updates: The Oscars"
                                   << "http://feeds.mashable.com/~r/Mashable/~3/Pm6OrtL9p1o/"
                                   << QDateTime::fromString("02 Mar 2014 23:15:10", dtf);
-                                  */
 }
 
 QTEST_MAIN(TestFangParser)

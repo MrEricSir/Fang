@@ -1,7 +1,7 @@
 #include "ParserXMLWorker.h"
 
 ParserXMLWorker::ParserXMLWorker(QObject *parent) :
-    QObject(parent), feed(NULL), currentItem(NULL), isValid(false)
+    FangObject(parent), feed(NULL), currentItem(NULL), isValid(false)
 {
 }
 
@@ -22,25 +22,14 @@ void ParserXMLWorker::documentStart()
 
 void ParserXMLWorker::documentEnd()
 {
-    //
-    // TODO: finish processing the QUEUEUEUEE
-    //
-    
     if (isValid) {
         emit done(feed);
     }
+    
+    // If it's not valid, we already emitted a signal.
 }
 
 void ParserXMLWorker::addXML(QByteArray data)
-{
-    //
-    // TODO: actually queue this up, etc.
-    //
-    parseXml(data);
-}
-
-// Parsed in chunks -- NOT all in one go.
-void ParserXMLWorker::parseXml(QByteArray data)
 {
     if (!isValid) {
         return;

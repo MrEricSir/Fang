@@ -18,9 +18,10 @@
 #include "models/FangSettings.h"
 #include "models/WebInteractor.h"
 #include "parser/Parser.h"
+#include "FangObject.h"
 
 
-class FangApp : public QObject
+class FangApp : public FangObject
 {
     Q_OBJECT
 public:

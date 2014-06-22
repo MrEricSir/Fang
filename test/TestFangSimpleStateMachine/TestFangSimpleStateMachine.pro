@@ -16,8 +16,10 @@ TEMPLATE = app
 
 
 SOURCES += tst_testfangsimplestatemachine.cpp \
-    ../../src/utilities/SimpleStateMachine.cpp
+    ../../src/utilities/SimpleStateMachine.cpp \
+    ../../src/FangObject.cpp
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
 HEADERS += \
-    ../../src/utilities/SimpleStateMachine.h
+    ../../src/utilities/SimpleStateMachine.h \
+    ../../src/FangObject.h

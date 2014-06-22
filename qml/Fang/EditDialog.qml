@@ -49,6 +49,10 @@ Dialog {
         }
     }
     
+    onDialogClosed: {
+        validator.destroy();
+    }
+    
     DialogButton {
         id: cancelButton;
         

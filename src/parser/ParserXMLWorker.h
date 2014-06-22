@@ -9,13 +9,21 @@
 #include <QStack>
 
 #include "RawFeed.h"
+#include "../FangObject.h"
 
 /**
  * @brief Does the icky string work for RSS/Atom parking.  Intended
  * to be used as a background operation.
  * 
+ * The user is expected to:
+ * Call documentStart()
+ * Call addXML() at least once
+ * Call documentEnd()
+ * 
+ * This can be run in a background thread using signals/slots.  addXML() will
+ * block until it's done, so the call to documentEnd() will queue up.
  */
-class ParserXMLWorker : public QObject
+class ParserXMLWorker : public FangObject
 {
     Q_OBJECT
 public:
@@ -39,11 +47,6 @@ public slots:
     void addXML(QByteArray data);
     
 private:
-    /**
-     * @brief This is where the magic (you know, the parsing) really happens.
-     * @param data
-     */
-    void parseXml(QByteArray data);
     
     void resetParserVars();
     

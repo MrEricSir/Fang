@@ -114,6 +114,11 @@ Dialog {
         text: "OPML feed list"
     }
     
+    onDialogClosed: {
+        // Manual memory management.
+        opml.destroy();
+    }
+    
     OPMLInteractor {
         id: opml
         

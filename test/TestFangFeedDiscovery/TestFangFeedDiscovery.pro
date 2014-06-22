@@ -24,7 +24,9 @@ SOURCES += tst_testfangfeeddiscovery.cpp \
     ../../src/parser/ParserInterface.cpp \
     ../../src/parser/RawFeed.cpp \
     ../../src/parser/RawNews.cpp \
-    ../../src/utilities/NetworkUtilities.cpp
+    ../../src/utilities/NetworkUtilities.cpp \
+    ../../src/FangObject.cpp \
+    ../../src/parser/ParserXMLWorker.cpp
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
 HEADERS += \
@@ -36,4 +38,6 @@ HEADERS += \
     ../../src/parser/ParserInterface.h \
     ../../src/parser/RawFeed.h \
     ../../src/parser/RawNews.h \
-    ../../src/utilities/NetworkUtilities.h
+    ../../src/utilities/NetworkUtilities.h \
+    ../../src/FangObject.h \
+    ../../src/parser/ParserXMLWorker.h

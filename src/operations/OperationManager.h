@@ -9,8 +9,9 @@
 #include <QSet>
 
 #include "Operation.h"
+#include "../FangObject.h"
 
-class OperationManager : public QObject
+class OperationManager : public FangObject
 {
     Q_OBJECT
 public:

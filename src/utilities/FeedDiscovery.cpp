@@ -5,7 +5,7 @@
 #include <QWebFrame>
 
 FeedDiscovery::FeedDiscovery(QObject *parent) :
-    QObject(parent),
+    FangObject(parent),
     machine(),
     _error(false),
     _errorString(""),

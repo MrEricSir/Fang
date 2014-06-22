@@ -5,11 +5,12 @@
 #include <QWebView>
 #include <QWebPage>
 #include <QString>
+#include "../FangObject.h"
 
 /**
  * @brief Loads a web page at a given URL and signals with the page when done.
  */
-class WebPageGrabber : public QObject
+class WebPageGrabber : public FangObject
 {
     Q_OBJECT
 public:
