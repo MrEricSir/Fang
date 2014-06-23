@@ -64,6 +64,9 @@ function appendNews(append, id, title, url, feedTitle, timestamp, content) {
     // (but not anymore!! HAHA!)
     item.attr( 'id', '' );
     
+    // Unescape newlines.  This allows pre tags to work.
+    content = content.replace(/[\u0018]/g, "\n");
+    
     // Assign data.
     item.attr( 'id', id );
     item.find( '.link' ).attr( 'href', url );

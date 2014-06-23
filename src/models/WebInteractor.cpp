@@ -292,8 +292,8 @@ QString WebInteractor::escapeCharacters(const QString& string)
     // Replace slash r with nothing
     rValue = rValue.replace('\r', "");
     
-    // Replace slash n with space
-    rValue = rValue.replace('\n', " ");
+    // Replace slash n with ASCII code 0x18, "cancel"
+    rValue = rValue.replace('\n', QChar(0x18));
     
     return rValue;
 }
