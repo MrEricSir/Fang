@@ -35,7 +35,7 @@ var isInProgress = false;
 // We're either about to append, prepend, or do the initial load.
 function inProgress(started, operation) {
     if (started)
-        prependScroll = 0;
+        prependScroll = $(document).scrollTop(); // War we are NOWs.
     
     if (!started && operation === "prepend" && prependScroll > 10) {
         $(document).scrollTop( prependScroll );
@@ -91,8 +91,8 @@ function appendNews(append, id, title, url, feedTitle, timestamp, content) {
         item.insertBefore( 'body>.newsContainer:first' );
         
         // Calculate the size and add it to our prepend scroll tally.
-        var verticalMargins = parseInt( item.css("marginBottom") ) + parseInt( item.css("marginTop") );
-        prependScroll += verticalMargins + item.height();
+        //var verticalMargins = parseInt( item.css("marginBottom") ) + parseInt( item.css("marginTop") );
+        prependScroll += item.height(); /* + verticalMargins; */
     }
     
     resizeBottomSpacer();

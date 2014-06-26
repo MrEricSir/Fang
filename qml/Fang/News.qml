@@ -46,6 +46,9 @@ Item {
                 newsView.experimental.evaluateJavaScript("inProgress("
                                                          + started + ", '"
                                                          + operation + "');");
+                if (started) {
+                    newsView.isInProgress = true;
+                }
             }
             
             onAdd: {
@@ -104,7 +107,7 @@ Item {
             id: newsScrollView;
             
             anchors.fill: parent;
-
+            
             WebView {
                 id: newsView;
                 
@@ -112,8 +115,14 @@ Item {
                 // http://127.0.0.1:9999/webkit/inspector/inspector.html?page=1
                 property bool devMode: true;
                 
+                // Read-only
+                property bool isInProgress: false;
+                
                 // Start invisible
                 visible: false;
+                
+                // Stops scrolling while we're loading.
+                enabled: !isInProgress;
                 
                 // Turn the inspek0r off and on.
                 experimental.preferences.developerExtrasEnabled: devMode;
@@ -185,6 +194,7 @@ Item {
                         webInteractor.openLink(commandArray[1]);
                     } else if (cmd === "stopProgress" ) {
                         newsView.experimental.evaluateJavaScript("stopInProgress();");
+                        newsView.isInProgress = false;
                     } else if (cmd === "drawBookmarkAndJumpToFinished" ) {
                         // Check if it's time to become visible again.
                         //console.log("draw book jump to finished");
