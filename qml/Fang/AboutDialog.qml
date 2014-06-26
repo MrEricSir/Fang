@@ -23,6 +23,11 @@ Dialog {
         fontPointSize: style.font.titleSize
     }
     
+    DialogText {
+        text: "<a href='http://www.getfang.com'>Visit our website</a>";
+        horizontalAlignment: Text.AlignHCenter
+    }
+    
     DialogSpacer {}
     
     DialogText {

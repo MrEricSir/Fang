@@ -26,6 +26,9 @@ Rectangle {
         wrapMode: Text.WordWrap
         renderType: Text.NativeRendering
         
+        // In case you want teh linkx0rz
+        onLinkActivated: Qt.openUrlExternally(link)
+        
         width: parent.width
     }
 }
