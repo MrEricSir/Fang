@@ -41,6 +41,7 @@ void LoadAllFeedsOperation::execute()
                     query.value("url").toString(),
                     query.value("siteURL").toString(),
                     query.value("imageURL").toString(),
+                    QDateTime::fromMSecsSinceEpoch(query.value("lastIconUpdate").toLongLong()),
                     NULL
                     );
         

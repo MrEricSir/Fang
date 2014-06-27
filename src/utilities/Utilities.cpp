@@ -17,6 +17,7 @@ FeedItem *Utilities::feedItemFromRaw(const RawFeed *raw, qint64 dbId, QObject* p
                         raw->url,
                         raw->siteURL,
                         raw->imageURL,
+                        QDateTime(),
                         parent
                         );
 }

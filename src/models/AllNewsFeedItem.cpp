@@ -1,8 +1,9 @@
 #include "AllNewsFeedItem.h"
 #include <QList>
+#include <QDateTime>
 
 AllNewsFeedItem::AllNewsFeedItem(ListModel *feedList) :
-    FeedItem(-1, -1, "All News", "", QDateTime(), 0, QUrl(), QUrl(), QUrl(), feedList),
+    FeedItem(-1, -1, "All News", "", QDateTime(), 0, QUrl(), QUrl(), QUrl(), QDateTime(), feedList),
     feedList(feedList)
 {
     // Do this here to avoid getting added/removed signals too early.

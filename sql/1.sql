@@ -15,6 +15,7 @@ CREATE TABLE FeedItemTable (
     url TEXT NOT NULL,
     siteURL TEXT NOT NULL,
     imageURL TEXT DEFAULT '',
+    lastIconUpdate INTEGER DEFAULT 0,
     ordinal INTEGER DEFAULT 0,
     bookmark_id INTEGER DEFAULT -1
 );

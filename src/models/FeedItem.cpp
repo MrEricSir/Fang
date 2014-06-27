@@ -20,7 +20,8 @@ FeedItem::FeedItem(QObject *parent) :
     bookmark(NULL),
     dropTarget("none"),
     _errorFlag(false),
-    isSelected(false)
+    isSelected(false),
+    lastIconUpdate()
     
 {
     newsList = new QList<NewsItem*>();
@@ -28,7 +29,7 @@ FeedItem::FeedItem(QObject *parent) :
 
 FeedItem::FeedItem(qint64 id, const qint32 ordinal, const QString &title, const QString &subtitle,
                    const QDateTime &lastUpdated, quint32 minutesToUpdate, const QUrl &url,
-                   const QUrl& siteURL, const QUrl &imageURL, QObject* parent) :
+                   const QUrl& siteURL, const QUrl &imageURL, const QDateTime& lastIconUpdate, QObject* parent) :
     ListItem(parent),
     _id(id),
     ordinal(ordinal),
@@ -45,7 +46,8 @@ FeedItem::FeedItem(qint64 id, const qint32 ordinal, const QString &title, const 
     bookmark(NULL),
     dropTarget("none"),
     _errorFlag(false),
-    isSelected(false)
+    isSelected(false),
+    lastIconUpdate(lastIconUpdate)
 {
     newsList = new QList<NewsItem*>();
 }

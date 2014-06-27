@@ -46,6 +46,7 @@ public:
             const QUrl& url,
             const QUrl& siteURL,
             const QUrl& imageURL,
+            const QDateTime& lastIconUpdate,
             QObject *parent = 0);
     
     virtual ~FeedItem();
@@ -172,6 +173,9 @@ public:
      */
     inline bool getIsSelected() const { return isSelected; }
     
+    void setLastIconUpdate(QDateTime last) { lastIconUpdate = last; }
+    QDateTime getLastIconUpdate() { return lastIconUpdate; }
+    
 signals:
     
     void appended(NewsItem* item);
@@ -195,6 +199,7 @@ private:
     QString dropTarget;
     bool _errorFlag;
     bool isSelected;
+    QDateTime lastIconUpdate;
 };
 
 #endif // FEEDITEM_H
