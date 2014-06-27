@@ -21,7 +21,7 @@ Item {
     }
     
     // Sets focus on the news view when dialogs are closed.
-    property alias newsFocus: newsScrollView.focus
+    property alias newsFocus: newsScrollView.focus;
     
     Item {
         id: newsMargin;
@@ -107,6 +107,8 @@ Item {
             id: newsScrollView;
             
             anchors.fill: parent;
+            
+            focus: true;
             
             WebView {
                 id: newsView;
