@@ -238,6 +238,11 @@ Item {
                             news.refreshFeed();
                         
                         break;
+                    case Qt.Key_Q:
+                        if (event.modifiers & Qt.ControlModifier)
+                            Qt.quit();
+                        
+                        break;
                     }
                 }
             }
