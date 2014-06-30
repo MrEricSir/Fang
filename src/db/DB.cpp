@@ -111,7 +111,7 @@ void DB::upgrade()
     while(true) {
         QString filename;
         QTextStream output(&filename);
-        output << ":/sql/" << nextVersion << ".sql";
+        output << ":/sql/sql/" << nextVersion << ".sql";
         QFile schemaFile(filename);
         if (!schemaFile.exists())
             break; // We're up to date!
