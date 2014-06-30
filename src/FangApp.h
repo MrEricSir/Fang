@@ -2,16 +2,14 @@
 #define FANGAPP_H
 
 #include <QObject>
+#include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include <QQuickView>
 #include <QTimer>
 #include <QMap>
 
-#include "../qtquick2applicationviewer/qtquick2applicationviewer.h"
-
 #include "operations/OperationManager.h"
 
-#include "models/FangApplicationViewer.h"
 #include "models/NewsItem.h"
 #include "models/FeedItem.h"
 #include "models/ListModel.h"
@@ -25,7 +23,7 @@ class FangApp : public FangObject
 {
     Q_OBJECT
 public:
-    explicit FangApp(QObject *parent, FangApplicationViewer* viewer);
+    explicit FangApp(QObject *parent, QQmlApplicationEngine* engine);
     
     void init();
     
@@ -89,11 +87,12 @@ public slots:
     
     
 private slots:
-    void onViewerStatusChanged(QQuickView::Status);
-    
-    void onWindowResized();
-    
-    void onOperationFinished(Operation* operation);
+    /**
+     * @brief QML layer created something for us to look at.
+     * @param object
+     * @param url
+     */
+    void onObjectCreated(QObject *object, const QUrl &url);
     
     void onFeedAdded(ListItem*);
     
@@ -146,7 +145,7 @@ private slots:
     
 private:
     static FangApp* _instance;
-    FangApplicationViewer* viewer;
+    QQmlApplicationEngine* engine;
     OperationManager manager;
     ListModel *feedList;
     ListModel *importList;
@@ -156,6 +155,7 @@ private:
     WebInteractor *interactor;
     QTimer *updateTimer;
     QMap<qint64, FeedItem*> feedIdMap;
+    QQuickWindow* window;
 };
 
 #endif // FANGAPP_H

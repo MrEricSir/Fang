@@ -123,7 +123,7 @@ Dialog {
         id: opml
         
         onImportReady: {
-            var importDialog = globals.openDialog("OPMLImportDialog.qml");
+            var importDialog = main.openDialog("OPMLImportDialog.qml");
             importDialog.interactor = opml;
             importDialog.onParentClose.connect(close);
         }
@@ -164,7 +164,7 @@ Dialog {
     DialogButton {
         id: aboutBox
         text: "About"
-        onClicked: globals.openDialog("AboutDialog.qml")
+        onClicked: main.openDialog("AboutDialog.qml")
     }
     
     DialogSpacer {}

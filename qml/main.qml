@@ -1,10 +1,20 @@
-import QtQuick 2.0
+import QtQuick 2.2
+import QtQuick.Window 2.1
 import Fang 1.0
 import QtQuick.Controls 1.2
 import QtQuick.Controls.Styles 1.2
+import Qt.labs.settings 1.0
 
-Rectangle {
-    id: globals;
+Window {
+    id: main;
+    
+    width: windowSettings.width;
+    height: windowSettings.height;
+    visibility: windowSettings.maximized ?
+                    Window.Maximized : Window.Windowed
+    
+    minimumWidth: 600;
+    minimumHeight: 450;
     
     // Treat as const
     property int sidebarWidth: 230;
@@ -14,20 +24,61 @@ Rectangle {
         id: style;
     }
     
+    visible: true
+    
     FangSettings {
         id: fangSettings;
         objectName: "fangSettings"; // Don't change this!
     }
     
+    // Save window settings on close.
+    Component.onDestruction: {
+        windowSettings.save();
+    }
+    
+    // Read-only.
+    property bool wasMaximized: false;
+    onVisibilityChanged: {
+        if (main.visibility === Window.Maximized) {
+            wasMaximized = true;
+        } else if (main.visibility === Window.Windowed) {
+            wasMaximized = false;
+        }
+    }
+    
+    // Saves window dimensions and whether or not we're maximized.
+    Settings {
+        id: windowSettings
+        
+        function save() {
+            if (main.wasMaximized) {
+                // We're MAXimized!
+                windowSettings.maximized = true;
+            } else {
+                // We're windowed!
+                windowSettings.maximized = false;
+                windowSettings.width = main.width;
+                windowSettings.height = main.height;
+            }
+        }
+        
+        category: "FangWindow"
+        
+        // Defaults
+        property bool maximized: false;
+        property int width: 900;
+        property int height: 700;
+    }
+    
     // Read-only: List of all open dialogs
     property var openDialogs: []
     
-    // Creates and opens a dialog.  The dialog is returned in case you wanna mess with
-    // it and shit.
+    // Creates and opens a dialog.  The dialog is returned in
+    // case you wanna mess with it and shit.
     function openDialog(dialogName) {
         var component = Qt.createComponent(dialogName);
         var dialog = component.createObject(
-                    globals, {"x": 0, "y": 0, "listView": sidebar.listView});
+                    main, {"x": 0, "y": 0, "listView": sidebar.listView});
         
         if (dialog === null) {
             // Error Handling
@@ -81,8 +132,9 @@ Rectangle {
         }
     }
     
-    color: "black"; // For transitions.
     
+    color: "black"; // For transitions.
+        
     /**
      * Operator: mainFrame turn on.
      *
@@ -94,10 +146,10 @@ Rectangle {
      * CATS: You have no chance to survive make your time.
      * CATS: Ha ha ha ha ....
      */
-    Screen {
+    FangScreen {
         id: mainFrame;
         
-        anchors.fill: parent;
+        //anchors.fill: parent;
         
         // The feed list sidebar.
         Sidebar {
@@ -225,4 +277,5 @@ Rectangle {
             }
         }
     }
+    
 }

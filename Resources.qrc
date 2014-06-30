@@ -1,69 +1,14 @@
 <RCC>
-    <qresource prefix="/">
-        <file>qml/Fang/FeedTitleDelegate.qml</file>
-        <file>qml/Fang/main.qml</file>
-        <file>qml/Fang/News.qml</file>
-        <file>qml/Fang/Sidebar.qml</file>
-        <file>qml/Fang/images/arrows_left.png</file>
-        <file>qml/Fang/images/arrows_right.png</file>
-        <file>qml/Fang/images/minus.png</file>
-        <file>qml/Fang/images/plus.png</file>
-        <file>html/NewsPage.html</file>
+	<qresource prefix="/sql">
         <file>sql/1.sql</file>
-        <file>qml/Fang/Dialog.qml</file>
-        <file>qml/Fang/SidebarButton.qml</file>
-        <file>qml/Fang/AddDialog.qml</file>
-        <file>qml/Fang/DialogButton.qml</file>
-        <file>qml/Fang/TextEntry.qml</file>
-        <file>qml/Fang/DialogText.qml</file>
-        <file>qml/Fang/images/spinner.gif</file>
-        <file>qml/Fang/DialogSpinner.qml</file>
-        <file>qml/Fang/DialogStatus.qml</file>
-        <file>qml/Fang/images/symbol_error.svg</file>
-        <file>qml/Fang/images/symbol_ok.svg</file>
-        <file>qml/Fang/images/symbol_question.svg</file>
-        <file>qml/Fang/images/symbol_reload.svg</file>
-        <file>qml/Fang/RemoveDialog.qml</file>
-        <file>qml/Fang/images/symbol_rss.svg</file>
-        <file>qml/Fang/Spinner.qml</file>
-        <file>qml/Fang/images/symbol_pencil.svg</file>
-        <file>qml/Fang/EditDialog.qml</file>
-        <file>qml/Fang/images/symbol_gear.svg</file>
-        <file>qml/Fang/Style.qml</file>
-        <file>qml/Fang/SettingsDialog.qml</file>
-        <file>qml/Fang/DialogToggleButton.qml</file>
-        <file>qml/Fang/DialogRadioButton.qml</file>
-        <file>qml/Fang/RadioButtonGroup.qml</file>
-        <file>qml/Fang/DialogButtonGroup.qml</file>
-        <file>qml/Fang/images/plus_dark.png</file>
-        <file>qml/Fang/images/minus_dark.png</file>
-        <file>qml/Fang/images/arrows_right_dark.png</file>
-        <file>qml/Fang/images/arrows_left_dark.png</file>
-        <file>qml/Fang/images/symbol_dark_question.svg</file>
-        <file>qml/Fang/images/symbol_dark_ok.svg</file>
-        <file>qml/Fang/images/symbol_dark_pencil.svg</file>
-        <file>qml/Fang/images/symbol_dark_gear.svg</file>
-        <file>qml/Fang/images/symbol_dark_error.svg</file>
-        <file>qml/Fang/images/symbol_dark_rss.svg</file>
-        <file>qml/Fang/images/symbol_dark_reload.svg</file>
-        <file>qml/Fang/images/spinner_dark.gif</file>
-        <file>html/jquery-2.0.3.js</file>
-        <file>html/fang.js</file>
-        <file>qml/Fang/images/fang_logo.svg</file>
+	</qresource>
+    <qresource prefix="/icons">
         <file>icons/icon_circle.svg</file>
         <file>icons/icon_square.svg</file>
-        <file>win32.rc</file>
         <file>icons/mac.icns</file>
         <file>icons/win32.ico</file>
-        <file>qml/Fang/Button.qml</file>
-        <file>qml/Fang/ListViewDragDelegate.qml</file>
-        <file>qml/Fang/AboutDialog.qml</file>
-        <file>qml/Fang/images/fang_logo_color.svg</file>
-        <file>qml/Fang/DialogSpacer.qml</file>
-        <file>qml/Fang/Screen.qml</file>
-        <file>qml/Fang/OPMLImportDialog.qml</file>
-        <file>qml/Fang/CheckBox.qml</file>
-        <file>html/formatDateSimply.js</file>
-        <file>qml/Fang/FangScrollView.qml</file>
+	</qresource>
+	<qresource prefix="/">
+		<file>win32.rc</file>
     </qresource>
 </RCC>

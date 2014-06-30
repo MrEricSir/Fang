@@ -4,7 +4,7 @@ import Fang 1.0
 // Dialog container.
 // Takes up the entire screen.
 // Note: Mr. T. pitties the fool who uses this with anchors!  Specify x, y, width, height, please.
-Screen {
+FangScreen {
     id: dialog
     
     signal dialogOpened() // Open has completed

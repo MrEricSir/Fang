@@ -1,10 +1,9 @@
 #include "FangApp.h"
 
 #include <QDebug>
-#include <QQmlEngine>
 
-#include "../utilities/Utilities.h"
-#include "../utilities/NetworkUtilities.h"
+#include "utilities/Utilities.h"
+#include "utilities/NetworkUtilities.h"
 
 #include "operations/UpdateFeedOperation.h"
 #include "operations/LoadAllFeedsOperation.h"
@@ -14,9 +13,9 @@
 
 FangApp* FangApp::_instance = NULL;
 
-FangApp::FangApp(QObject *parent, FangApplicationViewer* viewer) :
+FangApp::FangApp(QObject *parent, QQmlApplicationEngine* engine) :
     FangObject(parent),
-    viewer(viewer),
+    engine(engine),
     manager(this),
     feedList(new ListModel(new FeedItem, this)),
     importList(new ListModel(new FeedItem, this)),
@@ -24,18 +23,14 @@ FangApp::FangApp(QObject *parent, FangApplicationViewer* viewer) :
     loadAllFinished(false),
     fangSettings(NULL),
     interactor(NULL),
-    updateTimer(new QTimer(this))
+    updateTimer(new QTimer(this)),
+    window(NULL)
 {
     Q_ASSERT(_instance == NULL);
     _instance = this;
     
     // Setup signals.
-    connect(viewer, SIGNAL(statusChanged(QQuickView::Status)),
-                     this, SLOT(onViewerStatusChanged(QQuickView::Status)));
-    connect(viewer, SIGNAL(windowResized()), this, SLOT(onWindowResized()));
-    
-    connect(&manager, SIGNAL(operationFinished(Operation*)),
-                     this, SLOT(onOperationFinished(Operation*)));
+    connect(engine, SIGNAL(objectCreated(QObject*,QUrl)), this, SLOT(onObjectCreated(QObject*,QUrl)));
     
     connect(feedList, SIGNAL(added(ListItem*)), this, SLOT(onFeedAdded(ListItem*)));
     connect(feedList, SIGNAL(removed(ListItem*)), this, SLOT(onFeedRemoved(ListItem*)));
@@ -44,27 +39,15 @@ FangApp::FangApp(QObject *parent, FangApplicationViewer* viewer) :
 
 void FangApp::init()
 {
-    // Enable cache for remote QML elements.
-    NetworkUtilities::addCache(viewer->engine()->networkAccessManager());
-    
     // Setup our QML.
-    viewer->rootContext()->setContextProperty("feedListModel", feedList); // list of feeds
-    viewer->rootContext()->setContextProperty("importListModel", importList); // list of feeds to be batch imported
-    viewer->rootContext()->setContextProperty("platform", getPlatform()); // platform string ID
-    viewer->addImportPath(QLatin1String("modules"));
-    //viewer->setOrientation(QtQuick2ApplicationViewer::ScreenOrientationAuto);
-    viewer->setSource(QUrl("qrc:/qml/Fang/main.qml"));
-    viewer->displayWindow();
+    engine->rootContext()->setContextProperty("feedListModel", feedList); // list of feeds
+    engine->rootContext()->setContextProperty("importListModel", importList); // list of feeds to be batch imported
+    engine->rootContext()->setContextProperty("platform", getPlatform()); // platform string ID
     
     // Load feed list.
     LoadAllFeedsOperation* loadAllOp = new LoadAllFeedsOperation(&manager, feedList);
     connect(loadAllOp, SIGNAL(finished(Operation*)), this, SLOT(onLoadAllFinished(Operation*)));
     manager.add(loadAllOp);
-    
-    // Set a timer to update the feeds every ten minutes.
-    // TODO: Customize news update timer
-    connect(updateTimer, SIGNAL(timeout()), this, SLOT(updateAllFeeds()));
-    updateTimer->start(10 * 60 * 1000);
 }
 
 FeedItem* FangApp::getFeed(int index)
@@ -92,38 +75,8 @@ FeedItem *FangApp::getFeedForID(qint64 dbID)
 
 void FangApp::focusApp()
 {
-    viewer->requestActivate();
-}
-
-void FangApp::onViewerStatusChanged(QQuickView::Status status)
-{
-    if (status != QQuickView::Ready)
-        return;
-    
-    // OH! We're ready! Well I'll be damned. Grab all the stuff from 
-    interactor = viewer->rootObject()->findChild<WebInteractor*>("webInteractor");
-    fangSettings = viewer->rootObject()->findChild<FangSettings*>("fangSettings");
-    
-    // Do a sanity check.
-    if (interactor == NULL || fangSettings == NULL) {
-        qDebug() << "Could not find QML objects!!!11";
-        
-        return;
-    }
-    
-    // Init interactor with Mr. Manager, our list of feeds, and the settings.
-    interactor->init(&manager, feedList, fangSettings);
-}
-
-void FangApp::onWindowResized()
-{
-
-}
-
-void FangApp::onOperationFinished(Operation *operation)
-{
-    if (operation->metaObject() == &LoadAllFeedsOperation::staticMetaObject) {
-        // Data is loaded!
+    if (window) {
+        window->requestActivate();
     }
 }
 
@@ -190,8 +143,8 @@ void FangApp::onLoadAllFinished(Operation *op)
     Q_UNUSED(op);
     loadAllFinished = true;
     
-    // Update!.
-    updateAllFeeds();
+    // Load teh cue em el.
+    engine->load(QUrl("qrc:///qml/main.qml"));
 }
 
 void FangApp::updateAllFeeds()
@@ -202,10 +155,44 @@ void FangApp::updateAllFeeds()
     interactor->refreshAllFeeds();
 }
 
+void FangApp::onObjectCreated(QObject* object, const QUrl& url)
+{
+    Q_UNUSED(url);
+    //qDebug() << "Object created: " << object << " with url: " << url;
+    
+    // Save our window.
+    window = qobject_cast<QQuickWindow*>(object);
+    
+    interactor = object->findChild<WebInteractor*>("webInteractor");
+    fangSettings = object->findChild<FangSettings*>("fangSettings");
+    
+    // Do a sanity check.
+    if (interactor == NULL || fangSettings == NULL) {
+        qDebug() << "Could not find QML objects!!!11";
+        
+        return;
+    }
+    
+    // Show the current feed.
+    displayFeed();
+    
+    // Init interactor with Mr. Manager, our list of feeds, and the settings.
+    interactor->init(&manager, feedList, fangSettings);
+    
+    // Update!.
+    updateAllFeeds();
+    
+    // Set a timer to update the feeds every ten minutes.
+    // TODO: Customize news update timer frequency.
+    connect(updateTimer, SIGNAL(timeout()), this, SLOT(updateAllFeeds()));
+    updateTimer->start(10 * 60 * 1000);
+}
+
 void FangApp::displayFeed()
 {
-    if (currentFeed != NULL)
+    if (currentFeed && interactor) {
         interactor->setFeed(currentFeed);
+    }
 }
 
 void FangApp::setCurrentFeed(FeedItem *feed)

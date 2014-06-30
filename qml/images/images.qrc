@@ -1,0 +1,30 @@
+<RCC>
+	<qresource prefix="/qml/images">
+		<file>fang_logo_color.svg</file>
+		<file>spinner.gif</file>
+        <file>symbol_rss.svg</file>
+        <file>arrows_left.png</file>
+        <file>arrows_right.png</file>
+        <file>minus.png</file>
+        <file>plus.png</file>
+		<file>symbol_error.svg</file>
+        <file>symbol_ok.svg</file>
+        <file>symbol_question.svg</file>
+        <file>symbol_reload.svg</file>
+		<file>symbol_pencil.svg</file>
+		<file>symbol_gear.svg</file>
+		<file>plus_dark.png</file>
+        <file>minus_dark.png</file>
+        <file>arrows_right_dark.png</file>
+        <file>arrows_left_dark.png</file>
+        <file>symbol_dark_question.svg</file>
+        <file>symbol_dark_ok.svg</file>
+        <file>symbol_dark_pencil.svg</file>
+        <file>symbol_dark_gear.svg</file>
+        <file>symbol_dark_error.svg</file>
+        <file>symbol_dark_rss.svg</file>
+        <file>symbol_dark_reload.svg</file>
+        <file>spinner_dark.gif</file>
+		<file>fang_logo.svg</file>
+	</qresource>
+</RCC>

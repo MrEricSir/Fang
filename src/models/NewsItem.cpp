@@ -36,9 +36,9 @@ bool NewsItem::operator<(const NewsItem& right) {
 }
 
 bool NewsItem::LessThan(const NewsItem* left, const NewsItem* right) {
-    // Use title if dates are equal.
+    // Use id if dates are equal.
     if (left->timestamp == right->timestamp)
-        return left->title < right->title;
+        return left->_id < right->_id;
     
     // Sort on timestamp.
     return left->timestamp < right->timestamp;

@@ -1,13 +1,11 @@
 #include <QApplication>
+#include <QQmlApplicationEngine>
 #include <QFile>
 #include <QDateTime>
-
-#include "qtquick2applicationviewer/qtquick2applicationviewer.h"
 
 #include "FangApp.h"
 
 #include "models/FeedValidator.h"
-#include "models/FangApplicationViewer.h"
 #include "models/FangSettings.h"
 #include "models/WebInteractor.h"
 #include "models/ListModel.h"
@@ -28,8 +26,8 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     app.setOrganizationDomain("EricSoft.com");
     app.setApplicationName("Fang");
     
-    FangApplicationViewer viewer;
-    FangApp fang(&app, &viewer);
+    QQmlApplicationEngine engine;
+    FangApp fang(&app, &engine);
     fang.init();
     
     int ret = app.exec();

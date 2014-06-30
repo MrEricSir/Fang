@@ -2,30 +2,32 @@ import QtQuick 2.0
 import Fang 1.0
 
 Dialog {
-    id: aboutDialog
+    id: aboutDialog;
     
-    title: "About"
+    title: "About";
     
     Image {
-        source: "images/fang_logo_color.svg"
+        source: "images/fang_logo_color.svg";
         
-        width: parent.width
-        fillMode: Image.PreserveAspectCrop
+        // 20% margins, for a decent size.
+        x: parent.width * 0.2;
+        width: parent.width - (parent.width * 0.4);
+        fillMode: Image.PreserveAspectCrop;
         
         // Make SVGs render real good like.
-        sourceSize.width: width
-        sourceSize.height: height
+        sourceSize.width: width;
+        sourceSize.height: height;
     }
     
     DialogText {
-        text: "Feed on news"
-        horizontalAlignment: Text.AlignHCenter
-        fontPointSize: style.font.titleSize
+        text: "Feed on news";
+        horizontalAlignment: Text.AlignHCenter;
+        fontPointSize: style.font.titleSize;
     }
     
     DialogText {
         text: "<a href='http://www.getfang.com'>Visit our website</a>";
-        horizontalAlignment: Text.AlignHCenter
+        horizontalAlignment: Text.AlignHCenter;
     }
     
     DialogSpacer {}
@@ -37,7 +39,7 @@ Dialog {
               "Logo\n" +
               "Studyou Design";
         
-        horizontalAlignment: Text.AlignHCenter 
+        horizontalAlignment: Text.AlignHCenter;
     }
     
     DialogSpacer {}
@@ -50,9 +52,9 @@ Dialog {
     DialogSpacer {}
     
     DialogButton {
-        id: dismissButton
+        id: dismissButton;
         
-        text: "Dismiss"
-        onClicked: close()
+        text: "Dismiss";
+        onClicked: close();
     }
 }

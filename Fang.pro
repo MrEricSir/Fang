@@ -1,23 +1,22 @@
-# Add more folders to ship with the application, here
-folder_01.source = qml/Fang
-folder_01.target = qml
-DEPLOYMENTFOLDERS = folder_01
+TEMPLATE = app
 
-# Additional import path used to resolve QML modules in Creator's code model
-QML_IMPORT_PATH =
+QT += network sql qml quick webkit webkitwidgets
 
-# If your application uses the Qt Mobility libraries, uncomment the following
-# lines and add the respective components to the MOBILITY variable.
-# CONFIG += mobility
-# MOBILITY +=
+# Resource files
+RESOURCES += Resources.qrc \
+    qml/qml.qrc \
+	qml/images/images.qrc \
+	html/html.qrc
 
-# Speed up launching on MeeGo/Harmattan when using applauncherd daemon
-# CONFIG += qdeclarative-boostable
+# Default rules for deployment.
+include(deployment.pri)
 
-# For Fang we'll need QtCore, the network, and the built-in SQLite database.
-QT       += core network sql qml quick webkit webkitwidgets
+# Windows icon
+RC_FILE = win32.rc
 
-# The .cpp file which was generated for your project. Feel free to hack it.
+# Mac icon
+ICON = icons/mac.icns
+
 SOURCES += src/main.cpp \
     src/models/ListModel.cpp \
     src/models/NewsItem.cpp \
@@ -40,7 +39,6 @@ SOURCES += src/main.cpp \
     src/operations/SetBookmarkOperation.cpp \
     src/utilities/WebPageGrabber.cpp \
     src/operations/FaviconUpdateOperation.cpp \
-    src/models/FangApplicationViewer.cpp \
     src/models/AllNewsFeedItem.cpp \
     src/utilities/WebImageSizeRewriter.cpp \
     src/utilities/ImageGrabber.cpp \
@@ -62,32 +60,7 @@ SOURCES += src/main.cpp \
     src/utilities/BatchFeedDiscovery.cpp \
     src/FangObject.cpp \
     src/parser/ParserXMLWorker.cpp
-
-# Installation path
-# target.path =
-
-# Please do not modify the following two lines. Required for deployment.
-include(src/qtquick2applicationviewer/qtquick2applicationviewer.pri)
-qtcAddDeployment()
-
-# Windows icon
-RC_FILE = win32.rc
-
-# Mac icon
-ICON = icons/mac.icns
-
-OTHER_FILES += \
-    qml/Fang/FeedTitleDelegate.qml \
-    html/NewsPage.html \
-    sql/1.sql \
-    qml/Fang/SidebarButton.qml \
-    html/jquery-2.0.3.js \
-    html/fang.js \
-    html/formatDateSimply.js
-
-RESOURCES += \
-    Resources.qrc
-
+	
 HEADERS += \
     src/models/ListModel.h \
     src/models/NewsItem.h \
@@ -110,7 +83,6 @@ HEADERS += \
     src/operations/SetBookmarkOperation.h \
     src/utilities/WebPageGrabber.h \
     src/operations/FaviconUpdateOperation.h \
-    src/models/FangApplicationViewer.h \
     src/models/AllNewsFeedItem.h \
     src/utilities/WebImageSizeRewriter.h \
     src/utilities/ImageGrabber.h \
@@ -132,3 +104,7 @@ HEADERS += \
     src/utilities/BatchFeedDiscovery.h \
     src/FangObject.h \
     src/parser/ParserXMLWorker.h
+
+# Additional import path used to resolve QML modules in Qt Creator's code model
+QML_IMPORT_PATH =
+

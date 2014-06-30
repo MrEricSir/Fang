@@ -86,8 +86,8 @@ bool LoadNews::executeLoadQuery(qint64 startId, bool append)
 {
     QString direction = append ? ">=" : "<";
     QString sortOrder = append ? "ASC" : "DESC";
-    QString queryString = "SELECT * FROM NewsItemTable WHERE feed_id = :feed_id AND id " + direction + " :start_id "
-            "ORDER BY timestamp " + sortOrder + " LIMIT :load_limit";
+    QString queryString = "SELECT * FROM NewsItemTable WHERE feed_id = :feed_id AND id " 
+            + direction + " :start_id ORDER BY timestamp " + sortOrder + " LIMIT :load_limit";
     
     //qDebug() << "Query: " << queryString;
     QSqlQuery query(db());
