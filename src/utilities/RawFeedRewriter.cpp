@@ -157,6 +157,16 @@ void RawFeedRewriter::takeOutTrash(QWebElement newsContainer)
         QString tag = last.tagName().toLower();
         if (tag == "br" || tag == "hr") {
             last.removeFromDocument();
+        } else if (tag == "p") {
+            QString inner = last.toInnerXml();
+            inner = inner.replace("&nbsp;", "", Qt::CaseInsensitive);
+            inner = inner.trimmed();
+            if (inner.isEmpty()) {
+                last.removeFromDocument();
+            } else {
+                // We have to break here or we'll loop forever!
+                break;
+            }
         } else {
             break; // exit loop
         }
