@@ -76,7 +76,10 @@ private:
     QString title;
     QString subtitle;
     QString content;
-    QString timestamp;
+    QString pubdate;
+    QString lastbuilddate;
+    QString updated;
+    QString date;
     QString author;
     bool hasType;
     QStack<QString> tagStack;

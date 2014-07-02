@@ -269,6 +269,11 @@ void TestFangParser::parseTest_data()
                                   << "Live Updates: The Oscars"
                                   << "http://feeds.mashable.com/~r/Mashable/~3/Pm6OrtL9p1o/"
                                   << QDateTime::fromString("02 Mar 2014 23:15:10", dtf);
+    
+    QTest::newRow("Planet Gnome") << "planetgnome.atom" << "Planet GNOME" << 40
+                                  << "Trip to San Jose GSoC 10 Year Reunion: Help!"
+                                  << "http://feedproxy.google.com/~r/thismagpie/GNOME/~3/ywMHj6HEfok/trip-to-san-jose-gsoc-10-year-reunion.html"
+                                  << QDateTime::fromString("01 Jul 2014 22:05:25", dtf);
 }
 
 QTEST_MAIN(TestFangParser)

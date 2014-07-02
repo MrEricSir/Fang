@@ -63,11 +63,14 @@ void ParserXMLWorker::addXML(QByteArray data)
                     
                     //qDebug() << "Title " << title;
                     
-                    // Clear all strings.
+                    // Clear all local strings.
                     title = "";
                     url = "";
                     subtitle = "";
-                    timestamp = "";
+                    pubdate = "";
+                    lastbuilddate = "";
+                    updated = "";
+                    date = "";
                     author = "";
                     content = "";
                 }
@@ -95,6 +98,19 @@ void ParserXMLWorker::addXML(QByteArray data)
                     qDebug() << "Current title: " << title;
                     qDebug() << "Xml element: " << xml.name().toString();
                 }
+                
+                // Figure out which date to use.
+                QString timestamp;
+                if (!pubdate.trimmed().isEmpty()) {
+                    timestamp = pubdate;
+                } else if (!lastbuilddate.trimmed().isEmpty()) {
+                    timestamp = lastbuilddate;
+                } else if (!updated.trimmed().isEmpty()) {
+                    timestamp = updated;
+                } else if (!date.trimmed().isEmpty()) {
+                    timestamp = date;
+                }
+                
                 // Item space.
                 currentItem->author = author;
                 currentItem->title = title;
@@ -117,27 +133,53 @@ void ParserXMLWorker::addXML(QByteArray data)
                 title = "";
                 url = "";
                 subtitle = "";
-                timestamp = "";
+                pubdate = "";
+                lastbuilddate = "";
+                date = "";
+                updated = "";
                 author = "";
                 content = "";
             }
 
         } else if (xml.isCharacters() && !xml.isWhitespace()) {
-            if (currentTag == "title" && currentPrefix == "" && getTagStackAt(1) != "image") {
-                title += xml.text().toString();
-                //qDebug() << "Title: " << title << "  tagStack top: " << getTagStackAt(0) << " " << getTagStackAt(1);
-            } else if (currentTag == "link" && currentPrefix == "" && getTagStackAt(1) != "image") {
-                url += xml.text().toString();
-            } else if (currentTag == "description" || currentTag == "summary") {
-                subtitle += xml.text().toString();
-            } else if (currentTag == "name") {
-                author += xml.text().toString();
-            } else if (currentTag == "pubdate" || currentTag == "lastbuilddate" 
-                     || currentTag == "updated" || currentTag == "date") {
-                timestamp += xml.text().toString();
-            } else if ((currentTag == "encoded" && currentPrefix == "content")
-                     || (currentTag == "content" && hasType)) {
-                content += xml.text().toString();
+            QString parentTag = getTagStackAt(1);
+            if (parentTag == "item" || parentTag == "entry") {
+                //
+                // Inside a news item.
+                //
+                
+                if (currentTag == "title" && currentPrefix == "") {
+                    title += xml.text().toString();
+                } else if (currentTag == "link" && currentPrefix == "") {
+                    url += xml.text().toString();
+                } else if (currentTag == "description" || currentTag == "summary") {
+                    subtitle += xml.text().toString();
+                } else if (currentTag == "name") {
+                    author += xml.text().toString();
+                } else if (currentTag == "pubdate") {
+                    pubdate += xml.text().toString();
+                } else if (currentTag == "lastbuilddate") {
+                    lastbuilddate += xml.text().toString();
+                } else if (currentTag == "updated") {
+                    updated += xml.text().toString();
+                } else if (currentTag == "date") {
+                    date += xml.text().toString();
+                } else if ((currentTag == "encoded" && currentPrefix == "content")
+                           || (currentTag == "content" && hasType)) {
+                    content += xml.text().toString();
+                }
+            } else if (parentTag == "channel" || parentTag == "feed") {
+                //
+                // Top level items.
+                //
+                
+                if (currentTag == "title" && currentPrefix == "") {
+                    title += xml.text().toString();
+                } else if (currentTag == "link" && currentPrefix == "") {
+                    url += xml.text().toString();
+                } else if (currentTag == "description" || currentTag == "summary") {
+                    subtitle += xml.text().toString();
+                }
             }
         }
     }
@@ -281,7 +323,10 @@ void ParserXMLWorker::resetParserVars()
     title = "";
     subtitle = "";
     content = "";
-    timestamp = "";
+    pubdate = "";
+    lastbuilddate = "";
+    updated = "";
+    date = "";
     author = "";
     hasType = false;
     tagStack.clear();
