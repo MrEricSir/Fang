@@ -62,8 +62,6 @@ Dialog {
             validationStatus.text = importString;
             validationStatus.state = "error";
         }
-        
-        validationStatus.visible = true;
     }
     
     // Batch feed validation is complete.
@@ -89,8 +87,8 @@ Dialog {
     DialogStatus {
         id: validationStatus;
 
-        text: "";
-        visible: false;
+        text: "Importing...";
+        state: "spinner";
 
         width: parent.width;
     }
