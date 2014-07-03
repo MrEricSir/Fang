@@ -177,6 +177,9 @@ Item {
                 // Resize a bit more intelligently.
                 experimental.preferredMinimumContentsWidth: 300;
                 
+                // No plugins and such.
+                experimental.preferences.pluginsEnabled: false;
+                
                 url: "qrc:///html/NewsPage.html"
                 
                 // Communication from WebKit layer to QML.

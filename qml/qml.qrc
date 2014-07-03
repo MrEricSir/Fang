@@ -10,10 +10,8 @@
         <file>DialogButton.qml</file>
         <file>TextEntry.qml</file>
         <file>DialogText.qml</file>
-        <file>DialogSpinner.qml</file>
         <file>DialogStatus.qml</file>
         <file>RemoveDialog.qml</file>
-        <file>Spinner.qml</file>
         <file>EditDialog.qml</file>
         <file>Style.qml</file>
         <file>SettingsDialog.qml</file>
@@ -29,5 +27,6 @@
         <file>OPMLImportDialog.qml</file>
         <file>CheckBox.qml</file>
         <file>FangScrollView.qml</file>
+        <file>FangIcon.qml</file>
     </qresource>
 </RCC>

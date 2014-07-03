@@ -50,21 +50,6 @@ Dialog {
         width: parent.width;
     }
     
-    DialogSpinner {
-        id: validationSpinner;
-        
-        text: "Checking feed...";
-        visible: addDialog.state === "validating";
-        
-        onVisibleChanged: {
-            // If we're spinning, kill status.
-            if (visible)
-                validationStatus.visible = false;
-        }
-        
-        width: parent.width;
-    }
-    
     DialogStatus {
         id: validationStatus;
         
@@ -81,11 +66,12 @@ Dialog {
         onClicked: {
             validator.check();
             addDialog.state = "validating";
+            validationStatus.state = "spinner";
+            validationStatus.text = "Checking feed...";
+            validationStatus.visible = true;
         }
         visible: addDialog.state !== "add";
         enabled: textURL.text && addDialog.state !== "validating";
-            //textURL.text && !validator.validating &&
-              //   !validator.validationComplete;
     }
     
     DialogButton {
@@ -110,7 +96,6 @@ Dialog {
         
         text: "Cancel";
         onClicked: close();
-        //enabled: !validator.validationComplete;
     }
     
     onDialogClosed: {
