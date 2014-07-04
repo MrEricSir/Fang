@@ -4,10 +4,10 @@
 #include <QObject>
 
 #include <QString>
-#include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QThread>
 
+#include "../network/FangNetworkAccessManager.h"
 #include "ParserInterface.h"
 #include "ParserXMLWorker.h"
 
@@ -59,7 +59,7 @@ private:
     RawFeed* feed;
     ParseResult result;
     
-    QNetworkAccessManager manager;
+    FangNetworkAccessManager manager;
     QNetworkReply *currentReply;
     QUrl finalFeedURL;
     QNetworkReply *redirectReply;

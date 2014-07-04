@@ -4,16 +4,12 @@
 #include <QFile>
 #include <QFileInfo>
 
-#include "../utilities/NetworkUtilities.h"
-
 Parser::Parser(QObject *parent) :
     ParserInterface(parent),
     feed(NULL), result(OK),
     currentReply(NULL), redirectReply(NULL),
     fromCache(false), noParseIfCached(false)
 {
-    NetworkUtilities::addCache(&manager);
-    
     // Connex0r teh siganls.
     connect(&manager, SIGNAL(finished(QNetworkReply*)),
             this, SLOT(netFinished(QNetworkReply*)));
@@ -51,12 +47,6 @@ void Parser::parse(const QUrl& url, bool noParseIfCached)
         currentReply->disconnect(this);
         currentReply->deleteLater();
     }
-    
-    // Make crappy servers happy.
-    NetworkUtilities::fakeBrowserHeaders(&request);
-    
-    // Use the cache, luke.
-    NetworkUtilities::useCache(&request);
     
     currentReply = manager.get(request);
     connect(currentReply, SIGNAL(readyRead()), this, SLOT(readyRead()));

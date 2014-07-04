@@ -5,17 +5,12 @@
 #include <QStringList>
 #include <QNetworkReply>
 
-#include "NetworkUtilities.h"
-
 ImageGrabber::ImageGrabber(QObject *parent) :
     FangObject(parent),
     manager(),
     urlsToCheck(),
     results()
 {
-    // Caching!
-    NetworkUtilities::addCache(&manager);
-    
     // Signals!
     connect(&manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onRequestFinished(QNetworkReply*)));
 }
@@ -46,7 +41,6 @@ void ImageGrabber::checkUrl(const QUrl &url)
     urlsToCheck.append(url);
     
     QNetworkRequest request(url);
-    NetworkUtilities::useCache(&request);
     manager.get(request);
 }
 

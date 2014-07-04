@@ -14,9 +14,6 @@ FaviconGrabber::FaviconGrabber(QObject *parent) :
     manager(),
     webGrabber()
 {
-    // Caching!
-    NetworkUtilities::addCache(&manager);
-    
     // Set up our state machine.
     machine.setReceiver(this);
     
@@ -84,8 +81,6 @@ void FaviconGrabber::onCheckIcons()
         }
         
         QNetworkRequest request(url);
-        NetworkUtilities::useCache(&request);
-        NetworkUtilities::fakeBrowserHeaders(&request);
         manager.get(request);
     }
 }

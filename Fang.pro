@@ -59,7 +59,9 @@ SOURCES += src/main.cpp \
     src/utilities/OPMLExport.cpp \
     src/utilities/BatchFeedDiscovery.cpp \
     src/FangObject.cpp \
-    src/parser/ParserXMLWorker.cpp
+    src/parser/ParserXMLWorker.cpp \
+    src/network/FangNetworkAccessManager.cpp \
+    src/network/FangQQmlNetworkAccessManagerFactory.cpp
 	
 HEADERS += \
     src/models/ListModel.h \
@@ -103,7 +105,9 @@ HEADERS += \
     src/utilities/OPMLExport.h \
     src/utilities/BatchFeedDiscovery.h \
     src/FangObject.h \
-    src/parser/ParserXMLWorker.h
+    src/parser/ParserXMLWorker.h \
+    src/network/FangNetworkAccessManager.h \
+    src/network/FangQQmlNetworkAccessManagerFactory.h
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =

@@ -3,7 +3,6 @@
 #include <QDebug>
 
 #include "utilities/Utilities.h"
-#include "utilities/NetworkUtilities.h"
 
 #include "operations/UpdateFeedOperation.h"
 #include "operations/LoadAllFeedsOperation.h"

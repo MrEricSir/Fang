@@ -11,6 +11,8 @@
 #include "models/ListModel.h"
 #include "models/OPMLInteractor.h"
 
+#include "network/FangQQmlNetworkAccessManagerFactory.h"
+
 #include "FangObject.h"
 
 Q_DECL_EXPORT int main(int argc, char *argv[])
@@ -27,6 +29,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     app.setApplicationName("Fang");
     
     QQmlApplicationEngine engine;
+    engine.setNetworkAccessManagerFactory(new FangQQmlNetworkAccessManagerFactory());
     FangApp fang(&app, &engine);
     fang.init();
     

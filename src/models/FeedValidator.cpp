@@ -1,7 +1,6 @@
 #include "FeedValidator.h"
 #include "../FangApp.h"
 #include "../utilities/Utilities.h"
-#include "../utilities/NetworkUtilities.h"
 
 FeedValidator::FeedValidator(QQuickItem *parent) :
     QQuickItem(parent),

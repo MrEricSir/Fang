@@ -3,11 +3,11 @@
 
 #include <QObject>
 #include <QImage>
-#include <QNetworkAccessManager>
 #include <QList>
 #include <QUrl>
 #include <QMap>
 
+#include "../network/FangNetworkAccessManager.h"
 #include "../FangObject.h"
 
 class ImageGrabber : public FangObject
@@ -46,7 +46,7 @@ private slots:
     void checkUrl(const QUrl &url);
     
 private:
-    QNetworkAccessManager manager;
+    FangNetworkAccessManager manager;
     QList<QUrl> urlsToCheck;
     QMap<QUrl, QImage> results;
 };

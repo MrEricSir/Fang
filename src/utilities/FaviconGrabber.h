@@ -3,7 +3,6 @@
 
 #include <QObject>
 #include <QUrl>
-#include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QList>
 #include <QPair>
@@ -13,6 +12,7 @@
 #include "WebPageGrabber.h"
 #include "SimpleStateMachine.h"
 #include "../FangObject.h"
+#include "../network/FangNetworkAccessManager.h"
 
 class FaviconGrabber : public FangObject
 {
@@ -76,7 +76,7 @@ private:
     QList<QUrl> urlsToCheck;
     int repliesWaiting;
     QList<QPair<QUrl, QImage> > imagesToCheck;
-    QNetworkAccessManager manager;
+    FangNetworkAccessManager manager;
     WebPageGrabber webGrabber;
     QUrl location;
 };
