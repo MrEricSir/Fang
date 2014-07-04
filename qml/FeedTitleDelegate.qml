@@ -55,14 +55,26 @@ ListViewDragDelegate {
                         id: feedIcon;
                         
                         source: imageURL;
-                        visible: !isUpdating;
                         
-                        onStatusChanged: {
-                            // Show the default for errors.
-                            if (status == Image.Error || imageURL == "")
-                                source = fangSettings.style === "LIGHT" ? "images/symbol_rss.svg"
-                                                                        : "images/symbol_dark_rss.svg";
-                        }
+                        visible: !isUpdating && status === Image.Ready;
+                        
+                        anchors.verticalCenter: parent.verticalCenter;
+                        
+                        width: 24;
+                        height: 24;
+                        
+                        sourceSize.width: width;
+                        sourceSize.height: height;
+                        asynchronous: true;
+                    }
+                    
+                    Image {
+                        id: defaultFeedIcon;
+                        
+                        visible: !isUpdating && (feedIcon.status !== Image.Ready);
+                        
+                        source: (fangSettings.style === "LIGHT" ? "images/symbol_rss.svg"
+                                                        : "images/symbol_dark_rss.svg");
                         
                         anchors.verticalCenter: parent.verticalCenter;
                         
