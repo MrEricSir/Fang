@@ -29,6 +29,12 @@ public:
      * @param request
      */
     static void useCache(QNetworkRequest* request);
+    
+    /**
+     * @brief Adds fake browser headers to make weird web servers happy.
+     * @param request
+     */
+    static void fakeBrowserHeaders(QNetworkRequest* request);
 };
 
 #endif // NETWORKUTILITIES_H

@@ -85,6 +85,7 @@ void FaviconGrabber::onCheckIcons()
         
         QNetworkRequest request(url);
         NetworkUtilities::useCache(&request);
+        NetworkUtilities::fakeBrowserHeaders(&request);
         manager.get(request);
     }
 }

@@ -45,7 +45,7 @@ void TestFangFaviconGrabberTest::testCase1()
     QCOMPARE(spy.count(), 1);
     
     QList<QVariant> arguments = spy.takeFirst(); // take the first signal
-    QVERIFY(arguments.at(0).toUrl() == faviconURL);
+    QCOMPARE(arguments.at(0).toUrl(), faviconURL);
 }
 
 void TestFangFaviconGrabberTest::testCase1_data()
@@ -61,10 +61,9 @@ void TestFangFaviconGrabberTest::testCase1_data()
             << QUrl("http://www.missionmission.org") 
             << QUrl("http://www.missionmission.org/wp-content/uploads/2012/09/favicon2.ico");
     
-    QTest::newRow("Hoodline") 
-                << QUrl("http://hoodline.com/") 
-                << QUrl("http://hoodline.com/assets/AppIcon60x60-549192917909c2570524e93e7de4a133.png");
-    
+    QTest::newRow("Slashdot.org") 
+                << QUrl("http://slashdot.org/") 
+                << QUrl("http://slashdot.org/favicon.ico");
 }
 
 QTEST_MAIN(TestFangFaviconGrabberTest)
