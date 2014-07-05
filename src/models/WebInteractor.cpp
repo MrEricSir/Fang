@@ -2,6 +2,7 @@
 #include <QDebug>
 #include <QList>
 #include <QDesktopServices>
+#include <QJsonDocument>
 #include "../FangApp.h"
 #include "../operations/FaviconUpdateOperation.h"
 
@@ -236,13 +237,25 @@ void WebInteractor::onLoadNewsFinished(Operation* operation)
     emit addInProgress(true, operationName);
     
     // Stuff the new items into our feed.
-    if (loader->getAppendList() != NULL)
-        foreach(NewsItem* item, *loader->getAppendList())
-            addNewsItem(true, item);
+    if (loader->getAppendList() != NULL) {
+        QVariantList appendList;
+        foreach(NewsItem* item, *loader->getAppendList()) {
+            addNewsItem(item, &appendList);
+        }
+        
+        // Emmit append signal.
+        emit add(true, escapeCharacters(QJsonDocument::fromVariant(appendList).toJson()));
+    }
     
-    if (loader->getPrependList() != NULL)
-        foreach(NewsItem* item, *loader->getPrependList())
-            addNewsItem(false, item);
+    if (loader->getPrependList() != NULL) {
+        QVariantList prependList;
+        foreach(NewsItem* item, *loader->getPrependList()) {
+            addNewsItem(item, &prependList);
+        }
+        
+        // Emmit prepend signal.
+        emit add(false, escapeCharacters(QJsonDocument::fromVariant(prependList).toJson()));
+    }
     
     // If this is the initial load, draw and jump to the bookmark.
     QString idOfBookmark = "";
@@ -298,7 +311,7 @@ QString WebInteractor::escapeCharacters(const QString& string)
     return rValue;
 }
 
-void WebInteractor::addNewsItem(bool append, NewsItem *item)
+void WebInteractor::addNewsItem(NewsItem *item, QVariantList* newsList)
 {
     //qDebug() << "Add news: " << item->id();
     
@@ -307,13 +320,24 @@ void WebInteractor::addNewsItem(bool append, NewsItem *item)
                             item->getFeed()->getTitle() :
                             FangApp::instance()->getFeedForID(item->getFeedId())->getTitle();
     
-    emit add(append,
-             item->id(),
-             escapeCharacters(item->getTitle()),
-             escapeCharacters(item->getURL().toString()),
-             escapeCharacters(feedTitle),
-             item->getTimestamp().toMSecsSinceEpoch(),
-             escapeCharacters( item->getContent() != "" ? item->getContent() : item->getSummary()) );
+    QVariantMap itemMap;
+    itemMap["id"] = item->id();
+    itemMap["title"] = item->getTitle();
+    itemMap["url"] = item->getURL().toString();
+    itemMap["feedTitle"] = feedTitle;
+    itemMap["timestamp"] = item->getTimestamp().toMSecsSinceEpoch();
+    itemMap["content"] = item->getContent() != "" ? item->getContent() : item->getSummary();
+    
+    // Add to the list.
+    *newsList << itemMap;
+    
+//    emit add(append,
+//             item->id(),
+//             escapeCharacters(item->getTitle()),
+//             escapeCharacters(item->getURL().toString()),
+//             escapeCharacters(feedTitle),
+//             item->getTimestamp().toMSecsSinceEpoch(),
+//             escapeCharacters( item->getContent() != "" ? item->getContent() : item->getSummary()) );
 }
 
 void WebInteractor::doLoadNews(LoadNews::LoadMode mode)

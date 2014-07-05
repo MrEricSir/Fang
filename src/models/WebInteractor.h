@@ -49,14 +49,9 @@ signals:
      * @brief Add a little something to the web page.
      * 
      * @param append      True for appending, false for prepending.
-     * @param id          The string ID for the HTML element.
-     * @param title       Title of the news item
-     * @param url         URL of the story
-     * @param feedTitle   Feed's title
-     * @param timestamp   Timestamp (in ms since epoch)
-     * @param content     HTML content
+     * @param jsonNews    The news list converted to a JSON object.
      */
-    void add(bool append, QString id, QString title, QString url, QString feedTitle, qint64 timestamp, QString content);
+    void add(bool append, QString jsonNews);
 
     /**
      * @brief If you loaded a feed with no news items, this will be called instead of the above.
@@ -141,8 +136,8 @@ private slots:
     
     QString escapeCharacters(const QString& string);
     
-    // Emits the add signal for an item.
-    void addNewsItem(bool append, NewsItem* item);
+    // Adds an item to a list that y'er buildin' on up.
+    void addNewsItem(NewsItem* item, QVariantList* newsList);
     
     // Creates and executes a LoadNews operation.
     void doLoadNews(LoadNews::LoadMode mode);

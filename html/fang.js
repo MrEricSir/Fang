@@ -26,20 +26,17 @@ function delegateLink() {
     return false; // Don't propogate link.
 };
 
-// Collects the size of each prepended item to use for scrolling up.
-var prependScroll = 0;
-
 // True if an operation is in progress.  Set to true by clearNews().
 var isInProgress = false;
 
+var currentOperation = "";
+
 // We're either about to append, prepend, or do the initial load.
 function inProgress(started, operation) {
-    if (started)
-        prependScroll = $(document).scrollTop(); // War we are NOWs.
-    
-    if (!started && operation === "prepend" && prependScroll > 10) {
-        $(document).scrollTop( prependScroll );
-        //console.log("Prepend: scroll to: ", prependScroll);
+    if (started) {
+        currentOperation = operation;
+    } else {
+        currentOperation = "";
     }
     
     // Let the stop go through both processes so we can ensure the view has moved.
@@ -56,43 +53,60 @@ function stopInProgress() {
 }
 
 // Appends (or prepends) a news item.
-function appendNews(append, id, title, url, feedTitle, timestamp, content) {
-    // Copy the model.
-    var item = $( 'body>.newsContainer#model' ).clone();
+function appendNews(append, jsonNews) {
+    // Unescape newlines.  (This allows pre tags to work.)
+    jsonNews = jsonNews.replace(/[\u0018]/g, "\n");
     
-    // I'm a model, you know what I mean...
-    // (but not anymore!! HAHA!)
-    item.attr( 'id', '' );
+    // Unroll the JSON string into a Javascript object.
+    var newsList = eval('(' + jsonNews + ')');
+    //console.log("News list: ", newsList);
     
-    // Unescape newlines.  This allows pre tags to work.
-    content = content.replace(/[\u0018]/g, "\n");
+    // Remember where we are.
+    var prependScroll = $(document).scrollTop();
     
-    // Assign data.
-    item.attr( 'id', id );
-    item.find( '.link' ).attr( 'href', url );
-    item.find( '.link' ).html( title );
-    item.find( '.content' ).html( content );
-    item.find( '.siteTitle' ).html( feedTitle );
-    item.find( '.timestamp' ).html( timestamp ); // Hidden timestamp (shh)
-    item.find( '.date' ).html( formatDateSimply(timestamp) );
-    
-    //console.log(item.html());
-    //console.log("ID: ", id, "append: ", append)
-    
-    // Setup link delegator.
-    item.find( 'a' ).on( "click", delegateLink );
-    
-    // Stick 'er in!
-    if (append) {
-        console.log("Append!")
-        item.insertAfter('body>.newsContainer:last');
-    } else {
-        console.log("Prepend!")
-        item.insertBefore( 'body>.newsContainer:first' );
+    for (var i = 0; i < newsList.length; i++) {
+        var newsItem = newsList[i];
+        //console.log("news item:", newsItem);
         
-        // Calculate the size and add it to our prepend scroll tally.
-        //var verticalMargins = parseInt( item.css("marginBottom") ) + parseInt( item.css("marginTop") );
-        prependScroll += item.height(); /* + verticalMargins; */
+        // Copy the model.
+        var item = $( 'body>.newsContainer#model' ).clone();
+        
+        // I'm a model, you know what I mean...
+        // (but not anymore!! HAHA!)
+        item.attr( 'id', '' );
+        
+        // Assign data.
+        item.attr( 'id', newsItem['id'] );
+        item.find( '.link' ).attr( 'href', newsItem['url'] );
+        item.find( '.link' ).html( newsItem['title'] );
+        item.find( '.content' ).html( newsItem['content'] );
+        item.find( '.siteTitle' ).html( newsItem['feedTitle'] );
+        item.find( '.timestamp' ).html( newsItem['timestamp'] ); // Hidden timestamp (shh)
+        item.find( '.date' ).html( formatDateSimply(newsItem['timestamp']) );
+        
+        //console.log(item.html());
+        //console.log("ID: ", id, "append: ", append)
+        
+        // Setup link delegator.
+        item.find( 'a' ).on( "click", delegateLink );
+        
+        // Stick 'er in!
+        if (append) {
+            console.log("Append!")
+            item.insertAfter('body>.newsContainer:last');
+        } else {
+            console.log("Prepend!")
+            item.insertBefore( 'body>.newsContainer:first' );
+            
+            // Calculate the size and add it to our prepend scroll tally.
+            //var verticalMargins = parseInt( item.css("marginBottom") ) + parseInt( item.css("marginTop") );
+            prependScroll += item.height(); /* + verticalMargins; */
+        }
+    }
+    
+    // Scroll back down if we added a bunch of old news at the top.
+    if (currentOperation === "prepend" && prependScroll > 10) {
+        $(document).scrollTop( prependScroll );
     }
     
     resizeBottomSpacer();

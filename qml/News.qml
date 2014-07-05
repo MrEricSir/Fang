@@ -54,12 +54,7 @@ Item {
             onAdd: {
                 newsView.experimental.evaluateJavaScript("appendNews("
                                                          + append + ", '"
-                                                         + id + "', '"
-                                                         + title + "', '"
-                                                         + url + "', '"
-                                                         + feedTitle + "', '"
-                                                         + timestamp + "', '"
-                                                         + content + "');");
+                                                         + jsonNews + "');");
             }
             
             onNothingToAdd: {
