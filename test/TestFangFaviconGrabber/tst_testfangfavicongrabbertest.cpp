@@ -64,6 +64,10 @@ void TestFangFaviconGrabberTest::testCase1_data()
     QTest::newRow("Slashdot.org") 
                 << QUrl("http://slashdot.org/") 
                 << QUrl("http://slashdot.org/favicon.ico");
+    
+    QTest::newRow("SFGate.com") 
+            << QUrl("http://www.sfgate.com/bayarea/feed/Bay-Area-News-429.php") 
+            << QUrl("http://www.sfgate.com/apple-touch-icon.png");
 }
 
 QTEST_MAIN(TestFangFaviconGrabberTest)

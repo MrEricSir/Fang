@@ -6,6 +6,7 @@
 #include <QWebPage>
 #include <QString>
 #include "../FangObject.h"
+#include "../network/FangNetworkAccessManager.h"
 
 /**
  * @brief Loads a web page at a given URL and signals with the page when done.
@@ -33,6 +34,7 @@ private slots:
     
 private:
     QWebView webView;
+    FangNetworkAccessManager networkManager;
     
 };
 

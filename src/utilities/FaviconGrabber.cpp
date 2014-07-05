@@ -54,7 +54,8 @@ void FaviconGrabber::onWebGrabber()
     //qDebug() << "onWebGrabber";
     
     // Check for favicons embedded in the HTML.
-    webGrabber.load(location);
+    // We look at the main page rather than the feed.
+    webGrabber.load(NetworkUtilities::getHost(location));
 }
 
 void FaviconGrabber::onCheckIcons()

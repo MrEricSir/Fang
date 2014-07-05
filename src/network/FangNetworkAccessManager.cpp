@@ -17,6 +17,18 @@ QNetworkReply* FangNetworkAccessManager::createRequest(QNetworkAccessManager::Op
 {
     QNetworkRequest& req = const_cast<QNetworkRequest&>(request);
     
+#ifdef QT_DEBUG
+    // In debug mode, WebKit doesn't like Vine's headers.
+    //
+    // TODO: Revisit when WebKit is upgraded in Qt.
+    //
+    // https://github.com/MrEricSir/Fang/issues/77
+    // https://bugs.webkit.org/show_bug.cgi?id=129081
+    if (req.url().host() == "vine.co") {
+        req.setUrl(QUrl("http://0.0.0.0"));
+    }
+#endif // QT_DEBUG
+    
     // This SHOULD be the default, but just in case.
     req.setAttribute(QNetworkRequest::CacheLoadControlAttribute,
                           QNetworkRequest::PreferNetwork);

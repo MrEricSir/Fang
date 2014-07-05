@@ -71,4 +71,5 @@ OTHER_FILES += \
     feeds/tmz.com.rss \
     feeds/eonline.com.rss \
     feeds/popsugar.com.rss \
-    feeds/mashable.com.rss
+    feeds/mashable.com.rss \
+    feeds/yelp.rss

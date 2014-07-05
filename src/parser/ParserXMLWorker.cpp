@@ -202,10 +202,10 @@ QDateTime ParserXMLWorker::dateFromFeedString(const QString& _timestamp)
     QString timestamp = _timestamp.trimmed();
     QString timestamps[] = {
         timestamp,
-        timestamp.left(timestamp.lastIndexOf(" ")),
-        timestamp.left(timestamp.lastIndexOf(".")),
-        timestamp.left(timestamp.lastIndexOf("-")),
-        timestamp.left(timestamp.lastIndexOf("+")),
+        timestamp.left(timestamp.lastIndexOf(" ")).trimmed(),
+        timestamp.left(timestamp.lastIndexOf(".")).trimmed(),
+        timestamp.left(timestamp.lastIndexOf("-")).trimmed(),
+        timestamp.left(timestamp.lastIndexOf("+")).trimmed(),
         
         0 // must be last
     };

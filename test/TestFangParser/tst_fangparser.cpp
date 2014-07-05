@@ -274,6 +274,11 @@ void TestFangParser::parseTest_data()
                                   << "Trip to San Jose GSoC 10 Year Reunion: Help!"
                                   << "http://feedproxy.google.com/~r/thismagpie/GNOME/~3/ywMHj6HEfok/trip-to-san-jose-gsoc-10-year-reunion.html"
                                   << QDateTime::fromString("01 Jul 2014 22:05:25", dtf);
+    
+    QTest::newRow("Yelp") << "yelp.rss" << "Recent Reviews Near San Francisco, CA" << 25
+                                  << "Lisa Z.'s Review of Score! Bar and Lounge - San Francisco (5/5) on Yelp"
+                                  << "http://www.yelp.com/biz/score-bar-and-lounge-san-francisco?hrid=PNUmsy71RbWtCOq3sNKsDg"
+                                  << QDateTime::fromString("04 Jul 2014 21:36:06", dtf);
 }
 
 QTEST_MAIN(TestFangParser)
