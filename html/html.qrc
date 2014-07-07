@@ -1,8 +1,10 @@
 <RCC>
-	<qresource prefix="/html">
+    <qresource prefix="/html">
         <file>NewsPage.html</file>
-		<file>jquery-2.0.3.js</file>
+        <file>jquery-2.0.3.js</file>
         <file>fang.js</file>
-		<file>formatDateSimply.js</file>
-	</qresource>
+        <file>formatDateSimply.js</file>
+        <file>fangStyleSwitch.js</file>
+        <file>Welcome.html</file>
+    </qresource>
 </RCC>

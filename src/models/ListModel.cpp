@@ -92,6 +92,8 @@ void ListModel::appendRows(const QList<ListItem *> &items)
   foreach(ListItem* item, items) {
       emit added(item);
   }
+  
+  emit countChanged(count());
 }
  
 void ListModel::insertRow(int row, ListItem *item)
@@ -102,6 +104,8 @@ void ListModel::insertRow(int row, ListItem *item)
   endInsertRows();
   
   emit added(item);
+  
+  emit countChanged(count());
 }
  
 void ListModel::handleItemChange()
@@ -136,6 +140,8 @@ void ListModel::clear()
     }
     
     m_list.clear();
+    
+    emit countChanged(count());
 }
 
 void ListModel::setSelected(ListItem *selected)
@@ -165,6 +171,7 @@ bool ListModel::removeRow(int row, const QModelIndex &parent)
   endRemoveRows();
   
   emit removed(toRemove);
+  emit countChanged(count());
   
   return true;
 }
@@ -184,6 +191,8 @@ bool ListModel::removeRows(int row, int count, const QModelIndex &parent)
   foreach(ListItem* item, toRemove) {
       emit removed(item);
   }
+  
+  emit countChanged(this->count());
   
   return true;
 }
@@ -208,6 +217,7 @@ ListItem * ListModel::takeRow(int row)
   endRemoveRows();
   
   emit removed(item);
+  emit countChanged(count());
   
   return item;
 }
