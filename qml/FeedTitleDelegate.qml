@@ -13,9 +13,7 @@ ListViewDragDelegate {
     // Read-only
     property bool isAllNews: index == 0;
     
-    onClicked: {
-        feedListView.currentIndex = index;
-    }
+    onClicked: feedListView.currentIndex = index;
     
     onDoubleClicked: {
         if (feedListView.currentIndex == index)

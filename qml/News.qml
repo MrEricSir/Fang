@@ -77,7 +77,7 @@ Item {
                 newsView.contentY = 0;  // reset scroll
                 
                 // Wipe the view clean; it will be set to visible again when ready.
-                //newsView.visible = false;
+                newsView.visible = false;
             }
             
             onJumpTo: {
@@ -234,9 +234,6 @@ Item {
                 
                 // No plugins and such.
                 experimental.preferences.pluginsEnabled: false;
-                
-                //url: "qrc:///html/NewsPage.html"
-                //url: "qrc:///html/Welcome.html"
                 
                 // Communication from WebKit layer to QML.
                 experimental.preferences.navigatorQtObjectEnabled: true;
