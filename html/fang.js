@@ -363,18 +363,6 @@ function jumpNextPrev(jumpNext) {
     $(document).scrollTop( jumpTo.offset().top );
 }
 
-// Removes all existing classes on the body element.
-function clearBodyClasses() {
-    $('body').removeClass();
-}
-
-// Adds a class to the body element.
-function addBodyClass(p) {
-    //console.log("adding class " + p);
-    $('body').addClass(p);
-}
-
-
 // Called by QML to tell us the height of the window.
 function setWindowHeight(height) {
     //console.log("height is now: ", height)

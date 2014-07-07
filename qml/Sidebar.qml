@@ -2,16 +2,18 @@ import QtQuick 2.0
 
 // Feed list sidebar
 Item {
-    id: sidebar
+    id: sidebar;
     
-    signal settingsClicked()
-    signal addClicked()
-    signal removeClicked()
-    signal editClicked()
-    signal closeClicked()
-    signal feedSelected()
-    signal feedDoubleClicked()
-    signal orderChanged()
+    signal settingsClicked();
+    signal addClicked();
+    signal removeClicked();
+    signal editClicked();
+    signal closeClicked();
+    signal feedSelected();
+    signal feedClicked();
+    signal feedDoubleClicked();
+    signal helpClicked();
+    signal orderChanged();
     
     // Read-only properties.
     property int buttonSize: 30
@@ -47,6 +49,28 @@ Item {
                 // Hack to make SVGs render with anti-aliasing
                 sourceSize.width: width
                 sourceSize.height: height
+            }
+            
+            // HALP
+            SidebarButton {
+                id: helpButton;
+                
+                anchors.right: settingsButton.left;
+                anchors.rightMargin: 10;
+                
+                width: buttonSize;
+                height: buttonSize;
+                
+                imageURL: fangSettings.style === "LIGHT" ? "images/symbol_dark_help.svg" :
+                                                           "images/symbol_help.svg";
+                imageHoverURL: fangSettings.style === "LIGHT" ? "images/symbol_help.svg" :
+                                                                "images/symbol_dark_help.svg";
+                imagePressedURL: fangSettings.style === "LIGHT" ? "images/symbol_dark_help.svg" :
+                                                                  "images/symbol_help.svg";
+                
+                onClicked: {
+                    helpClicked();
+                }
             }
             
             // Fang settings.
@@ -107,10 +131,14 @@ Item {
                         // This sets the selected item in the C++ layer.
                         ListView.onIsCurrentItemChanged: {
                             if (ListView.isCurrentItem) {
-                                console.log("Item selected: ", feedListView.currentIndex)
-                                feedListView.model.selectedIndex = feedListView.currentIndex
+                                //console.log("Item selected: ", feedListView.currentIndex)
                                 sidebar.feedSelected();
+                                feedListView.model.selectedIndex = feedListView.currentIndex
                             }
+                        }
+                        
+                        onClicked: {
+                            sidebar.feedClicked();
                         }
                         
                         onJumpToBookmark: {

@@ -8,7 +8,7 @@ ListViewDragDelegate {
         id: style;
     }
     
-    signal jumpToBookmark()
+    signal jumpToBookmark();
     
     // Read-only
     property bool isAllNews: index == 0;

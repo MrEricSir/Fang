@@ -1,0 +1,338 @@
+<html>
+<head>
+<style>
+
+body {
+    padding: 0;
+    margin: 0;
+}
+
+.helpContainer {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    margin-top: 0.6em;
+}
+
+.helpContainer > .logo {
+    max-width: 40%;
+    
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.helpContainer > .logo img {
+    max-width: 100%;
+}
+
+
+.helpContainer > .divider {
+    height: 1px;
+    width: 100%;
+    margin: 0;
+}
+
+.helpContainer > h1 {
+    font-weight: normal;
+    margin: 0;
+    margin-bottom: 0.2em;
+    margin-top: .8em;
+}
+
+a { text-decoration: none; }
+
+a:hover { text-decoration: underline; }
+
+.helpContainer > h1 > a:hover {
+    text-decoration: none;
+    border-bottom-style: solid;
+    border-bottom-width: 2px;
+}
+
+a:active { text-decoration: underline; }
+
+.helpContainer > h1 > a:active {
+    text-decoration: none;
+    border-bottom-style: solid;
+    border-bottom-width: 2px;
+}
+
+p#slogan { text-align: center; } 
+
+
+/*** Keyboard shortcuts ***/
+
+/* Loosely based on: http://cssdeck.com/labs/apple-keyboard-via-css3 */
+.keyboard {
+    display:table-cell;
+    padding: 8px;
+    
+    text-align: center;
+    margin: 5px;
+    vertical-align: middle;
+    border-radius: 4px;
+}
+
+.helpText {
+    display:table-cell;
+    padding: 8px;
+    
+    font-style: italic;
+    text-align: center;
+    margin: 5px;
+    text-align: center;
+}
+
+.shortcut {
+    display: table; border-spacing: 8px 0;
+}
+
+table {
+    border-spacing: 4px 6px;
+}
+
+
+/**** Light theme ****/
+
+body.LIGHT {
+    background-color: white;
+    color: black;
+}
+
+body.LIGHT a { color: #00c; }
+body.LIGHT a:visited { color: #a33; }
+body.LIGHT a:hover, body.LIGHT a:active { color: #04f; }
+body.LIGHT > .helpContainer > h1 > a:hover,
+  body.LIGHT > .helpContainer > h1 > a:active { border-bottom-color: #00f; }
+
+body.LIGHT > .helpContainer > .siteTitle { color: #777; }
+body.LIGHT > .helpContainer > .divider { background-color: #ccc; }
+body.LIGHT > .helpContainer > h1, body.LIGHT > .helpContainer > h1 > a { color: black; }
+
+body.LIGHT .keyboard {
+    border-top: 1px solid #f5f5f5;
+    box-shadow: 
+        inset 0 0 25px #fff,
+        0 1px 0 #ddd,
+        0 3px 0 #ddd,
+        0 3px 3px #333;
+    text-shadow: 0px 1px 0px #f5f5f5;
+}
+
+/**** Dark theme ****/
+
+body.DARK {
+    background-color: black;
+    color: white;
+}
+
+body.DARK a { color: #6af; }
+body.DARK a:visited { color: #6af; }
+body.DARK a:hover, body.DARK a:active { color: #f10; }
+body.DARK > .helpContainer > h1 > a:hover,
+  body.DARK > .helpContainer > h1 > a:active { border-bottom-color: #f10; }
+
+body.DARK > .helpContainer > .siteTitle { color: #ccc; }
+body.DARK > .helpContainer > .divider { background-color: #888; }
+body.DARK > .helpContainer > h1, body.DARK > .helpContainer > h1 a { color: white; }
+
+body.DARK .keyboard {
+    border-top: 1px solid #0A0A0A;
+    box-shadow: 
+        inset 0 0 25px #000,
+        0 1px 0 #222,
+        0 3px 0 #222,
+        0 3px 3px #ccc;
+    text-shadow: 0px 1px 0px #0A0A0A;
+}
+
+
+/**** Platforms ****/
+
+body.MAC { font-family: "Lucida Grande", Helvetica, sans-serif !important; }
+body.WIN { font-family: "Segoe UI", Arial, sans-serif !important; }
+
+body.WIN .winKey { display: table-cell; }
+body.WIN .macKey { display: none; }
+
+body.MAC .macKey { display: table-cell; }
+body.MAC .winKey { display: none; }
+
+/**** Font size ****/
+
+body.FONT_SMALL { font-size: 9pt; }
+table { font-size: inherit; }
+body.FONT_SMALL > .helpContainer > h1 { font-size: 13pt; }
+body.FONT_SMALL > .helpContainer > #slogan { font-size: 10pt; }
+
+body.FONT_MEDIUM { font-size: 12pt; }
+table { font-size: inherit; }
+body.FONT_MEDIUM > .helpContainer > h1 { font-size: 16pt; }
+body.FONT_MEDIUM > .helpContainer  > #slogan { font-size: 14pt; }
+
+
+body.FONT_LARGE { font-size: 16pt; }
+table { font-size: inherit; }
+body.FONT_LARGE > .helpContainer > h1 { font-size: 26pt; }
+body.FONT_LARGE > .helpContainer > #slogan { font-size: 20pt; }
+
+</style>
+
+<script type="text/javascript" src="jquery-2.0.3.js"></script>
+<script type="text/javascript" src="fangStyleSwitch.js"></script>
+
+</head>
+<body>
+
+
+<!-- Copied and pasted from fang.js LOLOLOLOL -->
+<script type="text/javascript">
+// Intercept clix.
+function delegateLink() {
+    navigator.qt.postMessage( 'openLink ' + $(this).attr( 'href' ) );
+    return false; // Don't propogate link.
+};
+
+// Main method
+$(document).ready(function() {
+    $('body').find( 'a' ).on( "click", delegateLink );
+});
+</script>
+<!-- /Copied -->
+
+
+<div class="helpContainer">
+
+
+
+<div class="logo">
+    <img src="/qml/images/fang_logo_color.svg" />
+</div>
+
+
+
+<p id="slogan">Feed on news</p>
+
+
+
+<h1>Welcome</h1>
+<div class="divider"></div>
+
+<p>Skip the hassle and read news the easy way! Fang keeps you up to date with your favorite news websites and blogs.</p>
+
+<p>For the latest information head to <a href="http://www.getfang.com">Fang's website</a>.<p>
+
+
+
+<h1>Add a feed</h1>
+<div class="divider"></div>
+
+<p>Press the + button at the bottom of the sidebar to add a feed.</p>
+
+<p>Enter the website URL and press "Continue." Fang will validate the feed.</p>
+
+<p>If Fang can't find the feed, you may have to open the site in your web browser and
+locate the news feed yourself.  Larger news sites such as BBC and NY Times have more than
+one feed.</p>
+
+<p>Once Fang has found a valid feed, edit the title to your liking and press "Add Feed."
+
+
+
+<h1>Import from other news readers</h1>
+<div class="divider"></div>
+
+<p>Already got your news feeds in another feed reader?  No problem!  Most feed readers can export
+your list of feeds in OPML format.</p>
+
+<p>Once you have an OPML file, press the gear button at the top of the sidebar, then press the "Import"
+button under "OPML feed list."</p>
+
+<p>Likewise, if you want to try a different feed reader, press the "Export" button to save a list of
+your feeds to an OPML file.</p>
+
+
+
+<h1>Reading a feed</h1>
+<div class="divider"></div>
+
+<p>Reading the news is as easy as scrolling.  Select the feed in the sidebar and scroll down as you read.
+That's it!</p>
+
+<p>As you read, Fang will place a bookmark after an item is scrolled off screen.  If you change feeds or
+quit Fang and start it again, you'll be right where you left off.</p>
+
+<p>Lost your place?  Double-click the feed in the sidebar to jump back to the bookmark.</p>
+
+
+
+<h1>Keyboard shortcuts</h1>
+<div class="divider"></div>
+
+<p>Fang has keyboard shortcuts for many common operations.</p>
+
+<!-- Keyboard shortcuts go here -->
+<table>
+
+<tr><td>
+    <span class="shortcut">
+        <span class="keyboard">&uarr;</span>
+        <span class="helpText">or</span>
+        <span class="keyboard">&darr;</span>
+    </span>
+</td><td>
+	Scroll up or down
+</td></tr>
+
+<tr><td>
+    <span class="shortcut">
+        <span class="keyboard">&rarr;</span>
+        <span class="helpText">or</span>
+        <span class="keyboard">&larr;</span>
+    </span>
+</td><td>
+    Scroll to the next or previous news item
+</td></tr>
+
+<tr><td>
+    <span class="shortcut">
+        <span class="keyboard">PgUp</span>
+        <span class="helpText">or</span>
+        <span class="keyboard">PgDn</span>
+    </span>
+</td><td>
+	Scroll up or down by one screen
+</td></tr>
+
+<tr><td>
+    <div class="shortcut">
+        <span class="keyboard macKey">Command</span><span class="keyboard winKey">Ctrl</span><span class="keyboard">R</span>
+        <span class="helpText">or</span>
+        <span class="keyboard">F5</span>
+    </div>
+</td><td>
+    Refresh current feed
+</td></tr>
+
+<tr><td>
+    <div class="shortcut">
+        <span class="keyboard macKey">Command</span><span class="keyboard winKey">Ctrl</span><span class="keyboard">Q</span>
+    </div>
+</td> <td>
+    Quit
+</td></tr>
+
+
+</table>
+<!-- /shortcuts -->
+
+
+
+
+<br clear="all" /><br />
+<div class="divider"></div>
+<p>&copy; <i>Copyright 2014 Eric Gregory</i></p>
+
+</div>
+
+</body></html>

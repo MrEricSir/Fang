@@ -36,7 +36,7 @@ class ListModel : public QAbstractListModel
   // Must manually set in C++ layer
   Q_PROPERTY(ListItem* selected READ selected WRITE setSelected NOTIFY selectedChanged)
   Q_PROPERTY(int selectedIndex READ selectedIndex WRITE setSelectedIndex NOTIFY selectedIndexChanged)
-    Q_PROPERTY(int count READ count)
+    Q_PROPERTY(int count READ count NOTIFY countChanged)
   
 public:
   explicit ListModel(ListItem* prototype, QObject* parent = 0);
@@ -71,6 +71,7 @@ signals:
   
   void selectedChanged(ListItem* selected);
   void selectedIndexChanged(int selectedIndex);
+  void countChanged(int newCount);
   
 private slots:
   void handleItemChange();

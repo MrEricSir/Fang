@@ -11,7 +11,7 @@ Window {
     width: windowSettings.width;
     height: windowSettings.height;
     visibility: windowSettings.maximized ?
-                    Window.Maximized : Window.Windowed
+                    Window.Maximized : Window.Windowed;
     
     minimumWidth: 600;
     minimumHeight: 450;
@@ -222,8 +222,10 @@ Window {
             
             onCloseClicked: sidebar.state = "closed";
             
+            onFeedClicked: news.showNews();
             onFeedDoubleClicked: news.jumpToBookmark();
             onOrderChanged: news.orderChanged();
+            onHelpClicked: news.showWelcome();
             
             onSettingsClicked: openDialog("SettingsDialog.qml");
             onAddClicked: openDialog("AddDialog.qml");

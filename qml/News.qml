@@ -20,6 +20,16 @@ Item {
         webInteractor.refreshCurrentFeed();
     }
     
+    // Switch to news.
+    function showNews() {
+        newsView.state = "news";
+    }
+    
+    // Switch to the welcome/help screen.
+    function showWelcome() {
+        newsView.state = "welcome";
+    }
+    
     // Sets focus on the news view when dialogs are closed.
     property alias newsFocus: newsScrollView.focus;
     
@@ -124,6 +134,46 @@ Item {
                 // Turn the inspek0r off and on.
                 experimental.preferences.developerExtrasEnabled: devMode;
                 
+                state: (feedListModel.count > 1) ? "news" : "welcome";
+                states: [
+                    // Shows welcome screen.
+                    State { name: "welcome" },
+                    
+                    // The typical news mode.
+                    State { name: "news" }
+                ]
+                
+                Connections {
+                    target: feedListModel;
+                    onCountChanged: {
+                        if (feedListModel.count > 1 && "welcome" === newsView.state) {
+                            newsView.state = "news";
+                        } else if (feedListModel.count <= 1 && "news" === newsView.state) {
+                            newsView.state = "welcome";
+                        }
+                    }
+                }
+                
+                onStateChanged: {
+                    switch (state) {
+                    case "welcome":
+                        newsView.cssUpdated = false;
+                        newsView.url = "qrc:///html/Welcome.html";
+                        break;
+                        
+                    case "news":
+                        newsView.cssUpdated = false;
+                        newsView.firstRun = true;
+                        newsView.url = "qrc:///html/NewsPage.html";
+                        
+                        break;
+                        
+                    default:
+                         // Shouldn't get here.
+                        console.error("You didn't handle state: ", state)
+                    }
+                }
+                
                 property bool firstRun: true;        // On first run, we need to wait for both.
                 property bool cssUpdated: false;     // Check for this on first run.
                 // Whether the bookmark has been jumped to
@@ -131,13 +181,23 @@ Item {
                 
                 // Checks if we should become visible or not.  (Internal)
                 function checkReady() {
-                    if (firstRun) {
-                        if (drawBookmarkAndJumpToFinished && cssUpdated) {
+                    if (state === "welcome") {
+                        // Welcome screen.
+                        if (cssUpdated) {
                             visible = true;
+                            isInProgress = false;
                         }
                     } else {
-                        if (drawBookmarkAndJumpToFinished)
-                            visible = true;
+                        // We're showing the news!
+                        if (firstRun) {
+                            if (drawBookmarkAndJumpToFinished && cssUpdated) {
+                                visible = true;
+                                firstRun = false;
+                            }
+                        } else {
+                            if (drawBookmarkAndJumpToFinished)
+                                visible = true;
+                        }
                     }
                 }
                 
@@ -175,8 +235,6 @@ Item {
                 // No plugins and such.
                 experimental.preferences.pluginsEnabled: false;
                 
-                url: "qrc:///html/NewsPage.html"
-                
                 // Communication from WebKit layer to QML.
                 experimental.preferences.navigatorQtObjectEnabled: true;
                 experimental.onMessageReceived: {
@@ -213,7 +271,11 @@ Item {
                     if (loadRequest.status === WebView.LoadSucceededStatus) {
                         webInteractor.pageLoaded();  // tell 'em the page is loaded now.
                         updateCSS(); // set our page's style
-                        webInteractor.heightChanged(newsMargin.height); // update height (if not already updated)
+                        
+                        // update height (if not already updated)
+                        webInteractor.heightChanged(newsMargin.height);
+                    } else if (loadRequest.status === WebView.LoadStartedStatus) {
+                        visible = false;
                     }
                 }
                 
