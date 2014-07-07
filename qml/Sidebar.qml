@@ -10,6 +10,7 @@ Item {
     signal editClicked();
     signal closeClicked();
     signal feedSelected();
+    signal feedClicked();
     signal feedDoubleClicked();
     signal helpClicked();
     signal orderChanged();
@@ -67,7 +68,9 @@ Item {
                 imagePressedURL: fangSettings.style === "LIGHT" ? "images/symbol_dark_help.svg" :
                                                                   "images/symbol_help.svg";
                 
-                onClicked: helpClicked();
+                onClicked: {
+                    helpClicked();
+                }
             }
             
             // Fang settings.
@@ -128,10 +131,14 @@ Item {
                         // This sets the selected item in the C++ layer.
                         ListView.onIsCurrentItemChanged: {
                             if (ListView.isCurrentItem) {
-                                console.log("Item selected: ", feedListView.currentIndex)
-                                feedListView.model.selectedIndex = feedListView.currentIndex
+                                //console.log("Item selected: ", feedListView.currentIndex)
                                 sidebar.feedSelected();
+                                feedListView.model.selectedIndex = feedListView.currentIndex
                             }
+                        }
+                        
+                        onClicked: {
+                            sidebar.feedClicked();
                         }
                         
                         onJumpToBookmark: {

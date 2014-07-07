@@ -222,6 +222,7 @@ Window {
             
             onCloseClicked: sidebar.state = "closed";
             
+            onFeedClicked: news.showNews();
             onFeedDoubleClicked: news.jumpToBookmark();
             onOrderChanged: news.orderChanged();
             onHelpClicked: news.showWelcome();

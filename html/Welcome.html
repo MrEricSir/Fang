@@ -184,6 +184,23 @@ body.FONT_LARGE > .helpContainer > #slogan { font-size: 20pt; }
 </head>
 <body>
 
+
+<!-- Copied and pasted from fang.js LOLOLOLOL -->
+<script type="text/javascript">
+// Intercept clix.
+function delegateLink() {
+    navigator.qt.postMessage( 'openLink ' + $(this).attr( 'href' ) );
+    return false; // Don't propogate link.
+};
+
+// Main method
+$(document).ready(function() {
+    $('body').find( 'a' ).on( "click", delegateLink );
+});
+</script>
+<!-- /Copied -->
+
+
 <div class="helpContainer">
 
 

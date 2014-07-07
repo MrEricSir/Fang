@@ -20,6 +20,12 @@ Item {
         webInteractor.refreshCurrentFeed();
     }
     
+    // Switch to news.
+    function showNews() {
+        newsView.state = "news";
+    }
+    
+    // Switch to the welcome/help screen.
     function showWelcome() {
         newsView.state = "welcome";
     }
@@ -151,11 +157,15 @@ Item {
                 onStateChanged: {
                     switch (state) {
                     case "welcome":
+                        newsView.cssUpdated = false;
                         newsView.url = "qrc:///html/Welcome.html";
                         break;
                         
                     case "news":
+                        newsView.cssUpdated = false;
+                        newsView.firstRun = true;
                         newsView.url = "qrc:///html/NewsPage.html";
+                        
                         break;
                         
                     default:
@@ -175,12 +185,14 @@ Item {
                         // Welcome screen.
                         if (cssUpdated) {
                             visible = true;
+                            isInProgress = false;
                         }
                     } else {
                         // We're showing the news!
                         if (firstRun) {
                             if (drawBookmarkAndJumpToFinished && cssUpdated) {
                                 visible = true;
+                                firstRun = false;
                             }
                         } else {
                             if (drawBookmarkAndJumpToFinished)
@@ -265,8 +277,8 @@ Item {
                         
                         // update height (if not already updated)
                         webInteractor.heightChanged(newsMargin.height);
-                    } else if (loadRequest.status === WebView.LoadSucceededStatus) {
-                        cssUpdated = false;
+                    } else if (loadRequest.status === WebView.LoadStartedStatus) {
+                        visible = false;
                     }
                 }
                 
