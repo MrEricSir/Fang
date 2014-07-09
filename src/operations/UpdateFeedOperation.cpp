@@ -140,10 +140,11 @@ void UpdateFeedOperation::onRewriterFinished()
     db().transaction(); // Prevent getting out of sync on error.
     foreach (RawNews* rawNews, newsList) {
         QSqlQuery query(db());
-        query.prepare("INSERT INTO NewsItemTable (feed_id, title, author, summary, content, "
-                      "timestamp, url) VALUES (:feed_id, :title, :author, :summary, :content, "
+        query.prepare("INSERT INTO NewsItemTable (feed_id, guid, title, author, summary, content, "
+                      "timestamp, url) VALUES (:feed_id, :guid, :title, :author, :summary, :content, "
                       ":timestamp, :url)");
         query.bindValue(":feed_id", feed->getDbId());
+        query.bindValue(":guid", rawNews->guid);
         query.bindValue(":title", rawNews->title);
         query.bindValue(":author", rawNews->author);
         query.bindValue(":summary", rawNews->description);
