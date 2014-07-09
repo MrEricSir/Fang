@@ -24,6 +24,7 @@ public:
     QString content;
     QDateTime timestamp;
     QUrl url;
+    QString guid; // id, guid, or link URL
     
     // For convenience.
     qint64 dbId;

@@ -17,7 +17,7 @@ QUrl NetworkUtilities::getHost(const QUrl& url) {
         sUrl = sUrl.remove(sUrl.length() - 1, 1);
     
     ret.setUrl(sUrl);
-    qDebug() << "Get Host returning: " << ret;
+    //qDebug() << "Get Host returning: " << ret;
     return ret;
 }
 

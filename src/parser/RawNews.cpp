@@ -7,6 +7,7 @@ RawNews::RawNews(QObject *parent) :
     description(""),
     timestamp(),
     url(),
+    guid(""),
     dbId(-1)
 {
 }

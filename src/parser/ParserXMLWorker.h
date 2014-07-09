@@ -82,6 +82,8 @@ private:
     QString date;
     QString author;
     bool hasType;
+    QString guid;
+    QString id;
     QStack<QString> tagStack;
     //
 };
