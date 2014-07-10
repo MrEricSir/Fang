@@ -36,9 +36,11 @@ CREATE TABLE NewsItemTable (
     summary TEXT NOT NULL,
     content TEXT NOT NULL,
     timestamp INTEGER DEFAULT 0,
-    url TEXT NOT NULL
+    url TEXT NOT NULL,
+    
+-- If the same news item GUID occurs twice for this feed, skip adding it.
+    UNIQUE(feed_id, guid) ON CONFLICT IGNORE
 );
 
 CREATE INDEX NewsItemTableFeedIdIndex ON NewsItemTable(feed_id);
-CREATE INDEX NewsItemTableGuidIndex ON NewsItemTable(guid);
 CREATE INDEX NewsItemTableTimestampIndex ON NewsItemTable(timestamp);

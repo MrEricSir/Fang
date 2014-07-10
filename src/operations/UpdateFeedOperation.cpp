@@ -124,11 +124,7 @@ void UpdateFeedOperation::onFeedFinished()
     for (int i = newIndex; i < rawFeed->items.size(); i++)
         newsList.append(rawFeed->items.at(i));
     
-    //
-    // TODO: Check this list for existing GUIDs.
-    //       Remove duplicates.
-    //
-    
+    // Start the rewriter!  (See the next method below.)
     rewriter.rewrite(&newsList);
 }
 
