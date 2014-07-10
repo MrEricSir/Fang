@@ -18,7 +18,7 @@ Dialog {
         State { name: "add" }
     ]
     
-    onStateChanged: console.log("State is now: ", state)
+    //onStateChanged: console.log("State is now: ", state)
     
     DialogText {
         text: "What site would you like to add?";

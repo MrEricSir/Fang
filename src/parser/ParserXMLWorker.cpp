@@ -73,6 +73,8 @@ void ParserXMLWorker::addXML(QByteArray data)
                     date = "";
                     author = "";
                     content = "";
+                    guid = "";
+                    id = "";
                 }
                 
                 currentItem = new RawNews(feed);
@@ -111,6 +113,19 @@ void ParserXMLWorker::addXML(QByteArray data)
                     timestamp = date;
                 }
                 
+                // Determine the GUID.
+                QString guid;
+                if (!id.trimmed().isEmpty()) {
+                    guid = id.trimmed();
+                } else if (!guid.trimmed().isEmpty()) {
+                    guid = guid.trimmed();
+                } else {
+                    guid = url.trimmed();
+                }
+                
+                // Yes, we need a guid!
+                Q_ASSERT(!guid.isEmpty());
+                
                 // Item space.
                 currentItem->author = author;
                 currentItem->title = title;
@@ -118,6 +133,7 @@ void ParserXMLWorker::addXML(QByteArray data)
                 currentItem->content = content;
                 currentItem->url = QUrl(url);
                 currentItem->timestamp = dateFromFeedString(timestamp);
+                currentItem->guid = guid;
                 
                 // Okay, give it up. :(
                 if (!currentItem->timestamp.isValid()) {
@@ -139,6 +155,8 @@ void ParserXMLWorker::addXML(QByteArray data)
                 updated = "";
                 author = "";
                 content = "";
+                guid = "";
+                id = "";
             }
 
         } else if (xml.isCharacters() && !xml.isWhitespace()) {
@@ -164,6 +182,10 @@ void ParserXMLWorker::addXML(QByteArray data)
                     updated += xml.text().toString();
                 } else if (currentTag == "date") {
                     date += xml.text().toString();
+                } else if (currentTag == "guid") {
+                    guid += xml.text().toString();
+                } else if (currentTag == "id") {
+                    id += xml.text().toString();
                 } else if ((currentTag == "encoded" && currentPrefix == "content")
                            || (currentTag == "content" && hasType)) {
                     content += xml.text().toString();
@@ -328,6 +350,8 @@ void ParserXMLWorker::resetParserVars()
     updated = "";
     date = "";
     author = "";
+    guid = "";
+    id = "";
     hasType = false;
     tagStack.clear();
 }

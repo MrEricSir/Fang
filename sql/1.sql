@@ -29,13 +29,17 @@ CREATE INDEX FeedItemTableOrdinalIndex ON FeedItemTable(ordinal);
 CREATE TABLE NewsItemTable (
     id INTEGER PRIMARY KEY,
     feed_id INTEGER REFERENCES FeedItemTable(id) ON DELETE CASCADE,
+    guid TEXT NOT NULL,
     
     title TEXT NOT NULL,
     author TEXT NOT NULL,
     summary TEXT NOT NULL,
     content TEXT NOT NULL,
     timestamp INTEGER DEFAULT 0,
-    url TEXT NOT NULL
+    url TEXT NOT NULL,
+    
+-- If the same news item GUID occurs twice for this feed, skip adding it.
+    UNIQUE(feed_id, guid) ON CONFLICT IGNORE
 );
 
 CREATE INDEX NewsItemTableFeedIdIndex ON NewsItemTable(feed_id);
