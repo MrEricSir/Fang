@@ -5,7 +5,7 @@
  * Version: 1.0
  */
  
-#include "listmodel.h"
+#include "ListModel.h"
 
 #include <QDebug>
  

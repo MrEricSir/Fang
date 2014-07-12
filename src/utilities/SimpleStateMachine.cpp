@@ -35,7 +35,7 @@ void SimpleStateMachine::setState(int state)
     const char* method = stateMap[pair];
     ++method; // Skip first character.
     
-    int methodNumber = methodNumber = receiver->metaObject()->indexOfSlot(QMetaObject::normalizedSignature(method));
+    int methodNumber = receiver->metaObject()->indexOfSlot(QMetaObject::normalizedSignature(method));
     //qDebug() << "Method #: " << methodNumber;
     Q_ASSERT(methodNumber > 0 || methodNumber == -1);
     
