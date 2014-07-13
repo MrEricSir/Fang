@@ -1,4 +1,6 @@
 Fang
 ====
 
-A modern news reader
+Feed on news
+
+For details, see the wiki on GitHub.
