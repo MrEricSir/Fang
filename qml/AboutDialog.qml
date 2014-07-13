@@ -7,7 +7,7 @@ Dialog {
     title: "About";
     
     Image {
-        source: "images/fang_logo_color.svg";
+        source: "qrc:/qml/images/fang_logo_color.svg";
         
         // 20% margins, for a decent size.
         x: parent.width * 0.2;

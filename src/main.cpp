@@ -2,6 +2,7 @@
 #include <QQmlApplicationEngine>
 #include <QFile>
 #include <QDateTime>
+#include <QtSvg> // Required for SVG support (yes, really.)
 
 #include "FangApp.h"
 

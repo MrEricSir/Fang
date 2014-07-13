@@ -1,12 +1,13 @@
 TEMPLATE = app
 
-QT += network sql qml quick webkit webkitwidgets
+QT += network sql qml quick webkit webkitwidgets svg
 
 # Resource files
+# Qt zips these and stashes them inside the executable.
 RESOURCES += Resources.qrc \
     qml/qml.qrc \
-	qml/images/images.qrc \
-	html/html.qrc
+    qml/images/images.qrc \
+    html/html.qrc
 
 # Default rules for deployment.
 include(deployment.pri)
@@ -16,6 +17,9 @@ RC_FILE = win32.rc
 
 # Mac icon
 ICON = icons/mac.icns
+
+# Mac Info.plist bundle info
+QMAKE_INFO_PLIST = Info.plist
 
 SOURCES += src/main.cpp \
     src/models/ListModel.cpp \
