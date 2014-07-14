@@ -61,7 +61,10 @@ void UpdateFeedOperation::onFeedFinished()
         rawFeed = parser.getFeed();
     
     if (rawFeed == NULL) {
-        qDebug() << "Raw feed was null :(";
+        // This is often the result of the feed not having been updated, and thus
+        // it was already cached.  We return null in that case to save time.
+        
+        //qDebug() << "Raw feed was null!";
         
         emit finished(this);
         
