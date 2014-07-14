@@ -5,11 +5,11 @@ NotificationBase::NotificationBase(FangSettings *fangSettings,
                                    AllNewsFeedItem *allNews,
                                    QQuickWindow* window,
                                    FangObject *parent) :
+    FangObject(parent),
     fangSettings(fangSettings),
     feedList(feedList),
     allNews(allNews),
-    window(window),
-    FangObject(parent)
+    window(window)
 {
     // You can't call virtual methods in C++ from within the constructor,
     // so we let implementors do this using the init method below.

@@ -10,7 +10,11 @@
 #include "operations/RemoveFeedOperation.h"
 #include "operations/UpdateTitleOperation.h"
 
-#include "notifications/NotificationWindows.h"
+#if defined(Q_OS_MAC)
+    #include "notifications/NotificationMac.h"
+#elif defined(Q_OS_WIN)
+    #include "notifications/NotificationWindows.h"
+#endif
 
 FangApp* FangApp::_instance = NULL;
 
@@ -185,7 +189,8 @@ void FangApp::onObjectCreated(QObject* object, const QUrl& url)
     
     // Notifications, activate!
 #if defined(Q_OS_MAC)
-    // TODO
+    notifications = new NotificationMac(fangSettings, feedList,
+                                        allNews, window, this);
 #elif defined(Q_OS_WIN)
     notifications = new NotificationWindows(fangSettings, feedList,
                                             allNews, window, this);

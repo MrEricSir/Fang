@@ -66,8 +66,7 @@ SOURCES += src/main.cpp \
     src/parser/ParserXMLWorker.cpp \
     src/network/FangNetworkAccessManager.cpp \
     src/network/FangQQmlNetworkAccessManagerFactory.cpp \
-    src/notifications/NotificationBase.cpp \
-    src/notifications/NotificationWindows.cpp
+    src/notifications/NotificationBase.cpp
 	
 HEADERS += \
     src/models/ListModel.h \
@@ -114,8 +113,19 @@ HEADERS += \
     src/parser/ParserXMLWorker.h \
     src/network/FangNetworkAccessManager.h \
     src/network/FangQQmlNetworkAccessManagerFactory.h \
-    src/notifications/NotificationBase.h \
-    src/notifications/NotificationWindows.h
+    src/notifications/NotificationBase.h
+
+mac {
+    QT += macextras
+    HEADERS += src/notifications/NotificationMac.h
+    SOURCES += src/notifications/NotificationMac.cpp
+}
+
+win32 {
+    HEADERS += src/notifications/NotificationWindows.h
+    SOURCES += src/notifications/NotificationWindows.cpp
+}
+
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =

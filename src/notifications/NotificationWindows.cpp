@@ -2,8 +2,6 @@
 
 #include <QDebug>
 
-#if defined(Q_OS_WIN)
-
 NotificationWindows::NotificationWindows(FangSettings *fangSettings,
                                          ListModel *feedList,
                                          AllNewsFeedItem *allNews,
@@ -26,5 +24,3 @@ void NotificationWindows::onUnreadCountChanged(quint32 unread)
     
     window->setTitle(windowTitle);
 }
-
-#endif // defined(Q_OS_WIN)

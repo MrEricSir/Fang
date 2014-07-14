@@ -3,8 +3,6 @@
 
 #include "NotificationBase.h"
 
-#if defined(Q_OS_WIN)
-
 class NotificationWindows : public NotificationBase
 {
     Q_OBJECT
@@ -19,7 +17,5 @@ protected:
     virtual void onUnreadCountChanged(quint32 unread);
     
 };
-
-#endif // defined(Q_OS_WIN)
 
 #endif // NOTIFICATIONWINDOWS_H
