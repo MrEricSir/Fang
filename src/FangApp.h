@@ -17,6 +17,7 @@
 #include "models/WebInteractor.h"
 #include "parser/Parser.h"
 #include "FangObject.h"
+#include "notifications/NotificationBase.h"
 
 
 class FangApp : public FangObject
@@ -156,6 +157,7 @@ private:
     QTimer *updateTimer;
     QMap<qint64, FeedItem*> feedIdMap;
     QQuickWindow* window;
+    NotificationBase* notifications;
 };
 
 #endif // FANGAPP_H

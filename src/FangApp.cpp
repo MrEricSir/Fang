@@ -10,6 +10,8 @@
 #include "operations/RemoveFeedOperation.h"
 #include "operations/UpdateTitleOperation.h"
 
+#include "notifications/NotificationWindows.h"
+
 FangApp* FangApp::_instance = NULL;
 
 FangApp::FangApp(QObject *parent, QQmlApplicationEngine* engine) :
@@ -177,6 +179,17 @@ void FangApp::onObjectCreated(QObject* object, const QUrl& url)
     
     // Init interactor with Mr. Manager, our list of feeds, and the settings.
     interactor->init(&manager, feedList, fangSettings);
+    
+    // Grab the All News item.
+    AllNewsFeedItem* allNews = qobject_cast<AllNewsFeedItem*>(feedList->row(0));
+    
+    // Notifications, activate!
+#if defined(Q_OS_MAC)
+    // TODO
+#elif defined(Q_OS_WIN)
+    notifications = new NotificationWindows(fangSettings, feedList,
+                                            allNews, window, this);
+#endif
     
     // Update!.
     updateAllFeeds();
