@@ -73,4 +73,5 @@ OTHER_FILES += \
     feeds/popsugar.com.rss \
     feeds/mashable.com.rss \
     feeds/yelp.rss \
-    feeds/planetgnome.atom
+    feeds/planetgnome.atom \
+    feeds/hoodline.atom

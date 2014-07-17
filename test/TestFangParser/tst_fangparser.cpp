@@ -321,6 +321,12 @@ void TestFangParser::parseTest_data()
                                   << "http://www.yelp.com/biz/score-bar-and-lounge-san-francisco?hrid=PNUmsy71RbWtCOq3sNKsDg"
                                   << "http://www.yelp.com/biz/score-bar-and-lounge-san-francisco?hrid=PNUmsy71RbWtCOq3sNKsDg"
                                   << QDateTime::fromString("04 Jul 2014 21:36:06", dtf);
+    
+    QTest::newRow("Hoodline") << "hoodline.atom" << "Hoodline" << 25
+                                  << "Lower Haight Weekend Planner: 7/10"
+                                  << "http://hoodline.com/2014/07/lower-haight-weekend-planner-7-10"
+                                  << "tag:hoodwork.com,2010-01-01:/2014/07/lower-haight-weekend-planner-7-10"
+                                  << QDateTime::fromString("10 Jul 2014 23:04:58", dtf);
 }
 
 QTEST_MAIN(TestFangParser)

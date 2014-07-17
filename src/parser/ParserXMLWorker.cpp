@@ -1,7 +1,7 @@
 #include "ParserXMLWorker.h"
 
 ParserXMLWorker::ParserXMLWorker(QObject *parent) :
-    FangObject(parent), feed(NULL), currentItem(NULL), isValid(false)
+    FangObject(parent), feed(NULL), currentItem(NULL), isValid(false), inAtomXHTML(false)
 {
 }
 
@@ -38,171 +38,15 @@ void ParserXMLWorker::addXML(QByteArray data)
     xml.addData(data);
     
     while (!xml.atEnd()) {
+        // Grab the next thingie.
         xml.readNext();
+        
         if (xml.isStartElement()) {
-            // Add this new tag to our stack.
-            tagStack.push(xml.name().toString().toLower());
-            
-            // Look for start of entries.
-            //qDebug() << "XML node: " << xml.name().toString() << " " << xml.prefix().toString();
-            if (xml.name() == "item" || xml.name() == "entry") {
-                
-                if (url.isEmpty())
-                    url = xml.attributes().value("rss:about").toString();
-                
-                if (numItems == 0) {
-                    // Oh, first item?  Assume we've seen the summary then.
-                    
-                    // Global space.
-                    //
-                    //feed->url = finalFeedURL;
-                    //
-                    feed->title = title;
-                    feed->subtitle = subtitle;
-                    feed->siteURL = QUrl(url);
-                    
-                    //qDebug() << "Title " << title;
-                    
-                    // Clear all local strings.
-                    title = "";
-                    url = "";
-                    subtitle = "";
-                    pubdate = "";
-                    lastbuilddate = "";
-                    updated = "";
-                    date = "";
-                    author = "";
-                    content = "";
-                    guid = "";
-                    id = "";
-                }
-                
-                currentItem = new RawNews(feed);
-                numItems++;
-            }
-            
-            currentTag = xml.name().toString().toLower();
-            currentPrefix = xml.prefix().toString().toLower();
-            hasType = xml.attributes().hasAttribute("type");
-            
-            if (currentTag == "link" && url.isEmpty() && xml.attributes().hasAttribute("href")) {
-                // Used by atom feeds to grab the first link.
-                url = xml.attributes().value("href").toString();
-            }
+            elementStart();
         } else if (xml.isEndElement()) {
-            tagStack.pop(); // Pop our tag stack, we're through with this one!
-            
-            if (xml.name() == "item" || xml.name() == "entry") {
-                //qDebug() << "End element:" << xml.name().toString();
-                if (currentItem == NULL) {
-                    // Throw some kinda error, this can't happen.
-                    qDebug() << "Current item is null!";
-                    qDebug() << "Current title: " << title;
-                    qDebug() << "Xml element: " << xml.name().toString();
-                }
-                
-                // Figure out which date to use.
-                QString timestamp;
-                if (!pubdate.trimmed().isEmpty()) {
-                    timestamp = pubdate;
-                } else if (!lastbuilddate.trimmed().isEmpty()) {
-                    timestamp = lastbuilddate;
-                } else if (!updated.trimmed().isEmpty()) {
-                    timestamp = updated;
-                } else if (!date.trimmed().isEmpty()) {
-                    timestamp = date;
-                }
-                
-                // Determine the GUID.
-                QString guid;
-                if (!id.trimmed().isEmpty()) {
-                    guid = id.trimmed();
-                } else if (!guid.trimmed().isEmpty()) {
-                    guid = guid.trimmed();
-                } else {
-                    guid = url.trimmed();
-                }
-                
-                // Yes, we need a guid!
-                Q_ASSERT(!guid.isEmpty());
-                
-                // Item space.
-                currentItem->author = author;
-                currentItem->title = title;
-                currentItem->description = subtitle;
-                currentItem->content = content;
-                currentItem->url = QUrl(url);
-                currentItem->timestamp = dateFromFeedString(timestamp);
-                currentItem->guid = guid;
-                
-                // Okay, give it up. :(
-                if (!currentItem->timestamp.isValid()) {
-                    qDebug() << "Time string: " << timestamp;
-                    qDebug() << "invalid date!";
-                }
-                
-                
-                feed->items.append(currentItem);
-                currentItem = NULL;
-                
-                // Clear all strings.
-                title = "";
-                url = "";
-                subtitle = "";
-                pubdate = "";
-                lastbuilddate = "";
-                date = "";
-                updated = "";
-                author = "";
-                content = "";
-                guid = "";
-                id = "";
-            }
-
+            elementEnd();
         } else if (xml.isCharacters() && !xml.isWhitespace()) {
-            QString parentTag = getTagStackAt(1);
-            if (parentTag == "item" || parentTag == "entry") {
-                //
-                // Inside a news item.
-                //
-                
-                if (currentTag == "title" && currentPrefix == "") {
-                    title += xml.text().toString();
-                } else if (currentTag == "link" && currentPrefix == "") {
-                    url += xml.text().toString();
-                } else if (currentTag == "description" || currentTag == "summary") {
-                    subtitle += xml.text().toString();
-                } else if (currentTag == "name") {
-                    author += xml.text().toString();
-                } else if (currentTag == "pubdate") {
-                    pubdate += xml.text().toString();
-                } else if (currentTag == "lastbuilddate") {
-                    lastbuilddate += xml.text().toString();
-                } else if (currentTag == "updated") {
-                    updated += xml.text().toString();
-                } else if (currentTag == "date") {
-                    date += xml.text().toString();
-                } else if (currentTag == "guid") {
-                    guid += xml.text().toString();
-                } else if (currentTag == "id") {
-                    id += xml.text().toString();
-                } else if ((currentTag == "encoded" && currentPrefix == "content")
-                           || (currentTag == "content" && hasType)) {
-                    content += xml.text().toString();
-                }
-            } else if (parentTag == "channel" || parentTag == "feed") {
-                //
-                // Top level items.
-                //
-                
-                if (currentTag == "title" && currentPrefix == "") {
-                    title += xml.text().toString();
-                } else if (currentTag == "link" && currentPrefix == "") {
-                    url += xml.text().toString();
-                } else if (currentTag == "description" || currentTag == "summary") {
-                    subtitle += xml.text().toString();
-                }
-            }
+            elementContents();
         }
     }
     
@@ -215,6 +59,250 @@ void ParserXMLWorker::addXML(QByteArray data)
     }
     
 }
+
+
+void ParserXMLWorker::elementStart()
+{
+    QString tagName = xml.name().toString().toLower();
+    
+    // Look for start of entries.
+    //qDebug() << "XML node: " << xml.name().toString() << " " << xml.prefix().toString();
+    if ((tagName == "item" || tagName == "entry") && !inAtomXHTML) {
+        
+        if (url.isEmpty())
+            url = xml.attributes().value("rss:about").toString();
+        
+        if (numItems == 0) {
+            // Oh, first item?  Assume we've seen the summary then.
+            
+            // Global space.
+            //
+            //feed->url = finalFeedURL;
+            //
+            feed->title = title;
+            feed->subtitle = subtitle;
+            feed->siteURL = QUrl(url);
+            
+            //qDebug() << "Title " << title;
+            
+            // Clear all local strings.
+            title = "";
+            url = "";
+            subtitle = "";
+            pubdate = "";
+            lastbuilddate = "";
+            updated = "";
+            date = "";
+            author = "";
+            content = "";
+            guid = "";
+            id = "";
+        }
+        
+        currentItem = new RawNews(feed);
+        numItems++;
+    } else if ((tagName == "content" || tagName == "summary") && 
+               xml.attributes().value("type").toString().toLower() == "xhtml") {
+        // Atom has a crappy feature where you can just stick unescaped xhtml
+        // into the Atom's DOM.  Someone at Google must not believe in SAX
+        // parsers, I guess?
+        inAtomXHTML = true;
+    } else if (inAtomXHTML) {
+        // Build a string of the tag's elements.
+        QString elements = "";
+        QXmlStreamAttributes attributes = xml.attributes();
+        foreach (QXmlStreamAttribute attribute, attributes) {
+            elements += " " + attribute.name().toString() + "=\""
+                        + attribute.value().toString() + "\"";
+        }
+        
+        // Mash the tag together.
+        content += "<" + xml.qualifiedName().toString() + elements + ">";
+        
+        // Early exit!
+        return;
+    }
+    
+    currentTag = tagName;
+    currentPrefix = xml.prefix().toString().toLower();
+    hasType = xml.attributes().hasAttribute("type");
+    
+    if (currentTag == "link" && url.isEmpty() && xml.attributes().hasAttribute("href")) {
+        // Used by atom feeds to grab the first link.
+        url = xml.attributes().value("href").toString();
+    }
+    
+    // Add this new tag to our stack. :)
+    tagStack.push(tagName);
+}
+
+void ParserXMLWorker::elementEnd()
+{
+    if (!inAtomXHTML) {
+        tagStack.pop(); // Pop our tag stack, we're through with this one!
+    }
+    
+    QString tagName = xml.name().toString().toLower();
+    
+    if ((tagName == "item" || tagName == "entry") && !inAtomXHTML) {
+        //qDebug() << "End element:" << xml.name().toString();
+        if (currentItem == NULL) {
+            // Throw some kinda error, this can't happen.
+            qDebug() << "Current item is null!";
+            qDebug() << "Current title: " << title;
+            qDebug() << "Xml element: " << tagName;
+        }
+        
+        // Figure out which date to use.
+        QString timestamp;
+        if (!pubdate.trimmed().isEmpty()) {
+            timestamp = pubdate;
+        } else if (!lastbuilddate.trimmed().isEmpty()) {
+            timestamp = lastbuilddate;
+        } else if (!updated.trimmed().isEmpty()) {
+            timestamp = updated;
+        } else if (!date.trimmed().isEmpty()) {
+            timestamp = date;
+        }
+        
+        // Determine the GUID.
+        QString guid;
+        if (!id.trimmed().isEmpty()) {
+            guid = id.trimmed();
+        } else if (!guid.trimmed().isEmpty()) {
+            guid = guid.trimmed();
+        } else {
+            guid = url.trimmed();
+        }
+        
+        // Yes, we need a guid!
+        Q_ASSERT(!guid.isEmpty());
+        
+        // Item space.
+        currentItem->author = author;
+        currentItem->title = title;
+        currentItem->description = subtitle;
+        currentItem->content = content;
+        currentItem->url = QUrl(url);
+        currentItem->timestamp = dateFromFeedString(timestamp);
+        currentItem->guid = guid;
+        
+        // Okay, give it up. :(
+        if (!currentItem->timestamp.isValid()) {
+            qDebug() << "Time string: " << timestamp;
+            qDebug() << "invalid date!";
+        }
+        
+        
+        feed->items.append(currentItem);
+        currentItem = NULL;
+        
+        // Clear all strings.
+        title = "";
+        url = "";
+        subtitle = "";
+        pubdate = "";
+        lastbuilddate = "";
+        date = "";
+        updated = "";
+        author = "";
+        content = "";
+        guid = "";
+        id = "";
+    } else if (tagName == "content" || tagName == "summary") {
+        // Just accept that this is the end of one of these:
+        // <contents type="xhtml">
+        if (inAtomXHTML) {
+            inAtomXHTML = false;
+            tagStack.pop(); // We didn't do this earlier, you see.
+        }
+    }
+    
+    if (inAtomXHTML) {
+        // SLORG we need to add this tag to the contents.
+        
+        // TODO: Is there a better way to do this?!
+        content += "</" + xml.qualifiedName().toString() + ">";
+    }
+}
+
+void ParserXMLWorker::elementContents()
+{
+    if (inAtomXHTML) {
+        // Atom sucks!
+        content += xml.text().toString();
+        
+        return; // Early exit.
+    }
+    
+    QString parentTag = getTagStackAt(1);
+    if (parentTag == "item" || parentTag == "entry") {
+        //
+        // Inside a news item.
+        //
+        
+        if (currentTag == "title" && currentPrefix == "") {
+            title += xml.text().toString();
+        } else if (currentTag == "link" && currentPrefix == "") {
+            url += xml.text().toString();
+        } else if (currentTag == "description" || currentTag == "summary") {
+            subtitle += xml.text().toString();
+        } else if (currentTag == "name") {
+            author += xml.text().toString();
+        } else if (currentTag == "pubdate") {
+            pubdate += xml.text().toString();
+        } else if (currentTag == "lastbuilddate") {
+            lastbuilddate += xml.text().toString();
+        } else if (currentTag == "updated") {
+            updated += xml.text().toString();
+        } else if (currentTag == "date") {
+            date += xml.text().toString();
+        } else if (currentTag == "guid") {
+            guid += xml.text().toString();
+        } else if (currentTag == "id") {
+            id += xml.text().toString();
+        } else if ((currentTag == "encoded" && currentPrefix == "content")
+                   || (currentTag == "content" && hasType)) {
+            content += xml.text().toString();
+        }
+    } else if (parentTag == "channel" || parentTag == "feed") {
+        //
+        // Top level items.
+        //
+        
+        if (currentTag == "title" && currentPrefix == "") {
+            title += xml.text().toString();
+        } else if (currentTag == "link" && currentPrefix == "") {
+            url += xml.text().toString();
+        } else if (currentTag == "description" || currentTag == "summary") {
+            subtitle += xml.text().toString();
+        }
+    }
+}
+
+void ParserXMLWorker::resetParserVars()
+{
+    xml.clear();
+
+    numItems = 0;
+    currentTag = "";
+    currentPrefix = "";
+    url = "";
+    title = "";
+    subtitle = "";
+    content = "";
+    pubdate = "";
+    lastbuilddate = "";
+    updated = "";
+    date = "";
+    author = "";
+    guid = "";
+    id = "";
+    hasType = false;
+    inAtomXHTML = false;
+    tagStack.clear();
+}
+
 
 QDateTime ParserXMLWorker::dateFromFeedString(const QString& _timestamp)
 {
@@ -332,28 +420,6 @@ QDateTime ParserXMLWorker::dateFromFeedString(const QString& _timestamp)
     ret.setTimeSpec(Qt::UTC);
     
     return ret;
-}
-
-void ParserXMLWorker::resetParserVars()
-{
-    xml.clear();
-
-    numItems = 0;
-    currentTag = "";
-    currentPrefix = "";
-    url = "";
-    title = "";
-    subtitle = "";
-    content = "";
-    pubdate = "";
-    lastbuilddate = "";
-    updated = "";
-    date = "";
-    author = "";
-    guid = "";
-    id = "";
-    hasType = false;
-    tagStack.clear();
 }
 
 QString ParserXMLWorker::getTagStackAt(qint32 n)

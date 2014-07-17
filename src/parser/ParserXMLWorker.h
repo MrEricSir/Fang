@@ -48,6 +48,21 @@ public slots:
     
 private:
     
+    /**
+     * @brief Parse a start element, e.g. <b>
+     */
+    void elementStart();
+    
+    /**
+     * @brief Parse an end element, e.g. </b>
+     */
+    void elementEnd();
+    
+    /**
+     * @brief Parse the contents, e.g. <tag>contents goes here</tag>
+     */
+    void elementContents();
+    
     void resetParserVars();
     
     /**
@@ -82,6 +97,7 @@ private:
     QString date;
     QString author;
     bool hasType;
+    bool inAtomXHTML;
     QString guid;
     QString id;
     QStack<QString> tagStack;
