@@ -192,7 +192,7 @@ Dialog {
 
                             FangIcon {
                                 id: spinnerImage;
-                                state: "spinners";
+                                state: "spinner";
 
                                 y: (parent.height - width) / 2; // center
                                 width: importTitle.height;

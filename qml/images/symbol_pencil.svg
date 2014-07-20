@@ -20,7 +20,7 @@
    sodipodi:docname="symbol_pencil.svg"><metadata
    id="metadata13"><rdf:RDF><cc:Work
        rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type
-         rdf:resource="http://purl.org/dc/dcmitype/StillImage" /></cc:Work></rdf:RDF></metadata><defs
+         rdf:resource="http://purl.org/dc/dcmitype/StillImage" /><dc:title></dc:title></cc:Work></rdf:RDF></metadata><defs
    id="defs11"><clipPath
      clipPathUnits="userSpaceOnUse"
      id="clipPath3008"><path
@@ -59,8 +59,8 @@
    inkscape:zoom="4.72"
    inkscape:cx="64.292822"
    inkscape:cy="66.736218"
-   inkscape:window-x="0"
-   inkscape:window-y="30"
+   inkscape:window-x="248"
+   inkscape:window-y="45"
    inkscape:window-maximized="0"
    inkscape:current-layer="Layer_1" />
 <path
@@ -69,16 +69,16 @@
    clip-path="url(#clipPath3780)"
    inkscape:connector-curvature="0"
    transform="translate(2.5295212,-3.1159125)"
-   style="stroke:none;fill:#ffffff;fill-opacity:1" />
+   style="stroke:none;fill:#000000;fill-opacity:1" />
 <path
    d="M 96.846,9.12 90.527,2.809 C 88.713,0.998 86.301,0 83.735,0 81.171,0 78.758,0.998 76.945,2.809 L 70.626,9.12 c -0.093,0.092 -0.145,0.216 -0.145,0.347 0,0.13 0.052,0.254 0.145,0.346 l 19.207,19.182 c 0.092,0.092 0.348,0.144 0.348,0.144 0.131,0 0.255,-0.052 0.346,-0.144 l 6.319,-6.311 c 1.814,-1.812 2.813,-4.22 2.813,-6.783 0,-2.561 -0.999,-4.969 -2.813,-6.781 z"
    id="path5"
    inkscape:connector-curvature="0"
    sodipodi:nodetypes="ccsccsccsccsc"
    clip-path="url(#clipPath3008)"
-   style="stroke:none;fill:#ffffff;fill-opacity:1" />
+   style="stroke:none;fill:#000000;fill-opacity:1" />
 <path
    d="M10.358,69.967c-0.122-0.121-0.296-0.172-0.464-0.129c-0.167,0.04-0.3,0.165-0.351,0.33l-9.18,29.195  c-0.055,0.178-0.006,0.369,0.127,0.498C0.584,99.952,0.707,100,0.832,100c0.054,0,0.11-0.011,0.164-0.029l28.387-10.012  c0.159-0.056,0.278-0.188,0.315-0.354c0.037-0.164-0.012-0.337-0.132-0.455L10.358,69.967z"
    id="path7"
-   style="stroke:none;fill:#ffffff;fill-opacity:1" />
+   style="stroke:none;fill:#000000;fill-opacity:1" />
 </svg>

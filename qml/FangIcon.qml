@@ -22,6 +22,7 @@ Image {
     source: getImage(state);
     
     function getImage(newState) {
+        console.log("Style is: ", fangSettings.style)
         if (newState === "ok")
             return fangSettings.style === "LIGHT" ?
                         "images/symbol_ok.svg" : "images/symbol_dark_ok.svg";
@@ -31,9 +32,11 @@ Image {
         else if (newState === "error")
             return fangSettings.style === "LIGHT" ?
                         "images/symbol_error.svg" : "images/symbol_dark_error.svg";
-        else
+        else if (newState === "spinner")
             return fangSettings.style === "LIGHT" ?
                         "images/symbol_reload.svg" : "images/symbol_dark_reload.svg";
+        else
+            console.log("Unknown state if FangIcon: ", newState);
     }
     
     Style {

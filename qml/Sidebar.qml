@@ -61,12 +61,12 @@ Item {
                 width: buttonSize;
                 height: buttonSize;
                 
-                imageURL: fangSettings.style === "LIGHT" ? "images/symbol_dark_help.svg" :
-                                                           "images/symbol_help.svg";
-                imageHoverURL: fangSettings.style === "LIGHT" ? "images/symbol_help.svg" :
-                                                                "images/symbol_dark_help.svg";
-                imagePressedURL: fangSettings.style === "LIGHT" ? "images/symbol_dark_help.svg" :
-                                                                  "images/symbol_help.svg";
+                imageURL: fangSettings.style === "LIGHT" ? "images/symbol_help.svg" :
+                                                           "images/symbol_dark_help.svg";
+                imageHoverURL: fangSettings.style === "LIGHT" ? "images/symbol_dark_help.svg" :
+                                                                "images/symbol_help.svg";
+                imagePressedURL: fangSettings.style === "LIGHT" ? "images/symbol_help.svg" :
+                                                                  "images/symbol_dark_help.svg";
                 
                 onClicked: {
                     helpClicked();
@@ -82,12 +82,12 @@ Item {
                 width: buttonSize
                 height: buttonSize
                 
-                imageURL: fangSettings.style === "LIGHT" ? "images/symbol_dark_gear.svg" :
-                                                           "images/symbol_gear.svg";
-                imageHoverURL: fangSettings.style === "LIGHT" ? "images/symbol_gear.svg" :
-                                                                "images/symbol_dark_gear.svg";
-                imagePressedURL: fangSettings.style === "LIGHT" ? "images/symbol_dark_gear.svg" :
-                                                                  "images/symbol_gear.svg";
+                imageURL: fangSettings.style === "LIGHT" ? "images/symbol_gear.svg" :
+                                                           "images/symbol_dark_gear.svg";
+                imageHoverURL: fangSettings.style === "LIGHT" ? "images/symbol_dark_gear.svg" :
+                                                                "images/symbol_gear.svg";
+                imagePressedURL: fangSettings.style === "LIGHT" ? "images/symbol_gear.svg" :
+                                                                  "images/symbol_dark_gear.svg";
                 
                 onClicked: settingsClicked()
             }
@@ -212,12 +212,12 @@ Item {
                 
                 visible: feedListView.currentIndex > 0
                 
-                imageURL: fangSettings.style === "LIGHT" ? "images/symbol_dark_pencil.svg"
-                                                         : "images/symbol_pencil.svg"
-                imageHoverURL: fangSettings.style === "LIGHT" ? "images/symbol_pencil.svg"
-                                                              : "images/symbol_dark_pencil.svg"
-                imagePressedURL: fangSettings.style === "LIGHT" ? "images/symbol_pencil.svg"
-                                                                : "images/symbol_dark_pencil.svg"
+                imageURL: fangSettings.style === "LIGHT" ? "images/symbol_pencil.svg"
+                                                         : "images/symbol_dark_pencil.svg"
+                imageHoverURL: fangSettings.style === "LIGHT" ? "images/symbol_dark_pencil.svg"
+                                                              : "images/symbol_pencil.svg"
+                imagePressedURL: fangSettings.style === "LIGHT" ? "images/symbol_dark_pencil.svg"
+                                                                : "images/symbol_pencil.svg"
                 
                 onClicked: editClicked()
             }
