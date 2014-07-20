@@ -26,6 +26,19 @@ if [ ! -d "Fang.app" ]
 fi
 
 
+# QtWebkit 2 workaround
+# See: https://bugreports.qt-project.org/browse/QTBUG-35211
+
+cat >> Fang.app/Contents/libexec/qt.conf <<EOD
+[Paths]
+Plugins = ../PlugIns
+Imports = ../Resources/qml
+Qml2Imports = ../Resources/qml
+EOD
+
+cp -R ~/Qt/5.3/clang_64/libexec Fang.app/Contents
+
+
 # Run the Mac deploy tool.
 #
 # About the arguments:
@@ -33,13 +46,7 @@ fi
 #   -verbose=2:   Print at a "normal" level of verbosity
 #   -qmldir="...  Scan QML files for dependencies (does NOT include Fang's QML!!!!!!)
 
-~/Qt/5.3/clang_64/bin/macdeployqt Fang.app -verbose=2 -qmldir="../Fang/qml" 
-
-
-# QtWebkit 2 workaround
-# See: https://bugreports.qt-project.org/browse/QTBUG-35211
-
-cp -R ~/Qt/5.3/clang_64/libexec Fang.app/Contents
+~/Qt/5.3/clang_64/bin/macdeployqt Fang.app -verbose=2 -qmldir="../Fang/qml" -executable="Fang.app/Contents/libexec/QtWebProcess"
 
 
 # Sign the app bundle.
