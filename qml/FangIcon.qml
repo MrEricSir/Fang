@@ -22,7 +22,6 @@ Image {
     source: getImage(state);
     
     function getImage(newState) {
-        console.log("Style is: ", fangSettings.style)
         if (newState === "ok")
             return fangSettings.style === "LIGHT" ?
                         "images/symbol_ok.svg" : "images/symbol_dark_ok.svg";
