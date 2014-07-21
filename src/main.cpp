@@ -17,6 +17,8 @@
 
 #include "network/FangQQmlNetworkAccessManagerFactory.h"
 
+#include "db/DB.h"
+
 #include "FangObject.h"
 
 Q_DECL_EXPORT int main(int argc, char *argv[])
@@ -32,12 +34,21 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     app.setOrganizationDomain("EricSoft.com");
     app.setApplicationName("Fang");
     
+    int ret = 0;
     QQmlApplicationEngine engine;
     engine.setNetworkAccessManagerFactory(new FangQQmlNetworkAccessManagerFactory());
-    FangApp fang(&app, &engine);
-    fang.init();
     
-    int ret = app.exec();
+    // Use a code block to ensure FangApp is deleted.
+    {
+        FangApp fang(&app, &engine);
+        fang.init();
+    
+        ret = app.exec();
+    }
+    
+    // Make sure the database is shut down.
+    delete DB::instance();
+    
     FangObject::printRemainingObjects();
     
     return ret;

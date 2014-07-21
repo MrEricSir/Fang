@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0">
+<channel>
+<title>REAPER news</title>
+<link>http://www.reaper.fm</link>
+<description>New releases of REAPER</description>
+<item>
+<title>July 15, 2014</title>
+<link>http://www.reaper.fm/download.php</link>
+<pubDate>Tue, 15 Jul 2014 00:00:00 +0000</pubDate>
+<description>REAPER 4.71</description>
+</item>
+<item>
+<title>July 10, 2014</title>
+<link>http://www.reaper.fm/download-old.php?ver=3x</link>
+<pubDate>Thu, 10 Jul 2014 00:00:00 +0000</pubDate>
+<description>REAPER 4.7</description>
+</item>
+<item>
+<title>May 12, 2014</title>
+<link>http://www.reaper.fm/download-old.php?ver=3x</link>
+<pubDate>Mon, 12 May 2014 00:00:00 +0000</pubDate>
+<description>REAPER 4.62</description>
+</item>
+<item>
+<title>April 14, 2014</title>
+<link>http://www.reaper.fm/download-old.php?ver=3x</link>
+<pubDate>Mon, 14 Apr 2014 00:00:00 +0000</pubDate>
+<description>REAPER 4.611</description>
+</item>
+<item>
+<title>March 20, 2014</title>
+<link>http://www.reaper.fm/download-old.php?ver=3x</link>
+<pubDate>Thu, 20 Mar 2014 00:00:00 +0000</pubDate>
+<description>REAPER 4.61</description>
+</item>
+<item>
+<title>March 2, 2014</title>
+<link>http://www.reaper.fm/download-old.php?ver=3x</link>
+<pubDate>Sun, 02 Mar 2014 00:00:00 +0000</pubDate>
+<description>REAPER 4.602, 1 better</description>
+</item>
+<item>
+<title>February 28, 2014</title>
+<link>http://www.reaper.fm/download-old.php?ver=3x</link>
+<pubDate>Fri, 28 Feb 2014 00:00:00 +0000</pubDate>
+<description>REAPER 4.60</description>
+</item>
+<item>
+<title>January 17, 2014</title>
+<link>http://www.reaper.fm/download-old.php?ver=3x</link>
+<pubDate>Fri, 17 Jan 2014 00:00:00 +0000</pubDate>
+<description>REAPER 4.591</description>
+</item>
+<item>
+<title>January 13, 2014</title>
+<link>http://www.reaper.fm/download-old.php?ver=3x</link>
+<pubDate>Mon, 13 Jan 2014 00:00:00 +0000</pubDate>
+<description>REAPER 4.59</description>
+</item>
+<item>
+<title>December 17, 2013</title>
+<link>http://www.reaper.fm/download-old.php?ver=3x</link>
+<pubDate>Tue, 17 Dec 2013 00:00:00 +0000</pubDate>
+<description>REAPER 4.581</description>
+</item>
+<item>
+<title>December 16, 2013</title>
+<link>http://www.reaper.fm/download-old.php?ver=3x</link>
+<pubDate>Mon, 16 Dec 2013 00:00:00 +0000</pubDate>
+<description>REAPER 4.58</description>
+</item>
+</channel>
+</rss>

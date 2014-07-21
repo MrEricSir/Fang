@@ -91,25 +91,25 @@ void TestFangParser::parseTest_data()
     QTest::newRow("MrEricSir") << "mrericsir.com.rss" << "MrEricSir.com" << 10
                                << "Space reserved for mural" 
                                << "http://www.mrericsir.com/blog/local/space-reserved-for-mural/"
-                               << "http://www.mrericsir.com/blog/local/space-reserved-for-mural/"
+                               << "http://www.mrericsir.com/blog/?p=2831"
                                << QDateTime::fromString("12 Feb 2014 23:04:49", dtf);
     
     QTest::newRow("Slashdot.org") << "slashdot.org.rss" << "Slashdot" << 25
                                   << "Internet Shutdown Adds To Venezuela's Woes" 
                                   << "http://rss.slashdot.org/~r/Slashdot/slashdot/~3/WNpqP5TfVss/story01.htm"
-                                  << "http://rss.slashdot.org/~r/Slashdot/slashdot/~3/WNpqP5TfVss/story01.htm"
+                                  << "http://slashdot.feedsportal.com/c/35028/f/647410/s/376c3d57/sc/24/l/0Lyro0Bslashdot0Borg0Cstory0C140C0A20C230C0A2152130Cinternet0Eshutdown0Eadds0Eto0Evenezuelas0Ewoes0Dutm0Isource0Frss10B0Amainlinkanon0Gutm0Imedium0Ffeed/story01.htm"
                                   << QDateTime::fromString("23 Feb 2014 03:20:00", dtf);
     
     QTest::newRow("SFist") << "sfist.com.rss" << "SFist" << 25
                                   << "Day Around The Bay: Here Come The Bank Bros"
                                   << "http://feeds.gothamistllc.com/c/35360/f/663259/s/37657c64/sc/8/l/0Lsfist0N0C20A140C0A20C210Cday0Iaround0Ithe0Ibay0I12640Bphp/story01.htm"
-                                  << "http://feeds.gothamistllc.com/c/35360/f/663259/s/37657c64/sc/8/l/0Lsfist0N0C20A140C0A20C210Cday0Iaround0Ithe0Ibay0I12640Bphp/story01.htm"
+                                  << "http://sfist.com/2014/02/21/day_around_the_bay_1264.php"
                                   << QDateTime::fromString("22 Feb 2014 01:20:54", dtf);
     
     QTest::newRow("The Onion") << "theonion.com.rss" << "The Onion" << 25
                                   << "[video] New Report Shows Record Year For Births Of Test Tube Abominations"
                                   << "http://feedproxy.google.com/~r/theonion/daily/~3/Kll--EhWgv4/story01.htm"
-                                  << "http://feedproxy.google.com/~r/theonion/daily/~3/Kll--EhWgv4/story01.htm"
+                                  << "http://www.theonion.com/video/new-report-shows-record-year-for-births-of-test-tu,35348/"
                                   << QDateTime::fromString("21 Feb 2014 21:17:00", dtf);
     
     QTest::newRow("Fark") << "fark.com.rss" << "Fark.com RSS" << 50
@@ -121,19 +121,19 @@ void TestFangParser::parseTest_data()
     QTest::newRow("Laughing Squid") << "laughingsquid.com.rss" << "Laughing Squid" << 20
                                   << "The Smoking Machine, An Apparatus That Automatically Lights, Smokes, and Tosses Cigarettes on the Ground"
                                   << "http://laughingsquid.com/the-smoking-machine-an-apparatus-that-automatically-lights-smokes-and-tosses-cigarettes-on-the-ground/"
-                                  << "http://laughingsquid.com/the-smoking-machine-an-apparatus-that-automatically-lights-smokes-and-tosses-cigarettes-on-the-ground/"
+                                  << "http://laughingsquid.com/?p=375849"
                                   << QDateTime::fromString("23 Feb 2014 19:19:54", dtf);
     
     QTest::newRow("BBC (top) News") << "bbc.co.uk.rss" << "BBC News - Home" << 81
                                   << "Ukraine to seek European integration"
                                   << "http://www.bbc.co.uk/news/world-europe-26317912#sa-ns_mchannel=rss&ns_source=PublicRSS20-sa"
-                                  << "http://www.bbc.co.uk/news/world-europe-26317912#sa-ns_mchannel=rss&ns_source=PublicRSS20-sa"
+                                  << "http://www.bbc.co.uk/news/world-europe-26317912"
                                   << QDateTime::fromString("24 Feb 2014 01:53:44", dtf);
     
     QTest::newRow("Jimmy") << "zaphos.wordpress.com.rss" << "oh man." << 10
                                   << "Birds birds birds"
                                   << "http://zaphos.wordpress.com/2014/02/15/birds-birds-birds-2/"
-                                  << "http://zaphos.wordpress.com/2014/02/15/birds-birds-birds-2/"
+                                  << "http://zaphos.wordpress.com/?p=1422"
                                   << QDateTime::fromString("15 Feb 2014 19:30:44", dtf);
     
     QTest::newRow("The Register") << "theregister.co.uk.atom" << "The Register" << 50
@@ -157,7 +157,7 @@ void TestFangParser::parseTest_data()
     QTest::newRow("Economist Science & Tech") << "science.economist.com.rss" << "The Economist: Science and technology" << 20
                                   << "Climate change: Jet set"
                                   << "http://www.economist.com/news/science-and-technology/21596920-polar-warming-blame-americas-and-britains-bad-winter-weather-jet-set?fsrc=rss%7Csct"
-                                  << "http://www.economist.com/news/science-and-technology/21596920-polar-warming-blame-americas-and-britains-bad-winter-weather-jet-set?fsrc=rss|sct"
+                                  << "http://www.economist.com/news/science-and-technology/21596920-polar-warming-blame-americas-and-britains-bad-winter-weather-jet-set"
                                   << QDateTime::fromString("20 Feb 2014 15:58:34", dtf);
     
     QTest::newRow("NPR News") << "npr.org.rss" << "News" << 15
@@ -169,25 +169,25 @@ void TestFangParser::parseTest_data()
     QTest::newRow("Smoking Gun") << "thesmokinggun.com.rss" << "The Smoking Gun RSS" << 50
                                   << "\"Breaking Bad\" Fan Collared In Meth Bust"
                                   << "http://www.thesmokinggun.com/documents/meth-dealer-breaking-bad-shirt-687432"
-                                  << "http://www.thesmokinggun.com/documents/meth-dealer-breaking-bad-shirt-687432"
+                                  << "208585 at http://www.thesmokinggun.com"
                                   << QDateTime::fromString("26 Feb 2014 17:33:51", dtf);
     
     QTest::newRow("Lifehacker") << "lifehacker.com.rss" << "Lifehacker" << 25
                                   << "Paperwhite Tricks, Touchpad Settings, and Flashcards"
                                   << "http://feeds.gawker.com/~r/lifehacker/full/~3/437hNRKLh6s/paperwhite-tricks-touchpad-settings-and-flashcards-1531994358"
-                                  << "http://feeds.gawker.com/~r/lifehacker/full/~3/437hNRKLh6s/paperwhite-tricks-touchpad-settings-and-flashcards-1531994358"
+                                  << "1531994358"
                                   << QDateTime::fromString("27 Feb 2014 01:00:00", dtf);
     
     QTest::newRow("MissionMission") << "missionmission.feedburner.rss" << "Mission Mission" << 15
                                   << "Candy Winters on the Google Glass controversy"
                                   << "http://feedproxy.google.com/~r/MissionMission/~3/g7sOB4s2Mwo/"
-                                  << "http://feedproxy.google.com/~r/MissionMission/~3/g7sOB4s2Mwo/"
+                                  << "http://www.missionmission.org/?p=52521"
                                   << QDateTime::fromString("27 Feb 2014 01:31:39", dtf);
     
     QTest::newRow("Uptown Almanac") << "uptownalmanac.com.rss" << "Uptown Almanac" << 50
                                   << "How to Know When You Can Call the Cops on a Glasshole"
                                   << "http://uptownalmanac.com/2014/02/how-know-when-you-can-call-cops-glasshole"
-                                  << "http://uptownalmanac.com/2014/02/how-know-when-you-can-call-cops-glasshole"
+                                  << "8803 at http://uptownalmanac.com"
                                   << QDateTime::fromString("26 Feb 2014 23:44:00", dtf);
     
     QTest::newRow("Mirror") << "mirror.co.uk.rss" << "mirror - Home" << 25
@@ -217,7 +217,7 @@ void TestFangParser::parseTest_data()
     QTest::newRow("TH Daily News") << "dailynews.co.th.rss" << "เดลินิวส์ - อ่านความจริง อ่านเดลินิวส์" << 10
                                   << "เว็บบ์ยังนำสวิงเอชเอสบีซี"
                                   << "http://www.dailynews.co.th/Content.do?contentId=219811"
-                                  << "http://www.dailynews.co.th/Content.do?contentId=219811"
+                                  << "219811 at http://www.dailynews.co.th/"
                                   << QDateTime::fromString("01 Mar 2014 21:05:00", dtf);
     
     QTest::newRow("Krone") << "krone.at.rss" << "Krone.at - Nachrichten" << 35
@@ -229,7 +229,7 @@ void TestFangParser::parseTest_data()
     QTest::newRow("Ouest-France") << "ouest-france.fr.rss" << "Ouest-France - Actualité" << 17
                                   << "Ukraine. Menaces de la Russie, l'armée ukrainienne en état d'alerte"
                                   << "http://www.ouest-france.fr/ukraine-suivez-les-evenements-de-ce-samedi-en-direct-1970380"
-                                  << "http://www.ouest-france.fr/ukraine-suivez-les-evenements-de-ce-samedi-en-direct-1970380"
+                                  << "http://www.ouest-france.fr/node/1970380"
                                   << QDateTime::fromString("01 Mar 2014 19:21:00", dtf);
     
     QTest::newRow("Hryx's Github") << "github.hryx.atom" << "hryx's Activity" << 30
@@ -247,13 +247,13 @@ void TestFangParser::parseTest_data()
     QTest::newRow("Yomiuri") << "yomiuri.co.jp.rss" << "YOMIURI ONLINE（読売新聞）主要ニュース" << 7
                                   << "ウクライナ軍事介入へ…露大統領提案、上院承認"
                                   << "http://rss.rssad.jp/rss/artclk/z0r9SvPmQy3H/4e9b00c230a30acc524b87cfb96a1bdf?ul=dTEkp0Q.3xQ0ioSSaARBwAjEz8VQ1gEH0sy7bPSX_q8UznMPrZFmLTGR9aXbjLSM8qt3_FOOWUtVeDP_oFQdpBUFfLqOYXwcTPjvcXUmcNM7aD2J."
-                                  << "http://rss.rssad.jp/rss/artclk/z0r9SvPmQy3H/4e9b00c230a30acc524b87cfb96a1bdf?ul=dTEkp0Q.3xQ0ioSSaARBwAjEz8VQ1gEH0sy7bPSX_q8UznMPrZFmLTGR9aXbjLSM8qt3_FOOWUtVeDP_oFQdpBUFfLqOYXwcTPjvcXUmcNM7aD2J."
+                                  << "yomiuri.co.jp/20140301-OYT1T00816"
                                   << QDateTime::fromString("01 Mar 2014 16:44:21", dtf);
     
     QTest::newRow("Times of India Sports") << "sports.timesofindia.com.rss" << "The Times of India Sports: Extensive sports coverage, key statistics and free downloads" << 25
                                   << "Indo-Pak Express kicks up desert storm"
                                   << "http://timesofindia.feedsportal.com/c/33039/f/533921/s/37ad9914/sc/13/l/0Ltimesofindia0Bindiatimes0N0Csports0Ctennis0Ctop0Estories0CIndo0EPak0EExpress0Ekicks0Eup0Edesert0Estorm0Carticleshow0C312375150Bcms/story01.htm"
-                                  << "http://timesofindia.feedsportal.com/c/33039/f/533921/s/37ad9914/sc/13/l/0Ltimesofindia0Bindiatimes0N0Csports0Ctennis0Ctop0Estories0CIndo0EPak0EExpress0Ekicks0Eup0Edesert0Estorm0Carticleshow0C312375150Bcms/story01.htm"
+                                  << "http://timesofindia.indiatimes.com/sports/tennis/top-stories/Indo-Pak-Express-kicks-up-desert-storm/articleshow/31237515.cms"
                                   << QDateTime::fromString("01 Mar 2014 20:15:17", dtf);
     
     QTest::newRow("Chosun") << "chosun.com.rss" << "조선닷컴 : 전체기사" << 25
@@ -271,7 +271,7 @@ void TestFangParser::parseTest_data()
     QTest::newRow("YouTube") << "youtube.com.rss" << "Uploads by The Onion" << 25
                                   << "Members Of Academy Can't Imagine What Would Happen If They Ever Selected Wrong Best Picture"
                                   << "http://www.youtube.com/watch?v=j3v35HcyEyI&feature=youtube_gdata"
-                                  << "http://www.youtube.com/watch?v=j3v35HcyEyI&feature=youtube_gdata"
+                                  << "tag:youtube.com,2008:video:j3v35HcyEyI"
                                   << QDateTime::fromString("28 Feb 2014 20:52:26", dtf);
     
     QTest::newRow("Bild") << "bild.de.rss" << "Bild.de Home" << 62
@@ -295,19 +295,19 @@ void TestFangParser::parseTest_data()
     QTest::newRow("E") << "eonline.com.rss" << "E! Online (US) - Top Stories" << 20
                                   << "Debby Ryan Preps for 2014 Oscars Night Wearing Custom Gown--See the Pics!"
                                   << "http://www.eonline.com/news/516429/debby-ryan-preps-for-2014-oscars-night-wearing-custom-gown-see-the-pics?cmpid=rss-000000-rssfeed-365-topstories&utm_source=eonline&utm_medium=rssfeeds&utm_campaign=rss_topstories"
-                                  << "http://www.eonline.com/news/516429/debby-ryan-preps-for-2014-oscars-night-wearing-custom-gown-see-the-pics?cmpid=rss-000000-rssfeed-365-topstories&utm_source=eonline&utm_medium=rssfeeds&utm_campaign=rss_topstories"
+                                  << "b516429"
                                   << QDateTime::fromString("02 Mar 2014 22:48:00", dtf);
     
     QTest::newRow("Popsugar") << "popsugar.com.rss" << "POPSUGAR Celebrity" << 25
                                   << "The Stars Come Out For the Oscars Red Carpet!"
                                   << "http://www.popsugar.com/Celebrities-Oscars-Red-Carpet-2014-Pictures-34170716"
-                                  << "http://www.popsugar.com/Celebrities-Oscars-Red-Carpet-2014-Pictures-34170716"
+                                  << "34170716"
                                   << QDateTime::fromString("02 Mar 2014 15:07:31", dtf);
     
     QTest::newRow("Mashable") << "mashable.com.rss" << "Mashable" << 30
                                   << "Live Updates: The Oscars"
                                   << "http://feeds.mashable.com/~r/Mashable/~3/Pm6OrtL9p1o/"
-                                  << "http://feeds.mashable.com/~r/Mashable/~3/Pm6OrtL9p1o/"
+                                  << "http://mashable.com/?p=2450301"
                                   << QDateTime::fromString("02 Mar 2014 23:15:10", dtf);
     
     QTest::newRow("Planet Gnome") << "planetgnome.atom" << "Planet GNOME" << 40
@@ -327,6 +327,24 @@ void TestFangParser::parseTest_data()
                                   << "http://hoodline.com/2014/07/lower-haight-weekend-planner-7-10"
                                   << "tag:hoodwork.com,2010-01-01:/2014/07/lower-haight-weekend-planner-7-10"
                                   << QDateTime::fromString("10 Jul 2014 23:04:58", dtf);
+    
+    QTest::newRow("Reaper") << "reaper.fm.rss" << "REAPER news" << 11
+                                  << "July 15, 2014"
+                                  << "http://www.reaper.fm/download.php"
+                                  << "http://www.reaper.fm/download.php" // Note that GUIDs aren't unique in this feed!!
+                                  << QDateTime::fromString("15 Jul 2014 00:00:00", dtf);
+    
+    QTest::newRow("Foldplop") << "foldplop.rss" << "Foldplop News" << 16
+                                  << "Creative Commons 4.0"
+                                  << "http://foldplop.com/news/16"
+                                  << "16"
+                                  << QDateTime::fromString("27 Nov 2013 02:16:20", dtf);
+    
+    QTest::newRow("Bleep Podcast") << "bleep.podcast.rss" << "Bleep Podcast" << 125
+                                  << "Bleep Podcast #125"
+                                  << "http://bleep.com/podcasts"
+                                  << "http://podcast.bleep.com/125/Bleep+podcast+125.mp3"
+                                  << QDateTime::fromString("14 Jul 2014 12:00:00", dtf);
 }
 
 QTEST_MAIN(TestFangParser)

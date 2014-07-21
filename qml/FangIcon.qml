@@ -35,7 +35,7 @@ Image {
             return fangSettings.style === "LIGHT" ?
                         "images/symbol_reload.svg" : "images/symbol_dark_reload.svg";
         else
-            console.log("Unknown state if FangIcon: ", newState);
+            console.log("Unknown state of FangIcon: ", newState);
     }
     
     Style {

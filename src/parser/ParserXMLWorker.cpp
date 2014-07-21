@@ -169,8 +169,8 @@ void ParserXMLWorker::elementEnd()
         QString guid;
         if (!id.trimmed().isEmpty()) {
             guid = id.trimmed();
-        } else if (!guid.trimmed().isEmpty()) {
-            guid = guid.trimmed();
+        } else if (!this->guid.trimmed().isEmpty()) {
+            guid = this->guid.trimmed();
         } else {
             guid = url.trimmed();
         }
@@ -310,6 +310,9 @@ QDateTime ParserXMLWorker::dateFromFeedString(const QString& _timestamp)
     
     // Come up with a few versions of the time stamp.
     QString timestamp = _timestamp.trimmed();
+    yearFix(timestamp); //IMPORTANT: Must be done *before* weekday name is shaved.
+    shaveWeekdayName(timestamp);
+    monthMassager(timestamp);
     QString timestamps[] = {
         timestamp,
         timestamp.left(timestamp.lastIndexOf(" ")).trimmed(),
@@ -317,20 +320,27 @@ QDateTime ParserXMLWorker::dateFromFeedString(const QString& _timestamp)
         timestamp.left(timestamp.lastIndexOf("-")).trimmed(),
         timestamp.left(timestamp.lastIndexOf("+")).trimmed(),
         
-        0 // must be last
+        "" // must be last
     };
     
     // Date time.  Comes in many (ugh) different formats.
     const QString dateFormats[] = { 
         // Most typical RSS format
         // Example: Tue, 02 Jul 2013 01:01:24 +0000 or Sun, 13 Oct 2013 19:15:29  PST
-        "ddd, dd MMM yyyy hh:mm:ss",
+        // But Fang shaves off weekday names (see above), because they're useless and are often screwed up.
+        "dd MMM yyyy hh:mm:ss",
+        
+        // One-digit minutes (yes, this happens.)
+        "dd MMM yyyy hh:m:ss",
         
         // Same as above, but with full months.
-        "ddd, dd MMMM yyyy hh:mm:ss",
+        "dd MMMM yyyy hh:mm:ss",
+        
+        // Full month, one digit minutes.
+        "dd MMMM yyyy hh:m:ss",
         
         // Also same as above, but with potentially single-digit days. (Used by "The Hindu".)
-        "ddd, d MMM yyyy hh:mm:ss",
+        "d MMM yyyy hh:mm:ss",
         
         // RFC 3339, normally used by Atom.
         // Example: 2013-08-07T16:47:54Z
@@ -354,19 +364,19 @@ QDateTime ParserXMLWorker::dateFromFeedString(const QString& _timestamp)
         "dd-MM-yyyy hh:mm:ss",
         
         
-        0 // must be last!
+        "" // must be last!
     };
     
     // Iterate over date formats.
     int i = 0;
-    while (!ret.isValid() && dateFormats[i] != 0) {
+    while (!ret.isValid() && !dateFormats[i].isEmpty()) {
         const QString& format = dateFormats[i];
         
         // Try each format against each possible manipulated timestamp.
         int j = 0;
-        while (!ret.isValid() && timestamps[j] != 0) {
+        while (!ret.isValid() && !timestamps[j].isEmpty()) {
             QString& ts = timestamps[j];
-            ret = QDateTime::fromString(ts, format); 
+            ret = QDateTime::fromString(ts, format);
             
             j++;
         }
@@ -421,6 +431,85 @@ QDateTime ParserXMLWorker::dateFromFeedString(const QString& _timestamp)
     
     return ret;
 }
+
+
+void ParserXMLWorker::yearFix(QString& timestamp)
+{
+    // If the timestamp is something like this:
+    // Tue, 02 Jul 13 [etc]
+    // We want to make it something like this:
+    // Tue, 02 Jul 2013 [etc]
+    if (timestamp.length() == 0 || !timestamp[0].isLetter()) {
+        return; // Early exit.
+    }
+    
+    bool seenWeekday = false;
+    bool seenDay = false;
+    bool seenMonth = false;
+    bool seenYear = false;
+    bool hitSpace = true; // This controls whether or not we examine the character.
+    int charsInYear = 0;
+    for (int i = 0; i < timestamp.length(); i++) {
+        if (hitSpace && (timestamp[i].isLetter() || timestamp[i] == ',')) {
+            hitSpace = false; // reset
+            
+            if (!seenWeekday) {
+                seenWeekday = true;
+            } else if (!seenMonth) {
+                seenMonth = true;
+            }
+        } else if (hitSpace && (timestamp[i].isDigit())) {
+            hitSpace = false; // reset
+            
+            if (!seenDay) {
+                seenDay = true;
+            } else if (!seenYear) {
+                seenYear = true;
+            }
+        } else if (timestamp[i].isSpace()) {
+            if (seenYear) {
+                // Here's where we find out if we can leave yet.
+                if (charsInYear != 2) {
+                    break; // Early exit!
+                } else {
+                    // Sigh... okay, now we have to back up and insert a "20".
+                    // Currently we're here: [Tue, 02 Jul 13 ]
+                    timestamp = timestamp.insert(i - 2, "20");
+                    return; // YAY! WE DID IT!
+                }
+            } else {
+                hitSpace = true;
+            }
+        }
+        
+        if (seenYear) {
+            ++charsInYear;
+        }
+    }
+}
+
+
+void ParserXMLWorker::shaveWeekdayName(QString& timestamp)
+{
+    // NOTE:
+    // By the time we've reached this method, the timestamp has
+    // already been trimmed, and we've made sure the year has four digits.
+    
+    int comma = timestamp.indexOf(',');
+    if (comma < 0) {
+        return; // Early exit.
+    }
+    
+    // Remove up to and including the comma itself.
+    timestamp = timestamp.remove(0, comma + 1).trimmed();
+}
+
+void ParserXMLWorker::monthMassager(QString& timestamp)
+{
+    // Add new ones as they're encountered.
+    timestamp = timestamp.replace("Sept ", "Sep ");
+}
+
 
 QString ParserXMLWorker::getTagStackAt(qint32 n)
 {

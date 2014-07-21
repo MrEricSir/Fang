@@ -10,6 +10,10 @@ OperationManager::OperationManager(QObject *parent) :
     connect(&operationTimer, SIGNAL(timeout()), this, SLOT(runNextOperations()));
 }
 
+OperationManager::~OperationManager()
+{
+}
+
 void OperationManager::add(Operation *operation)
 {
     switch (operation->getPriority()) {

@@ -74,4 +74,7 @@ OTHER_FILES += \
     feeds/mashable.com.rss \
     feeds/yelp.rss \
     feeds/planetgnome.atom \
-    feeds/hoodline.atom
+    feeds/hoodline.atom \
+    feeds/reaper.fm.rss \
+    feeds/foldplop.rss \
+    feeds/bleep.podcast.rss
