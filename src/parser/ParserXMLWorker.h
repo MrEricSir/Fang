@@ -116,6 +116,7 @@ private:
     QString content;
     QString pubdate;
     QString lastbuilddate;
+    QString created;
     QString updated;
     QString date;
     QString author;

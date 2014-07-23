@@ -77,4 +77,5 @@ OTHER_FILES += \
     feeds/hoodline.atom \
     feeds/reaper.fm.rss \
     feeds/foldplop.rss \
-    feeds/bleep.podcast.rss
+    feeds/bleep.podcast.rss \
+    feeds/3drealms.atom

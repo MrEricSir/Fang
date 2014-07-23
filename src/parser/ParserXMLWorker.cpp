@@ -159,10 +159,12 @@ void ParserXMLWorker::elementEnd()
             timestamp = pubdate;
         } else if (!lastbuilddate.trimmed().isEmpty()) {
             timestamp = lastbuilddate;
-        } else if (!updated.trimmed().isEmpty()) {
-            timestamp = updated;
+        } else if (!created.trimmed().isEmpty()) {
+            timestamp = created;
         } else if (!date.trimmed().isEmpty()) {
             timestamp = date;
+        } else if (!updated.trimmed().isEmpty()) {
+            timestamp = updated;
         }
         
         // Determine the GUID.
@@ -203,6 +205,7 @@ void ParserXMLWorker::elementEnd()
         subtitle = "";
         pubdate = "";
         lastbuilddate = "";
+        created = "";
         date = "";
         updated = "";
         author = "";
@@ -253,6 +256,8 @@ void ParserXMLWorker::elementContents()
             pubdate += xml.text().toString();
         } else if (currentTag == "lastbuilddate") {
             lastbuilddate += xml.text().toString();
+        } else if (currentTag == "created") {
+            created += xml.text().toString();
         } else if (currentTag == "updated") {
             updated += xml.text().toString();
         } else if (currentTag == "date") {
@@ -293,6 +298,7 @@ void ParserXMLWorker::resetParserVars()
     content = "";
     pubdate = "";
     lastbuilddate = "";
+    created = "";
     updated = "";
     date = "";
     author = "";

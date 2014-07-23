@@ -345,6 +345,12 @@ void TestFangParser::parseTest_data()
                                   << "http://bleep.com/podcasts"
                                   << "http://podcast.bleep.com/125/Bleep+podcast+125.mp3"
                                   << QDateTime::fromString("14 Jul 2014 12:00:00", dtf);
+    
+    QTest::newRow("3D Realms") << "3drealms.atom" << "3D Realms News" << 15
+                                  << "Duke Nukem II Now Available for iOS"
+                                  << "http://www.3drealms.com/news/2013/04/duke_nukem_ii_now_available_for_ios.html"
+                                  << "tag:www.3drealms.com,2013://1.1575"
+                                  << QDateTime::fromString("03 Apr 2013 17:23:40", dtf);
 }
 
 QTEST_MAIN(TestFangParser)
