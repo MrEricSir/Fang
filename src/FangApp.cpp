@@ -48,6 +48,13 @@ void FangApp::init()
     engine->rootContext()->setContextProperty("feedListModel", feedList); // list of feeds
     engine->rootContext()->setContextProperty("importListModel", importList); // list of feeds to be batch imported
     engine->rootContext()->setContextProperty("platform", getPlatform()); // platform string ID
+#ifdef QT_DEBUG
+    bool isDebugBuild = true;
+#else
+    bool isDebugBuild = false;
+#endif // QT_DEBUG
+    engine->rootContext()->setContextProperty("isDebugBuild", isDebugBuild); // let QML know if we're a debug build or not
+    qDebug() << "Is debug build: " << isDebugBuild;
     
     // Load feed list.
     LoadAllFeedsOperation* loadAllOp = new LoadAllFeedsOperation(&manager, feedList);

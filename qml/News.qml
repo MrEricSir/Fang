@@ -126,7 +126,7 @@ Item {
                 
                 // Enable the web inspector by setting this to true.  You'll have to open Chrome to: 
                 // http://127.0.0.1:9999/webkit/inspector/inspector.html?page=1
-                property bool devMode: true;
+                property bool devMode: isDebugBuild;
                 
                 // Read-only
                 property bool isInProgress: false;
