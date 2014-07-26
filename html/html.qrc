@@ -6,5 +6,6 @@
         <file>formatDateSimply.js</file>
         <file>fangStyleSwitch.js</file>
         <file>Welcome.html</file>
+        <file>Blank.html</file>
     </qresource>
 </RCC>

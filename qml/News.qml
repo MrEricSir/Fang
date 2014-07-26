@@ -30,6 +30,12 @@ Item {
         newsView.state = "welcome";
     }
     
+    // This is a workaround for a bug on Winows; see the comment
+    // in main.qml where this is called for more information.
+    function close() {
+        newsView.state = "closing";
+    }
+    
     // Sets focus on the news view when dialogs are closed.
     property alias newsFocus: newsScrollView.focus;
     
@@ -140,7 +146,10 @@ Item {
                     State { name: "welcome" },
                     
                     // The typical news mode.
-                    State { name: "news" }
+                    State { name: "news" },
+                    
+                    // Let WebKit load a safe, empty page before shutdown.
+                    State { name: "closing" }
                 ]
                 
                 Connections {
@@ -160,14 +169,19 @@ Item {
                         newsView.cssUpdated = false;
                         newsView.url = "qrc:///html/Welcome.html";
                         break;
-                        
+                    
                     case "news":
                         newsView.cssUpdated = false;
                         newsView.firstRun = true;
                         newsView.url = "qrc:///html/NewsPage.html";
                         
                         break;
+                    
+                    case "closing":
+                        newsView.url = "qrc:///html/Blank.html";
                         
+                        break;
+                    
                     default:
                          // Shouldn't get here.
                         console.error("You didn't handle state: ", state)
@@ -269,6 +283,12 @@ Item {
                 // Set style, and update when needed.
                 onLoadingChanged: {
                     if (loadRequest.status === WebView.LoadSucceededStatus) {
+                        if (state === "closing") {
+                            Qt.quit();
+                            
+                            return;
+                        }
+                        
                         webInteractor.pageLoaded();  // tell 'em the page is loaded now.
                         updateCSS(); // set our page's style
                         

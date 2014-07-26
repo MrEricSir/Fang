@@ -70,6 +70,14 @@ Window {
         property int height: 700;
     }
     
+    // This is a hack to prevent Fang from hanging when closed on
+    // Windows due to a bug in QtWebKit.
+    // Ticket: https://github.com/MrEricSir/Fang/issues/93
+    onClosing: {
+        close.accepted = false;
+        news.close();
+    }
+    
     // Read-only: List of all open dialogs
     property var openDialogs: []
     
