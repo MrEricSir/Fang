@@ -14,5 +14,7 @@
 	<string>Fang</string>
 	<key>CFBundleIdentifier</key>
 	<string>com.EricGregory.Fang</string>
+	<key>LSMultipleInstancesProhibited</key>
+    <true/>
 </dict>
 </plist>
