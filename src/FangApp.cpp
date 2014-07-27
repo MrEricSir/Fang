@@ -18,9 +18,10 @@
 
 FangApp* FangApp::_instance = NULL;
 
-FangApp::FangApp(QObject *parent, QQmlApplicationEngine* engine) :
+FangApp::FangApp(QObject *parent, QQmlApplicationEngine* engine, SingleInstanceCheck* single) :
     FangObject(parent),
     engine(engine),
+    single(single),
     manager(this),
     feedList(new ListModel(new FeedItem, this)),
     importList(new ListModel(new FeedItem, this)),
@@ -175,6 +176,7 @@ void FangApp::onObjectCreated(QObject* object, const QUrl& url)
     // Save our window.
     window = qobject_cast<QQuickWindow*>(object);
     
+    single->setWindow(window);
     interactor = object->findChild<WebInteractor*>("webInteractor");
     fangSettings = object->findChild<FangSettings*>("fangSettings");
     

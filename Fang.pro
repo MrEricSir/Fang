@@ -66,7 +66,8 @@ SOURCES += src/main.cpp \
     src/parser/ParserXMLWorker.cpp \
     src/network/FangNetworkAccessManager.cpp \
     src/network/FangQQmlNetworkAccessManagerFactory.cpp \
-    src/notifications/NotificationBase.cpp
+    src/notifications/NotificationBase.cpp \
+    src/utilities/SingleInstanceCheck.cpp
 	
 HEADERS += \
     src/models/ListModel.h \
@@ -113,7 +114,8 @@ HEADERS += \
     src/parser/ParserXMLWorker.h \
     src/network/FangNetworkAccessManager.h \
     src/network/FangQQmlNetworkAccessManagerFactory.h \
-    src/notifications/NotificationBase.h
+    src/notifications/NotificationBase.h \
+    src/utilities/SingleInstanceCheck.h
 
 mac {
     QT += macextras

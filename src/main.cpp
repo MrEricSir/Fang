@@ -19,6 +19,8 @@
 
 #include "db/DB.h"
 
+#include "utilities/SingleInstanceCheck.h"
+
 #include "FangObject.h"
 
 Q_DECL_EXPORT int main(int argc, char *argv[])
@@ -34,13 +36,19 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     app.setOrganizationDomain("EricSoft.com");
     app.setApplicationName("Fang");
     
+    // Only run one Fang at a time, fellas.
+    SingleInstanceCheck single("FangNewsReader", "FangSettings");
+    if (single.isAlreadyRunning()) {
+        return -1;
+    }
+    
     int ret = 0;
     QQmlApplicationEngine engine;
     engine.setNetworkAccessManagerFactory(new FangQQmlNetworkAccessManagerFactory());
     
     // Use a code block to ensure FangApp is deleted.
     {
-        FangApp fang(&app, &engine);
+        FangApp fang(&app, &engine, &single);
         fang.init();
     
         ret = app.exec();

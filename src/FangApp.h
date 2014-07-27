@@ -18,13 +18,14 @@
 #include "parser/Parser.h"
 #include "FangObject.h"
 #include "notifications/NotificationBase.h"
+#include "utilities/SingleInstanceCheck.h"
 
 
 class FangApp : public FangObject
 {
     Q_OBJECT
 public:
-    explicit FangApp(QObject *parent, QQmlApplicationEngine* engine);
+    explicit FangApp(QObject *parent, QQmlApplicationEngine* engine, SingleInstanceCheck* single);
     
     void init();
     
@@ -147,6 +148,7 @@ private slots:
 private:
     static FangApp* _instance;
     QQmlApplicationEngine* engine;
+    SingleInstanceCheck* single;
     OperationManager manager;
     ListModel *feedList;
     ListModel *importList;
