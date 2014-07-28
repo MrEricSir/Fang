@@ -5,6 +5,9 @@
 #include "../models/FeedItem.h"
 #include "../models/NewsItem.h"
 
+/**
+ * @brief Sets a bookmark, but only if it's newer than the current one.
+ */
 class SetBookmarkOperation : public DBOperation
 {
     Q_OBJECT
@@ -18,6 +21,7 @@ public slots:
     
     inline FeedItem* getFeed() { return feed; }
     
+    // Returns the bookmarked item, or NULL if it's older than the bookmark.
     inline NewsItem* getBookmarkItem() { return bookmarkItem; }
     
 private:

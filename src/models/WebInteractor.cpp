@@ -295,8 +295,15 @@ void WebInteractor::onSetBookmarkFinished(Operation *operation)
     
     isSettingBookmark = false;
     
-    if (bookmarkOp->getFeed() != currentFeed)
-        return; // Too slow, no go, bro.
+    if (bookmarkOp->getBookmarkItem() == NULL) {
+        // Older bookmark is older.
+        return;
+    }
+    
+    if (bookmarkOp->getFeed() != currentFeed) {
+        // Too slow, no go, bro.
+        return;
+    }
     
     currentFeed->setBookmark(bookmarkOp->getBookmarkItem());
     emit drawBookmark(currentFeed->getBookmark()->id());
