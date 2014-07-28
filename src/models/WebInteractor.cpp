@@ -182,11 +182,12 @@ void WebInteractor::removeNews(bool fromTop, int numberToRemove)
     if (!currentFeed)
         return;
     
+    // Remove from list, free memory.
     for (int i = 0; i < numberToRemove; i++) {
         if (fromTop) {
-            currentFeed->getNewsList()->removeFirst();
+            currentFeed->getNewsList()->takeFirst()->deleteLater();
         } else {
-            currentFeed->getNewsList()->removeLast();
+            currentFeed->getNewsList()->takeLast()->deleteLater();
         }
     }
 }

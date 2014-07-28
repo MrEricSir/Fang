@@ -127,6 +127,7 @@ public slots:
     Q_INVOKABLE void refreshCurrentFeed();
     
     // Removes news from the list from either the top or bottom.
+    // This is used to prevent too many items from clogging up the news view.
     Q_INVOKABLE void removeNews(bool fromTop, int numberToRemove);
     
 private slots:
