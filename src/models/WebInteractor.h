@@ -126,6 +126,9 @@ public slots:
     // Refreshes the current feed.
     Q_INVOKABLE void refreshCurrentFeed();
     
+    // Removes news from the list from either the top or bottom.
+    Q_INVOKABLE void removeNews(bool fromTop, int numberToRemove);
+    
 private slots:
     
     // Called when a load has completed.

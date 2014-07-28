@@ -46,7 +46,7 @@ void WebInteractor::loadPrevious()
     if (isLoading && !isReady)
         return;
     
-    qDebug() << "Load prev!";
+    //qDebug() << "Load prev!";
     
     // Load the PREVIOUS
     doLoadNews(LoadNews::Prepend);
@@ -175,6 +175,20 @@ void WebInteractor::refreshCurrentFeed()
     }
     
     refreshFeed(currentFeed);
+}
+
+void WebInteractor::removeNews(bool fromTop, int numberToRemove)
+{
+    if (!currentFeed)
+        return;
+    
+    for (int i = 0; i < numberToRemove; i++) {
+        if (fromTop) {
+            currentFeed->getNewsList()->removeFirst();
+        } else {
+            currentFeed->getNewsList()->removeLast();
+        }
+    }
 }
 
 void WebInteractor::setFeed(FeedItem *feed)

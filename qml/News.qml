@@ -272,7 +272,12 @@ Item {
                         //console.log("draw book jump to finished");
                         newsView.drawBookmarkAndJumpToFinished = true;
                         checkReady();
+                    } else if (cmd === "removeNewsTop") {
+                        webInteractor.removeNews(true, commandArray[1]);
+                    } else if (cmd === "removeNewsBottom") {
+                        webInteractor.removeNews(false, commandArray[1]);
                     }
+                    
                     
                     // Not used in Qt 5.3
                     //                } else if (cmd === "scrollToPosition" ) {

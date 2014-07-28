@@ -62,7 +62,8 @@ function appendNews(append, jsonNews) {
     //console.log("News list: ", newsList);
     
     // Remember where we are.
-    var prependScroll = $(document).scrollTop();
+    var currentScroll = $(document).scrollTop();
+    var addToScroll = 0;
     
     for (var i = 0; i < newsList.length; i++) {
         var newsItem = newsList[i];
@@ -100,13 +101,51 @@ function appendNews(append, jsonNews) {
             
             // Calculate the size and add it to our prepend scroll tally.
             //var verticalMargins = parseInt( item.css("marginBottom") ) + parseInt( item.css("marginTop") );
-            prependScroll += item.height(); /* + verticalMargins; */
+            addToScroll += item.height(); /* + verticalMargins; */
         }
     }
     
-    // Scroll back down if we added a bunch of old news at the top.
-    if (currentOperation === "prepend" && prependScroll > 10) {
-        $(document).scrollTop( prependScroll );
+    // Check total number of excessive news items.
+    var extraItems = $(newsContainerSelector).length - 50; //"Too many."
+    if (extraItems > 0) {
+        //console.log("Total items: ", $(newsContainerSelector).length, " extra items: ", extraItems)
+        
+        // Okay, we have too many damn items to display.  We need to remove a few.
+        //
+        // The assumption here is this will never be on the initial load; it will
+        // always occur during a manual append or prepend.
+        if (append) {
+            var itemsOnTop = $('body>.newsContainer:lt(' + extraItems + '):not(#model)');
+            console.log("# Items to remove on the top:", itemsOnTop.length)
+            
+            // We have to iterate over all the items to get an accurate height.
+            var myItem = itemsOnTop;
+            itemsOnTop.each(function( index ) {
+                //console.log( index + ": " + this );
+                addToScroll -= $(this).height();
+            });
+            
+            removeMatchingItems(itemsOnTop);
+            navigator.qt.postMessage( 'removeNewsTop ' + itemsOnTop.length );
+        } else {
+            var itemsOnBottom = $('body>.newsContainer:gt(-' + (extraItems + 1) + '):not(#model)');
+            //console.log("# Items to remove on the bottom:", itemsOnBottom.length)
+            removeMatchingItems(itemsOnBottom);
+            navigator.qt.postMessage( 'removeNewsBottom ' + itemsOnBottom.length );
+        }
+    }
+    
+    // Scroll back down if we added a bunch of old news at the top, or scroll up
+    // if we removed items at the top.
+    if ((!append && addToScroll > 10) ||
+        (append && addToScroll < 10)) {
+        var newScroll = currentScroll + addToScroll;
+        if (newScroll < 0) {
+            newScroll = 0;
+        }
+        
+        //console.log("addToScroll ", addToScroll, " new scroll: ", newScroll)
+        $(document).scrollTop( newScroll );
     }
     
     resizeBottomSpacer();
