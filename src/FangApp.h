@@ -9,6 +9,7 @@
 #include <QMap>
 
 #include "operations/OperationManager.h"
+#include "operations/FaviconUpdateOperation.h"
 
 #include "models/NewsItem.h"
 #include "models/FeedItem.h"
@@ -86,6 +87,31 @@ public slots:
      * @return Our special list for batch imports.
      */
     ListModel* getImportList() { return importList; }
+    
+    /**
+     * @brief Refresh a single feed.
+     */
+    void refreshFeed(FeedItem* feed);
+    
+    /**
+     * @brief Refresh ALL feeds.
+     */
+    void refreshAllFeeds();
+    
+    /**
+     * @brief Refreshes a given feed.
+     */
+    void refreshFeed(const qint64 id);
+    
+    /**
+     * @brief Refreshes the current feed.
+     */
+    void refreshCurrentFeed();
+    
+    /**
+     * @brief Fetches the feed with the given ID.
+     */
+    FeedItem* feedForId(const qint64 id);
     
     
 private slots:

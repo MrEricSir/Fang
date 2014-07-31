@@ -110,7 +110,7 @@ void FangApp::onFeedAdded(ListItem *item)
     if (!feed->isAllNews() && loadAllFinished) {
         // Not all news, so trigger an update.
         // TODO: Handle folders.
-        interactor->refreshFeed(feed);
+        refreshFeed(feed);
     }
 }
 
@@ -162,10 +162,79 @@ void FangApp::onLoadAllFinished(Operation *op)
 
 void FangApp::updateAllFeeds()
 {
-    if (feedList == NULL || feedList->rowCount() == 0 || interactor == NULL)
+    if (feedList == NULL || feedList->rowCount() == 0)
         return; // Somehow this was called too early.
     
-    interactor->refreshAllFeeds();
+    refreshAllFeeds();
+}
+
+void FangApp::refreshFeed(FeedItem *feed)
+{
+    Q_ASSERT(feed != NULL);
+    
+    QList<FeedItem*> feedsToUpdate;
+    bool useCache = true; // Use cache by default.
+    
+    // Special handling for all news.
+    // TODO: Handle folders
+    if (feed->isAllNews()) {
+        // Update ALL the feeds (except all news, obviously.)
+        for (int i = 1; i < feedList->rowCount(); i++)
+        {
+            FeedItem* item = qobject_cast<FeedItem*>(feedList->row(i));
+            Q_ASSERT(item != NULL);
+            feedsToUpdate.append(item);
+        }
+        
+        // Reset the "update all" timer.
+        updateTimer->start();
+    } else {
+        feedsToUpdate.append(feed);
+        useCache = false; // Don't check cache if we're just checking a single feed.
+    }
+    
+    // Update 'em all!
+    foreach(FeedItem* item, feedsToUpdate) {
+        manager.add(new UpdateFeedOperation(&manager, item, NULL, useCache));
+        manager.add(new FaviconUpdateOperation(&manager, item));
+    }
+}
+
+void FangApp::refreshAllFeeds()
+{
+    // Use the "all news" trick (see above)
+    FeedItem* allNews = qobject_cast<FeedItem*>(feedList->row(0));
+    Q_ASSERT(allNews != NULL);
+    Q_ASSERT(allNews->isAllNews());
+    refreshFeed(allNews);
+}
+
+void FangApp::refreshFeed(const qint64 id)
+{
+    refreshFeed(feedForId(id));
+}
+
+void FangApp::refreshCurrentFeed()
+{
+    if (NULL == currentFeed) {
+        return;
+    }
+    
+    refreshFeed(currentFeed);
+}
+
+FeedItem* FangApp::feedForId(const qint64 id)
+{
+    for (int i = 0; i < feedList->rowCount(); i++)
+    {
+        FeedItem* feed = qobject_cast<FeedItem*>(feedList->row(i));
+        Q_ASSERT(feed != NULL);
+        
+        if (feed->getDbId() == id)
+            return feed;
+    }
+    
+    return NULL;
 }
 
 void FangApp::onObjectCreated(QObject* object, const QUrl& url)
@@ -211,7 +280,8 @@ void FangApp::onObjectCreated(QObject* object, const QUrl& url)
     // Set a timer to update the feeds every ten minutes.
     // TODO: Customize news update timer frequency.
     connect(updateTimer, SIGNAL(timeout()), this, SLOT(updateAllFeeds()));
-    updateTimer->start(10 * 60 * 1000);
+    updateTimer->setInterval(10 * 60 * 1000);
+    updateTimer->start();
 }
 
 void FangApp::displayFeed()

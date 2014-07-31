@@ -4,7 +4,6 @@
 #include <QDesktopServices>
 #include <QJsonDocument>
 #include "../FangApp.h"
-#include "../operations/FaviconUpdateOperation.h"
 
 WebInteractor::WebInteractor(QQuickItem *parent) :
     QQuickItem(parent),
@@ -125,56 +124,9 @@ void WebInteractor::openLink(QString link)
     QDesktopServices::openUrl(QUrl(link));
 }
 
-void WebInteractor::refreshFeed(FeedItem *feed)
-{
-    Q_ASSERT(feed != NULL);
-    
-    QList<FeedItem*> feedsToUpdate;
-    bool useCache = true; // Use cache by default.
-    
-    // Special handling for all news.
-    // TODO: Handle folders
-    if (feed->isAllNews()) {
-        // Update ALL the feeds (except all news, obviously.)
-        for (int i = 1; i < feedList->rowCount(); i++)
-        {
-            FeedItem* item = qobject_cast<FeedItem*>(feedList->row(i));
-            Q_ASSERT(item != NULL);
-            feedsToUpdate.append(item);
-        }
-    } else {
-        feedsToUpdate.append(feed);
-        useCache = false; // Don't check cache if we're just checking a single feed.
-    }
-    
-    // Update 'em all!
-    foreach(FeedItem* item, feedsToUpdate) {
-        manager->add(new UpdateFeedOperation(manager, item, NULL, useCache));
-        manager->add(new FaviconUpdateOperation(manager, item));
-    }
-}
-
-void WebInteractor::refreshAllFeeds()
-{
-    // Use the "all news" trick (see above)
-    FeedItem* allNews = qobject_cast<FeedItem*>(feedList->row(0));
-    Q_ASSERT(allNews != NULL);
-    Q_ASSERT(allNews->isAllNews());
-    refreshFeed(allNews);
-}
-
-void WebInteractor::refreshFeed(const qint64 id)
-{
-    refreshFeed(feedForId(id));
-}
-
 void WebInteractor::refreshCurrentFeed()
 {
-    if (NULL == currentFeed) {
-        return;
-    }
-    
-    refreshFeed(currentFeed);
+    FangApp::instance()->refreshCurrentFeed();
 }
 
 void WebInteractor::removeNews(bool fromTop, int numberToRemove)
@@ -352,14 +304,6 @@ void WebInteractor::addNewsItem(NewsItem *item, QVariantList* newsList)
     
     // Add to the list.
     *newsList << itemMap;
-    
-//    emit add(append,
-//             item->id(),
-//             escapeCharacters(item->getTitle()),
-//             escapeCharacters(item->getURL().toString()),
-//             escapeCharacters(feedTitle),
-//             item->getTimestamp().toMSecsSinceEpoch(),
-//             escapeCharacters( item->getContent() != "" ? item->getContent() : item->getSummary()) );
 }
 
 void WebInteractor::doLoadNews(LoadNews::LoadMode mode)
@@ -374,20 +318,6 @@ void WebInteractor::doLoadNews(LoadNews::LoadMode mode)
     isLoading =  true;
     connect(loader, SIGNAL(finished(Operation*)), this, SLOT(onLoadNewsFinished(Operation*)));
     manager->add(loader);
-}
-
-FeedItem *WebInteractor::feedForId(const qint64 id)
-{
-    for (int i = 0; i < feedList->rowCount(); i++)
-    {
-        FeedItem* feed = qobject_cast<FeedItem*>(feedList->row(i));
-        Q_ASSERT(feed != NULL);
-        
-        if (feed->getDbId() == id)
-            return feed;
-    }
-    
-    return NULL;
 }
 
 void WebInteractor::onFeedRemoved(ListItem *listItem)

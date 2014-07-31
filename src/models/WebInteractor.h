@@ -114,15 +114,6 @@ public slots:
     // Opens a link in the external browser.
     Q_INVOKABLE void openLink(QString link);
     
-    // Refresh a single feed.
-    void refreshFeed(FeedItem* feed);
-    
-    // Refresh ALL feeds.
-    void refreshAllFeeds();
-    
-    // Refreshes a given feed.
-    Q_INVOKABLE void refreshFeed(const qint64 id);
-    
     // Refreshes the current feed.
     Q_INVOKABLE void refreshCurrentFeed();
     
@@ -145,9 +136,6 @@ private slots:
     
     // Creates and executes a LoadNews operation.
     void doLoadNews(LoadNews::LoadMode mode);
-    
-    // Fetches the feed with the given ID.
-    FeedItem* feedForId(const qint64 id);
     
     void onFeedRemoved(ListItem* listItem);
     
