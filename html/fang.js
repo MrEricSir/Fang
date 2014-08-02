@@ -420,6 +420,7 @@ $(document).ready(function() {
         var $document = $(document);
         
         var prevScrollTop = 0;
+        var lastVeryBottom = 0;
         
         var checkScrollPosition = function() {
             var scrollTop =  $(document).scrollTop();
@@ -430,12 +431,20 @@ $(document).ready(function() {
                 // If we're at the bottom, always trigger the callback.
                 var bottom = $document.height() - windowHeight - distance - $( '#bottom' ).height();
                 if (scrollTop >= bottom) {
-                    //console.log("at bottom!")
-                    bottomCallback();
+                    // Only proceed with the callback if it's been more than 5 seconds since we last
+                    // hit bottom and hadn't scrolled.
+                    var now =  Date.now();
+                    if (now >= lastVeryBottom + 5000) {
+                        //console.log("at bottom!")
+                        lastVeryBottom = now;
+                        bottomCallback();
+                    }
                 }
                 
                 return;
             }
+            
+            lastVeryBottom = 0; // Now that we've scrolled, clear this timer.
             
             // Check top.
             var top = distance;
