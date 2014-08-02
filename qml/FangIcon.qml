@@ -42,28 +42,35 @@ Image {
         id: style;
     }
     
-    onStateChanged: {
-        if (state === "spinner") {
-            spinAnimation.restart();
-        } else {
-            spinAnimation.stop();
-            fangIcon.rotation = 0;
+    transitions: [
+        Transition {
+            from: "*";
+            to: "spinner";
+            RotationAnimation {
+                id: spinAnimation;
+                
+                running: false;
+                direction: RotationAnimation.Clockwise;
+                loops: Animation.Infinite;
+                
+                target: fangIcon;
+                from: 0;
+                to: 360;
+                duration: 750;
+                
+                // Hack to supress warning message.
+                property: "rotation";
+            }
+        },
+        // This is needed to reset our rotation.
+        Transition {
+            from: "spinner";
+            to: "*";
+            PropertyAction {
+                target: fangIcon;
+                property: "rotation";
+                value: 0;
+            }
         }
-    }
-    
-    RotationAnimation  {
-        id: spinAnimation;
-        
-        running: false;
-        direction: RotationAnimation.Clockwise;
-        loops: Animation.Infinite;
-        
-        target: fangIcon;
-        from: 0;
-        to: 360;
-        duration: 750;
-        
-        // Hack to supress warning message.
-        property: "rotation";
-    }
+    ]
 }
