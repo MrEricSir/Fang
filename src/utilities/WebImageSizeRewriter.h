@@ -14,11 +14,12 @@
 #include "../FangObject.h"
 
 /**
- * @brief Given an HTML string, this class fetches images that are missing inline dimension
- * attributes.
+ * @brief Given an HTML string, this class fetches images that
+ * are missing inline dimension attributes.
  *
- * Why?  Well you can't really skip down the page to a specific point if the images are still
- * loading.  That's a baa-a-a-a-a-ad user experience.
+ * Why?  Well you can't really skip down the page to a specific
+ * point if the images are still loading.  That's a baa-a-a-a-a-ad
+ * user experience.
  *
  * Oops, I just turned into a goat.  Gotta go.
  */
@@ -26,7 +27,14 @@ class WebImageSizeRewriter : public FangObject
 {
     Q_OBJECT
 public:
-    explicit WebImageSizeRewriter(QObject *parent = 0);
+    
+    /**
+     * @param maxWidth  [optional] If you want to scale images to
+     *                  a max width, gimmie it here.
+     * @param parent    QObject's parent.
+     */
+    explicit WebImageSizeRewriter(int maxWidth = -1,
+                                  QObject *parent = 0);
     
     
 signals:
@@ -67,6 +75,7 @@ private slots:
     QWebElementCollection getImgElementsInNeed();
     
 private:
+    int maxWidth;
     WebPageGrabber webGrabber;
     QString html;
     QSet<QUrl> imageURLs;

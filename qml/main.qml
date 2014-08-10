@@ -13,7 +13,7 @@ Window {
     visibility: windowSettings.maximized ?
                     Window.Maximized : Window.Windowed;
     
-    minimumWidth: 600;
+    minimumWidth: 640;
     minimumHeight: 450;
     
     // Treat as const

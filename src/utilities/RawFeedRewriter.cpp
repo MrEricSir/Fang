@@ -4,9 +4,11 @@
 #include <QWebElement>
 #include <QDebug>
 
+#define MAX_ELEMENT_WIDTH 400
+
 RawFeedRewriter::RawFeedRewriter(QObject *parent) :
     FangObject(parent),
-    imageSizer(),
+    imageSizer(MAX_ELEMENT_WIDTH), // <-- max width of resized images
     newsList(NULL)
 {
     connect(&imageSizer, SIGNAL(finished()), this, SLOT(onImageSizerFinished()));
@@ -88,18 +90,36 @@ void RawFeedRewriter::takeOutTrash(QWebElement newsContainer)
     removeAll("script", newsContainer); // Javascript
     removeAll("style", newsContainer); // Custom styles.
     removeAll("iframe", newsContainer); // Iframes!
+    removeAll("object", newsContainer); // Plugins!
+    removeAll("embed", newsContainer); // Other plugins!
     removeAll("hr", newsContainer); // No horizontals allowed; they're ugly.
     removeAll(".feedflare", newsContainer); // Feedburger's 37 pieces of flare
     removeAll(".mf-viral", newsContainer); // Motherfucking viral?
     removeAll(".service-links-stumbleupon", newsContainer); // StubbleUponYourFace
     
-    // Delete annoying images.
+    // Wipe out dimensions on spans and divs.
+    QWebElementCollection containers = newsContainer.findAll("span,div");
+    foreach (QWebElement e, containers) {
+        e.removeAttribute("width");
+        e.removeAttribute("height");
+        e.setStyleProperty("width", "");
+        e.setStyleProperty("height", "");
+    }
+    
+    // Delete annoying images, fix bad ones.
     QWebElementCollection collection = newsContainer.findAll("img");
     foreach (QWebElement e, collection) {
         QString parentHref = e.parent().tagName().toLower() == "a" ? e.parent().attribute("href") : "";
         QString src = e.attribute("src");
         QString sWidth = e.attribute("width");
         QString sHeight = e.attribute("height");
+        
+        // Style dimensions?  Forget 'em.
+        e.setStyleProperty("width", "");
+        e.setStyleProperty("height", "");
+        
+        // Left align our images.
+        e.setAttribute("align", "left");
         
         bool removeElement = false;
         bool removeParent = false;

@@ -3,8 +3,9 @@
 #include <QWebElement>
 #include <QDebug>
 
-WebImageSizeRewriter::WebImageSizeRewriter(QObject *parent) :
+WebImageSizeRewriter::WebImageSizeRewriter(int maxWidth, QObject *parent) :
     FangObject(parent),
+    maxWidth(maxWidth),
     webGrabber(),
     imageGrabber()
 {
@@ -53,8 +54,8 @@ void WebImageSizeRewriter::onWebGrabberReady(QWebPage* page)
 
 QWebElementCollection WebImageSizeRewriter::getImgElementsInNeed()
 {
-    // This CSS selector grabs all images that have a src tag but no width OR height.
-    return document.findAll("img[src]:not([width]),img[src]:not([height])");
+    // This CSS selector grabs all images that have a src tag.
+    return document.findAll("img[src]");
 }
 
 void WebImageSizeRewriter::onImageGrabberFinished()
@@ -68,6 +69,12 @@ void WebImageSizeRewriter::onImageGrabberFinished()
             // We got 'em!
             width = myImage.width();
             height = myImage.height();
+            
+            if (maxWidth > 1 && width > maxWidth) {
+                // Scale down the image.
+                height = (double) height / (double) width * (double) maxWidth;
+                width = maxWidth;
+            }
         }
             
         QWebElementCollection elementList = document.findAll("img[src=\"" + imageUrl.toString() + "\"]");

@@ -45,6 +45,8 @@ void TestRawFeedRewriterTest::testCase1()
     
     QCOMPARE(spy.count(), 1);
     
+    qDebug() << "Output: " << news.description;
+    
     // Check to see what we got!
     QCOMPARE(news.description, output);
 }
@@ -85,16 +87,43 @@ void TestRawFeedRewriterTest::testCase1_data()
                                  "http://i.imgur.com/ohnlAzj.png\">Share on Facebook</a>"
                               << "<p>hi</p>"  << true;
     
-    // Image size rewriter.
-    QTest::newRow("Share me") << "<img src=\"http://i.imgur.com/ohnlAzj.png\">"
-                              << "<img src=\"http://i.imgur.com/ohnlAzj.png\" width=\"610\""
-                                 " height=\"437\">"  << true;
+    // Image size rewriter (and reducer.)
+    QTest::newRow("Image test") << "<img src=\"http://i.imgur.com/ohnlAzj.png\">"
+                              << "<img src=\"http://i.imgur.com/ohnlAzj.png\" width=\"400\""
+                                 " height=\"286\" align=\"left\">"  << true;
+    
+    // Image size rewriter (and reducer) with STYLE.
+    QTest::newRow("Image test 2") << "<img src=\"http://i.imgur.com/ohnlAzj.png\" style=\""
+                                 "width: 500px;\">"
+                              << "<img src=\"http://i.imgur.com/ohnlAzj.png\" style=\"\" "
+                                 "width=\"400\""
+                                 " height=\"286\" align=\"left\">"  << true;
     
     // Embedded Vine video.
     QTest::newRow("Vine") << "<iframe class=\"vine-embed\" src=\""
                              "https://vine.co/v/MwxwzKAupL6/embed/postcard\" "
                              "width=\"560\" height=\"560\" frameborder=\"0\"></iframe>"
                           << ""  << true;
+    
+    // Streetsblog formatting
+    QTest::newRow("Streetsblog") << "<p><div class=\"wp-caption aligncenter\" id=\"attachment_98788\" "
+                                    "style=\"width: 586px;\"><a href=\"http://la.streetsblog.org/"
+                                    "wp-content/uploads/2014/08/hsr-Edited.jpg\"><img alt=\"How should "
+                                    "California's high speed rail interface with Los Angeles County? Give "
+                                    "your input at an upcoming meeting or via email. Image via CAHSRA\" "
+                                    "class=\" wp-image-98788 \" height=\"267\" src=\"http://i.imgur.com/523Qeov.jpg\" "
+                                    "width=\"576\" /></a>"
+                                    "<p class=\"wp-caption-text\">How should California&#8217;s high speed "
+                                    "rail interface with Los Angeles County? Give your input at an upcoming "
+                                    "meeting or via email. Image via CAHSRA</p></div></p>"
+                                 << "<p></p><div class=\"wp-caption aligncenter\" id=\"attachment_98788\" style=\"\">"
+                                    "<a href=\"http://la.streetsblog.org/wp-content/uploads/2014/08/hsr-Edited.jpg\">"
+                                    "<img alt=\"How should California's high speed rail interface with Los Angeles "
+                                    "County? Give your input at an upcoming meeting or via email. Image via CAHSRA\" "
+                                    "class=\" wp-image-98788 \" height=\"185\" src=\"http://i.imgur.com/523Qeov.jpg\" "
+                                    "width=\"400\" align=\"left\"></a><p class=\"wp-caption-text\">How should "
+                                    "California’s high speed rail interface with Los Angeles County? Give your input "
+                                    "at an upcoming meeting or via email. Image via CAHSRA</p></div>"  << true;
 }
 
 QTEST_MAIN(TestRawFeedRewriterTest)
