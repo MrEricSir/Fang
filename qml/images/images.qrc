@@ -28,5 +28,11 @@
         <file>fang_logo.svg</file>
         <file>symbol_dark_help.svg</file>
         <file>symbol_help.svg</file>
+        <file>bookmark_left.svg</file>
+        <file>bookmark_mid.svg</file>
+        <file>bookmark_right.svg</file>
+        <file>bookmark_left_dark.svg</file>
+        <file>bookmark_mid_dark.svg</file>
+        <file>bookmark_right_dark.svg</file>
     </qresource>
 </RCC>

@@ -29,14 +29,52 @@ pre {
 
 /* Draws the bookmark's stripe. */
 .newsContainer > .bookmark > .stripe {
-    width: 90%;
+    width: 80%;
+    height: 22px;
     margin: 0;
-    margin-left: 5%;
+    padding: 0;
     margin-top: 1.8em;
-    height: 0.5em;
-    border-radius: 0.15em;
+    position: relative;
+    
+    /* Center */
+    margin-left: auto;
+    margin-right: auto;
     
     visibility: hidden; /* Don't show by default */
+}
+
+.newsContainer > .bookmark > .stripe > .stripe_left {
+    width: 18px;
+    height: 22px;
+    background-size: 18px 22px;
+    
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    height: 22px;
+    width: 18px;
+}
+
+.newsContainer > .bookmark > .stripe > .stripe_mid {
+    background-repeat: repeat-x;
+    background-size: 10px 22px;
+    
+    position: absolute;
+    left: 18px;
+    right: 6px;
+    top: 0px;
+    height: 22px;
+}
+
+.newsContainer > .bookmark > .stripe > .stripe_right {
+    background-repeat: no-repeat;
+    background-size: 6px 22px;
+    
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    height: 22px;
+    width: 6px;
 }
 
 .bookmarked > .bookmark > .stripe {
@@ -151,8 +189,11 @@ body.LIGHT > .newsContainer > .siteTitle, body.LIGHT > .newsContainer > .date { 
 body.LIGHT > .newsContainer > .divider { background-color: #ccc; }
 body.LIGHT > .newsContainer > h1, body.LIGHT > .newsContainer > h1 > a { color: black; }
 
-body.LIGHT > .newsContainer > .bookmark > .stripe { background-color: #8e0000; }
 body.LIGHT > #bottom > #bottomText  { color: #777; }
+
+body.LIGHT > .newsContainer > .bookmark > .stripe > .stripe_left { background-image: url('/qml/images/bookmark_left.svg'); }
+body.LIGHT > .newsContainer > .bookmark > .stripe > .stripe_mid { background-image: url('/qml/images/bookmark_mid.svg'); }
+body.LIGHT > .newsContainer > .bookmark > .stripe > .stripe_right { background-image: url('/qml/images/bookmark_right.svg'); }
 
 /**** Dark theme ****/
 
@@ -171,8 +212,11 @@ body.DARK > .newsContainer > .siteTitle, body.DARK > .newsContainer > .date { co
 body.DARK > .newsContainer > .divider { background-color: #888; }
 body.DARK > .newsContainer > h1, body.DARK > .newsContainer > h1 a { color: white; }
 
-body.DARK > .newsContainer > .bookmark > .stripe  { background-color: #ce0000; }
 body.DARK > #bottom > #bottomText  { color: #ccc; }
+
+body.DARK > .newsContainer > .bookmark > .stripe > .stripe_left { background-image: url('/qml/images/bookmark_left_dark.svg'); }
+body.DARK > .newsContainer > .bookmark > .stripe > .stripe_mid { background-image: url('/qml/images/bookmark_mid_dark.svg'); }
+body.DARK > .newsContainer > .bookmark > .stripe > .stripe_right { background-image: url('/qml/images/bookmark_right_dark.svg'); }
 
 /**** Platforms ****/
 
@@ -214,7 +258,13 @@ body.FONT_LARGE > #bottom > #bottomText { font-size: 20pt; }
 <span class="timestamp"></span>
 <div class="content"></div>
 
-<div class="bookmark"><div class="stripe"></div></div>
+<div class="bookmark">
+    <div class="stripe">
+        <div class="stripe_left"></div>
+        <div class="stripe_mid"></div>
+        <div class="stripe_right"></div>
+    </div>
+</div>
 
 </div>
 
