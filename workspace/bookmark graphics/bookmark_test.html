@@ -61,8 +61,18 @@
   margin-right: auto;
 }
 
+.bookmark2:not(#bookmarked) {
+    opacity: 0.0;
+    transition: opacity 0.25s ease-in-out;
+}
+
+.bookmark2:hover:not(#bookmarked) {
+    opacity: 1.0;
+    transition: opacity 0.25s ease-in-out;
+}
+
 .bookmark2 > .bookmark_left {
-	background-image: url('bookmark_2_left.svg');
+	background-image: url('bookmark_2_left_hover.svg');
 	width: 18px;
 	height: 22px;
 	background-size: 18px 22px;
@@ -75,6 +85,45 @@
 }
 
 .bookmark2 > .bookmark_mid {
+	background-image: url('bookmark_2_mid_hover.svg');
+    background-repeat: repeat-x;
+	
+	background-size: 10px 22px;
+	position: absolute;
+    left: 18px;
+	right: 6px;
+    top: 0px;
+	height: 22px;
+}
+
+
+
+.bookmark2 > .bookmark_right {
+	background-image: url('bookmark_2_right_hover.svg');
+    background-repeat: no-repeat;
+	background-size: 6px 22px;
+	
+	position: absolute;
+    right: 0px;
+    top: 0px;
+	height: 22px;
+	width: 6px;
+}
+
+#bookmarked > .bookmark_left {
+	background-image: url('bookmark_2_left.svg');
+	width: 18px;
+	height: 22px;
+	background-size: 18px 22px;
+	
+	position: absolute;
+    left: 0px;
+    top: 0px;
+	height: 22px;
+	width: 18px;
+}
+
+#bookmarked > .bookmark_mid {
 	background-image: url('bookmark_2_mid.svg');
     background-repeat: repeat-x;
 	
@@ -87,7 +136,7 @@
 	height: 22px;
 }
 
-.bookmark2 > .bookmark_right {
+#bookmarked > .bookmark_right {
 	background-image: url('bookmark_2_right.svg');
     background-repeat: no-repeat;
 	background-size: 6px 22px;
@@ -107,6 +156,14 @@
 <p></p><p></p><p></p>
 
 <div class="bookmark">
+<div class="bookmark_left"></div>
+<div class="bookmark_mid"></div>
+<div class="bookmark_right"></div>
+</div>
+
+<br><Br>
+
+<div class="bookmark2" id="bookmarked">
 <div class="bookmark_left"></div>
 <div class="bookmark_mid"></div>
 <div class="bookmark_right"></div>
