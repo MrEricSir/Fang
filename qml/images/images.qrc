@@ -31,8 +31,14 @@
         <file>bookmark_left.svg</file>
         <file>bookmark_mid.svg</file>
         <file>bookmark_right.svg</file>
-        <file>bookmark_left_dark.svg</file>
-        <file>bookmark_mid_dark.svg</file>
-        <file>bookmark_right_dark.svg</file>
+        <file>bookmark_dark_left.svg</file>
+        <file>bookmark_dark_mid.svg</file>
+        <file>bookmark_dark_right.svg</file>
+        <file>bookmark_hover_left.svg</file>
+        <file>bookmark_hover_mid.svg</file>
+        <file>bookmark_hover_right.svg</file>
+        <file>bookmark_dark_hover_left.svg</file>
+        <file>bookmark_dark_hover_mid.svg</file>
+        <file>bookmark_dark_hover_right.svg</file>
     </qresource>
 </RCC>

@@ -150,6 +150,47 @@
 
 
 </style>
+
+<script type="text/javascript" src="../../html/jquery-2.0.3.js"></script>
+
+
+<!-- https://github.com/vaidik/jquery-longpress -->
+<script type="text/javascript" src="../../html/jquery.longpress.js"></script>
+
+<script>
+ $(document).ready(function() {
+ /*
+	$(".bookmark2:not(#bookmarked)").pressAndHold({
+		holdTime: 500,
+		progressIndicatorOpacity: 0.0
+	});
+
+
+	$(".bookmark2:not(#bookmarked)").on('complete.pressAndHold', function(event) {
+		// Set bookmark here
+		$(event.target).attr('id', 'bookmarked') ;
+	}); */
+	
+	$('.bookmark2:not(#bookmarked)').longpress(function(e) {
+		//alert('You just longpressed something.');
+		console.log("E: ", e);
+		$(e.currentTarget).attr('id', 'bookmarked') ;
+	}, function(e) {
+		//alert('You released before longpress duration and that\'s why its a shortpress now.');
+		//$(e.currentTarget).attr('id', 'bookmarked') ;
+	});
+});
+
+
+function onPressAndHold(x, y) {
+	console.log("On pressy and holdy: ", x, y);
+	var elem = document.elementFromPoint(x, y) 
+	console.log("Element: ", elem);
+	console.log("Zoom level: ", window.devicePixelRatio);
+}
+
+</script>
+
 </head><body>
 
 

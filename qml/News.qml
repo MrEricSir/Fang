@@ -130,6 +130,8 @@ Item {
                 
                 // Read-only
                 property bool isInProgress: false;
+                property real scaleFactor: (width >= experimental.preferredMinimumContentsWidth) ? 1.0 :
+                    width / experimental.preferredMinimumContentsWidth;
                 
                 // Start invisible
                 visible: false;
@@ -301,6 +303,18 @@ Item {
                         webInteractor.heightChanged(newsMargin.height);
                     } else if (loadRequest.status === WebView.LoadStartedStatus) {
                         visible = false;
+                    }
+                }
+                
+                MouseArea {
+                    anchors.fill: parent;
+                    propagateComposedEvents: true;
+                    acceptedButtons: Qt.LeftButton;
+                    onPressAndHold: {
+                        //console.log("scale = ", newsView.scaleFactor)
+                        //console.log("cw = ", newsView.contentItem.childrenRect.width)
+                        newsView.experimental.evaluateJavaScript("onPressAndHold(" + 
+                            mouse.x /*/ newsView.scaleFactor*/ + "," + mouse.y /*/ newsView.scaleFactor*/ + ")");
                     }
                 }
                 

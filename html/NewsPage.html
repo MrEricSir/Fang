@@ -40,7 +40,8 @@ pre {
     margin-left: auto;
     margin-right: auto;
     
-    visibility: hidden; /* Don't show by default */
+    opacity: 0.0; /* Don't show by default */
+    transition: opacity 0.25s ease-in-out;
 }
 
 .newsContainer > .bookmark > .stripe > .stripe_left {
@@ -78,7 +79,13 @@ pre {
 }
 
 .bookmarked > .bookmark > .stripe {
-    visibility: visible;
+    opacity: 1.0;
+    transition: opacity 0.25s ease-in-out;
+}
+
+.newsContainer:not(.bookmarked) > .bookmark > .stripe:hover {
+    opacity: 1.0;
+    transition: opacity 0.25s ease-in-out;
 }
 
 .newsContainer > .content {
@@ -191,9 +198,13 @@ body.LIGHT > .newsContainer > h1, body.LIGHT > .newsContainer > h1 > a { color: 
 
 body.LIGHT > #bottom > #bottomText  { color: #777; }
 
-body.LIGHT > .newsContainer > .bookmark > .stripe > .stripe_left { background-image: url('/qml/images/bookmark_left.svg'); }
-body.LIGHT > .newsContainer > .bookmark > .stripe > .stripe_mid { background-image: url('/qml/images/bookmark_mid.svg'); }
-body.LIGHT > .newsContainer > .bookmark > .stripe > .stripe_right { background-image: url('/qml/images/bookmark_right.svg'); }
+body.LIGHT > .bookmarked > .bookmark > .stripe > .stripe_left { background-image: url('/qml/images/bookmark_left.svg'); }
+body.LIGHT > .bookmarked > .bookmark > .stripe > .stripe_mid { background-image: url('/qml/images/bookmark_mid.svg'); }
+body.LIGHT > .bookmarked > .bookmark > .stripe > .stripe_right { background-image: url('/qml/images/bookmark_right.svg'); }
+
+body.LIGHT > .newsContainer:not(.bookmarked) > .bookmark > .stripe > .stripe_left { background-image: url('/qml/images/bookmark_hover_left.svg'); }
+body.LIGHT > .newsContainer:not(.bookmarked) > .bookmark > .stripe > .stripe_mid { background-image: url('/qml/images/bookmark_hover_mid.svg'); }
+body.LIGHT > .newsContainer:not(.bookmarked) > .bookmark > .stripe > .stripe_right { background-image: url('/qml/images/bookmark_hover_right.svg'); }
 
 /**** Dark theme ****/
 
@@ -214,9 +225,14 @@ body.DARK > .newsContainer > h1, body.DARK > .newsContainer > h1 a { color: whit
 
 body.DARK > #bottom > #bottomText  { color: #ccc; }
 
-body.DARK > .newsContainer > .bookmark > .stripe > .stripe_left { background-image: url('/qml/images/bookmark_left_dark.svg'); }
-body.DARK > .newsContainer > .bookmark > .stripe > .stripe_mid { background-image: url('/qml/images/bookmark_mid_dark.svg'); }
-body.DARK > .newsContainer > .bookmark > .stripe > .stripe_right { background-image: url('/qml/images/bookmark_right_dark.svg'); }
+body.DARK > .bookmarked > .bookmark > .stripe > .stripe_left { background-image: url('/qml/images/bookmark_dark_left.svg'); }
+body.DARK > .bookmarked > .bookmark > .stripe > .stripe_mid { background-image: url('/qml/images/bookmark_dark_mid.svg'); }
+body.DARK > .bookmarked > .bookmark > .stripe > .stripe_right { background-image: url('/qml/images/bookmark_dark_right.svg'); }
+
+body.DARK > .newsContainer:not(.bookmarked) > .bookmark > .stripe > .stripe_left { background-image: url('/qml/images/bookmark_dark_hover_left.svg'); }
+body.DARK > .newsContainer:not(.bookmarked) > .bookmark > .stripe > .stripe_mid { background-image: url('/qml/images/bookmark_dark_hover_mid.svg'); }
+body.DARK > .newsContainer:not(.bookmarked) > .bookmark > .stripe > .stripe_right { background-image: url('/qml/images/bookmark_dark_hover_right.svg'); }
+
 
 /**** Platforms ****/
 
