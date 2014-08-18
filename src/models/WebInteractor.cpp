@@ -71,8 +71,10 @@ void WebInteractor::orderChanged()
     manager->add(updateOp);
 }
 
-void WebInteractor::setBookmark(QString sId)
+void WebInteractor::setBookmark(QString sId, bool allowBackward)
 {
+    qDebug() << "Set bookmarK; " << sId << ", " << allowBackward;
+    
     if (isSettingBookmark || NULL == currentFeed) {
         return;
     }

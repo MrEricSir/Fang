@@ -106,7 +106,7 @@ public slots:
     Q_INVOKABLE void orderChanged();
     
     // Sets the bookmark, and fires a draw event.
-    Q_INVOKABLE void setBookmark(QString sId);
+    Q_INVOKABLE void setBookmark(QString sId, bool allowBackward = false);
     
     // The web layer has to call this to lead us know we're good to go.
     Q_INVOKABLE void pageLoaded();

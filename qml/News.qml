@@ -264,6 +264,8 @@ Item {
                         webInteractor.loadPrevious();
                     } else if (cmd === "setBookmark") {
                         webInteractor.setBookmark(commandArray[1]);
+                    } else if (cmd === "forceBookmark") {
+                        webInteractor.setBookmark(commandArray[1], true);
                     } else if (cmd === "openLink") {
                         webInteractor.openLink(commandArray[1]);
                     } else if (cmd === "stopProgress" ) {

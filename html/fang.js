@@ -52,13 +52,6 @@ function stopInProgress() {
     isInProgress = false;
 }
 
-// Press and hold handler.  Called by QML, used to set bookmarks.
-function onPressAndHold(x, y) {
-    console.log("On pressy and holdy: ", x, y);
-    var elem = document.elementFromPoint(x, y - $(document).scrollTop()) 
-    console.log("Element: ", elem);
-}
-
 // Appends (or prepends) a news item.
 function appendNews(append, jsonNews) {
     // Unescape newlines.  (This allows pre tags to work.)
@@ -97,6 +90,11 @@ function appendNews(append, jsonNews) {
         
         // Setup link delegator.
         item.find( 'a' ).on( "click", delegateLink );
+        
+        // Setup manual bookmarks.
+        item.find( '.stripe' ).on( "click", function() { 
+            navigator.qt.postMessage( 'forceBookmark ' +
+                                     $(this).parent().parent().attr( 'id' ) ); } );
         
         // Stick 'er in!
         if (append) {
