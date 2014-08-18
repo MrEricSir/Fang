@@ -306,17 +306,7 @@ Item {
                     }
                 }
                 
-                MouseArea {
-                    anchors.fill: parent;
-                    propagateComposedEvents: true;
-                    acceptedButtons: Qt.LeftButton;
-                    onPressAndHold: {
-                        //console.log("scale = ", newsView.scaleFactor)
-                        //console.log("cw = ", newsView.contentItem.childrenRect.width)
-                        newsView.experimental.evaluateJavaScript("onPressAndHold(" + 
-                            mouse.x /*/ newsView.scaleFactor*/ + "," + mouse.y /*/ newsView.scaleFactor*/ + ")");
-                    }
-                }
+                
                 
                 Keys.onPressed: {
                     switch (event.key) {
