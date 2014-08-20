@@ -100,7 +100,7 @@ void WebInteractor::setBookmark(QString sId, bool allowBackward)
         return; // We didn't find it.  Perhaps this is an old request? Either way, fuck it.
     }
     
-    if (!currentFeed->canBookmark(bookmarkItem)) {
+    if (!currentFeed->canBookmark(bookmarkItem, allowBackward)) {
         isSettingBookmark = false;
         qDebug() << "Cannot set bookmark to: " << bookmarkItem->getTitle();
         
@@ -108,7 +108,7 @@ void WebInteractor::setBookmark(QString sId, bool allowBackward)
     }
     
     // I bookmark you!
-    SetBookmarkOperation* bookmarkOp = new SetBookmarkOperation(manager, currentFeed, bookmarkItem);
+    SetBookmarkOperation* bookmarkOp = new SetBookmarkOperation(manager, currentFeed, bookmarkItem, allowBackward);
     isSettingBookmark =  true;
     connect(bookmarkOp, SIGNAL(finished(Operation*)), this, SLOT(onSetBookmarkFinished(Operation*)));
     manager->add(bookmarkOp);
@@ -250,7 +250,7 @@ void WebInteractor::onSetBookmarkFinished(Operation *operation)
     isSettingBookmark = false;
     
     if (bookmarkOp->getBookmarkItem() == NULL) {
-        // Older bookmark is older.
+        // NOPE NOPE NOPE
         return;
     }
     

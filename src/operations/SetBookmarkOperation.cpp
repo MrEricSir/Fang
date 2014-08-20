@@ -5,10 +5,11 @@
 #include "../utilities/UnreadCountReader.h"
 #include "../FangApp.h"
 
-SetBookmarkOperation::SetBookmarkOperation(OperationManager *parent, FeedItem* feed, NewsItem* bookmarkItem) :
+SetBookmarkOperation::SetBookmarkOperation(OperationManager *parent, FeedItem* feed, NewsItem* bookmarkItem, bool allowBackward) :
     DBOperation(IMMEDIATE, parent),
     feed(feed),
-    bookmarkItem(bookmarkItem)
+    bookmarkItem(bookmarkItem),
+    allowBackward(allowBackward)
 {
 }
 
@@ -51,8 +52,8 @@ void SetBookmarkOperation::execute()
     qDebug() << "Current bookmark ID: " << currentBookmarkID;
     qDebug() << "New bookmark ID: " << bookmarkItem->getDbID();
     
-    // Only proceed if the bookmark is NEWER for htis feed.
-    if (bookmarkItem->getDbID() > currentBookmarkID) {
+    // Unless allow backward is set, only proceed if the bookmark is NEWER for ttis feed.
+    if (allowBackward || bookmarkItem->getDbID() > currentBookmarkID) {
         // Step 3: Set the feed's bookmark.
         QSqlQuery update(db());
         update.prepare("UPDATE FeedItemTable SET bookmark_id = :bookmark_id WHERE id = "

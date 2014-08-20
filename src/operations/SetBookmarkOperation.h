@@ -12,7 +12,8 @@ class SetBookmarkOperation : public DBOperation
 {
     Q_OBJECT
 public:
-    explicit SetBookmarkOperation(OperationManager *parent, FeedItem* feed, NewsItem* bookmarkItem);
+    explicit SetBookmarkOperation(OperationManager *parent, FeedItem* feed,
+                                  NewsItem* bookmarkItem, bool allowBackward = false);
     virtual ~SetBookmarkOperation();
 signals:
     
@@ -27,6 +28,7 @@ public slots:
 private:
     FeedItem *feed;
     NewsItem* bookmarkItem;
+    bool allowBackward;
 };
 
 #endif // SETBOOKMARKOPERATION_H

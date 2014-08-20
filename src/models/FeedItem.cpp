@@ -204,7 +204,7 @@ void FeedItem::clearNews()
     }
 }
 
-bool FeedItem::canBookmark(NewsItem *item)
+bool FeedItem::canBookmark(NewsItem *item, bool allowBackward)
 {
     if (bookmark == NULL)
         return true;
@@ -213,8 +213,20 @@ bool FeedItem::canBookmark(NewsItem *item)
         return false;
     
     int currentBookmarkIndex = newsList->indexOf(bookmark);
-    
     int newBookmarkIndex = newsList->indexOf(item);
+    
+    Q_ASSERT(currentBookmarkIndex != -1);
+    Q_ASSERT(newBookmarkIndex != -1);
+    
+    if (currentBookmarkIndex == newBookmarkIndex) {
+        // Can't bookmark myself, sorry!
+        return false;
+    }
+    
+    if (allowBackward) {
+        // Sure, why not?
+        return true;
+    }
     
     // If the new one is later in the list, we're good.
     return newBookmarkIndex > currentBookmarkIndex;
@@ -227,9 +239,6 @@ void FeedItem::setBookmark(NewsItem *item)
     
     if (bookmark == item)
         return; // Nothing to do.
-    
-    if (!canBookmark(item))
-        return; // Shouldn't have called this method, sir.
     
     bookmark = item;
     emit dataChanged();

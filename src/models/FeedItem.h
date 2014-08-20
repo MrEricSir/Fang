@@ -122,9 +122,10 @@ public:
     
     /**
      * @param item
+     * @param allowBackward
      * @return True if this item can be bookmarked.
      */
-    bool canBookmark(NewsItem* item);
+    bool canBookmark(NewsItem* item, bool allowBackward);
     
     /**
      * @brief Returns the current bookmark.
