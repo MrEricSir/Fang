@@ -74,20 +74,28 @@ void SetBookmarkOperation::bookmarkAllNewsFeed(AllNewsFeedItem* allNews)
     int i = current;
     while (i != proposed)
     {
-        // Move i.
+        // Forward: increment i.
         if (current < proposed) {
             i++;
-        } else {
-            i--;
         }
         
         // Get the news ID.
         qint64 newBookmark = allNews->newsIDs()->at(i);
         
+        // Generate our query.
         //
+        // * Forward:  Set the bookmark ID to the provided value.
+        // * Backward: Set the bookmark ID to the PREVIOUS news item.
+        QString query = (current < proposed) ?
+                            "UPDATE FeedItemTable SET bookmark_id = :bookmark_id WHERE id = "
+                            "(SELECT feed_id FROM NewsItemTable WHERE id = :bookmark_id2)"
+                          :
+                            "UPDATE FeedItemTable SET bookmark_id = "
+                            "(SELECT id FROM NewsItemTable WHERE id < :bookmark_id ORDER BY ID DESC LIMIT 1) "
+                            "WHERE id = (SELECT feed_id FROM NewsItemTable WHERE id = :bookmark_id2)";
+        
         QSqlQuery update(db());
-        update.prepare("UPDATE FeedItemTable SET bookmark_id = :bookmark_id WHERE id = "
-                       "(SELECT feed_id FROM NewsItemTable WHERE id = :bookmark_id2)");
+        update.prepare(query);
         update.bindValue(":bookmark_id", newBookmark);
         update.bindValue(":bookmark_id2", newBookmark);
         
@@ -96,6 +104,11 @@ void SetBookmarkOperation::bookmarkAllNewsFeed(AllNewsFeedItem* allNews)
             db().rollback();
             
             return;
+        }
+        
+        // Backward: decrement i.
+        if (current > proposed) {
+            i--;
         }
     }
     
