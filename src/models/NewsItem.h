@@ -42,9 +42,13 @@ public:
     
     inline FeedItem* getFeed() const { return feed; }
     inline QString id() const { 
+        return idForDbID(_id);
+    }
+    
+    static inline QString idForDbID(qint64 id) {
         QString ret;
         QTextStream output(&ret);
-        output << NEWS_ITEM_ID_PREIX << _id;
+        output << NEWS_ITEM_ID_PREIX << id;
         return ret;
     }
     

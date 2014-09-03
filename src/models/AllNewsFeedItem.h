@@ -4,6 +4,7 @@
 #include "FeedItem.h"
 
 #include <QObject>
+#include <QList>
 
 #include "ListModel.h"
 #include "NewsItem.h"
@@ -14,25 +15,34 @@ class AllNewsFeedItem : public FeedItem
 public:
     explicit AllNewsFeedItem(ListModel *feedList);
     
-private slots:
+    /**
+     * @brief When the feed changes away from all news, this kills the view.
+     * 
+     * TODO: This general solution can work for any folder/container type.
+     */
+    virtual void clearNews();
     
-    // Called when a feed is added or removed from the master list.
-    void onFeedAdded(ListItem *item);
-    void onFeedRemoved(ListItem *item);
+    /**
+     * @brief canBookmark
+     * @param item
+     * @param allowBackward
+     * @return 
+     */
+    virtual bool canBookmark(qint64 bookmarkID, bool allowBackward);
     
-    // Called when a feed is updated.
-    void onNewsAppended(NewsItem* item);
-    void onNewsRemoved(NewsItem* item);
-    
-    // Setup signals for sub-feeds.
-    void connectFeed(FeedItem* feed);
-    void disconnectFeed(FeedItem* feed);
-    
-    // Called when any sub-feed is changed.
-    void onFeedItemDataChanged();
+    /**
+     * @brief List of all news IDs that have been in the view.
+     * 
+     * TODO: This general solution can work for any folder/container type.
+     * 
+     * @return 
+     */
+    QList<qint64>* newsIDs() { return &_newsIDs; }
     
 private:
-    ListModel* feedList;
+    // Though the news items are shown temporarily, the view is inifinite.  This
+    // ever-growing list of db IDs ensures that by containing a temporary view.
+    QList<qint64> _newsIDs;
 };
 
 #endif // ALLNEWSFEEDITEM_H

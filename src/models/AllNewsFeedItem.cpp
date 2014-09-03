@@ -4,59 +4,41 @@
 
 AllNewsFeedItem::AllNewsFeedItem(ListModel *feedList) :
     FeedItem(-1, -1, "All News", "", QDateTime(), 0, QUrl(), QUrl(), QUrl(), QDateTime(), feedList),
-    feedList(feedList)
+    _newsIDs()
 {
-    // Do this here to avoid getting added/removed signals too early.
-    connect(feedList, SIGNAL(added(ListItem*)), this, SLOT(onFeedAdded(ListItem*)));
-    connect(feedList, SIGNAL(removed(ListItem*)), this, SLOT(onFeedRemoved(ListItem*)));
 }
 
-void AllNewsFeedItem::onFeedAdded(ListItem* item)
+void AllNewsFeedItem::clearNews()
 {
-    // TODO:
-    // When a feed is added to all news, we need to append the items and update the unread count
+    // Remove the view.
+    _newsIDs.clear();
     
-    Q_UNUSED(item);
+    // Bubble bobble up our chain.
+    FeedItem::clearNews();
 }
 
-void AllNewsFeedItem::onFeedRemoved(ListItem* item)
+bool AllNewsFeedItem::canBookmark(qint64 bookmarkID, bool allowBackward)
 {
-    // TODO: 
-    // * update unread count
-    // * if it's the current feed, a view has to get refreshed.  Should I do that?
+    // You FAIL!
+    if (bookmarkID < 0)
+        return false;
     
-    Q_UNUSED(item);
+    // No change.
+    if (getBookmarkID() == bookmarkID)
+        return false;
+    
+    // ASSUMPTION: Since we always start from the bookmark, if the bookmark ID isn't -1 it
+    // must therefore be in the _newsIDs list, my dear Watson.
+    if (getBookmarkID() < 0)
+        return true;
+    
+    // YOLO
+    if (allowBackward)
+        return true;
+    
+    int proposed = _newsIDs.indexOf(bookmarkID);
+    int current = _newsIDs.indexOf(getBookmarkID());
+    Q_ASSERT(proposed >= 0); // It HAS TO be in the news ids list at this point, or you're screwed.
+    
+    return proposed > current;
 }
-
-void AllNewsFeedItem::onNewsAppended(NewsItem *item)
-{
-    // is this needed?
-    Q_UNUSED(item);
-}
-
-void AllNewsFeedItem::onNewsRemoved(NewsItem *item)
-{
-    // is this needed?
-    Q_UNUSED(item);
-}
-
-void AllNewsFeedItem::connectFeed(FeedItem *feed)
-{
-    connect(feed, SIGNAL(dataChanged()), this, SLOT(onFeedItemDataChanged()));
-    connect(feed, SIGNAL(appended(NewsItem*)), this, SLOT(onNewsAppended(NewsItem*)));
-    connect(feed, SIGNAL(removed(NewsItem*)), this, SLOT(onNewsRemoved(NewsItem*)));
-}
-
-void AllNewsFeedItem::disconnectFeed(FeedItem *feed)
-{
-    disconnect(feed, SIGNAL(dataChanged()), this, SLOT(onFeedItemDataChanged()));
-    disconnect(feed, SIGNAL(appended(NewsItem*)), this, SLOT(onNewsAppended(NewsItem*)));
-    disconnect(feed, SIGNAL(removed(NewsItem*)), this, SLOT(onNewsRemoved(NewsItem*)));
-}
-
-void AllNewsFeedItem::onFeedItemDataChanged()
-{
-    // Pass the signal up the chain.
-   // emit dataChanged();
-}
-

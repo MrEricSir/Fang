@@ -1,0 +1,22 @@
+<html><body>
+
+<!-- 
+
+The purpose of this little script is to generate some barebones sample data for Fang.
+
+-->
+
+<script>
+document.write( 'INSERT INTO NewsItemTable ( timestamp, feed_id, id, guid, title, author, summary, content, url ) VALUES <br />' );
+
+var MaxGen = 100;
+
+for (i = 1; i <= MaxGen; i++ ) {
+    var endChar = (i == MaxGen) ? ';' : ',';
+	document.write( '(1409455718000, 1, ' + i + ', ' + i + ', ' + i + ', ' + i + ', ' + i + ', ' + i + ', ' + i + ' )' + endChar + '  <br />' );
+	
+}
+
+</script>
+
+</body></html>

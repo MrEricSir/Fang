@@ -3,17 +3,17 @@
 
 #include "DBOperation.h"
 #include "../models/FeedItem.h"
-#include "../models/NewsItem.h"
+#include "../models/AllNewsFeedItem.h"
 
 /**
- * @brief Sets a bookmark, but only if it's newer than the current one.
+ * @brief Sets a bookmark to whatever news id you'd like.
  */
 class SetBookmarkOperation : public DBOperation
 {
     Q_OBJECT
 public:
     explicit SetBookmarkOperation(OperationManager *parent, FeedItem* feed,
-                                  NewsItem* bookmarkItem, bool allowBackward = false);
+                                  qint64 bookmarkID);
     virtual ~SetBookmarkOperation();
 signals:
     
@@ -22,13 +22,18 @@ public slots:
     
     inline FeedItem* getFeed() { return feed; }
     
-    // Returns the bookmarked item, or NULL if it's older than the bookmark.
-    inline NewsItem* getBookmarkItem() { return bookmarkItem; }
+    // Returns the bookmarked item ID.
+    inline qint64 getBookmarkID() { return bookmarkID; }
+    
+protected:
+    
+    void bookmarkSingleFeed(FeedItem *feed);
+    
+    void bookmarkAllNewsFeed(AllNewsFeedItem* allNews);
     
 private:
     FeedItem *feed;
-    NewsItem* bookmarkItem;
-    bool allowBackward;
+    qint64 bookmarkID;
 };
 
 #endif // SETBOOKMARKOPERATION_H

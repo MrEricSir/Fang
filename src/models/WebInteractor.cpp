@@ -81,34 +81,25 @@ void WebInteractor::setBookmark(QString sId, bool allowBackward)
     
     // qDebug() << "Setting bookmark to: " << sId;
     
-    qint64 id = sId.replace(NEWS_ITEM_ID_PREIX, "").toLongLong();
+    bool ok;
+    qint64 id = sId.replace(NEWS_ITEM_ID_PREIX, "").toLongLong(&ok);
     
-    // Locate the item!
-    NewsItem* bookmarkItem = NULL;
-    foreach(NewsItem* item, *currentFeed->getNewsList()) {
-        if (item->getDbID() == id) {
-            // We found it, yo!
-            bookmarkItem = item;
-            break;
-        }
-    }
-    
-    if (bookmarkItem == NULL) {
+    if (sId.isEmpty() || !ok) {
         isSettingBookmark = false;
         qDebug() << "Bookmark itm was not found for the current feed!";
         
         return; // We didn't find it.  Perhaps this is an old request? Either way, fuck it.
     }
     
-    if (!currentFeed->canBookmark(bookmarkItem, allowBackward)) {
+    if (!currentFeed->canBookmark(id, allowBackward)) {
         isSettingBookmark = false;
-        qDebug() << "Cannot set bookmark to: " << bookmarkItem->getTitle();
+        qDebug() << "Cannot set bookmark to: " << id;
         
         return;
     }
     
     // I bookmark you!
-    SetBookmarkOperation* bookmarkOp = new SetBookmarkOperation(manager, currentFeed, bookmarkItem, allowBackward);
+    SetBookmarkOperation* bookmarkOp = new SetBookmarkOperation(manager, currentFeed, id);
     isSettingBookmark =  true;
     connect(bookmarkOp, SIGNAL(finished(Operation*)), this, SLOT(onSetBookmarkFinished(Operation*)));
     manager->add(bookmarkOp);
@@ -228,8 +219,8 @@ void WebInteractor::onLoadNewsFinished(Operation* operation)
     
     // If this is the initial load, draw and jump to the bookmark.
     QString idOfBookmark = "";
-    if (loader->getMode() == LoadNews::Initial && currentFeed->getBookmark() != NULL) {
-        idOfBookmark = currentFeed->getBookmark()->id();
+    if (loader->getMode() == LoadNews::Initial && currentFeed->getBookmarkID() != -1) {
+        idOfBookmark = NewsItem::idForDbID(currentFeed->getBookmarkID());
     }
     emit drawBookmarkAndJumpTo(idOfBookmark);
     
@@ -249,18 +240,13 @@ void WebInteractor::onSetBookmarkFinished(Operation *operation)
     
     isSettingBookmark = false;
     
-    if (bookmarkOp->getBookmarkItem() == NULL) {
-        // NOPE NOPE NOPE
-        return;
-    }
-    
     if (bookmarkOp->getFeed() != currentFeed) {
         // Too slow, no go, bro.
         return;
     }
     
-    currentFeed->setBookmark(bookmarkOp->getBookmarkItem());
-    emit drawBookmark(currentFeed->getBookmark()->id());
+    currentFeed->setBookmarkID(bookmarkOp->getBookmarkID());
+    emit drawBookmark(NewsItem::idForDbID(currentFeed->getBookmarkID()));
 }
 
 QString WebInteractor::escapeCharacters(const QString& string)

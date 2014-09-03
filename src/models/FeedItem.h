@@ -65,7 +65,7 @@ public:
     
     void setIsUpdating(bool isUpdating);
     
-    inline QString id() const { 
+    inline QString id() const {
         QString ret;
         QTextStream output(&ret);
         output << "FeedItem_" << _id;
@@ -95,43 +95,34 @@ public:
     Q_INVOKABLE void setIsSelected(bool s);
     
     /**
-     * @brief Appends a NewsItem to the end of the feed.
-     * @param item
-     */
-    virtual void append(NewsItem* item);
-    
-    /**
-     * @brief Removes a NewsItem from the feed.
-     * @param item
-     */
-    virtual void remove(NewsItem* item);
-    
-    /**
      * @brief Clears all news items.  Does NOT signal.
      * @return 
      */
-    void clearNews();
+    virtual void clearNews();
     
+    /**
+     * @brief Provides direct access to the news list.
+     */
     inline QList<NewsItem*>* getNewsList() { return newsList; }
     
     /**
      * @brief Used to set the bookmark internally.  External classes shouldn't need to call this.
-     * @param item
+     * @param bookmark
      */
-    virtual void setBookmark(NewsItem* item);
+    virtual void setBookmarkID(qint64 bookmark);
     
     /**
      * @param item
      * @param allowBackward
      * @return True if this item can be bookmarked.
      */
-    bool canBookmark(NewsItem* item, bool allowBackward);
+    virtual bool canBookmark(qint64 bookmarkID, bool allowBackward);
     
     /**
-     * @brief Returns the current bookmark.
+     * @brief Returns the current bookmark's ID.
      * @return 
      */
-    inline NewsItem* getBookmark() { return bookmark; }
+    inline qint64 getBookmarkID() { return _bookmark; }
     
     inline void clearDbId() { _id = -1; }
     
@@ -196,7 +187,7 @@ private:
     QList<NewsItem*>* newsList;
     int isUpdating;
     qint32 unreadCount;
-    NewsItem* bookmark;
+    qint64 _bookmark;
     QString dropTarget;
     bool _errorFlag;
     bool isSelected;

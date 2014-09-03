@@ -111,7 +111,7 @@ function appendNews(append, jsonNews) {
     }
     
     // Check total number of excessive news items.
-    var extraItems = $(newsContainerSelector).length - 50; //"Too many."
+    var extraItems = $(newsContainerSelector).length - 40; //"Too many."
     if (extraItems > 0) {
         //console.log("Total items: ", $(newsContainerSelector).length, " extra items: ", extraItems)
         

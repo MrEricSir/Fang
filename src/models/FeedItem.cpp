@@ -17,7 +17,7 @@ FeedItem::FeedItem(QObject *parent) :
     newsList(NULL),
     isUpdating(false),
     unreadCount(0),
-    bookmark(NULL),
+    _bookmark(-1),
     dropTarget("none"),
     _errorFlag(false),
     isSelected(false),
@@ -43,7 +43,7 @@ FeedItem::FeedItem(qint64 id, const qint32 ordinal, const QString &title, const 
     newsList(NULL),
     isUpdating(false),
     unreadCount(0),
-    bookmark(NULL),
+    _bookmark(-1),
     dropTarget("none"),
     _errorFlag(false),
     isSelected(false),
@@ -177,25 +177,6 @@ void FeedItem::setIsSelected(bool s)
     emit dataChanged();
 }
 
-void FeedItem::append(NewsItem *item)
-{
-    if (newsList->contains(item))
-        return;
-    
-    newsList->append(item);
-    emit appended(item);
-    
-    emit dataChanged();
-}
-
-void FeedItem::remove(NewsItem *item)
-{
-    newsList->removeAll(item);
-    emit removed(item);
-    
-    emit dataChanged();
-}
-
 void FeedItem::clearNews()
 {
     // Delete each and every news item.
@@ -204,43 +185,34 @@ void FeedItem::clearNews()
     }
 }
 
-bool FeedItem::canBookmark(NewsItem *item, bool allowBackward)
+bool FeedItem::canBookmark(qint64 bookmarkID, bool allowBackward)
 {
-    if (bookmark == NULL)
-        return true;
-    
-    if (item == NULL)
+    // What is this? I don't even.
+    if (bookmarkID < 0)
         return false;
     
-    int currentBookmarkIndex = newsList->indexOf(bookmark);
-    int newBookmarkIndex = newsList->indexOf(item);
-    
-    Q_ASSERT(currentBookmarkIndex != -1);
-    Q_ASSERT(newBookmarkIndex != -1);
-    
-    if (currentBookmarkIndex == newBookmarkIndex) {
-        // Can't bookmark myself, sorry!
-        return false;
-    }
-    
-    if (allowBackward) {
-        // Sure, why not?
+    // Given no current bookmark, anything will do.
+    if (_bookmark == -1)
         return true;
-    }
     
-    // If the new one is later in the list, we're good.
-    return newBookmarkIndex > currentBookmarkIndex;
+    // That's a no-op for you, young man.
+    if (_bookmark == bookmarkID)
+        return false;
+    
+    // Sure, whatever you want.
+    if (allowBackward)
+        return true;
+    
+    // We asked SQLite to always increase our IDs, remember.
+    return bookmarkID > _bookmark;
 }
 
-void FeedItem::setBookmark(NewsItem *item)
+void FeedItem::setBookmarkID(qint64 bookmark)
 {
-    if (item != NULL)
-        Q_ASSERT(newsList->contains(item));
-    
-    if (bookmark == item)
+    if (bookmark == _bookmark)
         return; // Nothing to do.
     
-    bookmark = item;
+    _bookmark = bookmark;
     emit dataChanged();
 }
 

@@ -54,12 +54,26 @@ void LoadAllNewsOperation::execute()
     
     // Append/prepend items from our lists.
     if (listAppend != NULL)
-        foreach (NewsItem* newsItem, *listAppend)
+        foreach (NewsItem* newsItem, *listAppend) {
+            // News item list.
             feedItem->getNewsList()->append(newsItem);
+            
+            // News ID list.
+            if (!allNews->newsIDs()->contains(newsItem->getDbID())) {
+                allNews->newsIDs()->append(newsItem->getDbID());
+            }
+        }
     
     if (listPrepend != NULL)
-        foreach (NewsItem* newsItem, *listPrepend)
+        foreach (NewsItem* newsItem, *listPrepend) {
+            // News item list.
             feedItem->getNewsList()->prepend(newsItem);
+            
+            // News ID list.
+            if (!allNews->newsIDs()->contains(newsItem->getDbID())) {
+                allNews->newsIDs()->prepend(newsItem->getDbID());
+            }
+        }
     
     // For the initial load, set the bookmark if we have one.
     if (getMode() == Initial) {
@@ -70,7 +84,7 @@ void LoadAllNewsOperation::execute()
             bookmark = listPrepend->first();
         
         if (bookmark != NULL)
-            feedItem->setBookmark(bookmark);
+            feedItem->setBookmarkID(bookmark->getDbID());
     }
     
     // we r dun lol
@@ -79,26 +93,85 @@ void LoadAllNewsOperation::execute()
 
 bool LoadAllNewsOperation::doPrepend()
 {
-    QString queryString = "SELECT * FROM NewsItemTable N where id <= (SELECT bookmark_id from "
-            "FeedItemTable WHERE id = N.feed_id) AND id NOT IN (" + getLoadedIDString() +
-            ") ORDER BY timestamp DESC LIMIT :load_limit";
+    // Create our list.  This will be deleted at the end if it's empty.
+    listPrepend = new QList<NewsItem*>();
     
-    //qDebug() << "Query: " << queryString;
-    QSqlQuery query(db());
-    query.prepare(queryString);
-    query.bindValue(":load_limit", getLoadLimit());
+    // Remaining items to load.
+    int remainingLoadLimit = getLoadLimit();
     
-    if (!query.exec()) {
-       qDebug() << "Could not load news for all news!";
-       qDebug() << query.lastError();
-       
-       return false;
+    //
+    // STEP ONE: Page up/down the ID list.
+    //
+    qint64 firstId = allNews->getNewsList()->size() ?
+                         allNews->getNewsList()->first()->getDbID() : -1;
+    
+    // Assuming we even got a valid ID, only continue if the items isn't the first
+    // one on the list.  If it is, we're already at the top and can skip over this.
+    if (firstId > 0 && allNews->newsIDs()->indexOf(firstId) > 0) {
+        // Get the initial and previous list positions.
+        int initial = allNews->newsIDs()->indexOf(firstId) - 1; // Remember that it's > 0!
+        int previous = qMax(0, initial - remainingLoadLimit);
+        
+        QString idString;   // List of IDs
+        QString whenString; // List if WHEN statements for ordering switch statement.
+        int index = 0;
+        for(int i = initial; i >= previous; i--, index++) {
+            if (index != 0)
+                idString += ", ";
+            
+            QString currentID = QString::number(allNews->newsIDs()->at(i));
+            idString += currentID;
+            whenString += "WHEN " + currentID + " THEN " + QString::number(index) + " ";
+        }
+        
+        // Load the items.
+        QString queryString = "SELECT * FROM NewsItemTable N where id IN (" + idString + 
+                              ") ORDER BY CASE id " + whenString + " END LIMIT :load_limit";
+        QSqlQuery query(db());
+        query.prepare(queryString);
+        query.bindValue(":load_limit", remainingLoadLimit);
+        
+        if (!query.exec()) {
+            qDebug() << "Could not load news for all news!";
+            qDebug() << query.lastError();
+            
+            return false;
+        }
+        
+        // Extract the query.
+        queryToNewsList(query, listPrepend);
+        
+        // Keep track of our load limit.
+        remainingLoadLimit -= listPrepend->size();
     }
     
-    // Extract the query into our news list.
-    listPrepend = new QList<NewsItem*>();
-    queryToNewsList(query, listPrepend);
+    //
+    // STEP TWO: Load new items.
+    //
     
+    // Do we still have items to load?  If so, load 'em now.
+    if (remainingLoadLimit > 0) {
+        QString queryString = "SELECT * FROM NewsItemTable N where id <= (SELECT bookmark_id from "
+                              "FeedItemTable WHERE id = N.feed_id) AND id NOT IN (" + getLoadedIDString() +
+                              ") ORDER BY timestamp DESC, id DESC LIMIT :load_limit";
+        
+        //qDebug() << "Query: " << queryString;
+        QSqlQuery query(db());
+        query.prepare(queryString);
+        query.bindValue(":load_limit", remainingLoadLimit);
+        
+        if (!query.exec()) {
+            qDebug() << "Could not load news for all news!";
+            qDebug() << query.lastError();
+            
+            return false;
+        }
+        
+        // Extract the query into our news list.
+        queryToNewsList(query, listPrepend);
+    }
+    
+    // Delete our list if it's empty.
     if (listPrepend->size() == 0) {
         delete listPrepend;
         listPrepend = NULL;
@@ -109,26 +182,83 @@ bool LoadAllNewsOperation::doPrepend()
 
 bool LoadAllNewsOperation::doAppend()
 {
-    QString queryString = "SELECT * FROM NewsItemTable N where id > (SELECT bookmark_id from "
-            "FeedItemTable WHERE id = N.feed_id) AND id NOT IN (" + getLoadedIDString() +
-            ") ORDER BY timestamp ASC LIMIT :load_limit";
+    // Create our list.  This will be deleted at the end if it's empty.
+    listAppend = new QList<NewsItem*>();
     
-    //qDebug() << "Query: " << queryString;
-    QSqlQuery query(db());
-    query.prepare(queryString);
-    query.bindValue(":load_limit", getLoadLimit());
+    // Remaining items to load.
+    int remainingLoadLimit = getLoadLimit();
     
-    if (!query.exec()) {
-       qDebug() << "Could not load news for all news!";
-       qDebug() << query.lastError();
-       
-       return false;
+    //
+    // STEP ONE: Page down the ID list.
+    //
+    qint64 lastId = allNews->getNewsList()->size() ?
+                         allNews->getNewsList()->last()->getDbID() : -1;
+    
+    // Assuming we even got a valid ID, only continue if the items isn't the last
+    // one on the list.  If it is, we're already at the bottom and can skip over this.
+    if (lastId > 0 && allNews->newsIDs()->indexOf(lastId) < allNews->newsIDs()->size() - 1) {
+        // Get the initial and next list positions.
+        int initial = allNews->newsIDs()->indexOf(lastId) + 1; // Remember that it's not at the end!
+        int next = qMin(allNews->newsIDs()->size() - 1, initial + remainingLoadLimit);
+        
+        QString idString;   // List of IDs
+        QString whenString; // List if WHEN statements for ordering switch statement.
+        int index = 0;
+        for(int i = initial; i <= next; i++, index++) {
+            if (index != 0)
+                idString += ", ";
+            
+            QString currentID = QString::number(allNews->newsIDs()->at(i));
+            idString += currentID;
+            whenString += "WHEN " + currentID + " THEN " + QString::number(index) + " ";
+        }
+        
+        // Load the items.
+        QString queryString = "SELECT * FROM NewsItemTable N where id IN (" + idString + 
+                              ") ORDER BY CASE id " + whenString + " END LIMIT :load_limit";
+        QSqlQuery query(db());
+        query.prepare(queryString);
+        query.bindValue(":load_limit", remainingLoadLimit);
+        
+        if (!query.exec()) {
+            qDebug() << "Could not load news for all news!";
+            qDebug() << query.lastError();
+            
+            return false;
+        }
+        
+        // Extract the query.
+        queryToNewsList(query, listAppend);
+        
+        // Keep track of our load limit.
+        remainingLoadLimit -= listAppend->size();
     }
     
-    // Extract the query into our news list.
-    listAppend = new QList<NewsItem*>();
-    queryToNewsList(query, listAppend);
+    //
+    // STEP TWO: Load new items.
+    //
     
+    // Do we still have items to load?  If so, load 'em now.
+    if (remainingLoadLimit > 0) {
+        QString queryString = "SELECT * FROM NewsItemTable N where id > (SELECT bookmark_id from "
+                              "FeedItemTable WHERE id = N.feed_id) AND id NOT IN (" + getLoadedIDString() +
+                              ") ORDER BY timestamp ASC, id ASC LIMIT :load_limit";
+        QSqlQuery query(db());
+        query.prepare(queryString);
+        query.bindValue(":load_limit", remainingLoadLimit);
+        
+        if (!query.exec()) {
+            qDebug() << "Could not load news for all news!";
+            qDebug() << query.lastError();
+            
+            return false;
+        }
+        
+        // Extract the query into our news list.
+        queryToNewsList(query, listAppend);
+    }
+    
+    // Delete our list if it's empty.
     if (listAppend->size() == 0) {
         delete listAppend;
         listAppend = NULL;
@@ -139,35 +269,16 @@ bool LoadAllNewsOperation::doAppend()
 
 QString LoadAllNewsOperation::getLoadedIDString()
 {
-    // Throw all our news items' IDs into a big ol' set.
-    QSet<qint64> allItems;
-    if (listAppend != NULL)
-        foreach(NewsItem* item, *listAppend)
-            allItems.insert(item->getDbID());
-    
-    if (listPrepend != NULL)
-        foreach(NewsItem* item, *listPrepend)
-            allItems.insert(item->getDbID());
-    
-    if (feedItem->getNewsList() != NULL)
-        foreach(NewsItem* item, *feedItem->getNewsList())
-            allItems.insert(item->getDbID());
-    
     QString ret = "";
     
     int i = 0;
-    foreach(qint64 id, allItems) {
+    foreach(qint64 id, *allNews->newsIDs()) {
         ret += QString::number(id);
         i++;
         
-        if (allItems.size() != i)
+        if (allNews->newsIDs()->size() != i)
             ret += ", ";
     }
     
     return ret;
 }
-
-// SELECT * FROM NewsItemTable N where id > (SELECT bookmark_id from FeedItemTable WHERE id = N.feed_id) ORDER BY timestamp ASC
-
-
-// SELECT * FROM NewsItemTable N where id > (SELECT bookmark_id from FeedItemTable WHERE id = N.feed_id) AND id NOT IN (21, 22) ORDER BY timestamp ASC LIMIT 5
