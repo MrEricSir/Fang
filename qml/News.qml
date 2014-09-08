@@ -258,9 +258,9 @@ Item {
                     var commandArray = message.data.split(" ");
                     var cmd = commandArray[0];
                     
-                    if (cmd === "loadNext") {
+                    if (cmd === "loadNext" && !newsView.isInProgress) {
                         webInteractor.loadNext();
-                    } else if (cmd === "loadPrevious") {
+                    } else if (cmd === "loadPrevious" && !newsView.isInProgress) {
                         webInteractor.loadPrevious();
                     } else if (cmd === "setBookmark") {
                         webInteractor.setBookmark(commandArray[1]);

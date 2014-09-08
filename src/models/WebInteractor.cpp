@@ -31,7 +31,7 @@ void WebInteractor::init(OperationManager *manager, ListModel *feedList, FangSet
 
 void WebInteractor::loadNext()
 {
-    if (isLoading && !isReady)
+    if (isLoading || !isReady)
         return;
     
     //qDebug() << "Load next!";
@@ -42,7 +42,7 @@ void WebInteractor::loadNext()
 
 void WebInteractor::loadPrevious()
 {
-    if (isLoading && !isReady)
+    if (isLoading || !isReady)
         return;
     
     //qDebug() << "Load prev!";
@@ -249,12 +249,35 @@ void WebInteractor::onSetBookmarkFinished(Operation *operation)
     emit drawBookmark(NewsItem::idForDbID(currentFeed->getBookmarkID()));
 }
 
+
+QString WebInteractor::encodeEntities( const QString& src, const QString& force )
+{
+    // Stolen from:
+    // http://stackoverflow.com/questions/7696159/how-can-i-convert-entity-characterescape-character-to-html-in-qt
+    QString tmp(src);
+    uint len = tmp.length();
+    uint i = 0;
+    while( i<len )
+    {
+        if( tmp[i].unicode() > 128 || force.contains(tmp[i]) ){
+            QString rp = "&#"+QString::number(tmp[i].unicode())+";";
+            tmp.replace(i,1,rp);
+            len += rp.length()-1;
+            i += rp.length();
+        }else{
+            ++i;
+        }
+    }
+    return tmp;
+}
+
+
 QString WebInteractor::escapeCharacters(const QString& string)
 {
     // Based on:
     // http://developer.nokia.com/Community/Wiki/Add_data_to_a_web_page_with_JavaScript,_WebKit,_and_Qt
     // (Key difference: single quotes instead of double)
-    QString rValue = QString(string);
+    QString rValue = encodeEntities(string);
     /** Assign \\ to backSlash */
     QString backSlash = QString(QChar(0x5c)).append(QChar(0x5c));
     /** Replace \ with \\ */
@@ -296,7 +319,7 @@ void WebInteractor::addNewsItem(NewsItem *item, QVariantList* newsList)
 
 void WebInteractor::doLoadNews(LoadNews::LoadMode mode)
 {
-    if (currentFeed == NULL) {
+    if (currentFeed == NULL || isLoading) {
         return;
     }
     

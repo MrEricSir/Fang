@@ -7,13 +7,20 @@ The purpose of this little script is to generate some barebones sample data for 
 -->
 
 <script>
+document.write( 'INSERT INTO FeedItemTable ( id, title, subtitle, lastUpdated, minutesToUpdate, url, siteURL, imageURL, lastIconUpdate, ordinal, bookmark_id ) VALUES <br />' );
+document.write( ' (1, "FakeFeed", "", 0, 0, "http://www.google.com/", "http://www.google.com/", "", 0, 0, -1); ' );
+
+document.write( '<br /><br />' );
+
 document.write( 'INSERT INTO NewsItemTable ( timestamp, feed_id, id, guid, title, author, summary, content, url ) VALUES <br />' );
 
 var MaxGen = 100;
+var timeStamp = 1409455718000;
 
 for (i = 1; i <= MaxGen; i++ ) {
     var endChar = (i == MaxGen) ? ';' : ',';
-	document.write( '(1409455718000, 1, ' + i + ', ' + i + ', ' + i + ', ' + i + ', ' + i + ', ' + i + ', ' + i + ' )' + endChar + '  <br />' );
+	document.write( '(' + timeStamp + ', 1, ' + i + ', ' + i + ', ' + i + ', ' + i + ', ' + i + ', ' + i + ', ' + i + ' )' + endChar + '  <br />' );
+	timeStamp += 80000;
 	
 }
 

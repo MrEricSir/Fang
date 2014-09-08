@@ -52,6 +52,35 @@ void LoadAllNewsOperation::execute()
         return;
     }
     
+    
+    if (getMode() == Initial) {
+        // For the initial load, set the bookmark if we have one.
+        NewsItem* bookmark = NULL;
+        
+        // Bookmark is prepended item.
+        if (listPrepend != NULL)
+            bookmark = listPrepend->first();
+        
+        if (bookmark != NULL)
+            feedItem->setBookmarkID(bookmark->getDbID());
+        
+        // As an optimization, we only want to present *one* list -- an append list.
+        // So we rewind our prepend list on top of it, then delete the prepend list.
+        if (listPrepend != NULL) {
+            if (listAppend == NULL) {
+                listAppend = new QList<NewsItem*>();
+            }
+            
+            foreach (NewsItem* newsItem, *listPrepend) {
+                // News item list.
+                listAppend->prepend(newsItem);
+            }
+            
+            delete listPrepend;
+            listPrepend = NULL;
+        }
+    }
+    
     // Append/prepend items from our lists.
     if (listAppend != NULL)
         foreach (NewsItem* newsItem, *listAppend) {
@@ -74,18 +103,6 @@ void LoadAllNewsOperation::execute()
                 allNews->newsIDs()->prepend(newsItem->getDbID());
             }
         }
-    
-    // For the initial load, set the bookmark if we have one.
-    if (getMode() == Initial) {
-        NewsItem* bookmark = NULL;
-        
-        // Bookmark is prepended item.
-        if (listPrepend != NULL)
-            bookmark = listPrepend->first();
-        
-        if (bookmark != NULL)
-            feedItem->setBookmarkID(bookmark->getDbID());
-    }
     
     // we r dun lol
     emit finished(this);
@@ -186,7 +203,7 @@ bool LoadAllNewsOperation::doAppend()
     listAppend = new QList<NewsItem*>();
     
     // Remaining items to load.
-    int remainingLoadLimit = getLoadLimit();
+    int remainingLoadLimit = 10;//getLoadLimit();
     
     //
     // STEP ONE: Page down the ID list.

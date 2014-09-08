@@ -13,7 +13,6 @@
 #include "../operations/LoadAllNewsOperation.h"
 #include "../operations/SetBookmarkOperation.h"
 #include "../operations/UpdateOrdinalsOperation.h"
-#include "../operations/UpdateFeedOperation.h"
 
 /**
  * @brief Passes news between the JavaScript and C++ layers, yo.
@@ -129,6 +128,10 @@ private slots:
     // Called when a bookmark has been set.
     void onSetBookmarkFinished(Operation* operation);
     
+    // Escapes non-ASCII Unicode characters.
+    QString encodeEntities( const QString& src, const QString& force=QString() );
+    
+    // Escpaes a few special characters for us.
     QString escapeCharacters(const QString& string);
     
     // Adds an item to a list that y'er buildin' on up.
