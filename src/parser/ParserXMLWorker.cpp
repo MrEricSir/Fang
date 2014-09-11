@@ -168,17 +168,17 @@ void ParserXMLWorker::elementEnd()
         }
         
         // Determine the GUID.
-        QString guid;
+        QString myGuid;
         if (!id.trimmed().isEmpty()) {
-            guid = id.trimmed();
-        } else if (!this->guid.trimmed().isEmpty()) {
-            guid = this->guid.trimmed();
+            myGuid = id.trimmed();
+        } else if (!guid.trimmed().isEmpty()) {
+            myGuid = guid.trimmed();
         } else {
-            guid = url.trimmed();
+            myGuid = url.trimmed();
         }
         
         // Yes, we need a guid!
-        Q_ASSERT(!guid.isEmpty());
+        Q_ASSERT(!myGuid.isEmpty());
         
         // Item space.
         currentItem->author = author;
@@ -187,7 +187,7 @@ void ParserXMLWorker::elementEnd()
         currentItem->content = content;
         currentItem->url = QUrl(url);
         currentItem->timestamp = dateFromFeedString(timestamp);
-        currentItem->guid = guid;
+        currentItem->guid = myGuid;
         
         // Okay, give it up. :(
         if (!currentItem->timestamp.isValid()) {
