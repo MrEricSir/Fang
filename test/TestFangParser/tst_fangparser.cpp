@@ -351,6 +351,60 @@ void TestFangParser::parseTest_data()
                                   << "http://www.3drealms.com/news/2013/04/duke_nukem_ii_now_available_for_ios.html"
                                   << "tag:www.3drealms.com,2013://1.1575"
                                   << QDateTime::fromString("03 Apr 2013 17:23:40", dtf);
+    
+    QTest::newRow("The Verge") << "theverge.rss" << "The Verge -  All Posts" << 10
+                                  << "Twitpic changes course yet again, will now be shutting down on October 25th"
+                                  << "http://www.theverge.com/2014/10/16/6991567/twitpic-shutting-down-on-october-25th"
+                                  << "http://www.theverge.com/2014/10/16/6991567/twitpic-shutting-down-on-october-25th"
+                                  << QDateTime::fromString("17 Oct 2014 00:19:19", dtf);
+    
+    QTest::newRow("Valleywag") << "valleywag.rss" << "Valleywag" << 25
+                                  << "Uber Fired a Driver Over a \"Hateful\" Tweet About the Company"
+                                  << "http://feeds.gawker.com/~r/valleywag/full/~3/1_URVEiaSbI/uber-fired-a-driver-over-a-hateful-tweet-about-the-co-1647350304"
+                                  << "1647350304"
+                                  << QDateTime::fromString("16 Oct 2014 22:45:00", dtf);
+    
+    QTest::newRow("MakeUseOf") << "makeuseof.rss" << "MakeUseOf" << 15
+                                  << "Famous Internet Firsts And Where We Are Now"
+                                  << "http://www.makeuseof.com/tag/famous-internet-firsts-now/"
+                                  << "http://www.makeuseof.com/?p=418618"
+                                  << QDateTime::fromString("17 Oct 2014 02:30:20", dtf);
+    
+    QTest::newRow("BitTorrent blog") << "bittorrent.rss" << "The Official BitTorrent Blog" << 10
+                                  << "Sync Stories: Kickstarter Project Playnode Takes Distributed Technology to DJs"
+                                  << "http://blog.bittorrent.com/2014/10/14/sync-stories-kickstarter-project-playnode-takes-distributed-technology-to-djs/"
+                                  << "http://bittorrent.gyre.wpengine.com/?p=5338"
+                                  << QDateTime::fromString("14 Oct 2014 17:00:55", dtf);
+    
+    QTest::newRow("xkcd RSS") << "xkcd.rss" << "xkcd.com" << 4
+                                  << "Presidential Alert"
+                                  << "http://xkcd.com/1435/"
+                                  << "http://xkcd.com/1435/"
+                                  << QDateTime::fromString("17 Oct 2014 04:00:00", dtf);
+    
+    QTest::newRow("xkcd Atom") << "xkcd.atom" << "xkcd.com" << 4
+                                  << "Presidential Alert"
+                                  << "http://xkcd.com/1435/"
+                                  << "http://xkcd.com/1435/"
+                                  << QDateTime::fromString("17 Oct 2014 00:00:00", dtf);
+    
+    QTest::newRow("NBC News") << "nbcnews.rss" << "NBC News Top Stories" << 25
+                                  << "'Deplorable': Foley Family Disgusted by Political Ad"
+                                  << "http://feeds.nbcnews.com/c/35002/f/663303/s/3f8a588f/sc/7/l/0L0Snbcnews0N0Cnews0Cus0Enews0Cparents0Eslain0Ejournalist0Ejames0Efoley0Ecall0Epolitical0Ead0Edeplorable0En227866/story01.htm"
+                                  << "http://www.nbcnews.com/news/us-news/parents-slain-journalist-james-foley-call-political-ad-deplorable-n227866"
+                                  << QDateTime::fromString("17 Oct 2014 03:57:50", dtf);
+    
+    QTest::newRow("MIT Humanities.rss") << "mithumanities.rss" << "MIT News - Humanities" << 50
+                                  << "Said and Done for September 2014 "
+                                  << "http://newsoffice.mit.edu/2014/said-and-done-september-2014-0930"
+                                  << "http://newsoffice.mit.edu/2014/said-and-done-september-2014-0930"
+                                  << QDateTime::fromString("30 Sep 2014 22:01:02", dtf);
+    
+    QTest::newRow("CBSNews") << "cbsnews.rss" << "Home - CBSNews.com" << 29
+                                  << "Obama mulls Ebola \"czar\""
+                                  << "http://www.cbsnews.com/news/obama-says-ebola-czar-may-be-appropriate/"
+                                  << "0c593429-8235-4bfb-92b2-2025ab0c334c"
+                                  << QDateTime::fromString("17 Oct 2014 04:07:46", dtf);
 }
 
 QTEST_MAIN(TestFangParser)

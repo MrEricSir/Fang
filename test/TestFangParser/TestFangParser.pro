@@ -78,4 +78,13 @@ OTHER_FILES += \
     feeds/reaper.fm.rss \
     feeds/foldplop.rss \
     feeds/bleep.podcast.rss \
-    feeds/3drealms.atom
+    feeds/3drealms.atom \
+    feeds/theverge.rss \
+    feeds/valleywag.rss \
+    feeds/makeuseof.rss \
+    feeds/bittorrent.rss \
+    feeds/xkcd.rss \
+    feeds/xkcd.atom \
+    feeds/nbcnews.rss \
+    feeds/mithumanities.rss \
+    feeds/cbsnews.rss

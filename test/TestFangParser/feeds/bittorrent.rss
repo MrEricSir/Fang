@@ -1,0 +1,461 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+	>
+
+<channel>
+	<title>The Official BitTorrent Blog</title>
+	<atom:link href="http://blog.bittorrent.com/feed/" rel="self" type="application/rss+xml" />
+	<link>http://blog.bittorrent.com</link>
+	<description>The official source for BitTorrent news.</description>
+	<lastBuildDate>Thu, 16 Oct 2014 22:52:26 +0000</lastBuildDate>
+	<language>en-US</language>
+		<sy:updatePeriod>hourly</sy:updatePeriod>
+		<sy:updateFrequency>1</sy:updateFrequency>
+	
+	<item>
+		<title>Sync Stories: Kickstarter Project Playnode Takes Distributed Technology to DJs</title>
+		<link>http://blog.bittorrent.com/2014/10/14/sync-stories-kickstarter-project-playnode-takes-distributed-technology-to-djs/</link>
+		<comments>http://blog.bittorrent.com/2014/10/14/sync-stories-kickstarter-project-playnode-takes-distributed-technology-to-djs/#comments</comments>
+		<pubDate>Tue, 14 Oct 2014 17:00:55 +0000</pubDate>
+		<dc:creator><![CDATA[Lou]]></dc:creator>
+				<category><![CDATA[Stories]]></category>
+		<category><![CDATA[Sync]]></category>
+		<category><![CDATA[bittorrent sync]]></category>
+		<category><![CDATA[sync]]></category>
+		<category><![CDATA[sync stories]]></category>
+
+		<guid isPermaLink="false">http://bittorrent.gyre.wpengine.com/?p=5338</guid>
+		<description><![CDATA[Sync Stories is a column dedicated to our users. Each week, we showcase a different use case for BitTorrent Sync and the personal stories behind it. Neil Scudder &#8211; a developer of digital media distribution systems for the commercial background music industry &#8211; shows how Sync has helped to enable a distributed music platform that...]]></description>
+				<content:encoded><![CDATA[<p dir="ltr"><em>Sync Stories is a column dedicated to our users. Each week, we showcase a different use case for BitTorrent Sync and the personal stories behind it.</em></p>
+<p dir="ltr"><em><span class="Apple-style-span" style="font-style: normal;">Neil Scudder &#8211; a developer of digital media distribution systems for the commercial background music industry &#8211; shows how Sync has helped to enable a distributed music platform that better fosters the exchange of music between DJs and their clientele.</span></em></p>
+<p><span id="more-5338"></span></p>
+<p dir="ltr"><em>From Neil: </em></p>
+<p dir="ltr">It can be difficult to explain a business with an unconventional product. This is something that BitTorrent Inc. and I have in common.</p>
+<p dir="ltr">BitTorrent is awesome, and almost nobody understands why. Companies like Netflix or YouTube distribute media to consumers on the Internet from a central server. This model closely resembles traditional broadcast networks, and the idea fits easily into most people&#8217;s comprehension of the world. Distribution to each consumer has an expense, and the cost per consumer goes down with the economy of large scale distribution. Good.</p>
+<p dir="ltr">What if each consumer did not increase the cost of distribution? It would cost no more to distribute one media file to a million consumers than it did to one. It defies conventional logic, but it is actually a much more natural way to use the Internet than centralized distribution. This is what BitTorrent makes possible, and it has lowered the barrier to entry for individuals to distribute digital media.</p>
+<h3 dir="ltr">A Distributed Model for Music Playlists</h3>
+<p dir="ltr">Why is this interesting? Since 2007, I have created computer systems for DJs to remotely manage playlists in commercial environments such as restaurants and bars. I chose to use a centralized model because at first, there was only one DJ and one client. By the time there were 5 DJs and 400 clients, it became clear that decentralization would offer numerous benefits.</p>
+<p>The strength of a DJ is in their particular music library and how they know it better than anyone else. While the centralized distribution model would bring in multiple DJs under the umbrella of one music supply service, a decentralized model would allow DJs to serve their particular brand of cool directly to those who want it.</p>
+<p>Technology can free us from old world models of owner/labourer and enable contractor/client relationships. This is why I created the Playnode. It&#8217;s intended to improve on the corporate distribution system with a decentralized tool to be used by individual DJs operating at any scale.</p>
+<p style="text-align: center;"><img class="wp-image-5340 aligncenter" alt="Playnode BitTorrent Sync" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="http://2chie424y5ug2kfkkypuhcvwq2.wpengine.netdna-cdn.com/files/2014/10/Playnode-2.jpg" width="451" height="358" / data-unveil="true"><noscript><img class="wp-image-5340 aligncenter" alt="Playnode BitTorrent Sync" src="http://2chie424y5ug2kfkkypuhcvwq2.wpengine.netdna-cdn.com/files/2014/10/Playnode-2.jpg" width="451" height="358" /></noscript></p>
+<p>The advantage for business owners is not being tied to one music supplier with each piece of hardware. The Playnode allows the leasing of music selections from multiple DJs, each for a period of time and at a price set by the DJ. The business owns the hardware, but the DJ owns the music &#8211; a relationship strictly enforced with encryption.</p>
+<p>Playnode required a file transfer solution that would work for a single DJ with one client, working from anywhere, on any type of computer, with any quality of internet connection. The solution would have to scale to serve a larger number of clients without requiring a central server.</p>
+<p><img class="size-full wp-image-5342 aligncenter" alt="Playnode BitTorrent Sync" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="http://2chie424y5ug2kfkkypuhcvwq2.wpengine.netdna-cdn.com/files/2014/10/Playnode-Mobile-2.jpg" width="931" height="479" / data-unveil="true"><noscript><img class="size-full wp-image-5342 aligncenter" alt="Playnode BitTorrent Sync" src="http://2chie424y5ug2kfkkypuhcvwq2.wpengine.netdna-cdn.com/files/2014/10/Playnode-Mobile-2.jpg" width="931" height="479" /></noscript></p>
+<p dir="ltr">BitTorrent Sync was the only option that made sense. The tool provided an easy way to start, and the Sync API offered us a way to tailor the end-user experience just the way we need it. There would be no central storage server costs, no significant bandwidth usage, and no significant development of any kind in order to start using the system right away, and scale to any size.</p>
+<p>Sync is the kind of technology that empowers the individual more than ever before. Along with the Raspberry Pi, Linux and open source software, BitTorrent has made the Playnode possible and provided an opportunity to disrupt the market of background music to benefit both DJs and small business.</p>
+<p dir="ltr">Playnode launched on Kickstarter on September 29. Pricing starts at $89.</p>
+<p dir="ltr"><em>To support the project, please visit: </em></p>
+<p dir="ltr" style="text-align: center;"><a href="https://www.kickstarter.com/projects/933014548/playnode-for-djs-to-lease-music-to-restaurants-and"><img class="wp-image-5344 aligncenter" alt="Kickstarter Playnode BitTorrent Sync" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="http://2chie424y5ug2kfkkypuhcvwq2.wpengine.netdna-cdn.com/files/2014/10/Kickstarter.png" width="288" height="35" / data-unveil="true"><noscript><img class="wp-image-5344 aligncenter" alt="Kickstarter Playnode BitTorrent Sync" src="http://2chie424y5ug2kfkkypuhcvwq2.wpengine.netdna-cdn.com/files/2014/10/Kickstarter.png" width="288" height="35" /></noscript></a></p>
+]]></content:encoded>
+			<wfw:commentRss>http://blog.bittorrent.com/2014/10/14/sync-stories-kickstarter-project-playnode-takes-distributed-technology-to-djs/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+		</item>
+		<item>
+		<title>Staff Picks: Tourist Attractions</title>
+		<link>http://blog.bittorrent.com/2014/10/13/staff-picks-tourist-attractions/</link>
+		<comments>http://blog.bittorrent.com/2014/10/13/staff-picks-tourist-attractions/#comments</comments>
+		<pubDate>Mon, 13 Oct 2014 22:45:49 +0000</pubDate>
+		<dc:creator><![CDATA[Austin Leigh Briggs]]></dc:creator>
+				<category><![CDATA[Bundle]]></category>
+		<category><![CDATA[Staff Picks]]></category>
+		<category><![CDATA[bittorrent]]></category>
+		<category><![CDATA[bundle]]></category>
+		<category><![CDATA[Dusk]]></category>
+		<category><![CDATA[EP]]></category>
+		<category><![CDATA[Guitars]]></category>
+		<category><![CDATA[indie]]></category>
+		<category><![CDATA[rock]]></category>
+		<category><![CDATA[staff picks]]></category>
+		<category><![CDATA[Tourist Attractions]]></category>
+		<category><![CDATA[uk]]></category>
+
+		<guid isPermaLink="false">http://bittorrent.gyre.wpengine.com/?p=5351</guid>
+		<description><![CDATA[Staff Picks is dedicated to surfacing the best music, film, and art downloads on the Internet; digitally handmade by BitTorrent Publishers. Read on for this week’s finds. In this edition of Staff Picks: our latest Bundle discovery, the new four-track EP from England&#8217;s Tourist Attractions. For fans of British contemporaries Arctic Monkeys and Foals, the...]]></description>
+				<content:encoded><![CDATA[<p><em>Staff Picks is dedicated to surfacing the best music, film, and art downloads on the Internet; digitally handmade by <a href="http://bundles.bittorrent.com/" target="_blank">BitTorrent Publishers</a>. Read on for this week’s finds.</em></p>
+<p>In this edition of Staff Picks: our latest Bundle discovery, the new four-track EP from England&#8217;s <a href="http://www.touristattractionsband.co.uk" target="_blank">Tourist Attractions</a>.  For fans of British contemporaries Arctic Monkeys and Foals, the young four-piece from Lancashire have quickly struck a chord in the UK scene with their debut EP <em>Dusk</em>.  From the first notes of the opening track &#8220;Silhouette&#8221;, it is clear that Tourist Attractions is an emerging act that deserves our full attention.<br />
+<span id="more-5351"></span></p>
+</div><div class="wide"><br />
+<iframe src="http://bundles.bittorrent.com/embed/bundles/6d9dda96c7f868c5bbdc2cd168029dfca7d4005cc5b68ca0633f5e08161372dd" height="640" width="940" allowfullscreen="true" frameborder="no" scrolling="no"></iframe><br />
+</div><div class="single-pad">
+<p>Download the <a href="http://bundles.bittorrent.com/embed/bundles/6d9dda96c7f868c5bbdc2cd168029dfca7d4005cc5b68ca0633f5e08161372dd" target="_blank"><em>Dusk</em> Bundle</a> from Tourist Attractions to unlock the four-track EP for free.  Once you&#8217;ve added the <em>Dusk</em> EP to your playlist, head over to the <a href="http://www.touristattractionsband.co.uk/index.php?content=content/music.htm" target="_blank">band&#8217;s website</a> to check out their brand new single &#8220;The Fear&#8221; which was just released this week.  </p>
+<h3>About BitTorrent Bundle</h3>
+<p><a href="http://bundles.bittorrent.com" target="_blank">BitTorrent Bundle</a> is an alpha project made with and for the web’s creative community. Our mission is to help artists connect directly with fans, inside the content they share.</p>
+<p>Each BitTorrent Bundle allows artists to distribute content directly to the Internet. And each Bundle comes with a key. Fans can unlock artist content with an email address. The idea is to make each song a storefront, and each file more valuable, every time it’s shared. Got ideas for the next BitTorrent Bundle? <a href="https://bundles.bittorrent.com/publish#!/signup" target="_blank">Hit us up.</a></p>
+]]></content:encoded>
+			<wfw:commentRss>http://blog.bittorrent.com/2014/10/13/staff-picks-tourist-attractions/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+		</item>
+		<item>
+		<title>Friday Download: KDrew</title>
+		<link>http://blog.bittorrent.com/2014/10/10/friday-download-kdrew/</link>
+		<comments>http://blog.bittorrent.com/2014/10/10/friday-download-kdrew/#comments</comments>
+		<pubDate>Fri, 10 Oct 2014 16:59:47 +0000</pubDate>
+		<dc:creator><![CDATA[Straith]]></dc:creator>
+				<category><![CDATA[Bundle]]></category>
+		<category><![CDATA[Friday Download]]></category>
+		<category><![CDATA[bittorrent bundle]]></category>
+		<category><![CDATA[edm]]></category>
+		<category><![CDATA[friday download]]></category>
+		<category><![CDATA[kdrew]]></category>
+
+		<guid isPermaLink="false">http://bittorrent.gyre.wpengine.com/?p=5311</guid>
+		<description><![CDATA[Good Game Records launches their label with an exclusive first look at the upcoming EP by KDrew. In this edition of Friday Download: a new label opens up shop on BitTorrent Bundle. Good Game Records is a grassroots collective of awesome artists and creatives, dedicated to new media innovation. KDrew is the very first of...]]></description>
+				<content:encoded><![CDATA[<p><em>Good Game Records launches their label with an exclusive first look at the upcoming EP by KDrew.</em></p>
+<p>In this edition of Friday Download: a new label opens up shop on BitTorrent Bundle. Good Game Records is a grassroots collective of awesome artists and creatives, dedicated to new media innovation. <a href="https://soundcloud.com/kdrewmusic" target="_blank">KDrew</a> is the very first of them: a producer who’s fast emerging as one of EDM’s most talented. His upcoming EP, <em>Signals</em>, marks the first release from the new label. You can exclusively preview a track from it <a href="http://bundles.bittorrent.com/bundles/kdrew" target="_blank">here</a>, first.</p>
+<p><span id="more-5311"></span></p>
+</div><div class="wide"><br />
+<iframe src="http://bundles.bittorrent.com/embed/bundles/kdrew" height="640" width="940" allowfullscreen="true" frameborder="no" scrolling="no"></iframe><br />
+</div><div class="single-pad">
+<p>Download the <a href="http://bundles.bittorrent.com/bundles/kdrew" target="_blank">BitTorrent Bundle</a>, and unlock an exclusive 6-track sampler, a preview of the upcoming single “Tonight”, plus exclusive videos, art, and more.</p>
+<h3>KDrew <em>Signals</em> BitTorrent Bundle</h3>
+<p>“Let Me Go” Preview (Video)<br />
+“All Or Nothing” (Audio)<br />
+“Break The House” (Audio)<br />
+“Bullseye” (Audio)<br />
+“Circles” (Audio)<br />
+“Halogen” (Audio)<br />
+“Last Train To Paradise” (Audio)<br />
+Curated Images &amp; Photos (Art)<br />
+Wallpapers (Art)<br />
+“Tonight” Preview (Audio)<br />
+KDrew Q+A (Video)</p>
+</div><div class="wide"><br />
+<img class="alignnone size-full wp-image-5313" alt="10346512_10152545881596343_1377912447441818780_n" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="http://2chie424y5ug2kfkkypuhcvwq2.wpengine.netdna-cdn.com/files/2014/10/10346512_10152545881596343_1377912447441818780_n.jpg" width="940" height="617" / data-unveil="true"><noscript><img class="alignnone size-full wp-image-5313" alt="10346512_10152545881596343_1377912447441818780_n" src="http://2chie424y5ug2kfkkypuhcvwq2.wpengine.netdna-cdn.com/files/2014/10/10346512_10152545881596343_1377912447441818780_n.jpg" width="940" height="617" /></noscript><br />
+</div><div class="single-pad">
+<h3>Words with KDrew: On <em>Signals</em>, Sharing, and the Evolution of EDM</h3>
+<p><strong>BitTorrent: What got you into music? What made you decide to pursue it as more than a passion, but a career? Was there a point where you were like: this can work, or this has to work?</strong></p>
+<p><strong>KDrew:</strong> My dad was in a rock band, so growing up playing around in his studio I heard everything from Michael Jackson to Soundgarden.</p>
+<blockquote><p>&#8220;I was always a fan of music, but the production aspect of it was what got me hooked.&#8221;</p></blockquote>
+<p>It was a combo of loving to make music, and not being a fan of school. Everything else somehow just seemed to fall into place. I wake up everyday asking myself that question. There are times it&#8217;s hard for me to believe that I&#8217;m actually doing something that I love for a living.</p>
+<p><strong>BitTorrent: How did you get into electronic? How has your style evolved over time? How has the genre evolved over time?</strong></p>
+<p><strong>KDrew:</strong> I&#8217;ve always enjoyed dance music but it was when I heard dubstep for the first time that I really decided to get involved in the scene. I have so many influences, so my sound is constantly evolving. Plus, I enjoy the challenge of creating different kinds of music. I love doing rock and pop tracks with a little bit of dub or house influence within them. It’s cool because the scene is always changing and evolving so peoples’ musical pallets are being exposed to so much different stuff. I love it!</p>
+<p><strong>BitTorrent: What influences you? What inspires you? What are some of the key themes you explore in your work?</strong></p>
+<p><strong>KDrew:</strong> First and foremost, I&#8217;m inspired by life in general. Second, a constant yearning to perfect my craft, and third, the love of what I do. As far as themes, I&#8217;m currently working with a lot of organic/ambient textures. I like combining something pretty with something aggressive. I’m also a big fan of Coldplay so, like them, I&#8217;m always trying to make my records as big as they can be.</p>
+<p><strong>BitTorrent: The music industry has transitioned so massively over the last five years (some would call it chaos). What do you see as some of the possibilities or opportunities within this new landscape? </strong></p>
+<p><strong>KDrew:</strong> It&#8217;s funny that some people consider it chaos, I&#8217;ve always dreamed of the industry being this way. I feel the evolution of the music industry has been changing the old school ideologies that have polluted the music business for a long time.</p>
+<blockquote><p>&#8220;Music is made to be heard and shared. There&#8217;s more opportunity now to connect directly with fans, as well as get your music to them.&#8221;</p></blockquote>
+<p>It’s crazy because you can do something in your bedroom one day and the next day you’re charting on iTunes because of some viral video that had your track in it. There is no conventional way of “making it&#8221; anymore, which is so exciting.</p>
+<p><strong>BitTorrent: What went into the making of the upcoming <em>Signals</em> EP? What can we expect from the record?</strong></p>
+<p><strong>KDrew:</strong> Just like anything else, it starts with an idea, then you bring it to life; then you question it, you revise it; then you question it again and revise it some more. What&#8217;s so cool about finishing a body of work is that at the end you&#8217;ve grown so much from when you started it. You can expect something I&#8217;m extremely proud of, as well as a glimpse into the future of where my project is headed.</p>
+</div><div class="wide"><br />
+<img class="alignnone size-full wp-image-5314" alt="1467219_10152697751956343_9181339510802007003_n" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="http://2chie424y5ug2kfkkypuhcvwq2.wpengine.netdna-cdn.com/files/2014/10/1467219_10152697751956343_9181339510802007003_n.jpg" width="957" height="702" / data-unveil="true"><noscript><img class="alignnone size-full wp-image-5314" alt="1467219_10152697751956343_9181339510802007003_n" src="http://2chie424y5ug2kfkkypuhcvwq2.wpengine.netdna-cdn.com/files/2014/10/1467219_10152697751956343_9181339510802007003_n.jpg" width="957" height="702" /></noscript><br />
+</div><div class="single-pad">
+<h3>About BitTorrent Bundle</h3>
+<p><a href="https://bundles.bittorrent.com/" target="_blank">BitTorrent Bundle</a> is a publishing project made with and for the world’s creative community. Our mission is to help artists connect directly with fans, inside the content they share.</p>
+<p>Each BitTorrent Bundle allows artists to distribute content directly to the Internet. And each Bundle comes with a key. Fans can unlock artist content, like <em>Tomorrow&#8217;s Modern Boxes</em>, through a direct payment to the artist. The idea is to make each song a storefront, and each file more valuable, every time it’s shared. Got ideas for the next BitTorrent Bundle? <a href="https://bundles.bittorrent.com/publish#!/signup" target="_blank">Hit us up.</a></p>
+]]></content:encoded>
+			<wfw:commentRss>http://blog.bittorrent.com/2014/10/10/friday-download-kdrew/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+		</item>
+		<item>
+		<title>BitTorrent Bundle X Foreally</title>
+		<link>http://blog.bittorrent.com/2014/10/07/bittorrent-bundle-x-foreally/</link>
+		<comments>http://blog.bittorrent.com/2014/10/07/bittorrent-bundle-x-foreally/#comments</comments>
+		<pubDate>Tue, 07 Oct 2014 21:27:19 +0000</pubDate>
+		<dc:creator><![CDATA[Straith]]></dc:creator>
+				<category><![CDATA[Bundle]]></category>
+		<category><![CDATA[bittorrent bundle]]></category>
+		<category><![CDATA[forreally show]]></category>
+		<category><![CDATA[podcast]]></category>
+
+		<guid isPermaLink="false">http://bittorrent.gyre.wpengine.com/?p=5317</guid>
+		<description><![CDATA[Jude Angelini (Rude Jude of Shade45’s All Out Show) and Ross Rowe (Senim Silla of Binary Star) bring their podcast to BitTorrent. Ross and Jude are boyhood friends that grew up in Pontiac, Michigan. They may or may not be high school graduates, but for whatever they lack in higher education, they make up for...]]></description>
+				<content:encoded><![CDATA[<p><em>Jude Angelini (Rude Jude of Shade45’s All Out Show) and Ross Rowe (Senim Silla of Binary Star) bring their podcast to BitTorrent.</em></p>
+<p>Ross and Jude are boyhood friends that grew up in Pontiac, Michigan. They may or may not be high school graduates, but for whatever they lack in higher education, they make up for with untried and untrue, highly opinionated personal dogma and philosophy.</p>
+<p><span id="more-5317"></span></p>
+<p>Today, they’re bringing that dogma to BitTorrent. The <a href="http://bundles.bittorrent.com/bundles/foreallyshow" target="_blank">Foreally Show Bundle</a> features 8 original episodes of the podcast, curated photos, an exclusive video, and a first look at Jude&#8217;s new book, <em>Hyena</em>. Grab the <a href="http://bundles.bittorrent.com/bundles/forreallyshow" target="_blank">Bundle</a>, and get caught up. </p>
+<p>More from Foreally <a href="http://bit.ly/1q3T0vq" target="_blank">here</a>. Get the full story with Jude’s new book, <em>Hyena</em>, out now on <a href="http://amzn.to/1twmGDM" target="_blank">Amazon</a>. </p>
+</div><div class="wide"><br />
+<iframe width="940" height="640" scrolling="no" frameborder="no" src="http://bundles.bittorrent.com/embed/bundles/foreallyshow" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true"></iframe><br />
+</div><div class="single-pad">
+<h3>Words With Foreally: On 20 Years of Storytelling, Stream of Consciousness, and the Start of a Podcast.</h3>
+<p><strong>BitTorrent: How did the Foreally Show come about?</strong> </p>
+<p><strong>Jude Angelini:</strong> Ross kept bugging me about doing a video show, even though we didn’t have a camera, anyone to shoot it, edit it, or a plan. What we did have was some microphones so we opted to do a podcast instead. </p>
+<blockquote><p>My buddy described it best. It’s like sitting around talking to your homies without being able to get a word in edgewise. We hope for world peace.</p></blockquote>
+<p>I do a radio show on Sirius that plays a lot of music and this podcast is a nice way to unwind, slow down the pace, and talk some shit. Y&#8217;all get to benefit from the chemistry of two guys knowing each other for twenty plus years having a conversation.</p>
+<p><strong>BitTorrent: How do you approach building each episode?</strong> </p>
+<p><strong>Jude Angelini:</strong> The episodes tend to do the best when we have no plan, and it&#8217;s run like stream-of-consciousness. We find that when there is a plan we often sound contrived. Do we miss out on some topics because of this approach? Yes. But what we do speak on, sounds fresh.</p>
+<p><strong>BitTorrent: How has the show evolved over time? Where do you see it going? </strong></p>
+<p><strong>Jude Angelini:</strong> It hasn’t, we’re stagnant&#8230; Just kidding!  When we first started, we made a point not to have guests on, as we wanted to get comfortable on the mics with each other. The last few months we’ve really hit our stride. Now we’re bringing on more guests, and it’s definitely added to the show.</p>
+</div><div class="wide"><br />
+<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="http://2chie424y5ug2kfkkypuhcvwq2.wpengine.netdna-cdn.com/files/2014/10/RD6Om8WQTz6EEKXzgiVb_Bundle-Cover.jpg" alt="bittorrent bundle, foreally" width="3246" height="1533" class="alignnone size-full wp-image-5327" / data-unveil="true"><noscript><img src="http://2chie424y5ug2kfkkypuhcvwq2.wpengine.netdna-cdn.com/files/2014/10/RD6Om8WQTz6EEKXzgiVb_Bundle-Cover.jpg" alt="bittorrent bundle, foreally" width="3246" height="1533" class="alignnone size-full wp-image-5327" /></noscript><br />
+</div><div class="single-pad">
+<h3>About BitTorrent Bundle</h3>
+<p><a href="https://bundles.bittorrent.com/" target="_blank">BitTorrent Bundle</a> is a publishing project made with and for the world’s creative community. Our mission is to help artists connect directly with fans, inside the content they share.</p>
+<p>Each BitTorrent Bundle allows artists to distribute content directly to the Internet. And each Bundle comes with a key. Fans can unlock artist content, like <em>Tomorrow&#8217;s Modern Boxes</em>, through a direct payment to the artist. The idea is to make each song a storefront, and each file more valuable, every time it’s shared. Got ideas for the next BitTorrent Bundle? <a href="https://bundles.bittorrent.com/publish#!/signup" target="_blank">Hit us up.</a></p>
+]]></content:encoded>
+			<wfw:commentRss>http://blog.bittorrent.com/2014/10/07/bittorrent-bundle-x-foreally/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+		</item>
+		<item>
+		<title>Sync Stories: Event Planning with BitTorrent Sync</title>
+		<link>http://blog.bittorrent.com/2014/10/07/sync-stories-event-planning-with-bittorrent-sync/</link>
+		<comments>http://blog.bittorrent.com/2014/10/07/sync-stories-event-planning-with-bittorrent-sync/#comments</comments>
+		<pubDate>Tue, 07 Oct 2014 17:30:54 +0000</pubDate>
+		<dc:creator><![CDATA[Lou]]></dc:creator>
+				<category><![CDATA[Stories]]></category>
+		<category><![CDATA[Sync]]></category>
+		<category><![CDATA[bittorrent]]></category>
+		<category><![CDATA[bittorrent sync]]></category>
+		<category><![CDATA[sync]]></category>
+		<category><![CDATA[sync stories]]></category>
+
+		<guid isPermaLink="false">http://bittorrent.gyre.wpengine.com/?p=5298</guid>
+		<description><![CDATA[Sync Stories is a column dedicated to our users. Each week, we showcase a different use case for BitTorrent Sync and the personal stories behind it. In this week’s edition: Chris Dillon &#8211; managing director of AVE Services, an audio/visual and events company in the South of England &#8211; talks about how his company uses...]]></description>
+				<content:encoded><![CDATA[<p dir="ltr"><em>Sync Stories is a column dedicated to our users. Each week, we showcase a different use case for BitTorrent Sync and the personal stories behind it.</em></p>
+<p dir="ltr">In this week’s edition: Chris Dillon &#8211; managing director of AVE Services, an audio/visual and events company in the South of England &#8211; talks about how his company uses Sync to work effectively with clients and amongst the team.</p>
+<p><span id="more-5298"></span></p>
+<p dir="ltr"><em>From Chris: </em></p>
+<p>As any bride, party planner, or communications officer can tell you, event organising presents a myriad of stresses, challenges and of course rewards. The date itself, and the days leading up to it, become a melting pot of organising people, transport, technology, venues, food and responding quickly to the inevitable problems that arise.</p>
+<p>For an event organiser, waking up at 3:30am, already mid-leap towards the computer to check a presentation, video, or simply just to send an email, is standard practice.</p>
+<p>In the summer of 2013 &#8211; when we decided to start AVE Services &#8211; we knew that to arrange incredible events for others, we had to be sure that our own organisation was spot on. With this in mind, we began sourcing tools that allowed us to work efficiently, reliably and to a professional grade.<br />
+<img class="alignnone size-full wp-image-5306" alt="AVE Services BitTorrent Sync" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="http://2chie424y5ug2kfkkypuhcvwq2.wpengine.netdna-cdn.com/files/2014/10/AVE-Services-2.png" width="784" height="464" / data-unveil="true"><noscript><img class="alignnone size-full wp-image-5306" alt="AVE Services BitTorrent Sync" src="http://2chie424y5ug2kfkkypuhcvwq2.wpengine.netdna-cdn.com/files/2014/10/AVE-Services-2.png" width="784" height="464" /></noscript><br />
+BitTorrent Sync was top of our list. We had been following it closely since BitTorrent, Inc. announced it and could not wait to see what we could do with it. We had previously used a clumsy mixture of Dropbox to sync office files and Rapidshare to send large video files. It was a slow and frustrating process, with Dropbox mocking us from the taskbar every day that our storage was full and we should pay for more space.</p>
+<p>The day we created our first BitTorrent Sync folder was a good day indeed.<br />
+<img class="alignnone size-full wp-image-5307" alt="AVE Services BitTorrent Sync" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="http://2chie424y5ug2kfkkypuhcvwq2.wpengine.netdna-cdn.com/files/2014/10/btsync-server.png" width="1354" height="624" / data-unveil="true"><noscript><img class="alignnone size-full wp-image-5307" alt="AVE Services BitTorrent Sync" src="http://2chie424y5ug2kfkkypuhcvwq2.wpengine.netdna-cdn.com/files/2014/10/btsync-server.png" width="1354" height="624" /></noscript><br />
+We installed it on our three office computers, our personal laptops, phones and a remote server. The server &#8211; hosted at a great value rate by <a href="https://www.bhost.net/">BHost</a> - was on all the time, allowing a decent download speed 24/7. We installed 4G dongles in our vans too, meaning that we could manage files at remote locations. Whereas before, being sent a .mp4 from a presenter 10 minutes before it is due to be played in front of the audience would place our hearts squarely in our throats, we now know that we can respond calmly and wow our clients.<br />
+<img class="alignnone size-full wp-image-5308" alt="AVE Services BitTorrent Sync" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="http://2chie424y5ug2kfkkypuhcvwq2.wpengine.netdna-cdn.com/files/2014/10/AVE-Services-Sync.png" width="1297" height="639" / data-unveil="true"><noscript><img class="alignnone size-full wp-image-5308" alt="AVE Services BitTorrent Sync" src="http://2chie424y5ug2kfkkypuhcvwq2.wpengine.netdna-cdn.com/files/2014/10/AVE-Services-Sync.png" width="1297" height="639" /></noscript><br />
+We found that after the 1.4 update, our clients were a lot happier with using the improved UI on Sync. We have already received many positive comments about how easy and convenient it is to work. Using Sync with clients allows us to keep a transparent preparation process between all parties involved in the event; they see how up to date we are and so know exactly what to expect. It keeps us performing our best and it allows them to work with us easier.</p>
+<p>Our events business structure is incredibly decentralised. We have an office, but our staff are often out on site or staying away. Sync allows us to share graphics, documents, pictures, and code with each other so we can manage our website without being confined to one place. It allows us to take our office with us wherever we go. It’s so reassuring too to know that we stay in charge of our files. When we’re dealing with confidential data, the last thing we want is for a data breach beyond our control to land us in trouble. We take our client’s data seriously and trust no one but us to look after it.</p>
+<p>In addition to events, we also provide filming, video production and live streaming services. By syncing these huge files with other computers, we instantly keep everything backed up and can have the files synced with our powerful video production computer instantly. This allows for a quicker turn around with projects.</p>
+<h3>Looking Ahead with Sync</h3>
+<p>Inspired by Sync, we’re currently in the process of setting up ‘public folders’ to provide stock footage and photos for free back into the videography and photography community. We know that putting on events is all about teamwork and thanks to Sync, we can create a wiki of stock footage for our freelancers and friends to access.</p>
+<p>All in all, Sync has become such a central part to the way that we work every day.</p>
+<p>So as I bring this to an end, knowing that I will click ‘save’ instantly into the sync so that my colleague can proof read it for me, I want to really express how grateful we are to Sync for keeping their services open, and putting other companies performances and prices to shame. Thank you.</p>
+<p><em>You can reach Chris and inquire about AVE Services at their <a href="http://audiovisualexcellence.co.uk/">website</a>.</em> <i>For more info on Sync, click <a href="http://try.getsync.com/large-file-transfer-sync/">here</a> and</i><em> if you’ve got an epic Sync idea, use-case or how-to, shoot us an email at sync[at]bittorrent.com.</em></p>
+<div></div>
+]]></content:encoded>
+			<wfw:commentRss>http://blog.bittorrent.com/2014/10/07/sync-stories-event-planning-with-bittorrent-sync/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+		</item>
+		<item>
+		<title>Staff Pick: Atari Teenage Riot</title>
+		<link>http://blog.bittorrent.com/2014/10/06/staff-pick-atari-teenage-riot/</link>
+		<comments>http://blog.bittorrent.com/2014/10/06/staff-pick-atari-teenage-riot/#comments</comments>
+		<pubDate>Mon, 06 Oct 2014 19:28:17 +0000</pubDate>
+		<dc:creator><![CDATA[Austin Leigh Briggs]]></dc:creator>
+				<category><![CDATA[Bundle]]></category>
+		<category><![CDATA[Staff Picks]]></category>
+		<category><![CDATA[Atari Teenage Riot]]></category>
+		<category><![CDATA[bittorrent]]></category>
+		<category><![CDATA[bundle]]></category>
+		<category><![CDATA[Digital Freedom]]></category>
+		<category><![CDATA[electronic]]></category>
+		<category><![CDATA[experimental]]></category>
+		<category><![CDATA[hacktivist]]></category>
+		<category><![CDATA[Modern Liars]]></category>
+		<category><![CDATA[music]]></category>
+		<category><![CDATA[Video]]></category>
+
+		<guid isPermaLink="false">http://bittorrent.gyre.wpengine.com/?p=5315</guid>
+		<description><![CDATA[Staff Picks is dedicated to surfacing the best music, film, and art downloads on the Internet; digitally handmade by BitTorrent Publishers. Read on for this week’s finds. In this edition of Staff Picks: Alec Empire and Atari Teenage Riot offer fans the debut single from their forthcoming album Reset. Dedicated &#8220;to all hackers, DJs, activists,...]]></description>
+				<content:encoded><![CDATA[<p><em>Staff Picks is dedicated to surfacing the best music, film, and art downloads on the Internet; digitally handmade by <a href="http://bundles.bittorrent.com/" target="_blank">BitTorrent Publishers</a>. Read on for this week’s finds.</em></p>
+<p>In this edition of Staff Picks: <a href="https://twitter.com/ALEC_EMPIRE" target="_blank">Alec Empire</a> and <a href="http://www.atari-teenage-riot.com/" target="_blank">Atari Teenage Riot</a> offer fans the debut single from their forthcoming album <em>Reset</em>.  Dedicated &#8220;to all hackers, DJs, activists, all riot grrls!&#8221;, &#8220;Modern Empires&#8221; finds ATR once again leading the charge for a free and open Internet.  Fighting to preserve the online world as a vehicle for social change and to safeguard it from an ever-growing surveillance state.  These are the ideas that inspire ATR to create.  These are the rights that ATR inspires us to defend.<br />
+<span id="more-5315"></span></p>
+<blockquote><p>&#8220;Some say that computers are destroying our humanity, but we say computers are controlled by men and they can be used to help humanity&#8221; -<em>Modern Liars</em></p></blockquote>
+</div><div class="wide"><br />
+<iframe src="http://bundles.bittorrent.com/embed/bundles/a14afb60fbb466caa3047cfc70dc3117db322d07fe36e335eda769dc5a35dcb5" height="640" width="940" allowfullscreen="true" frameborder="no" scrolling="no"></iframe><br />
+</div><div class="single-pad">
+<p>Download the <a href="https://bundles.bittorrent.com/bundles/a14afb60fbb466caa3047cfc70dc3117db322d07fe36e335eda769dc5a35dcb5" target="_blank">Modern Liars Bundle</a> to get the  official video and a hi-definition live performance of the new single.  Enter your email to unlock the high-quality audio track.  If you&#8217;re not familiar, check out ATR&#8217;s <a href="https://bundles.bittorrent.com/bundles/651ac99ed9609482af3ccab8b51b6ed816df4ef1d9b93d5175aff1dce0ea0c89" target="_blank"><em>This is Hyperreal</em></a> Bundle and prepare for the new album <em>Reset</em> coming soon.</p>
+<h3>About BitTorrent Bundle</h3>
+<p><a href="http://bundles.bittorrent.com" target="_blank">BitTorrent Bundle</a> is an alpha project made with and for the web’s creative community. Our mission is to help artists connect directly with fans, inside the content they share.</p>
+<p>Each BitTorrent Bundle allows artists to distribute content directly to the Internet. And each Bundle comes with a key. Fans can unlock artist content with an email address. The idea is to make each song a storefront, and each file more valuable, every time it’s shared. Got ideas for the next BitTorrent Bundle? <a href="https://bundles.bittorrent.com/publish#!/signup" target="_blank">Hit us up.</a></p>
+]]></content:encoded>
+			<wfw:commentRss>http://blog.bittorrent.com/2014/10/06/staff-pick-atari-teenage-riot/feed/</wfw:commentRss>
+		<slash:comments>1</slash:comments>
+		</item>
+		<item>
+		<title>Friday Download: Copenhagen</title>
+		<link>http://blog.bittorrent.com/2014/10/03/friday-download-copenhagen/</link>
+		<comments>http://blog.bittorrent.com/2014/10/03/friday-download-copenhagen/#comments</comments>
+		<pubDate>Fri, 03 Oct 2014 19:00:16 +0000</pubDate>
+		<dc:creator><![CDATA[Straith]]></dc:creator>
+				<category><![CDATA[Bundle]]></category>
+		<category><![CDATA[Friday Download]]></category>
+		<category><![CDATA[bittorrent bundle]]></category>
+		<category><![CDATA[copenhagen]]></category>
+		<category><![CDATA[drama]]></category>
+		<category><![CDATA[indie film]]></category>
+
+		<guid isPermaLink="false">http://bittorrent.gyre.wpengine.com/?p=5279</guid>
+		<description><![CDATA[An exclusive preview of the new indie drama, in theaters and VOD today. Copenhagen, directed by Mark Raso, follows a man abroad and adrift; searching for his past. William (Gethin Anthony), convinces Effy, a young waitress, to accompany him on his journey. Together, they uncover a family’s secret history. They also fall in love. Effie...]]></description>
+				<content:encoded><![CDATA[<p><em>An exclusive preview of the new indie drama, in theaters and VOD today. </em></p>
+<p><span id="more-5279"></span></p>
+<p><a href="http://www.copenhagenthemovie.com/" target="_blank"><em>Copenhagen</em></a>, directed by Mark Raso, follows a man abroad and adrift; searching for his past. William (Gethin Anthony), convinces Effy, a young waitress, to accompany him on his journey. Together, they uncover a family’s secret history. They also fall in love. Effie is 14; just half William’s age. The film debuted at festivals this year. Today, it’s out in theaters and available On Demand.</p>
+</div><div class="wide"><br />
+<iframe src="http://bundles.bittorrent.com/embed/bundles/copenhagen" height="640" width="940" allowfullscreen="true" frameborder="no" scrolling="no"></iframe><br />
+</div><div class="single-pad">
+<p>To help launch the film, the director is releasing a digital box set: featuring an exclusive Student Academy Award winning short film, <em>Under</em>, the first 5 minutes of the feature film <em>Copenhagen</em>, music by Esther Maria and ONBC, art, and a curated photo collection from behind the scenes. Download the BitTorrent Bundle, and unlock the new film.</p>
+<h3>Copenhagen X BitTorrent Bundle</h3>
+<p><em>Copenhagen</em> Official Trailer (Video)<br />
+<em>Copenhagen</em> Film Special Preview (Video)<br />
+Esther Maria: Broken (Audio)<br />
+ONBC: You and Me Against the World (Audio)<br />
+<em>Copenhagen</em>: Stay With Me (Audio)<br />
+<em>Under</em>: HD (Video)<br />
+<em>Copenhagen</em>: Exclusive Movie Clip HD (Video)<br />
+<em>Copenhagen</em>: Slamdance Spotlight (Video)<br />
+<em>Copenhagen</em>: EPK (PDF)<br />
+<em>Copenhagen</em>: Final Script (PDF)<br />
+<em>Copenhagen</em>: Shotlist (PDF)<br />
+<em>Copenhagen</em>: FFTT Pitch Package (PDF)<br />
+Curated Photoset (Art)</p>
+</div><div class="wide"><br />
+<img class="alignnone size-full wp-image-5297" alt="COPENHAGEN-Effy-William-river" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="http://2chie424y5ug2kfkkypuhcvwq2.wpengine.netdna-cdn.com/files/2014/10/COPENHAGEN-Effy-William-river1.jpg" width="1600" height="1067" / data-unveil="true"><noscript><img class="alignnone size-full wp-image-5297" alt="COPENHAGEN-Effy-William-river" src="http://2chie424y5ug2kfkkypuhcvwq2.wpengine.netdna-cdn.com/files/2014/10/COPENHAGEN-Effy-William-river1.jpg" width="1600" height="1067" /></noscript><br />
+</div><div class="single-pad">
+<h3>Words with Mark Raso: On Copenhagen, and After</h3>
+<p><strong>BitTorrent: What drew you to Copenhagen? The place? The story? What role did the city play in the narrative (and off-screen)? </strong></p>
+<p><strong>Mark Raso:</strong> My wife is from Copenhagen, so I&#8217;ve spent a lot of time there over the years. I instantly fell in love with the youthful energy of the city, and the story grew from that and various specific episodes I had while living there. The city plays a huge role in the film, and I wanted it to feel like a character much like the Tokyo of “Lost in Translation” does for that film.</p>
+<p><strong>BitTorrent: William and Effy’s relationship goes against the conventions of a typical Hollywood romance. Why was that important? How did you approach the development of these characters?</strong></p>
+<p><strong>Raso:</strong> I’m not sure it goes totally against the conventions, but rather pushed them to the extremes so that it feels different. And pushing them was important because I feel like films don’t challenge audiences enough, so we wanted to ask the tough questions while at the same time hope that audiences can embody the characters and “feel” along with them. Once the audience is in William’s shoes, they are forced to look at things differently. The characters have clear arcs and we knew where they had to go, so it was just a matter of the actors hitting certain milestones along the way to help the characters get to where they needed to go.</p>
+<p><strong>BitTorrent: This marks your first feature-length project. What was the process like? What were some of the challenges you faced? </strong></p>
+<p><strong>Raso:</strong> It was a truly great experience and a privilege to work with such an incredible team. Shooting in a foreign country challenged us a lot, but it is also provided myself and the crew from out of town an experience of adventure, which I think we brought to the film. The longest I had shot prior to Copenhagen was 8 days, so the thought of going 24 days was a bit scary at first but it really became easier as we went on, and I actually found myself hitting my groove as we moved forward. By far the biggest challenge we faced was budgetary, but the Producers really made every penny count and the people of Copenhagen opened their arms that were were able to pull it off. Still, shooting a micro in one of the most expensive countries in the world is not advisable.</p>
+</div><div class="wide"><br />
+<img class="alignnone size-full wp-image-5300" alt="eBSvECeAA3w79VnTDrH0sdDi6Sk-1" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="http://2chie424y5ug2kfkkypuhcvwq2.wpengine.netdna-cdn.com/files/2014/10/eBSvECeAA3w79VnTDrH0sdDi6Sk-1.jpg" width="1600" height="900" / data-unveil="true"><noscript><img class="alignnone size-full wp-image-5300" alt="eBSvECeAA3w79VnTDrH0sdDi6Sk-1" src="http://2chie424y5ug2kfkkypuhcvwq2.wpengine.netdna-cdn.com/files/2014/10/eBSvECeAA3w79VnTDrH0sdDi6Sk-1.jpg" width="1600" height="900" /></noscript><br />
+</div><div class="single-pad">
+<p><strong>BitTorrent: What advice do you have for filmmakers who are just starting out, or working on micro-budgets?</strong></p>
+<p><strong>Raso:</strong> Filmmaking is a craft, so if you are just starting out my advice would be to hone that craft by practicing. With the cost of good, cheap HD camera’s being so low (or coming with your phone), make a ton of shorts and practice, practice, practice. In terms of tackling a micro, remember that pre-production is free. So spend as much time working on the script as you need. And as much time casting as you need, and make sure you have done everything you can to prepare before days start equalling dollars.</p>
+<p><strong>BitTorrent: As an independent filmmaker, how do you see the industry changing? How would you like to see it change? </strong></p>
+<p><strong>Raso:</strong> It’s easier to make films, which is great. But trying to get them seen is that much harder with all the competition &#8211; which is a shitty word to use- out there. I think it has never been more difficult to be an Indy filmmaker and until audiences start gravitating to them it’s going to be hard to make money doing this. I’m not sure what the change would look like, but there is definitely a need for something to change so that great films can be seen by large audiences. The platforms are out there, it is just a matter of monetizing it so that it can be sustainable for so many people in the Indy film landscape.</p>
+<p><strong>BitTorrent: What’s next?</strong></p>
+<p><strong>Raso:</strong> Things are going well. I am attached to various scripts of different sizes, from something very small and indie, to something more on the studio side. So much has to time right with this that I am reluctant to get ahead of myself and discuss the projects in more detail, but the hope is you will see my second feature sometime in the near future.</p>
+</div><div class="wide"><br />
+<img class="alignnone size-full wp-image-5299" alt="copenhagen_slamdance" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="http://2chie424y5ug2kfkkypuhcvwq2.wpengine.netdna-cdn.com/files/2014/10/copenhagen_slamdance.jpg" width="1296" height="730" / data-unveil="true"><noscript><img class="alignnone size-full wp-image-5299" alt="copenhagen_slamdance" src="http://2chie424y5ug2kfkkypuhcvwq2.wpengine.netdna-cdn.com/files/2014/10/copenhagen_slamdance.jpg" width="1296" height="730" /></noscript><br />
+</div><div class="single-pad">
+<h3>About BitTorrent Bundle</h3>
+<p><a href="https://bundles.bittorrent.com/" target="_blank">BitTorrent Bundle</a> is a publishing project made with and for the world’s creative community. Our mission is to help artists connect directly with fans, inside the content they share.</p>
+<p>Each BitTorrent Bundle allows artists to distribute content directly to the Internet. And each Bundle comes with a key. Fans can unlock artist content, like <em>Tomorrow&#8217;s Modern Boxes</em>, through a direct payment to the artist. The idea is to make each song a storefront, and each file more valuable, every time it’s shared. Got ideas for the next BitTorrent Bundle? <a href="https://bundles.bittorrent.com/publish#!/signup" target="_blank">Hit us up.</a></p>
+]]></content:encoded>
+			<wfw:commentRss>http://blog.bittorrent.com/2014/10/03/friday-download-copenhagen/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+		</item>
+		<item>
+		<title>Tomorrow’s Modern Boxes Reaches 1 Million Downloads</title>
+		<link>http://blog.bittorrent.com/2014/10/02/tomorrows-modern-boxes-reaches-1-million-downloads/</link>
+		<comments>http://blog.bittorrent.com/2014/10/02/tomorrows-modern-boxes-reaches-1-million-downloads/#comments</comments>
+		<pubDate>Thu, 02 Oct 2014 22:01:23 +0000</pubDate>
+		<dc:creator><![CDATA[Matt Mason]]></dc:creator>
+				<category><![CDATA[BitTorrent]]></category>
+		<category><![CDATA[Bundle]]></category>
+		<category><![CDATA[bittorrent]]></category>
+		<category><![CDATA[bundle]]></category>
+		<category><![CDATA[thom yorke]]></category>
+		<category><![CDATA[tomorrow's modern boxes]]></category>
+
+		<guid isPermaLink="false">http://bittorrent.gyre.wpengine.com/?p=5290</guid>
+		<description><![CDATA[On Friday, Thom Yorke released an experiment: a new album called Tomorrow’s Modern Boxes; a new way of distributing music via BitTorrent Bundle. Today, that project has been downloaded more than 1 million times; including both free downloads of the single and video, and paid downloads of the full album. Yorke released the album with...]]></description>
+				<content:encoded><![CDATA[<p>On Friday, Thom Yorke released an experiment: a new album called <em>Tomorrow’s Modern Boxes</em>; a new way of distributing music via <a href="https://bundles.bittorrent.com/" target="_blank">BitTorrent Bundle</a>. Today, that project has been downloaded more than 1 million times; including both free downloads of the single and video, and paid downloads of the full album.<br />
+<span id="more-5290"></span></p>
+<p>Yorke released the album with this stated goal:</p>
+<blockquote><p>“If it works well it could be an effective way of handing some control of Internet commerce back to the people who are creating the work.”</p></blockquote>
+<p>One million downloads later, it’s working.</p>
+<p>Thank you, all. If you haven’t yet purchased <em>Tomorrow’s Modern Boxes</em>, your copy is <a href="https://bundles.bittorrent.com/bundles/tomorrowsmodernboxes" target="_blank">here</a>.</p>
+</div><div class="wide"><br />
+<iframe src="http://bundles.bittorrent.com/embed/bundles/tomorrowsmodernboxes" height="640" width="940" allowfullscreen="true" frameborder="no" scrolling="no"></iframe><br />
+</div><div class="single-pad">
+<h3>About BitTorrent Bundle</h3>
+<p><a href="https://bundles.bittorrent.com/" target="_blank">BitTorrent Bundle</a> is a publishing project made with and for the world’s creative community. Our mission is to help artists connect directly with fans, inside the content they share.</p>
+<p>Each BitTorrent Bundle allows artists to distribute content directly to the Internet. And each Bundle comes with a key. Fans can unlock artist content, like <em>Tomorrow&#8217;s Modern Boxes</em>, through a direct payment to the artist. The idea is to make each song a storefront, and each file more valuable, every time it’s shared. Got ideas for the next BitTorrent Bundle? <a href="https://bundles.bittorrent.com/publish#!/signup" target="_blank">Hit us up.</a></p>
+]]></content:encoded>
+			<wfw:commentRss>http://blog.bittorrent.com/2014/10/02/tomorrows-modern-boxes-reaches-1-million-downloads/feed/</wfw:commentRss>
+		<slash:comments>1</slash:comments>
+		</item>
+		<item>
+		<title>Sync Dev: Staying Connected While Away From It All</title>
+		<link>http://blog.bittorrent.com/2014/10/02/sync-dev-staying-connected-while-away-from-it-all/</link>
+		<comments>http://blog.bittorrent.com/2014/10/02/sync-dev-staying-connected-while-away-from-it-all/#comments</comments>
+		<pubDate>Thu, 02 Oct 2014 21:30:42 +0000</pubDate>
+		<dc:creator><![CDATA[Aaron Liao]]></dc:creator>
+				<category><![CDATA[BitTorrent]]></category>
+		<category><![CDATA[Developer]]></category>
+		<category><![CDATA[Sync]]></category>
+		<category><![CDATA[Sync API]]></category>
+		<category><![CDATA[api]]></category>
+		<category><![CDATA[dev]]></category>
+		<category><![CDATA[developer]]></category>
+		<category><![CDATA[sync]]></category>
+
+		<guid isPermaLink="false">http://bittorrent.gyre.wpengine.com/?p=5281</guid>
+		<description><![CDATA[Developing on the BitTorrent Sync API? Our developer evangelist is here to work with you. In last week&#8217;s Sync Dev column, I wrote about my home Sync configuration and how I use Sync to &#8220;phone home&#8221; and back up my photos while I&#8217;m on the road. This week, I&#8217;m at the Four Seasons in Jakarta...]]></description>
+				<content:encoded><![CDATA[<p><em>Developing on the BitTorrent Sync API? Our developer evangelist is here to work with you.</em></p>
+<p>In <a href="http://blog.bittorrent.com/2014/09/25/sync-dev-how-i-sync/">last week&#8217;s Sync Dev column</a>, I wrote about my home Sync configuration and how I use Sync to &#8220;phone home&#8221; and back up my photos while I&#8217;m on the road. This week, I&#8217;m at the Four Seasons in Jakarta and I&#8217;ve got some photos to share with my friends back at home. Sync has already backed up my 3GB or so worth of RAW files and my processed versions are being pushed over hotel Wi-Fi back home as I type this. Slick.</p>
+<p><span id="more-5281"></span></p>
+<p>Before I share some of my Jakarta street photos, I frequently get asked about my travel setup <a href="https://www.flickr.com/photos/aaronliao/" target="_blank">on Flickr</a>, at the airport, etc.  I travel fairly light, and on this particular trip, I got to use most of the gear that I carry around.  This isn&#8217;t a &#8220;Top 10&#8243; list so to speak &#8211; the items aren&#8217;t in any particular order.  This is more like a list of things that I find immensely useful when I&#8217;m on the road.</p>
+<p><strong>1. <a href="http://24h.pchome.com.tw/prod/DRAF4F-A64323480">NorthLink Router</a> </strong>- This is a tiny Wi-Fi-N router that is powered via Micro USB.  Importantly, it has a WAN/Internet port as well as an additional Ethernet port so that you can serve up Wi-Fi and also have a wired connection.  My room here in Jakarta has Wi-Fi, but has a two-device limit. The NorthLink router solves the problem of pushing photos to Sync from multiple devices that want Wi-Fi.  You&#8217;re probably asking, &#8220;Where can I get one&#8221; and &#8220;Why does your link for this router point to a website in Taiwan that I can&#8217;t order from?&#8221;  My NorthLink was a souvenir gift from my brother when he was visiting Taiwan &#8211; but don&#8217;t fret, you can find these on Amazon in the US (with firmware that&#8217;s in English, no less).  TP-LINK makes a nice alternative that doesn&#8217;t have the additional Ethernet port &#8212; bonus points if you have heard of or get the SLboat-modded version. Even more bonus points if you get the Chinese knockoff version that comes with the additional Ethernet port. <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="http://2chie424y5ug2kfkkypuhcvwq2.wpengine.netdna-cdn.com/wp-includes/images/smilies/icon_wink.gif" alt=";)" class="wp-smiley" / data-unveil="true"><noscript><img src="http://2chie424y5ug2kfkkypuhcvwq2.wpengine.netdna-cdn.com/wp-includes/images/smilies/icon_wink.gif" alt=";)" class="wp-smiley" /></noscript><br />
+</div><div class="wide"><br />
+<img class="alignnone size-full wp-image-5283" alt="R0002841 copy" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="http://2chie424y5ug2kfkkypuhcvwq2.wpengine.netdna-cdn.com/files/2014/10/R0002841-copy.jpg" width="1600" height="1069" / data-unveil="true"><noscript><img class="alignnone size-full wp-image-5283" alt="R0002841 copy" src="http://2chie424y5ug2kfkkypuhcvwq2.wpengine.netdna-cdn.com/files/2014/10/R0002841-copy.jpg" width="1600" height="1069" /></noscript><br />
+</div><div class="single-pad">
+<p><strong>2. Bag Full of Cables</strong> &#8211; I like the laptop sleeves and cable pouches from local San Francisco business <a href="http://www.sfbags.com/">Waterfield/SFBags.com</a>.  I bought my first laptop sleeve case from these folks in 2001 for my Apple Titanium PowerBook G4.  The sleeves will easily outlive the laptops that they hold.  I&#8217;ve got a couple pouches full of power adapters and cables that I never unpack &#8211; this is an entire set of extra cables that I&#8217;ve bought just to travel with because nobody likes running around the house unplugging things when they have a flight to catch in an hour &#8211; you&#8217;ll invariably forget something.  In these pouches, I carry USB to Mini/Micro cables, Apple Lightning cables for my iDevices, Apple Thunderbolt to Ethernet and Thunderbolt to HDMI cables for my MacBook Air 11&#8243;, a couple retractable Cat6 cables, spare SD/MicroSDHC/CF cards, a USB 3 card reader (SD, CF, etc), USB to Ethernet, an Apple 12W USB power adapter, etc.  Recently, I added these <a href="https://www.kickstarter.com/projects/nativeunion/jump-the-first-charging-solution-that-fits-your-li">Native Union Jump cables</a> to my Bag of cables &#8211; they&#8217;re pretty handy.</p>
+<p><strong>3. <a href="http://www.belkin.com/us/p/P-BST300/">Belkin SurgePlus 3-Outlet Mini Travel Surge Protector</a> - </strong>Want to make some friends at the airport?  I don&#8217;t, either.  All jokes aside, this thing is a road warrior&#8217;s best friend.  Turns 1 power outlet into 3 and has 2 2.1 amp USB ports.  It swivels, too.  Perfect for hotel rooms where there is only one power socket on the desk.  Or airports lounges or terminals where everyone is fighting to charge their power-hungry phablet on the one available outlet.  While you&#8217;re at it, get yourself a good world power adapter &#8211; mine is from <a href="www.skross.com/">SKROSS</a> and it works very well.</p>
+</div><div class="wide"><br />
+<img class="alignnone size-full wp-image-5284" alt="R0002842 copy" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="http://2chie424y5ug2kfkkypuhcvwq2.wpengine.netdna-cdn.com/files/2014/10/R0002842-copy.jpg" width="1600" height="1069" / data-unveil="true"><noscript><img class="alignnone size-full wp-image-5284" alt="R0002842 copy" src="http://2chie424y5ug2kfkkypuhcvwq2.wpengine.netdna-cdn.com/files/2014/10/R0002842-copy.jpg" width="1600" height="1069" /></noscript><br />
+</div><div class="single-pad">
+<p>Speaking of power&#8230;</p>
+<p><strong>4. <a href="http://www.mophie.com/shop/powerstation-duo-smart-phones-tablets">Mophie Powerstation Duo </a></strong>- I carry two of these along with some short (3&#8243;) USB to Micro-USB cables and Apple Micro-USB to Lightning adapters.  I like the short cable + adapter option as opposed to Apple&#8217;s shortest Lightning cable because there is less cable to trip over or to get hung up.  I use these to charge everything from my iPhone/iPod/iPad to my MiFi.  Many planes now have power outlets under seats, but these USB batteries are still very handy for the times when you find yourself away from a reliable power source for hours or days at a time.</p>
+</div><div class="wide"><br />
+<img class="alignnone size-full wp-image-5285" alt="R0002843 copy" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="http://2chie424y5ug2kfkkypuhcvwq2.wpengine.netdna-cdn.com/files/2014/10/R0002843-copy.jpg" width="1600" height="1069" / data-unveil="true"><noscript><img class="alignnone size-full wp-image-5285" alt="R0002843 copy" src="http://2chie424y5ug2kfkkypuhcvwq2.wpengine.netdna-cdn.com/files/2014/10/R0002843-copy.jpg" width="1600" height="1069" /></noscript><br />
+</div><div class="single-pad">
+<p><strong>5. <a href="http://www.amazon.com/dp/B00IOY8XWQ">Amazon Kindle</a></strong><strong> </strong>- I like reading a bunch of books at once&#8230;or at least having the option to.  Carrying five books onto the plane goes against all of my packing rules.  My first Kindle was a 3G Keyboard.  Then I got a Kindle Fire.  I pre-ordered a Kindle Voyage and am looking forward to receiving that.  I read a lot when I&#8217;m on the road &#8211; the e-Ink devices are easier on the eyes.  I got the Kindle Fire because I wanted something that could better handle PDFs.  The Kindle Fire is great at PDFs, but reading on it for long periods of time is tough for my eyes, so it&#8217;s back to an e-Ink screen.</p>
+<p>PDFs will be handled by&#8230;</p>
+<p><strong>6. <a href="http://store.apple.com/us/buy-ipad/ipad-mini-retina">Apple iPad mini Retina display</a></strong> &#8211; PDFs, my favorite movies, TripIt, etc.  My first iPad was a Gen 2 iPad &#8211; I bought it mainly for FaceTime and Skype and didn&#8217;t think I&#8217;d store much media on it, what with Netflix, Pandora, and other streaming services.  I was completely wrong and the 16gb version proved to be woefully insufficient.  My iPad Mini is the 128GB version &#8211; I like having some familiar things like my favorite movies, Tintin comics in PDF and photos on tap when I&#8217;m far from home.</p>
+</div><div class="wide"><br />
+<img class="alignnone size-full wp-image-5286" alt="R0002847 copy" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="http://2chie424y5ug2kfkkypuhcvwq2.wpengine.netdna-cdn.com/files/2014/10/R0002847-copy.jpg" width="1600" height="1069" / data-unveil="true"><noscript><img class="alignnone size-full wp-image-5286" alt="R0002847 copy" src="http://2chie424y5ug2kfkkypuhcvwq2.wpengine.netdna-cdn.com/files/2014/10/R0002847-copy.jpg" width="1600" height="1069" /></noscript><br />
+</div><div class="single-pad">
+<p><strong>7. <a href="http://www.shure.com/americas/products/earphones-headphones/se-earphones/se535-sound-isolating-earphones">Shure SE-535 In-Ear Monitors</a></strong> &#8211; I use these with an 4th Gen iPod Touch, with my laptop, iPad mini, etc.  They are excellent, period.  These things will drown out the angriest of screaming babies and the folks on the plane who insist on talking through the &#8220;night&#8221; about how they proactively drive synergy and how the Internet of Things and IT strategy will help them &#8212; blah blah, Always Be Closing or something.  Right.  Seriously though, these IEMs are amazing.<br />
+</div><div class="wide"><br />
+<img class="alignnone size-full wp-image-5289" alt="M2400519 copy" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="http://2chie424y5ug2kfkkypuhcvwq2.wpengine.netdna-cdn.com/files/2014/10/M2400519-copy.jpg" width="1600" height="1067" / data-unveil="true"><noscript><img class="alignnone size-full wp-image-5289" alt="M2400519 copy" src="http://2chie424y5ug2kfkkypuhcvwq2.wpengine.netdna-cdn.com/files/2014/10/M2400519-copy.jpg" width="1600" height="1067" /></noscript><br />
+</div><div class="single-pad">
+<p><strong>8. <a href="https://github.com/grugq/portal">P.O.R.T.A.L. / Tor</a></strong> - Ever been somewhere or are you from a place that has oppressive internet?  Get around it.  Adafruit has a neat Raspberry Pi Tor kit available as well.  +2 points if you set one of those up and carry it around with you.</p>
+<p><strong>9. <a href="http://www.cbp.gov/global-entry/about">US CBP Global Entry</a></strong> &#8211; Not really technology, but since you wind up interacting with a machine instead of with a person via Global Entry, I figure it counts.  Global Entry is a program that lets you get vetted with US CBP and, once approved, bypass the long customs and immigration lines as a &#8220;trusted traveler&#8221; upon re-entering the US from overseas. Global Entry also gets you TSA Pre-Check, which lets you keep all of your techie toys in your bag when going through security.</p>
+</div><div class="wide"><br />
+<img class="alignnone size-full wp-image-5282" alt="R0002840 copy" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="http://2chie424y5ug2kfkkypuhcvwq2.wpengine.netdna-cdn.com/files/2014/10/R0002840-copy.jpg" width="1600" height="1069" / data-unveil="true"><noscript><img class="alignnone size-full wp-image-5282" alt="R0002840 copy" src="http://2chie424y5ug2kfkkypuhcvwq2.wpengine.netdna-cdn.com/files/2014/10/R0002840-copy.jpg" width="1600" height="1069" /></noscript><br />
+</div><div class="single-pad">
+<p><strong>10. Loyalty </strong>- Another item that&#8217;s not really technology, but makes a huge difference.  Pick an airline/backup airline and a hotel/backup hotel program and stick with it.  Yes, you will sometimes end up paying more for a flight or for a hotel vs the lowest listed fare on Expedia/Priceline/whatever, but I think the difference is worth it.  I won&#8217;t go into the perks of elite status with airlines/hotels (although I will say that I haven&#8217;t flown coach in years at this point) but will instead focus on airline/airport IRROPS &#8211; &#8220;Irregular Operations&#8221; aka &#8220;when things go bad.&#8221;  I flew through Chicago O&#8217;Hare on my way to Jakarta this week &#8211; ORD is experiencing something of a nightmare after a recent fire &#8211; aside from a few delays, my flights were mostly unaffected.  However, United set me up with multiple backup plans/confirmed seats on other flights in case the Chicago delays worsened to the point where I would miss connections.</p>
+<p>I still remember the time when &#8211; after being stuck on the tarmac in Miami for 3.5 hours due to a mechanical problem &#8211; the purser came up to me and quietly whispered, &#8220;Mr. Liao, I just wanted to let you know that because of the delay, you will miss your connecting flight in Houston &#8211; we went ahead and confirmed a seat for you in First Class on the next flight out of Houston, and also on a direct flight to Los Angeles on (a different airline) and we will provide you with a voucher for a taxi from LAX to SNA (my home airport) if the plane that we are on right now doesn&#8217;t make it to Houston.&#8221;  This, while there is sheer pandemonium on the plane due to the door being closed and no one being allowed to get off or call customer service for a re-booking.  <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="http://2chie424y5ug2kfkkypuhcvwq2.wpengine.netdna-cdn.com/wp-includes/images/smilies/icon_smile.gif" alt=":)" class="wp-smiley" / data-unveil="true"><noscript><img src="http://2chie424y5ug2kfkkypuhcvwq2.wpengine.netdna-cdn.com/wp-includes/images/smilies/icon_smile.gif" alt=":)" class="wp-smiley" /></noscript> </p>
+<p>How do you say connected while on the road? Got any great travel tips to share or Sync stories from abroad?  Tell me! Goodnight from Jakarta!</p>
+]]></content:encoded>
+			<wfw:commentRss>http://blog.bittorrent.com/2014/10/02/sync-dev-staying-connected-while-away-from-it-all/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+		</item>
+		<item>
+		<title>Sync Stories: Ideas for Business Travelers</title>
+		<link>http://blog.bittorrent.com/2014/09/30/sync-stories-ideas-for-business-travelers/</link>
+		<comments>http://blog.bittorrent.com/2014/09/30/sync-stories-ideas-for-business-travelers/#comments</comments>
+		<pubDate>Tue, 30 Sep 2014 18:41:04 +0000</pubDate>
+		<dc:creator><![CDATA[Lou]]></dc:creator>
+				<category><![CDATA[Stories]]></category>
+		<category><![CDATA[Sync]]></category>
+		<category><![CDATA[bittorrent sync]]></category>
+		<category><![CDATA[sync]]></category>
+		<category><![CDATA[sync stories]]></category>
+
+		<guid isPermaLink="false">http://bittorrent.gyre.wpengine.com/?p=5275</guid>
+		<description><![CDATA[Sync Stories is a column dedicated to our users. Each week, we showcase a different use case for BitTorrent Sync and the personal stories behind it. In this week’s edition: Art outsourcing manager Jon Jones provides three scenarios where BitTorrent Sync comes in handy for business travel. From Jon: Scenario 1: Need to share large...]]></description>
+				<content:encoded><![CDATA[<p dir="ltr"><em>Sync Stories is a column dedicated to our users. Each week, we showcase a different use case for BitTorrent Sync and the personal stories behind it.</em></p>
+<p dir="ltr">In this week’s edition: Art outsourcing manager Jon Jones provides three scenarios where BitTorrent Sync comes in handy for business travel.</p>
+<p><span id="more-5275"></span></p>
+<p dir="ltr"><em>From Jon:</em></p>
+<h3 dir="ltr">Scenario 1: Need to share large files; too big for email, no Wi-Fi connection, mobile devices only. Now what?</h3>
+<p dir="ltr">I use the <a href="http://www.amazon.com/TP-LINK-TL-MR3020-Wireless-Portable-Router/dp/B00634PLTW/ref=sr_1_1?ie=UTF8&amp;qid=1412082555&amp;sr=8-1&amp;keywords=mr3020">TP-Link MR3020</a> portable travel router. It&#8217;s a small, cheap router with a Wi-Fi hotspot you can connect to and share files through. In a hotel room, it&#8217;s great for plugging the Ethernet cable into so you have Wi-Fi access through all of your devices. But here&#8217;s the best part: You don&#8217;t even need to be connected to the Internet to use it! All you have to do is connect to its Wi-Fi hotspot with the devices you want to sync, and it will still work. It can even be run off of a portable battery charger and stay in your bag, everywhere you go. I use it for syncing large files between my devices and even with clients when I don&#8217;t have Internet access, wherever I am.</p>
+<h3 dir="ltr">Scenario 2: I&#8217;m getting on a plane and need to work on my documents offline. Now what?</h3>
+<p dir="ltr">Generally speaking, I always look to Sync first as a simple, secure, and reliable solution for syncing both personal and client data. However, in many situations, I&#8217;m locked in to using the business tools that my client already uses, and I don&#8217;t have much of a choice. For example, there&#8217;s often already an established folder structure, naming convention, and series of shared documents with specific permissions levels that I have little choice in altering.</p>
+<p dir="ltr">I&#8217;ve come up with a hybrid solution that uses my clients&#8217; existing system, but is augmented by the power and speed of BitTorrent Sync to make working offline much easier. For this example, I&#8217;ll use Google Drive, but most cloud storage providers have a desktop-based client like this. None of them are particularly convenient for syncing files offline except on a file-by-file basis, so I&#8217;m going to show you how Sync can solve that.</p>
+<p dir="ltr"><strong>Step 1</strong>: Install BitTorrent Sync on your PC. Create a shared folder for the documents you want to sync. Share it across your mobile devices and the laptop with which you&#8217;re traveling.</p>
+<p dir="ltr"><strong>Step 2</strong>: Install a file manager app (<a href="https://itunes.apple.com/us/app/file-manager-free/id479295290?mt=8">for iPhone</a> / <a href="https://play.google.com/store/apps/details?id=com.rhmsoft.fm&amp;hl=en">for Android</a>) on your mobile devices so you can create, remove, and manage files and folders as easily as you can on a desktop PC. Installing this before you realize you need it will save you a lot of frustration later on if you&#8217;re dealing with large amounts of files and folders. Practically speaking, you should assume you will be so you can anticipate the system scaling.</p>
+<p dir="ltr"><strong>Step 3</strong>: Install the Google Drive desktop app onto your primary work PC and the laptop with which you&#8217;re traveling. Under Preferences, select which folders on your hard drive that you want to sync to the cloud. Select the BitTorrent Sync shared folder you created in Step 1 and verify that the data is syncing. Done!</p>
+<p dir="ltr">With this setup, all of your data will be automatically synced to all of your devices for offline use wherever you go, as well as being backed up to the cloud via Google Drive to maintain the proper shared folders with your clients. Simply use your laptop or mobile devices as you normally would to open and edit the auto-synced documents in your regular applications. When you have Internet access again and connect with the laptop that has the Google Drive desktop client installed, Sync will automatically sync the data to its proper folders, and back into the cloud for your clients. It&#8217;s not the most elegant solution, but it&#8217;s the smartest one I found, and you don&#8217;t have to convince your clients to change the systems with which they&#8217;re comfortable. It&#8217;s the best of both worlds!</p>
+<h3 dir="ltr">Scenario 3: I received a business card I cannot lose. What&#8217;s the smart way to handle this?</h3>
+<p dir="ltr">I am a huge fan of CamScanner, an app for <a href="https://play.google.com/store/apps/details?id=com.intsig.camscanner&amp;hl=en">Android</a> and <a href="https://itunes.apple.com/us/app/camscanner-free-pdf-document/id388627783?mt=8">iOS</a> that makes scanning and backing up business cards incredibly simple. It automatically crops, adjusts lighting for visibility, and has the ability to save as PDF. Install that, then create a Sync shared folder that points to the &#8216;Save&#8217; directory for the app. That way, whenever you snap a photo of a business card, it&#8217;s automatically backed up to all of your devices so you can&#8217;t lose it!</p>
+<p dir="ltr"><em>You can reach Jon on <a href="https://twitter.com/jonjones">Twitter</a> and his <a href="http://www.jonjones.com/">website</a>. For more info on Sync, click <a href="http://try.getsync.com/backup-your-files/">here</a> and if you’ve got an epic Sync idea, use-case or how-to, shoot us an email at sync[at]bittorrent.com.</em></p>
+]]></content:encoded>
+			<wfw:commentRss>http://blog.bittorrent.com/2014/09/30/sync-stories-ideas-for-business-travelers/feed/</wfw:commentRss>
+		<slash:comments>1</slash:comments>
+		</item>
+	</channel>
+</rss>
