@@ -7,7 +7,7 @@ echo "| Fang packager for Mac OS X |"
 echo "| Copyright Eric Gregory     |"
 echo "+----------------------------+"
 echo ""
-echo "Last updated for Qt 5.3 in July 2014"
+echo "Last updated for Qt 5.3.1 in September 2014"
 echo ""
 
 # Make sure the folder exists!
@@ -29,14 +29,14 @@ fi
 # QtWebkit 2 workaround
 # See: https://bugreports.qt-project.org/browse/QTBUG-35211
 
+cp -R ~/Qt/5.3/clang_64/libexec Fang.app/Contents
+
 cat >> Fang.app/Contents/libexec/qt.conf <<EOD
 [Paths]
 Plugins = ../PlugIns
 Imports = ../Resources/qml
 Qml2Imports = ../Resources/qml
 EOD
-
-cp -R ~/Qt/5.3/clang_64/libexec Fang.app/Contents
 
 
 # Run the Mac deploy tool.
