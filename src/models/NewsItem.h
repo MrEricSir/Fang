@@ -11,8 +11,6 @@
 
 #include "../FangObject.h"
 
-#define NEWS_ITEM_ID_PREIX "NewsItem_"
-
 class NewsItem : public FangObject
 {
     Q_OBJECT
@@ -41,16 +39,6 @@ public:
     static bool GreaterThan(const NewsItem* left, const NewsItem* right);
     
     inline FeedItem* getFeed() const { return feed; }
-    inline QString id() const { 
-        return idForDbID(_id);
-    }
-    
-    static inline QString idForDbID(qint64 id) {
-        QString ret;
-        QTextStream output(&ret);
-        output << NEWS_ITEM_ID_PREIX << id;
-        return ret;
-    }
     
     // This returns the actual feed database ID
     inline qint64 getFeedId() const { return _feedId; }

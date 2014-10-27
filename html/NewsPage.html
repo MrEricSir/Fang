@@ -13,13 +13,13 @@ pre {
 }
 
 /* Contains a NewsItem */
-.newsContainer {
+.newsItemStyle {
     width: 100%;
     margin: 0;
     padding: 0;
 }
 
-.newsContainer > .bookmark {
+.newsItemStyle > .bookmark {
     height: 3.0em;
     width: 100%;
     margin: 0;
@@ -28,7 +28,7 @@ pre {
 }
 
 /* Draws the bookmark's stripe. */
-.newsContainer > .bookmark > .stripe {
+.newsItemStyle > .bookmark > .stripe {
     width: 80%;
     height: 22px;
     margin: 0;
@@ -44,7 +44,7 @@ pre {
     transition: opacity 0.25s ease-in-out;
 }
 
-.newsContainer > .bookmark > .stripe > .stripe_left {
+.newsItemStyle > .bookmark > .stripe > .stripe_left {
     width: 18px;
     height: 22px;
     background-size: 18px 22px;
@@ -56,7 +56,7 @@ pre {
     width: 18px;
 }
 
-.newsContainer > .bookmark > .stripe > .stripe_mid {
+.newsItemStyle > .bookmark > .stripe > .stripe_mid {
     background-repeat: repeat-x;
     background-size: 10px 22px;
     
@@ -67,7 +67,7 @@ pre {
     height: 22px;
 }
 
-.newsContainer > .bookmark > .stripe > .stripe_right {
+.newsItemStyle > .bookmark > .stripe > .stripe_right {
     background-repeat: no-repeat;
     background-size: 6px 22px;
     
@@ -83,12 +83,12 @@ pre {
     transition: opacity 0.25s ease-in-out;
 }
 
-.newsContainer:not(.bookmarked) > .bookmark > .stripe:hover {
+.newsItemStyle:not(.bookmarked) > .bookmark > .stripe:hover {
     opacity: 1.0;
     transition: opacity 0.25s ease-in-out;
 }
 
-.newsContainer > .content {
+.newsItemStyle > .content {
     width: 100%;
     margin: 0;
     padding: 0;
@@ -96,12 +96,12 @@ pre {
     overflow: auto;
 }
 
-.newsContainer > .content img {
+.newsItemStyle > .content img {
     margin-right: 8px;
     margin-bottom: 8px;
 }
 
-.newsContainer > .content p:before {
+.newsItemStyle > .content p:before {
   /* Prevent narrow text cols around images. From: http://css-tricks.com/minimum-paragraph-widths/ */
   content: "";
   width: 10em;
@@ -112,35 +112,35 @@ pre {
 }
 
 /* Don't display the original copy. */
-.newsContainer#model {
+.newsItemStyle#model {
     display: none;
 }
 
-.newsContainer > .siteTitle {
+.newsItemStyle > .siteTitle {
     width: 50%;
     display: inline-block;
     text-overflow: ellipsis-word;
 }
 
-.newsContainer > .date {
+.newsItemStyle > .date {
     width: 50%;
     display: inline-block;
     text-align: right;
     text-overflow: ellipsis-word;
 }
 
-.newsContainer > .timestamp {
+.newsItemStyle > .timestamp {
     display: none;
 }
 
-.newsContainer > .divider {
+.newsItemStyle > .divider {
     height: 1px;
     width: 100%;
     margin: 0;
     margin-bottom: 0.3em;
 }
 
-.newsContainer > h1 {
+.newsItemStyle > h1 {
     font-weight: normal;
     margin: 0;
     margin-bottom: 0.2em;
@@ -150,7 +150,7 @@ a { text-decoration: none; }
 
 a:hover { text-decoration: underline; }
 
-.newsContainer > h1 > a:hover {
+.newsItemStyle > h1 > a:hover {
     text-decoration: none;
     border-bottom-style: solid;
     border-bottom-width: 2px;
@@ -158,7 +158,7 @@ a:hover { text-decoration: underline; }
 
 a:active { text-decoration: underline; }
 
-.newsContainer > h1 > a:active {
+.newsItemStyle > h1 > a:active {
     text-decoration: none;
     border-bottom-style: solid;
     border-bottom-width: 2px;
@@ -189,12 +189,12 @@ body.LIGHT {
 body.LIGHT a { color: #00c; }
 body.LIGHT a:visited { color: #a33; }
 body.LIGHT a:hover, body.LIGHT a:active { color: #04f; }
-body.LIGHT > .newsContainer > h1 > a:hover,
-  body.LIGHT > .newsContainer > h1 > a:active { border-bottom-color: #00f; }
+body.LIGHT > .newsItemStyle > h1 > a:hover,
+  body.LIGHT > .newsItemStyle > h1 > a:active { border-bottom-color: #00f; }
 
-body.LIGHT > .newsContainer > .siteTitle, body.LIGHT > .newsContainer > .date { color: #777; }
-body.LIGHT > .newsContainer > .divider { background-color: #ccc; }
-body.LIGHT > .newsContainer > h1, body.LIGHT > .newsContainer > h1 > a { color: black; }
+body.LIGHT > .newsItemStyle > .siteTitle, body.LIGHT > .newsItemStyle > .date { color: #777; }
+body.LIGHT > .newsItemStyle > .divider { background-color: #ccc; }
+body.LIGHT > .newsItemStyle > h1, body.LIGHT > .newsItemStyle > h1 > a { color: black; }
 
 body.LIGHT > #bottom > #bottomText  { color: #777; }
 
@@ -202,9 +202,9 @@ body.LIGHT > .bookmarked > .bookmark > .stripe > .stripe_left { background-image
 body.LIGHT > .bookmarked > .bookmark > .stripe > .stripe_mid { background-image: url('/qml/images/bookmark_mid.svg'); }
 body.LIGHT > .bookmarked > .bookmark > .stripe > .stripe_right { background-image: url('/qml/images/bookmark_right.svg'); }
 
-body.LIGHT > .newsContainer:not(.bookmarked) > .bookmark > .stripe > .stripe_left { background-image: url('/qml/images/bookmark_hover_left.svg'); }
-body.LIGHT > .newsContainer:not(.bookmarked) > .bookmark > .stripe > .stripe_mid { background-image: url('/qml/images/bookmark_hover_mid.svg'); }
-body.LIGHT > .newsContainer:not(.bookmarked) > .bookmark > .stripe > .stripe_right { background-image: url('/qml/images/bookmark_hover_right.svg'); }
+body.LIGHT > .newsItemStyle:not(.bookmarked) > .bookmark > .stripe > .stripe_left { background-image: url('/qml/images/bookmark_hover_left.svg'); }
+body.LIGHT > .newsItemStyle:not(.bookmarked) > .bookmark > .stripe > .stripe_mid { background-image: url('/qml/images/bookmark_hover_mid.svg'); }
+body.LIGHT > .newsItemStyle:not(.bookmarked) > .bookmark > .stripe > .stripe_right { background-image: url('/qml/images/bookmark_hover_right.svg'); }
 
 /**** Dark theme ****/
 
@@ -216,12 +216,12 @@ body.DARK {
 body.DARK a { color: #6af; }
 body.DARK a:visited { color: #6af; }
 body.DARK a:hover, body.DARK a:active { color: #f10; }
-body.DARK > .newsContainer > h1 > a:hover,
-  body.DARK > .newsContainer > h1 > a:active { border-bottom-color: #f10; }
+body.DARK > .newsItemStyle > h1 > a:hover,
+  body.DARK > .newsItemStyle > h1 > a:active { border-bottom-color: #f10; }
 
-body.DARK > .newsContainer > .siteTitle, body.DARK > .newsContainer > .date { color: #ccc; }
-body.DARK > .newsContainer > .divider { background-color: #888; }
-body.DARK > .newsContainer > h1, body.DARK > .newsContainer > h1 a { color: white; }
+body.DARK > .newsItemStyle > .siteTitle, body.DARK > .newsItemStyle > .date { color: #ccc; }
+body.DARK > .newsItemStyle > .divider { background-color: #888; }
+body.DARK > .newsItemStyle > h1, body.DARK > .newsItemStyle > h1 a { color: white; }
 
 body.DARK > #bottom > #bottomText  { color: #ccc; }
 
@@ -229,9 +229,9 @@ body.DARK > .bookmarked > .bookmark > .stripe > .stripe_left { background-image:
 body.DARK > .bookmarked > .bookmark > .stripe > .stripe_mid { background-image: url('/qml/images/bookmark_dark_mid.svg'); }
 body.DARK > .bookmarked > .bookmark > .stripe > .stripe_right { background-image: url('/qml/images/bookmark_dark_right.svg'); }
 
-body.DARK > .newsContainer:not(.bookmarked) > .bookmark > .stripe > .stripe_left { background-image: url('/qml/images/bookmark_dark_hover_left.svg'); }
-body.DARK > .newsContainer:not(.bookmarked) > .bookmark > .stripe > .stripe_mid { background-image: url('/qml/images/bookmark_dark_hover_mid.svg'); }
-body.DARK > .newsContainer:not(.bookmarked) > .bookmark > .stripe > .stripe_right { background-image: url('/qml/images/bookmark_dark_hover_right.svg'); }
+body.DARK > .newsItemStyle:not(.bookmarked) > .bookmark > .stripe > .stripe_left { background-image: url('/qml/images/bookmark_dark_hover_left.svg'); }
+body.DARK > .newsItemStyle:not(.bookmarked) > .bookmark > .stripe > .stripe_mid { background-image: url('/qml/images/bookmark_dark_hover_mid.svg'); }
+body.DARK > .newsItemStyle:not(.bookmarked) > .bookmark > .stripe > .stripe_right { background-image: url('/qml/images/bookmark_dark_hover_right.svg'); }
 
 
 /**** Platforms ****/
@@ -242,17 +242,17 @@ body.LINUX { font-family: "Geneva", Arial, sans-serif !important; }
 
 /**** Font size ****/
 
-body.FONT_SMALL > .newsContainer > .content { font-size: 9pt; }
-body.FONT_SMALL > .newsContainer > h1 { font-size: 13pt; }
+body.FONT_SMALL > .newsItemStyle > .content { font-size: 9pt; }
+body.FONT_SMALL > .newsItemStyle > h1 { font-size: 13pt; }
 body.FONT_SMALL > #bottom > #bottomText { font-size: 10pt; }
 
-body.FONT_MEDIUM > .newsContainer > .content { font-size: 12pt; }
-body.FONT_MEDIUM > .newsContainer > h1 { font-size: 16pt; }
+body.FONT_MEDIUM > .newsItemStyle > .content { font-size: 12pt; }
+body.FONT_MEDIUM > .newsItemStyle > h1 { font-size: 16pt; }
 body.FONT_MEDIUM > #bottom > #bottomText { font-size: 14pt; }
 
 
-body.FONT_LARGE > .newsContainer > .content { font-size: 16pt; }
-body.FONT_LARGE > .newsContainer > h1 { font-size: 26pt; }
+body.FONT_LARGE > .newsItemStyle > .content { font-size: 16pt; }
+body.FONT_LARGE > .newsItemStyle > h1 { font-size: 26pt; }
 body.FONT_LARGE > #bottom > #bottomText { font-size: 20pt; }
 
 </style>
@@ -266,7 +266,19 @@ body.FONT_LARGE > #bottom > #bottomText { font-size: 20pt; }
 </head>
 <body>
 
-<div class="newsContainer" id="model">
+<div class="newsItemStyle" id="topBookmark">
+
+<div class="bookmark">
+    <div class="stripe">
+        <div class="stripe_left"></div>
+        <div class="stripe_mid"></div>
+        <div class="stripe_right"></div>
+    </div>
+</div>
+
+</div>
+
+<div class="newsContainer newsItemStyle" id="model">
 
 <h1><a href="" class="link"></a></h1>
 <div class="divider"></div>

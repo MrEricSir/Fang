@@ -71,25 +71,15 @@ void WebInteractor::orderChanged()
     manager->add(updateOp);
 }
 
-void WebInteractor::setBookmark(QString sId, bool allowBackward)
+void WebInteractor::setBookmark(qint64 id, bool allowBackward)
 {
-    qDebug() << "Set bookmarK; " << sId << ", " << allowBackward;
+    qDebug() << "Set bookmarK; " << id << ", " << allowBackward;
     
     if (isSettingBookmark || NULL == currentFeed) {
         return;
     }
     
     // qDebug() << "Setting bookmark to: " << sId;
-    
-    bool ok;
-    qint64 id = sId.replace(NEWS_ITEM_ID_PREIX, "").toLongLong(&ok);
-    
-    if (sId.isEmpty() || !ok) {
-        isSettingBookmark = false;
-        qDebug() << "Bookmark itm was not found for the current feed!";
-        
-        return; // We didn't find it.  Perhaps this is an old request? Either way, fuck it.
-    }
     
     if (!currentFeed->canBookmark(id, allowBackward)) {
         isSettingBookmark = false;
@@ -185,7 +175,7 @@ void WebInteractor::onLoadNewsFinished(Operation* operation)
         
         if (loader->getMode() == LoadNews::Initial) {
             emit nothingToAdd();
-            emit drawBookmarkAndJumpTo("");
+            emit drawBookmarkAndJumpTo(-1);
         }
         
         return; // Nothing to do.
@@ -218,9 +208,9 @@ void WebInteractor::onLoadNewsFinished(Operation* operation)
     }
     
     // If this is the initial load, draw and jump to the bookmark.
-    QString idOfBookmark = "";
-    if (loader->getMode() == LoadNews::Initial && currentFeed->getBookmarkID() != -1) {
-        idOfBookmark = NewsItem::idForDbID(currentFeed->getBookmarkID());
+    qint64 idOfBookmark = -1; // -1 means the special "top bookmark"
+    if (loader->getMode() == LoadNews::Initial) {
+        idOfBookmark = currentFeed->getBookmarkID();
     }
     emit drawBookmarkAndJumpTo(idOfBookmark);
     
@@ -246,7 +236,7 @@ void WebInteractor::onSetBookmarkFinished(Operation *operation)
     }
     
     currentFeed->setBookmarkID(bookmarkOp->getBookmarkID());
-    emit drawBookmark(NewsItem::idForDbID(currentFeed->getBookmarkID()));
+    emit drawBookmark(currentFeed->getBookmarkID());
 }
 
 
@@ -306,7 +296,7 @@ void WebInteractor::addNewsItem(NewsItem *item, QVariantList* newsList)
                             FangApp::instance()->getFeedForID(item->getFeedId())->getTitle();
     
     QVariantMap itemMap;
-    itemMap["id"] = item->id();
+    itemMap["id"] = item->getDbID();
     itemMap["title"] = item->getTitle();
     itemMap["url"] = item->getURL().toString();
     itemMap["feedTitle"] = feedTitle;

@@ -59,6 +59,7 @@ Item {
             }
             
             onAddInProgress: {
+                //console.log("on add in progress")
                 newsView.experimental.evaluateJavaScript("inProgress("
                                                          + started + ", '"
                                                          + operation + "');");
@@ -68,12 +69,14 @@ Item {
             }
             
             onAdd: {
+                //console.log("on add")
                 newsView.experimental.evaluateJavaScript("appendNews("
                                                          + append + ", '"
                                                          + jsonNews + "');");
             }
             
             onNothingToAdd: {
+                //console.log('nothing to add')
                 newsView.experimental.evaluateJavaScript("stopInProgress();");
             }
             

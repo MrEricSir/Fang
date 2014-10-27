@@ -63,6 +63,14 @@ void SetBookmarkOperation::bookmarkSingleFeed(FeedItem* feed)
 
 void SetBookmarkOperation::bookmarkAllNewsFeed(AllNewsFeedItem* allNews)
 {
+    // TODO
+    // If the bookmark is -1 for all news, that's a special case; we must un-bookmark
+    // ALL feeds.
+    if (bookmarkID == -1)
+        Q_ASSERT(false);
+    //
+    
+    
     int proposed = allNews->newsIDs()->indexOf(bookmarkID);
     int current = allNews->newsIDs()->indexOf(allNews->getBookmarkID());
     

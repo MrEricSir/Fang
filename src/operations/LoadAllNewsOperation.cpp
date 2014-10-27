@@ -61,8 +61,8 @@ void LoadAllNewsOperation::execute()
         if (listPrepend != NULL)
             bookmark = listPrepend->first();
         
-        if (bookmark != NULL)
-            feedItem->setBookmarkID(bookmark->getDbID());
+        // Set the bookmark -- or set it to -1 if there isn't one.
+        feedItem->setBookmarkID(bookmark ? bookmark->getDbID() : -1);
         
         // As an optimization, we only want to present *one* list -- an append list.
         // So we rewind our prepend list on top of it, then delete the prepend list.

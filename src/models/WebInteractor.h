@@ -64,21 +64,21 @@ signals:
     
     /**
      * @brief Jumps to a given news item by its ID.
-     * @param id      HTML ID of the element to jump to.
+     * @param id      ID of the element to jump to.
      */
-    void jumpTo(QString id);
+    void jumpTo(qint64 id);
     
     /**
      * @brief Draws the bookmark at the given news item.
-     * @param id   HTML ID of the news item element to draw a bookmark at.
+     * @param id   ID of the news item element to draw a bookmark at.
      */
-    void drawBookmark(QString id);
+    void drawBookmark(qint64 id);
     
     /**
      * @brief Not only draws the bookmark, but also issues a jump.
-     * @param id   HTML ID of the news item blah blah see above.  Or "" if we just want to indicate that we're ready to go!
+     * @param id   ID of the news item blah blah see above.
      */
-    void drawBookmarkAndJumpTo(QString id);
+    void drawBookmarkAndJumpTo(qint64 id);
     
     /**
      * @brief The style has changed in FangSettings, so the news viewer needs to refresh its css.
@@ -105,7 +105,7 @@ public slots:
     Q_INVOKABLE void orderChanged();
     
     // Sets the bookmark, and fires a draw event.
-    Q_INVOKABLE void setBookmark(QString sId, bool allowBackward = false);
+    Q_INVOKABLE void setBookmark(qint64 sId, bool allowBackward = false);
     
     // The web layer has to call this to lead us know we're good to go.
     Q_INVOKABLE void pageLoaded();

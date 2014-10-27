@@ -210,6 +210,9 @@ void LoadNews::execute()
                 break;
             }
         }
+    } else {
+        // You have no bookmark, sir.
+        feedItem->setBookmarkID(-1);
     }
     
     // we r dun lol

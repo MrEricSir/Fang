@@ -188,7 +188,7 @@ void FeedItem::clearNews()
 bool FeedItem::canBookmark(qint64 bookmarkID, bool allowBackward)
 {
     // What is this? I don't even.
-    if (bookmarkID < 0)
+    if (bookmarkID < -1)
         return false;
     
     // Given no current bookmark, anything will do.

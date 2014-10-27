@@ -20,6 +20,21 @@ $(window).resize(function() {
     
 });
 
+// Converts one of Fang's internal IDs to an HTML news item id.
+function idToHtmlId(id) {
+    if (id == -1)
+        return 'topBookmark';
+    else
+        return 'NewsItem_' + id;
+}
+
+function htmlIdToId(htmlID) {
+    if (htmlID == 'topBookmark')
+        return -1;
+    else
+        return htmlID.replace('NewsItem_', '');
+}
+
 // Intercept clix.
 function delegateLink() {
     navigator.qt.postMessage( 'openLink ' + $(this).attr( 'href' ) );
@@ -52,6 +67,16 @@ function stopInProgress() {
     isInProgress = false;
 }
 
+// Given a parent element, setup the bookmark forcer.
+function installBookmarkForcer(parentElement) {
+    // Setup manual bookmarks.
+    $(parentElement).find( '.stripe' ).on( "click", function() { 
+        var elementID = $(this).parent().parent().attr( 'id' );
+        
+        navigator.qt.postMessage( 'forceBookmark ' + htmlIdToId( elementID ) );
+    } );
+}
+
 // Appends (or prepends) a news item.
 function appendNews(append, jsonNews) {
     // Unescape newlines.  (This allows pre tags to work.)
@@ -77,7 +102,7 @@ function appendNews(append, jsonNews) {
         item.attr( 'id', '' );
         
         // Assign data.
-        item.attr( 'id', newsItem['id'] );
+        item.attr( 'id', idToHtmlId(newsItem['id']) );
         item.find( '.link' ).attr( 'href', newsItem['url'] );
         item.find( '.link' ).html( newsItem['title'] );
         item.find( '.content' ).html( newsItem['content'] );
@@ -91,10 +116,8 @@ function appendNews(append, jsonNews) {
         // Setup link delegator.
         item.find( 'a' ).on( "click", delegateLink );
         
-        // Setup manual bookmarks.
-        item.find( '.stripe' ).on( "click", function() { 
-            navigator.qt.postMessage( 'forceBookmark ' +
-                                     $(this).parent().parent().attr( 'id' ) ); } );
+        // Setup manual bookmark forcer.
+        installBookmarkForcer(item);
         
         // Stick 'er in!
         if (append) {
@@ -207,7 +230,7 @@ function jumpTo(id) {
     
     resizeBottomSpacer();
     
-    var elementId = '#' + id;
+    var elementId = '#' + idToHtmlId( id );
     var scrollTo = $( elementId ).offset().top;
     
     //console.log("jump to: ", elementId, "scrolling to: ", scrollTo);
@@ -218,11 +241,14 @@ function jumpTo(id) {
 
 // Draws a bookmark on the given news container ID.
 function drawBookmark(id) {
+    //console.log("draw bookmark: ", id)
+    
     // Remove any existing bookmark(s).
     $( ".bookmarked" ).removeClass('bookmarked');
     
     // Add bookmark.
-    var elementId = '#' + id;
+    var elementId = '#' + idToHtmlId(id);
+    //console.log("adding bookmarked class to: ", elementId);
     $( elementId ).addClass('bookmarked');
     
     resizeBottomSpacer();
@@ -230,8 +256,9 @@ function drawBookmark(id) {
 
 
 // Both draw the bookmark AND jump to it!  In ONE SHOT!!  WOW!
-var bookmarkIdWeAreJumpingTo = "";
+var bookmarkIdWeAreJumpingTo = -100;
 function drawBookmarkAndJumpTo(id) {
+    //console.log("drawBookmarkAndJumpTo", id)
     bookmarkIdWeAreJumpingTo = id;
     drawBookmarkAndJumpToJumpingToId();
 }
@@ -250,10 +277,13 @@ function drawBookmarkAndJumpToJumpingToId() {
     //console.log("Jump out complete: ", bookmarkIdWeAreJumpingTo)
     
     // If there's a bookmark, jump to it!
-    if (bookmarkIdWeAreJumpingTo !== '') {
+    if (bookmarkIdWeAreJumpingTo !== -100) {
         // Draw our bookmark and jump to it!
         drawBookmark(bookmarkIdWeAreJumpingTo);
         jumpToBookmark();
+        
+        // Reset.
+        bookmarkIdWeAreJumpingTo = -100;
     }
     
     // Tell NewsView that we're ready to ROCK and ROLL.
@@ -261,7 +291,7 @@ function drawBookmarkAndJumpToJumpingToId() {
 }
 
 function jumpToBookmark() {
-    console.log("Jump to bookmark");
+    //console.log("Jump to bookmark");
     
     resizeBottomSpacer();
     
@@ -509,7 +539,7 @@ $(document).ready(function() {
             
             // Move the bookmark down one.
             //console.log("SET BOOKMKAR! ", nextItem.attr('id'))
-            navigator.qt.postMessage( 'setBookmark ' + nextItem.attr('id') );
+            navigator.qt.postMessage( 'setBookmark ' + htmlIdToId(nextItem.attr('id')) );
             
             // Continue to next item.
             nextItem = nextNewsContainer(nextItem);
@@ -565,4 +595,7 @@ $(document).ready(function() {
     
     // Update timestamps every 10 seconds.
     updateTimestamps(10000);
+    
+    // Setup the bookmark forcer on the top bookmark.
+    installBookmarkForcer('#topBookmark');
 });
