@@ -78,7 +78,7 @@ function installBookmarkForcer(parentElement) {
 }
 
 // Appends (or prepends) a news item.
-function appendNews(append, jsonNews) {
+function appendNews(append, firstNewsID, jsonNews) {
     // Unescape newlines.  (This allows pre tags to work.)
     jsonNews = jsonNews.replace(/[\u0018]/g, "\n");
     
@@ -163,6 +163,34 @@ function appendNews(append, jsonNews) {
         }
     }
     
+    console.log("first news id in this feed ", firstNewsID);
+    
+    var myTopBookmark = $('#' + idToHtmlId(-1) );
+    var topBookmarkIsEnabled = myTopBookmark.css('display') !== 'none';
+    if (firstNewsID === -1) {
+        // No bookmark, so top bookmark should be visible.
+        console.log("No bookmark  (or it's all news!)")
+        if (!topBookmarkIsEnabled) {
+            console.log("Enabling the TOP bookmark!");
+            myTopBookmark.css('display', 'block');
+            addToScroll += myTopBookmark.height();
+        }
+    } else {
+        var firstIDInView = htmlIdToId( $(newsContainerSelector).attr('id') );
+        console.log("First id in view", firstIDInView)
+        
+        if (!topBookmarkIsEnabled && (firstNewsID == firstIDInView)) {
+            console.log("Enabling the TOP bookmark!");
+            myTopBookmark.css('display', 'block');
+            addToScroll += myTopBookmark.height();
+        } else if (topBookmarkIsEnabled && (firstNewsID != firstIDInView)) {
+            console.log("We can DISABLE the top bookmark now!");
+            console.log("at my restaurant, I no give SHIT about top bookmark!!!!")
+            addToScroll -= myTopBookmark.height();
+            myTopBookmark.css('display', 'none');
+        }
+    }
+    
     // Scroll back down if we added a bunch of old news at the top, or scroll up
     // if we removed items at the top.
     if ((!append && addToScroll > 10) ||
@@ -172,7 +200,7 @@ function appendNews(append, jsonNews) {
             newScroll = 0;
         }
         
-        //console.log("addToScroll ", addToScroll, " new scroll: ", newScroll)
+        console.log("addToScroll ", addToScroll, " new scroll: ", newScroll)
         $(document).scrollTop( newScroll );
     }
     
@@ -241,7 +269,7 @@ function jumpTo(id) {
 
 // Draws a bookmark on the given news container ID.
 function drawBookmark(id) {
-    //console.log("draw bookmark: ", id)
+    console.log("draw bookmark: ", id)
     
     // Remove any existing bookmark(s).
     $( ".bookmarked" ).removeClass('bookmarked');
@@ -258,14 +286,14 @@ function drawBookmark(id) {
 // Both draw the bookmark AND jump to it!  In ONE SHOT!!  WOW!
 var bookmarkIdWeAreJumpingTo = -100;
 function drawBookmarkAndJumpTo(id) {
-    //console.log("drawBookmarkAndJumpTo", id)
+    console.log("drawBookmarkAndJumpTo", id)
     bookmarkIdWeAreJumpingTo = id;
     drawBookmarkAndJumpToJumpingToId();
 }
 
 // Internal method for above function.
 function drawBookmarkAndJumpToJumpingToId() {
-    //console.log("Draw and jumping to jump jump")
+    console.log("Draw and jumping to jump jump")
     if (isInProgress) {
         window.setTimeout(function() {
             drawBookmarkAndJumpToJumpingToId();
@@ -279,6 +307,7 @@ function drawBookmarkAndJumpToJumpingToId() {
     // If there's a bookmark, jump to it!
     if (bookmarkIdWeAreJumpingTo !== -100) {
         // Draw our bookmark and jump to it!
+        console.log("Draw bookmark & jump to: ", bookmarkIdWeAreJumpingTo)
         drawBookmark(bookmarkIdWeAreJumpingTo);
         jumpToBookmark();
         
@@ -538,7 +567,7 @@ $(document).ready(function() {
             }
             
             // Move the bookmark down one.
-            //console.log("SET BOOKMKAR! ", nextItem.attr('id'))
+            console.log("SET BOOKMKAR! ", nextItem.attr('id'))
             navigator.qt.postMessage( 'setBookmark ' + htmlIdToId(nextItem.attr('id')) );
             
             // Continue to next item.

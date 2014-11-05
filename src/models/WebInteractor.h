@@ -48,9 +48,10 @@ signals:
      * @brief Add a little something to the web page.
      * 
      * @param append      True for appending, false for prepending.
+     * @param firstNewsID ID of the first news item in this feed.  Used for showing/hiding top bookmark.
      * @param jsonNews    The news list converted to a JSON object.
      */
-    void add(bool append, QString jsonNews);
+    void add(bool append, qint64 firstNewsID, QString jsonNews);
 
     /**
      * @brief If you loaded a feed with no news items, this will be called instead of the above.

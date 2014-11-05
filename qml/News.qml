@@ -69,9 +69,10 @@ Item {
             }
             
             onAdd: {
-                //console.log("on add")
+                //console.log("on add, first id is: ", firstNewsID)
                 newsView.experimental.evaluateJavaScript("appendNews("
-                                                         + append + ", '"
+                                                         + append + ", "
+                                                         + firstNewsID + ", '"
                                                          + jsonNews + "');");
             }
             

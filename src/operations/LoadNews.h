@@ -69,12 +69,18 @@ protected slots:
      */
     void queryToNewsList(QSqlQuery& query, QList<NewsItem*>* list);
     
-    
     /**
      * @brief Call this during the initial load of a feed.
      *@ return id of feed's bookmark.
      */
     qint64 getBookmarkID();
+    
+    /**
+     * @brief Finds the very first item available in this feed, loaded or not. This is
+     *        used to determine whether or not to display the top bookmark.
+     * @return id of the first item in the entire feed.
+     */
+    qint64 getFirstNewsID();
     
 private slots:
     

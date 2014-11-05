@@ -65,6 +65,7 @@ public:
     
     void setIsUpdating(bool isUpdating);
     
+    // Unused, required for ListItem base class.
     inline QString id() const {
         QString ret;
         QTextStream output(&ret);
@@ -124,7 +125,23 @@ public:
      */
     inline qint64 getBookmarkID() { return _bookmark; }
     
+    /**
+     * @brief Detaches the feed ID when this feed is being disconnected.
+     */
     inline void clearDbId() { _id = -1; }
+    
+    /**
+     * @return The ID of the very first item in the feed that we have in our database;
+     *         not the ID that's necessarily currently loaded.
+     */
+    inline qint64 getFirstNewsID() { return firstNewsID; }
+    
+    /**
+     * @brief setFirstNewsID Sets the first item available in the feed.  This is used
+     *                       to tell if we should draw the top bookmark to unbookmark all.
+     * @param id
+     */
+    inline void setFirstNewsID(qint64 id) { firstNewsID = id; }
     
     /**
      * @brief Sets the unread count to the new value and emits a change signal.
@@ -192,6 +209,7 @@ private:
     bool _errorFlag;
     bool isSelected;
     QDateTime lastIconUpdate;
+    qint64 firstNewsID;
 };
 
 #endif // FEEDITEM_H

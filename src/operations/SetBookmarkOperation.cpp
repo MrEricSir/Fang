@@ -20,11 +20,15 @@ SetBookmarkOperation::~SetBookmarkOperation()
 void SetBookmarkOperation::execute()
 {
     //
-    // TODO: 
+    // TODO: Folder support
     //
     AllNewsFeedItem* allNews = qobject_cast<AllNewsFeedItem*>(feed);
     if (allNews) {
-        bookmarkAllNewsFeed(allNews);
+        if (bookmarkID == -1) {
+            unbookmarkAll();
+        } else {
+            bookmarkAllNewsFeed(allNews);
+        }
     } else {
         bookmarkSingleFeed(feed);
     }
@@ -63,14 +67,6 @@ void SetBookmarkOperation::bookmarkSingleFeed(FeedItem* feed)
 
 void SetBookmarkOperation::bookmarkAllNewsFeed(AllNewsFeedItem* allNews)
 {
-    // TODO
-    // If the bookmark is -1 for all news, that's a special case; we must un-bookmark
-    // ALL feeds.
-    if (bookmarkID == -1)
-        Q_ASSERT(false);
-    //
-    
-    
     int proposed = allNews->newsIDs()->indexOf(bookmarkID);
     int current = allNews->newsIDs()->indexOf(allNews->getBookmarkID());
     
@@ -118,6 +114,30 @@ void SetBookmarkOperation::bookmarkAllNewsFeed(AllNewsFeedItem* allNews)
         if (current > proposed) {
             i--;
         }
+    }
+    
+    // Update all unread counts
+    for (int i = 0; i < FangApp::instance()->feedCount(); i++) {
+        UnreadCountReader::update(db(), FangApp::instance()->getFeed(i));
+    }
+    
+    db().commit();
+    
+    emit finished(this);
+}
+
+void SetBookmarkOperation::unbookmarkAll()
+{
+    db().transaction();
+    
+    QSqlQuery update(db());
+    update.prepare("UPDATE FeedItemTable SET bookmark_id = -1");
+    
+    if (!update.exec()) {
+        reportSQLError(update, "Unable to unset all bookmarks");
+        db().rollback();
+        
+        return;
     }
     
     // Update all unread counts

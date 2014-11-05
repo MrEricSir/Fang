@@ -194,7 +194,7 @@ void WebInteractor::onLoadNewsFinished(Operation* operation)
         }
         
         // Emmit append signal.
-        emit add(true, escapeCharacters(QJsonDocument::fromVariant(appendList).toJson()));
+        emit add(true, currentFeed->getFirstNewsID(), escapeCharacters(QJsonDocument::fromVariant(appendList).toJson()));
     }
     
     if (loader->getPrependList() != NULL) {
@@ -204,15 +204,14 @@ void WebInteractor::onLoadNewsFinished(Operation* operation)
         }
         
         // Emmit prepend signal.
-        emit add(false, escapeCharacters(QJsonDocument::fromVariant(prependList).toJson()));
+        emit add(false, currentFeed->getFirstNewsID(), escapeCharacters(QJsonDocument::fromVariant(prependList).toJson()));
     }
     
     // If this is the initial load, draw and jump to the bookmark.
-    qint64 idOfBookmark = -1; // -1 means the special "top bookmark"
     if (loader->getMode() == LoadNews::Initial) {
-        idOfBookmark = currentFeed->getBookmarkID();
+        qint64 idOfBookmark = currentFeed->getBookmarkID();
+        emit drawBookmarkAndJumpTo(idOfBookmark);
     }
-    emit drawBookmarkAndJumpTo(idOfBookmark);
     
     emit addInProgress(false, operationName);
     

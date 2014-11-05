@@ -31,6 +31,10 @@ protected:
     
     void bookmarkAllNewsFeed(AllNewsFeedItem* allNews);
     
+    // If the bookmark is -1 for all news, that's a special case; we must un-bookmark
+    // ALL feeds.
+    void unbookmarkAll();
+    
 private:
     FeedItem *feed;
     qint64 bookmarkID;
