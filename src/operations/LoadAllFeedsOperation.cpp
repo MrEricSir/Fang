@@ -48,7 +48,7 @@ void LoadAllFeedsOperation::execute()
         tempFeedItemList.append(item);
     }
     
-    // Update the unread count of each feed.
+    // Set the initial unread count.
     allNews->setUnreadCount(UnreadCountReader::forAllNews(db()));
     foreach(ListItem* li, tempFeedItemList) {
         FeedItem* item = qobject_cast<FeedItem*>(li);

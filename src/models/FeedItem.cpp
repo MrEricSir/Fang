@@ -21,7 +21,8 @@ FeedItem::FeedItem(QObject *parent) :
     dropTarget("none"),
     _errorFlag(false),
     isSelected(false),
-    lastIconUpdate()
+    lastIconUpdate(),
+    firstNewsID(-1)
     
 {
     newsList = new QList<NewsItem*>();
@@ -29,7 +30,8 @@ FeedItem::FeedItem(QObject *parent) :
 
 FeedItem::FeedItem(qint64 id, const qint32 ordinal, const QString &title, const QString &subtitle,
                    const QDateTime &lastUpdated, quint32 minutesToUpdate, const QUrl &url,
-                   const QUrl& siteURL, const QUrl &imageURL, const QDateTime& lastIconUpdate, QObject* parent) :
+                   const QUrl& siteURL, const QUrl &imageURL, const QDateTime& lastIconUpdate,
+                   QObject* parent) :
     ListItem(parent),
     _id(id),
     ordinal(ordinal),
@@ -47,7 +49,8 @@ FeedItem::FeedItem(qint64 id, const qint32 ordinal, const QString &title, const 
     dropTarget("none"),
     _errorFlag(false),
     isSelected(false),
-    lastIconUpdate(lastIconUpdate)
+    lastIconUpdate(lastIconUpdate),
+    firstNewsID(-1)
 {
     newsList = new QList<NewsItem*>();
 }
@@ -188,7 +191,7 @@ void FeedItem::clearNews()
 bool FeedItem::canBookmark(qint64 bookmarkID, bool allowBackward)
 {
     // What is this? I don't even.
-    if (bookmarkID < 0)
+    if (bookmarkID < -1)
         return false;
     
     // Given no current bookmark, anything will do.

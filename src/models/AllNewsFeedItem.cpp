@@ -20,7 +20,7 @@ void AllNewsFeedItem::clearNews()
 bool AllNewsFeedItem::canBookmark(qint64 bookmarkID, bool allowBackward)
 {
     // You FAIL!
-    if (bookmarkID < 0)
+    if (bookmarkID < -1)
         return false;
     
     // No change.
@@ -36,7 +36,7 @@ bool AllNewsFeedItem::canBookmark(qint64 bookmarkID, bool allowBackward)
     if (allowBackward)
         return true;
     
-    int proposed = _newsIDs.indexOf(bookmarkID);
+    int proposed = bookmarkID == -1 ? 0 : _newsIDs.indexOf(bookmarkID);
     int current = _newsIDs.indexOf(getBookmarkID());
     Q_ASSERT(proposed >= 0); // It HAS TO be in the news ids list at this point, or you're screwed.
     

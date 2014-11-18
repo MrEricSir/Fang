@@ -55,7 +55,7 @@ void FangApp::init()
     bool isDebugBuild = false;
 #endif // QT_DEBUG
     engine->rootContext()->setContextProperty("isDebugBuild", isDebugBuild); // let QML know if we're a debug build or not
-    qDebug() << "Is debug build: " << isDebugBuild;
+    //qDebug() << "Is debug build: " << isDebugBuild;
     
     // Load feed list.
     LoadAllFeedsOperation* loadAllOp = new LoadAllFeedsOperation(&manager, feedList);

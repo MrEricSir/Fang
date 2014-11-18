@@ -54,6 +54,24 @@ qint64 LoadNews::getBookmarkID()
     return query.value("bookmark_id").toULongLong();
 }
 
+qint64 LoadNews::getFirstNewsID()
+{
+    const QString queryString = "SELECT id FROM NewsItemTable WHERE feed_id = :feed_id "
+            "ORDER BY timestamp ASC, id ASC LIMIT 1";
+    
+    QSqlQuery query(db());
+    query.prepare(queryString);
+    
+    query.bindValue(":feed_id", feedItem->getDbId());
+    
+    if (!query.exec() || !query.next()) {
+        // No news yet!
+        return -1;
+    }
+    
+    return query.value("id").toULongLong();
+}
+
 bool LoadNews::doAppend(qint64 startId)
 {
     // Extract the query into our news list.
@@ -121,22 +139,20 @@ void LoadNews::execute()
         return;
     }
     
-    // For an initial load, make sure the feed isn't populated yet.
-    if (mode == LoadNews::Initial)
-        Q_ASSERT(feedItem->getNewsList() != NULL || feedItem->getNewsList()->isEmpty());
-    
     // DB query/ies.
     bool dbResult = true;
-    qint64 bookmarkID = -1;
+    qint64 bookmarkID = getBookmarkID(); // Default: unbookmarked = -1
+    qint64 firstNewsID = getFirstNewsID();
     switch (mode) {
     case Initial:
     {
-        qint64 startId = getBookmarkID();
-        if (startId > 0) {
-            // We has a bookmark, yo.
-            bookmarkID = startId;
+        // For an initial load, make sure the feed isn't populated yet.
+        Q_ASSERT(feedItem->getNewsList() == NULL || feedItem->getNewsList()->isEmpty());
             
-            // We have a bookmark, so try to load previous items.
+        qint64 startId = bookmarkID;
+        if (startId > 0) {
+            // We has a bookmark, yo!
+            // Try to load previous items.
             dbResult &= doPrepend(startId);
             
             qDebug() << "Start id: " << startId;
@@ -146,8 +162,6 @@ void LoadNews::execute()
         
         // Load next items, if available.
         dbResult &= doAppend(startId);
-        
-        
         
         break;
     }
@@ -200,17 +214,11 @@ void LoadNews::execute()
         foreach (NewsItem* newsItem, *listPrepend)
             feedItem->getNewsList()->prepend(newsItem);
     
-    // If we have a bookmark, find it and set it.
-    if (bookmarkID > 0) {
-        foreach (NewsItem* newsItem, *feedItem->getNewsList()) {
-            // Oh, is this the bookmark?  Rad!
-            if (newsItem->getDbID() == bookmarkID) {
-                feedItem->setBookmarkID(newsItem->getDbID());
-                
-                break;
-            }
-        }
-    }
+    // Set our bookmark.
+    feedItem->setBookmarkID(bookmarkID);
+    
+    // Set the first known ID.
+    feedItem->setFirstNewsID(firstNewsID);
     
     // we r dun lol
     emit finished(this);

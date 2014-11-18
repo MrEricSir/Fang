@@ -24,6 +24,13 @@ private slots:
     
     // Returns a SQL string of all in-memory news item IDs as a SQL string.
     QString getLoadedIDString();
+
+    /**
+     * @brief Finds the very first item available in this feed, loaded or not. This is
+     *        used to determine whether or not to display the top bookmark.
+     * @return id of the first item in the entire feed.
+     */
+    qint64 getFirstNewsID();
     
 private:
     // The feed that we're using here has gotta be All News.  Like, duh.

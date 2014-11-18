@@ -61,8 +61,8 @@ void LoadAllNewsOperation::execute()
         if (listPrepend != NULL)
             bookmark = listPrepend->first();
         
-        if (bookmark != NULL)
-            feedItem->setBookmarkID(bookmark->getDbID());
+        // Set the bookmark -- or set it to -1 if there isn't one.
+        feedItem->setBookmarkID(bookmark ? bookmark->getDbID() : -1);
         
         // As an optimization, we only want to present *one* list -- an append list.
         // So we rewind our prepend list on top of it, then delete the prepend list.
@@ -103,6 +103,9 @@ void LoadAllNewsOperation::execute()
                 allNews->newsIDs()->prepend(newsItem->getDbID());
             }
         }
+
+    // Set the first possible ID for that top bookmark display action.
+    allNews->setFirstNewsID(getFirstNewsID());
     
     // we r dun lol
     emit finished(this);
@@ -298,4 +301,19 @@ QString LoadAllNewsOperation::getLoadedIDString()
     }
     
     return ret;
+}
+
+qint64 LoadAllNewsOperation::getFirstNewsID()
+{
+    const QString queryString = "SELECT id FROM NewsItemTable ORDER BY timestamp ASC, id ASC LIMIT 1";
+
+    QSqlQuery query(db());
+    query.prepare(queryString);
+
+    if (!query.exec() || !query.next()) {
+        // No news yet!
+        return -1;
+    }
+
+    return query.value("id").toULongLong();
 }

@@ -59,6 +59,7 @@ Item {
             }
             
             onAddInProgress: {
+                //console.log("on add in progress")
                 newsView.experimental.evaluateJavaScript("inProgress("
                                                          + started + ", '"
                                                          + operation + "');");
@@ -68,12 +69,15 @@ Item {
             }
             
             onAdd: {
+                //console.log("on add, first id is: ", firstNewsID)
                 newsView.experimental.evaluateJavaScript("appendNews("
-                                                         + append + ", '"
+                                                         + append + ", "
+                                                         + firstNewsID + ", '"
                                                          + jsonNews + "');");
             }
             
             onNothingToAdd: {
+                //console.log('nothing to add')
                 newsView.experimental.evaluateJavaScript("stopInProgress();");
             }
             
@@ -124,8 +128,9 @@ Item {
             WebView {
                 id: newsView;
                 
-                // Enable the web inspector by setting this to true.  You'll have to open Chrome to: 
-                // http://127.0.0.1:9999/webkit/inspector/inspector.html?page=1
+                // Enable the web inspector by setting this to true.  First set QTWEBKIT_INSPECTOR_SERVER
+                // in the Project->Run setting to 9999 (or any other port number.)
+                // Then open Chrome/Safari to:  http://127.0.0.1:9999/webkit/inspector/inspector.html?page=1
                 property bool devMode: isDebugBuild;
                 
                 // Read-only
