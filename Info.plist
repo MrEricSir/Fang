@@ -16,5 +16,7 @@
 	<string>com.EricGregory.Fang</string>
 	<key>LSMultipleInstancesProhibited</key>
     <true/>
+    <key>NSHighResolutionCapable</key>
+	<true/>
 </dict>
 </plist>

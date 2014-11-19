@@ -1,6 +1,8 @@
 TEMPLATE = app
 
-QT += network sql qml quick webkit webkitwidgets svg
+QT += network sql quick webkit webkitwidgets svg
+
+QT -= sensors
 
 # Resource files
 # Qt zips these and stashes them inside the executable.
