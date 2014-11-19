@@ -103,6 +103,9 @@ void LoadAllNewsOperation::execute()
                 allNews->newsIDs()->prepend(newsItem->getDbID());
             }
         }
+
+    // Set the first possible ID for that top bookmark display action.
+    allNews->setFirstNewsID(getFirstNewsID());
     
     // we r dun lol
     emit finished(this);
@@ -298,4 +301,19 @@ QString LoadAllNewsOperation::getLoadedIDString()
     }
     
     return ret;
+}
+
+qint64 LoadAllNewsOperation::getFirstNewsID()
+{
+    const QString queryString = "SELECT id FROM NewsItemTable ORDER BY timestamp ASC, id ASC LIMIT 1";
+
+    QSqlQuery query(db());
+    query.prepare(queryString);
+
+    if (!query.exec() || !query.next()) {
+        // No news yet!
+        return -1;
+    }
+
+    return query.value("id").toULongLong();
 }

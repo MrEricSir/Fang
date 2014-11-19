@@ -128,8 +128,9 @@ Item {
             WebView {
                 id: newsView;
                 
-                // Enable the web inspector by setting this to true.  You'll have to open Chrome to: 
-                // http://127.0.0.1:9999/webkit/inspector/inspector.html?page=1
+                // Enable the web inspector by setting this to true.  First set QTWEBKIT_INSPECTOR_SERVER
+                // in the Project->Run setting to 9999 (or any other port number.)
+                // Then open Chrome/Safari to:  http://127.0.0.1:9999/webkit/inspector/inspector.html?page=1
                 property bool devMode: isDebugBuild;
                 
                 // Read-only
