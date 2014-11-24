@@ -1,14 +1,15 @@
 <RCC>
-	<qresource prefix="/sql">
+    <qresource prefix="/sql">
         <file>sql/1.sql</file>
-	</qresource>
+        <file>sql/2.sql</file>
+    </qresource>
     <qresource prefix="/icons">
         <file>icons/icon_circle.svg</file>
         <file>icons/icon_square.svg</file>
         <file>icons/mac.icns</file>
         <file>icons/win32.ico</file>
-	</qresource>
-	<qresource prefix="/">
-		<file>win32.rc</file>
+    </qresource>
+    <qresource prefix="/">
+        <file>win32.rc</file>
     </qresource>
 </RCC>

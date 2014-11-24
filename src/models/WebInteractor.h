@@ -107,6 +107,9 @@ public slots:
     
     // Sets the bookmark, and fires a draw event.
     Q_INVOKABLE void setBookmark(qint64 sId, bool allowBackward = false);
+
+    // Pins an item.
+    Q_INVOKABLE void setPin(qint64 id);
     
     // The web layer has to call this to lead us know we're good to go.
     Q_INVOKABLE void pageLoaded();

@@ -73,13 +73,11 @@ void WebInteractor::orderChanged()
 
 void WebInteractor::setBookmark(qint64 id, bool allowBackward)
 {
-    qDebug() << "Set bookmarK; " << id << ", " << allowBackward;
+    //qDebug() << "Set bookmarK; " << id << ", " << allowBackward;
     
     if (isSettingBookmark || NULL == currentFeed) {
         return;
     }
-    
-    // qDebug() << "Setting bookmark to: " << sId;
     
     if (!currentFeed->canBookmark(id, allowBackward)) {
         isSettingBookmark = false;
@@ -93,6 +91,16 @@ void WebInteractor::setBookmark(qint64 id, bool allowBackward)
     isSettingBookmark =  true;
     connect(bookmarkOp, SIGNAL(finished(Operation*)), this, SLOT(onSetBookmarkFinished(Operation*)));
     manager->add(bookmarkOp);
+}
+
+void WebInteractor::setPin(qint64 id)
+{
+    if (NULL == currentFeed) {
+        return;
+    }
+    qDebug() << "Someone wants to pin: " << id;
+
+    // TODO Bookmark operation
 }
 
 void WebInteractor::pageLoaded()
@@ -301,6 +309,7 @@ void WebInteractor::addNewsItem(NewsItem *item, QVariantList* newsList)
     itemMap["feedTitle"] = feedTitle;
     itemMap["timestamp"] = item->getTimestamp().toMSecsSinceEpoch();
     itemMap["content"] = item->getContent() != "" ? item->getContent() : item->getSummary();
+    itemMap["pinned"] = item->getPinned();
     
     // Add to the list.
     *newsList << itemMap;

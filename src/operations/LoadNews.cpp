@@ -30,7 +30,8 @@ void LoadNews::queryToNewsList(QSqlQuery& query, QList<NewsItem*>* list)
                     query.value("summary").toString(),
                     query.value("content").toString(),
                     QDateTime::fromMSecsSinceEpoch(query.value("timestamp").toLongLong()), 
-                    query.value("url").toString()
+                    query.value("url").toString(),
+                    query.value("pinned").toBool()
                     );
         
         // Add to our list.
