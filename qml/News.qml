@@ -91,18 +91,23 @@ Item {
             }
             
             onJumpTo: {
-                //console.log("jump to: ", id);
-                newsView.experimental.evaluateJavaScript("jumpTo('" + id + "');");
+                //console.log("jump to: ", newsID);
+                newsView.experimental.evaluateJavaScript("jumpTo('" + newsID + "');");
             }
             
             onDrawBookmark: {
-                //console.log("Draw bookmark: ", id);
-                newsView.experimental.evaluateJavaScript("drawBookmark('" + id + "');");
+                //console.log("Draw bookmark: ", newsID);
+                newsView.experimental.evaluateJavaScript("drawBookmark('" + newsID + "');");
             }
             
             onDrawBookmarkAndJumpTo: {
-                //console.log("Draw bookmark and jump to: ", id);
-                newsView.experimental.evaluateJavaScript("drawBookmarkAndJumpTo('" + id + "');");
+                //console.log("Draw bookmark and jump to: ", newsID);
+                newsView.experimental.evaluateJavaScript("drawBookmarkAndJumpTo('" + newsID + "');");
+            }
+
+            onUpdatePin: {
+                //console.log("Update pin: ", newsID, " set to: ", pin);
+                newsView.experimental.evaluateJavaScript("updatePin(" + newsID + ", " + pin + ");");
             }
             
             onFontSizeChanged: {
@@ -272,7 +277,8 @@ Item {
                     } else if (cmd === "forceBookmark") {
                         webInteractor.setBookmark(commandArray[1], true);
                     } else if (cmd === "setPin") {
-                        webInteractor.setPin(commandArray[1], true);
+                        // Stupid Javascript hack!  This forceces the expression to evaluate to a boolean.
+                        webInteractor.setPin(commandArray[1], commandArray[2] === 'true');
                     } else if (cmd === "openLink") {
                         webInteractor.openLink(commandArray[1]);
                     } else if (cmd === "stopProgress" ) {

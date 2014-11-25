@@ -76,11 +76,11 @@ function installMouseHandlers(parentElement) {
         navigator.qt.postMessage( 'forceBookmark ' + htmlIdToId( elementID ) );
     } );
 
-    // Setup the pin... pinner?
+    // Setup the pin... pinner?  Pinteresting.
     $(parentElement).find( '.pin' ).on( "click", function() {
-        var elementID = $(this).parent().parent().attr( 'id' );
-
-        navigator.qt.postMessage( 'setPin ' + htmlIdToId( elementID ) );
+        var element = $(this).parent().parent();
+        var isPinned = element.find( '.pin' ).hasClass( 'pinned' );
+        navigator.qt.postMessage( 'setPin ' + htmlIdToId( element.attr( 'id' ) ) + ' ' + !isPinned );
     } );
 }
 
@@ -350,6 +350,21 @@ function jumpToBookmark() {
         scrollTo = $(document).height() - windowHeight;
     
     $(document).scrollTop( scrollTo );
+}
+
+// Updates the pin status on newsID
+function updatePin(newsID, pin) {
+    //console.log("Update pin: ", newsID, " set to: ", pin);
+
+    var element = $('#' + idToHtmlId( newsID ));
+    if (!element.length)
+        return; // Not found.
+
+    if (pin) {
+        element.find( '.pin' ).addClass('pinned');
+    } else {
+        element.find( '.pin' ).removeClass('pinned');
+    }
 }
 
 // UTILITY: Returns true if the element is a real news item,

@@ -93,14 +93,16 @@ void WebInteractor::setBookmark(qint64 id, bool allowBackward)
     manager->add(bookmarkOp);
 }
 
-void WebInteractor::setPin(qint64 id)
+void WebInteractor::setPin(qint64 id, bool pin)
 {
+    //qDebug() << "Someone wants to " << (pin ? "pin: " : "unpin: ") << id;
     if (NULL == currentFeed) {
         return;
     }
-    qDebug() << "Someone wants to pin: " << id;
 
-    // TODO Bookmark operation
+    SetPinOperation* pinOp = new SetPinOperation(manager, id, pin);
+    connect(pinOp, SIGNAL(finished(Operation*)), this, SLOT(onSetPinFinished(Operation*)));
+    manager->add(pinOp);
 }
 
 void WebInteractor::pageLoaded()
@@ -244,6 +246,22 @@ void WebInteractor::onSetBookmarkFinished(Operation *operation)
     
     currentFeed->setBookmarkID(bookmarkOp->getBookmarkID());
     emit drawBookmark(currentFeed->getBookmarkID());
+}
+
+void WebInteractor::onSetPinFinished(Operation *operation)
+{
+    if (NULL == currentFeed) {
+        return;
+    }
+
+    SetPinOperation* pinOp = qobject_cast<SetPinOperation*>(operation);
+    Q_ASSERT(pinOp != NULL);
+
+    // Note: In theory we could update the NewsItem model itself at this point,
+    // but why bother?  It's really only used for going from the database to
+    // the HTML view.
+
+    emit updatePin(pinOp->getNewsID(), pinOp->getPin());
 }
 
 

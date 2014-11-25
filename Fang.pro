@@ -69,7 +69,8 @@ SOURCES += src/main.cpp \
     src/network/FangNetworkAccessManager.cpp \
     src/network/FangQQmlNetworkAccessManagerFactory.cpp \
     src/notifications/NotificationBase.cpp \
-    src/utilities/SingleInstanceCheck.cpp
+    src/utilities/SingleInstanceCheck.cpp \
+    src/operations/SetPinOperation.cpp
 	
 HEADERS += \
     src/models/ListModel.h \
@@ -117,7 +118,8 @@ HEADERS += \
     src/network/FangNetworkAccessManager.h \
     src/network/FangQQmlNetworkAccessManagerFactory.h \
     src/notifications/NotificationBase.h \
-    src/utilities/SingleInstanceCheck.h
+    src/utilities/SingleInstanceCheck.h \
+    src/operations/SetPinOperation.h
 
 mac {
     QT += macextras
