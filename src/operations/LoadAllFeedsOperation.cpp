@@ -5,6 +5,7 @@
 
 #include "../models/NewsItem.h"
 #include "../models/AllNewsFeedItem.h"
+#include "../models/PinnedFeedItem.h"
 #include "../utilities/UnreadCountReader.h"
 
 LoadAllFeedsOperation::LoadAllFeedsOperation(OperationManager *parent, ListModel *feedList) :
@@ -19,8 +20,9 @@ LoadAllFeedsOperation::~LoadAllFeedsOperation()
 
 void LoadAllFeedsOperation::execute()
 {
-    // Immediately add All News.
+    // Setup our pseudo-feeds.
     AllNewsFeedItem* allNews = new AllNewsFeedItem(feedList);
+    PinnedFeedItem* pinnedNews = new PinnedFeedItem();
     
     // Kindly ask the database for the rest.
     QSqlQuery query(db());
@@ -48,15 +50,19 @@ void LoadAllFeedsOperation::execute()
         tempFeedItemList.append(item);
     }
     
-    // Set the initial unread count.
+    // Set the initial unread counts.
     allNews->setUnreadCount(UnreadCountReader::forAllNews(db()));
+    pinnedNews->setUnreadCount(UnreadCountReader::forPinned(db()));
     foreach(ListItem* li, tempFeedItemList) {
         FeedItem* item = qobject_cast<FeedItem*>(li);
         item->setUnreadCount(UnreadCountReader::forFeed(db(), item->getDbId()));
     }
     
-    // Finally, put All News at the front and throw everything into the feed list.
-    tempFeedItemList.push_front(allNews);
+    // Finally, put special items at the front (in reverse order, since we're prepending.)
+    tempFeedItemList.prepend(pinnedNews);
+    tempFeedItemList.prepend(allNews);
+
+    // Add 'em all!
     feedList->appendRows(tempFeedItemList);
     
     // ...and we're done!  Yay!

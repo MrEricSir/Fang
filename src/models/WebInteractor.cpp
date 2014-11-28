@@ -58,8 +58,8 @@ void WebInteractor::orderChanged()
         FeedItem* feed = qobject_cast<FeedItem*>(feedList->row(i));
         Q_ASSERT(feed != NULL);
         
-        if (feed->getDbId() < 0)
-            continue; // Skip all news.
+        if (feed->isSpecialFeed())
+            continue; // Skip special feeds.
         
         // Set the new ordinal.
         feed->setOrdinal(i);
@@ -100,7 +100,9 @@ void WebInteractor::setPin(qint64 id, bool pin)
         return;
     }
 
-    SetPinOperation* pinOp = new SetPinOperation(manager, id, pin);
+    PinnedFeedItem* pinnedNews = qobject_cast<PinnedFeedItem*>(FangApp::instance()->feedForId(FEED_ID_PINNED));
+
+    SetPinOperation* pinOp = new SetPinOperation(manager, pinnedNews, id, pin);
     connect(pinOp, SIGNAL(finished(Operation*)), this, SLOT(onSetPinFinished(Operation*)));
     manager->add(pinOp);
 }
@@ -316,7 +318,7 @@ void WebInteractor::addNewsItem(NewsItem *item, QVariantList* newsList)
     //qDebug() << "Add news: " << item->id();
     
     // Make sure we get the real feed title for All News.
-    QString feedTitle = !item->getFeed()->isAllNews() ? 
+    QString feedTitle = !item->getFeed()->isSpecialFeed() ?
                             item->getFeed()->getTitle() :
                             FangApp::instance()->getFeedForID(item->getFeedId())->getTitle();
     
@@ -339,9 +341,22 @@ void WebInteractor::doLoadNews(LoadNews::LoadMode mode)
         return;
     }
     
-    LoadNews* loader = (currentFeed->getDbId() < 0) ? 
-                           new LoadAllNewsOperation(manager, currentFeed, mode) :
-                           new LoadNews(manager, currentFeed, mode);
+    LoadNews* loader = NULL;
+    switch (currentFeed->getDbId()) {
+    case FEED_ID_ALLNEWS:
+        loader = new LoadAllNewsOperation(manager, currentFeed, mode);
+        break;
+
+    case FEED_ID_PINNED:
+        // TODO
+        return;
+
+        break;
+
+    default:
+        loader = new LoadNews(manager, currentFeed, mode);
+    }
+
     isLoading =  true;
     connect(loader, SIGNAL(finished(Operation*)), this, SLOT(onLoadNewsFinished(Operation*)));
     manager->add(loader);

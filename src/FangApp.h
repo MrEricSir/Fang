@@ -13,6 +13,8 @@
 
 #include "models/NewsItem.h"
 #include "models/FeedItem.h"
+#include "models/AllNewsFeedItem.h"
+#include "models/PinnedFeedItem.h"
 #include "models/ListModel.h"
 #include "models/FangSettings.h"
 #include "models/WebInteractor.h"
@@ -186,6 +188,10 @@ private:
     QMap<qint64, FeedItem*> feedIdMap;
     QQuickWindow* window;
     NotificationBase* notifications;
+
+    // Special feeds.
+    AllNewsFeedItem* allNews;
+    PinnedFeedItem* pinnedNews;
 };
 
 #endif // FANGAPP_H

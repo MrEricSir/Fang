@@ -11,6 +11,13 @@
 
 class NewsItem;
 
+// IDs of special feeds.  (Normal feed IDs start at 0.)
+
+enum SpecialFeedID {
+    FEED_ID_ALLNEWS = -2,
+    FEED_ID_PINNED = -1
+};
+
 class FeedItem : public ListItem
 {
     Q_OBJECT
@@ -30,6 +37,7 @@ public:
         DropTargetRole,
         ErrorFlagRole,
         IsSelectedRole,
+        IsSpecialFeedRole,
         SelfRole
     };
     
@@ -85,7 +93,7 @@ public:
     inline QString getDropTarget() const { return dropTarget; }
     inline FeedItem* getSelf() const { return const_cast<FeedItem*>(this); }
     inline qint64 getDbId() const { return _id; }
-    inline bool isAllNews() const { return _id < 0; }
+    inline bool isSpecialFeed() const { return _id < 0; }
     
     void setImageURL(const QUrl& url);
     
@@ -128,7 +136,7 @@ public:
     /**
      * @brief Detaches the feed ID when this feed is being disconnected.
      */
-    inline void clearDbId() { _id = -1; }
+    inline void clearDbId() { _id = -100; }
     
     /**
      * @return The ID of the very first item in the feed that we have in our database;

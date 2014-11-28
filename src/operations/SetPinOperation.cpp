@@ -1,9 +1,10 @@
 #include "SetPinOperation.h"
 #include <QDebug>
 
+#include "../utilities/UnreadCountReader.h"
 
-SetPinOperation::SetPinOperation(OperationManager *parent, qint64 newsID, bool pin) :
-    DBOperation(IMMEDIATE, parent), newsID(newsID), pin(pin)
+SetPinOperation::SetPinOperation(OperationManager *parent, PinnedFeedItem *pinnedNews, qint64 newsID, bool pin) :
+    DBOperation(IMMEDIATE, parent), pinnedNews(pinnedNews), newsID(newsID), pin(pin)
 {
 }
 
@@ -26,7 +27,8 @@ void SetPinOperation::execute()
 
     db().commit();
 
-    // MOST GLORIOUS TODO: update the unread count of the artificial pinned feed
+    // Update the unread count of the special pinned feed.
+    pinnedNews->setUnreadCount(UnreadCountReader::forPinned(db()));
 
     emit finished(this);
 }

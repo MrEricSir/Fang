@@ -8,10 +8,24 @@ UnreadCountReader::UnreadCountReader()
 
 void UnreadCountReader::update(QSqlDatabase db, FeedItem *feed)
 {
-    if (feed->getDbId() >= 0)
-        feed->setUnreadCount(forFeed(db, feed->getDbId()));
-    else
-        feed->setUnreadCount(forAllNews(db));
+    if (feed->isSpecialFeed()) {
+        switch (feed->getDbId()) {
+        case FEED_ID_ALLNEWS:
+            feed->setUnreadCount(forAllNews(db));
+            break;
+
+        case FEED_ID_PINNED:
+            feed->setUnreadCount(forPinned(db));
+            break;
+
+        default:
+            Q_ASSERT(false); // You forgot to handle a new special feed type here.
+        }
+        return;
+    }
+
+    // All other feed types.
+    feed->setUnreadCount(forFeed(db, feed->getDbId()));
 }
 
 qint32 UnreadCountReader::forAllNews(QSqlDatabase db)
@@ -29,6 +43,23 @@ qint32 UnreadCountReader::forAllNews(QSqlDatabase db)
     
     int ret = query.value(0).toInt();
     //qDebug() << "UC: " << ret;
+    return ret;
+}
+
+qint32 UnreadCountReader::forPinned(QSqlDatabase db)
+{
+    QSqlQuery query(db);
+    query.prepare("SELECT count(id) FROM NewsItemTable WHERE pinned");
+
+    if (!query.exec() || !query.next()) {
+       qDebug() << "Could not update unread count for pinned news feed";
+       qDebug() << query.lastError();
+
+       return -1;
+    }
+
+    int ret = query.value(0).toInt();
+    qDebug() << "Unread count for pinned: " << ret;
     return ret;
 }
 

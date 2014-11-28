@@ -30,7 +30,9 @@ FangApp::FangApp(QObject *parent, QQmlApplicationEngine* engine, SingleInstanceC
     fangSettings(NULL),
     interactor(NULL),
     updateTimer(new QTimer(this)),
-    window(NULL)
+    window(NULL),
+    allNews(NULL),
+    pinnedNews(NULL)
 {
     Q_ASSERT(_instance == NULL);
     _instance = this;
@@ -107,8 +109,8 @@ void FangApp::onFeedAdded(ListItem *item)
     // Hook up signals.
     connectFeed(feed);
     
-    if (!feed->isAllNews() && loadAllFinished) {
-        // Not all news, so trigger an update.
+    if (!feed->isSpecialFeed() && loadAllFinished) {
+        // Not special feed, so trigger an update.
         // TODO: Handle folders.
         refreshFeed(feed);
     }
@@ -155,6 +157,26 @@ void FangApp::onLoadAllFinished(Operation *op)
 {
     Q_UNUSED(op);
     loadAllFinished = true;
+
+    // Find our special feeds.
+    for (int i = 0; i < feedList->rowCount(); i++) {
+        FeedItem* item = qobject_cast<FeedItem*>(feedList->row(i));
+        if (item->getDbId() >=0)
+            break; // We're done with special feeds.
+
+        switch (item->getDbId()) {
+        case FEED_ID_ALLNEWS:
+            allNews = qobject_cast<AllNewsFeedItem*>(item);
+            break;
+
+        case FEED_ID_PINNED:
+            pinnedNews = qobject_cast<PinnedFeedItem*>(item);
+            break;
+
+        default:
+            Q_ASSERT(false); // You forgot to add the new special feed here.
+        }
+    }
     
     // Load teh cue em el.
     engine->load(QUrl("qrc:///qml/main.qml"));
@@ -177,12 +199,15 @@ void FangApp::refreshFeed(FeedItem *feed)
     
     // Special handling for all news.
     // TODO: Handle folders
-    if (feed->isAllNews()) {
-        // Update ALL the feeds (except all news, obviously.)
-        for (int i = 1; i < feedList->rowCount(); i++)
+    if (feed->isSpecialFeed()) {
+        // Update ALL the feeds.
+        for (int i = 0; i < feedList->rowCount(); i++)
         {
             FeedItem* item = qobject_cast<FeedItem*>(feedList->row(i));
             Q_ASSERT(item != NULL);
+            if (item->isSpecialFeed())
+                continue; // Skip special feeds
+
             feedsToUpdate.append(item);
         }
         
@@ -203,9 +228,6 @@ void FangApp::refreshFeed(FeedItem *feed)
 void FangApp::refreshAllFeeds()
 {
     // Use the "all news" trick (see above)
-    FeedItem* allNews = qobject_cast<FeedItem*>(feedList->row(0));
-    Q_ASSERT(allNews != NULL);
-    Q_ASSERT(allNews->isAllNews());
     refreshFeed(allNews);
 }
 
@@ -225,8 +247,24 @@ void FangApp::refreshCurrentFeed()
 
 FeedItem* FangApp::feedForId(const qint64 id)
 {
-    for (int i = 0; i < feedList->rowCount(); i++)
-    {
+    // Special feeds.
+    if (id < 0) {
+        switch (id) {
+        case FEED_ID_ALLNEWS:
+            return allNews;
+
+        case FEED_ID_PINNED:
+            return pinnedNews;
+
+        default:
+            Q_ASSERT(false); // You added a new special feed but forgot to update this switch
+        }
+
+        return NULL; // Should never make it this far.
+    }
+
+    // Plain ol' feeds.
+    for (int i = 0; i < feedList->rowCount(); i++) {
         FeedItem* feed = qobject_cast<FeedItem*>(feedList->row(i));
         Q_ASSERT(feed != NULL);
         

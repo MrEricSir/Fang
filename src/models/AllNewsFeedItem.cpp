@@ -3,7 +3,7 @@
 #include <QDateTime>
 
 AllNewsFeedItem::AllNewsFeedItem(ListModel *feedList) :
-    FeedItem(-1, -1, "All News", "", QDateTime(), 0, QUrl(), QUrl(), QUrl(), QDateTime(), feedList),
+    FeedItem(FEED_ID_ALLNEWS, -1, "All News", "", QDateTime(), 0, QUrl(), QUrl(), QUrl(), QDateTime(), feedList),
     _newsIDs()
 {
 }

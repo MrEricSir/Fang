@@ -10,9 +10,6 @@ ListViewDragDelegate {
     
     signal jumpToBookmark();
     
-    // Read-only
-    property bool isAllNews: index == 0;
-    
     onClicked: feedListView.currentIndex = index;
     
     onDoubleClicked: {
@@ -42,8 +39,8 @@ ListViewDragDelegate {
                 Item {
                     id: feedIconCol
                     
-                    width: isAllNews ? 0 : 35; // no icon for all news
-                    visible: !isAllNews
+                    width: isSpecialFeed ? 0 : 35; // no icon for all news
+                    visible: !isSpecialFeed
                     
                     anchors.left: parent.left;
                     anchors.top: parent.top;

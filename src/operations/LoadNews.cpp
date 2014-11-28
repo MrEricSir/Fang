@@ -132,8 +132,8 @@ bool LoadNews::executeLoadQuery(qint64 startId, bool append)
 
 void LoadNews::execute()
 {
-    if (feedItem->getDbId() < 0) {
-        // This is AllNews, dumbass.  You called the wrong operation!
+    if (feedItem->isSpecialFeed()) {
+        // This is a special feed, dumbass.  You called the wrong operation!
         Q_ASSERT(false);
         emit finished(this);
         
