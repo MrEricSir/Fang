@@ -11,6 +11,7 @@
 #include "../operations/Operation.h"
 #include "../operations/LoadNews.h"
 #include "../operations/LoadAllNewsOperation.h"
+#include "../operations/LoadPinnedNewsOperation.h"
 #include "../operations/SetBookmarkOperation.h"
 #include "../operations/SetPinOperation.h"
 #include "../operations/UpdateOrdinalsOperation.h"

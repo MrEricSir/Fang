@@ -344,12 +344,11 @@ void WebInteractor::doLoadNews(LoadNews::LoadMode mode)
     LoadNews* loader = NULL;
     switch (currentFeed->getDbId()) {
     case FEED_ID_ALLNEWS:
-        loader = new LoadAllNewsOperation(manager, currentFeed, mode);
+        loader = new LoadAllNewsOperation(manager, qobject_cast<AllNewsFeedItem*>(currentFeed), mode);
         break;
 
     case FEED_ID_PINNED:
-        // TODO
-        return;
+        loader = new LoadPinnedNewsOperation(manager, qobject_cast<PinnedFeedItem*>(currentFeed), mode);
 
         break;
 

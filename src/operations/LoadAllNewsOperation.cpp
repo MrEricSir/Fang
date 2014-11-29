@@ -1,12 +1,9 @@
 #include "LoadAllNewsOperation.h"
 
-LoadAllNewsOperation::LoadAllNewsOperation(OperationManager *parent, FeedItem* feedItem, LoadMode mode, int loadLimit) :
+LoadAllNewsOperation::LoadAllNewsOperation(OperationManager *parent, AllNewsFeedItem *feedItem, LoadMode mode, int loadLimit) :
     LoadNews(parent, feedItem, mode, loadLimit),
-    allNews(NULL)
+    allNews(feedItem)
 {
-    // Ensure we have All News!
-    allNews = qobject_cast<AllNewsFeedItem*>(feedItem);
-    Q_ASSERT(allNews != NULL);
 }
 
 void LoadAllNewsOperation::execute()

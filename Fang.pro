@@ -71,7 +71,8 @@ SOURCES += src/main.cpp \
     src/notifications/NotificationBase.cpp \
     src/utilities/SingleInstanceCheck.cpp \
     src/operations/SetPinOperation.cpp \
-    src/models/PinnedFeedItem.cpp
+    src/models/PinnedFeedItem.cpp \
+    src/operations/LoadPinnedNewsOperation.cpp
 	
 HEADERS += \
     src/models/ListModel.h \
@@ -121,7 +122,8 @@ HEADERS += \
     src/notifications/NotificationBase.h \
     src/utilities/SingleInstanceCheck.h \
     src/operations/SetPinOperation.h \
-    src/models/PinnedFeedItem.h
+    src/models/PinnedFeedItem.h \
+    src/operations/LoadPinnedNewsOperation.h
 
 mac {
     QT += macextras

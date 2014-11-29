@@ -130,6 +130,26 @@ bool LoadNews::executeLoadQuery(qint64 startId, bool append)
     return true;
 }
 
+qint64 LoadNews::getStartIDForAppend()
+{
+    qint64 startId = -1;
+    if (feedItem->getNewsList() != NULL && feedItem->getNewsList()->size() > 0) {
+        startId = feedItem->getNewsList()->last()->getDbID() + 1; // Advance to next item
+    }
+
+    return startId;
+}
+
+qint64 LoadNews::getStartIDForPrepend()
+{
+    qint64 startId = -1;
+    if (feedItem->getNewsList() != NULL && feedItem->getNewsList()->size() > 0) {
+        startId = feedItem->getNewsList()->first()->getDbID();
+    }
+
+    return startId;
+}
+
 void LoadNews::execute()
 {
     if (feedItem->isSpecialFeed()) {
@@ -169,15 +189,7 @@ void LoadNews::execute()
     
     case Append:
     {
-        qint64 startId = -1;
-        if (feedItem->getNewsList() != NULL && feedItem->getNewsList()->size() > 0)
-            startId = feedItem->getNewsList()->last()->getDbID();
-        
-        startId++; // Advance to the next item.
-        
-        //qDebug() << "Append from " << startId;
-        dbResult &= doAppend(startId);
-        
+        dbResult &= doAppend(getStartIDForAppend());
         //qDebug() << "Adding: " << (listAppend != NULL ? listAppend->size() : 0);
         
         break;
@@ -185,11 +197,7 @@ void LoadNews::execute()
         
     case Prepend:
     {
-        qint64 startId = -1;
-        if (feedItem->getNewsList() != NULL && feedItem->getNewsList()->size() > 0)
-            startId = feedItem->getNewsList()->first()->getDbID();
-        
-        dbResult &= doPrepend(startId);
+        dbResult &= doPrepend(getStartIDForPrepend());
         
         break;
     }
