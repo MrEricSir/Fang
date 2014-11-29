@@ -17,6 +17,8 @@ ListViewDragDelegate {
             feedTitleDelegate.jumpToBookmark();
     }
     
+    dragEnabled: !isSpecialFeed;
+
     Row {
         id: row1;
         

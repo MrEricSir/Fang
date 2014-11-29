@@ -62,9 +62,17 @@ public:
     static FangApp *instance();
     
 signals:
+
+    // The number of special feeds has changed, huzzah!
+    void specialFeedCountChanged();
     
 public slots:
     inline int feedCount() { return feedList->rowCount(); }
+
+    /**
+     * @return The number of visible special feeds (all news, pinned, etc.)
+     */
+    qint32 specialFeedCount();
     
     /**
      * @brief Adds a known, pre-processed feed.

@@ -27,6 +27,12 @@ void WebInteractor::init(OperationManager *manager, ListModel *feedList, FangSet
     connect(feedList, SIGNAL(removed(ListItem*)), this, SLOT(onFeedRemoved(ListItem*)));
     connect(fangSettings, SIGNAL(styleChanged(QString)), this, SLOT(onStyleChanged(QString)));
     connect(fangSettings, SIGNAL(fontSizeChanged(QString)), this, SLOT(onFontSizeChanged(QString)));
+    connect(FangApp::instance(), SIGNAL(specialFeedCountChanged()), this, SIGNAL(specialFeedCountChanged()));
+}
+
+qint32 WebInteractor::specialFeedCount()
+{
+    return FangApp::instance()->specialFeedCount();
 }
 
 void WebInteractor::loadNext()
@@ -363,6 +369,11 @@ void WebInteractor::doLoadNews(LoadNews::LoadMode mode)
 
 void WebInteractor::onFeedRemoved(ListItem *listItem)
 {
+    if (qobject_cast<FeedItem*>(listItem)->isSpecialFeed()) {
+        // It's okay to stay, this feed has superpowers and will live forever.
+        return;
+    }
+
     if (listItem == currentFeed) {
         // Feed is being removed, don't try to use this pointer.  I mean, duh.
         currentFeed = NULL;

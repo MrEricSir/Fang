@@ -5,6 +5,9 @@ import Fang 1.0
 
 Item {
     id: news
+
+    // Read-only: The number of special feeds in the feed list
+    property alias specialFeedCount: webInteractor.specialFeedCount;
     
     // Used by main for double clicking on feed titles.
     function jumpToBookmark() {

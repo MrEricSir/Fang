@@ -93,7 +93,7 @@ public:
     inline QString getDropTarget() const { return dropTarget; }
     inline FeedItem* getSelf() const { return const_cast<FeedItem*>(this); }
     inline qint64 getDbId() const { return _id; }
-    inline bool isSpecialFeed() const { return _id < 0; }
+    Q_INVOKABLE inline bool isSpecialFeed() const { return _id < 0; }
     
     void setImageURL(const QUrl& url);
     

@@ -373,6 +373,17 @@ FangApp* FangApp::instance()
     return _instance;
 }
 
+qint32 FangApp::specialFeedCount()
+{
+    // If pinned is visible, it's two.
+    if (feedList->count() > 1 && feedList->row(1) == pinnedNews) {
+        return 2;
+    }
+
+    // Otherwise just one for all news.
+    return 1;
+}
+
 void FangApp::addFeed(const QUrl &feedURL, const RawFeed* rawFeed, bool switchTo)
 {
     //qDebug() << "Add feed " << siteTitle << " " << feedURL;

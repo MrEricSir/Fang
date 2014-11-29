@@ -168,6 +168,9 @@ Window {
             anchors.top: parent.top;
             anchors.bottom: parent.bottom;
             state: "open";
+
+            // Now isn't that special?
+            specialFeedCount: news.specialFeedCount;
             
             states: [
                 State { name: "open"; },

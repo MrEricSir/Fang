@@ -24,6 +24,9 @@ class WebInteractor : public QQuickItem
     Q_OBJECT
     Q_DISABLE_COPY(WebInteractor)
     
+    Q_PROPERTY(qint32 specialFeedCount READ specialFeedCount NOTIFY specialFeedCountChanged)
+
+
 public:
     explicit WebInteractor(QQuickItem *parent = 0);
     virtual ~WebInteractor() {}
@@ -35,6 +38,10 @@ public:
      * @param fangSettings
      */
     void init(OperationManager* manager, ListModel *feedList, FangSettings *fangSettings);
+
+
+    // Returns the number of special feeds.
+    qint32 specialFeedCount();
     
 signals:
     
@@ -99,6 +106,11 @@ signals:
      * @brief The font size has changed, so to a jump to bookmark.
      */
     void fontSizeChanged();
+
+    /**
+     * @brief The number of special feeds in the feed list has changed.
+     */
+    void specialFeedCountChanged();
     
 public slots:
     
