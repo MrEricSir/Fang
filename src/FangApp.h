@@ -180,6 +180,11 @@ private slots:
      * @return String representing the platform.
      */
     QString getPlatform();
+
+    /**
+     * @brief Adds/removes the pinned news item to the list.
+     */
+    void pinnedNewsWatcher();
     
 private:
     static FangApp* _instance;
@@ -200,6 +205,8 @@ private:
     // Special feeds.
     AllNewsFeedItem* allNews;
     PinnedFeedItem* pinnedNews;
+
+    bool isPinnedNewsVisible;
 };
 
 #endif // FANGAPP_H

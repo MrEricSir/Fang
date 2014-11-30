@@ -370,7 +370,7 @@ void WebInteractor::doLoadNews(LoadNews::LoadMode mode)
 void WebInteractor::onFeedRemoved(ListItem *listItem)
 {
     if (qobject_cast<FeedItem*>(listItem)->isSpecialFeed()) {
-        // It's okay to stay, this feed has superpowers and will live forever.
+        // It's okay, this feed has superpowers and will live forever.
         return;
     }
 

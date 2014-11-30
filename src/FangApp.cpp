@@ -32,7 +32,8 @@ FangApp::FangApp(QObject *parent, QQmlApplicationEngine* engine, SingleInstanceC
     updateTimer(new QTimer(this)),
     window(NULL),
     allNews(NULL),
-    pinnedNews(NULL)
+    pinnedNews(NULL),
+    isPinnedNewsVisible(true)
 {
     Q_ASSERT(_instance == NULL);
     _instance = this;
@@ -103,7 +104,7 @@ void FangApp::onFeedAdded(ListItem *item)
         
         return;
     }
-    
+
     feedIdMap.insert(feed->getDbId(), feed);
     
     // Hook up signals.
@@ -122,13 +123,16 @@ void FangApp::onFeedRemoved(ListItem * listItem)
     if (item != NULL) {
         disconnectFeed(item);
         feedIdMap.take(item->getDbId());
-        item->deleteLater(); // Well, bye.
+
+        if (!item->isSpecialFeed()) {
+            item->deleteLater(); // Well, bye.
+        }
     }
 }
 
 void FangApp::onFeedSelected(ListItem* _item)
 {
-    qDebug() << "New feed selected";
+    //qDebug() << "New feed selected";
     FeedItem* item = qobject_cast<FeedItem *>(_item);
     setCurrentFeed(item);
 }
@@ -177,6 +181,12 @@ void FangApp::onLoadAllFinished(Operation *op)
             Q_ASSERT(false); // You forgot to add the new special feed here.
         }
     }
+
+    // We get signal.
+    connect(pinnedNews, SIGNAL(dataChanged()), this, SLOT(pinnedNewsWatcher()));
+
+    // This has to be manually invoked the first time.
+    pinnedNewsWatcher();
     
     // Load teh cue em el.
     engine->load(QUrl("qrc:///qml/main.qml"));
@@ -331,10 +341,20 @@ void FangApp::displayFeed()
 
 void FangApp::setCurrentFeed(FeedItem *feed)
 {
-    qDebug() << "You've set the feed to "<< (feed != NULL ? feed->getTitle() : "(null)");
-    
+    if (feed == currentFeed) {
+        return;
+    }
+
+    FeedItem* previousFeed = currentFeed;
+
+    //qDebug() << "You've set the feed to "<< (feed != NULL ? feed->getTitle() : "(null)");
+
     currentFeed = feed;
     displayFeed();
+
+    if (previousFeed == pinnedNews) {
+        pinnedNewsWatcher(); // If we were on pinned items, it can be removed now.
+    }
 }
 
 void FangApp::onFeedTitleChanged()
@@ -367,6 +387,23 @@ QString FangApp::getPlatform()
 #endif
 }
 
+void FangApp::pinnedNewsWatcher()
+{
+    if (isPinnedNewsVisible && pinnedNews->getUnreadCount() == 0 && currentFeed != pinnedNews) {
+        // Remove pinned news from the feed list -- but ONLY if it's not the selected one!
+        isPinnedNewsVisible = false;
+        feedList->removeItem(pinnedNews);
+
+        emit specialFeedCountChanged();
+    } else if (!isPinnedNewsVisible && pinnedNews->getUnreadCount() > 0) {
+        // Add pinned news to the feed list.
+        isPinnedNewsVisible = true;
+        feedList->insertRow(1, pinnedNews);
+
+        emit specialFeedCountChanged();
+    }
+}
+
 FangApp* FangApp::instance()
 {
     Q_ASSERT(_instance != NULL);
@@ -376,7 +413,7 @@ FangApp* FangApp::instance()
 qint32 FangApp::specialFeedCount()
 {
     // If pinned is visible, it's two.
-    if (feedList->count() > 1 && feedList->row(1) == pinnedNews) {
+    if (isPinnedNewsVisible) {
         return 2;
     }
 

@@ -59,7 +59,7 @@ qint32 UnreadCountReader::forPinned(QSqlDatabase db)
     }
 
     int ret = query.value(0).toInt();
-    qDebug() << "Unread count for pinned: " << ret;
+    //qDebug() << "Unread count for pinned: " << ret;
     return ret;
 }
 
