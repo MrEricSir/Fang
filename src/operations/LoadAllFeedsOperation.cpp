@@ -22,7 +22,7 @@ void LoadAllFeedsOperation::execute()
 {
     // Setup our pseudo-feeds.
     AllNewsFeedItem* allNews = new AllNewsFeedItem(feedList);
-    PinnedFeedItem* pinnedNews = new PinnedFeedItem();
+    PinnedFeedItem* pinnedNews = new PinnedFeedItem(feedList);
     
     // Kindly ask the database for the rest.
     QSqlQuery query(db());

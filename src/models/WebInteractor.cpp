@@ -193,7 +193,7 @@ void WebInteractor::onLoadNewsFinished(Operation* operation)
         
         if (loader->getMode() == LoadNews::Initial) {
             emit nothingToAdd();
-            emit drawBookmarkAndJumpTo(-1);
+            emit drawBookmarkAndJumpTo(-1, currentFeed->bookmarksEnabled());
         }
         
         return; // Nothing to do.
@@ -228,7 +228,7 @@ void WebInteractor::onLoadNewsFinished(Operation* operation)
     // If this is the initial load, draw and jump to the bookmark.
     if (loader->getMode() == LoadNews::Initial) {
         qint64 idOfBookmark = currentFeed->getBookmarkID();
-        emit drawBookmarkAndJumpTo(idOfBookmark);
+        emit drawBookmarkAndJumpTo(idOfBookmark, currentFeed->bookmarksEnabled());
     }
     
     emit addInProgress(false, operationName);

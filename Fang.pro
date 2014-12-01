@@ -72,7 +72,9 @@ SOURCES += src/main.cpp \
     src/utilities/SingleInstanceCheck.cpp \
     src/operations/SetPinOperation.cpp \
     src/models/PinnedFeedItem.cpp \
-    src/operations/LoadPinnedNewsOperation.cpp
+    src/operations/LoadPinnedNewsOperation.cpp \
+    src/models/LisvelFeedItem.cpp \
+    src/operations/LisvelLoadNewsOperation.cpp
 	
 HEADERS += \
     src/models/ListModel.h \
@@ -123,7 +125,9 @@ HEADERS += \
     src/utilities/SingleInstanceCheck.h \
     src/operations/SetPinOperation.h \
     src/models/PinnedFeedItem.h \
-    src/operations/LoadPinnedNewsOperation.h
+    src/operations/LoadPinnedNewsOperation.h \
+    src/models/LisvelFeedItem.h \
+    src/operations/LisvelLoadNewsOperation.h
 
 mac {
     QT += macextras

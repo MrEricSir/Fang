@@ -192,6 +192,12 @@ public:
     
     void setLastIconUpdate(QDateTime last) { lastIconUpdate = last; }
     QDateTime getLastIconUpdate() { return lastIconUpdate; }
+
+    /**
+     * @brief If true, the feed supports bookmarks.  Otherwise false.
+     * @return  By default, returns true.  Override if you want it to return false.
+     */
+    virtual bool bookmarksEnabled();
     
 signals:
     

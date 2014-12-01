@@ -8,6 +8,9 @@ Item {
 
     // Read-only: The number of special feeds in the feed list
     property alias specialFeedCount: webInteractor.specialFeedCount;
+
+    // Read-only: Whether bookmarks are enabled for this feed.
+    property bool bookmarksEnabled: true;
     
     // Used by main for double clicking on feed titles.
     function jumpToBookmark() {
@@ -104,7 +107,13 @@ Item {
             }
             
             onDrawBookmarkAndJumpTo: {
-                //console.log("Draw bookmark and jump to: ", newsID);
+                console.log("Draw bookmark and jump to: ", newsID, " bookmarks enabled? ", bookmarksEnabled);
+                if (news.bookmarksEnabled !== bookmarksEnabled) {
+                    // Enable/disable bookmarking.
+                    news.bookmarksEnabled = bookmarksEnabled;
+                    newsView.updateCSS();
+                }
+
                 newsView.experimental.evaluateJavaScript("drawBookmarkAndJumpTo('" + newsID + "');");
             }
 
@@ -233,11 +242,13 @@ Item {
                 focus: true;
                 
                 function updateCSS() {
-                    newsView.experimental.evaluateJavaScript(
-                                "clearBodyClasses(); " +
-                                "addBodyClass('" + platform + "'); " +
-                                "addBodyClass('FONT_" + fangSettings.fontSize + "'); " +
-                                "addBodyClass('" + fangSettings.style + "');");
+                    var cssJS = "clearBodyClasses(); " +
+                            "addBodyClass('" + platform + "'); " +
+                            "addBodyClass('FONT_" + fangSettings.fontSize + "'); " +
+                            "addBodyClass('" + fangSettings.style + "'); " +
+                            (news.bookmarksEnabled ? "" : " addBodyClass('bookmarksDisabled'); ");
+
+                    newsView.experimental.evaluateJavaScript(cssJS);
                     
                     cssUpdated = true;
                     checkReady();

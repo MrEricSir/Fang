@@ -93,9 +93,10 @@ signals:
     
     /**
      * @brief Not only draws the bookmark, but also issues a jump.
-     * @param id   ID of the news item blah blah see above.
+     * @param newsID   ID of the news item blah blah see above.
+     * @param bookmarksEnabled  If true allow bookmarks, if false they're not actually supported by the feed
      */
-    void drawBookmarkAndJumpTo(qint64 newsID);
+    void drawBookmarkAndJumpTo(qint64 newsID, bool bookmarksEnabled);
     
     /**
      * @brief The style has changed in FangSettings, so the news viewer needs to refresh its css.

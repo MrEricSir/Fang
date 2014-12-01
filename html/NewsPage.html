@@ -89,6 +89,17 @@ pre {
     transition: opacity 0.25s ease-in-out;
 }
 
+/* When bookmarks are disabled (pinned feed) */
+body.bookmarksDisabled > .newsItemStyle > .bookmark > .stripe {
+    display: none;
+}
+
+body.bookmarksDisabled > .newsItemStyle#topBookmark {
+    display: none;
+    height: 8px;
+}
+
+
 .newsItemStyle > .content {
     width: 100%;
     margin: 0;

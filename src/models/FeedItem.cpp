@@ -253,3 +253,8 @@ void FeedItem::setURL(QUrl url)
     this->url = url;
     emit dataChanged();
 }
+
+bool FeedItem::bookmarksEnabled()
+{
+    return true;
+}

@@ -1,7 +1,7 @@
 #ifndef PINNEDFEEDITEM_H
 #define PINNEDFEEDITEM_H
 
-#include "FeedItem.h"
+#include "LisvelFeedItem.h"
 
 #include <QObject>
 
@@ -11,14 +11,17 @@
 /**
  * @brief A pseudo-feed of all pinned news items.
  */
-class PinnedFeedItem : public FeedItem
+class PinnedFeedItem : public LisvelFeedItem
 {
     Q_OBJECT
 public:
-    explicit PinnedFeedItem(QObject *parent = 0);
+    explicit PinnedFeedItem(ListModel *feedList);
 
     // No bookmarks allowed, sir.
     virtual bool canBookmark(qint64 bookmarkID, bool allowBackward);
+
+    // No bookmarks! No! Not for you!
+    virtual bool bookmarksEnabled();
 
 signals:
 
