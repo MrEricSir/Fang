@@ -69,7 +69,12 @@ SOURCES += src/main.cpp \
     src/network/FangNetworkAccessManager.cpp \
     src/network/FangQQmlNetworkAccessManagerFactory.cpp \
     src/notifications/NotificationBase.cpp \
-    src/utilities/SingleInstanceCheck.cpp
+    src/utilities/SingleInstanceCheck.cpp \
+    src/operations/SetPinOperation.cpp \
+    src/models/PinnedFeedItem.cpp \
+    src/operations/LoadPinnedNewsOperation.cpp \
+    src/models/LisvelFeedItem.cpp \
+    src/operations/LisvelLoadNewsOperation.cpp
 	
 HEADERS += \
     src/models/ListModel.h \
@@ -117,7 +122,12 @@ HEADERS += \
     src/network/FangNetworkAccessManager.h \
     src/network/FangQQmlNetworkAccessManagerFactory.h \
     src/notifications/NotificationBase.h \
-    src/utilities/SingleInstanceCheck.h
+    src/utilities/SingleInstanceCheck.h \
+    src/operations/SetPinOperation.h \
+    src/models/PinnedFeedItem.h \
+    src/operations/LoadPinnedNewsOperation.h \
+    src/models/LisvelFeedItem.h \
+    src/operations/LisvelLoadNewsOperation.h
 
 mac {
     QT += macextras

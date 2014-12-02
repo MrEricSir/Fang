@@ -14,6 +14,10 @@ Item {
     signal feedDoubleClicked();
     signal helpClicked();
     signal orderChanged();
+
+    // Set this to the number of special feeds at the top so I can treat them with
+    // the care and respect that they deserve.
+    property int specialFeedCount: 0;
     
     // Read-only properties.
     property int buttonSize: 30
@@ -122,7 +126,7 @@ Item {
                     id: feedListView
                     anchors.fill: parent
                     
-                    // Only move if there's a need.
+                    // Only scroll if there's a need.
                     interactive: height < childrenRect.height
                     
                     delegate: FeedTitleDelegate {
@@ -136,6 +140,9 @@ Item {
                                 feedListView.model.selectedIndex = feedListView.currentIndex
                             }
                         }
+
+                        // Special feeds won't let themselves get dragged around.
+                        numUndraggable: sidebar.specialFeedCount;
                         
                         onClicked: {
                             sidebar.feedClicked();
@@ -209,8 +216,7 @@ Item {
                 
                 width: buttonSize
                 height: buttonSize
-                
-                visible: feedListView.currentIndex > 0
+                visible: !feedListView.model.selected.isSpecialFeed();
                 
                 imageURL: fangSettings.style === "LIGHT" ? "images/symbol_pencil.svg"
                                                          : "images/symbol_dark_pencil.svg"
@@ -231,7 +237,7 @@ Item {
                 width: buttonSize
                 height: buttonSize
                 
-                visible: feedListView.currentIndex > 0
+                visible: !feedListView.model.selected.isSpecialFeed();
                 
                 imageURL: fangSettings.style === "LIGHT" ? "images/minus_dark.png"
                                                          : "images/minus.png"

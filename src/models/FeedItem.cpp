@@ -5,7 +5,7 @@
 
 FeedItem::FeedItem(QObject *parent) :
     ListItem(parent),
-    _id(-1),
+    _id(0),
     ordinal(-1),
     title(""),
     subtitle(""),
@@ -76,6 +76,7 @@ QHash<int, QByteArray> FeedItem::roleNames() const
     names[DropTargetRole] = "dropTarget";
     names[ErrorFlagRole] = "errorFlag";
     names[IsSelectedRole] = "isSelected";
+    names[IsSpecialFeedRole] = "isSpecialFeed";
     return names;
 }
 
@@ -108,6 +109,8 @@ QVariant FeedItem::data(int role) const
             return getErrorFlag();
         case IsSelectedRole:
             return getIsSelected();
+        case IsSpecialFeedRole:
+            return isSpecialFeed();
         default:
             return QVariant();
     }
@@ -249,4 +252,9 @@ void FeedItem::setURL(QUrl url)
     
     this->url = url;
     emit dataChanged();
+}
+
+bool FeedItem::bookmarksEnabled()
+{
+    return true;
 }

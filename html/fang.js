@@ -67,13 +67,20 @@ function stopInProgress() {
     isInProgress = false;
 }
 
-// Given a parent element, setup the bookmark forcer.
-function installBookmarkForcer(parentElement) {
+// Given a parent element, setup the bookmark forcer and pin handler.
+function installMouseHandlers(parentElement) {
     // Setup manual bookmarks.
     $(parentElement).find( '.stripe' ).on( "click", function() { 
         var elementID = $(this).parent().parent().attr( 'id' );
         
         navigator.qt.postMessage( 'forceBookmark ' + htmlIdToId( elementID ) );
+    } );
+
+    // Setup the pin... pinner?  Pinteresting.
+    $(parentElement).find( '.pin' ).on( "click", function() {
+        var element = $(this).parent().parent();
+        var isPinned = element.find( '.pin' ).hasClass( 'pinned' );
+        navigator.qt.postMessage( 'setPin ' + htmlIdToId( element.attr( 'id' ) ) + ' ' + !isPinned );
     } );
 }
 
@@ -109,6 +116,11 @@ function appendNews(append, firstNewsID, jsonNews) {
         item.find( '.siteTitle' ).html( newsItem['feedTitle'] );
         item.find( '.timestamp' ).html( newsItem['timestamp'] ); // Hidden timestamp (shh)
         item.find( '.date' ).html( formatDateSimply(newsItem['timestamp']) );
+
+        // Set pin.
+        if (newsItem['pinned']) {
+            item.find( '.pin' ).addClass('pinned');
+        }
         
         //console.log(item.html());
         //console.log("ID: ", id, "append: ", append)
@@ -116,8 +128,8 @@ function appendNews(append, firstNewsID, jsonNews) {
         // Setup link delegator.
         item.find( 'a' ).on( "click", delegateLink );
         
-        // Setup manual bookmark forcer.
-        installBookmarkForcer(item);
+        // Setup mouse handlers (bookmark forcer, pinner, etc.)
+        installMouseHandlers(item);
         
         // Stick 'er in!
         if (append) {
@@ -338,6 +350,21 @@ function jumpToBookmark() {
         scrollTo = $(document).height() - windowHeight;
     
     $(document).scrollTop( scrollTo );
+}
+
+// Updates the pin status on newsID
+function updatePin(newsID, pin) {
+    //console.log("Update pin: ", newsID, " set to: ", pin);
+
+    var element = $('#' + idToHtmlId( newsID ));
+    if (!element.length)
+        return; // Not found.
+
+    if (pin) {
+        element.find( '.pin' ).addClass('pinned');
+    } else {
+        element.find( '.pin' ).removeClass('pinned');
+    }
 }
 
 // UTILITY: Returns true if the element is a real news item,
@@ -626,5 +653,5 @@ $(document).ready(function() {
     updateTimestamps(10000);
     
     // Setup the bookmark forcer on the top bookmark.
-    installBookmarkForcer('#topBookmark');
+    installMouseHandlers('#topBookmark');
 });

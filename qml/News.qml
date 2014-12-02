@@ -5,6 +5,12 @@ import Fang 1.0
 
 Item {
     id: news
+
+    // Read-only: The number of special feeds in the feed list
+    property alias specialFeedCount: webInteractor.specialFeedCount;
+
+    // Read-only: Whether bookmarks are enabled for this feed.
+    property bool bookmarksEnabled: true;
     
     // Used by main for double clicking on feed titles.
     function jumpToBookmark() {
@@ -91,18 +97,29 @@ Item {
             }
             
             onJumpTo: {
-                //console.log("jump to: ", id);
-                newsView.experimental.evaluateJavaScript("jumpTo('" + id + "');");
+                //console.log("jump to: ", newsID);
+                newsView.experimental.evaluateJavaScript("jumpTo('" + newsID + "');");
             }
             
             onDrawBookmark: {
-                //console.log("Draw bookmark: ", id);
-                newsView.experimental.evaluateJavaScript("drawBookmark('" + id + "');");
+                //console.log("Draw bookmark: ", newsID);
+                newsView.experimental.evaluateJavaScript("drawBookmark('" + newsID + "');");
             }
             
             onDrawBookmarkAndJumpTo: {
-                //console.log("Draw bookmark and jump to: ", id);
-                newsView.experimental.evaluateJavaScript("drawBookmarkAndJumpTo('" + id + "');");
+                console.log("Draw bookmark and jump to: ", newsID, " bookmarks enabled? ", bookmarksEnabled);
+                if (news.bookmarksEnabled !== bookmarksEnabled) {
+                    // Enable/disable bookmarking.
+                    news.bookmarksEnabled = bookmarksEnabled;
+                    newsView.updateCSS();
+                }
+
+                newsView.experimental.evaluateJavaScript("drawBookmarkAndJumpTo('" + newsID + "');");
+            }
+
+            onUpdatePin: {
+                //console.log("Update pin: ", newsID, " set to: ", pin);
+                newsView.experimental.evaluateJavaScript("updatePin(" + newsID + ", " + pin + ");");
             }
             
             onFontSizeChanged: {
@@ -225,11 +242,13 @@ Item {
                 focus: true;
                 
                 function updateCSS() {
-                    newsView.experimental.evaluateJavaScript(
-                                "clearBodyClasses(); " +
-                                "addBodyClass('" + platform + "'); " +
-                                "addBodyClass('FONT_" + fangSettings.fontSize + "'); " +
-                                "addBodyClass('" + fangSettings.style + "');");
+                    var cssJS = "clearBodyClasses(); " +
+                            "addBodyClass('" + platform + "'); " +
+                            "addBodyClass('FONT_" + fangSettings.fontSize + "'); " +
+                            "addBodyClass('" + fangSettings.style + "'); " +
+                            (news.bookmarksEnabled ? "" : " addBodyClass('bookmarksDisabled'); ");
+
+                    newsView.experimental.evaluateJavaScript(cssJS);
                     
                     cssUpdated = true;
                     checkReady();
@@ -271,6 +290,9 @@ Item {
                         webInteractor.setBookmark(commandArray[1]);
                     } else if (cmd === "forceBookmark") {
                         webInteractor.setBookmark(commandArray[1], true);
+                    } else if (cmd === "setPin") {
+                        // Stupid Javascript hack!  This forceces the expression to evaluate to a boolean.
+                        webInteractor.setPin(commandArray[1], commandArray[2] === 'true');
                     } else if (cmd === "openLink") {
                         webInteractor.openLink(commandArray[1]);
                     } else if (cmd === "stopProgress" ) {

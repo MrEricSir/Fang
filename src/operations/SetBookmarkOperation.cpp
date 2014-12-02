@@ -95,7 +95,7 @@ void SetBookmarkOperation::bookmarkAllNewsFeed(AllNewsFeedItem* allNews)
                             "(SELECT feed_id FROM NewsItemTable WHERE id = :bookmark_id2)"
                           :
                             "UPDATE FeedItemTable SET bookmark_id = "
-                            "(SELECT id FROM NewsItemTable WHERE id < :bookmark_id ORDER BY ID DESC LIMIT 1) "
+                            "(SELECT IFNULL((SELECT id FROM NewsItemTable WHERE id < :bookmark_id ORDER BY ID DESC LIMIT 1), -1)) "
                             "WHERE id = (SELECT feed_id FROM NewsItemTable WHERE id = :bookmark_id2)";
         
         QSqlQuery update(db());

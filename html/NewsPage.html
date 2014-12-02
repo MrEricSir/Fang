@@ -6,6 +6,7 @@ body {
     padding: 0;
     margin: 0;
     word-wrap: break-word !important; /* Prevents super long words from breaking layout. */
+    -webkit-tap-highlight-color: rgba(0,0,0,0); /* Webkit draws an annoying grey box on active links without this. */
 }
 
 pre {
@@ -88,6 +89,17 @@ pre {
     transition: opacity 0.25s ease-in-out;
 }
 
+/* When bookmarks are disabled (pinned feed) */
+body.bookmarksDisabled > .newsItemStyle > .bookmark > .stripe {
+    display: none;
+}
+
+body.bookmarksDisabled > .newsItemStyle#topBookmark {
+    display: none;
+    height: 8px;
+}
+
+
 .newsItemStyle > .content {
     width: 100%;
     margin: 0;
@@ -127,7 +139,7 @@ pre {
     text-overflow: ellipsis-word;
 }
 
-.newsItemStyle > .date {
+.newsItemStyle > .dateDiv {
     width: 50%;
     display: inline-block;
     text-align: right;
@@ -184,6 +196,18 @@ body > #bottom > #bottomText {
     bottom: 1.0em;
 }
 
+body > .newsItemStyle > .dateDiv > .pin {
+    background-size: contain;
+    background-repeat: no-repeat;
+    margin-left: 5px;
+    background-position: right center;
+
+    width: 30px;
+    height: 15px;
+    display: inline-block;
+}
+
+
 /**** Light theme ****/
 
 body.LIGHT {
@@ -197,7 +221,7 @@ body.LIGHT a:hover, body.LIGHT a:active { color: #04f; }
 body.LIGHT > .newsItemStyle > h1 > a:hover,
   body.LIGHT > .newsItemStyle > h1 > a:active { border-bottom-color: #00f; }
 
-body.LIGHT > .newsItemStyle > .siteTitle, body.LIGHT > .newsItemStyle > .date { color: #777; }
+body.LIGHT > .newsItemStyle > .siteTitle, body.LIGHT > .newsItemStyle > .dateDiv > .date { color: #777; }
 body.LIGHT > .newsItemStyle > .divider { background-color: #ccc; }
 body.LIGHT > .newsItemStyle > h1, body.LIGHT > .newsItemStyle > h1 > a { color: black; }
 
@@ -210,6 +234,10 @@ body.LIGHT > .bookmarked > .bookmark > .stripe > .stripe_right { background-imag
 body.LIGHT > .newsItemStyle:not(.bookmarked) > .bookmark > .stripe > .stripe_left { background-image: url('/qml/images/bookmark_hover_left.svg'); }
 body.LIGHT > .newsItemStyle:not(.bookmarked) > .bookmark > .stripe > .stripe_mid { background-image: url('/qml/images/bookmark_hover_mid.svg'); }
 body.LIGHT > .newsItemStyle:not(.bookmarked) > .bookmark > .stripe > .stripe_right { background-image: url('/qml/images/bookmark_hover_right.svg'); }
+
+body.LIGHT > .newsItemStyle > .dateDiv > .pin { background-image: url('/qml/images/pin_dim.svg'); }
+body.LIGHT > .newsItemStyle:not(.pinned) > .dateDiv > .pin:hover { background-image: url('/qml/images/pin_dim_dark.svg'); }
+body.LIGHT > .newsItemStyle > .dateDiv > .pinned { background-image: url('/qml/images/pin_selected.svg'); }
 
 /**** Dark theme ****/
 
@@ -224,7 +252,7 @@ body.DARK a:hover, body.DARK a:active { color: #f10; }
 body.DARK > .newsItemStyle > h1 > a:hover,
   body.DARK > .newsItemStyle > h1 > a:active { border-bottom-color: #f10; }
 
-body.DARK > .newsItemStyle > .siteTitle, body.DARK > .newsItemStyle > .date { color: #ccc; }
+body.DARK > .newsItemStyle > .siteTitle, body.DARK > .newsItemStyle > .dateDiv > .date { color: #ccc; }
 body.DARK > .newsItemStyle > .divider { background-color: #888; }
 body.DARK > .newsItemStyle > h1, body.DARK > .newsItemStyle > h1 a { color: white; }
 
@@ -237,6 +265,10 @@ body.DARK > .bookmarked > .bookmark > .stripe > .stripe_right { background-image
 body.DARK > .newsItemStyle:not(.bookmarked) > .bookmark > .stripe > .stripe_left { background-image: url('/qml/images/bookmark_dark_hover_left.svg'); }
 body.DARK > .newsItemStyle:not(.bookmarked) > .bookmark > .stripe > .stripe_mid { background-image: url('/qml/images/bookmark_dark_hover_mid.svg'); }
 body.DARK > .newsItemStyle:not(.bookmarked) > .bookmark > .stripe > .stripe_right { background-image: url('/qml/images/bookmark_dark_hover_right.svg'); }
+
+body.DARK > .newsItemStyle > .dateDiv > .pin { background-image: url('/qml/images/pin_dim_dark.svg'); }
+body.DARK > .newsItemStyle:not(.pinned) > .dateDiv > .pin:hover { background-image: url('/qml/images/pin_dim.svg'); }
+body.DARK > .newsItemStyle > .dateDiv > .pinned { background-image: url('/qml/images/pin_selected_dark.svg'); }
 
 
 /**** Platforms ****/
@@ -287,7 +319,7 @@ body.FONT_LARGE > #bottom > #bottomText { font-size: 20pt; }
 
 <h1><a href="" class="link"></a></h1>
 <div class="divider"></div>
-<div class="siteTitle"></div><div class="date"></div>
+<div class="siteTitle"></div><div class="dateDiv"><span class="date"></span><div class="pin"></div></div>
 <span class="timestamp"></span>
 <div class="content"></div>
 

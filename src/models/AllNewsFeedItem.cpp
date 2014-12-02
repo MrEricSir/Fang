@@ -3,18 +3,8 @@
 #include <QDateTime>
 
 AllNewsFeedItem::AllNewsFeedItem(ListModel *feedList) :
-    FeedItem(-1, -1, "All News", "", QDateTime(), 0, QUrl(), QUrl(), QUrl(), QDateTime(), feedList),
-    _newsIDs()
+    LisvelFeedItem(FEED_ID_ALLNEWS, -2, "All News", feedList)
 {
-}
-
-void AllNewsFeedItem::clearNews()
-{
-    // Remove the view.
-    _newsIDs.clear();
-    
-    // Bubble bobble up our chain.
-    FeedItem::clearNews();
 }
 
 bool AllNewsFeedItem::canBookmark(qint64 bookmarkID, bool allowBackward)
@@ -36,8 +26,8 @@ bool AllNewsFeedItem::canBookmark(qint64 bookmarkID, bool allowBackward)
     if (allowBackward)
         return true;
     
-    int proposed = bookmarkID == -1 ? 0 : _newsIDs.indexOf(bookmarkID);
-    int current = _newsIDs.indexOf(getBookmarkID());
+    int proposed = bookmarkID == -1 ? 0 : newsIDs()->indexOf(bookmarkID);
+    int current = newsIDs()->indexOf(getBookmarkID());
     Q_ASSERT(proposed >= 0); // It HAS TO be in the news ids list at this point, or you're screwed.
     
     return proposed > current;

@@ -40,5 +40,9 @@
         <file>bookmark_dark_hover_left.svg</file>
         <file>bookmark_dark_hover_mid.svg</file>
         <file>bookmark_dark_hover_right.svg</file>
+        <file>pin_dim.svg</file>
+        <file>pin_dim_dark.svg</file>
+        <file>pin_selected.svg</file>
+        <file>pin_selected_dark.svg</file>
     </qresource>
 </RCC>

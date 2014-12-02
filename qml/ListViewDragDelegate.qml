@@ -6,8 +6,8 @@ import QtQuick 2.0
   * Each element in the list model must have a string named "dropTarget" which is by default
   * set to "none".
   *
-  * The first item in the list can't be dragged.  Sorry, but this is Fang, and that's just how it
-  * works. So fuck you.
+  * If you want a certain number of items at the top to not be draggable, set numUndraggable
+  * to that number, okay?  Geez.
   */
 Rectangle {
     id: dragDelegateBorder
@@ -18,10 +18,14 @@ Rectangle {
     
     // Subscribe to this signal to know when the list may have changed order.
     signal orderChanged()
+
+    // Sets the number of undraggable items at the top of the list.
+    property int numUndraggable: 0;
     
     // Drag border color and height.
-    property color dragBorderColor: "black"
-    property int dragBorderHeight: 1
+    property color dragBorderColor: "black";
+    property int dragBorderHeight: 1;
+    property bool dragEnabled: true;
     
     // PRIVATE:
     
@@ -82,7 +86,7 @@ Rectangle {
         property int newPosition: index + positionsMoved
         
         // New index (within range)
-        property int cappedNewPosition: Math.max(1, Math.min(dragDelegateBorder.ListView.view.count - 1, newPosition));
+        property int cappedNewPosition: Math.max(numUndraggable, Math.min(dragDelegateBorder.ListView.view.count - 1, newPosition));
         
         // Whether or not the rect is currently being held.
         property bool held: false
@@ -93,8 +97,9 @@ Rectangle {
         onDoubleClicked: dragDelegateBorder.doubleClicked()
         
         onPressAndHold: {
-            if (index === 0)
+            if (!dragEnabled) {
                 return;
+            }
             
             dragDelegateBorder.z = 2
             positionStarted = dragDelegateBorder.y

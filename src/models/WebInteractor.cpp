@@ -27,6 +27,12 @@ void WebInteractor::init(OperationManager *manager, ListModel *feedList, FangSet
     connect(feedList, SIGNAL(removed(ListItem*)), this, SLOT(onFeedRemoved(ListItem*)));
     connect(fangSettings, SIGNAL(styleChanged(QString)), this, SLOT(onStyleChanged(QString)));
     connect(fangSettings, SIGNAL(fontSizeChanged(QString)), this, SLOT(onFontSizeChanged(QString)));
+    connect(FangApp::instance(), SIGNAL(specialFeedCountChanged()), this, SIGNAL(specialFeedCountChanged()));
+}
+
+qint32 WebInteractor::specialFeedCount()
+{
+    return FangApp::instance()->specialFeedCount();
 }
 
 void WebInteractor::loadNext()
@@ -58,8 +64,8 @@ void WebInteractor::orderChanged()
         FeedItem* feed = qobject_cast<FeedItem*>(feedList->row(i));
         Q_ASSERT(feed != NULL);
         
-        if (feed->getDbId() < 0)
-            continue; // Skip all news.
+        if (feed->isSpecialFeed())
+            continue; // Skip special feeds.
         
         // Set the new ordinal.
         feed->setOrdinal(i);
@@ -73,13 +79,11 @@ void WebInteractor::orderChanged()
 
 void WebInteractor::setBookmark(qint64 id, bool allowBackward)
 {
-    qDebug() << "Set bookmarK; " << id << ", " << allowBackward;
+    //qDebug() << "Set bookmarK; " << id << ", " << allowBackward;
     
     if (isSettingBookmark || NULL == currentFeed) {
         return;
     }
-    
-    // qDebug() << "Setting bookmark to: " << sId;
     
     if (!currentFeed->canBookmark(id, allowBackward)) {
         isSettingBookmark = false;
@@ -93,6 +97,20 @@ void WebInteractor::setBookmark(qint64 id, bool allowBackward)
     isSettingBookmark =  true;
     connect(bookmarkOp, SIGNAL(finished(Operation*)), this, SLOT(onSetBookmarkFinished(Operation*)));
     manager->add(bookmarkOp);
+}
+
+void WebInteractor::setPin(qint64 id, bool pin)
+{
+    //qDebug() << "Someone wants to " << (pin ? "pin: " : "unpin: ") << id;
+    if (NULL == currentFeed) {
+        return;
+    }
+
+    PinnedFeedItem* pinnedNews = qobject_cast<PinnedFeedItem*>(FangApp::instance()->feedForId(FEED_ID_PINNED));
+
+    SetPinOperation* pinOp = new SetPinOperation(manager, pinnedNews, id, pin);
+    connect(pinOp, SIGNAL(finished(Operation*)), this, SLOT(onSetPinFinished(Operation*)));
+    manager->add(pinOp);
 }
 
 void WebInteractor::pageLoaded()
@@ -175,7 +193,7 @@ void WebInteractor::onLoadNewsFinished(Operation* operation)
         
         if (loader->getMode() == LoadNews::Initial) {
             emit nothingToAdd();
-            emit drawBookmarkAndJumpTo(-1);
+            emit drawBookmarkAndJumpTo(-1, currentFeed->bookmarksEnabled());
         }
         
         return; // Nothing to do.
@@ -210,7 +228,7 @@ void WebInteractor::onLoadNewsFinished(Operation* operation)
     // If this is the initial load, draw and jump to the bookmark.
     if (loader->getMode() == LoadNews::Initial) {
         qint64 idOfBookmark = currentFeed->getBookmarkID();
-        emit drawBookmarkAndJumpTo(idOfBookmark);
+        emit drawBookmarkAndJumpTo(idOfBookmark, currentFeed->bookmarksEnabled());
     }
     
     emit addInProgress(false, operationName);
@@ -236,6 +254,22 @@ void WebInteractor::onSetBookmarkFinished(Operation *operation)
     
     currentFeed->setBookmarkID(bookmarkOp->getBookmarkID());
     emit drawBookmark(currentFeed->getBookmarkID());
+}
+
+void WebInteractor::onSetPinFinished(Operation *operation)
+{
+    if (NULL == currentFeed) {
+        return;
+    }
+
+    SetPinOperation* pinOp = qobject_cast<SetPinOperation*>(operation);
+    Q_ASSERT(pinOp != NULL);
+
+    // Note: In theory we could update the NewsItem model itself at this point,
+    // but why bother?  It's really only used for going from the database to
+    // the HTML view.
+
+    emit updatePin(pinOp->getNewsID(), pinOp->getPin());
 }
 
 
@@ -290,7 +324,7 @@ void WebInteractor::addNewsItem(NewsItem *item, QVariantList* newsList)
     //qDebug() << "Add news: " << item->id();
     
     // Make sure we get the real feed title for All News.
-    QString feedTitle = !item->getFeed()->isAllNews() ? 
+    QString feedTitle = !item->getFeed()->isSpecialFeed() ?
                             item->getFeed()->getTitle() :
                             FangApp::instance()->getFeedForID(item->getFeedId())->getTitle();
     
@@ -301,6 +335,7 @@ void WebInteractor::addNewsItem(NewsItem *item, QVariantList* newsList)
     itemMap["feedTitle"] = feedTitle;
     itemMap["timestamp"] = item->getTimestamp().toMSecsSinceEpoch();
     itemMap["content"] = item->getContent() != "" ? item->getContent() : item->getSummary();
+    itemMap["pinned"] = item->getPinned();
     
     // Add to the list.
     *newsList << itemMap;
@@ -312,9 +347,21 @@ void WebInteractor::doLoadNews(LoadNews::LoadMode mode)
         return;
     }
     
-    LoadNews* loader = (currentFeed->getDbId() < 0) ? 
-                           new LoadAllNewsOperation(manager, currentFeed, mode) :
-                           new LoadNews(manager, currentFeed, mode);
+    LoadNews* loader = NULL;
+    switch (currentFeed->getDbId()) {
+    case FEED_ID_ALLNEWS:
+        loader = new LoadAllNewsOperation(manager, qobject_cast<AllNewsFeedItem*>(currentFeed), mode);
+        break;
+
+    case FEED_ID_PINNED:
+        loader = new LoadPinnedNewsOperation(manager, qobject_cast<PinnedFeedItem*>(currentFeed), mode);
+
+        break;
+
+    default:
+        loader = new LoadNews(manager, currentFeed, mode);
+    }
+
     isLoading =  true;
     connect(loader, SIGNAL(finished(Operation*)), this, SLOT(onLoadNewsFinished(Operation*)));
     manager->add(loader);
@@ -322,6 +369,11 @@ void WebInteractor::doLoadNews(LoadNews::LoadMode mode)
 
 void WebInteractor::onFeedRemoved(ListItem *listItem)
 {
+    if (qobject_cast<FeedItem*>(listItem)->isSpecialFeed()) {
+        // It's okay, this feed has superpowers and will live forever.
+        return;
+    }
+
     if (listItem == currentFeed) {
         // Feed is being removed, don't try to use this pointer.  I mean, duh.
         currentFeed = NULL;

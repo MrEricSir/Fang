@@ -11,7 +11,9 @@
 #include "../operations/Operation.h"
 #include "../operations/LoadNews.h"
 #include "../operations/LoadAllNewsOperation.h"
+#include "../operations/LoadPinnedNewsOperation.h"
 #include "../operations/SetBookmarkOperation.h"
+#include "../operations/SetPinOperation.h"
 #include "../operations/UpdateOrdinalsOperation.h"
 
 /**
@@ -22,6 +24,9 @@ class WebInteractor : public QQuickItem
     Q_OBJECT
     Q_DISABLE_COPY(WebInteractor)
     
+    Q_PROPERTY(qint32 specialFeedCount READ specialFeedCount NOTIFY specialFeedCountChanged)
+
+
 public:
     explicit WebInteractor(QQuickItem *parent = 0);
     virtual ~WebInteractor() {}
@@ -33,6 +38,10 @@ public:
      * @param fangSettings
      */
     void init(OperationManager* manager, ListModel *feedList, FangSettings *fangSettings);
+
+
+    // Returns the number of special feeds.
+    qint32 specialFeedCount();
     
 signals:
     
@@ -67,19 +76,27 @@ signals:
      * @brief Jumps to a given news item by its ID.
      * @param id      ID of the element to jump to.
      */
-    void jumpTo(qint64 id);
+    void jumpTo(qint64 newsID);
     
     /**
      * @brief Draws the bookmark at the given news item.
      * @param id   ID of the news item element to draw a bookmark at.
      */
-    void drawBookmark(qint64 id);
+    void drawBookmark(qint64 newsID);
+
+    /**
+     * @brief Tells the view to update the pin for the given ID.
+     * @param newsID ID of the news item
+     * @param pin    If true, set pin. If false, unset.
+     */
+    void updatePin(qint64 newsID, bool pin);
     
     /**
      * @brief Not only draws the bookmark, but also issues a jump.
-     * @param id   ID of the news item blah blah see above.
+     * @param newsID   ID of the news item blah blah see above.
+     * @param bookmarksEnabled  If true allow bookmarks, if false they're not actually supported by the feed
      */
-    void drawBookmarkAndJumpTo(qint64 id);
+    void drawBookmarkAndJumpTo(qint64 newsID, bool bookmarksEnabled);
     
     /**
      * @brief The style has changed in FangSettings, so the news viewer needs to refresh its css.
@@ -90,6 +107,11 @@ signals:
      * @brief The font size has changed, so to a jump to bookmark.
      */
     void fontSizeChanged();
+
+    /**
+     * @brief The number of special feeds in the feed list has changed.
+     */
+    void specialFeedCountChanged();
     
 public slots:
     
@@ -107,6 +129,9 @@ public slots:
     
     // Sets the bookmark, and fires a draw event.
     Q_INVOKABLE void setBookmark(qint64 sId, bool allowBackward = false);
+
+    // Pin or unpins an item.
+    Q_INVOKABLE void setPin(qint64 id, bool pin);
     
     // The web layer has to call this to lead us know we're good to go.
     Q_INVOKABLE void pageLoaded();
@@ -128,6 +153,9 @@ private slots:
     
     // Called when a bookmark has been set.
     void onSetBookmarkFinished(Operation* operation);
+
+    // Called when a pin has ben set or unset.
+    void onSetPinFinished(Operation* operation);
     
     // Escapes non-ASCII Unicode characters.
     QString encodeEntities( const QString& src, const QString& force=QString() );

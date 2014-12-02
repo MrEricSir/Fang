@@ -13,6 +13,8 @@
 
 #include "models/NewsItem.h"
 #include "models/FeedItem.h"
+#include "models/AllNewsFeedItem.h"
+#include "models/PinnedFeedItem.h"
 #include "models/ListModel.h"
 #include "models/FangSettings.h"
 #include "models/WebInteractor.h"
@@ -60,9 +62,17 @@ public:
     static FangApp *instance();
     
 signals:
+
+    // The number of special feeds has changed, huzzah!
+    void specialFeedCountChanged();
     
 public slots:
     inline int feedCount() { return feedList->rowCount(); }
+
+    /**
+     * @return The number of visible special feeds (all news, pinned, etc.)
+     */
+    qint32 specialFeedCount();
     
     /**
      * @brief Adds a known, pre-processed feed.
@@ -170,6 +180,11 @@ private slots:
      * @return String representing the platform.
      */
     QString getPlatform();
+
+    /**
+     * @brief Adds/removes the pinned news item to the list.
+     */
+    void pinnedNewsWatcher();
     
 private:
     static FangApp* _instance;
@@ -186,6 +201,12 @@ private:
     QMap<qint64, FeedItem*> feedIdMap;
     QQuickWindow* window;
     NotificationBase* notifications;
+
+    // Special feeds.
+    AllNewsFeedItem* allNews;
+    PinnedFeedItem* pinnedNews;
+
+    bool isPinnedNewsVisible;
 };
 
 #endif // FANGAPP_H

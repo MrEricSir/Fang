@@ -26,6 +26,8 @@ public:
     static void update(QSqlDatabase db, FeedItem* feed);
     
     static qint32 forAllNews(QSqlDatabase db);
+
+    static qint32 forPinned(QSqlDatabase db);
     
     static qint32 forFeed(QSqlDatabase db, quint64 id);
 };

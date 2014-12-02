@@ -80,17 +80,28 @@ protected slots:
      *        used to determine whether or not to display the top bookmark.
      * @return id of the first item in the entire feed.
      */
-    qint64 getFirstNewsID();
-    
-private slots:
+    virtual qint64 getFirstNewsID();
     
     bool doAppend(qint64 startId);
     
     bool doPrepend(qint64 startId);
     
-    bool executeLoadQuery(qint64 startId, bool append);
+    /**
+     * @brief Performs the actual query and loads the results into the appropriate list
+     * @param startId ID to start with
+     * @param append Which direction and which list to load into
+     * @return True if successful, false on an error
+     */
+    virtual bool executeLoadQuery(qint64 startId, bool append);
+
+    // Returns the next ID after the last item in the feed's news list, or -1
+    qint64 getStartIDForAppend();
+
+    // Returns the first ID in the feed's news list, or -1
+    qint64 getStartIDForPrepend();
     
 protected:
+
     // Feed we're adding to.
     FeedItem* feedItem;
     
@@ -99,8 +110,6 @@ protected:
     
     // List of items we prepended.
     QList<NewsItem*>* listPrepend;
-    
-private:
     
     // True if we're appending.
     LoadMode mode;

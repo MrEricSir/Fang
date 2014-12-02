@@ -29,7 +29,8 @@ public:
             const QString& summary,
             const QString& content,
             const QDateTime& timestamp,
-            const QUrl& url);
+            const QUrl& url,
+            bool pinned);
     
     virtual ~NewsItem() {}
     
@@ -50,6 +51,8 @@ public:
     inline QDateTime getTimestamp() const { return timestamp; }
     inline QUrl getURL() const { return url; }
     inline qint64 getDbID() const { return _id; }
+    inline bool getPinned() const { return pinned; }
+    inline void setPinned(bool p) { pinned = p; }
    
   private:
     FeedItem* feed;
@@ -61,6 +64,7 @@ public:
     QString content;
     QDateTime timestamp;
     QUrl url;
+    bool pinned;
 };
 
 #endif // NEWSITEM_H

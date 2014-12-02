@@ -30,7 +30,8 @@ void LoadNews::queryToNewsList(QSqlQuery& query, QList<NewsItem*>* list)
                     query.value("summary").toString(),
                     query.value("content").toString(),
                     QDateTime::fromMSecsSinceEpoch(query.value("timestamp").toLongLong()), 
-                    query.value("url").toString()
+                    query.value("url").toString(),
+                    query.value("pinned").toBool()
                     );
         
         // Add to our list.
@@ -129,10 +130,30 @@ bool LoadNews::executeLoadQuery(qint64 startId, bool append)
     return true;
 }
 
+qint64 LoadNews::getStartIDForAppend()
+{
+    qint64 startId = -1;
+    if (feedItem->getNewsList() != NULL && feedItem->getNewsList()->size() > 0) {
+        startId = feedItem->getNewsList()->last()->getDbID() + 1; // Advance to next item
+    }
+
+    return startId;
+}
+
+qint64 LoadNews::getStartIDForPrepend()
+{
+    qint64 startId = -1;
+    if (feedItem->getNewsList() != NULL && feedItem->getNewsList()->size() > 0) {
+        startId = feedItem->getNewsList()->first()->getDbID();
+    }
+
+    return startId;
+}
+
 void LoadNews::execute()
 {
-    if (feedItem->getDbId() < 0) {
-        // This is AllNews, dumbass.  You called the wrong operation!
+    if (feedItem->isSpecialFeed()) {
+        // This is a special feed, dumbass.  You called the wrong operation!
         Q_ASSERT(false);
         emit finished(this);
         
@@ -168,15 +189,7 @@ void LoadNews::execute()
     
     case Append:
     {
-        qint64 startId = -1;
-        if (feedItem->getNewsList() != NULL && feedItem->getNewsList()->size() > 0)
-            startId = feedItem->getNewsList()->last()->getDbID();
-        
-        startId++; // Advance to the next item.
-        
-        //qDebug() << "Append from " << startId;
-        dbResult &= doAppend(startId);
-        
+        dbResult &= doAppend(getStartIDForAppend());
         //qDebug() << "Adding: " << (listAppend != NULL ? listAppend->size() : 0);
         
         break;
@@ -184,11 +197,7 @@ void LoadNews::execute()
         
     case Prepend:
     {
-        qint64 startId = -1;
-        if (feedItem->getNewsList() != NULL && feedItem->getNewsList()->size() > 0)
-            startId = feedItem->getNewsList()->first()->getDbID();
-        
-        dbResult &= doPrepend(startId);
+        dbResult &= doPrepend(getStartIDForPrepend());
         
         break;
     }
