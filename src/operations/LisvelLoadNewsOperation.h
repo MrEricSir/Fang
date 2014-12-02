@@ -11,7 +11,8 @@ class LisvelLoadNewsOperation : public LoadNews
 {
     Q_OBJECT
 public:
-    explicit LisvelLoadNewsOperation(OperationManager *parent, LisvelFeedItem* feedItem, LoadMode mode, int loadLimit = 15);
+    explicit LisvelLoadNewsOperation(OperationManager *parent, LisvelFeedItem* feedItem,
+                                     LoadMode mode, int loadLimit = 15, bool prependOnInit = true);
 
 public slots:
     virtual void execute();
@@ -40,13 +41,17 @@ protected slots:
     virtual QString appendNewQueryString() = 0;
 
     /**
-     * @return The query string used by the prepend new operation.
+     * @return The query string used by the prepend new operation, or the empty string
+     *         if prepend is not supported.
      */
     virtual QString prependNewQueryString() = 0;
 
 private:
     // Lisvel feed.
     LisvelFeedItem* lisvelNews;
+
+    // If true, run a prepend when initializing the feed.
+    bool prependOnInit;
 
 };
 

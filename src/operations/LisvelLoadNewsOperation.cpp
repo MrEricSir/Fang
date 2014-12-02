@@ -1,9 +1,10 @@
 #include "LisvelLoadNewsOperation.h"
 
 
-LisvelLoadNewsOperation::LisvelLoadNewsOperation(OperationManager *parent, LisvelFeedItem *feedItem, LoadMode mode, int loadLimit) :
+LisvelLoadNewsOperation::LisvelLoadNewsOperation(OperationManager *parent, LisvelFeedItem *feedItem, LoadMode mode, int loadLimit, bool prependOnInit) :
     LoadNews(parent, feedItem, mode, loadLimit),
-    lisvelNews(feedItem)
+    lisvelNews(feedItem),
+    prependOnInit(prependOnInit)
 {
 }
 
@@ -19,7 +20,10 @@ void LisvelLoadNewsOperation::execute()
     case Initial:
     {
         dbResult &= doAppend();  // First load everything after bookmark.
-        dbResult &= doPrepend(); // Now the stuff on top
+
+        if (prependOnInit) {
+            dbResult &= doPrepend(); // Now the stuff on top
+        }
 
         break;
     }
@@ -168,9 +172,10 @@ bool LisvelLoadNewsOperation::doPrepend()
     //
 
     // Do we still have items to load?  If so, load 'em now.
-    if (remainingLoadLimit > 0) {
+    QString prependQuery = prependNewQueryString();
+    if (remainingLoadLimit > 0 && !prependQuery.isEmpty()) {
         QSqlQuery query(db());
-        query.prepare(prependNewQueryString());
+        query.prepare(prependQuery);
         query.bindValue(":load_limit", remainingLoadLimit);
 
         if (!query.exec()) {

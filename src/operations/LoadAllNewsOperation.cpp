@@ -1,8 +1,7 @@
 #include "LoadAllNewsOperation.h"
 
 LoadAllNewsOperation::LoadAllNewsOperation(OperationManager *parent, AllNewsFeedItem *feedItem, LoadMode mode, int loadLimit) :
-    LisvelLoadNewsOperation(parent, feedItem, mode, loadLimit),
-    allNews(feedItem)
+    LisvelLoadNewsOperation(parent, feedItem, mode, loadLimit, true)
 {
 }
 
