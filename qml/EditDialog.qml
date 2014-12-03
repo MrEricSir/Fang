@@ -12,6 +12,7 @@ Dialog {
     onDialogOpened: {
         feedTitle.forceActiveFocus();
         feedTitle.text = listView.model.selected.getTitle();
+        feedURL.text = listView.model.selected.getURL();
     }
 
     DialogStatus {
@@ -27,6 +28,13 @@ Dialog {
         placeholderText: "Feed title";
         
         onAccepted: saveEditButton.click();
+        width: parent.width;
+    }
+
+    DialogText {
+        id: feedURL;
+        textColor: style.color.fadedText;
+
         width: parent.width;
     }
     

@@ -1,18 +1,19 @@
 import QtQuick 2.0
 
 Rectangle {
-    id: dialogText
-    property string text: ""
-    color: "transparent"
+    id: dialogText;
+    property string text: "";
+    property color textColor: style.color.dialogText;
+    color: "transparent";
     
-    property alias horizontalAlignment: dialogTextText.horizontalAlignment
-    property alias fontPointSize: dialogTextText.font.pointSize
+    property alias horizontalAlignment: dialogTextText.horizontalAlignment;
+    property alias fontPointSize: dialogTextText.font.pointSize;
     
-    width: parent.width
-    height: dialogTextText.paintedHeight
+    width: parent.width;
+    height: dialogTextText.paintedHeight;
     
     Style {
-        id: style
+        id: style;
     }
     
     Text {
@@ -22,7 +23,7 @@ Rectangle {
         
         font.pointSize: style.font.defaultSize
         font.family: style.font.defaultFamily
-        color: style.color.dialogText
+        color: dialogText.textColor
         wrapMode: Text.WordWrap
         renderType: Text.NativeRendering
         

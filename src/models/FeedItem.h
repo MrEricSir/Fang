@@ -80,6 +80,8 @@ public:
         output << "FeedItem_" << _id;
         return ret;
     }
+
+public slots:
     
     Q_INVOKABLE inline QString getTitle() const { return title; }
     inline QString getSubtitle() const { return subtitle; }
