@@ -50,8 +50,8 @@ void RemoveFeedOperation::execute()
     feedList->removeItem(feed);
     
     // Update the unread count of our special feeds.
-    UnreadCountReader::update(db(), FangApp::instance()->getFeedForID(FEED_ID_ALLNEWS));
-    UnreadCountReader::update(db(), FangApp::instance()->getFeedForID(FEED_ID_PINNED));
+    UnreadCountReader::update(db(), FangApp::instance()->feedForId(FEED_ID_ALLNEWS));
+    UnreadCountReader::update(db(), FangApp::instance()->feedForId(FEED_ID_PINNED));
     
     emit finished(this);
 }

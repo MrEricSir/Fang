@@ -1,0 +1,689 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0"  xmlns:atom="http://www.w3.org/2005/Atom" >
+  <channel>
+    <title>WSJ.com: World News</title>
+    <link>http://online.wsj.com/page/2_0006.html</link> 
+	  <description>World News</description> 
+	  <language>en-us</language> 
+	  <copyright>copyright  &#169; 2014 Dow Jones &amp; Company, Inc.</copyright> 
+	  <lastBuildDate>Sat, 06 Dec 2014 13:18:00 EST</lastBuildDate>
+	  <image>
+      <title>WSJ.com: World News</title>
+      <url>http://online.wsj.com/img/wsj_sm_logo.gif</url>
+      <link>http://online.wsj.com/page/2_0006.html</link> 
+    </image>
+    <atom:link href="http://online.wsj.com/page/2_0006.html" rel="self" type="application/rss+xml" />
+<!--Item 1 of World_9 -->
+<item>
+      <title>Two Hostages Killed in Rescue Bid in Yemen</title>
+      <guid isPermaLink="false">SB10470281195569164720004580320502041250636</guid>
+      <link>http://online.wsj.com/articles/american-hostage-luke-somers-killed-in-rescue-attempt-1417862298?mod=fox_australian</link>
+      <description>An American and a South African held hostage for more than a year by al Qaeda&#8217;s Yemen branch died after a raid by U.S. Special Operations forces, in the second rescue attempt in as many weeks.</description>
+      
+      <media:content xmlns:media="http://search.yahoo.com/mrss"
+               url="http://s.wsj.net/public/resources/images/BN-FX005_YEMENA_G_20141205150915.jpg" 
+               type="image/jpeg"
+               medium="image"
+               height="369"
+               width="553"> 
+    <media:description>image</media:description>
+    </media:content>
+    <category>FREE</category>
+    <pubDate>Sat, 06 Dec 2014 13:04:22 EST</pubDate>
+    </item>
+<!--Item 2 of World_9 -->
+<item>
+      <title>How the Raid in Yemen Went Wrong</title>
+      <guid isPermaLink="false">SB10470281195569164720004580320794041511442</guid>
+      <link>http://online.wsj.com/articles/luke-somers-raid-in-yemen-how-it-went-wrong-1417879640?mod=fox_australian</link>
+      <description>The inside story of the failed attempt by U.S. Special Operations forces to rescue American Luke Somers and another hostage in Yemen.</description>
+      
+      <media:content xmlns:media="http://search.yahoo.com/mrss"
+               url="http://s.wsj.net/public/resources/images/BN-FX095_1206re_G_20141206085516.jpg" 
+               type="image/jpeg"
+               medium="image"
+               height="369"
+               width="553"> 
+    <media:description>image</media:description>
+    </media:content>
+    <category>PAID</category>
+    <pubDate>Sat, 06 Dec 2014 13:17:45 EST</pubDate>
+    </item>
+<!--Item 1 of World_11 -->
+<item>
+      <title>Shiite Militias Win Bloody Battles in Iraq</title>
+      <guid isPermaLink="false">SB11008785394923453828404580291211569558020</guid>
+      <link>http://online.wsj.com/articles/shiite-militias-win-bloody-battles-in-iraq-show-no-mercy-1417804464?mod=fox_australian</link>
+      <description>Fatwa-inspired fighters are gaining political power as they help the Iraqi army repel Islamic State. But the militia groups&#8217; take-no-prisoners tactics are deepening worries about sectarian tensions.</description>
+      
+      <media:content xmlns:media="http://search.yahoo.com/mrss"
+               url="http://s.wsj.net/public/resources/images/BN-FW912_IRAQMI_G_20141205124210.jpg" 
+               type="image/jpeg"
+               medium="image"
+               height="369"
+               width="553"> 
+    <media:description>image</media:description>
+    </media:content>
+    <category>FREE</category>
+    <pubDate>Sat, 06 Dec 2014 07:25:16 EST</pubDate>
+    </item>
+<!--Item 1 of World_18 -->
+<item>
+      <title>Doctors Try Survivors' Blood to Treat Ebola</title>
+      <guid isPermaLink="false">SB10909804295654494231304580296973291279884</guid>
+      <link>http://online.wsj.com/articles/ebola-survivors-in-africa-offer-new-treatment-hope-their-blood-1417821483?mod=fox_australian</link>
+      <description>Nearly a year after Ebola began spreading in West Africa, researchers are seeing if the blood of survivors can help fight the disease.</description>
+      
+      <media:content xmlns:media="http://search.yahoo.com/mrss"
+               url="http://s.wsj.net/public/resources/images/WO-AU663_EBOLAB_G_20141205175538.jpg" 
+               type="image/jpeg"
+               medium="image"
+               height="369"
+               width="553"> 
+    <media:description>image</media:description>
+    </media:content>
+    <category>FREE</category>
+    <pubDate>Sat, 06 Dec 2014 10:47:28 EST</pubDate>
+    </item>
+<!--Item 2 of World_18 -->
+<item>
+      <title>Pakistani Forces Kill Al Qaeda Leader</title>
+      <guid isPermaLink="false">SB12767063834263894437504580320821747771924</guid>
+      <link>http://online.wsj.com/articles/pakistani-forces-kill-al-qaeda-leader-wanted-by-u-s-1417878713?mod=fox_australian</link>
+      <description>Pakistani security forces Saturday shot and killed a top al Qaeda operative wanted by U.S. authorities for allegedly planning attacks in America, the country&#8217;s military said.</description>
+      
+      <category>PAID</category>
+    <pubDate>Sat, 06 Dec 2014 10:32:39 EST</pubDate>
+    </item>
+<!--Item 3 of World_18 -->
+<item>
+      <title>Hollande Makes Surprise Visit to Meet With Putin</title>
+      <guid isPermaLink="false">SB12767063834263894437504580320912580834320</guid>
+      <link>http://online.wsj.com/articles/hollande-makes-surprise-visit-to-moscow-1417880591?mod=fox_australian</link>
+      <description>French President Fran&#231;ois Hollande met in Moscow with Vladimir Putin to discuss the crisis in Ukraine, becoming one of the first Western leaders to visit the Russian president since his annexation of Crimea.</description>
+      
+      <media:content xmlns:media="http://search.yahoo.com/mrss"
+               url="http://s.wsj.net/public/resources/images/BN-FX103_frputi_G_20141206103310.jpg" 
+               type="image/jpeg"
+               medium="image"
+               height="369"
+               width="553"> 
+    <media:description>image</media:description>
+    </media:content>
+    <category>PAID</category>
+    <pubDate>Sat, 06 Dec 2014 13:16:00 EST</pubDate>
+    </item>
+<!--Item 4 of World_18 -->
+<item>
+      <title>Swiss Hostage Rescued in Philippines</title>
+      <guid isPermaLink="false">SB10470281195569164720004580320470842954494</guid>
+      <link>http://online.wsj.com/articles/swiss-hostage-rescued-in-philippines-1417860715?mod=fox_australian</link>
+      <description>A Swiss hostage made a dramatic escape from Abu Sayyaf extremists, ending more than two years of jungle captivity in the southern Philippines, officials said.</description>
+      
+      <media:content xmlns:media="http://search.yahoo.com/mrss"
+               url="http://s.wsj.net/public/resources/images/BN-FX090_phswis_G_20141206073454.jpg" 
+               type="image/jpeg"
+               medium="image"
+               height="369"
+               width="553"> 
+    <media:description>image</media:description>
+    </media:content>
+    <category>PAID</category>
+    <pubDate>Sat, 06 Dec 2014 08:49:58 EST</pubDate>
+    </item>
+<!--Item 5 of World_18 -->
+<item>
+      <title>Hong Kong Protest Leader Ends Hunger Strike</title>
+      <guid isPermaLink="false">SB12767063834263894437504580320483594212378</guid>
+      <link>http://online.wsj.com/articles/hong-kong-protest-leader-joshua-wong-ends-hunger-strike-1417862325?mod=fox_australian</link>
+      <description>Joshua Wong, one of the leaders of Hong Kong&#8217;s pro-democracy protests, said he had ended a hunger strike on advice from his doctor.</description>
+      
+      <media:content xmlns:media="http://search.yahoo.com/mrss"
+               url="http://s.wsj.net/public/resources/images/BN-FX087_1206hk_G_20141206052942.jpg" 
+               type="image/jpeg"
+               medium="image"
+               height="369"
+               width="553"> 
+    <media:description>image</media:description>
+    </media:content>
+    <category>PAID</category>
+    <pubDate>Sat, 06 Dec 2014 07:48:33 EST</pubDate>
+    </item>
+<!--Item 6 of World_18 -->
+<item>
+      <title>Somali Parliament Votes Out Premier</title>
+      <guid isPermaLink="false">SB10470281195569164720004580321011963126710</guid>
+      <link>http://online.wsj.com/articles/somali-parliament-votes-out-prime-minister-1417884060?mod=fox_australian</link>
+      <description>Somalia&#8217;s parliament voted to oust the country&#8217;s prime minister on Saturday, capping a long feud between the president and prime minister, an official said.</description>
+      
+      <media:content xmlns:media="http://search.yahoo.com/mrss"
+               url="http://s.wsj.net/public/resources/images/BN-FX108_somali_G_20141206113641.jpg" 
+               type="image/jpeg"
+               medium="image"
+               height="369"
+               width="553"> 
+    <media:description>image</media:description>
+    </media:content>
+    <category>PAID</category>
+    <pubDate>Sat, 06 Dec 2014 11:42:46 EST</pubDate>
+    </item>
+<!--Item 7 of World_18 -->
+<item>
+      <title>U.K. to Boost Gulf Military Presence</title>
+      <guid isPermaLink="false">SB10470281195569164720004580320720795345824</guid>
+      <link>http://online.wsj.com/articles/u-k-to-boost-military-presence-in-persian-gulf-1417871589?mod=fox_australian</link>
+      <description>The U.K. has signed a deal with Bahrain to bolster its military presence in the Gulf region, Britain&#8217;s top diplomat said.</description>
+      
+      <media:content xmlns:media="http://search.yahoo.com/mrss"
+               url="http://s.wsj.net/public/resources/images/BN-FX091_ukbahr_G_20141206080921.jpg" 
+               type="image/jpeg"
+               medium="image"
+               height="369"
+               width="553"> 
+    <media:description>image</media:description>
+    </media:content>
+    <category>FREE</category>
+    <pubDate>Sat, 06 Dec 2014 09:08:54 EST</pubDate>
+    </item>
+<!--Item 8 of World_18 -->
+<item>
+      <title>India to Buy Sikorsky Military Helicopters</title>
+      <guid isPermaLink="false">SB12767063834263894437504580320571762342694</guid>
+      <link>http://online.wsj.com/articles/india-chooses-sikorsky-for-1-billion-military-helicopter-deal-1417867938?mod=fox_australian</link>
+      <description>India has awarded an estimated $1 billion deal to Sikorsky Aircraft to buy 16 helicopters, an official at India&#8217;s defense ministry said.</description>
+      
+      <media:content xmlns:media="http://search.yahoo.com/mrss"
+               url="http://s.wsj.net/public/resources/images/BN-FX088_indefe_G_20141206070413.jpg" 
+               type="image/jpeg"
+               medium="image"
+               height="369"
+               width="553"> 
+    <media:description>image</media:description>
+    </media:content>
+    <category>PAID</category>
+    <pubDate>Sat, 06 Dec 2014 07:28:03 EST</pubDate>
+    </item>
+<!--Item 9 of World_18 -->
+<item>
+      <title>China Arrests Former Security Chief</title>
+      <guid isPermaLink="false">SB12667989510970424270704580319013248551420</guid>
+      <link>http://online.wsj.com/articles/chinas-communist-party-ejects-former-security-chief-zhou-1417798750?mod=fox_australian</link>
+      <description>The Communist Party expelled and ordered the arrest of one of its highest-ranking members, Zhou Yongkang, in Beijing&#8217;s boldest move yet to stamp out government corruption. </description>
+      
+      <media:content xmlns:media="http://search.yahoo.com/mrss"
+               url="http://s.wsj.net/public/resources/images/BN-FW874_ZHOUjp_G_20141205115134.jpg" 
+               type="image/jpeg"
+               medium="image"
+               height="369"
+               width="553"> 
+    <media:description>image</media:description>
+    </media:content>
+    <category>PAID</category>
+    <pubDate>Sat, 06 Dec 2014 01:41:36 EST</pubDate>
+    </item>
+<!--Item 10 of World_18 -->
+<item>
+      <title>Prosecutor Withdraws Charges Against Kenya President</title>
+      <guid isPermaLink="false">SB12667989510970424270704580318620815294254</guid>
+      <link>http://online.wsj.com/articles/icc-withdraws-charges-against-kenyan-president-1417782334?mod=fox_australian</link>
+      <description>The prosecutor of the International Criminal Court has withdrawn charges of crimes against humanity against Kenyan President Uhuru Kenyatta, ending a case that has triggered a backlash from African governments.</description>
+      
+      <media:content xmlns:media="http://search.yahoo.com/mrss"
+               url="http://s.wsj.net/public/resources/images/WO-AU664_KENYAI_G_20141205175838.jpg" 
+               type="image/jpeg"
+               medium="image"
+               height="369"
+               width="553"> 
+    <media:description>image</media:description>
+    </media:content>
+    <category>PAID</category>
+    <pubDate>Fri, 05 Dec 2014 20:45:36 EST</pubDate>
+    </item>
+<!--Item 11 of World_18 -->
+<item>
+      <title>Iran Talks Likely to Figure in Clinton 2016</title>
+      <guid isPermaLink="false">SB11571129534817904104404580315502340285056</guid>
+      <link>http://online.wsj.com/articles/iran-talks-likely-to-figure-in-any-hillary-clinton-2016-bid-1417823608?mod=fox_australian</link>
+      <description>Former Secretary of State Hillary Clinton is closely tied to current U.S. diplomatic efforts toward Iran, and her role is likely to become a campaign issue for Republicans in any 2016 presidential bid.</description>
+      
+      <media:content xmlns:media="http://search.yahoo.com/mrss"
+               url="http://s.wsj.net/public/resources/images/BN-FX055_HILLIR_G_20141205175546.jpg" 
+               type="image/jpeg"
+               medium="image"
+               height="369"
+               width="553"> 
+    <media:description>image</media:description>
+    </media:content>
+    <category>PAID</category>
+    <pubDate>Sat, 06 Dec 2014 09:34:00 EST</pubDate>
+    </item>
+<!--Item 12 of World_18 -->
+<item>
+      <title>White House Seeks to Clarify Syria Policy</title>
+      <guid isPermaLink="false">SB10257638415083894258404580317432618777928</guid>
+      <link>http://online.wsj.com/articles/white-house-seeks-to-clarify-syria-policy-1417805733?mod=fox_australian</link>
+      <description>Under pressure from allies abroad and Republicans at home, the Obama administration is at pains to better implement its opposition to both Islamic State and the Assad regime. </description>
+      
+      <media:content xmlns:media="http://search.yahoo.com/mrss"
+               url="http://s.wsj.net/public/resources/images/BN-FW949_OBASYR_G_20141205133555.jpg" 
+               type="image/jpeg"
+               medium="image"
+               height="369"
+               width="553"> 
+    <media:description>image</media:description>
+    </media:content>
+    <category>PAID</category>
+    <pubDate>Fri, 05 Dec 2014 20:54:15 EST</pubDate>
+    </item>
+<!--Item 13 of World_18 -->
+<item>
+      <title>Kin of U.S. Hostage in Yemen Plead for His Release</title>
+      <guid isPermaLink="false">SB11179732792715064836904580319071211946214</guid>
+      <link>http://online.wsj.com/articles/family-of-american-held-hostage-in-yemen-pleads-for-his-safe-release-1417806069?mod=fox_australian</link>
+      <description>With a weekend deadline approaching, the mother and brother of journalist Luke Somers implore al Qaeda militants to spare his life.</description>
+      
+      <media:content xmlns:media="http://search.yahoo.com/mrss"
+               url="http://s.wsj.net/public/resources/images/BN-FW532_yemenr_G_20141204191122.jpg" 
+               type="image/jpeg"
+               medium="image"
+               height="369"
+               width="553"> 
+    <media:description>image</media:description>
+    </media:content>
+    <category>PAID</category>
+    <pubDate>Sat, 06 Dec 2014 00:13:45 EST</pubDate>
+    </item>
+<!--Item 14 of World_18 -->
+<item>
+      <title>NATO, EU Discuss Closer Cooperation</title>
+      <guid isPermaLink="false">SB10632165604417554729904580317173264721654</guid>
+      <link>http://online.wsj.com/articles/nato-and-the-eu-talk-over-closer-cooperation-1417728833?mod=fox_australian</link>
+      <description>Brussels Beat: The common challenge of a newly assertive Russia is giving new impetus to efforts to better align the security policies of Europe&#8217;s two predominant organizations.</description>
+      
+      <media:content xmlns:media="http://search.yahoo.com/mrss"
+               url="http://s.wsj.net/public/resources/images/EI-CK445_P2_col_G_20141204161307.jpg" 
+               type="image/jpeg"
+               medium="image"
+               height="369"
+               width="553"> 
+    <media:description>image</media:description>
+    </media:content>
+    <category>FREE</category>
+    <pubDate>Fri, 05 Dec 2014 21:36:56 EST</pubDate>
+    </item>
+<!--Item 15 of World_18 -->
+<item>
+      <title>France to Compensate Non-French Death Camp Deportees</title>
+      <guid isPermaLink="false">SB12667989510970424270704580318871908948554</guid>
+      <link>http://online.wsj.com/articles/france-to-compensate-non-french-death-camp-deportees-1417792319?mod=fox_australian</link>
+      <description>France has reached an agreement to pay $60 million in reparations to Jews from the U.S. and other countries who were deported to Nazi death camps.</description>
+      
+      <media:content xmlns:media="http://search.yahoo.com/mrss"
+               url="http://s.wsj.net/public/resources/images/BN-FW938_REPARA_G_20141205131704.jpg" 
+               type="image/jpeg"
+               medium="image"
+               height="369"
+               width="553"> 
+    <media:description>image</media:description>
+    </media:content>
+    <category>PAID</category>
+    <pubDate>Fri, 05 Dec 2014 21:39:35 EST</pubDate>
+    </item>
+<!--Item 16 of World_18 -->
+<item>
+      <title>Greeks Angry Over British Loan of Elgin Marbles to Russia</title>
+      <guid isPermaLink="false">SB11179732792715064836904580318881780347768</guid>
+      <link>http://online.wsj.com/articles/greece-angry-over-british-museums-loan-of-ancient-sculptures-taken-from-parthenon-1417796844?mod=fox_australian</link>
+      <description>The British Museum said it lent one of a collection of disputed Greek sculptures to Russia, reigniting a battle between the U.K. and Greece over who owns the 2,500-year-old works known as the Elgin marbles.</description>
+      
+      <media:content xmlns:media="http://search.yahoo.com/mrss"
+               url="http://s.wsj.net/public/resources/images/BN-FW849_1marbl_G_20141205111456.jpg" 
+               type="image/jpeg"
+               medium="image"
+               height="369"
+               width="553"> 
+    <media:description>image</media:description>
+    </media:content>
+    <category>FREE</category>
+    <pubDate>Sat, 06 Dec 2014 00:16:00 EST</pubDate>
+    </item>
+<!--Item 17 of World_18 -->
+<item>
+      <title>Germany's Ex-Communists Climb Political Ladder</title>
+      <guid isPermaLink="false">SB12667989510970424270704580318463166330730</guid>
+      <link>http://online.wsj.com/articles/germanys-left-party-secures-first-state-governorship-1417777381?mod=fox_australian</link>
+      <description>A quarter-of-a-century after the Berlin Wall fell, the successor to East Germany&#8217;s ruling party claimed its biggest political prize since reunification when it secured its first state governorship.</description>
+      
+      <media:content xmlns:media="http://search.yahoo.com/mrss"
+               url="http://s.wsj.net/public/resources/images/BN-FW724_gerlef_G_20141205055339.jpg" 
+               type="image/jpeg"
+               medium="image"
+               height="369"
+               width="553"> 
+    <media:description>image</media:description>
+    </media:content>
+    <category>PAID</category>
+    <pubDate>Fri, 05 Dec 2014 21:50:55 EST</pubDate>
+    </item>
+<!--Item 18 of World_18 -->
+<item>
+      <title>Modi Tests Labor Overhaul at State Level</title>
+      <guid isPermaLink="false">SB10201082926585793778104580308733880724358</guid>
+      <link>http://online.wsj.com/articles/modis-bjp-controlled-states-become-labs-for-contentious-reform-1417732704?mod=fox_australian</link>
+      <description>Prime Minister Narendra Modi and the BJP are using states they control as laboratories for greater economic openness while pursuing more-gradual steps in the national Parliament.</description>
+      
+      <media:content xmlns:media="http://search.yahoo.com/mrss"
+               url="http://s.wsj.net/public/resources/images/BN-FW207_indref_G_20141204112511.jpg" 
+               type="image/jpeg"
+               medium="image"
+               height="369"
+               width="553"> 
+    <media:description>image</media:description>
+    </media:content>
+    <category>FREEASIA</category>
+    <category>FREEINDIA</category>
+    <pubDate>Fri, 05 Dec 2014 21:55:30 EST</pubDate>
+    </item>
+<!--Item 19 of World_18 -->
+<item>
+      <title>Militants Launch Deadly Kashmir Attacks</title>
+      <guid isPermaLink="false">SB12667989510970424270704580318881475240098</guid>
+      <link>http://online.wsj.com/articles/militants-launch-deadly-attacks-in-kashmir-1417793794?mod=fox_australian</link>
+      <description>Militants armed with assault rifles and grenades opened fire on an Indian army camp and killed eight soldiers&#8212;one in a series of violent attacks in the disputed region of Kashmir on Friday.</description>
+      
+      <media:content xmlns:media="http://search.yahoo.com/mrss"
+               url="http://s.wsj.net/public/resources/images/WO-AU671_KASHMI_G_20141205175940.jpg" 
+               type="image/jpeg"
+               medium="image"
+               height="369"
+               width="553"> 
+    <media:description>image</media:description>
+    </media:content>
+    <category>PAID</category>
+    <pubDate>Sat, 06 Dec 2014 07:29:46 EST</pubDate>
+    </item>
+<!--Item 20 of World_18 -->
+<item>
+      <title>Syrian Militant Threatens Lebanese Shiites</title>
+      <guid isPermaLink="false">SB11179732792715064836904580318650117690526</guid>
+      <link>http://online.wsj.com/articles/syrian-militant-threatens-lebanese-shiites-after-family-arrested-1417783865?mod=fox_australian</link>
+      <description>A Syrian Sunni militant commander who has pledged allegiance to Islamic State has threatened to &#8220;retaliate&#8221; against Lebanese Shiites over the arrest of his wife and two children.</description>
+      
+      <category>PAID</category>
+    <pubDate>Fri, 05 Dec 2014 07:51:07 EST</pubDate>
+    </item>
+<!--Item 21 of World_18 -->
+<item>
+      <title>EU's Mogherini Appoints Catherine Ashton Special Adviser for Iran Talks</title>
+      <guid isPermaLink="false">SB12667989510970424270704580319250236533176</guid>
+      <link>http://online.wsj.com/articles/eus-mogherini-appoints-catherine-ashton-special-adviser-for-iran-talks-1417808968?mod=fox_australian</link>
+      <description>European Union foreign policy chief Federica Mogherini has asked Catherine Ashton, her predecessor, to stay on in the role as chief negotiator of the six powers in nuclear talks with Iran. </description>
+      
+      <category>PAID</category>
+    <pubDate>Fri, 05 Dec 2014 14:52:06 EST</pubDate>
+    </item>
+<!--Item 22 of World_18 -->
+<item>
+      <title>Greece Mulls Early Presidential Poll</title>
+      <guid isPermaLink="false">SB12667989510970424270704580318872011882524</guid>
+      <link>http://online.wsj.com/articles/greece-considers-bringing-forward-presidential-elections-in-2015-1417795381?mod=fox_australian</link>
+      <description>Greece is considering bringing forward its presidential elections next year by more than a month in a bid to ease concerns among international creditors over political uncertainty facing the country, two party officials said.</description>
+      
+      <media:content xmlns:media="http://search.yahoo.com/mrss"
+               url="http://s.wsj.net/public/resources/images/BN-FW834_gkpoll_G_20141205104856.jpg" 
+               type="image/jpeg"
+               medium="image"
+               height="369"
+               width="553"> 
+    <media:description>image</media:description>
+    </media:content>
+    <category>PAID</category>
+    <pubDate>Fri, 05 Dec 2014 11:03:03 EST</pubDate>
+    </item>
+<!--Item 23 of World_18 -->
+<item>
+      <title>Thai King's Birthday Ceremony Canceled</title>
+      <guid isPermaLink="false">SB11385249049173293335304580317951324784556</guid>
+      <link>http://online.wsj.com/articles/thailand-kings-birthday-ceremony-canceled-because-of-his-ill-health-1417755435?mod=fox_australian</link>
+      <description>A traditional birthday celebration ceremony for Thailand&#8217;s King Bhumibol Adulyadej, the world&#8217;s longest-reigning monarch, has been canceled because his doctors say he isn&#8217;t well enough to attend.</description>
+      
+      <media:content xmlns:media="http://search.yahoo.com/mrss"
+               url="http://s.wsj.net/public/resources/images/BN-FW606_1205TH_G_20141204235104.jpg" 
+               type="image/jpeg"
+               medium="image"
+               height="369"
+               width="553"> 
+    <media:description>image</media:description>
+    </media:content>
+    <category>PAID</category>
+    <pubDate>Thu, 04 Dec 2014 23:57:16 EST</pubDate>
+    </item>
+<!--Item 24 of World_18 -->
+<item>
+      <title>U.K. Judges Rule in Favor of Spy Program</title>
+      <guid isPermaLink="false">SB12667989510970424270704580318914132938930</guid>
+      <link>http://online.wsj.com/articles/uk-judges-rule-in-favor-of-government-spying-program-1417795517?mod=fox_australian</link>
+      <description>A British judicial panel has ruled that the U.K.&#8217;s surveillance practices exposed by former  U.S. government contractor Edward Snowden are legal, marking a preliminary victory for the British government in the first legal challenge in the U.K. of its controversial spying program.</description>
+      
+      <media:content xmlns:media="http://search.yahoo.com/mrss"
+               url="http://s.wsj.net/public/resources/images/BN-FW852_ukspy1_G_20141205111831.jpg" 
+               type="image/jpeg"
+               medium="image"
+               height="369"
+               width="553"> 
+    <media:description>image</media:description>
+    </media:content>
+    <category>PAID</category>
+    <pubDate>Sat, 06 Dec 2014 09:11:44 EST</pubDate>
+    </item>
+<!--Item 25 of World_18 -->
+<item>
+      <title>Serbia, Bosnia-Herzegovina Arrest 15 for Suspected War Crimes</title>
+      <guid isPermaLink="false">SB12667989510970424270704580319072951920344</guid>
+      <link>http://online.wsj.com/articles/serbia-bosnia-herzegovina-arrest-15-people-for-suspected-war-crimes-1417803180?mod=fox_australian</link>
+      <description>Serbia and Bosnia-Herzegovina on Friday arrested 15 people suspected of torturing and killing a group of 20 people in 1993.</description>
+      
+      <category>PAID</category>
+    <pubDate>Fri, 05 Dec 2014 13:13:01 EST</pubDate>
+    </item>
+<!--Item 26 of World_18 -->
+<item>
+      <title>Finland OK'S Russian-Backed Nuclear Plant</title>
+      <guid isPermaLink="false">SB12667989510970424270704580318833811318088</guid>
+      <link>http://online.wsj.com/articles/finland-approves-russian-backed-nuclear-plant-1417796653?mod=fox_australian</link>
+      <description>Finland has approved the building of a Russian-backed nuclear power plant at a time when many western capitals are seeking to isolate Moscow over its intervention in Ukraine.</description>
+      
+      <media:content xmlns:media="http://search.yahoo.com/mrss"
+               url="http://s.wsj.net/public/resources/images/BN-FW866_finnis_G_20141205114051.jpg" 
+               type="image/jpeg"
+               medium="image"
+               height="369"
+               width="553"> 
+    <media:description>image</media:description>
+    </media:content>
+    <category>PAID</category>
+    <pubDate>Fri, 05 Dec 2014 12:22:50 EST</pubDate>
+    </item>
+<!--Item 27 of World_18 -->
+<item>
+      <title>Two Jailed Over Syria Visit in U.K. Terror Trial</title>
+      <guid isPermaLink="false">SB12667989510970424270704580318921294671864</guid>
+      <link>http://online.wsj.com/articles/two-jailed-over-syria-visit-in-u-k-terror-trial-1417795154?mod=fox_australian</link>
+      <description>An English judge sentenced two British men to 12 years and eight months in prison for training in overseas terror camps, the stiffest penalty so far in a growing string of convictions in the U.K. related to the fighting in Syria</description>
+      
+      <media:content xmlns:media="http://search.yahoo.com/mrss"
+               url="http://s.wsj.net/public/resources/images/BN-FW830_ukterr_G_20141205103901.jpg" 
+               type="image/jpeg"
+               medium="image"
+               height="369"
+               width="553"> 
+    <media:description>image</media:description>
+    </media:content>
+    <category>PAID</category>
+    <pubDate>Fri, 05 Dec 2014 10:59:16 EST</pubDate>
+    </item>
+<!--Item 28 of World_18 -->
+<item>
+      <title>Germany Sentences Islamic State Militant to Prison</title>
+      <guid isPermaLink="false">SB12667989510970424270704580318532000262138</guid>
+      <link>http://online.wsj.com/articles/germany-sentences-islamic-state-militant-to-prison-1417779418?mod=fox_australian</link>
+      <description>A German court on has handed a jail term of three years and nine months to a former Islamic State militant who fought in Syria</description>
+      
+      <media:content xmlns:media="http://search.yahoo.com/mrss"
+               url="http://s.wsj.net/public/resources/images/BN-FW738_GERIS1_G_20141205073348.jpg" 
+               type="image/jpeg"
+               medium="image"
+               height="369"
+               width="553"> 
+    <media:description>image</media:description>
+    </media:content>
+    <category>PAID</category>
+    <pubDate>Fri, 05 Dec 2014 10:25:07 EST</pubDate>
+    </item>
+<!--Item 1 of World_20 -->
+<item>
+      <title>The Return of Africa's Strongmen</title>
+      <guid isPermaLink="false">SB11609319719009873490604580315110603326940</guid>
+      <link>http://online.wsj.com/articles/the-return-of-africas-strongmen-1417798993?mod=fox_australian</link>
+      <description>The Saturday Essay: Despite two decades of elections and growth, democracy has stalled, militaries are resurgent, and autocrats are in control.</description>
+      
+      <media:content xmlns:media="http://search.yahoo.com/mrss"
+               url="http://s.wsj.net/public/resources/images/BN-FW873_cover_G_20141205114931.jpg" 
+               type="image/jpeg"
+               medium="image"
+               height="369"
+               width="553"> 
+    <media:description>image</media:description>
+    </media:content>
+    <category>FREE</category>
+    <pubDate>Fri, 05 Dec 2014 23:14:49 EST</pubDate>
+    </item>
+<!--Item 2 of World_20 -->
+<item>
+      <title>How Did Moses Part the Red Sea?</title>
+      <guid isPermaLink="false">SB11040532636800194615704580315442623562382</guid>
+      <link>http://online.wsj.com/articles/how-did-moses-part-the-red-sea-1417790250?mod=fox_australian</link>
+      <description>The science of tides may have saved the Israelites from the Egyptians.</description>
+      
+      <media:content xmlns:media="http://search.yahoo.com/mrss"
+               url="http://s.wsj.net/public/resources/images/RV-AP045_REDSEA_G_20141204172009.jpg" 
+               type="image/jpeg"
+               medium="image"
+               height="369"
+               width="553"> 
+    <media:description>image</media:description>
+    </media:content>
+    <category>FREE</category>
+    <pubDate>Fri, 05 Dec 2014 17:20:52 EST</pubDate>
+    </item>
+<!--Item 3 of World_20 -->
+<item>
+      <title>Risk in Putting Einstein's Papers  Online</title>
+      <guid isPermaLink="false">SB10224152129988824652004580313490334780802</guid>
+      <link>http://online.wsj.com/articles/what-could-be-lost-as-einsteins-papers-go-online-1417790386?mod=fox_australian</link>
+      <description>Even in our digital age, scholars should visit their subjects&#8217; archives&#8212;not just surf their sites.</description>
+      
+      <media:content xmlns:media="http://search.yahoo.com/mrss"
+               url="http://s.wsj.net/public/resources/images/BN-FW505_einste_G_20141204175604.jpg" 
+               type="image/jpeg"
+               medium="image"
+               height="369"
+               width="553"> 
+    <media:description>image</media:description>
+    </media:content>
+    <category>FREE</category>
+    <pubDate>Sat, 06 Dec 2014 09:52:18 EST</pubDate>
+    </item>
+<!--Item 1 of World_24 -->
+<item>
+      <title>Photos of the Day: Dec. 5</title>
+      <guid isPermaLink="false">SB11179732792715064836904580319220251437674</guid>
+      <link>http://online.wsj.com/articles/photos-of-the-day-dec-5-1417815454?mod=fox_australian</link>
+      <description>In photos chosen Friday by Wall Street Journal editors, Filipinos brace for a supertyphoon, a successful NASA test flight for an eventual Mars mission, and more.</description>
+      
+      <media:content xmlns:media="http://search.yahoo.com/mrss"
+               url="http://s.wsj.net/public/resources/images/BN-FW980_120514_G_20141205141227.jpg" 
+               type="image/jpeg"
+               medium="image"
+               height="369"
+               width="553"> 
+    <media:description>image</media:description>
+    </media:content>
+    <category>FREE</category>
+    <pubDate>Fri, 05 Dec 2014 17:17:22 EST</pubDate>
+    </item>
+<!--Item 2 of World_24 -->
+<item>
+      <title>A Boom Market for Arms Manufacturers</title>
+      <guid isPermaLink="false">SB11179732792715064836904580318421296694054</guid>
+      <link>http://online.wsj.com/articles/pakistans-ideas-arms-fair-suggests-demand-is-booming-amid-insecurity-1417774357?mod=fox_australian</link>
+      <description>Pakistan has faced a year of insecurity, with a major military campaign over summer against militants in tribal areas and terror attacks in cities. For arms manufacturers, there is an upside: Pakistan is seen as a growth market. </description>
+      
+      <media:content xmlns:media="http://search.yahoo.com/mrss"
+               url="http://s.wsj.net/public/resources/images/BN-FW708_pakmil_G_20141205043609.jpg" 
+               type="image/jpeg"
+               medium="image"
+               height="369"
+               width="553"> 
+    <media:description>image</media:description>
+    </media:content>
+    <category>PAID</category>
+    <pubDate>Fri, 05 Dec 2014 17:31:02 EST</pubDate>
+    </item>
+<!--Item 3 of World_24 -->
+<item>
+      <title>NASA's Orion Capsule Returns Safely</title>
+      <guid isPermaLink="false">SB11179732792715064836904580318382357891898</guid>
+      <link>http://online.wsj.com/articles/orion-spacecraft-set-for-second-launch-attempt-1417771599?mod=fox_australian</link>
+      <description>After a virtually flawless test flight that took NASA&#8217;s Orion capsule deeper into space than any other such vehicle in more than four decades, the unmanned spacecraft made a safe landing in the Pacific Ocean.</description>
+      
+      <media:content xmlns:media="http://search.yahoo.com/mrss"
+               url="http://s.wsj.net/public/resources/images/NA-CD793_LIONDO_G_20141205165948.jpg" 
+               type="image/jpeg"
+               medium="image"
+               height="369"
+               width="553"> 
+    <media:description>image</media:description>
+    </media:content>
+    <category>FREE</category>
+    <pubDate>Fri, 05 Dec 2014 20:16:38 EST</pubDate>
+    </item>
+<!--Item 4 of World_24 -->
+<item>
+      <title>Warmer Water Speeds Melting of Antarctica</title>
+      <guid isPermaLink="false">SB11385249049173293335304580316833612297258</guid>
+      <link>http://online.wsj.com/articles/warmer-water-speeds-melting-of-antarctica-glaciers-study-says-1417719661?mod=fox_australian</link>
+      <description>Warmer water is washing up against large swaths of the Antarctic ice sheet, accelerating the melting of glaciers from below and hastening their slide into the sea, a new study shows.</description>
+      
+      <media:content xmlns:media="http://search.yahoo.com/mrss"
+               url="http://s.wsj.net/public/resources/images/BN-FW312_ANTARC_G_20141204141006.jpg" 
+               type="image/jpeg"
+               medium="image"
+               height="369"
+               width="553"> 
+    <media:description>image</media:description>
+    </media:content>
+    <category>PAID</category>
+    <pubDate>Fri, 05 Dec 2014 14:09:58 EST</pubDate>
+    </item>
+<!--Item 5 of World_24 -->
+<item>
+      <title>In Bangkok, Filmmaker Takes Break From Zombies for Patriotic Fare</title>
+      <guid isPermaLink="false">SB10224152129988824652004580313282698660178</guid>
+      <link>http://online.wsj.com/articles/in-bangkok-filmmaker-takes-break-from-zombies-for-patriotic-fare-1417737031?mod=fox_australian</link>
+      <description>Thailand&#8217;s leaders have tapped the services of the country&#8217;s up-and-coming filmmakers to produce &#8220;Thai Pride&#8221; to get a jump on their critics. The movie debuts on Dec. 6.</description>
+      
+      <media:content xmlns:media="http://search.yahoo.com/mrss"
+               url="http://s.wsj.net/public/resources/images/BN-FW427_1204tf_G_20141204160324.jpg" 
+               type="image/jpeg"
+               medium="image"
+               height="369"
+               width="553"> 
+    <media:description>image</media:description>
+    </media:content>
+    <category>FREE</category>
+    <pubDate>Fri, 05 Dec 2014 17:45:10 EST</pubDate>
+    </item>
+</channel>
+</rss>
+<!-- fastdynapage - sbkj2kwebappp11 - Sat 12/06/14 - 13:18:00 EST -->

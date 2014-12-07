@@ -57,8 +57,8 @@ void SetBookmarkOperation::bookmarkSingleFeed(FeedItem* feed)
     //
     // Step 2: Update unread count for both the feed and All News.
     //
-    UnreadCountReader::update(db(), FangApp::instance()->getFeedForID(feed->getDbId()));
-    UnreadCountReader::update(db(), FangApp::instance()->getFeed(0));
+    UnreadCountReader::update(db(), FangApp::instance()->feedForId(feed->getDbId()));
+    UnreadCountReader::update(db(), FangApp::instance()->feedForId(FEED_ID_ALLNEWS));
     
     db().commit();
     

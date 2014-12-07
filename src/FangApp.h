@@ -2,6 +2,7 @@
 #define FANGAPP_H
 
 #include <QObject>
+#include <QApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include <QQuickView>
@@ -28,7 +29,7 @@ class FangApp : public FangObject
 {
     Q_OBJECT
 public:
-    explicit FangApp(QObject *parent, QQmlApplicationEngine* engine, SingleInstanceCheck* single);
+    explicit FangApp(QApplication *parent, QQmlApplicationEngine* engine, SingleInstanceCheck* single);
     
     void init();
     
@@ -38,13 +39,6 @@ public:
      * @return        The associated FeedItem object, or null if invalid
      */
     FeedItem *getFeed(int index);
-    
-    /**
-     * @brief Returns the feed associated with a given ID.
-     * @param dbID   Database ID of feed.
-     * @return       The associated FeedItem object, or null if invalid.
-     */
-    FeedItem* getFeedForID(qint64 dbID);
     
     /**
      * @return A (read-only) list of teh feedz.
@@ -131,6 +125,11 @@ private slots:
      * @param url
      */
     void onObjectCreated(QObject *object, const QUrl &url);
+
+    /**
+     * @brief Called at closing time, one last call for alcohol so finish your whiskey or beer.
+     */
+    void onQuit();
     
     void onFeedAdded(ListItem*);
     

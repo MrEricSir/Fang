@@ -326,7 +326,7 @@ void WebInteractor::addNewsItem(NewsItem *item, QVariantList* newsList)
     // Make sure we get the real feed title for All News.
     QString feedTitle = !item->getFeed()->isSpecialFeed() ?
                             item->getFeed()->getTitle() :
-                            FangApp::instance()->getFeedForID(item->getFeedId())->getTitle();
+                            FangApp::instance()->feedForId(item->getFeedId())->getTitle();
     
     QVariantMap itemMap;
     itemMap["id"] = item->getDbID();

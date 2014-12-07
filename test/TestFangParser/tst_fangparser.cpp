@@ -84,7 +84,7 @@ void TestFangParser::parseTest_data()
     QTest::addColumn<QString>("firstNewsURL");         // URL of first news item.
     QTest::addColumn<QString>("guid");         // GUID of first news item.
     QTest::addColumn<QDateTime>("firstNewsTimestamp"); // Time of first news item -- in UTC/GMT
-    
+
     //
     // Test files go here!
     //
@@ -405,6 +405,30 @@ void TestFangParser::parseTest_data()
                                   << "http://www.cbsnews.com/news/obama-says-ebola-czar-may-be-appropriate/"
                                   << "0c593429-8235-4bfb-92b2-2025ab0c334c"
                                   << QDateTime::fromString("17 Oct 2014 04:07:46", dtf);
+
+    QTest::newRow("WSJ") << "wallstreetjournal.atom" << "WSJ.com: World News" << 39
+                                  << "Two Hostages Killed in Rescue Bid in Yemen"
+                                  << "http://online.wsj.com/articles/american-hostage-luke-somers-killed-in-rescue-attempt-1417862298?mod=fox_australian"
+                                  << "SB10470281195569164720004580320502041250636"
+                                  << QDateTime::fromString("06 Dec 2014 13:04:22", dtf);
+
+    QTest::newRow("Recode") << "recode.atom" << "Re/code" << 25
+                                  << "Facebook CEO Jabs Apple For Pricey Products"
+                                  << "http://recode.net/2014/12/06/facebook-ceo-jabs-apple-for-pricey-products/"
+                                  << "http://recode.net/?p=106809"
+                                  << QDateTime::fromString("06 Dec 2014 19:06:23", dtf);
+
+    QTest::newRow("NRO") << "nationalreview.rss" << "National Review Online" << 30
+                                  << "More on TNR"
+                                  << "https://www.nationalreview.com/postmodern-conservative/394135/more-tnr-carl-eric-scott"
+                                  << "394135"
+                                  << QDateTime::fromString("06 Dec 2014 18:28:43", dtf);
+
+    QTest::newRow("TheNewRepublic") << "thenewrepublic.rss" << "New Republic" << 100
+                                  << "Don't Let Police Killings of Unarmed Black Men Become Another Forgotten News Fad"
+                                  << "http://www.newrepublic.com/article/120496/police-brutality-must-not-be-media-news-blip"
+                                  << "120496 at http://www.newrepublic.com"
+                                  << QDateTime::fromString("05 Dec 2014 23:11:00", dtf);
 }
 
 QTEST_MAIN(TestFangParser)

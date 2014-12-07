@@ -9,6 +9,7 @@
 #include "operations/AddFeedOperation.h"
 #include "operations/RemoveFeedOperation.h"
 #include "operations/UpdateTitleOperation.h"
+#include "operations/ExpireNewsOperation.h"
 
 #if defined(Q_OS_MAC)
     #include "notifications/NotificationMac.h"
@@ -18,7 +19,7 @@
 
 FangApp* FangApp::_instance = NULL;
 
-FangApp::FangApp(QObject *parent, QQmlApplicationEngine* engine, SingleInstanceCheck* single) :
+FangApp::FangApp(QApplication *parent, QQmlApplicationEngine* engine, SingleInstanceCheck* single) :
     FangObject(parent),
     engine(engine),
     single(single),
@@ -39,6 +40,8 @@ FangApp::FangApp(QObject *parent, QQmlApplicationEngine* engine, SingleInstanceC
     _instance = this;
     
     // Setup signals.
+    connect(parent, SIGNAL(aboutToQuit()), this, SLOT(onQuit()));
+
     connect(engine, SIGNAL(objectCreated(QObject*,QUrl)), this, SLOT(onObjectCreated(QObject*,QUrl)));
     
     connect(feedList, SIGNAL(added(ListItem*)), this, SLOT(onFeedAdded(ListItem*)));
@@ -76,17 +79,6 @@ FeedItem* FangApp::getFeed(int index)
     }
     
     return (FeedItem*) item;
-}
-
-FeedItem *FangApp::getFeedForID(qint64 dbID)
-{
-    QMap<qint64, FeedItem*>::iterator it = feedIdMap.find(dbID);
-    if (it == feedIdMap.end()) {
-        qDebug() << "Um, we didn't find a feed for id: " << dbID;
-        return NULL;
-    }
-    
-    return it.value();
 }
 
 void FangApp::focusApp()
@@ -330,6 +322,17 @@ void FangApp::onObjectCreated(QObject* object, const QUrl& url)
     connect(updateTimer, SIGNAL(timeout()), this, SLOT(updateAllFeeds()));
     updateTimer->setInterval(10 * 60 * 1000);
     updateTimer->start();
+}
+
+void FangApp::onQuit()
+{
+    // By default, cull items older than 3 months, save for the last 25.
+    // (If read and unpinned, of course.)
+    QDateTime olderThan = QDateTime::currentDateTime().addMonths(3);
+    qint32 saveLast = 25;
+
+    // Clean up DB before we exit.
+    manager.add(new ExpireNewsOperation(&manager, feedList, olderThan, saveLast));
 }
 
 void FangApp::displayFeed()

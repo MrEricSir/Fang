@@ -1,0 +1,1203 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+	xmlns:georss="http://www.georss.org/georss" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:media="http://search.yahoo.com/mrss/"
+	>
+
+<channel>
+	<title>Re/code</title>
+	<atom:link href="http://recode.net/feed/" rel="self" type="application/rss+xml" />
+	<link>http://recode.net</link>
+	<description></description>
+	<lastBuildDate>Sat, 06 Dec 2014 19:06:28 +0000</lastBuildDate>
+	<language>en</language>
+		<sy:updatePeriod>hourly</sy:updatePeriod>
+		<sy:updateFrequency>1</sy:updateFrequency>
+	<generator>http://wordpress.com/</generator>
+<cloud domain='recode.net' port='80' path='/?rsscloud=notify' registerProcedure='' protocol='http-post' />
+<image>
+		<url>http://1.gravatar.com/blavatar/ffb3d8712b6311fcec3570217b252e8d?s=96&#038;d=http%3A%2F%2Fs2.wp.com%2Fi%2Fbuttonw-com.png</url>
+		<title>Re/code</title>
+		<link>http://recode.net</link>
+	</image>
+	<atom:link rel="search" type="application/opensearchdescription+xml" href="http://recode.net/osd.xml" title="Re/code" />
+	<atom:link rel='hub' href='http://recode.net/?pushpress=hub'/>
+	<item>
+		<title>Facebook CEO Jabs Apple For Pricey Products</title>
+		<link>http://recode.net/2014/12/06/facebook-ceo-jabs-apple-for-pricey-products/</link>
+		<comments>http://recode.net/2014/12/06/facebook-ceo-jabs-apple-for-pricey-products/#comments</comments>
+		<pubDate>Sat, 06 Dec 2014 19:06:23 +0000</pubDate>
+		<dc:creator><![CDATA[Kurt Wagner]]></dc:creator>
+				<category><![CDATA[Social]]></category>
+		<category><![CDATA[time]]></category>
+		<category><![CDATA[user privacy]]></category>
+
+		<guid isPermaLink="false">http://recode.net/?p=106809</guid>
+		<description><![CDATA[Mark Zuckerberg says Apple CEO Tim Cook's claim that ads turn people into products is silly.<img alt="" border="0" src="http://pixel.wp.com/b.gif?host=recode.net&#038;blog=61371898&#038;post=106809&#038;subd=recodetech&#038;ref=&#038;feed=1" width="1" height="1" />]]></description>
+				<content:encoded><![CDATA[<p><img src="http://recodetech.files.wordpress.com/2014/12/zuck_d8.jpg?w=640" class="attachment-large wp-post-image" alt="zuck_d8" />
+<p class="credit right">Asa Mathat</p>
+<p>Mark Zuckerberg has a bone to pick with <a href="http://recode.net/company/apple/">Apple</a>. </p>
+<p>The Facebook CEO took a shot at the company in a recently published <a href="http://time.com/facebook-world-plan/">Time story</a>. The point of contention? A three-month-old quote from Apple CEO Tim Cook that may or may not have even been about the social network. </p>
+<p>Zuckerberg took exception to Cook&#8217;s suggestion that Facebook&#8217;s users (and Google&#8217;s, too) are actually &#8220;the product&#8221; since their data is helping the company make money. &#8220;A few years ago, users of Internet services began to realize that when an online service is free, you’re not the customer. You’re the product,&#8221; Cook <a href="https://www.apple.com/privacy/">wrote</a>. </p>
+<p>Zuckerberg told Time he thinks that notion is silly.</p>
+<p>“A frustration I have is that a lot of people increasingly seem to equate an advertising business model with somehow being out of alignment with your customers. I think it’s the most ridiculous concept. What, you think because you’re paying Apple that you’re somehow in alignment with them? If you were in alignment with them, then they’d make their products a lot cheaper!”</p>
+<p>Zing!</p>
+<p>The remark is hardly fodder for a Celebrity Deathmatch-style feud, but it&#8217;s a rare barb from Zuckerberg, who seems to be tiring of criticism about Facebook&#8217;s data use and the monetization of its user base. Conversations about Facebook&#8217;s handling of consumer data and privacy<a href="http://allthingsd.com/20100610/full-d8-video-facebook-ceo-mark-zuckerberg/">used to make Zuckerberg sweat</a>. Now he&#8217;s fighting back &#8212; and talking a little smack, too.</p><img alt="" border="0" src="http://pixel.wp.com/b.gif?host=recode.net&#038;blog=61371898&#038;post=106809&#038;subd=recodetech&#038;ref=&#038;feed=1" width="1" height="1" />]]></content:encoded>
+			<wfw:commentRss>http://recode.net/2014/12/06/facebook-ceo-jabs-apple-for-pricey-products/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+	
+		<media:thumbnail url="http://recodetech.files.wordpress.com/2014/12/zuck_d8.jpg?w=200" />
+		<media:content url="http://recodetech.files.wordpress.com/2014/12/zuck_d8.jpg" medium="image">
+			<media:title type="html">zuck_d8</media:title>
+		</media:content>
+
+		<media:content url="http://0.gravatar.com/avatar/f9db238d36e1350a735dcd76018de4d7?s=96&#38;d=identicon&#38;r=G" medium="image">
+			<media:title type="html">kurtwag88</media:title>
+		</media:content>
+	</item>
+		<item>
+		<title>What The Heck is a Snapchat Celebrity?</title>
+		<link>http://recode.net/2014/12/06/what-the-heck-is-a-snapchat-celebrity/</link>
+		<comments>http://recode.net/2014/12/06/what-the-heck-is-a-snapchat-celebrity/#comments</comments>
+		<pubDate>Sat, 06 Dec 2014 17:00:32 +0000</pubDate>
+		<dc:creator><![CDATA[Kurt Wagner]]></dc:creator>
+				<category><![CDATA[Social]]></category>
+		<category><![CDATA[brand marketing]]></category>
+		<category><![CDATA[Snapchat celebrity]]></category>
+
+		<guid isPermaLink="false">http://recode.net/?p=106527</guid>
+		<description><![CDATA[Shaun McBride has turned Snapchatting into a full-time job. <img alt="" border="0" src="http://pixel.wp.com/b.gif?host=recode.net&#038;blog=61371898&#038;post=106527&#038;subd=recodetech&#038;ref=&#038;feed=1" width="1" height="1" />]]></description>
+				<content:encoded><![CDATA[<p><img src="http://recodetech.files.wordpress.com/2014/12/shaun-mcbride-thumb.jpg?w=640" class="attachment-large wp-post-image" alt="Shaun McBride, AKA Shonduras, has made a career out of Snapchatting." /></p>
+<p>Shaun McBride has the kind of job a teenager would drool over. </p>
+<p>In the past year, <a href="https://www.facebook.com/ShondurasSnapchat">McBride</a> visited Disneyland and Disney World, flew in a helicopter over Alaskan glaciers, and hung out backstage at the Austin City Limits Music Festival. His trips were paid for by others and he had only one job &#8212; Snapchat as much as possible along the way. </p>
+<p>McBride, who&#8217;s known on Snapchat as &#8220;Shonduras,&#8221; is part of a small group of young social media celebrities building viable careers on social networks like Snapchat, Vine and Instagram. Brands are willing to pony up big bucks &#8212; <a href="http://mashable.com/2014/07/22/sneaky-vine-ads/">as much as six figures</a> for some deals &#8212; to have their products mentioned in the videos and images shared by these celebs. </p>
+<p>For McBride, Snapchatting is now a full-time job. After downloading the app just over a year ago, he built up a following traveling the country as a sales rep for snowboard and skateboard companies. And as his audience grew, brands came calling. McBride, who&#8217;s known for adding colorful cartoon art to this posts, says he now has hundreds of thousands of followers on the service, and has been Snapchatting full-time for a couple of months.</p>
+<p>So how do you make a career out of Snapchat? We asked &#8220;Shonduras&#8221; to fill us in.  </p>
+<p><a href="https://recodetech.files.wordpress.com/2014/12/thanks-snap-1.jpg"><img src="https://recodetech.files.wordpress.com/2014/12/thanks-snap-1.jpg?w=270&#038;h=480" alt="thanks-snap-1" width="270" height="480" class="alignleft size-large wp-image-106803" /></a></p>
+<p><strong>Re/code: How does one become a Snapchat celebrity? I don&#8217;t think many people know that job exists.</strong></p>
+<p><strong>McBride:</strong> You just have to create good content. &#8230; I really like going on adventures. &#8230; And I’ve been documenting them on Snapchat. Then I thought those adventures would be a lot better if I added some color. So I added some funny drawings to my snaps and augmented reality a little bit. </p>
+<p><strong>How do you get noticed? Did you have one big break that was a tipping point?</strong></p>
+<p>I didn’t have a big break. I’ve been featured in some big places, but my growth has been pretty incremental. On Snapchat, you can’t just get shared by one site or celebrity and go viral because you can’t really share a Snapchat. People can’t just see an article, click your name and follow you. I get featured in Forbes and 10,000 people follow me. I go to Disney World and 10,000 people follow me. Every time I do something fun on Snapchat I see growth, but it&#8217;s not attributable to one thing. </p>
+<p><strong>Brands often approach you to snap on their behalf. What&#8217;s your philosophy about doing that?</strong></p>
+<p>I guess I’m looking at the bigger picture. &#8230; I’m thinking more long-term about creating a fun experience where people can check me out and not really worry about seeing ads all the time. I will do campaigns for brands, but I’m selective. I’ve turned down a lot of money from advertisers. I wait for good opportunities.</p>
+<p><strong>What&#8217;s the demand like for this type of content? How much can Snapchat celebs or Vine celebs make?</strong></p>
+<p>I know some people who have done Snapchat gigs for anywhere from $5,000 to $50,000. There’s definitely some great money in it. </p>
+<p><strong>How do you make sure you aren&#8217;t just taking advantage of your audience?</strong></p>
+<p>I think it’s in the brands that I’ve chosen to work with. I’ve said &#8220;no&#8221; to more brands than I’ve said &#8220;yes&#8221; to. &#8230; It’s not being afraid to say no. And when you do branded work, it’s the way you present it. In my contract I make sure I don’t have to do any direct selling or pitching of a product.</p>
+<p><strong>Can you give me an example of a brand you would work with?</strong></p>
+<p>I did something with Disney. They said “Hey, we’ll fly you to Disneyland, come have fun, check out Mickey&#8217;s Not-So-Scary Halloween Party and just do what you would do and make a Snapchat story about it.” So I went out there, I enjoyed the park, and I documented my adventure on Snapchat. It didn’t feel branded, but subliminally people think, “You know, Disneyland is awesome, I need to go there sometime.” </p><img alt="" border="0" src="http://pixel.wp.com/b.gif?host=recode.net&#038;blog=61371898&#038;post=106527&#038;subd=recodetech&#038;ref=&#038;feed=1" width="1" height="1" />]]></content:encoded>
+			<wfw:commentRss>http://recode.net/2014/12/06/what-the-heck-is-a-snapchat-celebrity/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+	
+		<media:thumbnail url="http://recodetech.files.wordpress.com/2014/12/shaun-mcbride-thumb.jpg?w=200" />
+		<media:content url="http://recodetech.files.wordpress.com/2014/12/shaun-mcbride-thumb.jpg" medium="image">
+			<media:title type="html">shaun-mcbride-thumb</media:title>
+		</media:content>
+
+		<media:content url="http://0.gravatar.com/avatar/f9db238d36e1350a735dcd76018de4d7?s=96&#38;d=identicon&#38;r=G" medium="image">
+			<media:title type="html">kurtwag88</media:title>
+		</media:content>
+
+		<media:content url="https://recodetech.files.wordpress.com/2014/12/thanks-snap-1.jpg?w=270" medium="image">
+			<media:title type="html">thanks-snap-1</media:title>
+		</media:content>
+	</item>
+		<item>
+		<title>Tim Draper Pockets Small Change in Latest Bitcoin Auction</title>
+		<link>http://recode.net/2014/12/06/tim-draper-pockets-small-change-in-latest-bitcoin-auction/</link>
+		<comments>http://recode.net/2014/12/06/tim-draper-pockets-small-change-in-latest-bitcoin-auction/#comments</comments>
+		<pubDate>Sat, 06 Dec 2014 16:05:47 +0000</pubDate>
+		<dc:creator><![CDATA[Reuters]]></dc:creator>
+				<category><![CDATA[Gaming]]></category>
+		<category><![CDATA[bitcoin]]></category>
+		<category><![CDATA[Silk Road]]></category>
+
+		<guid isPermaLink="false">http://recode.net/?p=106797</guid>
+		<description><![CDATA[Venture capitalist Tim Draper, who won nearly all of the 30,000 Bitcoins in the United States Marshals Service's first Bitcoin auction, snags just 2,000 in the second.<img alt="" border="0" src="http://pixel.wp.com/b.gif?host=recode.net&#038;blog=61371898&#038;post=106797&#038;subd=recodetech&#038;ref=&#038;feed=1" width="1" height="1" />]]></description>
+				<content:encoded><![CDATA[<p><img src="http://recodetech.files.wordpress.com/2014/05/2014-05-16t050126z_1_cbrea4f0dyu00_rtroptp_4_canada-e1400256036653.jpg?w=640" class="attachment-large wp-post-image" alt="A Bitcoin sign is seen in a window in Toronto" />
+<p class="credit right">REUTERS / Mark Blinch</p>
+<p>Venture capitalist Tim Draper won part of the U.S. Marshals Service&#8217; auction of 50,000 bitcoins, he said in an email Friday.</p>
+<p>Draper said he successfully bid on one lot, totaling 2,000 bitcoins, on behalf of Draper Associates. The move helps fulfill his plan to invest 300 bitcoins in every startup that participates in the current session of Boost, a program for bitcoin-related startups founded by his son, Adam Draper.</p>
+<p>Draper declined to disclose the price he paid.</p>
+<p>On Thursday, the U.S. government auctioned the 50,000 bitcoins confiscated during the prosecution of the alleged owner of Silk Road, an Internet black-market bazaar where authorities say illegal drugs and other goods could be bought.</p>
+<p>It was the U.S. Marshals Service&#8217;s second such auction following one in June for almost 30,000 bitcoins seized during a raid on Silk Road in 2013.</p>
+<p>Lynzey Donahue, a Marshals Service spokeswoman, said in a emailed statement that she cannot &#8220;confirm, deny or make any further announcements until the entire award process has concluded, including the completion of required financial transactions.&#8221;</p>
+<p>Bitcoin has declined in value throughout the year, leading to a school of thought that growth for the young currency has peaked. But Draper said he viewed the lower prices as a buying opportunity.</p>
+<p>&#8220;Good luck to the Luddites you have been talking to,&#8221; he wrote. &#8220;In a year or two, they are going to wonder what happened.&#8221; He added he planned to keep investing in bitcoin-related companies in fields such as accounting and retailing.</p>
+<p>Bitcoin prices were up 2.3 percent late Friday at $377.76.</p>
+<p>Draper&#8217;s success at the auction was first reported by Bloomberg.</p>
+<p>(Reporting by Gertrude Chavez-Dreyfuss and Nate Raymond; Additional reporting by Sarah McBride in San Francisco; Editing by David Gregorio and Lisa Shumaker)</p><img alt="" border="0" src="http://pixel.wp.com/b.gif?host=recode.net&#038;blog=61371898&#038;post=106797&#038;subd=recodetech&#038;ref=&#038;feed=1" width="1" height="1" />]]></content:encoded>
+			<wfw:commentRss>http://recode.net/2014/12/06/tim-draper-pockets-small-change-in-latest-bitcoin-auction/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+	
+		<media:thumbnail url="http://recodetech.files.wordpress.com/2014/05/2014-05-16t050126z_1_cbrea4f0dyu00_rtroptp_4_canada-e1400256036653.jpg?w=200" />
+		<media:content url="http://recodetech.files.wordpress.com/2014/05/2014-05-16t050126z_1_cbrea4f0dyu00_rtroptp_4_canada-e1400256036653.jpg" medium="image">
+			<media:title type="html">A Bitcoin sign is seen in a window in Toronto</media:title>
+		</media:content>
+
+		<media:content url="http://1.gravatar.com/avatar/df1f276f46b88c73b981bfc9b192286a?s=96&#38;d=identicon&#38;r=G" medium="image">
+			<media:title type="html">johnpaczkowski</media:title>
+		</media:content>
+	</item>
+		<item>
+		<title>Grocery Delivery Startup Instacart Raising $100 Million-Plus at $2 Billion Valuation</title>
+		<link>http://recode.net/2014/12/05/grocery-delivery-startup-instacart-raising-100-million-plus-at-2-billion-valuation/</link>
+		<comments>http://recode.net/2014/12/05/grocery-delivery-startup-instacart-raising-100-million-plus-at-2-billion-valuation/#comments</comments>
+		<pubDate>Sat, 06 Dec 2014 00:26:06 +0000</pubDate>
+		<dc:creator><![CDATA[Jason Del Rey]]></dc:creator>
+				<category><![CDATA[Commerce]]></category>
+		<category><![CDATA[General]]></category>
+		<category><![CDATA[funding]]></category>
+		<category><![CDATA[grocery delivery]]></category>
+		<category><![CDATA[same-day delivery]]></category>
+		<category><![CDATA[valuation]]></category>
+
+		<guid isPermaLink="false">http://recode.net/?p=106752</guid>
+		<description><![CDATA[Instacart is capitalizing on concerns among big grocery chains about Amazon.<img alt="" border="0" src="http://pixel.wp.com/b.gif?host=recode.net&#038;blog=61371898&#038;post=106752&#038;subd=recodetech&#038;ref=&#038;feed=1" width="1" height="1" />]]></description>
+				<content:encoded><![CDATA[<p><img src="http://recodetech.files.wordpress.com/2014/08/instacart-delivery-e1417823344684.jpg?w=640" class="attachment-large wp-post-image" alt="instacart-delivery" />
+<p class="credit right">Instacart</p>
+<p>Instacart, a grocery delivery startup that whisks orders from brick-and-mortar stores like Whole Foods to customer homes, is raising a $100 million-plus investment led by Kleiner Perkins Caufield &amp; Byers, according to an industry source. The investment, which has not yet closed, will value the San Francisco-based company at $2 billion, this person said.</p>
+<p>Previous investors, including Sequoia Capital and Andreessen Horowitz, are re-upping in this round. TechCrunch <a href="http://techcrunch.com/2014/12/05/instacart-2b-kleiner/" title="Instacart raising $100 million">first reported the deal.</a> </p>
+<p>The massive investment underscores rising interest among urban residents for same-day delivery of groceries. Instacart, led by CEO Apoorva Mehta, is capitalizing on concerns among big grocery chains about Amazon <a href="http://recode.net/2014/10/16/amazon-confirms-it-will-deliver-fresh-groceries-in-new-york-city/" title="Amazon grocery delivery comes to new york">expanding its grocery delivery business</a>. Instacart is also taking advantage of surging investor interest in the category, as the size of this valuation shows. Instacart&#8217;s momentum gives it a strong shot at becoming the big independent player in this space.</p><img alt="" border="0" src="http://pixel.wp.com/b.gif?host=recode.net&#038;blog=61371898&#038;post=106752&#038;subd=recodetech&#038;ref=&#038;feed=1" width="1" height="1" />]]></content:encoded>
+			<wfw:commentRss>http://recode.net/2014/12/05/grocery-delivery-startup-instacart-raising-100-million-plus-at-2-billion-valuation/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+	
+		<media:thumbnail url="http://recodetech.files.wordpress.com/2014/08/instacart-delivery-e1417823344684.jpg?w=200" />
+		<media:content url="http://recodetech.files.wordpress.com/2014/08/instacart-delivery-e1417823344684.jpg" medium="image">
+			<media:title type="html">instacart-delivery</media:title>
+		</media:content>
+
+		<media:content url="http://1.gravatar.com/avatar/71dc3afc9370c1555ca7775fc4bc0144?s=96&#38;d=identicon&#38;r=G" medium="image">
+			<media:title type="html">jasondelrey</media:title>
+		</media:content>
+	</item>
+		<item>
+		<title>Attackers Threaten Sony Pictures Employees</title>
+		<link>http://recode.net/2014/12/05/attackers-threaten-sony-pictures-employees/</link>
+		<comments>http://recode.net/2014/12/05/attackers-threaten-sony-pictures-employees/#comments</comments>
+		<pubDate>Sat, 06 Dec 2014 00:15:17 +0000</pubDate>
+		<dc:creator><![CDATA[Dawn Chmielewski and Arik Hesseldahl]]></dc:creator>
+				<category><![CDATA[General]]></category>
+		<category><![CDATA[hackers]]></category>
+		<category><![CDATA[hacking]]></category>
+		<category><![CDATA[North Korea]]></category>
+		<category><![CDATA[Sony hack]]></category>
+
+		<guid isPermaLink="false">http://recode.net/?p=106757</guid>
+		<description><![CDATA[If this communiqué is authenticated, then the intent of the hackers is clear: Destroy the studio.<img alt="" border="0" src="http://pixel.wp.com/b.gif?host=recode.net&#038;blog=61371898&#038;post=106757&#038;subd=recodetech&#038;ref=&#038;feed=1" width="1" height="1" />]]></description>
+				<content:encoded><![CDATA[<p><img src="http://recodetech.files.wordpress.com/2014/02/computer-hacker.jpg?w=640" class="attachment-large wp-post-image" alt="Computer hacker" />
+<p class="credit right">Gualtiero Boffi/Shutterstock</p>
+<p>The hacking attack against Sony Pictures Entertainment entered a new and potentially dangerous phase as someone claiming to be the leader of a hacking group threatened employees and their families in an email message.</p>
+<p>“What we have done is so far is only a small part of our further plan,” reads the message received by some Sony Pictures employees, and written in halting English. &#8220;Please sign your name to object the false of the company at the email address below if you don&#8217;t want to suffer damage. If you don&#8217;t, not only you but your family will be in danger.&#8221;</p>
+<p>Sony Pictures suffered one of the <a href="http://recode.net/2014/12/02/details-emerge-on-malware-used-in-sony-hacking-attack/">worst cyber attacks</a> in recent memory after intruders made off with 10 terabytes of internal information including salary, social security numbers, passwords, sales plans and <a href="http://recode.net/2014/11/30/sony-hackers-leaked-movies-to-file-sharing-sites/">four unreleased feature films.</a></p>
+<p>The author of the message claimed to be the leader of the Guardians of Peace, or GOP, the previously unknown group that claimed responsibility for the initial attack. “Many things beyond imagination will happen at many places in the world. … Our agents find themselves act in necessary places.”</p>
+<p>A Sony spokesperson issued a short statement: &#8220;We understand that some of our employees have received an email claiming to be from GOP. We are aware of the situation and are working with law enforcement.&#8221;</p>
+<p>The threatening message is the latest in a series of incidents that has unfolded since last Monday when attackers penetrated and crippled the corporate networks of Sony Pictures. Later, these documents were made available to the public on file-sharing sites around the world.</p>
+<p>While the source of the attacks has not been identified, an investigation carried out by security consultants working for Sony and by agents with the FBI has focused on the potential that someone working <a href="http://recode.net/2014/12/03/sony-to-officially-name-north-korea-as-source-of-hack-attack/">on behalf of North Korea</a> carried out the attack in reaction to a forthcoming movie that makes fun of that nation’s leader Kim Jong-Un. Other theories have included the potential that a disgruntled former employee may have been involved in the attack.</p>
+<p>The attack is in many ways unlike other hacking attacks against large corporations in recent memory, most of which have been rooted in a financial motive. This attack appears to be far more malicious.</p>
+<p>In this case, the hackers seem determined to simply wreak as much havoc and damage as possible. Among other objectives, the latest email included this phrase: &#8220;Removing Sony Pictures on earth.&#8221;</p><img alt="" border="0" src="http://pixel.wp.com/b.gif?host=recode.net&#038;blog=61371898&#038;post=106757&#038;subd=recodetech&#038;ref=&#038;feed=1" width="1" height="1" />]]></content:encoded>
+			<wfw:commentRss>http://recode.net/2014/12/05/attackers-threaten-sony-pictures-employees/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+	
+		<media:thumbnail url="http://recodetech.files.wordpress.com/2014/02/computer-hacker.jpg?w=200" />
+		<media:content url="http://recodetech.files.wordpress.com/2014/02/computer-hacker.jpg" medium="image">
+			<media:title type="html">Computer hacker</media:title>
+		</media:content>
+
+		<media:content url="http://2.gravatar.com/avatar/5fcf49b7d33e1aa85a28f2299d0fd96c?s=96&#38;d=identicon&#38;r=G" medium="image">
+			<media:title type="html">dawnchmielewski</media:title>
+		</media:content>
+	</item>
+		<item>
+		<title>Former Product VP Daniel Graf Leaves Twitter After Demotion</title>
+		<link>http://recode.net/2014/12/05/former-product-vp-daniel-graf-leaves-twitter-after-demotion/</link>
+		<comments>http://recode.net/2014/12/05/former-product-vp-daniel-graf-leaves-twitter-after-demotion/#comments</comments>
+		<pubDate>Fri, 05 Dec 2014 23:06:16 +0000</pubDate>
+		<dc:creator><![CDATA[Kurt Wagner]]></dc:creator>
+				<category><![CDATA[Social]]></category>
+		<category><![CDATA[Comings and Goings]]></category>
+		<category><![CDATA[product]]></category>
+
+		<guid isPermaLink="false">http://recode.net/?p=106739</guid>
+		<description><![CDATA[Graf announced his departure Friday on Twitter. <img alt="" border="0" src="http://pixel.wp.com/b.gif?host=recode.net&#038;blog=61371898&#038;post=106739&#038;subd=recodetech&#038;ref=&#038;feed=1" width="1" height="1" />]]></description>
+				<content:encoded><![CDATA[<p><img src="http://recodetech.files.wordpress.com/2014/12/daniel-graf-crop.jpg?w=471" class="attachment-large wp-post-image" alt="daniel-graf-crop" /></p>
+<p>Twitter&#8217;s former head of product Dainel Graf is leaving the company just one month after he was demoted. </p>
+<p>Graf announced his departure on Twitter Friday afternoon. He was hired to run Twitter&#8217;s product team in April after managing Google Maps, but was <a href="http://recode.net/2014/10/30/twitter-demotes-product-vp-after-only-six-months/">demoted in late October</a>. Graf was hired by Twitter COO Ali Rowghani <a href="http://recode.net/2014/06/12/twitter-coo-steps-down-from-job-on-twitter-but-stays-as-strategic-advisor/">who was pushed out</a> of the company over the summer after failing to spur the kind of growth expected by CEO Dick Costolo. </p>
+<p>Graf was demoted for similar reasons, according to people within the company, and was replaced by Twitter VP Kevin Weil. At the time, Graf was expected to work on Twitter&#8217;s geo-location products moving forward, but that plan has obviously changed. Twitter declined to comment, and Graf did not specify what he&#8217;ll be doing next.</p>
+<p>The departure is not a surprise given Graf&#8217;s change in responsibilities, but it&#8217;s yet another example of executive churn at Twitter, which has had a number of departures over the past year. Weil is the third product head at Twitter this year alone, with Graf and previous Product VP Michael Sippey both departing the company. </p>
+<div class="embed-twitter">
+<blockquote class="twitter-tweet" width="550">
+<p>Danke team, danke <a href="https://twitter.com/twitter">@Twitter</a>! May you succeed in your mission, society needs you!</p>
+<p>&mdash; Daniel Graf (@danielgraf) <a href="https://twitter.com/danielgraf/status/541004637801680896">December 5, 2014</a></p></blockquote>
+<p><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script></div><img alt="" border="0" src="http://pixel.wp.com/b.gif?host=recode.net&#038;blog=61371898&#038;post=106739&#038;subd=recodetech&#038;ref=&#038;feed=1" width="1" height="1" />]]></content:encoded>
+			<wfw:commentRss>http://recode.net/2014/12/05/former-product-vp-daniel-graf-leaves-twitter-after-demotion/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+	
+		<media:thumbnail url="http://recodetech.files.wordpress.com/2014/12/daniel-graf-crop.jpg?w=200" />
+		<media:content url="http://recodetech.files.wordpress.com/2014/12/daniel-graf-crop.jpg" medium="image">
+			<media:title type="html">daniel-graf-crop</media:title>
+		</media:content>
+
+		<media:content url="http://0.gravatar.com/avatar/f9db238d36e1350a735dcd76018de4d7?s=96&#38;d=identicon&#38;r=G" medium="image">
+			<media:title type="html">kurtwag88</media:title>
+		</media:content>
+	</item>
+		<item>
+		<title>Two Drinks With Redpoint Venture Capitalist Ryan Sarver at Alta, His New Bar</title>
+		<link>http://recode.net/2014/12/05/two-drinks-with-redpoint-vc-ryan-sarver-at-alta-his-new-bar/</link>
+		<comments>http://recode.net/2014/12/05/two-drinks-with-redpoint-vc-ryan-sarver-at-alta-his-new-bar/#comments</comments>
+		<pubDate>Fri, 05 Dec 2014 22:38:35 +0000</pubDate>
+		<dc:creator><![CDATA[Nellie Bowles]]></dc:creator>
+				<category><![CDATA[Culture]]></category>
+		<category><![CDATA[Alta]]></category>
+		<category><![CDATA[beard committee]]></category>
+		<category><![CDATA[OMGkids]]></category>
+		<category><![CDATA[tech dads]]></category>
+		<category><![CDATA[Two Drinks With]]></category>
+		<category><![CDATA[Valleywag]]></category>
+
+		<guid isPermaLink="false">http://recode.net/?p=106339</guid>
+		<description><![CDATA["Oh, I hate the word, I hate it, but ... there's <em>synergy</em> between restaurant culture and startup culture."<img alt="" border="0" src="http://pixel.wp.com/b.gif?host=recode.net&#038;blog=61371898&#038;post=106339&#038;subd=recodetech&#038;ref=&#038;feed=1" width="1" height="1" />]]></description>
+				<content:encoded><![CDATA[<p><img src="http://recodetech.files.wordpress.com/2014/12/two-drinks-with-ryan-sarver.jpg?w=640" class="attachment-large wp-post-image" alt="Ryan Sarver at Alta" />
+<p class="credit right">Nellie Bowles</p>
+<p><a href="https://recodetech.files.wordpress.com/2014/07/two-drinks-with.jpg"><img src="https://recodetech.files.wordpress.com/2014/07/two-drinks-with.jpg?w=380&#038;h=285" alt="two drinks with" width="380" height="285" class="alignright size-medium wp-image-69364" /></a></p>
+<p><em>I sat down for two drinks with Ryan Sarver &#8212; venture capitalist, hockey player and restaurateur &#8212; for a <strong>Re/code</strong> series called “Two Drinks With” (you can order kombucha, but I will judge you). Sarver, 34, talked about his dad-listserv OMGkids, feeling like a mob boss with his new restaurant, being excited for the new Valleywag, and being an investor in the kind of companies Valleywag skewers the hardest.</em></p>
+<hr />
+<p>Settling into his bar stool for a bit of day drinking at <a href="http://altaca.co">Alta</a> (his stool, because it&#8217;s actually his &#8212; he owns the place), Ryan Sarver rattled off everything that has happened this year (quitting Twitter, joining Redpoint, having a kid and starting the bar), and asked if we could make it <em>five</em> drinks. </p>
+<p>He ordered the &#8220;Fashions of 1796&#8221;: Rum, rye, mole and blood orange. I got the &#8220;Seasonal Great Pumpkin&#8221;: Bourbon, orange, cardamon and pumpkin.</p>
+<p>How&#8217;s he liking the new job?</p>
+<p>&#8220;Startups &#8212; you go through this roller coaster every week,&#8221; he said. &#8220;Venture has smaller highs and lows. Not the same endorphins. But I like it.&#8221;</p>
+<p>He continued: &#8220;I don&#8217;t think it&#8217;s for everybody. You need to be adventurous. You have to be ready for a lot of interesting flavors.&#8221;</p>
+<p>Wait, <em>what</em>?</p>
+<p>&#8220;The drink. The drink. A lot of flavors in the pumpkin,&#8221; he said.</p>
+<p>Sarver is discovering what mob bosses have long known: Owning part of a restaurant is a lot of fun. An early employee at Twitter who helped develop its API, Sarver is now a partner at Redpoint, leading investments in Silicon Valley classics: Photo-sharing and on-demand convenience (specifically, Memoir and LuxeValet). He and Alta have become something of a social center for San Francisco&#8217;s mid-Market Street tech community, which is booming with new companies, thanks to a very generous tax break from the mayor&#8217;s office. </p>
+<p>&#8220;Uber, Yammer, Square and Twitter are all here, and we&#8217;ve been the only restaurant in the neighborhood for a year,&#8221; he said. </p>
+<p>Alta&#8217;s neighborhood, the Tenderloin, is going through a well-documented shift with scores of new tech companies coming in, but most of the changes (the artisanal espresso and sushi and yoga classes) are hidden within the tech startups, behind security guards.</p>
+<p>The next era will usher in <a href="http://www.sfgate.com/bayarea/article/Plans-for-rising-Mid-Market-threaten-to-create-5882195.php">a fleet of new ground-floor</a> amenities. The luxury apartment building Nema is opening a restaurant. Twitter is opening a ground-floor market. Half a dozen hip hotels and new bars are trying to squeeze in. </p>
+<p>Our drinks came; mine in a silver goblet, his in a tumbler. Sarver continued talking about the difference between entrepreneurship and venture capital.</p>
+<p>&#8220;In entrepreneurship, you have to be a no-holds-barred optimist &#8212; dedicate 10 years to something everyone thinks is going to die,&#8221; he said. &#8220;I mean, look at Twitter! People were always saying it was about to die.&#8221;</p>
+<p>People are still saying that about Twitter, I added. He nodded, and we both took a drink.</p>
+<p>&#8220;In VC, you have to balance pessimism and optimism &#8212; you have to say, &#8216;This will change the world,'&#8221; he said. &#8220;But also know that nine out of 10 companies fail.&#8221;</p>
+<p>Which led to him talking about startups being so hot right now. He said he was excited for notorious satirist <a href="http://www.realdanlyons.com">Dan Lyons</a> to take over Valleywag, and asked if I had read Lyons in his previous gig as <a href="http://www.fakesteve.net">Fake Steve Jobs</a>. (I&#8217;m of course not old enough to have done so, but onward.) </p>
+<p>&#8220;Well, it was funny. Snark needs to exist!&#8221; Sarver said. &#8220;We all need to be critical of ourselves.&#8221;</p>
+<p>It was funny that he brought up that particular blog. Sarver&#8217;s investments are, actually, <em>exactly</em> the sort that Valleywag specializes in mocking and many others hand-wring over (&#8220;Why can&#8217;t tech solve <em>real</em> problems?&#8221; writers often ask). Serious minds bemoan the photo-sharing apps and convenience services like on-demand valet, in which a uniformed but non-union and certainly not insured contractor comes running out from the ether to park your car.</p>
+<p>&#8220;They take scooters, actually,&#8221; he said, referring to his portfolio company <a href="http://luxevalet.com">LuxeValet</a>. &#8220;No running.&#8221;</p>
+<p>Scooters. Of course they do. Ryan, you do realize that LuxeValet is why we can&#8217;t have nice things?</p>
+<p>&#8220;Maybe. But listen, Uber started with Garrett [Camp] coming out of a club and seeing all the black cars and wanting to take one home. It started silly, and now it will change the world,&#8221; he said. &#8220;People hate parking. It&#8217;s a big market.&#8221;</p>
+<p>God, maybe he&#8217;s right. We order another round of the same drinks. </p>
+<p>He said he has all his business meetings at his bar now. I said, of course he does, because he&#8217;s a mob boss. He joked that he&#8217;ll build a secret room in back, and that the best part of his new role is being able to off people. (Am I at risk?!)  </p>
+<p>&#8220;There&#8217;s also interesting &#8212; oh, I hate the word, I hate it, but &#8230; there&#8217;s <em>synergy</em> between restaurant culture and startup culture. Chef Daniel [Patterson] creates 12 courses, and you&#8217;d never expect those flavors together, and he also has to scale for the whole restaurant,&#8221; Sarver said. &#8220;Founders are very much the same &#8212; can we innovate, and can we execute, and can we scale?&#8221;</p>
+<p>The best part of the restaurant is that it gives him an excuse to meet people in other industries. </p>
+<p>&#8220;The downside to San Francisco is it&#8217;s a very homogenous world &#8212; we&#8217;ve all read the same seven books,&#8221; said Sarver, who lives in a modern condo in the upscale residential Noe Valley neighborhood. </p>
+<p>Sarver didn&#8217;t come from a particularly technical world. He grew up in Birmingham, Mich., playing hockey and working as a restaurant server and bartender, learning about the business from his uncle&#8217;s bar, The Landshark. His dad, a project manager at a heating, ventilation and air conditioning company, sold his motocross bike so he could buy the family&#8217;s first computer.</p>
+<p>Sarver started taking coding contracts in high school, dropped out of <a href="http://www.babson.edu/Pages/default.aspx">Babson</a> after one year, and joined the Boston tech community where he met his wife, Devon Biondi, who now works as a VP at Mashery. He started going to Burning Man (he&#8217;s gone five times), and officially moved to San Francisco five years ago, at age 29.</p>
+<p>His left hand was all stitched up along the palm. </p>
+<p>What happened? </p>
+<p>&#8220;Oh, don&#8217;t put it in &#8212; it&#8217;s embarrassing,&#8221; he said. &#8220;I caught a puck in my hand.&#8221;</p>
+<p>Were there no <em>gloves</em>? Sarver, who has been playing hockey since he was three years old, plays twice a week in the city&#8217;s Yerba Buena ice rink (without gloves?).</p>
+<p>Three of Sarver&#8217;s friends walked into the bar, and Sarver introduced them all to me (all technologists, two CTOs). </p>
+<p>&#8220;Oh, I see! It&#8217;s the beard committee!&#8221; he said to them in lieu of hello.</p>
+<p>They all had enormous beards, the kind that&#8217;s grown over years. They started talking about the latest emails on their tech-dads email list, called OMGkids.</p>
+<p>&#8220;We use [the listserv] to talk monitor specs,&#8221; said Sarver. &#8220;Baby monitors.&#8221;</p><img alt="" border="0" src="http://pixel.wp.com/b.gif?host=recode.net&#038;blog=61371898&#038;post=106339&#038;subd=recodetech&#038;ref=&#038;feed=1" width="1" height="1" />]]></content:encoded>
+			<wfw:commentRss>http://recode.net/2014/12/05/two-drinks-with-redpoint-vc-ryan-sarver-at-alta-his-new-bar/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+	
+		<media:thumbnail url="http://recodetech.files.wordpress.com/2014/12/two-drinks-with-ryan-sarver.jpg?w=200" />
+		<media:content url="http://recodetech.files.wordpress.com/2014/12/two-drinks-with-ryan-sarver.jpg" medium="image">
+			<media:title type="html">two-drinks-with-ryan-sarver</media:title>
+		</media:content>
+
+		<media:content url="http://0.gravatar.com/avatar/9336f4dcf034a62d54a379103d8c52bf?s=96&#38;d=identicon&#38;r=G" medium="image">
+			<media:title type="html">nelliebowles</media:title>
+		</media:content>
+
+		<media:content url="https://recodetech.files.wordpress.com/2014/07/two-drinks-with.jpg?w=380" medium="image">
+			<media:title type="html">two drinks with</media:title>
+		</media:content>
+	</item>
+		<item>
+		<title>Amazon&#8217;s Giant Mystery Box Is Back</title>
+		<link>http://recode.net/2014/12/05/amazons-giant-mystery-box-is-back/</link>
+		<comments>http://recode.net/2014/12/05/amazons-giant-mystery-box-is-back/#comments</comments>
+		<pubDate>Fri, 05 Dec 2014 21:34:25 +0000</pubDate>
+		<dc:creator><![CDATA[Jason Del Rey]]></dc:creator>
+				<category><![CDATA[Commerce]]></category>
+		<category><![CDATA[General]]></category>
+		<category><![CDATA[Reddit]]></category>
+
+		<guid isPermaLink="false">http://recode.net/?p=106699</guid>
+		<description><![CDATA[Special delivery!<img alt="" border="0" src="http://pixel.wp.com/b.gif?host=recode.net&#038;blog=61371898&#038;post=106699&#038;subd=recodetech&#038;ref=&#038;feed=1" width="1" height="1" />]]></description>
+				<content:encoded><![CDATA[<p><img src="http://recodetech.files.wordpress.com/2014/12/amazonmysteryboxinsf.jpg?w=640" class="attachment-large wp-post-image" alt="amazonmysteryboxinsf" />
+<p class="credit right">Arik Hesseldahl for Re/code</p>
+<p>What&#8217;s in the box, Amazon?</p>
+<p>Reddit went into a tizzy earlier this year <a title="Amazon giant box" href="http://recode.net/2014/01/07/amazon-confirms-that-the-giant-amazon-box-from-reddit-is-real/">when a giant Amazon box</a> was spotted on the back of a flatbed truck. Turned out the box held a Nissan car that was being delivered as part of an advertising deal the car maker did with Amazon.</p>
+<p>Guess what? The big box is back. This morning, a <strong>Re/code</strong> editor spotted the box shown in the photo above on the back of a truck in the SoMa neighborhood of San Francisco. On first look, it didn&#8217;t appear big enough to fit a car. I contacted Amazon to get some more information.</p>
+<p>An Amazon rep said it is not part of an advertising campaign like last time, but it is part of a &#8220;new program&#8221; that the company will unveil next week. Fifteen of these boxes are scattered around the U.S., he said.</p>
+<p>&#8220;We’re excited to be making 15 special deliveries next week as part of the holiday season,&#8221; the spokesperson said in an email. &#8220;Stay tuned.&#8221;</p><img alt="" border="0" src="http://pixel.wp.com/b.gif?host=recode.net&#038;blog=61371898&#038;post=106699&#038;subd=recodetech&#038;ref=&#038;feed=1" width="1" height="1" />]]></content:encoded>
+			<wfw:commentRss>http://recode.net/2014/12/05/amazons-giant-mystery-box-is-back/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+	
+		<media:thumbnail url="http://recodetech.files.wordpress.com/2014/12/amazonmysteryboxinsf.jpg?w=200" />
+		<media:content url="http://recodetech.files.wordpress.com/2014/12/amazonmysteryboxinsf.jpg" medium="image">
+			<media:title type="html">amazonmysteryboxinsf</media:title>
+		</media:content>
+
+		<media:content url="http://1.gravatar.com/avatar/71dc3afc9370c1555ca7775fc4bc0144?s=96&#38;d=identicon&#38;r=G" medium="image">
+			<media:title type="html">jasondelrey</media:title>
+		</media:content>
+	</item>
+		<item>
+		<title>If Other Tech Companies Did Diapers (Comic)</title>
+		<link>http://recode.net/2014/12/05/if-other-tech-companies-did-diapers-comic/</link>
+		<comments>http://recode.net/2014/12/05/if-other-tech-companies-did-diapers-comic/#comments</comments>
+		<pubDate>Fri, 05 Dec 2014 19:05:20 +0000</pubDate>
+		<dc:creator><![CDATA[Nitrozac & Snaggy]]></dc:creator>
+				<category><![CDATA[Commerce]]></category>
+		<category><![CDATA[Voices]]></category>
+		<category><![CDATA[delivery]]></category>
+		<category><![CDATA[diapers]]></category>
+
+		<guid isPermaLink="false">http://recode.net/?p=106684</guid>
+		<description><![CDATA[Here is the latest comic from our Joy of Tech friends at <a href="http://www.geekculture.com/joyoftech/">Geek Culture</a>, Nitrozac &#38; Snaggy.<img alt="" border="0" src="http://pixel.wp.com/b.gif?host=recode.net&#038;blog=61371898&#038;post=106684&#038;subd=recodetech&#038;ref=&#038;feed=1" width="1" height="1" />]]></description>
+				<content:encoded><![CDATA[<p><a href="https://recodetech.files.wordpress.com/2014/12/2079.jpg"><img src="https://recodetech.files.wordpress.com/2014/12/2079.jpg?w=640&#038;h=1157" alt="Joy of Tech diapers2" width="640" height="1157" class="alignnone size-full wp-image-106829" /></a></p><img alt="" border="0" src="http://pixel.wp.com/b.gif?host=recode.net&#038;blog=61371898&#038;post=106684&#038;subd=recodetech&#038;ref=&#038;feed=1" width="1" height="1" />]]></content:encoded>
+			<wfw:commentRss>http://recode.net/2014/12/05/if-other-tech-companies-did-diapers-comic/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+	
+		<media:thumbnail url="http://recodetech.files.wordpress.com/2014/12/unnamed-3.jpg?w=200" />
+		<media:content url="http://recodetech.files.wordpress.com/2014/12/unnamed-3.jpg" medium="image">
+			<media:title type="html">JoT diapers</media:title>
+		</media:content>
+
+		<media:content url="http://1.gravatar.com/avatar/7652000990d45c6b761ffdb0315de5d4?s=96&#38;d=identicon&#38;r=G" medium="image">
+			<media:title type="html">joebsf</media:title>
+		</media:content>
+
+		<media:content url="https://recodetech.files.wordpress.com/2014/12/2079.jpg" medium="image">
+			<media:title type="html">Joy of Tech diapers2</media:title>
+		</media:content>
+	</item>
+		<item>
+		<title>MetaMind Sets Out to Bring Deep Learning to the Rest of Us</title>
+		<link>http://recode.net/2014/12/05/metamind-sets-out-to-bring-deep-learning-to-the-rest-of-us/</link>
+		<comments>http://recode.net/2014/12/05/metamind-sets-out-to-bring-deep-learning-to-the-rest-of-us/#comments</comments>
+		<pubDate>Fri, 05 Dec 2014 15:00:30 +0000</pubDate>
+		<dc:creator><![CDATA[Liz Gannes]]></dc:creator>
+				<category><![CDATA[General]]></category>
+		<category><![CDATA[Science]]></category>
+		<category><![CDATA[artificial intelligence]]></category>
+		<category><![CDATA[deep learning]]></category>
+
+		<guid isPermaLink="false">http://recode.net/?p=106475</guid>
+		<description><![CDATA[Khosla Ventures and Marc Benioff are backing the four-month-old startup to the tune of $8 million.<img alt="" border="0" src="http://pixel.wp.com/b.gif?host=recode.net&#038;blog=61371898&#038;post=106475&#038;subd=recodetech&#038;ref=&#038;feed=1" width="1" height="1" />]]></description>
+				<content:encoded><![CDATA[<p><img src="http://recodetech.files.wordpress.com/2014/12/metamind.jpg?w=640" class="attachment-large wp-post-image" alt="MetaMind co-founder and CTO Richard Socher" /></p>
+<p>A tiny group of artificial intelligence researchers say they&#8217;ve built solutions that are better than or nearly as good as the reigning global standards for determining how semantically related words are, in which categories images belong and how to analyze sentiment. For example, they are just .8 percent behind the winner, Google, in this year&#8217;s ImageNet competition, where teams compete on a computer vision challenge. </p>
+<p>And all this only took them four months. </p>
+<p>In their spare time, they raised $8 million from Khosla Ventures and Salesforce CEO Marc Benioff to launch a new company, called <a href="http://www.metamind.io">MetaMind</a>.</p>
+<p>What&#8217;s powering these breakthroughs? A branch of AI called deep learning that has had a big impact on the technology industry the last couple years because it is so good at assessing and labeling huge amounts of data. There are only a few longtime established deep learning researchers in the world, and the most prominent ones have been snatched up from their academic posts by Google, Facebook and Baidu. </p>
+<p>Deep learning is not a novel technique, but it&#8217;s one that has recently been hugely successful for applications like image and speech recognition. And those things happen to be critically important products for big Internet companies.</p>
+<p>One of the next generation of deep learning experts is Richard Socher, co-founder and CTO of MetaMind. He just got his PhD from Stanford this year. Now he&#8217;s out to hire and train a whole bunch of people to think like him, with the hope they can make big advances in applications for deep learning that aren&#8217;t locked up with those big Internet companies. </p>
+<p>MetaMind will provide deep learning as a service to companies in industries like consumer goods, financial services and medicine. It wants to help radiologists identify cancer, insurers assess houses and nutritionists label food. </p>
+<p>&#8220;We call it &#8216;drag, drop and learn,'&#8221; said MetaMind CEO Sven Strohband, who joined the company from Khosla Ventures. &#8220;All you need is a Web browser, and you can use deep learning technology.&#8221;</p>
+<p>To that end, MetaMind has built some free Web apps that are open to the public. That includes a pre-built tool that will take in pictures of food and say what is on the plate. Or there&#8217;s another tool where, without writing any code, someone could develop an image recognition system that&#8217;s specifically trained to their friends&#8217; faces.</p>
+<p>To be sure, deep learning may have its moments, but it&#8217;s not the cure for every problem. Even Strohband would admit that. &#8220;We are trying to not be very abstract,&#8221; he said. &#8220;There are specific tasks, and we are trying to be the best in the world.&#8221;</p>
+<p>MetaMind so far has 10 employees. What are the raw ingredients for a good deep learning researcher? Math, programming and smarts, said Socher. </p><img alt="" border="0" src="http://pixel.wp.com/b.gif?host=recode.net&#038;blog=61371898&#038;post=106475&#038;subd=recodetech&#038;ref=&#038;feed=1" width="1" height="1" />]]></content:encoded>
+			<wfw:commentRss>http://recode.net/2014/12/05/metamind-sets-out-to-bring-deep-learning-to-the-rest-of-us/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+	
+		<media:thumbnail url="http://recodetech.files.wordpress.com/2014/12/metamind.jpg?w=200" />
+		<media:content url="http://recodetech.files.wordpress.com/2014/12/metamind.jpg" medium="image">
+			<media:title type="html">Richard Socher</media:title>
+		</media:content>
+
+		<media:content url="http://0.gravatar.com/avatar/ceb4ff0d8873ca5334220d9b8fec2df1?s=96&#38;d=identicon&#38;r=G" medium="image">
+			<media:title type="html">Liz Gannes</media:title>
+		</media:content>
+	</item>
+		<item>
+		<title>Microsoft Band Part One: Everyday Functions</title>
+		<link>http://recode.net/2014/12/05/microsoft-band-part-one-everyday-functions/</link>
+		<comments>http://recode.net/2014/12/05/microsoft-band-part-one-everyday-functions/#comments</comments>
+		<pubDate>Fri, 05 Dec 2014 14:00:44 +0000</pubDate>
+		<dc:creator><![CDATA[Katherine Boehret]]></dc:creator>
+				<category><![CDATA[General]]></category>
+		<category><![CDATA[Mobile]]></category>
+		<category><![CDATA[Reviews]]></category>
+		<category><![CDATA[Android]]></category>
+		<category><![CDATA[battery life]]></category>
+		<category><![CDATA[Bluetooth]]></category>
+		<category><![CDATA[Bluetooth LE]]></category>
+		<category><![CDATA[fashion]]></category>
+		<category><![CDATA[iOS]]></category>
+		<category><![CDATA[iPhone]]></category>
+		<category><![CDATA[Windows Phone]]></category>
+
+		<guid isPermaLink="false">http://recode.net/?p=106075</guid>
+		<description><![CDATA[In this first half of the review, Windows Phone's digital Tiles inhabit a rectangular wristband that works on its own or syncs to a phone.<img alt="" border="0" src="http://pixel.wp.com/b.gif?host=recode.net&#038;blog=61371898&#038;post=106075&#038;subd=recodetech&#038;ref=&#038;feed=1" width="1" height="1" />]]></description>
+				<content:encoded><![CDATA[<p><img src="http://recodetech.files.wordpress.com/2014/12/microsoft-band_lifestyle_f1.png?w=640" class="attachment-large wp-post-image" alt="microsoft-band_lifestyle_f1" />
+<p class="credit right">Microsoft</p>
+<p><em>This is the first part of my two-part review of the Microsoft Band, after I wore it nearly every day and for many nights over a month-long time period. In this part, I focus on how the device functions for ordinary things, like connecting with your smartphone to display notifications. The second review will focus more on the Band’s fitness-fanatic features.</em></p>
+<hr />
+<p>I know what you’re thinking: Another wrist thingy?</p>
+<p>You’re right: Wearable tech is a crowded space. Last month, Microsoft entered the ring with a device that it thinks can stand out from the crowd.</p>
+<p>The Microsoft Band is a $200 gadget that works on its own and gets more useful when connected to a nearby smartphone. It measures a variety of data points using its 10 sensors. And it syncs this data back to your profile in the Microsoft Health app. This Band has a leg up on competitors <a href="http://recode.net/2014/09/04/out-before-apple-can-motos-stylish-watch-win-fans/">like the Moto 360</a> or <a href="http://recode.net/2014/09/09/apple-unveils-the-apple-watch-its-wearable-device-for-communication-health-and-fitness/">Apple Watch </a>because, unlike them, it plays nice with iOS, Android and Windows Phone.</p>
+<iframe src="//player.theplatform.com/p/PhfuRC/vNP4WUiQeJFa/embed/select/r8u7j4puASh3?width=640&#038;height=360&#038;siteSectionId=recode_news_main_vod" height=360 width=640 frameBorder="0" seamless="seamless" allowFullScreen></iframe>
+<p>Its interface uses digital tiles that are like mini versions of the ones found on a Windows Phone. Several of these tiles have numbers that represent activity, like the number of new Facebook notifications I received. Two basic buttons &#8212; a Power button and an Action button &#8212; run alongside the Band’s screen, and its adjustable clasp helps to tweak the fit after buying it in <a href="http://www.microsoft.com/microsoft-band/en-us/sizing" target="_blank">one of three sizes</a>.</p>
+<p>As much as I liked the band’s good battery life and ability to connect to any of the three major operating systems, its look and feel are not where they should be for a device that’s meant to be on a wrist at all times.</p>
+<h3 class="red">What is it like to wear this thing?</h3>
+<p>There’s no easy way to say this: Wearing the Microsoft Band feels like being punished. Its stiff build and angular shape left me looking forward to taking it off. When I put my baby to sleep at night, it roughly dragged against his skin as I placed him in his crib. When I slept wearing the band to measure my sleep patterns, I couldn’t lie on my stomach with my hands under my pillow, because the Band felt like a rock. After a month of wear, I got a little more used to it, but I still didn’t like it.</p>
+<div id="attachment_106067" style="width: 390px" class="wp-caption alignleft"><a href="https://recodetech.files.wordpress.com/2014/12/microsoft-band_hero_2.png"><img class="size-medium wp-image-106067" src="https://recodetech.files.wordpress.com/2014/12/microsoft-band_hero_2.png?w=380&#038;h=275" alt="" width="380" height="275" /></a><p class="wp-caption-text"><span class="media-attribution">Microsoft</span></p></div>
+<p>While the Moto 360 has a stylish &#8212; albeit large &#8212; round face, and Apple’s forthcoming Apple Watch has a portrait-rectangular face that <a href="http://www.walmart.com/ip/Casio-Men-s-CA53W-1-Databank-Calculator-Water-Resistant-Digital-Wrist-Watch/33365606?sourceid=csesh01f224bcaef7194d528aa9bd5dda3be27e&amp;wmlspartner=shoppingcom&amp;affcmpid=1627787164&amp;tmode=0000&amp;bcfg=c60bd71e6460d164991940ae169c9556&amp;veh=cse" target="_blank">reminds me of a geeky calculator wristwatch</a>, the Microsoft Band has a thin, landscape-rectangular face. This shows comparably less data on the screen, and forced me to do a lot of swiping to navigate.</p>
+<p>On the upside, this smaller screen can give the Microsoft Band noticeably good battery life. The company estimates that its battery will last 48 hours, and I got that in several instances. At times, the battery died a little earlier. I noticed this when I used the Band in activity-measuring mode, measuring a run or other activity.</p>
+<p>The Microsoft Band can be worn with its screen on the outside or inside of your wrist. Unlike the Moto 360, which has a screen that conveniently wakes when you turn your wrist to glance at it, the Microsoft Band screen stays dark until you press its Power button. This meant I had to use two hands to do something as simple as checking the time, which got really annoying.</p>
+<p>This Band won’t win any fashion accolades. It only comes in one color, and my screen had a lot of scratches after a month. (For $10, you can buy a <a href="http://www.microsoftstore.com/store/msusa/en_US/pdp/ZAGG-invisibleSHIELD-Screen-Protector-for-Microsoft-Band/productID.309114400" target="_blank">Zagg screen protector</a> to put on your Microsoft Band for scratch protection.)</p>
+<h3 class="red">Put your phones away</h3>
+<p>If you can manage to put looks and comfort aside, the Microsoft Band gives you a more subtle way to interact with your phone.</p>
+<p><a href="https://recodetech.files.wordpress.com/2014/12/img_5425-e1417641772730.jpg"><img class="alignright size-medium wp-image-106063" src="https://recodetech.files.wordpress.com/2014/12/img_5425-e1417641772730.jpg?w=380&#038;h=285" alt="" width="380" height="285" /></a></p>
+<p>It connects to phones so that incoming notifications are displayed simultaneously on the Band’s screen. (IPhones connect via Bluetooth Low Energy, and Android and Windows Phones use traditional Bluetooth.) I tested my Band primarily using the iPhone, and saw notifications that normally appear on my lock screen &#8212; like incoming calls, text messages, emails and Facebook notifications &#8212; on my Band.</p>
+<p>This meant that rather than sitting down for lunch with an old friend and keeping my phone on the table, I put my phone away in my bag. Instead of playing with my son while keeping my phone handy as I waited for a work call, I could rely solely on the Microsoft Band to vibrate and tell me who was on the phone when the call came in.</p>
+<p>Some notifications, like longer emails and details about Facebook notifications, must be read on your phone, and the Band notification tells you to see your phone for more. And you can’t reply to these messages using iOS</p>
+<p>If your Band is connected to an Android or Windows Phone, you can only select canned text messages for your reply. With Windows Phone, you can also tap and hold the Action button until you see &#8220;Listen&#8221; on the screen, then say, &#8220;Send text to Joe,&#8221; or whoever, before speaking a new message. A Microsoft spokesman said future updates will enable more options for audio replies.</p>
+<p>On the downside, my iPhone and Microsoft Band lost their connection after a while. A Microsoft representative said this was a problem between iOS and Bluetooth Low Energy, and Microsoft has filed a bug with Apple, asking them to fix this. An Apple spokesperson had no comment. Meanwhile, users must go into Settings on their phones to reconnect the Band and iPhone.</p>
+<h3 class="red">Other perks to joining the Band</h3>
+<div id="attachment_106065" style="width: 224px" class="wp-caption alignleft"><a href="https://recodetech.files.wordpress.com/2014/12/img_54371.jpg"><img class="wp-image-106065 size-medium" src="https://recodetech.files.wordpress.com/2014/12/img_54371.jpg?w=214&#038;h=285" alt="" width="214" height="285" /></a><p class="wp-caption-text">Here&#8217;s how your wrist looks just before paying for something at Starbucks.</p></div>
+<p>I’ll focus on the Microsoft Band’s fitness-centric features next week, but several other built-in sensors also track your behavior. For example, sleep patterns are measured, including your varying levels of sleep, when you wake and how long it takes you to fall asleep. Curious about how much sun you’re getting? Ultraviolet rays can be measured using a U.V. sensor in the Band.</p>
+<p>If you frequent Starbucks, a special tile for the coffee shop can be added to your Band. After I set this up by entering my Starbucks card number, a bar code appeared on the Band so I could hold up my wrist at the store and buy a cake pop without a phone or wallet. But this didn’t integrate with my existing Starbucks iOS app.</p>
+<p>Tiles that show information about weather, calendar and other categories can be added to the Band, and these are helpful when you want a shortcut to information without pulling out your phone.</p>
+<p>If you&#8217;re curious about devices that double as fitness trackers and wrist computers that work with smartphones, the Microsoft Band is certainly capable. But its downsides and limitations are still too much of a drawback for the $200 price.</p><img alt="" border="0" src="http://pixel.wp.com/b.gif?host=recode.net&#038;blog=61371898&#038;post=106075&#038;subd=recodetech&#038;ref=&#038;feed=1" width="1" height="1" />]]></content:encoded>
+			<wfw:commentRss>http://recode.net/2014/12/05/microsoft-band-part-one-everyday-functions/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+	
+		<media:thumbnail url="http://recodetech.files.wordpress.com/2014/12/microsoft-band_lifestyle_f1.png?w=200" />
+		<media:content url="http://recodetech.files.wordpress.com/2014/12/microsoft-band_lifestyle_f1.png" medium="image">
+			<media:title type="html">microsoft-band_lifestyle_f1</media:title>
+		</media:content>
+
+		<media:content url="http://2.gravatar.com/avatar/e365f3278b6340003066a1ebfef04bb4?s=96&#38;d=identicon&#38;r=G" medium="image">
+			<media:title type="html">katieboehret</media:title>
+		</media:content>
+
+		<media:content url="https://recodetech.files.wordpress.com/2014/12/microsoft-band_hero_2.png?w=380" medium="image" />
+
+		<media:content url="https://recodetech.files.wordpress.com/2014/12/img_5425-e1417641772730.jpg?w=380" medium="image" />
+
+		<media:content url="https://recodetech.files.wordpress.com/2014/12/img_54371.jpg?w=214" medium="image" />
+	</item>
+		<item>
+		<title>Nintendo Always Avoids Catastrophe. This Time Might Be Different.</title>
+		<link>http://recode.net/2014/12/05/nintendo-always-avoids-catastrophe-this-time-might-be-different/</link>
+		<comments>http://recode.net/2014/12/05/nintendo-always-avoids-catastrophe-this-time-might-be-different/#comments</comments>
+		<pubDate>Fri, 05 Dec 2014 13:30:55 +0000</pubDate>
+		<dc:creator><![CDATA[Eric Johnson]]></dc:creator>
+				<category><![CDATA[Gaming]]></category>
+		<category><![CDATA[General]]></category>
+		<category><![CDATA[Mobile]]></category>
+		<category><![CDATA[Donkey Kong]]></category>
+		<category><![CDATA[Gamepad]]></category>
+		<category><![CDATA[Mario]]></category>
+		<category><![CDATA[Mario Kart]]></category>
+		<category><![CDATA[motion controls]]></category>
+		<category><![CDATA[PlayStation]]></category>
+		<category><![CDATA[Sega]]></category>
+		<category><![CDATA[Super Smash Bros.]]></category>
+		<category><![CDATA[Wii]]></category>
+		<category><![CDATA[Wii Sports]]></category>
+		<category><![CDATA[Wii U]]></category>
+		<category><![CDATA[Xbox]]></category>
+		<category><![CDATA[Zelda]]></category>
+
+		<guid isPermaLink="false">http://recode.net/?p=103510</guid>
+		<description><![CDATA[Nintendo has a knack for bouncing back from setbacks. But the modern gaming landscape is its toughest challenge yet.<img alt="" border="0" src="http://pixel.wp.com/b.gif?host=recode.net&#038;blog=61371898&#038;post=103510&#038;subd=recodetech&#038;ref=&#038;feed=1" width="1" height="1" />]]></description>
+				<content:encoded><![CDATA[<p><img src="http://recodetech.files.wordpress.com/2014/05/mario-kart-8-track.jpg?w=640" class="attachment-large wp-post-image" alt="mario-kart-8-track" />
+<p class="credit right">Nintendo / Mario Kart 8</p>
+<p><img class="alignright size-medium wp-image-105017" src="https://recodetech.files.wordpress.com/2014/11/blue-shell.jpg?w=285&#038;h=285" alt="" width="285" height="285" />In Mario Kart, comebacks are easy. The farther behind you are in the Nintendo racing videogame, the easier it is to pick up more powerful weapons like the Blue Shell, a <a href="https://www.youtube.com/watch?v=LFfga8-3SZI">homing missile</a> that will help you target and knock out the person in first place.</p>
+<p>If only the real world worked that way. The company behind iconic game characters Mario, Kirby, Pikachu and Donkey Kong now finds itself trailing the pack in an industry it helped create. Nintendo&#8217;s 2012 followup to its wildly popular Wii game system, the Wii U, failed to catch on with consumers. Critics blamed lackluster sales on miscalculations by Nintendo management and the company&#8217;s failure to anticipate the rise of games on smartphones, which would steal away a chunk of the Wii&#8217;s more casual players.</p>
+<p>So far, Nintendo has revealed no Blue Shell in its strategic arsenal. To the bafflement of critics, it has refused demands for significant change, time and again. It has insisted on staying the course &#8212; milking its valuable franchises, locking them to its own hardware and trying to invent new ways to play games.</p>
+<p>But for the first time in its 125-year history, Nintendo has reported <a href="http://www.nintendo.co.jp/ir/library/historical_data/pdf/consolidated_pl_e1403.pdf">three consecutive fiscal years</a> of operating losses. It&#8217;s not clear when a recovery will come.</p>
+			<div class="inner-related-article row module">
+				<hr />
+				<div class="medium-12 large-3 columns">
+					<span class="related-title">Related Article</span>
+				</div>
+				<div class="medium-12 large-9 columns">
+					<div class="row collapse secondary-bg">
+						<div class="small-5 large-3 columns">
+							<a href="http://recode.net/2014/11/05/nintendos-reggie-fils-aime-on-holiday-strategy-call-of-duty-and-mobile-games-qa/"  onClick="dataLayer.push({'event': 'GAEvent', 'eventCategory': 'Unknown: Related Article - Thumbnail', 'eventAction': 'Click', 'eventLabel': 'Nintendo&#8217;s Reggie Fils-Aime on Holiday Strategy, Call of Duty and Mobile Games (Q&amp;A)'});"><img src="http://recodetech.files.wordpress.com/2014/11/reggie-fils-aime.jpg?w=150&#038;h=150&#038;crop=1" width="150" height="150" alt="" /></a>
+						</div>
+						<div class="small-7 large-9 columns">
+							<h4 class="marker"><a href="http://recode.net/category/gaming/" title="Gaming">Gaming</a></h4>
+							<div class="featured-content">
+								<p class="title"><a href="http://recode.net/2014/11/05/nintendos-reggie-fils-aime-on-holiday-strategy-call-of-duty-and-mobile-games-qa/" title="Nintendo&#8217;s Reggie Fils-Aime on Holiday Strategy, Call of Duty and Mobile Games (Q&amp;A)"  onClick="dataLayer.push({'event': 'GAEvent', 'eventCategory': 'Unknown: Related Article - Headline', 'eventAction': 'Click', 'eventLabel': 'Nintendo&#8217;s Reggie Fils-Aime on Holiday Strategy, Call of Duty and Mobile Games (Q&amp;A)'});">Nintendo&#8217;s Reggie Fils-Aime on Holiday Strategy, Call of Duty and Mobile Games (Q&amp;A)</a></p>
+								<p class="author-date"><span class="author">By <a href="http://recode.net/author/eric-johnson/" title="Posts by Eric Johnson" class="url fn" rel="author">Eric Johnson</a></span>, <span class="date">Nov 5, 2014, 12:06 PM PST</span></p>
+							</div>
+						</div>
+					</div>
+				</div>
+				<hr />
+			</div>
+
+		
+<p>Second chances are rare in industries as competitive as gaming, and Nintendo has had at least three in the last three decades. But observers now question if sticking to the current game plan will put it on track to a fourth turnaround and help it avoid the fate of its one-time rival Sega, now a bit player in a war fought by giants.</p>
+<div id="attachment_103518" style="width: 629px" class="wp-caption aligncenter"><img class="size-large wp-image-103518" src="https://recodetech.files.wordpress.com/2014/11/nintendo-operating-profit1.png?w=619&#038;h=480" alt="" width="619" height="480" /><p class="wp-caption-text"><span class="media-attribution">Eric Johnson / Data source: Nintendo</span></p></div>
+<h2>Extra Life No. 1: Donkey Kong to the Rescue</h2>
+<div id="attachment_105020" style="width: 295px" class="wp-caption alignright"><a href="https://recodetech.files.wordpress.com/2014/11/radar-scope.jpg"><img class="size-medium wp-image-105020" src="https://recodetech.files.wordpress.com/2014/11/radar-scope.jpg?w=285&#038;h=285" alt="A restored Radar Scope &quot;cockpit.&quot;" width="285" height="285" /></a><p class="wp-caption-text"><span class="media-attribution">CoinOpSpace.com</span> A restored Radar Scope &#8220;cockpit&#8221;</p></div>
+<p>Near the employee cafeteria on the first floor of Nintendo&#8217;s American headquarters in Redmond, Wash., the company proudly displays some of its earliest arcade videogame hits. In front of this procession of arcade cabinets is one not-so-fondly remembered failure: A Space Invaders knock-off, Radar Scope, which was the first title worked on by now-legendary Nintendo game designer Shigeru Miyamoto.</p>
+<p>The game did fine in Japan at first, but an ambitious North American launch in 1980 was <a href="http://www.usgamer.net/articles/35-years-ago-nintendo-had-its-first-brush-with-video-game-disaster">disastrous</a>, with two-thirds of the cabinets shipped to the continent left unsold.</p>
+<p>Instead of wasting the cabinets, Nintendo of America founder Minoru Arakawa asked headquarters for a new game that could run on the same hardware. Nintendo ditched the cockpit-style hoods that discouraged arcade-goers from crowding around, and reintroduced the Radar Scope cabinets with a fresh coat of paint and a new piece of software: Donkey Kong.</p>
+<p>The launch of Donkey Kong was a watershed moment in videogame history, perhaps as significant as Pong is to the gaming canon. It was challenging and addictive, and one of the first games to have a story: A giant gorilla named Donkey Kong kidnaps the girlfriend of the player character, at first called Jumpman but later renamed Mario. Donkey Kong and its offshoots were also one of the game industry&#8217;s first franchises, long part of Hollywood&#8217;s playbook but new to the games business. Mario, of course, would go on to become Nintendo&#8217;s mascot, appearing in hundreds of games.</p>
+<p>Nintendo aimed to follow up on its hits at the arcade with a miniaturized effort in the living room.</p>
+<h2>Extra Life No. 2: When Videogame Consoles Were Retail Poison</h2>
+<div id="attachment_105736" style="width: 390px" class="wp-caption alignright"><a href="https://recodetech.files.wordpress.com/2014/12/famicom.jpg"><img class="size-medium wp-image-105736" src="https://recodetech.files.wordpress.com/2014/12/famicom.jpg?w=380&#038;h=196" alt="famicom" width="380" height="196" /></a><p class="wp-caption-text"><span class="media-attribution">CC BY-SA 3.0 Evan Amos</span></p></div>
+<p>The Famicom (short for &#8220;Family Computer&#8221;) enjoyed a strong launch in Japan in 1983, and two years later, Nintendo of America wanted to bring it stateside. At first, the company seemed poised for another Radar Scope debacle: Initial success in their native market, but major hurdles in the U.S. following the 1983 crash of the American videogame console market. Retailers thought the videogames business, led by Atari, was over.</p>
+<p>&#8220;Neither the consumer nor the retailer was interested in a videogame console,&#8221; said Gail Tilden, who for 24 years starting in 1983 was Nintendo&#8217;s vice president of brand management. &#8220;That’s why the Nintendo Entertainment System was called an &#8216;entertainment system.'&#8221;</p>
+<p><a href="https://recodetech.files.wordpress.com/2014/12/nes.jpg"><img class="alignright size-medium wp-image-105737" src="https://recodetech.files.wordpress.com/2014/12/nes.jpg?w=380&#038;h=206" alt="" width="380" height="206" /></a>The NES was effectively the same device as the Famicom, but with a different name, a different design and a &#8220;lockout chip&#8221; that made it harder to run unlicensed game cartridges, which had contributed to Atari&#8217;s downfall.</p>
+<p>The company convinced retailers to stock the NES by throwing in extra hardware, like the light gun, which made Duck Hunt possible, and R.O.B., a toy robot that helped kids play through a couple games. And thanks to games like the first Super Mario Bros., another breakthrough title, the NES was a hit.</p>
+<h2>The Console Wars Begin</h2>
+<p><a href="https://recodetech.files.wordpress.com/2014/11/nintendont.jpg"><img class="alignright size-medium wp-image-105022" src="https://recodetech.files.wordpress.com/2014/11/nintendont.jpg?w=380&#038;h=252" alt="" width="380" height="252" /></a>For the rest of the 1980s, Nintendo owned the living room, commanding <a href="https://recode.net/2014/07/30/marketers-reflect-on-sega-and-nintendos-console-war/">95 percent</a> of the American console market as it entered the next decade.</p>
+<p>Nintendo&#8217;s golden era was interrupted by Sega with the release of the Sega Genesis in 1989. <a href="http://smile.amazon.com/Console-Wars-Nintendo-Defined-Generation-ebook/dp/B00FJ379XE/ref=sr_1_1?ie=UTF8&amp;qid=1417565577&amp;sr=8-1&amp;keywords=console+wars">Console Wars</a> author Blake Harris said the key to the Genesis&#8217; success was its aggressive marketing, which emphasized more adult-themed games and the new console&#8217;s technical superiority, painting Nintendo as games for little kids.</p>
+<p><span class='embed-youtube' style='text-align:center; display: block;'><iframe class='youtube-player' type='text/html' width='640' height='390' src='http://www.youtube.com/embed/4YV5jV3olWI?version=3&#038;rel=1&#038;fs=1&#038;showsearch=0&#038;showinfo=1&#038;iv_load_policy=1&#038;wmode=transparent' frameborder='0' allowfullscreen='true'></iframe></span></p>
+<p>Sega made a huge dent in Nintendo&#8217;s market share, at one point capturing 55 percent of the U.S. But it lost its grip with poorly explained add-ons like the Sega CD.</p>
+<div id="attachment_105739" style="width: 390px" class="wp-caption alignright"><a href="https://recodetech.files.wordpress.com/2014/12/snes.jpg"><img class="size-medium wp-image-105739" src="https://recodetech.files.wordpress.com/2014/12/snes.jpg?w=380&#038;h=197" alt="snes" width="380" height="197" /></a><p class="wp-caption-text"><span class="media-attribution">CC BY-SA 3.0 Evan Amos</span></p></div>
+<p>&#8220;Sometimes, when a company is <em>the deal</em>, they don&#8217;t pay attention or don&#8217;t validate the capabilities of others,&#8221; former Nintendo of America vice president Perrin Kaplan said. &#8220;Sega was a light under the butt to stay focused.&#8221;</p>
+<p>Nintendo responded to the Genesis in 1991 with the Super NES, a more powerful console than the NES that featured some of the company&#8217;s most ambitious software, like Super Mario World and Donkey Kong Country.</p>
+<p>By the end of the console cycle in 1995, the Super NES had far outsold the Genesis, and Sega&#8217;s later consoles never matched The Super NES&#8217;s success. Nintendo&#8217;s competition, however, only got more intense with time.</p>
+<h2>The (First) Bad Years</h2>
+<p><a href="https://recodetech.files.wordpress.com/2014/12/n64.jpg"><img class="alignright size-medium wp-image-105740" src="https://recodetech.files.wordpress.com/2014/12/n64.jpg?w=380&#038;h=172" alt="" width="380" height="172" /></a>&#8220;I feel like there was some arrogance,&#8221; said a former high-level Nintendo engineer who asked not to be named. After a &#8220;great cycle with the SNES,&#8221; the engineer said, the company assumed it would have a smooth transition into its next home console, the Nintendo 64.</p>
+<p>Instead, it found itself ill-prepared to compete with another company it had once considered a partner, Sony. After talks with Nintendo to develop a CD drive add-on for the Super NES fell through, Sony built a rival console business, the PlayStation.</p>
+<p><a href="https://recodetech.files.wordpress.com/2014/12/ps1.jpg"><img class="alignright size-medium wp-image-105741" src="https://recodetech.files.wordpress.com/2014/12/ps1.jpg?w=380&#038;h=174" alt="" width="380" height="174" /></a>Nintendo initially scoffed at the PlayStation, the engineer said, and remained confident that third-party game developers who had shared in the profits of the Super NES would stay loyal.</p>
+<p>Big mistake. While Nintendo carried on with game cartridges in its next home console, the Nintendo 64, the PlayStation and its cheaper CDs were a better deal for developers; Sony offered better licensing terms, plus those CDs were faster to produce and could store far more data.</p>
+<p>Sony ultimately shipped <a href="http://web.archive.org/web/20110524023857/http://www.scei.co.jp/corporate/data/bizdataps_e.html">more than 100 million</a> PlayStations, about three times as many N64s as Nintendo sold. And that was just its first act.</p>
+<p><a href="https://recodetech.files.wordpress.com/2014/11/gamecube1.jpg"><img class="alignright size-medium wp-image-105027" src="https://recodetech.files.wordpress.com/2014/11/gamecube1.jpg?w=380&#038;h=213" alt="" width="380" height="213" /></a>The PlayStation 2 was an even bigger success, while Nintendo&#8217;s next effort was an even bigger dud. The Nintendo GameCube sold fewer than 22 million units, while new competitor Microsoft sold 24 million Xboxes and Sony moved more than 115 million PlayStation 2s.</p>
+<p>Now, Nintendo was not just beatable &#8212; it was in third place. Profits slipped from $1.4 billion (159 billion yen) in fiscal year 1993 to $520 million (65 billion yen) in 1997, but the company stayed in the black, and rebounded in the late &rsquo;90s as Pokémon, a hit series on its portable gaming device Game Boy, became a global phenomenon.</p>
+<p>This was a low point for its home console business &#8212; and also the foundation of its greatest high.</p>
+<h2>Extra Life No. 3: Wii Would Like to Play</h2>
+<p><a href="https://recodetech.files.wordpress.com/2014/12/wii.png"><img class="alignright size-medium wp-image-105744" src="https://recodetech.files.wordpress.com/2014/12/wii.png?w=285&#038;h=285" alt="" width="285" height="285" /></a>&#8220;I fell in love with it the minute I tried it in Japan,&#8221; Kaplan said of the first Wii. &#8220;I am a &#8216;snack gamer,&#8217; at best, but the second I started playing with it, it was over for me.&#8221;</p>
+<p>To the surprise of just about everyone outside of the company, the Wii (appropriately codenamed &#8220;Revolution&#8221;) succeeded where the Gamecube failed. Launched in late 2006, the Wii embodied the spirit of Nintendo&#8217;s counterintuitive innovation.</p>
+<p>Unlike everything up until the Wii, the new game system got game players to stand up from the couch to wave around a novel motion-based controller, imitating actions like swinging a tennis racket, golf club and baseball bat in games like Wii Sports. The controller came with a warning to wear the wrist strap or risk shattering your television screen, as <a href="https://www.youtube.com/watch?v=HAhIqX6lSCs">some consumers inevitably did</a>. Players of all ages, including a new market of casual gamers, bought in.</p>
+<p><span class='embed-youtube' style='text-align:center; display: block;'><iframe class='youtube-player' type='text/html' width='640' height='390' src='http://www.youtube.com/embed/0p7uJp25BlE?version=3&#038;rel=1&#038;fs=1&#038;showsearch=0&#038;showinfo=1&#038;iv_load_policy=1&#038;wmode=transparent' frameborder='0' allowfullscreen='true'></iframe></span></p>
+<p>This strategy led Nintendo to sales of 50.4 million Wiis between 2006 and 2008, and more than 100 million consoles to date, while Sony and Microsoft each ultimately sold about 80 million of their concurrent consoles.</p>
+<p>Dan Adelman, an eight-year Nintendo veteran who left in August, said Wii Sports was packed in with many Wii consoles for a reason.</p>
+<p>&#8220;Motion controls were a totally foreign concept,&#8221; Adelman said. &#8220;Sports games were chosen because people already knew the rules. A new type of gameplay paired with the new controls might have turned new users off, but the goal was to familiarize players with how motion controls worked.&#8221;</p>
+<p>Suddenly, Nintendo was no longer the console for kids. The Wii made Nintendo a trend-setter. Sony and Microsoft both tried to emulate its success with their own approaches to motion controls, the PlayStation Move and the Xbox Kinect.</p>
+<h2>Where Did Wii Go Wrong?</h2>
+<p><a href="https://recodetech.files.wordpress.com/2014/11/wii-u.jpg"><img class="alignright size-medium wp-image-105028" src="https://recodetech.files.wordpress.com/2014/11/wii-u.jpg?w=380&#038;h=247" alt="" width="380" height="247" /></a></p>
+<p>Meanwhile, Nintendo prepared for its second act: A new console, the Wii U, based around a tablet-like touchscreen controller called the GamePad. Thinking different had paid off, big time, in 2006 &#8212; why not again in 2012?</p>
+<p>One former Nintendo employee told <strong>Re/code</strong> he had heard the GamePad described as a &#8220;Fisher-Price iPad.&#8221; In its first two years, only 7.3 million Wii Us have been sold worldwide.</p>
+<p>Like the Wii, the Wii U was bundled with a collection of mini-games that highlighted the new technology, this time called Nintendo Land. But the games were less intuitive, the value of the GamePad was unclear and the console&#8217;s launch was marred by confusion over what, exactly, the Wii U was.</p>
+<p>&#8220;The great thing about the Wii was, family members, siblings or friends could play it,&#8221; Harris said. &#8220;It was a family atmosphere. But there’s only one [GamePad] tablet, and <a href="http://www.vg247.com/2014/06/19/dual-gamepad-wii-u-games-not-on-the-cards-right-now/">you can’t buy a second one</a>.&#8221;</p>
+<p>And Nintendo faced a bigger challenge than just bad marketing. Millions of the consumers who welcomed the Wii and its novel motion controls with open, flailing arms had moved on to an explosion of other gaming options.</p>
+<h2>Ch-ch-ch-changes</h2>
+<p><a href="https://recodetech.files.wordpress.com/2014/12/blue-ocean.jpg"><img class="alignright size-medium wp-image-105766" src="https://recodetech.files.wordpress.com/2014/12/blue-ocean.jpg?w=380&#038;h=228" alt="" width="380" height="228" /></a>In interviews with <strong>Re/code</strong>, multiple ex-Nintendo employees praised its &#8220;blue ocean&#8221; philosophy of trying to find new ways to play games that will reach as many people as possible. But casual gamers, who by definition are part of that broad target audience, are not the most loyal.</p>
+<p>&#8220;All those people who bought a Wii to play bowling, they&#8217;re not the people who need a new system every time it comes out,&#8221; Tilden said. &#8220;They would be happy to play the original Tetris on the Game Boy today. Even if the new hardware was similarly innovative and entertaining, it&#8217;s a hard sell.&#8221;</p>
+<p>By positioning itself as the gaming company for everyone, Nintendo was no longer competing against just Microsoft and Sony. It was now fighting all manner of distractions, from smartphones to online video streaming services. The original NES was called an &#8220;entertainment system&#8221; for marketing reasons, but now <em>everything</em> is an entertainment system.</p>
+<p>&#8220;Before Sega, they never really had any competition,&#8221; Kaplan said. &#8220;Today the competition is &#8216;soup du jour.&#8217; Consumers have a zillion options.&#8221;</p>
+<p><a href="https://recodetech.files.wordpress.com/2014/12/steam-logo.png"><img class="alignright size-medium wp-image-105029" src="https://recodetech.files.wordpress.com/2014/12/steam-logo.png?w=285&#038;h=285" alt="" width="285" height="285" /></a></p>
+<p>Less frequently discussed, but no less crucial, is the reality that game developers also have a zillion options. Adelman said that between the releases of the Wii and Wii U, &#8220;the indie [independent game] scene exploded in a big way,&#8221; with platforms like Valve&#8217;s PC gaming store Steam and app stores like iOS and Google Play dominating the discussion.</p>
+<p>&#8220;The conversation in the Wii days was, what kind of game would you want to make for this system?&#8221; Adelman said. &#8220;Now it&#8217;s, how could you make your game better for this system? Or would it be appropriate to port it to this system and make some modifications? Would it be worth it?&#8221;</p>
+<p>Electronic Arts, the second biggest game publisher by market value, has been MIA on the Wii U since March 2013, and even some longtime allies are backing off. Activision continues to make Wii U editions of its kid-friendly Skylanders series, but did not release this year&#8217;s Call of Duty on the system, a first for the series on consoles. Ubisoft delayed the Wii U version of its heavily-hyped game Watch Dogs from May, when it launched on all other platforms, to November, and did not release this year&#8217;s new Far Cry or Assassins Creed games on the console at all.</p>
+<h2>What Now?</h2>
+<p><img class="alignright size-medium wp-image-105031" src="https://recodetech.files.wordpress.com/2014/12/question.png?w=286&#038;h=285" alt="" width="286" height="285" /></p>
+<p>&#8220;For the first time in my career, I just don’t know what Nintendo does next,&#8221; said Casey Pelkey, who worked at Nintendo for 18 years as its marketing business director. &#8220;But you could say the same for Microsoft and Sony.&#8221;</p>
+<p>The difference, though, is that Microsoft and Sony are <a href="http://recode.net/2014/03/12/no-the-console-market-is-not-in-crisis-not-yet-anyway/">dealing with the new gaming landscape</a> fine, at least for now. Each has sold more consoles in a year than Nintendo did in two. And the top third-party developers that have abandoned Nintendo continue to pump out big budget games for other consoles.</p>
+<p>That means Nintendo has to rely on its own franchises, like Mario Kart and Super Smash Bros., to get its own numbers up and hopefully attract outside developers once again.</p>
+<p>&#8220;In the end, what third-party companies want is a large install base to sell their games into [and] a wide demographic footprint that they can target their games to,&#8221; Nintendo of America president Reggie Fils-Aime said in a <a href="http://recode.net/2014/11/05/nintendos-reggie-fils-aime-on-holiday-strategy-call-of-duty-and-mobile-games-qa/">recent Q&amp;A</a> with <strong>Re/code</strong>. &#8220;[For] the Wii U business, year-to-date versus last year, our install base is almost doubled.&#8221;</p>
+<p>Maybe, but it&#8217;s not enough. For a publisher deciding where to commit resources, Sony&#8217;s 13.5 million unit sales and Microsoft&#8217;s 10 million units shipped to stores are the obvious choice over 8 million on the Wii U, developing for which requires dealing with unique and less powerful hardware.</p>
+<p>The ex-Nintendo employees interviewed for this story all agreed that Nintendo&#8217;s own characters still have cultural currency. Kaplan said she believes the Wii U would have been a hit if it had launched with Super Smash Bros., which debuted last month and quickly became the <a href="http://www.cnet.com/news/super-smash-bros-becomes-fastest-selling-wii-u-game-ever/">fastest-selling</a> game on the console.</p>
+<p>Tilden, who now consults on branding strategy for other IP like My Little Pony, said she constantly sees people dressed as Nintendo characters at fan conventions.</p>
+<p>&#8220;Mario is probably more broadly appealing at this moment than Mickey,&#8221; Tilden said. &#8220;I go to every con. Nintendo’s characters, Mario and Zelda particularly, you don’t see anything as much as you see that.&#8221;</p>
+<p>However, she acknowledged that the children of the iPad generation are &#8220;probably not being exposed&#8221; to those characters as much today as they once were.</p>
+<p>By Nintendo&#8217;s admission, its future revolves around the popularity of its characters, which live only on its hardware. But unless it can convince more people to buy that hardware in the first place, or take those characters to other devices, new generations of gamers will never know Mario, or Link, or Donkey Kong.</p><img alt="" border="0" src="http://pixel.wp.com/b.gif?host=recode.net&#038;blog=61371898&#038;post=103510&#038;subd=recodetech&#038;ref=&#038;feed=1" width="1" height="1" />]]></content:encoded>
+			<wfw:commentRss>http://recode.net/2014/12/05/nintendo-always-avoids-catastrophe-this-time-might-be-different/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+	
+		<media:thumbnail url="http://recodetech.files.wordpress.com/2014/05/mario-kart-8-track.jpg?w=200" />
+		<media:content url="http://recodetech.files.wordpress.com/2014/05/mario-kart-8-track.jpg" medium="image">
+			<media:title type="html">mario-kart-8-track</media:title>
+		</media:content>
+
+		<media:content url="http://0.gravatar.com/avatar/90aa501837d87b78fee71d06e122c6f5?s=96&#38;d=identicon&#38;r=G" medium="image">
+			<media:title type="html">heyheyesj</media:title>
+		</media:content>
+
+		<media:content url="https://recodetech.files.wordpress.com/2014/11/blue-shell.jpg?w=285" medium="image" />
+
+		<media:content url="https://recodetech.files.wordpress.com/2014/11/nintendo-operating-profit1.png?w=619" medium="image" />
+
+		<media:content url="https://recodetech.files.wordpress.com/2014/11/radar-scope.jpg?w=285" medium="image">
+			<media:title type="html">A restored Radar Scope &#34;cockpit.&#34;</media:title>
+		</media:content>
+
+		<media:content url="https://recodetech.files.wordpress.com/2014/12/famicom.jpg?w=380" medium="image">
+			<media:title type="html">famicom</media:title>
+		</media:content>
+
+		<media:content url="https://recodetech.files.wordpress.com/2014/12/nes.jpg?w=380" medium="image" />
+
+		<media:content url="https://recodetech.files.wordpress.com/2014/11/nintendont.jpg?w=380" medium="image" />
+
+		<media:content url="https://recodetech.files.wordpress.com/2014/12/snes.jpg?w=380" medium="image">
+			<media:title type="html">snes</media:title>
+		</media:content>
+
+		<media:content url="https://recodetech.files.wordpress.com/2014/12/n64.jpg?w=380" medium="image" />
+
+		<media:content url="https://recodetech.files.wordpress.com/2014/12/ps1.jpg?w=380" medium="image" />
+
+		<media:content url="https://recodetech.files.wordpress.com/2014/11/gamecube1.jpg?w=380" medium="image" />
+
+		<media:content url="https://recodetech.files.wordpress.com/2014/12/wii.png?w=285" medium="image" />
+
+		<media:content url="https://recodetech.files.wordpress.com/2014/11/wii-u.jpg?w=380" medium="image" />
+
+		<media:content url="https://recodetech.files.wordpress.com/2014/12/blue-ocean.jpg?w=380" medium="image" />
+
+		<media:content url="https://recodetech.files.wordpress.com/2014/12/steam-logo.png?w=285" medium="image" />
+
+		<media:content url="https://recodetech.files.wordpress.com/2014/12/question.png?w=286" medium="image" />
+	</item>
+		<item>
+		<title>Code/Media SF in Three Minutes (Video)</title>
+		<link>http://recode.net/2014/12/05/codemedia-sf-in-three-minutes-video/</link>
+		<comments>http://recode.net/2014/12/05/codemedia-sf-in-three-minutes-video/#comments</comments>
+		<pubDate>Fri, 05 Dec 2014 13:00:37 +0000</pubDate>
+		<dc:creator><![CDATA[Lauren Goode]]></dc:creator>
+				<category><![CDATA[General]]></category>
+		<category><![CDATA[Media]]></category>
+		<category><![CDATA[code media]]></category>
+		<category><![CDATA[Code Media SF]]></category>
+		<category><![CDATA[Fullscreen]]></category>
+		<category><![CDATA[media]]></category>
+		<category><![CDATA[online]]></category>
+		<category><![CDATA[social media]]></category>
+		<category><![CDATA[Twitter]]></category>
+		<category><![CDATA[Vox]]></category>
+
+		<guid isPermaLink="false">http://recode.net/?p=106622</guid>
+		<description><![CDATA[The smartest minds in digital media joined us for a lively conversation Thursday night in San Francisco. Here are some of the don't-miss moments.<img alt="" border="0" src="http://pixel.wp.com/b.gif?host=recode.net&#038;blog=61371898&#038;post=106622&#038;subd=recodetech&#038;ref=&#038;feed=1" width="1" height="1" />]]></description>
+				<content:encoded><![CDATA[<p><img src="http://recodetech.files.wordpress.com/2014/12/codemediasanfranciscojimbankoff-1999.jpg?w=640" class="attachment-large wp-post-image" alt="Jim Bankoff" />
+<p class="credit right">Vjeran Pavic for Re/code</p>
+<p>Is Twitter a distraction &#8212; or a companion &#8212; to live TV shows?</p>
+<p>How is Fullscreen &#8212; one of YouTube&#8217;s largest content creators &#8212; targeting the &#8220;M&#8221; crowd (millennials)?</p>
+<p>And how is Vox.com using a combination of human creativity and technology to efficiently produce quality content &#8212; even if it is about farts?</p>
+<p>Some of the smartest minds in digital media &#8212; Twitter&#8217;s Katie Jacobs Stanton, Fullscreen&#8217;s George Strompolos and Vox&#8217;s Jim Bankoff &#8212; joined us for a lively conversation Thursday night at <a href="http://recode.net/event-coverage/codemedia-series-san-francisco/"><strong>Code/Media: San Francisco</strong></a>. Here are some of the don&#8217;t-miss moments:</p>
+<iframe src="//player.theplatform.com/p/PhfuRC/vNP4WUiQeJFa/embed/select/xeDXDRGZAxut?width=640&#038;height=360&#038;autoPlay=true&#038;siteSectionId=recode_news_main_vod" height=360 width=640 frameBorder="0" seamless="seamless" allowFullScreen></iframe>
+<blockquote class="previously">
+<h3>More From Code/Media: San Francisco</h3>
+<ul class="display-posts-listing">
+<li class="listing-item"><a class="title" href="http://recode.net/2014/12/05/codemedia-sf-in-three-minutes-video/">Code/Media SF in Three Minutes (Video)</a></li>
+<li class="listing-item"><a class="title" href="http://recode.net/2014/12/04/jim-bankoff-says-vox-media-is-content-publisher-for-a-new-generation/">Jim Bankoff Says Vox Media Is Content Publisher for a New Generation</a></li>
+<li class="listing-item"><a class="title" href="http://recode.net/2014/12/04/fullscreen-ceo-george-strompolos-on-premium-content-and-making-viewers-pay/">Fullscreen CEO George Strompolos on Premium Content and Making Viewers Pay</a></li>
+<li class="listing-item"><a class="title" href="http://recode.net/2014/12/04/twitter-to-media-companies-we-come-in-peace/">Twitter to Media Companies: We Come in Peace</a></li>
+<li class="listing-item"><a class="title" href="http://recode.net/2014/12/04/internet-stardom-has-its-own-rules-says-fullscreen-ceo-george-strompolos/">Internet Stardom Has Its Own Rules, Says Fullscreen CEO George Strompolos</a></li>
+</ul>
+</blockquote><img alt="" border="0" src="http://pixel.wp.com/b.gif?host=recode.net&#038;blog=61371898&#038;post=106622&#038;subd=recodetech&#038;ref=&#038;feed=1" width="1" height="1" />]]></content:encoded>
+			<wfw:commentRss>http://recode.net/2014/12/05/codemedia-sf-in-three-minutes-video/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+	
+		<media:thumbnail url="http://recodetech.files.wordpress.com/2014/12/codemediasanfranciscojimbankoff-1999.jpg?w=200" />
+		<media:content url="http://recodetech.files.wordpress.com/2014/12/codemediasanfranciscojimbankoff-1999.jpg" medium="image">
+			<media:title type="html">Jim Bankoff</media:title>
+		</media:content>
+
+		<media:content url="http://0.gravatar.com/avatar/630cc471a9cad5e872ea570bfa72a32c?s=96&#38;d=identicon&#38;r=G" medium="image">
+			<media:title type="html">laurengoode</media:title>
+		</media:content>
+	</item>
+		<item>
+		<title>California Ex-Governor Further Debases Self, the Fall of Gamergate HQ and More #Mustreads</title>
+		<link>http://recode.net/2014/12/05/california-ex-governor-further-debases-self-the-fall-of-gamergate-hq-and-more-mustreads/</link>
+		<comments>http://recode.net/2014/12/05/california-ex-governor-further-debases-self-the-fall-of-gamergate-hq-and-more-mustreads/#comments</comments>
+		<pubDate>Fri, 05 Dec 2014 11:00:43 +0000</pubDate>
+		<dc:creator><![CDATA[Noah Kulwin]]></dc:creator>
+				<category><![CDATA[Gaming]]></category>
+		<category><![CDATA[General]]></category>
+		<category><![CDATA[Media]]></category>
+		<category><![CDATA[Mobile]]></category>
+		<category><![CDATA[8chan]]></category>
+		<category><![CDATA[Cat Fancy]]></category>
+		<category><![CDATA[dark social]]></category>
+		<category><![CDATA[Dog Fancy]]></category>
+		<category><![CDATA[Gamergate]]></category>
+		<category><![CDATA[mustreads]]></category>
+		<category><![CDATA[Re/code Daily]]></category>
+
+		<guid isPermaLink="false">http://recode.net/?p=106461</guid>
+		<description><![CDATA[Also, "dark social" goes mobile.<img alt="" border="0" src="http://pixel.wp.com/b.gif?host=recode.net&#038;blog=61371898&#038;post=106461&#038;subd=recodetech&#038;ref=&#038;feed=1" width="1" height="1" />]]></description>
+				<content:encoded><![CDATA[<p><img src="http://recodetech.files.wordpress.com/2014/12/7588441406_db8e555bf4_k.jpg?w=640" class="attachment-large wp-post-image" alt="Former governor and rehabilitated action star Arnold Schwarzenegger." />
+<p class="credit right">Gage Skidmore via Flickr</p>
+<p>Hi!</p>
+<p>First, some housekeeping news. This will be the last #mustreads post, as I&#8217;ll be switching to writing up a morning email newsletter for <strong>Re/code</strong> instead. You can subscribe to the &#8220;beta&#8221; version, called <strong>Re/code Daily</strong>, <a href="http://recode.net/newsletters/subscribe/">here</a>. With the newsletter, you&#8217;ll be able to get your fix of Internet errata as well as the biggest stories in tech. You should expect to see the new and improved version in a couple weeks.</p>
+<p>Now, onto the links:</p>
+<ol class="linespace-one">
+<li>Arnold Schwarzenegger has returned for another &#8220;Terminator&#8221; movie. Here&#8217;s the <a href="https://www.youtube.com/watch?v=62E4FJTwSuc">trailer for &#8220;Terminator Genisys.&#8221;</a> The trailer is kind of strange: There are lots of insane-looking stunts and fresh faces. (Hello, Emilia Clarke from &#8220;Game of Thrones!&#8221;) It&#8217;s also tonally identical to the earlier &#8220;Terminator&#8221; movies, and it has Arnold Schwarzenegger. And who says Hollywood&#8217;s running out of new ideas?</li>
+<li>8chan, the social news board that took the place of 4chan as the center of Gamergate, has fallen prey to a harassment tactic it knows all too well &#8212; a horde of trolls posting so many graphic images that it effectively shut down the site. <a href="http://www.buzzfeed.com/josephbernstein/gamergates-headquarters-has-been-destroyed-by-trolls">BuzzFeed has more</a>.</li>
+<li><a href="http://www.theatlantic.com/technology/archive/2012/10/dark-social-we-have-the-whole-history-of-the-web-wrong/263523/">Previously for the Atlantic</a>, Alexis Madrigal wrote about the phenomenon of &#8220;dark social&#8221; &#8212; unidentifiable means by which visitors arrived at a website, confusing people keeping track of page views. Now he has followed up that story <a href="http://fusion.net/story/31450/dark-social-traffic-in-the-mobile-app-era/">with one at Fusion</a> about mobile &#8220;dark social&#8221; traffic and the entirely new set of questions and challenges it poses.</li>
+<li>A truck full of copies of the New York Times crashed yesterday, giving us <a href="http://gothamist.com/2014/12/04/ny_times_truck_crash.php">this perfect Gothamist headline</a>: &#8220;Overturned NY Times Truck Spills Metaphor All Over Highway.&#8221;</li>
+<li>In an off-the-record <a href="http://nymag.com/daily/intelligencer/2014/12/qa-an-nypd-officers-real-talk-on-garner-case.html">&#8220;real talk&#8221;-style conversation with New York magazine</a>, a New York Police Department officer gives a new angle on the Eric Garner story: He attributes the death of Garner (who was choked to death by an NYPD officer in Staten Island in July) to an institutional culture that began with Ray Kelly.</li>
+</ol>
+<p>Even though we&#8217;re stopping #mustreads, feel free to pester me with anything you think we should be linking to or writing about at <a href="mailto:noah.kulwin@recode.net">noah@recode.net</a>.</p><img alt="" border="0" src="http://pixel.wp.com/b.gif?host=recode.net&#038;blog=61371898&#038;post=106461&#038;subd=recodetech&#038;ref=&#038;feed=1" width="1" height="1" />]]></content:encoded>
+			<wfw:commentRss>http://recode.net/2014/12/05/california-ex-governor-further-debases-self-the-fall-of-gamergate-hq-and-more-mustreads/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+	
+		<media:thumbnail url="http://recodetech.files.wordpress.com/2014/12/7588441406_db8e555bf4_k.jpg?w=200" />
+		<media:content url="http://recodetech.files.wordpress.com/2014/12/7588441406_db8e555bf4_k.jpg" medium="image">
+			<media:title type="html">schwarzenegger</media:title>
+		</media:content>
+
+		<media:content url="http://0.gravatar.com/avatar/02b8d91f1c27f75686829b5082598352?s=96&#38;d=identicon&#38;r=G" medium="image">
+			<media:title type="html">nkulwin</media:title>
+		</media:content>
+	</item>
+		<item>
+		<title>Jim Bankoff Says Vox Media Is Content Publisher for a New Generation</title>
+		<link>http://recode.net/2014/12/04/jim-bankoff-says-vox-media-is-content-publisher-for-a-new-generation/</link>
+		<comments>http://recode.net/2014/12/04/jim-bankoff-says-vox-media-is-content-publisher-for-a-new-generation/#comments</comments>
+		<pubDate>Fri, 05 Dec 2014 04:27:37 +0000</pubDate>
+		<dc:creator><![CDATA[Edmund Lee]]></dc:creator>
+				<category><![CDATA[Gaming]]></category>
+		<category><![CDATA[Media]]></category>
+		<category><![CDATA[Code Media SF]]></category>
+
+		<guid isPermaLink="false">http://recode.net/?p=106386</guid>
+		<description><![CDATA["There are companies that have been built on lists," Bankoff said, but he didn't name any names.<img alt="" border="0" src="http://pixel.wp.com/b.gif?host=recode.net&#038;blog=61371898&#038;post=106386&#038;subd=recodetech&#038;ref=&#038;feed=1" width="1" height="1" />]]></description>
+				<content:encoded><![CDATA[<p><img src="http://recodetech.files.wordpress.com/2014/12/codemediasanfrancisco-1991.jpg?w=640" class="attachment-large wp-post-image" alt="Jim Bankoff" />
+<p class="credit right">Vjeran Pavic for Re/code</p>
+<p>Jim Bankoff, CEO of Vox Media, believes his company will become a dominant digital publisher the way Time Inc. or Conde Nast once ruled print media.</p>
+<p>&#8220;New audiences &#8212; with every generation &#8212; migrate to new brands &#8212; old media is giving way to new,&#8221; he said at the <strong>Code/Media</strong> event in San Francisco today. &#8220;It happened in print, and it&#8217;s happening in video as well.&#8221;</p>
+<p>Vox, publisher of high-profile sites including the Verge, SB Nation and Vox.com, just <a href="http://recode.net/2014/11/30/yet-another-big-funding-round-for-a-big-web-publisher-this-time-for-vox-media/">raised $46.5 million</a> in funding, which values the company at about $380 million. For some context, that&#8217;s a decent chunk more than the $250 million Amazon CEO Jeff Bezos paid for the Washington Post last year, but only half of the $850 million that BuzzFeed is currently worth &#8212; even though both digital publishers claim about 150 million monthly readers.</p>
+<p>&#8220;There are companies that have been built on lists,&#8221; Bankoff said of the slate of new publishers that have cropped up in the last few years, without naming a specific site. &#8220;When you&#8217;re a company that&#8217;s all lists, or all slideshows, or all quizzes, then that&#8217;s a problem because you&#8217;re trying to game something.&#8221;</p>
+<p>All the same, investors are now pouring money into Web publishers. This year, Business Insider raised a <a href="http://recode.net/2014/03/05/business-insider-raises-12-million-from-jeff-bezos-and-other-investors/">$12 million round</a>, which was led by Bezos, and BuzzFeed grabbed <a href="http://recode.net/2014/08/10/andreessen-horowitz-invests-50-million-in-buzzfeed/">$50 million</a> from Andreessen Horowitz.</p>
+<p>Bankoff has so far raised $110 million in the last six years, and he has spent a lot of his cash buying and building new businesses, including the Curbed Network and the splashy launch of Vox, run by the Washington Post’s Ezra Klein.</p>
+<p>Vox.com&#8217;s main draw is how Klein and his crew grok reams of data, making sense of complicated issues in ways that are easily digestible for online readers, an editorial style that Bankoff sees as fundamental to his sites.</p>
+<p>&#8220;Vox.com is the fastest growing Web brand of 2014,&#8221; he boasted, adding the site has grown because of the company&#8217;s clever use of both its writers and the technology it has developed. &#8220;Our content platform is less about the 1s and 0s and more about workflow &#8212; working with developers and designers in how you tell a better story online. It&#8217;s different from TV or print.&#8221;</p>
+<p>This year, Bankoff says the new money will allow him to add more video content and to build out his company&#8217;s native advertising division, which produces content for advertisers. </p>
+<p>Observers have suggested the company is likely burning through lots of cash given its staff of 350, but Bankoff had previously said the company expects to become profitable next year.</p>
+<p>&#8220;There will always be an important role for professional storytellers and professional journalists,&#8221; he said. &#8220;There are changes going on in media, but that doesn&#8217;t mean that demand will go away.&#8221;</p>
+<blockquote class="previously">
+<h3>More From Code/Media: San Francisco</h3>
+<ul class="display-posts-listing">
+<li class="listing-item"><a class="title" href="http://recode.net/2014/12/05/codemedia-sf-in-three-minutes-video/">Code/Media SF in Three Minutes (Video)</a></li>
+<li class="listing-item"><a class="title" href="http://recode.net/2014/12/04/jim-bankoff-says-vox-media-is-content-publisher-for-a-new-generation/">Jim Bankoff Says Vox Media Is Content Publisher for a New Generation</a></li>
+<li class="listing-item"><a class="title" href="http://recode.net/2014/12/04/fullscreen-ceo-george-strompolos-on-premium-content-and-making-viewers-pay/">Fullscreen CEO George Strompolos on Premium Content and Making Viewers Pay</a></li>
+<li class="listing-item"><a class="title" href="http://recode.net/2014/12/04/twitter-to-media-companies-we-come-in-peace/">Twitter to Media Companies: We Come in Peace</a></li>
+<li class="listing-item"><a class="title" href="http://recode.net/2014/12/04/internet-stardom-has-its-own-rules-says-fullscreen-ceo-george-strompolos/">Internet Stardom Has Its Own Rules, Says Fullscreen CEO George Strompolos</a></li>
+</ul>
+</blockquote><img alt="" border="0" src="http://pixel.wp.com/b.gif?host=recode.net&#038;blog=61371898&#038;post=106386&#038;subd=recodetech&#038;ref=&#038;feed=1" width="1" height="1" />]]></content:encoded>
+			<wfw:commentRss>http://recode.net/2014/12/04/jim-bankoff-says-vox-media-is-content-publisher-for-a-new-generation/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+	
+		<media:thumbnail url="http://recodetech.files.wordpress.com/2014/12/codemediasanfrancisco-1991.jpg?w=200" />
+		<media:content url="http://recodetech.files.wordpress.com/2014/12/codemediasanfrancisco-1991.jpg" medium="image">
+			<media:title type="html">Jim Bankoff</media:title>
+		</media:content>
+
+		<media:content url="http://0.gravatar.com/avatar/cf177f310e192046058d1a3efed3ac63?s=96&#38;d=identicon&#38;r=G" medium="image">
+			<media:title type="html">edmundjunglee</media:title>
+		</media:content>
+	</item>
+		<item>
+		<title>Fullscreen CEO George Strompolos on Premium Content and Making Viewers Pay</title>
+		<link>http://recode.net/2014/12/04/fullscreen-ceo-george-strompolos-on-premium-content-and-making-viewers-pay/</link>
+		<comments>http://recode.net/2014/12/04/fullscreen-ceo-george-strompolos-on-premium-content-and-making-viewers-pay/#comments</comments>
+		<pubDate>Fri, 05 Dec 2014 04:23:46 +0000</pubDate>
+		<dc:creator><![CDATA[Dawn Chmielewski]]></dc:creator>
+				<category><![CDATA[General]]></category>
+		<category><![CDATA[Media]]></category>
+		<category><![CDATA[Code Media SF]]></category>
+		<category><![CDATA[online video]]></category>
+		<category><![CDATA[YouTube]]></category>
+
+		<guid isPermaLink="false">http://recode.net/?p=106445</guid>
+		<description><![CDATA[Fullscreen is looking to create television-grade programming that could reach audiences in new ways with shows that they'd be willing to pay for.<img alt="" border="0" src="http://pixel.wp.com/b.gif?host=recode.net&#038;blog=61371898&#038;post=106445&#038;subd=recodetech&#038;ref=&#038;feed=1" width="1" height="1" />]]></description>
+				<content:encoded><![CDATA[<p><img src="http://recodetech.files.wordpress.com/2014/12/codemediasanfrancisco-1968.jpg?w=640" class="attachment-large wp-post-image" alt="Code-Media-San-Francisco" /></p>
+<p>The architect of one of the biggest YouTube networks talked for the first time about delving into premium content &#8212; and new ways to distribute video to viewers.</p>
+<p>Speaking at <a href="http://recode.net/event-coverage/codemedia-series-san-francisco/"><strong>Code/Media: San Francisco</strong></a>, Fullscreen&#8217;s George Strompolos said the digital media company is exploring the next phase of its growth after receiving an infusion of capital from Otter Media. The joint Web venture of AT&amp;T and the Chernin Group assumed a <a href="http://recode.net/2014/09/22/att-chernin-buy-fullscreen-the-big-youtube-video-network/">controlling stake</a> in Fullscreen on Oct. 17.</p>
+<p>Strompolos said Fullscreen has no plans to leave YouTube and its ad-supported business on the Web, which has minted millionaires of some young producers. The company he founded in 2011 has built a network of 50,000 content creators on YouTube who collectively reach 500 million subscribers.</p>
+<p>Rather, Fullscreen is looking to work with creators to produce television-grade programming that could reach audiences in new ways &#8212;  shows that they&#8217;d be willing to pay for, much as television viewers now do for content delivered via cable or satellite distributors.</p>
+<p>&#8220;Surprisingly, the young audiences are paying for things,&#8221; Strompolos said. &#8220;We do live events &#8230; and a lot of fans are paying to see those experiences, they&#8217;re buying merchandise.&#8221;</p>
+<p>Strompolos said some of the content might be packaged into programming bundles to entice subscribers. That&#8217;s how Crunchyroll has attracted &#8220;hundreds of thousands&#8221; of subscribers to its Japanese animation, he said.</p>
+<p>Asked why Fullscreen didn&#8217;t choose to remain independent, Strompolos said he believes his company can create &#8220;massive value&#8221; with the help of media veterans like Peter Chernin, who for years was a senior executive at Twentieth Century Fox.</p>
+<p>The recognition that young viewers, ages 13 to 30, are finding entertainment in new ways is what motivated a series of Web investments by mainstream media conglomerates, including <a href="http://recode.net/2014/03/24/disney-buys-maker-studios-and-youtube-investors-cheer/">Disney&#8217;s $500 million acquisition </a>of YouTube network Maker Studios.</p>
+<p>&#8220;With us, it was Chernin and AT&amp;T,&#8221; Strompolos said. &#8220;We want to create a once-in-a-generation media company.&#8221;</p>
+<p>Fullscreen subsequently acquired Rooster Teeth, a studio best-known for its videogame-inspired series such as its long-running series &#8220;Red vs. Blue.&#8221; Strompolos described the studio as the Marvel Studios of the Web video era, attracting young male audiences with its brand of entertainment.</p>
+<p>Strompolos debuted footage of Rooster Teeth&#8217;s forthcoming &#8220;Day 5.&#8221; The new series, which has a &#8220;Walking Dead&#8221; vibe, starts five days after anyone on the planet who was asleep was mysteriously wiped out &#8212; and anyone who falls asleep is dead.</p>
+<p>&#8220;It&#8217;s a great example of the premium quality,&#8221; he said. &#8220;In my view that looks like the quality of premium cable.&#8221;</p>
+<blockquote class="previously">
+<h3>More From Code/Media: San Francisco</h3>
+<ul class="display-posts-listing">
+<li class="listing-item"><a class="title" href="http://recode.net/2014/12/05/codemedia-sf-in-three-minutes-video/">Code/Media SF in Three Minutes (Video)</a></li>
+<li class="listing-item"><a class="title" href="http://recode.net/2014/12/04/jim-bankoff-says-vox-media-is-content-publisher-for-a-new-generation/">Jim Bankoff Says Vox Media Is Content Publisher for a New Generation</a></li>
+<li class="listing-item"><a class="title" href="http://recode.net/2014/12/04/fullscreen-ceo-george-strompolos-on-premium-content-and-making-viewers-pay/">Fullscreen CEO George Strompolos on Premium Content and Making Viewers Pay</a></li>
+<li class="listing-item"><a class="title" href="http://recode.net/2014/12/04/twitter-to-media-companies-we-come-in-peace/">Twitter to Media Companies: We Come in Peace</a></li>
+<li class="listing-item"><a class="title" href="http://recode.net/2014/12/04/internet-stardom-has-its-own-rules-says-fullscreen-ceo-george-strompolos/">Internet Stardom Has Its Own Rules, Says Fullscreen CEO George Strompolos</a></li>
+</ul>
+</blockquote><img alt="" border="0" src="http://pixel.wp.com/b.gif?host=recode.net&#038;blog=61371898&#038;post=106445&#038;subd=recodetech&#038;ref=&#038;feed=1" width="1" height="1" />]]></content:encoded>
+			<wfw:commentRss>http://recode.net/2014/12/04/fullscreen-ceo-george-strompolos-on-premium-content-and-making-viewers-pay/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+	
+		<media:thumbnail url="http://recodetech.files.wordpress.com/2014/12/codemediasanfrancisco-1968.jpg?w=200" />
+		<media:content url="http://recodetech.files.wordpress.com/2014/12/codemediasanfrancisco-1968.jpg" medium="image">
+			<media:title type="html">George Strompolos</media:title>
+		</media:content>
+
+		<media:content url="http://2.gravatar.com/avatar/5fcf49b7d33e1aa85a28f2299d0fd96c?s=96&#38;d=identicon&#38;r=G" medium="image">
+			<media:title type="html">dawnchmielewski</media:title>
+		</media:content>
+	</item>
+		<item>
+		<title>Twitter to Media Companies: We Come in Peace</title>
+		<link>http://recode.net/2014/12/04/twitter-to-media-companies-we-come-in-peace/</link>
+		<comments>http://recode.net/2014/12/04/twitter-to-media-companies-we-come-in-peace/#comments</comments>
+		<pubDate>Fri, 05 Dec 2014 03:55:17 +0000</pubDate>
+		<dc:creator><![CDATA[Kurt Wagner]]></dc:creator>
+				<category><![CDATA[Media]]></category>
+		<category><![CDATA[Social]]></category>
+		<category><![CDATA[Code Media SF]]></category>
+
+		<guid isPermaLink="false">http://recode.net/?p=106343</guid>
+		<description><![CDATA[Twitter VP Katie Jacobs Stanton says Twitter is not a media company, and it is not the competition.<img alt="" border="0" src="http://pixel.wp.com/b.gif?host=recode.net&#038;blog=61371898&#038;post=106343&#038;subd=recodetech&#038;ref=&#038;feed=1" width="1" height="1" />]]></description>
+				<content:encoded><![CDATA[<p><img src="http://recodetech.files.wordpress.com/2014/12/codemediasanfrancisco-1985.jpg?w=640" class="attachment-large wp-post-image" alt="Katie Jacobs Stanton" />
+<p class="credit right">Vjeran Pavic for Re/code</p>
+<p><a href="http://recode.net/company/twitter">Twitter</a> poses a catch-22 for many media companies. They need the service to broadcast their content to a wide audience, but sharing info for free on Twitter may mean that fewer people actually visit their site.</p>
+<p>Why bother turning to ESPN to watch the World Cup when all the highlights and scores have already been tweeted directly into your stream?</p>
+<p>Unraveling that dilemma is the job of Katie Jacobs Stanton, a four-year Twitter veteran and current VP of global media. Stanton&#8217;s task is to <a href="http://recode.net/2014/09/05/twitter-media-boss-katie-jacobs-stanton-wants-more-partners-in-more-countries/">convince media companies around the world</a> that sharing on Twitter is good for business &#8212; and that, ultimately, Twitter <em>isn&#8217;t</em> the competition.</p>
+<p>Stanton spoke at <strong><a href="http://recode.net/events/code-media-series-san-francisco/">Code/Media: San Francisco</a></strong> on Thursday. Working alongside Twitter is one of the best things media companies can do to boost their audience, she says, and can even buoy company revenues.</p>
+<p>“We’re not a media company,&#8221; she told <strong>Re/code&#8217;s</strong> Peter Kafka. &#8220;We’re a communications platform that helps service the media business.”</p>
+<p>In other words: <em>We come in peace.</em></p>
+<p>Stanton says Twitter&#8217;s relationship with media companies is win-win. While Twitter is helping media companies grow their audiences, those same companies are helping Twitter grow, too, by offering up their valuable content for free.</p>
+<p>One of the most popular verticals for Twitter is television, where the company has numerous partnerships with networks around live events like sports and award shows. There is no doubt people like tweeting during the commercials, but is Twitter actually boosting ratings for networks?</p>
+<p>Stanton wouldn&#8217;t say, at least not straight out. Twitter has <a href="http://recode.net/2014/09/18/twitter-to-tv-networks-live-tweeting-may-boost-your-ratings/">hinted in the past</a> that its service can boost ratings, and it works with Nielsen to provide user data to networks hoping to capture what, exactly, its audience is saying online during the show. &#8220;It&#8217;s still very early stages,&#8221; Stanton says.</p>
+<p>Still, if Twitter isn&#8217;t boosting ratings, it may actually be stealing eyeballs away from the screen during the one time networks can actually make money: The commercials. Brands are doing something about it by slapping on hashtags within the commercials. Whether you noticed is another matter.</p>
+<blockquote class="previously">
+<h3>More From Code/Media: San Francisco</h3>
+<ul class="display-posts-listing">
+<li class="listing-item"><a class="title" href="http://recode.net/2014/12/05/codemedia-sf-in-three-minutes-video/">Code/Media SF in Three Minutes (Video)</a></li>
+<li class="listing-item"><a class="title" href="http://recode.net/2014/12/04/jim-bankoff-says-vox-media-is-content-publisher-for-a-new-generation/">Jim Bankoff Says Vox Media Is Content Publisher for a New Generation</a></li>
+<li class="listing-item"><a class="title" href="http://recode.net/2014/12/04/fullscreen-ceo-george-strompolos-on-premium-content-and-making-viewers-pay/">Fullscreen CEO George Strompolos on Premium Content and Making Viewers Pay</a></li>
+<li class="listing-item"><a class="title" href="http://recode.net/2014/12/04/twitter-to-media-companies-we-come-in-peace/">Twitter to Media Companies: We Come in Peace</a></li>
+<li class="listing-item"><a class="title" href="http://recode.net/2014/12/04/internet-stardom-has-its-own-rules-says-fullscreen-ceo-george-strompolos/">Internet Stardom Has Its Own Rules, Says Fullscreen CEO George Strompolos</a></li>
+</ul>
+</blockquote><img alt="" border="0" src="http://pixel.wp.com/b.gif?host=recode.net&#038;blog=61371898&#038;post=106343&#038;subd=recodetech&#038;ref=&#038;feed=1" width="1" height="1" />]]></content:encoded>
+			<wfw:commentRss>http://recode.net/2014/12/04/twitter-to-media-companies-we-come-in-peace/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+	
+		<media:thumbnail url="http://recodetech.files.wordpress.com/2014/12/codemediasanfrancisco-1985.jpg?w=200" />
+		<media:content url="http://recodetech.files.wordpress.com/2014/12/codemediasanfrancisco-1985.jpg" medium="image">
+			<media:title type="html">Katie Jacobs Stanton</media:title>
+		</media:content>
+
+		<media:content url="http://0.gravatar.com/avatar/f9db238d36e1350a735dcd76018de4d7?s=96&#38;d=identicon&#38;r=G" medium="image">
+			<media:title type="html">kurtwag88</media:title>
+		</media:content>
+	</item>
+		<item>
+		<title>Internet Stardom Has Its Own Rules, Says Fullscreen CEO George Strompolos</title>
+		<link>http://recode.net/2014/12/04/internet-stardom-has-its-own-rules-says-fullscreen-ceo-george-strompolos/</link>
+		<comments>http://recode.net/2014/12/04/internet-stardom-has-its-own-rules-says-fullscreen-ceo-george-strompolos/#comments</comments>
+		<pubDate>Fri, 05 Dec 2014 03:32:52 +0000</pubDate>
+		<dc:creator><![CDATA[Liz Gannes]]></dc:creator>
+				<category><![CDATA[General]]></category>
+		<category><![CDATA[Media]]></category>
+		<category><![CDATA[Code Media SF]]></category>
+
+		<guid isPermaLink="false">http://recode.net/?p=106372</guid>
+		<description><![CDATA[If you're an Internet star and you get a sponsorship deal, your fans don't think you've sold out, according to Strompolos.<img alt="" border="0" src="http://pixel.wp.com/b.gif?host=recode.net&#038;blog=61371898&#038;post=106372&#038;subd=recodetech&#038;ref=&#038;feed=1" width="1" height="1" />]]></description>
+				<content:encoded><![CDATA[<p><img src="http://recodetech.files.wordpress.com/2014/12/codemediasanfrancisco-1974.jpg?w=640" class="attachment-large wp-post-image" alt="Code-Media-San-Francisco" /></p>
+<p>Fame on the Internet looks a lot different from old-school stardom.</p>
+<p>So says George Strompolos, founder and CEO of Fullscreen, which helps finance videos for 50,000 creators, who get five billion views per month. Fullscreen backs big stars, like TheFineBros and Grace Helbig and Rooster Teeth. They may not be familiar names to anyone over 30, but Fullscreen stars are so popular, the company has to warn its talent not to tweet when they visit headquarters because of all the security issues from teen fans.</p>
+<p>&#8220;We have a lot of teenage millionaires at Fullscreen,&#8221; Strompolos said, speaking at Thursday&#8217;s <strong>Code/Media</strong> evening event in San Francisco. And from fancy productions to unboxing and haul videos, the common element among all the Web stars is they are &#8220;personality driven,&#8221; he said.</p>
+<p>People who make videos for the Internet tend to break with TV conventions. They look into their own cameras and connect with their audiences, Strompolos noted. They are becoming the next generation of mainstream stars, and they are uniquely different from those that came before. &#8220;I think the new breed are going to be people who developed an audience and they will continue to feed that audience,&#8221; he said.</p>
+<p>If you&#8217;re an Internet star and you get a sponsorship deal, your fans don&#8217;t think you&#8217;ve sold out, Strompolos said. &#8220;If you grow up online, the fans say, &#8216;We’re so glad we got you to the level where advertisers want to work with you.'&#8221;</p>
+<p>And where a celebrity-driven television ad might have cost multiple millions of dollars to shoot and distribute, Fullscreen ads often cost hundreds of thousands of dollars, and they come with distribution built in. &#8220;A lot of advertisers come to us say, &#8216;How do we reach millennials?'&#8221; Strompolos said. &#8220;The truth is, they don’t. Instead of interruption, we help them be part of this world.&#8221;</p>
+<p>Fullscreen, which <a href="http://recode.net/2014/09/22/att-chernin-buy-fullscreen-the-big-youtube-video-network/">merged in September with Otter Media</a>, is now working to groom its next stars in countries around the world, like Brazil, India and the U.K. Strompolos said Fullscreen has picked up an interesting expansion strategy in new markets. &#8220;We overfund and over-promote certain creators,&#8221; he said. &#8220;Because as soon as one person breaks, everyone else says, &#8216;That’s really cool and I want to do that too.'&#8221;</p>
+<blockquote class="previously">
+<h3>More From Code/Media: San Francisco</h3>
+<ul class="display-posts-listing">
+<li class="listing-item"><a class="title" href="http://recode.net/2014/12/05/codemedia-sf-in-three-minutes-video/">Code/Media SF in Three Minutes (Video)</a></li>
+<li class="listing-item"><a class="title" href="http://recode.net/2014/12/04/jim-bankoff-says-vox-media-is-content-publisher-for-a-new-generation/">Jim Bankoff Says Vox Media Is Content Publisher for a New Generation</a></li>
+<li class="listing-item"><a class="title" href="http://recode.net/2014/12/04/fullscreen-ceo-george-strompolos-on-premium-content-and-making-viewers-pay/">Fullscreen CEO George Strompolos on Premium Content and Making Viewers Pay</a></li>
+<li class="listing-item"><a class="title" href="http://recode.net/2014/12/04/twitter-to-media-companies-we-come-in-peace/">Twitter to Media Companies: We Come in Peace</a></li>
+<li class="listing-item"><a class="title" href="http://recode.net/2014/12/04/internet-stardom-has-its-own-rules-says-fullscreen-ceo-george-strompolos/">Internet Stardom Has Its Own Rules, Says Fullscreen CEO George Strompolos</a></li>
+</ul>
+</blockquote><img alt="" border="0" src="http://pixel.wp.com/b.gif?host=recode.net&#038;blog=61371898&#038;post=106372&#038;subd=recodetech&#038;ref=&#038;feed=1" width="1" height="1" />]]></content:encoded>
+			<wfw:commentRss>http://recode.net/2014/12/04/internet-stardom-has-its-own-rules-says-fullscreen-ceo-george-strompolos/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+	
+		<media:thumbnail url="http://recodetech.files.wordpress.com/2014/12/codemediasanfrancisco-1974.jpg?w=200" />
+		<media:content url="http://recodetech.files.wordpress.com/2014/12/codemediasanfrancisco-1974.jpg" medium="image">
+			<media:title type="html">George Strompolos</media:title>
+		</media:content>
+
+		<media:content url="http://0.gravatar.com/avatar/ceb4ff0d8873ca5334220d9b8fec2df1?s=96&#38;d=identicon&#38;r=G" medium="image">
+			<media:title type="html">Liz Gannes</media:title>
+		</media:content>
+	</item>
+		<item>
+		<title>Samsung Mobile Executives to Leave After Profit Slide: Source</title>
+		<link>http://recode.net/2014/12/04/samsung-mobile-executives-to-leave-after-profit-slide-source/</link>
+		<comments>http://recode.net/2014/12/04/samsung-mobile-executives-to-leave-after-profit-slide-source/#comments</comments>
+		<pubDate>Fri, 05 Dec 2014 03:12:08 +0000</pubDate>
+		<dc:creator><![CDATA[Reuters]]></dc:creator>
+				<category><![CDATA[General]]></category>
+		<category><![CDATA[Mobile]]></category>
+		<category><![CDATA[Comings and Goings]]></category>
+
+		<guid isPermaLink="false">http://recode.net/?p=106561</guid>
+		<description><![CDATA[The three executives directly reported to division chief JK Shin, who this week retained his post despite sagging device sales.<img alt="" border="0" src="http://pixel.wp.com/b.gif?host=recode.net&#038;blog=61371898&#038;post=106561&#038;subd=recodetech&#038;ref=&#038;feed=1" width="1" height="1" />]]></description>
+				<content:encoded><![CDATA[<p><img src="http://recodetech.files.wordpress.com/2014/11/samsung-silhouettes.jpg?w=640" class="attachment-large wp-post-image" alt="samsung-silhouettes" />
+<p class="credit right">Reuters / Dado Ruvic</p>
+<p>Three deputies to the head of Samsung Electronics&#8217; mobile division are leaving, a person with knowledge of the matter said on Thursday, as the world&#8217;s largest smartphone maker faces a rapid decline in profit.</p>
+<p>The person, who declined to be named due to the sensitivity of the matter, said the executives directly report to division chief JK Shin, who this week retained his post despite sagging smartphone sales and expectations the company will see its worst annual profit in three years in 2014.</p>
+<p>The departures included global marketing chief D.J. Lee, the source said, confirming earlier media reports.</p>
+<p>Samsung Electronics declined to say if any executives were leaving the company as it announced its annual reshuffle for executive-level staff.</p>
+<p>But the announcement showed Samsung had made 165 executive-level promotions, the lowest number in at least four years, underscoring the strains the South Korean company is under.</p>
+<p>&#8220;Shin was given another chance, given his past contributions, but he will definitely continue to feel the pressure going forward,&#8221; said IBK Securities analyst Lee Seung-woo ahead of Samsung Electronics&#8217; staff announcement.</p>
+<p>Samsung&#8217;s share of the smartphone market has fallen year-on-year for the last three quarters, squeezed by Chinese rivals like Xiaomi at the low-end and Apple&#8217;s iPhones in the premium segment.</p>
+<p>Samsung Electronics is expected to announce its annual business reorganization plan by next week.</p>
+<p>The company has kept mum about the details but the Joongang Ilbo newspaper reported earlier that Samsung will reduce executive-level positions for its mobile communications business by 25 percent. Other media reported the company could hive off its medical equipment business.</p>
+<p>Samsung earlier this week said it will sell its fiber optics business to U.S. specialty glass maker Corning Inc, its second exit from a non-core business this quarter.</p>
+<p>(Reporting by Se Young Lee; Editing by Tony Munroe and Miral Fahmy)</p><img alt="" border="0" src="http://pixel.wp.com/b.gif?host=recode.net&#038;blog=61371898&#038;post=106561&#038;subd=recodetech&#038;ref=&#038;feed=1" width="1" height="1" />]]></content:encoded>
+			<wfw:commentRss>http://recode.net/2014/12/04/samsung-mobile-executives-to-leave-after-profit-slide-source/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+	
+		<media:thumbnail url="http://recodetech.files.wordpress.com/2014/11/samsung-silhouettes.jpg?w=200" />
+		<media:content url="http://recodetech.files.wordpress.com/2014/11/samsung-silhouettes.jpg" medium="image">
+			<media:title type="html">samsung-silhouettes</media:title>
+		</media:content>
+
+		<media:content url="http://1.gravatar.com/avatar/109641c1e34d0d89b4d629bfe0e30a59?s=96&#38;d=identicon&#38;r=G" medium="image">
+			<media:title type="html">elizcrane</media:title>
+		</media:content>
+	</item>
+		<item>
+		<title>Attn: Gets $4.1 Million From Ryan Seacrest and Others to Get Attention of Millennials</title>
+		<link>http://recode.net/2014/12/04/attn-gets-4-1m-from-ryan-seacrest-and-others-to-get-attention-of-millennials/</link>
+		<comments>http://recode.net/2014/12/04/attn-gets-4-1m-from-ryan-seacrest-and-others-to-get-attention-of-millennials/#comments</comments>
+		<pubDate>Fri, 05 Dec 2014 00:22:23 +0000</pubDate>
+		<dc:creator><![CDATA[Kara Swisher]]></dc:creator>
+				<category><![CDATA[General]]></category>
+		<category><![CDATA[Media]]></category>
+		<category><![CDATA[content]]></category>
+		<category><![CDATA[funding]]></category>
+		<category><![CDATA[Los Angeles]]></category>
+		<category><![CDATA[millennials]]></category>
+
+		<guid isPermaLink="false">http://recode.net/?p=106485</guid>
+		<description><![CDATA[A new media company that called itself Attn: has garnered $4.1 million in funding from Hollywood mogul Ryan Seacrest&#8217;s Seacrest Global Group, as well as other Los Angeles-based investors such as Troy Carter and Ross Levinsohn. The company was created by the founders of millennial-focused advocacy group Ourtime.org, but Attn: is a for-profit venture. The [&#8230;]<img alt="" border="0" src="http://pixel.wp.com/b.gif?host=recode.net&#038;blog=61371898&#038;post=106485&#038;subd=recodetech&#038;ref=&#038;feed=1" width="1" height="1" />]]></description>
+				<content:encoded><![CDATA[<p>A new media company that called itself Attn: has garnered $4.1 million in funding from Hollywood mogul Ryan Seacrest&#8217;s Seacrest Global Group, as well as other Los Angeles-based investors such as Troy Carter and Ross Levinsohn. The company was created by the founders of millennial-focused advocacy group Ourtime.org, but Attn: is a for-profit venture. The goal is &#8220;content that breaks down complex issues, making politics interesting for millennials, and analyzes the world from the perspective of the social media generation.&#8221; In other words, what would happen if BuzzFeed and Politico hooked up on Tinder.</p><img alt="" border="0" src="http://pixel.wp.com/b.gif?host=recode.net&#038;blog=61371898&#038;post=106485&#038;subd=recodetech&#038;ref=&#038;feed=1" width="1" height="1" />]]></content:encoded>
+			<wfw:commentRss>http://recode.net/2014/12/04/attn-gets-4-1m-from-ryan-seacrest-and-others-to-get-attention-of-millennials/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+	
+		<media:content url="http://1.gravatar.com/avatar/4c574aabfd9f4f05bfff3adf892ba910?s=96&#38;d=identicon&#38;r=G" medium="image">
+			<media:title type="html">karaswisher</media:title>
+		</media:content>
+	</item>
+		<item>
+		<title>Who Is Behind After School, the Anonymous App Taking Over American High Schools?</title>
+		<link>http://recode.net/2014/12/04/who-is-behind-after-school-the-anonymous-app-taking-over-american-high-schools/</link>
+		<comments>http://recode.net/2014/12/04/who-is-behind-after-school-the-anonymous-app-taking-over-american-high-schools/#comments</comments>
+		<pubDate>Thu, 04 Dec 2014 23:39:04 +0000</pubDate>
+		<dc:creator><![CDATA[Kurt Wagner]]></dc:creator>
+				<category><![CDATA[Social]]></category>
+		<category><![CDATA[anonymous apps]]></category>
+		<category><![CDATA[high school students]]></category>
+
+		<guid isPermaLink="false">http://recode.net/?p=106407</guid>
+		<description><![CDATA[Anonymous app After School is dealing with bullying, gun threats -- and massive growth. <img alt="" border="0" src="http://pixel.wp.com/b.gif?host=recode.net&#038;blog=61371898&#038;post=106407&#038;subd=recodetech&#038;ref=&#038;feed=1" width="1" height="1" />]]></description>
+				<content:encoded><![CDATA[<p><img src="http://recodetech.files.wordpress.com/2014/12/unnamed-e1417737341456.png?w=640" class="attachment-large wp-post-image" alt="After School" /></p>
+<p>Since launching their app in mid-November, the creators of After School, an anonymous social network for high school students, haven&#8217;t said a peep. </p>
+<p>Their app, however, which allows high school students to post secrets and gossip anonymously to their classmates, has been anything but quiet. </p>
+<p>Since launching three weeks ago, After School has been the subject of extreme scrutiny. One user in Michigan posted that he/she was <a href="http://www.wnem.com/story/27530024/high-school-receives-gun-threat-through-after-school-app">bringing a gun to school</a>, resulting in a police and FBI investigation (thankfully the threat wasn&#8217;t credible). A similar threat occurred this week in Ohio.  </p>
+<p>Multiple Detroit school districts have <a href="http://www.freep.com/story/news/local/michigan/2014/12/03/school-officials-warns-of-sexually-explicit-after-school-app/19853193/">emailed</a> parents warning them about the app, and another Michigan high school is <a href="https://www.change.org/p/ambient-corporation-remove-the-after-school-funny-anonymous-school-news-for-confessions-and-compliments-app-from-the-apple-app-store">petitioning</a> to remove the app from the App Store all together. </p>
+<p>The interest has been so strong that After School&#8217;s creators &#8212; Cory Levy and Michael Callahan of <a href="http://whatis1.com/app/">One</a>, a San Francisco-based social media startup &#8212; are ready to answer some questions. </p>
+<p><a href="https://recodetech.files.wordpress.com/2014/12/after-school-app.jpg"><img src="https://recodetech.files.wordpress.com/2014/12/after-school-app.jpg?w=523&#038;h=480" alt="after-school-app" width="523" height="480" class="aligncenter size-large wp-image-106446" /></a></p>
+<p>The duo is well aware of the bullying concerns voiced by school officials across the country. They&#8217;re receiving dozens of emails and hundred of tweets every day from parents, administrators and students complaining about the app. Still, Callahan admits the company doesn&#8217;t have a solution for the issue of bullying.  </p>
+<p>&#8220;Our job is to protect our users. &#8230; At this point we don&#8217;t have a 100 percent solution as to what that means,&#8221; Callahan told <strong>Re/code</strong>. &#8220;Our main goal is to remove the worst of the worst.&#8221; </p>
+<p>This was the case during the Ohio gun threat, which set off the app&#8217;s automatic alert system at 2 am Monday morning. Callahan and Levy claim they called the local authorities and the school to report the post. During the Michigan threat, students alerted the school of the post before Levy and Callahan even heard about the threat. </p>
+<p>The crux of the issue is After School&#8217;s unexpected popularity. Since launch, users from more than 14,000 different high schools across the country have already downloaded the app, says Levy. For comparison, there are roughly <a href="http://nces.ed.gov/fastfacts/display.asp?id=84">24,500</a> public high schools in total in the United States. </p>
+<p>More than 100,000 people have downloaded the app, and at peak times &#8212; right before school hours or immediately after &#8212; students are posting thousands of messages on After School every hour, he added. </p>
+<p>Monitoring every post is frankly more than One can handle. The company has seven employees, and while it has a system monitoring for posts containing dangerous words &#8212; &#8220;cut,&#8221; &#8220;kill,&#8221; &#8220;bomb&#8221; &#8212; the general bullying common in high schools is slipping through the cracks. </p>
+<p>So why not pull the app until the company is ready to handle the flow of content?</p>
+<p>&#8220;Our best case scenario would be where, because of the fire under our butt, we come online with these features ASAP,&#8221; said Callahan, who said the company isn&#8217;t taking the option of pulling the app off the table. Ultimately, he hopes students will start to police themselves. </p>
+<p>After School is hoping to avoid what happened to <a href="http://recode.net/2014/11/24/anonymous-app-yik-yak-raises-62-million/">Yik Yak</a>, another anonymous social network popular with college students. On Yik Yak, high school and middle school bullying got so bad the company implemented <a href="http://www.yikyakapp.com/support/">geo-fences</a> that keep the app from working within school boundaries.</p>
+<p>Callahan and Levy believe they can avoid that and provide a space for students to share gossip as well as important parts of their life they may be too shy or embarrassed to talk about otherwise. </p>
+<p>&#8220;There&#8217;s so much going on in a high school,&#8221; said Callahan. &#8220;You have to lower the barriers associated with communication &#8230; a barrier inhibiting people from sharing is attaching their identity to things.&#8221;</p>
+<p><strong>Update:</strong> Apple contacted After School on Monday, requiring that the app update specific safety features before a Wednesday afternoon deadline, according to Levy. Included in those demands was a requirement to change the app&#8217;s rating to &#8220;17+&#8221; (it was previously at &#8220;12+&#8221;) and a requirement to add a report button within the app for inappropriate content. </p>
+<p>After School made the changes and re-submitted the app Tuesday for approval, Levy says, but the app was not approved by the time Apple&#8217;s deadline for the changes arrived. After School was <a href="http://techcrunch.com/2014/12/04/after-school-is-back-on-the-app-store-but-with-changes-to-curb-cyberbullying/">temporarily removed</a> from the App Store, he added. The changes have since been approved, and the app was available once again on Thursday. </p><img alt="" border="0" src="http://pixel.wp.com/b.gif?host=recode.net&#038;blog=61371898&#038;post=106407&#038;subd=recodetech&#038;ref=&#038;feed=1" width="1" height="1" />]]></content:encoded>
+			<wfw:commentRss>http://recode.net/2014/12/04/who-is-behind-after-school-the-anonymous-app-taking-over-american-high-schools/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+	
+		<media:thumbnail url="http://recodetech.files.wordpress.com/2014/12/unnamed-e1417737341456.png?w=200" />
+		<media:content url="http://recodetech.files.wordpress.com/2014/12/unnamed-e1417737341456.png" medium="image">
+			<media:title type="html">After School</media:title>
+		</media:content>
+
+		<media:content url="http://0.gravatar.com/avatar/f9db238d36e1350a735dcd76018de4d7?s=96&#38;d=identicon&#38;r=G" medium="image">
+			<media:title type="html">kurtwag88</media:title>
+		</media:content>
+
+		<media:content url="https://recodetech.files.wordpress.com/2014/12/after-school-app.jpg?w=523" medium="image">
+			<media:title type="html">after-school-app</media:title>
+		</media:content>
+	</item>
+		<item>
+		<title>Tech Group: AT&amp;T’s DirecTV Deal Would Improve Internet Access</title>
+		<link>http://recode.net/2014/12/04/tech-group-atts-directv-deal-would-improve-internet-access/</link>
+		<comments>http://recode.net/2014/12/04/tech-group-atts-directv-deal-would-improve-internet-access/#comments</comments>
+		<pubDate>Thu, 04 Dec 2014 23:00:59 +0000</pubDate>
+		<dc:creator><![CDATA[Amy Schatz]]></dc:creator>
+				<category><![CDATA[Policy]]></category>
+		<category><![CDATA[FCC]]></category>
+		<category><![CDATA[Federal Communications Commission]]></category>
+		<category><![CDATA[Merger]]></category>
+		<category><![CDATA[TechNet]]></category>
+
+		<guid isPermaLink="false">http://recode.net/?p=106441</guid>
+		<description><![CDATA[An AT&#38;T deal would help get more Americans online, says a prominent tech lobbying group.<img alt="" border="0" src="http://pixel.wp.com/b.gif?host=recode.net&#038;blog=61371898&#038;post=106441&#038;subd=recodetech&#038;ref=&#038;feed=1" width="1" height="1" />]]></description>
+				<content:encoded><![CDATA[<p><img src="http://recodetech.files.wordpress.com/2014/10/shutterstock_183241166.jpg?w=640" class="attachment-large wp-post-image" alt="ATT logo" />
+<p class="credit right">Rob Wilson/Shutterstock</p>
+<p>Tech industry lobbying group TechNet praised AT&amp;T’s <a href="http://recode.net/2014/11/26/att-says-it-still-plans-to-expand-high-speed-internet-in-directv-acquisition">$48 billion deal</a> to acquire DirecTV Thursday, telling federal regulators that they should consider how it would help get more Americans online.</p>
+<p>“TechNet encourages the FCC to consider the positive impact that AT&amp;T’s acquisition of DirecTV would have on universal broadband deployment and the very real benefits it will produce for millions of underserved Americans,” the industry group wrote in a <a href="http://www.technet.org/technet-to-fcc-combined-attdirectv-will-increase-broadband-deployment/">letter </a> to Federal Communications Commission officials Thursday.</p>
+<p>Not a huge surprise that TechNet would say nice things about the deal, given that AT&amp;T is a member company. It is interesting, however, that TechNet hasn’t said similarly nice things yet about Comcast’s $45 billion deal to acquire Time Warner Cable, even though Comcast* is also a <a href="http://www.technet.org/leaders/member-companies/">TechNet member</a>.</p>
+<p>A Comcast spokeswoman didn’t comment, although the company noted that it is only a state-level member of TechNet. AT&amp;T is a national member.</p>
+<p>Generally, AT&amp;T’s DirecTV acquisition has drawn <a href="http://recode.net/2014/10/26/five-reasons-why-critics-of-comcasts-time-warner-cable-deal-are-feeling-hopeful/">less concern</a> so far from public interest groups and rivals than Comcast’s Time Warner Cable deal. That could be because DirecTV doesn’t offer broadband access so the combination wouldn’t give AT&amp;T more control over broadband access than it might otherwise already have.</p>
+<p>* Comcast owns NBCUniversal, which is a minority investor in Revere Digital, <strong>Re/code&#8217;s </strong>parent company.</p><img alt="" border="0" src="http://pixel.wp.com/b.gif?host=recode.net&#038;blog=61371898&#038;post=106441&#038;subd=recodetech&#038;ref=&#038;feed=1" width="1" height="1" />]]></content:encoded>
+			<wfw:commentRss>http://recode.net/2014/12/04/tech-group-atts-directv-deal-would-improve-internet-access/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+	
+		<media:thumbnail url="http://recodetech.files.wordpress.com/2014/10/shutterstock_183241166.jpg?w=200" />
+		<media:content url="http://recodetech.files.wordpress.com/2014/10/shutterstock_183241166.jpg" medium="image">
+			<media:title type="html">ATT logo</media:title>
+		</media:content>
+
+		<media:content url="http://0.gravatar.com/avatar/c0c0798bf81a87f8fd50f0ae9694f748?s=96&#38;d=identicon&#38;r=G" medium="image">
+			<media:title type="html">amyschatz2014</media:title>
+		</media:content>
+	</item>
+		<item>
+		<title>Barnes &amp; Noble Ends Pact With Microsoft in Nook Media</title>
+		<link>http://recode.net/2014/12/04/barnes-noble-ends-pact-with-microsoft-in-nook-media/</link>
+		<comments>http://recode.net/2014/12/04/barnes-noble-ends-pact-with-microsoft-in-nook-media/#comments</comments>
+		<pubDate>Thu, 04 Dec 2014 23:00:53 +0000</pubDate>
+		<dc:creator><![CDATA[Reuters]]></dc:creator>
+				<category><![CDATA[General]]></category>
+		<category><![CDATA[Mobile]]></category>
+		<category><![CDATA[e-readers]]></category>
+		<category><![CDATA[ebooks]]></category>
+
+		<guid isPermaLink="false">http://recode.net/?p=106404</guid>
+		<description><![CDATA[The move ends a two-year partnership that started off promisingly but didn't deliver.<img alt="" border="0" src="http://pixel.wp.com/b.gif?host=recode.net&#038;blog=61371898&#038;post=106404&#038;subd=recodetech&#038;ref=&#038;feed=1" width="1" height="1" />]]></description>
+				<content:encoded><![CDATA[<p><img src="http://recodetech.files.wordpress.com/2014/12/107377647.jpg?w=640" class="attachment-large wp-post-image" alt="107377647" />
+<p class="credit right">Getty Images News</p>
+<p><a href="http://recode.net/company/barnes-noble/">Barnes &amp; Noble</a> struck a deal to buy <a href="http://recode.net/company/microsoft/">Microsoft&#8217;s</a> stake in Nook Media LLC, ending a two-year partnership and clearing the way for the bookseller to spin off its loss-making e-reader and digital content division.</p>
+<p>Barnes &amp; Noble shares fell as much as 14.3 percent in early trading after the company also reported a much weaker-than-expected quarterly profit, due to lower sales of Nook devices.</p>
+<p>The company estimated the value of the cash and share deal at about $125 million.</p>
+<p>Nook, launched in 2009, enjoyed initial success but has ended up costing Barnes &amp; Noble hundreds of millions of dollars as it was unable to keep pace with Amazon.com&#8217;s Kindle and Apple&#8217;s iPad.</p>
+<p>Microsoft invested $300 million in Barnes &amp; Noble&#8217;s Nook e-reader in 2012 to gain a foothold in the fast-growing e-books market. As of Sept. 9, Microsoft owned about 17 percent of Nook Media through preferred shares.</p>
+<p>Barnes &amp; Noble said in June it would spin off its Nook Media business, which includes college bookstores, to focus on its retail book business.</p>
+<p>&#8220;As the respective business strategies of each company evolved, we mutually agreed that it made sense to terminate the agreement,&#8221; a Microsoft spokesman said in an email.</p>
+<p>Under the agreement announced on Thursday, Microsoft will have the right to receive about 22.7 percent of total proceeds of Nook&#8217;s digital business, which excludes the college bookstores, if it is sold in the next three years.</p>
+<p>Pearson Plc owns 5 percent of Nook Media, which had revenue of $815 million in the second quarter ended Nov. 1.<br />
+The company said it would buy Microsoft&#8217;s stake in Nook Media for $62.4 million in cash and about 2.7 million in shares.</p>
+<p>Barnes &amp; Noble shares were trading at $20.08 on Thursday.</p>
+<p>Barnes &amp; Noble said it now expected to complete the separation of its Nook Media business at the end of August 2015. It had earlier expected to complete it by March.<br />
+The company said its total revenue fell 2.6 percent to $1.69 billion in the second quarter. Retail sales fell 3.6 percent.</p>
+<p>Net income fell to $12.3 million, or 12 cents per share, from $13.2 million, or 15 cents per share, a year earlier. Analysts on average expected a profit of 31 cents per share on revenue of $1.69 billion, according to Thomson Reuters.</p>
+<p>(By Yashaswini Swamynathan and Devika Krishna Kumar; Additional reporting by Ramkumar Iyer; Editing by Don Sebastian, Ted Kerr and Siddharth Cavale)</p><img alt="" border="0" src="http://pixel.wp.com/b.gif?host=recode.net&#038;blog=61371898&#038;post=106404&#038;subd=recodetech&#038;ref=&#038;feed=1" width="1" height="1" />]]></content:encoded>
+			<wfw:commentRss>http://recode.net/2014/12/04/barnes-noble-ends-pact-with-microsoft-in-nook-media/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+	
+		<media:thumbnail url="http://recodetech.files.wordpress.com/2014/12/107377647.jpg?w=200" />
+		<media:content url="http://recodetech.files.wordpress.com/2014/12/107377647.jpg" medium="image">
+			<media:title type="html">107377647</media:title>
+		</media:content>
+
+		<media:content url="http://0.gravatar.com/avatar/9940a9ccbb19554f7b093fd9ee58f6f8?s=96&#38;d=identicon&#38;r=G" medium="image">
+			<media:title type="html">madfoot</media:title>
+		</media:content>
+	</item>
+		<item>
+		<title>Malware in Sony Attack Linked to 2013 South Korean Incidents</title>
+		<link>http://recode.net/2014/12/04/malware-in-sony-attack-linked-to-2013-south-korean-incidents/</link>
+		<comments>http://recode.net/2014/12/04/malware-in-sony-attack-linked-to-2013-south-korean-incidents/#comments</comments>
+		<pubDate>Thu, 04 Dec 2014 22:36:44 +0000</pubDate>
+		<dc:creator><![CDATA[Arik Hesseldahl]]></dc:creator>
+				<category><![CDATA[Enterprise]]></category>
+		<category><![CDATA[Security]]></category>
+		<category><![CDATA[cyberwar]]></category>
+		<category><![CDATA[hackers]]></category>
+		<category><![CDATA[hacking]]></category>
+		<category><![CDATA[North Korea]]></category>
+		<category><![CDATA[South Korea]]></category>
+
+		<guid isPermaLink="false">http://recode.net/?p=106360</guid>
+		<description><![CDATA[Similarities are found to an attack against South Korean banks and TV broadcasters. <img alt="" border="0" src="http://pixel.wp.com/b.gif?host=recode.net&#038;blog=61371898&#038;post=106360&#038;subd=recodetech&#038;ref=&#038;feed=1" width="1" height="1" />]]></description>
+				<content:encoded><![CDATA[<p><img src="http://recodetech.files.wordpress.com/2014/12/178795084.jpg?w=640" class="attachment-large wp-post-image" alt="178795084" />
+<p class="credit right">iStock</p>
+<p>Upon examination, the malicious software likely to be behind last week&#8217;s attack on the computer systems of Sony Pictures Entertainment appears similar to malware used in attacks against South Korean broadcasters and banks last year.</p>
+<p>The South Korean government blamed agents working on behalf of North Korea for the attacks in 2013.</p>
+<p>Sony Pictures last week suffered a devastating hacking attack that brought operations of its corporate computer network to a halt. Attackers soon <a href="http://recode.net/2014/11/30/sony-hackers-leaked-movies-to-file-sharing-sites/">leaked video of five Sony-produced films</a> to file-sharing networks, and then numerous sensitive corporate files, including the salaries of its executives. The <a href="http://recode.net/2014/12/01/sony-hires-mandiant-after-cyber-attack-fbi-starts-probe/">FBI has been investigating the attack</a>. </p>
+<p>The latest findings come from researchers at the security software firm Symantec. <a href="http://www.symantec.com/connect/blogs/destover-destructive-malware-has-links-attacks-south-korea">In a blog post</a>, Symantec said samples of the malware described in an FBI warning Monday, known as Backdoor.Destover, communicate with some of the same servers used for command and control &#8212; or C&amp;C &#8212; purposes in a series of attacks on South Korean TV and banking networks in March of 2013.</p>
+<p>&#8220;The shared C&amp;C indicates that the same group may be behind both attacks,&#8221; the post read.</p>
+<p>The <a href="http://recode.net/2014/12/02/details-emerge-on-malware-used-in-sony-hacking-attack/">malware described in the FBI warning Monday</a> is thought to be the same as that found in the Sony incident, though the FBI didn&#8217;t specifically name Sony as the victim.</p>
+<p>The software used in the 2013 attacks, known as Trojan.Volgmer, is described as a reconnaissance tool used for gathering information on a system in order to facilitate a later attack. A version of Volgmer that shares the same C&amp;C features was specifically configured to attack Korean systems and &#8220;will only run on Korean computers,&#8221; the company said.</p>
+<p>The malware thought to have been central to the attacks on Sony shares other characteristics with the South Korean incidents, but also with an attack known as the Shamoon incident on the Saudi Arabian oil company Saudi Aramco in 2012.</p>
+<p>In all three, software used to completely wipe data stored on a hard drive was used. However, Symantec says it&#8217;s unlikely that the South Korean and Saudi incidents are linked. &#8220;Instead it would appear that the Destover attacks copied techniques from Shamoon,&#8221; the company said.</p>
+<p>Last year, Symantec pinned responsibility for a series of attacks in South Korea dating back to 2009 on a single gang of operators it nicknamed the &#8220;DarkSeoul Gang,&#8221; though it didn&#8217;t name specific individuals as its members.</p>
+<p>In the 2013 incidents, the computer networks of three South Korean banks &#8212; Shinhan, NongHyup and Jeju &#8212; and of three TV broadcasters &#8212; KBS, MBC and YTN &#8212; were attacked and their operations disrupted. A South Korean government agency at the time <a href="http://english.yonhapnews.co.kr/northkorea/2013/04/10/49/0401000000AEN20130410007352320F.HTML">blamed North Korea</a>, which denied involvement.</p>
+<p>Prosecutors in Seoul later <a href="http://online.wsj.com/news/articles/SB10001424127887324136204578639540757695644">investigated a South Korean tech executive</a> on suspicions that he helped North Korea carry out the attacks.</p>
+<p>Sony and its outside security consultants Mandiant are <a href="http://recode.net/2014/11/28/sony-pictures-investigates-north-korea-link-in-hack-attack/">investigating the possibility of a North Korean connection</a> to the attacks. One possible motivation is the country&#8217;s complaints about the release of a Sony-produced film called &#8220;The Interview.&#8221; The film is a comedy that depicts two TV journalists who land an interview with North Korean leader Kim Jong-Un, and who are then recruited by the CIA to assassinate him.</p>
+<p>In <a href="http://www.voanews.com/content/exclusive-north-korea-denies-involvement-in-cyber-attack-sony-pictures/2545372.html">comments to Voice of America</a>, the North Korean government has officially denied involvement.</p>
+<p>Symantec&#8217;s researchers were among the first in 2010 to ferret out the <a href="http://www.wired.com/2014/11/countdown-to-zero-day-stuxnet/">Stuxnet digital weapon</a> used to attack nuclear research facilities in Iran, and last month uncovered a <a href="http://recode.net/2014/11/23/symantec-uncovers-sophisticated-stealthy-computer-spying-tool/">stealthy computer spying tool</a> they dubbed Regin.</p>
+<p>A spokesman for Mandiant, the division of the security company FireEye that is helping Sony investigate the attack, had no comment. A Sony spokeswoman did not immediately return messages seeking comment. </p><img alt="" border="0" src="http://pixel.wp.com/b.gif?host=recode.net&#038;blog=61371898&#038;post=106360&#038;subd=recodetech&#038;ref=&#038;feed=1" width="1" height="1" />]]></content:encoded>
+			<wfw:commentRss>http://recode.net/2014/12/04/malware-in-sony-attack-linked-to-2013-south-korean-incidents/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+	
+		<media:thumbnail url="http://recodetech.files.wordpress.com/2014/12/178795084.jpg?w=200" />
+		<media:content url="http://recodetech.files.wordpress.com/2014/12/178795084.jpg" medium="image">
+			<media:title type="html">178795084</media:title>
+		</media:content>
+
+		<media:content url="http://0.gravatar.com/avatar/611990617c72d956811510998fc036a0?s=96&#38;d=identicon&#38;r=G" medium="image">
+			<media:title type="html">ahess247</media:title>
+		</media:content>
+	</item>
+		<item>
+		<title>Cost for Apple to Build Its Own Auditorium? $161 Million. Value of Secrecy? Priceless.</title>
+		<link>http://recode.net/2014/12/04/cost-for-apple-to-build-its-own-auditorium-161-million-value-of-secrecy-priceless/</link>
+		<comments>http://recode.net/2014/12/04/cost-for-apple-to-build-its-own-auditorium-161-million-value-of-secrecy-priceless/#comments</comments>
+		<pubDate>Thu, 04 Dec 2014 22:07:19 +0000</pubDate>
+		<dc:creator><![CDATA[Dawn Chmielewski]]></dc:creator>
+				<category><![CDATA[General]]></category>
+		<category><![CDATA[Apple Campus 2]]></category>
+		<category><![CDATA[fitness center]]></category>
+		<category><![CDATA[new headquarters]]></category>
+		<category><![CDATA[theater]]></category>
+
+		<guid isPermaLink="false">http://recode.net/?p=106325</guid>
+		<description><![CDATA[Secrecy-conscious Apple is constructing a $161 million theater on its new campus for future product unveilings.<img alt="" border="0" src="http://pixel.wp.com/b.gif?host=recode.net&#038;blog=61371898&#038;post=106325&#038;subd=recodetech&#038;ref=&#038;feed=1" width="1" height="1" />]]></description>
+				<content:encoded><![CDATA[<p><img src="http://recodetech.files.wordpress.com/2014/12/apple-campus-2-rendering-002-retina-optimized-e1417725423685.jpg?w=640" class="attachment-large wp-post-image" alt="New Apple Headquarters" />
+<p class="credit right">Apple Inc.</p>
+<p>Apple takes great pains to keep details of its product announcements under wraps &#8212; even going so far as to shroud a venue in a giant white covering, as it did at the De Anza College campus, to keep prying eyes from glimpsing unreleased products.</p>
+<p>Now, the Cupertino technology giant is building a $161 million theater at its new campus, according to building permits <a href="http://blog.buildzoom.com/?p=3412">obtained by BuildZoom</a>. That would give Apple a venue that is entirely under its own control for future unveilings.</p>
+<p>Apple also is working on the ultimate recruitment tool: A <a href="http://blog.buildzoom.com/?p=3423">$74 million fitness facility </a>at the ring-shaped campus.</p>
+<p>The $5 billion headquarters has been the subject of intense interest since Apple co-founder Steve Jobs presented renderings of the futuristic Apple Campus 2 to <a href="http://www.businessweek.com/articles/2013-04-04/apples-campus-2-shapes-up-as-an-investor-relations-nightmare">the Cupertino City Council in 2011</a>. The massive four-story &#8220;spaceship&#8221; will have room to accommodate 12,000 employees.</p>
+<p>Apple broke ground last year on the project and expects to complete it by 2016.</p>
+<p>A company spokesperson declined comment. However, details of the <a href="http://www.cupertino.org/index.aspx?page=1223">project are available here</a>.</p><img alt="" border="0" src="http://pixel.wp.com/b.gif?host=recode.net&#038;blog=61371898&#038;post=106325&#038;subd=recodetech&#038;ref=&#038;feed=1" width="1" height="1" />]]></content:encoded>
+			<wfw:commentRss>http://recode.net/2014/12/04/cost-for-apple-to-build-its-own-auditorium-161-million-value-of-secrecy-priceless/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+	
+		<media:thumbnail url="http://recodetech.files.wordpress.com/2014/12/apple-campus-2-rendering-002-retina-optimized-e1417725423685.jpg?w=200" />
+		<media:content url="http://recodetech.files.wordpress.com/2014/12/apple-campus-2-rendering-002-retina-optimized-e1417725423685.jpg" medium="image">
+			<media:title type="html">New Apple Headquarters</media:title>
+		</media:content>
+
+		<media:content url="http://2.gravatar.com/avatar/5fcf49b7d33e1aa85a28f2299d0fd96c?s=96&#38;d=identicon&#38;r=G" medium="image">
+			<media:title type="html">dawnchmielewski</media:title>
+		</media:content>
+	</item>
+	</channel>
+</rss>

@@ -87,4 +87,8 @@ OTHER_FILES += \
     feeds/xkcd.atom \
     feeds/nbcnews.rss \
     feeds/mithumanities.rss \
-    feeds/cbsnews.rss
+    feeds/cbsnews.rss \
+    feeds/recode.atom \
+    feeds/wallstreetjournal.atom \
+    feeds/nationalreview.rss \
+    feeds/thenewrepublic.rss
