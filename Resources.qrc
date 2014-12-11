@@ -2,6 +2,7 @@
     <qresource prefix="/sql">
         <file>sql/1.sql</file>
         <file>sql/2.sql</file>
+        <file>sql/3.sql</file>
     </qresource>
     <qresource prefix="/icons">
         <file>icons/icon_circle.svg</file>

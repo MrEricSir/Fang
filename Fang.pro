@@ -75,7 +75,10 @@ SOURCES += src/main.cpp \
     src/operations/LoadPinnedNewsOperation.cpp \
     src/models/LisvelFeedItem.cpp \
     src/operations/LisvelLoadNewsOperation.cpp \
-    src/operations/ExpireNewsOperation.cpp
+    src/operations/ExpireNewsOperation.cpp \
+    src/operations/SetDBSettingOperation.cpp \
+    src/db/DBSettings.cpp \
+    src/operations/GetAllDBSettingsOperation.cpp
 	
 HEADERS += \
     src/models/ListModel.h \
@@ -129,7 +132,11 @@ HEADERS += \
     src/operations/LoadPinnedNewsOperation.h \
     src/models/LisvelFeedItem.h \
     src/operations/LisvelLoadNewsOperation.h \
-    src/operations/ExpireNewsOperation.h
+    src/operations/ExpireNewsOperation.h \
+    src/operations/SetDBSettingOperation.h \
+    src/db/DBSettings.h \
+    src/operations/GetAllDBSettingsOperation.h \
+    src/db/DBSettingsKey.h
 
 mac {
     QT += macextras

@@ -23,6 +23,7 @@
 #include "FangObject.h"
 #include "notifications/NotificationBase.h"
 #include "utilities/SingleInstanceCheck.h"
+#include "db/DBSettings.h"
 
 
 class FangApp : public FangObject
@@ -195,6 +196,7 @@ private:
     FeedItem* currentFeed;
     bool loadAllFinished;
     FangSettings *fangSettings;
+    DBSettings dbSettings;
     WebInteractor *interactor;
     QTimer *updateTimer;
     QMap<qint64, FeedItem*> feedIdMap;

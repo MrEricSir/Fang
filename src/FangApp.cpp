@@ -29,6 +29,7 @@ FangApp::FangApp(QApplication *parent, QQmlApplicationEngine* engine, SingleInst
     currentFeed(NULL),
     loadAllFinished(false),
     fangSettings(NULL),
+    dbSettings(&manager),
     interactor(NULL),
     updateTimer(new QTimer(this)),
     window(NULL),
@@ -295,6 +296,9 @@ void FangApp::onObjectCreated(QObject* object, const QUrl& url)
         
         return;
     }
+
+    // Init settings.
+    fangSettings->init(&dbSettings);
     
     // Show the current feed.
     displayFeed();
@@ -328,7 +332,7 @@ void FangApp::onQuit()
 {
     // By default, cull items older than 3 months, save for the last 25.
     // (If read and unpinned, of course.)
-    QDateTime olderThan = QDateTime::currentDateTime().addMonths(3);
+    QDateTime olderThan = DBSettingsCacheLengthToDateTime(dbSettings.get(CACHE_LENGTH));
     qint32 saveLast = 25;
 
     // Clean up DB before we exit.

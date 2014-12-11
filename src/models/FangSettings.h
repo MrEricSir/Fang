@@ -5,6 +5,8 @@
 #include <QString>
 #include <QSettings>
 
+#include "../db/DBSettings.h"
+
 class FangSettings : public QQuickItem
 {
     Q_OBJECT
@@ -15,19 +17,32 @@ class FangSettings : public QQuickItem
     
     // Font size.  Values are "SMALL", "MEDIUM", and "LARGE" (default: MEDIUM)
     Q_PROPERTY(QString fontSize READ getFontSize WRITE setFontSize NOTIFY fontSizeChanged)
+
+    // Length of cache size
+    Q_PROPERTY(QString cacheLength READ getCacheLength WRITE setCacheLength NOTIFY cacheLengthChanged)
     
 public:
     explicit FangSettings(QQuickItem *parent = 0);
+
+    /**
+     * @brief The stuff the settings object needs to do its job properly.
+     * @param manager
+     */
+    void init(DBSettings* dbSettings);
     
     QString getStyle();
     void setStyle(QString s);
     
     QString getFontSize();
     void setFontSize(QString s);
+
+    QString getCacheLength();
+    void setCacheLength(QString s);
     
 signals:
     void styleChanged(QString);
     void fontSizeChanged(QString);
+    void cacheLengthChanged(QString);
     
 private slots:
     /**
@@ -44,9 +59,17 @@ private slots:
      * @param newValue
      */
     void setStringSetting(const QString& name, const QString& newValue);
+
+    /**
+     * @brief Called when a DB setting has changed.
+     * @param key
+     * @param value
+     */
+    void onDBSettingChanged(DBSettingsKey key, QString value);
     
 private:
     QSettings settings;
+    DBSettings *dbSettings;
 };
 
 #endif // FANGSETTINGS_H

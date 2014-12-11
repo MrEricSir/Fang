@@ -109,6 +109,74 @@ Dialog {
             width: parent.buttonWidth
         }
     }
+
+    DialogText {
+        text: "Remove read news after"
+    }
+
+    RadioButtonGroup {
+        id: cacheLengthRadioGroup;
+
+        selected:
+            fangSettings.cacheLength === "2WEEK" ? twoWeekCache :
+            fangSettings.cacheLength === "3MONTH" ? threeMonthCache :
+            fangSettings.cacheLength === "6MONTH" ? sixMonthCache : oneYearCache;
+
+        onSelectedChanged: {
+            if (selected === twoWeekCache)
+                fangSettings.cacheLength = "2WEEK";
+            else if (selected === threeMonthCache)
+                fangSettings.cacheLength = "3MONTH";
+            else if (selected === threeMonthCache)
+                fangSettings.cacheLength = "6MONTH";
+            else
+                fangSettings.cacheLength = "1YEAR";
+        }
+    }
+
+    DialogButtonGroup {
+        width: parent.width;
+
+        DialogRadioButton {
+            id: twoWeekCache;
+            radioGroup: cacheLengthRadioGroup;
+
+            text: "2 weeks";
+            enabled: true;
+
+            width: parent.buttonWidth;
+        }
+
+        DialogRadioButton {
+            id: threeMonthCache;
+            radioGroup: cacheLengthRadioGroup;
+
+            text: "3 months";
+            enabled: true;
+
+            width: parent.buttonWidth;
+        }
+
+        DialogRadioButton {
+            id: sixMonthCache;
+            radioGroup: cacheLengthRadioGroup;
+
+            text: "6 months";
+            enabled: true;
+
+            width: parent.buttonWidth;
+        }
+
+        DialogRadioButton {
+            id: oneYearCache;
+            radioGroup: cacheLengthRadioGroup;
+
+            text: "1 year";
+            enabled: true;
+
+            width: parent.buttonWidth;
+        }
+    }
     
     DialogText {
         text: "OPML feed list"
