@@ -12,13 +12,13 @@
 #include "ParserXMLWorker.h"
 
 // PaRSSes RSS/Atom feeds into RawFeed/RawNews objects.
-class Parser : public ParserInterface
+class NewsParser : public ParserInterface
 {
     Q_OBJECT
     
 public:
-    explicit Parser(QObject *parent = 0);
-    virtual ~Parser();
+    explicit NewsParser(QObject *parent = 0);
+    virtual ~NewsParser();
     
 public slots:
     virtual void parse(const QUrl& url, bool noParseIfCached = false); // Override.

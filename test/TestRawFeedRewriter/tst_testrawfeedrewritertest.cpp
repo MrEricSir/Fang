@@ -67,9 +67,9 @@ void TestRawFeedRewriterTest::testCase1_data()
     QTest::newRow("Bad HTML 2") << "<b>bold text" << "<b>bold text</b>" << false;
 
     // Newlines need to work within a pre tag.
-    QTest::newRow("Pre tag") << "<pre>hello\n\nhi</pre>" << "<pre>hello\n\nhi</pre>"
+    QTest::newRow("Pre tag") << "<pre>hello\n\nhi</pre>" << "<pre> hello\n\nhi </pre>"
                              << false;
-    
+
     // Kill line breaks at the end.
     QTest::newRow("Line breaks") << "<p>Bunch of line breaks after last paragraph</p><br><br><br>"
                                  << "<p>Bunch of line breaks after last paragraph</p>"

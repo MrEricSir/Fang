@@ -58,11 +58,17 @@ protected:
     // Note: Can only be called after ImageGrabber completes!
     void traveseAndResizeImages(const QDomNode& node);
 
+    // Pre-process our news list.
+    void preProcess();
+
     // Post-process our news list.
     void postProcess();
 
     // Remove headers, footers, and other garbage.
     void postProcessDocString(QString& docString);
+
+    // Handles newlines, basically.
+    void preProcessDocString(QString& docString);
 
     // Resizes image dimensions.
     void imageResize(int width, int height, int* newWidth, int* newHeight);

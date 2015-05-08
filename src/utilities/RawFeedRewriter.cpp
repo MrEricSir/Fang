@@ -75,6 +75,9 @@ void RawFeedRewriter::rewrite(QList<RawNews *> *newsList)
     // Save our news list!</protestChant>
     this->newsList = newsList;
 
+    // Preprocess!
+    preProcess();
+
     QSet<QUrl> imageURLs;
 
     // Iterate over all the news we have.
@@ -104,8 +107,7 @@ bool RawFeedRewriter::isHTMLEmpty(QString html)
 {
     html.replace(" ", "");
     html.replace("\t", "");
-    html.replace("\n", "");
-    html.replace("\r", "");
+    html.replace("\007", "");
 
     return html.size() == 0;
 }
@@ -421,6 +423,20 @@ void RawFeedRewriter::traveseAndResizeImages(const QDomNode &node)
     }
 }
 
+void RawFeedRewriter::preProcess()
+{
+    // Iterate over all the news we have.
+    foreach(RawNews* news, *newsList) {
+        if (news->content.size()) {
+            preProcessDocString(news->content);
+        }
+
+        if (news->description.size()) {
+            preProcessDocString(news->description);
+        }
+    }
+}
+
 void RawFeedRewriter::postProcess()
 {
     // Iterate over all the news we have.
@@ -445,8 +461,18 @@ void RawFeedRewriter::postProcessDocString(QString &docString)
     docString.replace("<html xmlns=\"http://www.w3.org/1999/xhtml\"><body/></html>", ""); // This only happens if there's no content at all.
     docString.replace("&#xd;\n", " "); // I don't know why this happens, but it does.
 
+    // Unbeep our new lines.
+    docString.replace("\007", "\n");
+
     // Sometimes they're newlines, spaces, etc. at the front or end of the string. Kill it.
     docString = docString.trimmed();
+}
+
+void RawFeedRewriter::preProcessDocString(QString &docString)
+{
+    docString.replace("&#07;", ""); // Unbeep
+    docString.replace("\r", ""); // Fuck win32
+    docString.replace("\n", "&#07;"); // Beep beep!
 }
 
 void RawFeedRewriter::imageResize(int width, int height, int *newWidth, int *newHeight)

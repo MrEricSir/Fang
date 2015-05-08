@@ -1,6 +1,6 @@
 TEMPLATE = app
 
-QT += network sql quick webkit webkitwidgets svg
+QT += network sql quick webkit webkitwidgets svg xml
 
 QT -= sensors
 
@@ -13,6 +13,9 @@ RESOURCES += Resources.qrc \
 
 # Default rules for deployment.
 include(deployment.pri)
+
+# TidyLib
+include(tidylib/tidylib.pri)
 
 # Windows icon
 RC_FILE = win32.rc
@@ -27,7 +30,6 @@ SOURCES += src/main.cpp \
     src/models/ListModel.cpp \
     src/models/NewsItem.cpp \
     src/models/FeedItem.cpp \
-    src/parser/Parser.cpp \
     src/parser/RawFeed.cpp \
     src/parser/RawNews.cpp \
     src/FangApp.cpp \
@@ -78,13 +80,13 @@ SOURCES += src/main.cpp \
     src/operations/ExpireNewsOperation.cpp \
     src/operations/SetDBSettingOperation.cpp \
     src/db/DBSettings.cpp \
-    src/operations/GetAllDBSettingsOperation.cpp
+    src/operations/GetAllDBSettingsOperation.cpp \
+    src/parser/NewsParser.cpp
 	
 HEADERS += \
     src/models/ListModel.h \
     src/models/NewsItem.h \
     src/models/FeedItem.h \
-    src/parser/Parser.h \
     src/parser/RawFeed.h \
     src/parser/RawNews.h \
     src/FangApp.h \
@@ -136,7 +138,8 @@ HEADERS += \
     src/operations/SetDBSettingOperation.h \
     src/db/DBSettings.h \
     src/operations/GetAllDBSettingsOperation.h \
-    src/db/DBSettingsKey.h
+    src/db/DBSettingsKey.h \
+    src/parser/NewsParser.h
 
 mac {
     QT += macextras

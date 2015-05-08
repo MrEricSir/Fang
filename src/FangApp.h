@@ -19,7 +19,7 @@
 #include "models/ListModel.h"
 #include "models/FangSettings.h"
 #include "models/WebInteractor.h"
-#include "parser/Parser.h"
+#include "parser/NewsParser.h"
 #include "FangObject.h"
 #include "notifications/NotificationBase.h"
 #include "utilities/SingleInstanceCheck.h"
