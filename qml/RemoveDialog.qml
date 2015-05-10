@@ -1,4 +1,4 @@
-import QtQuick 2.0
+import QtQuick 2.4
 import Fang 1.0
 
 // Psst hey kid, you wanna remove a feed?

@@ -1,4 +1,4 @@
-import QtQuick 2.0
+import QtQuick 2.4
 import QtWebKit 3.0
 import QtWebKit.experimental 1.0
 import Fang 1.0

@@ -1,4 +1,4 @@
-import QtQuick 2.2
+import QtQuick 2.4
 import QtQuick.Window 2.1
 import Fang 1.0
 import QtQuick.Controls 1.2
@@ -270,7 +270,11 @@ Window {
                 anchors.leftMargin: 5;
                 anchors.bottomMargin: 5;
                 
+                //
+                // Disabled -- see Sidebar.qml to understand why.
+                //
                 // Button to re-open sidebar
+                /*
                 SidebarButton {
                     id: openSidebarButton
                     
@@ -291,6 +295,7 @@ Window {
                     
                     onClicked: sidebar.state = "open";
                 }
+                */
             }
         }
     }

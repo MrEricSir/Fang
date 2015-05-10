@@ -1,4 +1,4 @@
-import QtQuick 2.0
+import QtQuick 2.4
 
 /**
  * Represents all top-level screens (main frame, dialogs, etc.)

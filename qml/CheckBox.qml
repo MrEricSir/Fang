@@ -1,4 +1,4 @@
-import QtQuick 2.0
+import QtQuick 2.4
 
 // Provides a simple checkbox of any size with default colors.
 Button {

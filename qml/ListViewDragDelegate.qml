@@ -1,4 +1,4 @@
-import QtQuick 2.0
+import QtQuick 2.4
 
 /**
   * This is a draggable delegate for a ListView.

@@ -1,4 +1,4 @@
-import QtQuick 2.0
+import QtQuick 2.4
 
 // Feed list sidebar
 Item {
@@ -250,6 +250,12 @@ Item {
             }
             
             // Closes the sidebar.
+            //
+            // FEATURE REMOVED (for now?)
+            // We can't have an Open button on iOS because we can't lay content on top of the Safari
+            // browser
+
+            /*
             SidebarButton {
                 id: closeButton
                 
@@ -267,6 +273,7 @@ Item {
                 
                 onClicked: closeClicked()
             }
+            */
         }
     }
 }
