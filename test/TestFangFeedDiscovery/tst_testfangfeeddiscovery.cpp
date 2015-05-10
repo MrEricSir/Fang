@@ -31,10 +31,10 @@ void TestFangFeedDiscovery::testCase1()
     
     FeedDiscovery fd;
     QSignalSpy spy(&fd, SIGNAL(done(FeedDiscovery*)));
-    fd.checkFeed(QUrl(url));
+    fd.checkFeed(url);
     
     // Wait for the signal!
-    QVERIFY(spy.wait());  // default: up to 5 seconds
+    QVERIFY(spy.wait(6000));  // Up to 6 seconds
     QCOMPARE(spy.count(), 1);
     
     if (isValid) {

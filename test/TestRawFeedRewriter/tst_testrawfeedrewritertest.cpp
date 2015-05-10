@@ -23,6 +23,9 @@ TestRawFeedRewriterTest::TestRawFeedRewriterTest()
 
 void TestRawFeedRewriterTest::testCase1()
 {
+    // NOTE: In order to achieve consistent results, the QT_HASH_SEED environment variable MUST
+    // be set to 1
+
     QFETCH(QString, input);
     QFETCH(QString, output);
     QFETCH(bool,    images);
@@ -45,7 +48,8 @@ void TestRawFeedRewriterTest::testCase1()
     
     QCOMPARE(spy.count(), 1);
     
-    qDebug() << "Output: " << news.description;
+    //qDebug() << "Expected output: " << output;
+    //qDebug() << "Output: " << news.description;
     
     // Check to see what we got!
     QCOMPARE(news.description, output);
@@ -56,16 +60,16 @@ void TestRawFeedRewriterTest::testCase1_data()
     QTest::addColumn<QString>("input");  // HTML input
     QTest::addColumn<QString>("output"); // Expected HTML output
     QTest::addColumn<bool>("images");    // Set to true if we have to wait for image rewriter.
-    
+
     // Simplest edge cases.
     QTest::newRow("Empty String") << "" << "" << false;
     QTest::newRow("Bad HTML") << "</div>" << "" << false;
     QTest::newRow("Bad HTML 2") << "<b>bold text" << "<b>bold text</b>" << false;
-    
+
     // Newlines need to work within a pre tag.
-    QTest::newRow("Pre tag") << "<pre>hello\n\nhi</pre>" << "<pre>hello\n\nhi</pre>"
+    QTest::newRow("Pre tag") << "<pre>hello\n\nhi</pre>" << "<pre> hello\n\nhi </pre>"
                              << false;
-    
+
     // Kill line breaks at the end.
     QTest::newRow("Line breaks") << "<p>Bunch of line breaks after last paragraph</p><br><br><br>"
                                  << "<p>Bunch of line breaks after last paragraph</p>"
@@ -85,26 +89,25 @@ void TestRawFeedRewriterTest::testCase1_data()
     QTest::newRow("Share me") << "<p>hi</p><a href=\"http://www.facebook.com/share.php?u="
                                  "http://www.missionmission.org/2014/07/03/bingo/\"><img src=\""
                                  "http://i.imgur.com/ohnlAzj.png\">Share on Facebook</a>"
-                              << "<p>hi</p>"  << true;
+                              << "<p>hi</p>"  << false; // The image gets removed by the share detector
     
     // Image size rewriter (and reducer.)
     QTest::newRow("Image test") << "<img src=\"http://i.imgur.com/ohnlAzj.png\">"
-                              << "<img src=\"http://i.imgur.com/ohnlAzj.png\" width=\"400\""
-                                 " height=\"286\" align=\"left\">"  << true;
+                              << "<img height=\"286\" width=\"400\" align=\"left\""
+                                 " src=\"http://i.imgur.com/ohnlAzj.png\"/>"  << true;
     
     // Image size rewriter (and reducer) with STYLE.
     QTest::newRow("Image test 2") << "<img src=\"http://i.imgur.com/ohnlAzj.png\" style=\""
                                  "width: 500px;\">"
-                              << "<img src=\"http://i.imgur.com/ohnlAzj.png\" style=\"\" "
-                                 "width=\"400\""
-                                 " height=\"286\" align=\"left\">"  << true;
+                                  << "<img height=\"286\" width=\"400\" align=\"left\""
+                                     " src=\"http://i.imgur.com/ohnlAzj.png\"/>"  << true;
     
     // Embedded Vine video.
     QTest::newRow("Vine") << "<iframe class=\"vine-embed\" src=\""
                              "https://vine.co/v/MwxwzKAupL6/embed/postcard\" "
                              "width=\"560\" height=\"560\" frameborder=\"0\"></iframe>"
-                          << ""  << true;
-    
+                          << ""  << false;
+
     // Streetsblog formatting
     QTest::newRow("Streetsblog") << "<p><div class=\"wp-caption aligncenter\" id=\"attachment_98788\" "
                                     "style=\"width: 586px;\"><a href=\"http://la.streetsblog.org/"
@@ -116,14 +119,14 @@ void TestRawFeedRewriterTest::testCase1_data()
                                     "<p class=\"wp-caption-text\">How should California&#8217;s high speed "
                                     "rail interface with Los Angeles County? Give your input at an upcoming "
                                     "meeting or via email. Image via CAHSRA</p></div></p>"
-                                 << "<p></p><div class=\"wp-caption aligncenter\" id=\"attachment_98788\" style=\"\">"
+                                 << "<div id=\"attachment_98788\" class=\"wp-caption aligncenter\">"
                                     "<a href=\"http://la.streetsblog.org/wp-content/uploads/2014/08/hsr-Edited.jpg\">"
                                     "<img alt=\"How should California's high speed rail interface with Los Angeles "
                                     "County? Give your input at an upcoming meeting or via email. Image via CAHSRA\" "
-                                    "class=\" wp-image-98788 \" height=\"185\" src=\"http://i.imgur.com/523Qeov.jpg\" "
-                                    "width=\"400\" align=\"left\"></a><p class=\"wp-caption-text\">How should "
+                                    "height=\"185\" width=\"400\" align=\"left\" class=\"wp-image-98788\" "
+                                    "src=\"http://i.imgur.com/523Qeov.jpg\"/></a><p class=\"wp-caption-text\">How should "
                                     "California’s high speed rail interface with Los Angeles County? Give your input "
-                                    "at an upcoming meeting or via email. Image via CAHSRA</p></div>"  << true;
+                                    "at an upcoming meeting or via email. Image via CAHSRA</p></div>"  << false; // No image resize
 }
 
 QTEST_MAIN(TestRawFeedRewriterTest)

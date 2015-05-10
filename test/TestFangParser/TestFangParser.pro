@@ -16,7 +16,7 @@ TEMPLATE = app
 
 
 SOURCES += tst_fangparser.cpp \
-    ../../src/parser/Parser.cpp \
+    ../../src/parser/NewsParser.cpp \
     ../../src/parser/ParserInterface.cpp \
     ../../src/parser/RawFeed.cpp \
     ../../src/parser/RawNews.cpp \
@@ -26,7 +26,7 @@ SOURCES += tst_fangparser.cpp \
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
 HEADERS += \
-    ../../src/parser/Parser.h \
+    ../../src/parser/NewsParser.h \
     ../../src/parser/ParserInterface.h \
     ../../src/parser/RawFeed.h \
     ../../src/parser/RawNews.h \

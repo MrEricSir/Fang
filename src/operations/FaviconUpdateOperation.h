@@ -4,6 +4,7 @@
 #include "DBOperation.h"
 #include <QObject>
 #include <QUrl>
+#include <QImage>
 
 #include "../models/FeedItem.h"
 #include "../utilities/FaviconGrabber.h"

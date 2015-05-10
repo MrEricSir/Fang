@@ -6,7 +6,7 @@
 #include <QUrl>
 
 #include "SimpleStateMachine.h"
-#include "../parser/Parser.h"
+#include "../parser/NewsParser.h"
 #include "../parser/RawFeed.h"
 #include "../utilities/WebPageGrabber.h"
 #include "../FangObject.h"
@@ -84,9 +84,9 @@ public slots:
     
     /**
      * @brief Call this with a feed URL to check to get started!  Wait for done()
-     * @param url
+     * @param sURL
      */
-    void checkFeed(QUrl url);
+    void checkFeed(QString sURL);
     
 private slots:
     
@@ -102,7 +102,10 @@ private slots:
     void onSecondParseDone();
     
     // WebPageGrabber slots.
-    void onPageGrabberReady(QWebPage* page);
+    void onPageGrabberReady(QDomDocument* page);
+
+    // Try to find RSS and Atom feed, if available.
+    void traveseXML(const QDomNode& node);
     
 private:
     // Sets the error flag, error string, and triggers the ERROR state.
@@ -113,9 +116,12 @@ private:
     QUrl _feedURL;
     bool _error;
     QString _errorString;
+
+    QString rssURL;
+    QString atomURL;
     
-    Parser parserFirstTry;
-    Parser parserSecondTry;
+    NewsParser parserFirstTry;
+    NewsParser parserSecondTry;
     
     WebPageGrabber pageGrabber;
     

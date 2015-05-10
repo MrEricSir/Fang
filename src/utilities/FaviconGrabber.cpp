@@ -2,8 +2,7 @@
 #include <QDebug>
 #include <QString>
 #include <QStringList>
-#include <QWebElement>
-#include <QWebFrame>
+#include <QImage>
 
 #include "Utilities.h"
 #include "NetworkUtilities.h"
@@ -25,7 +24,7 @@ FaviconGrabber::FaviconGrabber(QObject *parent) :
     
     // Signals!
     connect(&manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onRequestFinished(QNetworkReply*)));
-    connect(&webGrabber, SIGNAL(ready(QWebPage*)), this, SLOT(onWebGrabberReady(QWebPage*)));
+    connect(&webGrabber, &WebPageGrabber::ready, this, &FaviconGrabber::onWebGrabberReady);
 }
 
 void FaviconGrabber::find(const QUrl &url)
@@ -148,44 +147,67 @@ void FaviconGrabber::onRequestFinished(QNetworkReply * reply)
     }
 }
 
-void FaviconGrabber::onWebGrabberReady(QWebPage *page)
+void FaviconGrabber::onWebGrabberReady(QDomDocument *page)
 {
     // Could indicate no internet.
-    if (page == NULL) {
+    if (page == NULL || page->isNull()) {
         machine.setState(CHECK_ICONS);
         
         return;
     }
-    
-    // Find the first feed URL.
-    QWebElement doc = page->mainFrame()->documentElement();
-    if (doc.isNull()) {
-        machine.setState(CHECK_ICONS);
-        
-        return;
-    }
-    
-    // Several types of favicon links:
-    //     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-    //     <link rel="icon" href="/favicon.ico" type="image/x-icon" />
-    //     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
-    QWebElement touchIconElement = doc.findFirst("link[rel=apple-touch-icon]");
-    QWebElement winMetroIconElement = doc.findFirst("meta[name=msapplication-TileImage]");
-    QWebElement iconElement = doc.findFirst("link[rel=icon]");
-    QWebElement shortcutIconElement = doc.findFirst("link[rel=shortcut\\ icon]");
-    
-    // If we got one, set it!
-    if (!touchIconElement.isNull() && touchIconElement.hasAttribute("href"))
-        urlsToCheck << QUrl(touchIconElement.attribute("href"));
-    
-    if (!winMetroIconElement.isNull() && winMetroIconElement.hasAttribute("content"))
-        urlsToCheck << QUrl(winMetroIconElement.attribute("content"));
-    
-    if (!iconElement.isNull() && iconElement.hasAttribute("href"))
-        urlsToCheck << QUrl(iconElement.attribute("href"));
-    
-    if (!shortcutIconElement.isNull() && shortcutIconElement.hasAttribute("href"))
-        urlsToCheck << QUrl(shortcutIconElement.attribute("href"));
+
+    traveseXML(*page);
     
     machine.setState(CHECK_ICONS);
+}
+
+void FaviconGrabber::traveseXML(const QDomNode &node)
+{
+    QDomNode domNode = node;
+    QDomElement domElement;
+
+    // Loop sibblings at this level.
+    while(!(domNode.isNull()))
+    {
+        QString nodeName = domNode.nodeName();
+        //qDebug() << "Node: " << nodeName;
+        //qDebug() << "Value: "  << domNode.nodeValue();
+
+        // Stop condition.
+        if (nodeName == "body") {
+            // Given that we're only intersted in headers, we can stop when we get to the body node.
+
+            return;
+        }
+
+        if (domNode.isElement())
+        {
+            domElement = domNode.toElement();
+            if(!(domElement.isNull()))
+            {
+                // Examples of what we're looking for:
+                //     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+                //     <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+                //     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+                if (nodeName == "link" && domElement.hasAttribute("href")) {
+                    if (domElement.attribute("rel").toLower() == "apple-touch-icon" ||
+                            domElement.attribute("rel").toLower() == "icon" ||
+                            domElement.attribute("rel").toLower() == "shortcut icon") {
+                        urlsToCheck << QUrl(domElement.attribute("href"));
+                    }
+                }
+            }
+        }
+
+        // Recurse children.
+        QDomNode child = domNode.firstChild();
+        while(!child.isNull()) {
+            // Recurse!
+            traveseXML(child);
+            child = child.nextSibling();
+        }
+
+        // Continue outter loop.
+        domNode = domNode.nextSibling();
+    }
 }

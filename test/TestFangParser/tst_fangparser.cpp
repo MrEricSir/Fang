@@ -3,7 +3,7 @@
 #include <QSignalSpy>
 #include <QNetworkAccessManager>
 
-#include "../../src/parser/Parser.h"
+#include "../../src/parser/NewsParser.h"
 
 /**
  * @brief Tests a number of RSS feeds I've saved from around the web.  
@@ -34,7 +34,7 @@ void TestFangParser::parseTest()
     QFETCH(QString, guid);
     QFETCH(QDateTime, firstNewsTimestamp);
     
-    Parser parser(this);
+    NewsParser parser(this);
     
     QSignalSpy spy(&parser, SIGNAL(done()));
     

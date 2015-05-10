@@ -1,10 +1,10 @@
-#include "Parser.h"
+#include "NewsParser.h"
 
 #include <QDebug>
 #include <QFile>
 #include <QFileInfo>
 
-Parser::Parser(QObject *parent) :
+NewsParser::NewsParser(QObject *parent) :
     ParserInterface(parent),
     feed(NULL), result(OK),
     currentReply(NULL), redirectReply(NULL),
@@ -18,16 +18,16 @@ Parser::Parser(QObject *parent) :
     ParserXMLWorker* worker = new ParserXMLWorker();
     worker->moveToThread(&workerThread);
     connect(&workerThread, &QThread::finished, worker, &QObject::deleteLater);
-    connect(this, &Parser::triggerDocStart, worker, &ParserXMLWorker::documentStart);
-    connect(this, &Parser::triggerDocEnd, worker, &ParserXMLWorker::documentEnd);
-    connect(this, &Parser::triggerAddXML, worker, &ParserXMLWorker::addXML);
+    connect(this, &NewsParser::triggerDocStart, worker, &ParserXMLWorker::documentStart);
+    connect(this, &NewsParser::triggerDocEnd, worker, &ParserXMLWorker::documentEnd);
+    connect(this, &NewsParser::triggerAddXML, worker, &ParserXMLWorker::addXML);
     connect(worker, SIGNAL(done(RawFeed*)),
             this, SLOT(workerDone(RawFeed*)));
     
     workerThread.start();
 }
 
-Parser::~Parser()
+NewsParser::~NewsParser()
 {
     workerThread.quit();
     workerThread.wait();
@@ -35,7 +35,7 @@ Parser::~Parser()
     delete currentReply;
 }
 
-void Parser::parse(const QUrl& url, bool noParseIfCached)
+void NewsParser::parse(const QUrl& url, bool noParseIfCached)
 {
     initParse(url);
     
@@ -54,7 +54,7 @@ void Parser::parse(const QUrl& url, bool noParseIfCached)
     connect(currentReply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(error(QNetworkReply::NetworkError)));
 }
 
-void Parser::parseFile(const QString &filename)
+void NewsParser::parseFile(const QString &filename)
 {
     initParse();
     
@@ -75,7 +75,7 @@ void Parser::parseFile(const QString &filename)
     emit triggerDocEnd();
 }
 
-void Parser::error(QNetworkReply::NetworkError ne)
+void NewsParser::error(QNetworkReply::NetworkError ne)
 {
     Q_UNUSED(ne);
     //qDebug() << "Error!!!!! " << ne << " " << currentReply->errorString();
@@ -83,12 +83,12 @@ void Parser::error(QNetworkReply::NetworkError ne)
     currentReply->deleteLater();
     currentReply = 0;
     
-    result = Parser::NETWORK_ERROR;
+    result = NewsParser::NETWORK_ERROR;
     emit done();
 }
 
 
-void Parser::readyRead()
+void NewsParser::readyRead()
 {
     int statusCode = currentReply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
     if (statusCode >= 200 && statusCode < 300) {
@@ -97,7 +97,7 @@ void Parser::readyRead()
     }
 }
 
-void Parser::metaDataChanged()
+void NewsParser::metaDataChanged()
 {
     QUrl redirectionTarget = currentReply->attribute(
                 QNetworkRequest::RedirectionTargetAttribute).toUrl();
@@ -119,7 +119,7 @@ void Parser::metaDataChanged()
                 currentReply->deleteLater();
                 currentReply = 0;
                 
-                result = Parser::OK;
+                result = NewsParser::OK;
                 emit done();
                 
                 return;
@@ -128,17 +128,17 @@ void Parser::metaDataChanged()
     }
 }
 
-Parser::ParseResult Parser::getResult()
+NewsParser::ParseResult NewsParser::getResult()
 {
     return result;
 }
 
-RawFeed* Parser::getFeed()
+RawFeed* NewsParser::getFeed()
 {
-    return result == Parser::OK ? feed : NULL;
+    return result == NewsParser::OK ? feed : NULL;
 }
 
-void Parser::netFinished(QNetworkReply *reply)
+void NewsParser::netFinished(QNetworkReply *reply)
 {
     if (redirectReply == reply)
         return; // This was the previous redirect.
@@ -150,9 +150,9 @@ void Parser::netFinished(QNetworkReply *reply)
     emit triggerDocEnd();
 }
 
-void Parser::workerDone(RawFeed* rawFeed)
+void NewsParser::workerDone(RawFeed* rawFeed)
 {
-    if (result != Parser::IN_PROGRESS) {
+    if (result != NewsParser::IN_PROGRESS) {
         // Already emitted a finished signal.  Nothing to dooooo.
         return;
     }
@@ -165,7 +165,7 @@ void Parser::workerDone(RawFeed* rawFeed)
         if (feed->items.size() > 0 || feed->title != "") {
             feed->url = finalFeedURL;
             
-            result = Parser::OK;
+            result = NewsParser::OK;
             //qDebug() << "Here, done is emitted.";
             emit done();
             
@@ -174,13 +174,13 @@ void Parser::workerDone(RawFeed* rawFeed)
     }
     
     // What we found must not have been an RSS/Atom feed.
-    result = Parser::PARSE_ERROR;
+    result = NewsParser::PARSE_ERROR;
     emit done();
 }
 
-void Parser::initParse(const QUrl& url)
+void NewsParser::initParse(const QUrl& url)
 {
-    result = Parser::IN_PROGRESS;
+    result = NewsParser::IN_PROGRESS;
     finalFeedURL = url;
     emit triggerDocStart();
 }

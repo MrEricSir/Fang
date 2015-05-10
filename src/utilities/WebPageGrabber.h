@@ -1,41 +1,65 @@
 #ifndef WEBPAGEGRABBER_H
 #define WEBPAGEGRABBER_H
 
+#include <QDomElement>
+#include <QDomDocument>
 #include <QObject>
-#include <QWebView>
-#include <QWebPage>
 #include <QString>
+#include <QUrl>
+#include <QTimer>
 #include "../FangObject.h"
-#include "../network/FangNetworkAccessManager.h"
+#include "SimpleHTTPDownloader.h"
 
 /**
- * @brief Loads a web page at a given URL and signals with the page when done.
+ * @brief Loads a web page at a given URL and signals with the XHTML document when done.
+ *
+ * Note that this class is not rentrant -- one page at a time, fellas.
  */
 class WebPageGrabber : public FangObject
 {
     Q_OBJECT
 public:
-    explicit WebPageGrabber(QObject *parent = 0);
+    // If handleMetaRefresh is true, we'll perform HTML-based redirects.
+
+    /**
+     * @brief WebPageGrabber creates an XML document from either a string or a URL.
+     * @param handleMetaRefresh If true, handles refreshes from within HTML documents rather than
+     *                          just HTTP communication.
+     * @param timeoutMS         Timeout after last download activity in milliseconds
+     * @param parent
+     */
+    explicit WebPageGrabber(bool handleMetaRefresh = true, int timeoutMS = 5000, QObject *parent = 0);
     virtual ~WebPageGrabber();
     
 signals:
-    
-    void ready(QWebPage* page);
+    // If you requested a URL, ready() will be emitted when it's ready!
+    void ready(QDomDocument* page);
     
 public slots:
-    
-    void load(const QUrl& url);
-    void load(const QString& htmlString, const QUrl& baseUrl = QUrl());
+    // Fetches the webpage and emits ready() with the DOM document.
+    // Signals with null on an error.
+    void load(const QUrl &url);
+
+    // Load the HTML string into a DOM document and returns it (no signal is emmitted.)
+    // Returns null on an error.
+    QDomDocument* load(const QString& htmlString);
     
 private slots:
-    
-    void onLoadFinished(bool ok);
-    void onUrlChanged(const QUrl& url);
+    // Uh oh, an error!
+    void onDownloadError(QString err);
+
+    // We got some HTTP content!
+    void onDownloadFinished(QByteArray array);
+
+    // Recursively searches for a meta refresh in the XHTML DOM.
+    // Sets redirectURL if one is found.
+    void traveseXML(const QDomNode& node);
     
 private:
-    QWebView webView;
-    FangNetworkAccessManager networkManager;
-    
+    SimpleHTTPDownloader downloader;
+    QDomDocument document;
+    bool handleMetaRefresh;
+    QString redirectURL;
 };
 
 #endif // WEBPAGEGRABBER_H

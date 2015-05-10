@@ -48,6 +48,10 @@ void ImageGrabber::onRequestFinished(QNetworkReply * reply)
 {
     QUrl requestedUrl = reply->request().url();
     Q_ASSERT(urlsToCheck.contains(requestedUrl));
+
+    //
+    // TODO: Handle HTTP redirects correctly.
+    //
     
     // Let's see what we got 'ere.
     if (reply->error() != QNetworkReply::NoError) {

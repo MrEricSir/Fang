@@ -60,5 +60,5 @@ void BatchFeedDiscovery::runDiscovery(FeedDiscovery* discovery, FeedItem* item)
 {
     lookup.insert(discovery, item);
     item->setIsUpdating(true);
-    discovery->checkFeed(item->getURL());
+    discovery->checkFeed(item->getURL().toString());
 }
