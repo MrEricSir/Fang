@@ -77,7 +77,7 @@ Window {
         close.accepted = false;
         news.close();
     }
-    
+
     // Read-only: List of all open dialogs
     property var openDialogs: []
     
@@ -139,10 +139,14 @@ Window {
             news.newsFocus = true;
         }
     }
-    
+
+    // Open the splash screen.
+    Component.onCompleted: {
+        openDialog("SplashScreenDialog.qml");
+    }
     
     color: "black"; // For transitions.
-        
+
     /**
      * Operator: mainFrame turn on.
      *
@@ -156,7 +160,7 @@ Window {
      */
     FangScreen {
         id: mainFrame;
-        
+
         //anchors.fill: parent;
         
         // The feed list sidebar.

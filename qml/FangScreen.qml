@@ -39,8 +39,8 @@ Rectangle {
         State { name: "out"; }
     ]
     
-    // Default state is faded in
-    state: "in";
+    // Default state is faded out for splash screen.
+    state: "out";
     
     Rectangle {
         id: blocker;

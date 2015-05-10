@@ -28,5 +28,6 @@
         <file>CheckBox.qml</file>
         <file>FangScrollView.qml</file>
         <file>FangIcon.qml</file>
+        <file>SplashScreenDialog.qml</file>
     </qresource>
 </RCC>

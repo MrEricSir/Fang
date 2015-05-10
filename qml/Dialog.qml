@@ -20,10 +20,13 @@ FangScreen {
     // Read only.
     property bool isClosing: dialogMainContainer.state === "closed" || dismissTimer.running
     property bool isClosed: dialogMainContainer.state === "closed"
-    property bool wasOpened: false
+    property bool wasOpened: openAtStart ? true : false
+
+    // Only used for splash screen.
+    property bool openAtStart: false;
     
     color: style.color.dialogBackground
-    visible: false // Managed by state transitions
+    visible: openAtStart ? true : false // Managed by state transitions
     
     // Opens the dialog.
     function open() {
@@ -59,7 +62,7 @@ FangScreen {
     Item {
         id: dialogMainContainer
         
-        state: "closed"
+        state: openAtStart ? "open" : "closed"
         
         states: [
             State { name: "open" },
@@ -152,7 +155,7 @@ FangScreen {
         
         // Dialog contents
         Item {
-            anchors.top: dialogTitle.bottom
+            anchors.top: openAtStart? parent.top : dialogTitle.bottom
             anchors.topMargin: 15
             anchors.bottom: parent.bottom
             anchors.left: parent.left
