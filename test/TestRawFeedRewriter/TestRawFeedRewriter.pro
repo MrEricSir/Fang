@@ -12,6 +12,7 @@ CONFIG   -= app_bundle
 
 TEMPLATE = app
 
+# TidyLib
 VPATH += ../../tidylib ../../tidylib/include
 INCLUDEPATH += ../../tidylib ../../tidylib/include
 include(../../tidylib/tidylib.pri)
@@ -22,7 +23,9 @@ SOURCES += tst_testrawfeedrewritertest.cpp \
     ../../src/utilities/ImageGrabber.cpp \
     ../../src/FangObject.cpp \
     ../../src/parser/RawNews.cpp \
-    ../../src/network/FangNetworkAccessManager.cpp
+    ../../src/network/FangNetworkAccessManager.cpp \
+    ../../src/utilities/WebPageGrabber.cpp \
+    ../../src/utilities/SimpleHTTPDownloader.cpp
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
 HEADERS += \
@@ -30,4 +33,6 @@ HEADERS += \
     ../../src/utilities/ImageGrabber.h \
     ../../src/FangObject.h \
     ../../src/parser/RawNews.h \
-    ../../src/network/FangNetworkAccessManager.h
+    ../../src/network/FangNetworkAccessManager.h \
+    ../../src/utilities/WebPageGrabber.h \
+    ../../src/utilities/SimpleHTTPDownloader.h

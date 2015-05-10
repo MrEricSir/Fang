@@ -4,10 +4,6 @@
 #include <QDomDocument>
 #include <QDebug>
 
-// TidyLib
-#include <tidy.h>
-#include <buffio.h>
-
 // Image width max.
 #define MAX_ELEMENT_WIDTH 400
 
@@ -19,6 +15,7 @@
 
 RawFeedRewriter::RawFeedRewriter(QObject *parent) :
     FangObject(parent),
+    webPageGrabber(false),
     imageGrabber(),
     newsList(NULL)
 {
@@ -274,72 +271,19 @@ void RawFeedRewriter::traverseXmlNode(const QDomNode &node, QSet<QUrl> &imageURL
 
 QString RawFeedRewriter::rewriteHTML(const QString &input, QSet<QUrl> &imageURLs)
 {
-    // In this method we use TidyLib to convert the (potentially crappy) HTML into XHTML.  This
-    // will add a doctype and other unwanted headers/footers, so we strip those out in a separate
-    // post-processing method.
+    // In this method we use TidyLib via WebPageGrabber to convert the (potentially crappy) HTML
+    // into XHTML.  This will add a doctype and other unwanted headers/footers, so we strip those
+    // out in a separate post-processing method.
 
-    TidyBuffer output = {0};
-    TidyBuffer errbuf = {0};
-
-    int rc = -1;
-    Bool ok;
-
-    TidyDoc tdoc = tidyCreate();                     // Initialize "document"
-
-    // QString can convert to/from utf8
-    tidySetInCharEncoding(tdoc, "utf8");
-    tidySetOutCharEncoding(tdoc, "utf8");
-
-    //printf( "Tidying:\t%s\n", input );
-
-    ok = tidyOptSetBool( tdoc, TidyXhtmlOut, yes );  // Convert to XHTML
-    if ( ok )
-        ok = tidyOptSetInt( tdoc, TidyIndentContent, TidyNoState );  // Don't pretty print
-    if ( ok )
-      rc = tidySetErrorBuffer( tdoc, &errbuf );      // Capture diagnostics
-    if ( rc >= 0 )
-      rc = tidyParseString( tdoc, input.toUtf8().constData());           // Parse the input
-    if ( rc >= 0 )
-      rc = tidyCleanAndRepair( tdoc );               // Tidy it up!
-    if ( rc >= 0 )
-      rc = tidyRunDiagnostics( tdoc );               // Kvetch
-    if ( rc > 1 )                                    // If error, force output.
-      rc = ( tidyOptSetBool(tdoc, TidyForceOutput, yes) ? rc : -1 );
-    if ( rc >= 0 )
-      rc = tidySaveBuffer( tdoc, &output );          // Pretty Print
-
-    // TODO: Error handling?
-//    if ( rc >= 0 )
-//    {
-//      if ( rc > 0 )
-//        printf( "\nDiagnostics:\n\n%s", errbuf.bp );
-//      printf( "\nAnd here is the result:\n\n%s", output.bp );
-//    }
-//    else
-//      printf( "A severe error (%d) occurred.\n", rc );
-
-    QString result = "";
-    if (rc > 0 && output.bp) {
-        result = QString::fromUtf8((char*)output.bp);
-    } else {
-        qDebug() << "Error!";
-        return "";
-    }
-
-    // Free memory.
-    tidyBufFree( &output );
-    tidyBufFree( &errbuf );
-    tidyRelease( tdoc );
-
-    QDomDocument doc;
-    if (!doc.setContent(result) || doc.isNull()) {
+    QDomDocument* doc = webPageGrabber.load(input);
+    if (doc == NULL || doc->isNull()) {
         qDebug() << "ERROR!!!!!";
         return "";
     }
 
     // Sanitize the document.
-    traverseXmlNode(doc, imageURLs);
-    QString docString = doc.toString( -1 ); // -1 means no newlines!
+    traverseXmlNode(*doc, imageURLs);
+    QString docString = doc->toString( -1 ); // -1 means no newlines!
 
     return docString;
 }

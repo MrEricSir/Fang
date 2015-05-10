@@ -3,11 +3,11 @@
 
 #include <QObject>
 #include <QList>
-#include <QDomElement>
 
 #include "../parser/RawNews.h"
 #include "../FangObject.h"
 #include "ImageGrabber.h"
+#include "WebPageGrabber.h"
 
 /**
  * @brief Takes in a "raw" HTML feed and processes it in the following ways:
@@ -82,7 +82,10 @@ private:
     // The current news list.
     QList<RawNews*>* newsList;
 
-    // Image grabber.
+    // Web page grabber.
+    WebPageGrabber webPageGrabber;
+
+    // Image grabber!  GRAB GRAB GRAB
     ImageGrabber imageGrabber;
 
     // Setup.

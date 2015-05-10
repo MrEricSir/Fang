@@ -1,6 +1,6 @@
 TEMPLATE = app
 
-QT += network sql quick webkit webkitwidgets svg xml
+QT += network sql quick webkitwidgets svg xml
 
 QT -= sensors
 
@@ -48,7 +48,6 @@ SOURCES += src/main.cpp \
     src/utilities/WebPageGrabber.cpp \
     src/operations/FaviconUpdateOperation.cpp \
     src/models/AllNewsFeedItem.cpp \
-    src/utilities/WebImageSizeRewriter.cpp \
     src/utilities/ImageGrabber.cpp \
     src/operations/UpdateTitleOperation.cpp \
     src/parser/ParserInterface.cpp \
@@ -81,7 +80,8 @@ SOURCES += src/main.cpp \
     src/operations/SetDBSettingOperation.cpp \
     src/db/DBSettings.cpp \
     src/operations/GetAllDBSettingsOperation.cpp \
-    src/parser/NewsParser.cpp
+    src/parser/NewsParser.cpp \
+    src/utilities/SimpleHTTPDownloader.cpp
 	
 HEADERS += \
     src/models/ListModel.h \
@@ -105,7 +105,6 @@ HEADERS += \
     src/utilities/WebPageGrabber.h \
     src/operations/FaviconUpdateOperation.h \
     src/models/AllNewsFeedItem.h \
-    src/utilities/WebImageSizeRewriter.h \
     src/utilities/ImageGrabber.h \
     src/operations/UpdateTitleOperation.h \
     src/parser/ParserInterface.h \
@@ -139,7 +138,8 @@ HEADERS += \
     src/db/DBSettings.h \
     src/operations/GetAllDBSettingsOperation.h \
     src/db/DBSettingsKey.h \
-    src/parser/NewsParser.h
+    src/parser/NewsParser.h \
+    src/utilities/SimpleHTTPDownloader.h
 
 mac {
     QT += macextras

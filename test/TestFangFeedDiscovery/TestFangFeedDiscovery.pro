@@ -14,19 +14,25 @@ CONFIG   -= app_bundle
 
 TEMPLATE = app
 
+# TidyLib
+VPATH += ../../tidylib ../../tidylib/include
+INCLUDEPATH += ../../tidylib ../../tidylib/include
+include(../../tidylib/tidylib.pri)
+
 
 SOURCES += tst_testfangfeeddiscovery.cpp \
     ../../src/utilities/FeedDiscovery.cpp \
     ../../src/utilities/SimpleStateMachine.cpp \
     ../../src/utilities/WebPageGrabber.cpp \
     ../../src/parser/OPMLParser.cpp \
-    ../../src/parser/Parser.cpp \
+    ../../src/parser/NewsParser.cpp \
     ../../src/parser/ParserInterface.cpp \
     ../../src/parser/RawFeed.cpp \
     ../../src/parser/RawNews.cpp \
     ../../src/FangObject.cpp \
     ../../src/parser/ParserXMLWorker.cpp \
-    ../../src/network/FangNetworkAccessManager.cpp
+    ../../src/network/FangNetworkAccessManager.cpp \
+    ../../src/utilities/SimpleHTTPDownloader.cpp
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
 HEADERS += \
@@ -34,10 +40,11 @@ HEADERS += \
     ../../src/utilities/SimpleStateMachine.h \
     ../../src/utilities/WebPageGrabber.h \
     ../../src/parser/OPMLParser.h \
-    ../../src/parser/Parser.h \
+    ../../src/parser/NewsParser.h \
     ../../src/parser/ParserInterface.h \
     ../../src/parser/RawFeed.h \
     ../../src/parser/RawNews.h \
     ../../src/FangObject.h \
     ../../src/parser/ParserXMLWorker.h \
-    ../../src/network/FangNetworkAccessManager.h
+    ../../src/network/FangNetworkAccessManager.h \
+    ../../src/utilities/SimpleHTTPDownloader.h

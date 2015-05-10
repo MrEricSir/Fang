@@ -6,8 +6,6 @@
 #include <QNetworkReply>
 #include <QList>
 #include <QPair>
-#include <QWebPage>
-#include <QImage>
 
 #include "WebPageGrabber.h"
 #include "SimpleStateMachine.h"
@@ -69,7 +67,10 @@ private slots:
     /**
      * @brief Completion for WEB_GRABBER
      */
-    void onWebGrabberReady(QWebPage* page);
+    void onWebGrabberReady(QDomDocument* page);
+
+    // Recursively searches for images in the XHTML DOM.
+    void traveseXML(const QDomNode& node);
     
 private:
     SimpleStateMachine machine;
