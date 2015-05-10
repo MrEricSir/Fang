@@ -6,7 +6,10 @@
 
 VPATH += tidylib tidylib/include
 INCLUDEPATH += tidylib tidylib/include
-#DEFINES -= UNICODE
+
+# Disable deprecation warnings.
+win32:DEFINES += "_CRT_SECURE_NO_WARNINGS" "_CRT_NONSTDC_NO_DEPRECATE"
+
 
 # Input
 HEADERS += access.h \
