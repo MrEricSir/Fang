@@ -14,11 +14,12 @@ Window {
     visibility: windowSettings.maximized ?
                     Window.Maximized : Window.Windowed;
     
-    minimumWidth: 640;
+    minimumWidth: Math.max(640, sidebar.width + minimumNewsWidth);
     minimumHeight: 450;
     
     // Treat as const
-    property int sidebarWidth: 230;
+    property int minimumSidebarWidth: 230;
+    property int minimumNewsWidth: 400;
     
     // Style object.
     Style {
@@ -69,6 +70,9 @@ Window {
         property bool maximized: false;
         property int width: 900;
         property int height: 700;
+
+        // Standard settings.
+        property alias sidebarWidth: sidebar.width;
     }
     
     // This is a hack to prevent Fang from hanging when closed on
@@ -176,7 +180,9 @@ Window {
             Sidebar {
                 id: sidebar;
 
-                width: sidebarWidth;
+                Layout.minimumWidth: minimumSidebarWidth;
+
+                width: minimumSidebarWidth;
                 state: "open";
 
                 // Now isn't that special?
@@ -187,6 +193,10 @@ Window {
                     State { name: "closed"; }
                 ]
 
+                // Currently disabled -- will need something like this for mobile, but
+                // not realy needed for desktop
+                // TODO
+                /*
                 transitions: [
                     Transition {
                         from: "open";
@@ -239,7 +249,7 @@ Window {
                             }
                         }
                     }
-                ]
+                ] */
 
                 onCloseClicked: sidebar.state = "closed";
 
@@ -258,6 +268,7 @@ Window {
                 id: news;
 
                 Layout.fillWidth: true
+                Layout.minimumWidth: minimumNewsWidth;
 
                 newsFocus: true // set by dialog system
 
