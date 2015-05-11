@@ -127,6 +127,17 @@ void TestRawFeedRewriterTest::testCase1_data()
                                     "src=\"http://i.imgur.com/523Qeov.jpg\"/></a><p class=\"wp-caption-text\">How should "
                                     "California’s high speed rail interface with Los Angeles County? Give your input "
                                     "at an upcoming meeting or via email. Image via CAHSRA</p></div>"  << false; // No image resize
+
+    // MissionLocal whitespace issues
+    QTest::newRow("MissionLocal") << "<p>As construction nears completion at V20, the 18 unit condo at 20th and Valencia, Sutter "
+                                     "Pacific Medical Foundation plans to open a medical facility in the ground floor commercial "
+                                     "space – if it&#8217;s approved by the Planning Commission.  Some Valencia Street neighbors, "
+                                     "however,  are working to prevent that from happening or at least working to get it downsized.</p>"
+                                  << "<p>As construction nears completion at V20, the 18 unit condo at 20th and Valencia, Sutter "
+                                     "Pacific Medical Foundation plans to open a medical facility in the ground floor commercial "
+                                     "space – if it&#8217;s approved by the Planning Commission.  Some Valencia Street neighbors, "
+                                     "however,  are working to prevent that from happening or at least working to get it downsized.</p>"
+                                  << false;
 }
 
 QTEST_MAIN(TestRawFeedRewriterTest)

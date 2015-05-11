@@ -92,3 +92,6 @@ OTHER_FILES += \
     feeds/wallstreetjournal.atom \
     feeds/nationalreview.rss \
     feeds/thenewrepublic.rss
+
+DISTFILES += \
+    feeds/missionlocal.rss

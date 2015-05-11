@@ -220,7 +220,7 @@ void RawFeedRewriter::traverseXmlNode(const QDomNode &node, QSet<QUrl> &imageURL
         }
 
         // Remove non-breaking spaces.
-        // TODO: Replace with a text node?
+        // An extra space will be added if the next node is text (see below.)
         if (nodeName == "nbsp") {
             remove = true;
         }
@@ -228,6 +228,11 @@ void RawFeedRewriter::traverseXmlNode(const QDomNode &node, QSet<QUrl> &imageURL
         // Only permit line breaks between text.
         if (lastSibling != "#text" && nodeName == "br") {
             remove = true;
+        }
+
+        // Add the any lost space back in from &nbsp; removals.
+        if (lastSibling == "nbsp" && nodeName == "#text") {
+            domNode.setNodeValue(" " + domNode.nodeValue());
         }
 
         // Recurse children.

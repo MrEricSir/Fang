@@ -63,7 +63,7 @@ Rectangle {
                     target: blocker;
                     properties: "color";
                     from: "transparent";
-                    to: "black";
+                    to: style.color.blockerBackground;
                     duration: 300;
                     easing.type: Easing.InOutQuad;
                 }
@@ -89,7 +89,7 @@ Rectangle {
                     target: blocker;
                     properties: "color";
                     to: "transparent";
-                    from: "black";
+                    from: style.color.blockerBackground;
                     duration: 300;
                     easing.type: Easing.InOutQuad;
                 }

@@ -52,6 +52,7 @@ Item {
         property color scrollbar: "#999"
         
         property color background: "white"
+        property color blockerBackground: "black"
         
         property color dialogBackground: "white"
         property color dialogText: "black"
@@ -92,6 +93,7 @@ Item {
         property color scrollbar: "#ddd"
         
         property color background: "black"
+        property color blockerBackground: "#999"
         
         property color dialogBackground: "black"
         property color dialogText: "white"

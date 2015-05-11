@@ -429,6 +429,12 @@ void TestFangParser::parseTest_data()
                                   << "http://www.newrepublic.com/article/120496/police-brutality-must-not-be-media-news-blip"
                                   << "120496 at http://www.newrepublic.com"
                                   << QDateTime::fromString("05 Dec 2014 23:11:00", dtf);
+
+    QTest::newRow("Mission Local") << "missionlocal.rss" << "MissionLocal" << 10
+                                  << "Medical Center Eyes Valencia, Opposition Mounts"
+                                  << "http://missionlocal.org/2015/05/medical-center-eyes-valencia-opposition-mounts/"
+                                  << "http://missionlocal.org/?p=291167"
+                                  << QDateTime::fromString("10 May 2015 21:50:11", dtf);
 }
 
 QTEST_MAIN(TestFangParser)

@@ -1,8 +1,9 @@
 import QtQuick 2.4
 import QtQuick.Window 2.1
 import Fang 1.0
-import QtQuick.Controls 1.2
+import QtQuick.Controls 1.3
 import QtQuick.Controls.Styles 1.2
+import QtQuick.Layouts 1.0
 import Qt.labs.settings 1.0
 
 Window {
@@ -145,7 +146,8 @@ Window {
         openDialog("SplashScreenDialog.qml");
     }
     
-    color: "black"; // For transitions.
+    // Seein in transitions.
+    color: style.color.blockerBackground;
 
     /**
      * Operator: mainFrame turn on.
@@ -161,141 +163,143 @@ Window {
     FangScreen {
         id: mainFrame;
 
-        //anchors.fill: parent;
-        
-        // The feed list sidebar.
-        Sidebar {
-            id: sidebar;
-            
-            width: sidebarWidth;
-            x: 0;
-            anchors.top: parent.top;
-            anchors.bottom: parent.bottom;
-            state: "open";
+        // Let them drag the sidebar if they want to!
+        SplitView {
+            id: mainView;
 
-            // Now isn't that special?
-            specialFeedCount: news.specialFeedCount;
-            
-            states: [
-                State { name: "open"; },
-                State { name: "closed"; }
-            ]
-            
-            transitions: [
-                Transition {
-                    from: "open";
-                    to: "closed";
-                    SequentialAnimation {
-                        // Move sidebar off screen
-                        ParallelAnimation {
-                            NumberAnimation {
-                                target: sidebar;
-                                properties: "x";
-                                to: -sidebarWidth;
-                                duration: 200;
-                                easing.type: Easing.InOutQuad;
-                            }
-                            
-                            NumberAnimation {
-                                target: openSidebarButton;
-                                properties: "opacity";
-                                from: 0.0;
-                                to: 1.0;
-                                duration: 500;
-                                easing.type: Easing.InOutQuad;
-                            }
-                        }
-                    }
-                },
-                Transition {
-                    from: "closed";
-                    to: "open";
-                    
-                    SequentialAnimation {
-                        // Move sidebar back on screen
-                        ParallelAnimation {
-                            NumberAnimation {
-                                target: sidebar;
-                                properties: "x";
-                                to: 0;
-                                duration: 200;
-                                easing.type: Easing.InOutQuad;
-                            }
-                            
-                            NumberAnimation {
-                                target: openSidebarButton;
-                                properties: "opacity";
-                                from: 1.0;
-                                to: 0.0;
-                                duration: 500;
-                                easing.type: Easing.InOutQuad;
-                            }
-                        }
-                    }
-                }
-            ]
-            
-            onCloseClicked: sidebar.state = "closed";
-            
-            onFeedClicked: news.showNews();
-            onFeedDoubleClicked: news.jumpToBookmark();
-            onOrderChanged: news.orderChanged();
-            onHelpClicked: news.showWelcome();
-            
-            onSettingsClicked: openDialog("SettingsDialog.qml");
-            onAddClicked: openDialog("AddDialog.qml");
-            onRemoveClicked: openDialog("RemoveDialog.qml");
-            onEditClicked: openDialog("EditDialog.qml");
-        }
+            anchors.fill: parent
+            orientation: Qt.Horizontal
+
+            handleDelegate: Rectangle { visible: false; }
         
-        News {
-            id: news;
-            
-            anchors.left: sidebar.right;
-            anchors.top: parent.top;
-            anchors.bottom: parent.bottom;
-            anchors.right: parent.right;
-            
-            newsFocus: true // set by dialog system
-            
-            Item {
-                id: openButtonContainer;
-                
-                anchors.left: parent.left;
-                anchors.bottom: parent.bottom;
-                
-                height: sidebar.buttonSize;
-                width: sidebar.buttonSize;
-                
-                anchors.leftMargin: 5;
-                anchors.bottomMargin: 5;
-                
-                //
-                // Disabled -- see Sidebar.qml to understand why.
-                //
-                // Button to re-open sidebar
-                /*
-                SidebarButton {
-                    id: openSidebarButton
-                    
-                    imageURL: fangSettings.style === "LIGHT" ? "images/arrows_right_dark.png"
-                                                             : "images/arrows_right.png";
-                    imageHoverURL: fangSettings.style === "LIGHT" ? "images/arrows_right.png"
-                                                                  : "images/arrows_right_dark.png";
-                    imagePressedURL: fangSettings.style === "LIGHT" ? "images/arrows_right.png"
-                                                                    : "images/arrows_right_dark.png";
-                    
-                    width: sidebar.buttonSize;
+            // The feed list sidebar.
+            Sidebar {
+                id: sidebar;
+
+                width: sidebarWidth;
+                state: "open";
+
+                // Now isn't that special?
+                specialFeedCount: news.specialFeedCount;
+
+                states: [
+                    State { name: "open"; },
+                    State { name: "closed"; }
+                ]
+
+                transitions: [
+                    Transition {
+                        from: "open";
+                        to: "closed";
+                        SequentialAnimation {
+                            // Move sidebar off screen
+                            ParallelAnimation {
+                                NumberAnimation {
+                                    target: sidebar;
+                                    properties: "x";
+                                    to: -sidebarWidth;
+                                    duration: 200;
+                                    easing.type: Easing.InOutQuad;
+                                }
+
+                                NumberAnimation {
+                                    target: openSidebarButton;
+                                    properties: "opacity";
+                                    from: 0.0;
+                                    to: 1.0;
+                                    duration: 500;
+                                    easing.type: Easing.InOutQuad;
+                                }
+                            }
+                        }
+                    },
+                    Transition {
+                        from: "closed";
+                        to: "open";
+
+                        SequentialAnimation {
+                            // Move sidebar back on screen
+                            ParallelAnimation {
+                                NumberAnimation {
+                                    target: sidebar;
+                                    properties: "x";
+                                    to: 0;
+                                    duration: 200;
+                                    easing.type: Easing.InOutQuad;
+                                }
+
+                                NumberAnimation {
+                                    target: openSidebarButton;
+                                    properties: "opacity";
+                                    from: 1.0;
+                                    to: 0.0;
+                                    duration: 500;
+                                    easing.type: Easing.InOutQuad;
+                                }
+                            }
+                        }
+                    }
+                ]
+
+                onCloseClicked: sidebar.state = "closed";
+
+                onFeedClicked: news.showNews();
+                onFeedDoubleClicked: news.jumpToBookmark();
+                onOrderChanged: news.orderChanged();
+                onHelpClicked: news.showWelcome();
+
+                onSettingsClicked: openDialog("SettingsDialog.qml");
+                onAddClicked: openDialog("AddDialog.qml");
+                onRemoveClicked: openDialog("RemoveDialog.qml");
+                onEditClicked: openDialog("EditDialog.qml");
+            }
+
+            News {
+                id: news;
+
+                Layout.fillWidth: true
+
+                newsFocus: true // set by dialog system
+
+                Item {
+                    id: openButtonContainer;
+
+                    anchors.left: parent.left;
+                    anchors.bottom: parent.bottom;
+
                     height: sidebar.buttonSize;
-                    
-                    opacity: 0;
-                    enabled: sidebar.state == "closed";
-                    
-                    anchors.margins: 5;
-                    
-                    onClicked: sidebar.state = "open";
+                    width: sidebar.buttonSize;
+
+                    anchors.leftMargin: 5;
+                    anchors.bottomMargin: 5;
+
+                    //
+                    // Disabled -- see Sidebar.qml to understand why.
+                    //
+                    // Button to re-open sidebar
+                    /*
+                    SidebarButton {
+                        id: openSidebarButton
+
+                        imageURL: fangSettings.style === "LIGHT" ? "images/arrows_right_dark.png"
+                                                                 : "images/arrows_right.png";
+                        imageHoverURL: fangSettings.style === "LIGHT" ? "images/arrows_right.png"
+                                                                      : "images/arrows_right_dark.png";
+                        imagePressedURL: fangSettings.style === "LIGHT" ? "images/arrows_right.png"
+                                                                        : "images/arrows_right_dark.png";
+
+                        width: sidebar.buttonSize;
+                        height: sidebar.buttonSize;
+
+                        opacity: 0;
+                        enabled: sidebar.state == "closed";
+
+                        anchors.margins: 5;
+
+                        onClicked: sidebar.state = "open";
+                    }
+                    */
                 }
-                */
             }
         }
     }
