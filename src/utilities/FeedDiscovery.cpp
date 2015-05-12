@@ -34,12 +34,7 @@ void FeedDiscovery::checkFeed(QString sURL)
     _errorString = "";
     machine.start(CHECK_FEED);
 
-    if (!sURL.startsWith("http:") && !sURL.startsWith("https:") && !sURL.startsWith("file:")) {
-        // Just assume it's http.
-        sURL = "http://" + sURL;
-    }
-
-    QUrl url = sURL;
+    QUrl url = urlFixup(sURL);
     
     // Make sure the location isn't a "relative" (and therefore severely invalid) path.
     if (url.isRelative() || url.scheme().isEmpty()) {
@@ -165,9 +160,9 @@ void FeedDiscovery::onPageGrabberReady(QDomDocument *page)
     // Check if the page contains a URL.
     QString newUrl = "";
     if (atomURL.size()) {
-        newUrl = atomURL;
+        newUrl = urlFixup(atomURL);
     } else if (rssURL.size()) {
-        newUrl = rssURL;
+        newUrl = urlFixup(rssURL);
     }
     
     // If we got one, set it and try again!
@@ -247,6 +242,22 @@ void FeedDiscovery::traveseXML(const QDomNode &node)
         // Continue outter loop.
         domNode = domNode.nextSibling();
     }
+}
+
+QString FeedDiscovery::urlFixup(const QString &url) const
+{
+    if (url.startsWith("//")) {
+        // Just assume it's http.
+        return "http:" + url;
+    }
+
+    if (!url.contains(':') && url.size() && url.at(0).isLetterOrNumber()) {
+        // Also assume it's http.
+        return "http://" + url;
+    }
+
+    // Hopefully it's correct!
+    return url;
 }
 
 void FeedDiscovery::reportError(QString errorString)
