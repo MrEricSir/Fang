@@ -65,6 +65,7 @@ void TestRawFeedRewriterTest::testCase1_data()
     QTest::newRow("Empty String") << "" << "" << false;
     QTest::newRow("Bad HTML") << "</div>" << "" << false;
     QTest::newRow("Bad HTML 2") << "<b>bold text" << "<b>bold text</b>" << false;
+    QTest::newRow("NBSP") << "Hello good sir&nbsp;<b>bold</b>" << "Hello good sir<b> bold</b>" << false;
 
     // Newlines need to work within a pre tag.
     QTest::newRow("Pre tag") << "<pre>hello\n\nhi</pre>" << "<pre> hello\n\nhi </pre>"

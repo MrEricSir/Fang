@@ -17,7 +17,8 @@ RawFeedRewriter::RawFeedRewriter(QObject *parent) :
     FangObject(parent),
     webPageGrabber(false),
     imageGrabber(),
-    newsList(NULL)
+    newsList(NULL),
+    addSpaceToNextText(false)
 {
     connect(&imageGrabber, SIGNAL(finished()), this, SLOT(onImageGrabberFinished()));
 
@@ -223,6 +224,7 @@ void RawFeedRewriter::traverseXmlNode(const QDomNode &node, QSet<QUrl> &imageURL
         // An extra space will be added if the next node is text (see below.)
         if (nodeName == "nbsp") {
             remove = true;
+            addSpaceToNextText = true;
         }
 
         // Only permit line breaks between text.
@@ -231,7 +233,8 @@ void RawFeedRewriter::traverseXmlNode(const QDomNode &node, QSet<QUrl> &imageURL
         }
 
         // Add the any lost space back in from &nbsp; removals.
-        if (lastSibling == "nbsp" && nodeName == "#text") {
+        if (addSpaceToNextText && nodeName == "#text") {
+            addSpaceToNextText = false;
             domNode.setNodeValue(" " + domNode.nodeValue());
         }
 
@@ -287,6 +290,7 @@ QString RawFeedRewriter::rewriteHTML(const QString &input, QSet<QUrl> &imageURLs
     }
 
     // Sanitize the document.
+    addSpaceToNextText = false;
     traverseXmlNode(*doc, imageURLs);
     QString docString = doc->toString( -1 ); // -1 means no newlines!
 

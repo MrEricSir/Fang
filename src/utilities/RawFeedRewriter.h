@@ -93,6 +93,9 @@ private:
     QSet<QString> classesToRemove;
     QList<QString> attributesToRemove;
     QList<QString> shareButtonURLs;
+
+    // Remember if we saw an nbsp so we can add a space to the next text node.
+    bool addSpaceToNextText;
     
 };
 
