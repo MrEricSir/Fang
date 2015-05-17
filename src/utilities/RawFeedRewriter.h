@@ -9,12 +9,36 @@
 #include "ImageGrabber.h"
 #include "WebPageGrabber.h"
 
+// Represents a DOM node.
+class DOMNode {
+public:
+    DOMNode(QString tagName, int intID) :
+        tagName(tagName),
+        intID(intID),
+        nonEmptyTextCount(0),
+        numChildren(0)
+    {}
+
+    // Stack requires a default c'tor
+    DOMNode() :
+        intID(0),
+        nonEmptyTextCount(0),
+        numChildren(0)
+    {}
+
+    QString tagName;
+    int intID;
+    int nonEmptyTextCount;
+    int numChildren;
+};
+
 /**
- * @brief Takes in a "raw" HTML feed and processes it in the following ways:
- *          - Image sizes are baked into the HTML
+ * @brief Takes a "raw" HTML feed and processes it in the following ways:
+ *          - Tidy'd into XHTML fragments
+ *          - Image sizes are baked in
  *          - Javascript is stripped
- *          - Those fucking "share this on social media!!11" buttons are removed
- *          - Tracking images?  Nope.
+ *          - Common social media buttons removed
+ *          - Tracking pixels?  Nope.
  */
 class RawFeedRewriter : public FangObject
 {
@@ -45,21 +69,17 @@ protected:
     // Check whether we're looking at a share button URL.
     bool isShareURL(const QString& url);
 
-    // Recursive DOM walker.
-    void traverseXmlNode(const QDomNode& node, QSet<QUrl>& imageURLs);
+    // Turns an int into an ID.
+    QString intToID(int id);
 
-    // Rewrites an HTML 4 u.
-    QString rewriteHTML(const QString& input, QSet<QUrl>& imageURLs);
+    // First pass rewriter.
+    QString rewriteFirstPass(const QString& document, QSet<QUrl>& imageURLs);
 
-    // Same as above, but this takes care of the images (2nd step.)
-    void rewriteImages(QString& docString);
+    // Calls rewriteSecondPass() on all news HTML.
+    void rewriteAllSecondPass();
 
-    // Recursively walks the DOM and resizes the images.
-    // Note: Can only be called after ImageGrabber completes!
-    void traveseAndResizeImages(const QDomNode& node);
-
-    // Pre-process our news list.
-    void preProcess();
+    // Same as above, but this takes care of the images (if needed) and deletes empty elements.
+    QString rewriteSecondPass(QString& docString);
 
     // Post-process our news list.
     void postProcess();
@@ -67,11 +87,11 @@ protected:
     // Remove headers, footers, and other garbage.
     void postProcessDocString(QString& docString);
 
-    // Handles newlines, basically.
-    void preProcessDocString(QString& docString);
-
     // Resizes image dimensions.
     void imageResize(int width, int height, int* newWidth, int* newHeight);
+
+    // Removes excessive newlines.
+    void removeNewlinesBothSides(QString& docString);
 
 protected slots:
     // We've grabbed our images.
@@ -91,12 +111,12 @@ private:
     // Setup.
     QSet<QString> tagsToRemove;
     QSet<QString> classesToRemove;
-    QList<QString> attributesToRemove;
     QList<QString> shareButtonURLs;
-
-    // Remember if we saw an nbsp so we can add a space to the next text node.
-    bool addSpaceToNextText;
+    QSet<QString> containerTags;
     
+    // Element IDs.
+    QSet<QString> idsToDelete;
+    int intID;
 };
 
 #endif // RAWFEEDIMAGESIZEREWRITER_H

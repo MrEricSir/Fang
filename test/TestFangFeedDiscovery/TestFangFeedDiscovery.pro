@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += network webkit webkitwidgets xml testlib
+QT       += network testlib
 
 QT       -= gui
 

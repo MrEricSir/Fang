@@ -1,7 +1,9 @@
 #include "RawFeedRewriter.h"
 
+#include <QXmlStreamReader>
+#include <QXmlStreamWriter>
 #include <QString>
-#include <QDomDocument>
+#include <QStack>
 #include <QDebug>
 
 // Image width max.
@@ -12,13 +14,15 @@
 #define S_HEIGHT "height"
 #define S_SRC "src"
 #define S_IMG "img"
+#define S_HREF "href"
+#define S_ID "id"
 
 RawFeedRewriter::RawFeedRewriter(QObject *parent) :
     FangObject(parent),
     webPageGrabber(false),
     imageGrabber(),
     newsList(NULL),
-    addSpaceToNextText(false)
+    intID(0)
 {
     connect(&imageGrabber, SIGNAL(finished()), this, SLOT(onImageGrabberFinished()));
 
@@ -35,30 +39,6 @@ RawFeedRewriter::RawFeedRewriter(QObject *parent) :
                     << "mf-viral"                   // Motherfucking viral?
                     << "service-links-stumbleupon"; // StubbleUponYourFace
 
-    attributesToRemove << "onload"      // Javascript...
-                       << "onunload"
-                       << "onfocus"
-                       << "onclick"
-                       << "onmouseover"
-                       << "onmouseout"
-                       << "onmousedown"
-                       << "onmouseup"
-                       << "ondblclick"
-                       << "onkeydown"
-                       << "onkeypress"
-                       << "onkeyup"
-                       << "onabort"
-                       << "onerror"
-                       << "onresize"
-                       << "onscroll"
-                       << "onblur"
-                       << "onchange"
-                       << "onfocus"
-                       << "onreset"
-                       << "onselect"
-                       << "onsubmit"    // ...Javascript
-                       << "style";      // No custom styles!
-
     shareButtonURLs << "twitter.com/home?status"
                     << "plus.google.com/shar"
                     << "facebook.com/shar"
@@ -66,6 +46,11 @@ RawFeedRewriter::RawFeedRewriter(QObject *parent) :
                     << "api.tweetmeme.com/"
                     << "stumbleupon.com/submit"
                     << "share.feedsportal.com/share";
+
+     containerTags << "p"
+                   << "div"
+                   << "span"
+                   << "pre";
 }
 
 void RawFeedRewriter::rewrite(QList<RawNews *> *newsList)
@@ -73,25 +58,27 @@ void RawFeedRewriter::rewrite(QList<RawNews *> *newsList)
     // Save our news list!</protestChant>
     this->newsList = newsList;
 
-    // Preprocess!
-    preProcess();
-
     QSet<QUrl> imageURLs;
+    idsToDelete.clear();
+    intID = 0;
 
     // Iterate over all the news we have.
     foreach(RawNews* news, *newsList) {
         if (news->content.size()) {
-            news->content = rewriteHTML(news->content, imageURLs);
+            news->content = rewriteFirstPass(news->content, imageURLs);
         }
 
         if (news->description.size()) {
-            news->description = rewriteHTML(news->description, imageURLs);
+            news->description = rewriteFirstPass(news->description, imageURLs);
         }
     }
 
     // No images? We're done, yay!
     if (imageURLs.size() == 0) {
-        postProcess(); // Gotta do this, g.
+        // Gotta do this, g.
+        rewriteAllSecondPass();
+        postProcess();
+
         emit finished();
 
         return;
@@ -105,7 +92,7 @@ bool RawFeedRewriter::isHTMLEmpty(QString html)
 {
     html.replace(" ", "");
     html.replace("\t", "");
-    html.replace("\007", "");
+    html.replace("\n", "");
 
     return html.size() == 0;
 }
@@ -121,273 +108,319 @@ bool RawFeedRewriter::isShareURL(const QString &url)
     return false;
 }
 
-void RawFeedRewriter::traverseXmlNode(const QDomNode &node, QSet<QUrl> &imageURLs)
+QString RawFeedRewriter::intToID(int id)
 {
-    QDomNode domNode = node;
-    QDomElement domElement;
+    return "FangID_" + QString::number(id);
+}
 
-    QString lastSibling = "";
+QString RawFeedRewriter::rewriteFirstPass(const QString &document, QSet<QUrl> &imageURLs)
+{
+    // We use TidyLib via WebPageGrabber to convert the (potentially crappy) HTML into proper
+    // XHTML.  This will add a doctype and other unwanted headers/footers, so we strip those
+    // out in a separate post-processing method.  You'll see.
+    QString* doc = webPageGrabber.load("<html><body>" + document + "</body></html>");
+    if (doc == NULL) {
+        qDebug() << "Error loading HTML document";
 
-    // Loop sibblings at this level.
-    while(!(domNode.isNull()))
-    {
-        QString nodeName = domNode.nodeName();
-        //qDebug() << "Node: " << nodeName;
-        bool remove = false;
-        bool possibleShareButton = false;
+        return "";
+    }
 
-        if (domNode.isElement())
-        {
-            domElement = domNode.toElement();
-            if(!(domElement.isNull()))
-            {
-                // Check tag name.
-                if (tagsToRemove.contains(nodeName)) {
-                    remove = true;
-                }
+    // Swap out non-breaking spaces here since QXmlStreamReader doesn't handle them well.
+    doc->replace("&nbsp;", " ", Qt::CaseInsensitive);
 
-                // Check attributes.
-                if (!remove && domElement.hasAttribute("class")) {
-                    foreach(QString c, classesToRemove) {
-                        if (domElement.attribute("class") == c) {
-                            remove = true;
-                            break;
+    QXmlStreamReader xml;
+    xml.addData(*doc);
+
+    QString output;
+    QXmlStreamWriter writer(&output);
+    writer.setCodec("UTF-16"); // Default for QString
+    writer.setAutoFormatting(false);
+
+    // If we're skipping elements, this is >= 1
+    int skip = 0;
+
+    // Current stack.
+    QStack<DOMNode> stack;
+
+    // Was the last node text?
+    bool lastWasText = false;
+
+    while (!xml.atEnd()) {
+        // Grab the next thingie.
+        xml.readNext();
+
+        if (xml.isStartElement()) {
+            // Start
+            if (0 == skip) {
+                QString tagName = xml.name().toString().toLower();
+                QString classValue = xml.attributes().value("class").toString();
+                QString href = xml.attributes().value(S_HREF).toString();
+
+                if (tagsToRemove.contains(tagName) ||
+                        classesToRemove.contains(classValue) || // Delete known bad classes
+                        (tagName == "a" && isShareURL(href)) || // Delete share links
+                        (tagName == "br" && !lastWasText)) {    // Delete br's that weren't preceeded by text.
+                    // Skip it good!
+                    skip = 1;
+                } else {
+                    // Write the tag.
+                    writer.writeStartElement(tagName);
+
+                    intID++;
+                    writer.writeAttribute(S_ID, intToID(intID));
+
+                    // If there's a parent node, add a child.
+                    if (stack.size()) {
+                        stack.top().numChildren++;
+                    }
+
+                    // Push it.
+                    stack.push(DOMNode(tagName, intID));
+
+                    // Anchor tags.
+                    if (tagName == "a" && xml.attributes().hasAttribute(S_HREF)) {
+                        writer.writeAttribute(S_HREF, xml.attributes().value(S_HREF).toString());
+                    }
+
+                    // Image tags.
+                    if (tagName == S_IMG && xml.attributes().hasAttribute(S_SRC)) {
+                        QString imgSrc = xml.attributes().value(S_SRC).toString();
+                        writer.writeAttribute(S_SRC, imgSrc);
+
+                        QString sWidth = xml.attributes().value(S_WIDTH).toString();
+                        QString sHeight = xml.attributes().value(S_HEIGHT).toString();
+
+                        bool widthOK, heightOK;
+                        int width = sWidth.toInt(&widthOK);
+                        int height = sHeight.toInt(&heightOK);
+
+                        if (widthOK && heightOK) {
+                            if (width < 3 || height < 3) {
+                                // Delete tiny images.
+                                idsToDelete << intToID(intID);
+                            } else {
+                                // Resize image if needed.
+                                int newWidth, newHeight;
+                                imageResize(width, height, &newWidth, &newHeight);
+                                writer.writeAttribute(S_WIDTH, QString::number(newWidth));
+                                writer.writeAttribute(S_HEIGHT, QString::number(newHeight));
+                            }
+                        } else {
+                            // Dammit, we're gonna have to fetch this image!
+                            imageURLs << imgSrc;
                         }
                     }
                 }
 
-                // Delete shady attributes.
-                foreach (QString a, attributesToRemove) {
-                    domNode.attributes().removeNamedItem(a);
-                }
-
-                // Don't allow forced dimensions on non-image tags.
-                if (nodeName != S_IMG) {
-                    domNode.attributes().removeNamedItem(S_WIDTH);
-                    domNode.attributes().removeNamedItem(S_HEIGHT);
-                } else if (domNode.attributes().contains(S_WIDTH) || domNode.attributes().contains(S_HEIGHT)) {
-                    // For images, if the width or height is too small, remove it.
-                    QString sWidth = domNode.attributes().namedItem(S_WIDTH).nodeValue();
-                    QString sHeight = domNode.attributes().namedItem(S_HEIGHT).nodeValue();
-
-                    bool widthOK = true;
-                    bool heightOK = true;
-                    int width = sWidth.toInt(&widthOK);
-                    int height = sHeight.toInt(&heightOK);
-
-                    if (!widthOK || !heightOK) {
-                        // Remove height and width because it wasn't a pixel value.  But it's OK;
-                        // we'll fetch the actual image in these cases.
-                        domNode.attributes().removeNamedItem(S_WIDTH);
-                        domNode.attributes().removeNamedItem(S_HEIGHT);
-                    } else if (width <=3 || height <=3) {
-                        // They're too small.
-                        remove = true;
-                    } else if (width >= MAX_ELEMENT_WIDTH) {
-                        // Downscale the image.
-                        int newWidth, newHeight;
-                        imageResize(width, height, &newWidth, &newHeight);
-                        domElement.setAttribute(S_WIDTH, QString::number(newWidth));
-                        domElement.setAttribute(S_HEIGHT, QString::number(newHeight));
-                    }
-                }
-
-                // Always add a left align tag to all images, no matter what!
-                if (nodeName == S_IMG) {
-                    domElement.setAttribute("align", "left");
-                }
-
-                if (!remove && nodeName == S_IMG && domNode.attributes().contains(S_SRC) &&
-                        (!domNode.attributes().contains(S_WIDTH) ||
-                         !domNode.attributes().contains(S_HEIGHT))) {
-                    // Image needs resizer! Put it in the to-resize bucket unless it's a relative
-                    // URL, which doesn't belong in a damn RSS feed, kids. Now get off my lawn.
-                    QUrl url(domNode.attributes().namedItem(S_SRC).nodeValue());
-                    if (url.isValid() && !url.isRelative()) {
-                        imageURLs.insert(url);
-                    }
-                }
-
-                // Check for share button links.  (They'll be removed if they point to an image.)
-                if (nodeName == "a" && isShareURL(domNode.attributes().namedItem("href").nodeValue())) {
-                    possibleShareButton = true;
-                }
+                lastWasText = false;
+            } else {
+                 skip++;
             }
-        }
+        } else if (xml.isEndElement()) {
+            QString tagName = xml.name().toString().toLower();
 
-        // Remove empty text.
-        if (nodeName == "#text" && isHTMLEmpty(domNode.nodeValue())) {
-            remove = true;
-        }
+            // End
+            if (0 == skip) {
+                writer.writeEndElement();
 
-        // Remove non-breaking spaces.
-        // An extra space will be added if the next node is text (see below.)
-        if (nodeName == "nbsp") {
-            remove = true;
-            addSpaceToNextText = true;
-        }
+                // Pop our node and investigate.
+                DOMNode dom = stack.pop();
 
-        // Only permit line breaks between text.
-        if (lastSibling != "#text" && nodeName == "br") {
-            remove = true;
-        }
-
-        // Add the any lost space back in from &nbsp; removals.
-        if (addSpaceToNextText && nodeName == "#text") {
-            addSpaceToNextText = false;
-            domNode.setNodeValue(" " + domNode.nodeValue());
-        }
-
-        // Recurse children.
-        if (!remove) {
-            QDomNode child = domNode.firstChild();
-            while(!child.isNull()) {
-                // Check for share buttons.
-                if (possibleShareButton && child.nodeName() == S_IMG) {
-                    remove = true;
-                    break;
+                // If it's a container and we didn't write any text, then delete this tag in the
+                // second pass.
+                if (containerTags.contains(tagName) && dom.nonEmptyTextCount == 0 && dom.numChildren == 0) {
+                    //
+                    // This doesn't work -- at the very least the IDs are wrong.  We need to
+                    // employ a stack here.
+                    //
+                    idsToDelete << intToID(dom.intID);
                 }
 
-                // Recurse!
-                traverseXmlNode(child, imageURLs);
-                child = child.nextSibling();
+                lastWasText = false;
+            } else {
+                skip--;
             }
-        }
+        } else if (xml.isCharacters() && 0 == skip) {
+            // Text
+            QString text = xml.text().toString();
+            bool isEmpty = isHTMLEmpty(text);
 
-        // Remove empty containers.
-        // (Note: It may not be empty until the above completes.
-        if (domNode.childNodes().size() == 0 && (nodeName == "p" || nodeName == "span" || nodeName == "div")) {
-            remove = true;
-        }
+            // Don't allow newlines outside of pre tags.
+            if (stack.top().tagName == "pre" || !isEmpty) {
+                bool addSpaceStart = text.startsWith('\n');
+                bool addSpaceEnd = text.endsWith('\n');
 
-        // Remember what we just saw!
-        lastSibling = nodeName;
+                // Text can start or end with a newline -- delete 'em.
+                removeNewlinesBothSides(text);
 
+                 // Add back extra spaces so text doesn'truntogether.
+                if (addSpaceStart) {
+                    text = ' ' + text;
+                }
 
-        QDomNode oldNode = domNode;
+                if (addSpaceEnd) {
+                    text = text + ' ';
+                }
 
-        // Continue outter loop.
-        domNode = domNode.nextSibling();
+                writer.writeCharacters(text);
+                stack.top().nonEmptyTextCount++;
 
-        // Remove unwanted node.  We have to do this AFTER advancing the current node (above)
-        // in order to process the entire document.
-        if (remove) {
-            oldNode.parentNode().removeChild(oldNode);
+                lastWasText = true;
+            }
+        } else if (xml.isEntityReference() && 0 == skip) {
+            // Entity
+            QString entity = xml.name().toString();
+            writer.writeEntityReference(entity);
+        } else if (xml.isStartDocument()) {
+            // Doc start
+            writer.writeStartDocument("1.0");
+        } else if (xml.isEndDocument()) {
+            // Doc end
+            writer.writeEndElement();
         }
     }
-}
 
-QString RawFeedRewriter::rewriteHTML(const QString &input, QSet<QUrl> &imageURLs)
-{
-    // In this method we use TidyLib via WebPageGrabber to convert the (potentially crappy) HTML
-    // into XHTML.  This will add a doctype and other unwanted headers/footers, so we strip those
-    // out in a separate post-processing method.
-
-    QDomDocument* doc = webPageGrabber.load(input);
-    if (doc == NULL || doc->isNull()) {
-        qDebug() << "ERROR!!!!!";
-        return "";
+    if (xml.hasError()) {
+        qDebug() << "Error reading XML: " << xml.errorString();
     }
 
-    // Sanitize the document.
-    addSpaceToNextText = false;
-    traverseXmlNode(*doc, imageURLs);
-    QString docString = doc->toString( -1 ); // -1 means no newlines!
-
-    return docString;
-}
-
-void RawFeedRewriter::rewriteImages(QString &docString)
-{
-    QDomDocument doc;
-    if (!doc.setContent(docString) || doc.isNull()) {
-        qDebug() << "ERROR!!!!!";
-        return;
+    if (writer.hasError()) {
+        qDebug() << "QXmlStreamWriter had an error of some kind.";
     }
 
-    // Rewrite hte images.
-    traveseAndResizeImages(doc);
-    docString = doc.toString( -1 ); // -1 means no newlines!
+    // Return new document.
+    return output;
 }
 
-void RawFeedRewriter::traveseAndResizeImages(const QDomNode &node)
+void RawFeedRewriter::rewriteAllSecondPass()
 {
-    QDomNode domNode = node;
-    QDomElement domElement;
-
-    // Loop sibblings at this level.
-    while(!(domNode.isNull()))
-    {
-        QString nodeName = domNode.nodeName();
-        //qDebug() << "Node: " << nodeName;
-        bool remove = false;
-
-        if (domNode.isElement())
-        {
-            domElement = domNode.toElement();
-            if(!(domElement.isNull()))
-            {
-                QString url = domElement.attribute(S_SRC);
-                QString sWidth = domElement.attribute(S_WIDTH);
-
-                bool widthOK = true;
-                int width = sWidth.toInt(&widthOK);
-
-                QImage image = imageGrabber.getResults()->value(url);
-
-                if (widthOK && width <= MAX_ELEMENT_WIDTH) {
-                    // We don't need to do anything!  Yay!
-                } else if (nodeName == S_IMG && url.size()) {
-                    if (image.isNull()) {
-                        // We couldn't fetch this image, so delete it.
-                        remove = true;
-                    } else {
-                        // Resize that baby, yeah!
-                        int newWidth, newHeight;
-                        imageResize(image.width(), image.height(), &newWidth, &newHeight);
-
-                        domElement.setAttribute(S_WIDTH, QString::number(newWidth));
-                        domElement.setAttribute(S_HEIGHT, QString::number(newHeight));
-                    }
-                }
-            }
-        }
-
-        // Recurse children.
-        if (!remove) {
-            QDomNode child = domNode.firstChild();
-            while(!child.isNull()) {
-                // Recurse!
-                traveseAndResizeImages(child);
-                child = child.nextSibling();
-            }
-        }
-
-        QDomNode oldNode = domNode;
-
-        // Continue outter loop.
-        domNode = domNode.nextSibling();
-
-        // Remove unwanted node.  We have to do this AFTER advancing the current node (above)
-        // in order to process the entire document.
-        if (remove) {
-            oldNode.parentNode().removeChild(oldNode);
-        }
-    }
-}
-
-void RawFeedRewriter::preProcess()
-{
-    // Iterate over all the news we have.
+    // Iterate over all the news... again!
     foreach(RawNews* news, *newsList) {
         if (news->content.size()) {
-            preProcessDocString(news->content);
+            news->content = rewriteSecondPass(news->content);
         }
 
         if (news->description.size()) {
-            preProcessDocString(news->description);
+            news->description = rewriteSecondPass(news->description);
         }
     }
+}
+
+QString RawFeedRewriter::rewriteSecondPass(QString &docString)
+{
+    //qDebug() << "Second pass: " << docString;
+
+    QXmlStreamReader xml;
+    xml.addData(docString);
+
+    QString output;
+    QXmlStreamWriter writer(&output);
+    writer.setCodec("UTF-16"); // Default for QString
+    writer.setAutoFormatting(false);
+    int skip = 0; // Skip stack.
+    QString lastTag = "";
+
+    while (!xml.atEnd()) {
+        // Grab the next thingie.
+        xml.readNext();
+
+        if (xml.isStartElement()) {
+            if (0 == skip) {
+                // Start
+                QString tagName = xml.name().toString().toLower();
+                QString id = xml.attributes().value(S_ID).toString();
+
+                if (idsToDelete.contains(id)) {
+                    // We need to delete this tag! Skip it.
+                    skip = 1;
+                } else if (tagName == S_IMG) {
+                    QString url = xml.attributes().value(S_SRC).toString();
+
+                    int width = 0;
+                    int height = 0;
+
+                    // We got an image.
+                    if (xml.attributes().hasAttribute(S_WIDTH) &&
+                            xml.attributes().hasAttribute(S_HEIGHT)) {
+                        // Already have attributes?  Cool.
+                        width = xml.attributes().value(S_WIDTH).toInt();
+                        height = xml.attributes().value(S_HEIGHT).toInt();
+                    } else {
+                        QImage image = imageGrabber.getResults()->value(url);
+                        if (!image.isNull()) {
+                            // Resize that baby, yeah!
+                            imageResize(image.width(), image.height(), &width, &height);
+                        }
+                    }
+
+                    if (width > 2 && height > 2) {
+                        // Okay, we got a good image and it's not a tracking pixel. Satisfaction!
+                        writer.writeStartElement(tagName);
+                        writer.writeAttribute(S_SRC, url);
+                        writer.writeAttribute(S_WIDTH, QString::number(width));
+                        writer.writeAttribute(S_HEIGHT, QString::number(height));
+                        writer.writeAttribute("align", "left"); // Always left-align.
+
+                        lastTag = tagName;
+                    } else {
+                        // Bad image! Skip!
+                        skip = 1;
+                    }
+                } else {
+                    // Write the tag and all attributes (except for ID)
+                    writer.writeStartElement(tagName);
+                    foreach(QXmlStreamAttribute attribute, xml.attributes()) {
+                        if (attribute.name().toString() != S_ID) {
+                            writer.writeAttribute(attribute);
+                        }
+                    }
+
+                    lastTag = tagName;
+                }
+            } else {
+                skip++;
+            }
+        } else if (xml.isEndElement()) {
+            // End
+            if (0 == skip) {
+                writer.writeEndElement();
+            } else {
+                skip--;
+            }
+        } else if (xml.isCharacters() && 0 == skip) {
+            // Text
+            QString text = xml.text().toString();
+            if (lastTag != "pre") {
+                // This happens due to some kind of auto-formatting glitch.
+                text.replace("\n", " ");
+            }
+
+            writer.writeCharacters(text);
+            lastTag = "#text";
+        } else if (xml.isEntityReference() && 0 == skip) {
+            // Entity
+            QString entity = xml.name().toString();
+            writer.writeEntityReference(entity);
+            lastTag = "#entity";
+        } else if (xml.isStartDocument()) {
+            // Doc start
+            writer.writeStartDocument(xml.documentVersion().toString());
+        } else if (xml.isEndDocument()) {
+            // Doc end;xml.documentVersion()
+            writer.writeEndElement();
+        }
+    }
+
+    if (xml.hasError()) {
+        qDebug() << "QXmlStreamReader had error: " << xml.errorString();
+    }
+
+    if (writer.hasError()) {
+        qDebug() << "QXmlStreamWriter had an error of some kind.";
+    }
+
+    // Return new document.
+    return output;
 }
 
 void RawFeedRewriter::postProcess()
@@ -406,26 +439,17 @@ void RawFeedRewriter::postProcess()
 
 void RawFeedRewriter::postProcessDocString(QString &docString)
 {
+    // The R is for Redundant!
+    docString.replace("\r", "");
+
     // Rip out headers/footers.
-    docString.replace("<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Transitional//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'>\n", "");
-    docString.replace("<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'>", "");
-    docString.replace("<html xmlns=\"http://www.w3.org/1999/xhtml\"><body>", "");
+    docString.replace("<?xml version=\"1.0\"?><html>", "");
+    docString.replace("<body>", "");
     docString.replace("</body></html>", "");
-    docString.replace("<html xmlns=\"http://www.w3.org/1999/xhtml\"><body/></html>", ""); // This only happens if there's no content at all.
-    docString.replace("&#xd;\n", " "); // I don't know why this happens, but it does.
+    docString.replace("<body/></html>", ""); // Empty body!
 
-    // Unbeep our new lines.
-    docString.replace("\007", "\n");
-
-    // Sometimes they're newlines, spaces, etc. at the front or end of the string. Kill it.
+    // This happens.
     docString = docString.trimmed();
-}
-
-void RawFeedRewriter::preProcessDocString(QString &docString)
-{
-    docString.replace("&#07;", ""); // Unbeep
-    docString.replace("\r", ""); // Fuck win32
-    docString.replace("\n", "&#07;"); // Beep beep!
 }
 
 void RawFeedRewriter::imageResize(int width, int height, int *newWidth, int *newHeight)
@@ -440,22 +464,22 @@ void RawFeedRewriter::imageResize(int width, int height, int *newWidth, int *new
     }
 }
 
-void RawFeedRewriter::onImageGrabberFinished()
+void RawFeedRewriter::removeNewlinesBothSides(QString &docString)
 {
-    // Iterate over all the news... again!
-    foreach(RawNews* news, *newsList) {
-        if (news->content.size()) {
-            rewriteImages(news->content);
-        }
-
-        if (news->description.size()) {
-            rewriteImages(news->description);
-        }
+    while (docString.startsWith("\n")) {
+        docString = docString.mid(1);
     }
 
-    // We're done! Post-process our XHTML and emit signal.
-    postProcess(); // Gotta do this, g.
-    emit finished();
+    while (docString.endsWith("\n")) {
+        docString = docString.left(docString.length() - 1);
+    }
 }
 
+void RawFeedRewriter::onImageGrabberFinished()
+{
+    // Gotta do this, g.
+    rewriteAllSecondPass();
+    postProcess();
 
+    emit finished();
+}

@@ -35,6 +35,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     app.setOrganizationName("EricSoft");
     app.setOrganizationDomain("EricSoft.com");
     app.setApplicationName("Fang");
+    app.setApplicationVersion(APP_VERSION);
     
     // Only run one Fang at a time, fellas.
     SingleInstanceCheck single("FangNewsReader", "FangSettings");

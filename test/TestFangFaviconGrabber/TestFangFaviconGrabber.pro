@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += network xml gui testlib
+QT       += network gui testlib
 
 
 TARGET = tst_testfangfavicongrabbertest

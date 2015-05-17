@@ -102,10 +102,10 @@ private slots:
     void onSecondParseDone();
     
     // WebPageGrabber slots.
-    void onPageGrabberReady(QDomDocument* page);
+    void onPageGrabberReady(QString* document);
 
     // Try to find RSS and Atom feed, if available.
-    void traveseXML(const QDomNode& node);
+    void findFeeds(const QString& document);
 
     // Fixes a missing protocol on a URL.
     QString urlFixup(const QString& url) const;

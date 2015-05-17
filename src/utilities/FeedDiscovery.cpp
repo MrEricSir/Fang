@@ -1,4 +1,5 @@
 #include "FeedDiscovery.h"
+#include <QXmlStreamReader>
 
 FeedDiscovery::FeedDiscovery(QObject *parent) :
     FangObject(parent),
@@ -144,18 +145,16 @@ void FeedDiscovery::onSecondParseDone()
     }
 }
 
-void FeedDiscovery::onPageGrabberReady(QDomDocument *page)
+void FeedDiscovery::onPageGrabberReady(QString *document)
 {
-    if (NULL == page || page->isNull()) {
+    if (NULL == document || document->isEmpty()) {
         reportError("No page found");
         
         return;
     }
 
-    // Recursively walk the DOM looking for an RSS and/or Atom feed.
-    rssURL = "";
-    atomURL = "";
-    traveseXML(*page);
+    // Scan the XML looking for an RSS and/or Atom feed.
+    findFeeds(*document);
     
     // Check if the page contains a URL.
     QString newUrl = "";
@@ -183,65 +182,51 @@ void FeedDiscovery::onPageGrabberReady(QDomDocument *page)
     reportError("No feed found");
 }
 
-void FeedDiscovery::traveseXML(const QDomNode &node)
+void FeedDiscovery::findFeeds(const QString& document)
 {
-    // Stop condition.
-    if (rssURL.size() && atomURL.size()) {
-        return;
-    }
+    atomURL = "";
+    rssURL = "";
 
-    QDomNode domNode = node;
-    QDomElement domElement;
+    // Examples of what we're looking for:
+    // <link rel="alternate" href="http://www.fark.com/fark.rss" type="application/rss+xml" title="FARK.com Fark RSS Feed">
+    // <link rel="alternate" type="application/rss+xml" title="MrEricSir.com RSS Feed" href="http://www.mrericsir.com/blog/feed/" />
+    // <link rel="alternate" type="application/atom+xml" title="MrEricSir.com Atom Feed" href="http://www.mrericsir.com/blog/feed/atom/" />
+    const QString S_REL = "rel";
+    const QString S_HREF = "href";
+    const QString S_TYPE = "type";
 
-    // Loop sibblings at this level.
-    while(!(domNode.isNull()))
-    {
-        QString nodeName = domNode.nodeName();
-        //qDebug() << "Node: " << nodeName;
+    QXmlStreamReader xml;
+    xml.addData(document);
 
-        // Stop condition.
-        if (nodeName == "body") {
-            // Given that we're only intersted in headers, we can stop when we get to the body node.
+    while (!xml.atEnd()) {
+        // Grab the next thingie.
+        xml.readNext();
 
-            return;
-        }
+        if (xml.isStartElement()) {
+            QString tagName = xml.name().toString().toLower();
+            if (tagName == "body") {
+                // We're done with the header, so bail.
+                return;
+            }
 
-        // Examples of what we're looking for:
-        // <link rel="alternate" href="http://www.fark.com/fark.rss" type="application/rss+xml" title="FARK.com Fark RSS Feed">
-        // <link rel="alternate" type="application/rss+xml" title="MrEricSir.com RSS Feed" href="http://www.mrericsir.com/blog/feed/" />
-        // <link rel="alternate" type="application/atom+xml" title="MrEricSir.com Atom Feed" href="http://www.mrericsir.com/blog/feed/atom/" />
-        if (domNode.isElement())
-        {
-            domElement = domNode.toElement();
-            if(!(domElement.isNull()))
-            {
-                if (nodeName == "link" && domElement.attribute("rel").toLower() == "alternate") {
-                    // RSS check.
-                    if (!rssURL.size() && domElement.attribute("type").toLower() == "application/rss+xml"
-                            && domElement.hasAttribute("href")) {
-                        rssURL = domElement.attribute("href");
-                    }
+            if (tagName == "link") {
+                // This could be a feed...
+                QXmlStreamAttributes attributes = xml.attributes();
 
-                    // Atom check.
-                    if (!atomURL.size() && domElement.attribute("type").toLower() == "application/atom+xml"
-                            && domElement.hasAttribute("href")) {
-                        atomURL = domElement.attribute("href");
+                if (attributes.hasAttribute(S_REL) && attributes.hasAttribute(S_HREF) &&
+                        attributes.value("", S_REL).toString().toLower() == "alternate" &&
+                        attributes.hasAttribute(S_TYPE)) {
+                    QString type = attributes.value("", S_TYPE).toString().toLower();
+                    if (type == "application/atom+xml" && !atomURL.size()) {
+                        atomURL = attributes.value("", S_HREF).toString();
+                    } else if (type == "application/rss+xml" && !rssURL.size()) {
+                        rssURL = attributes.value("", S_HREF).toString();
                     }
                 }
             }
         }
-
-        // Recurse children.
-        QDomNode child = domNode.firstChild();
-        while(!child.isNull()) {
-            // Recurse!
-            traveseXML(child);
-            child = child.nextSibling();
-        }
-
-        // Continue outter loop.
-        domNode = domNode.nextSibling();
     }
+
 }
 
 QString FeedDiscovery::urlFixup(const QString &url) const

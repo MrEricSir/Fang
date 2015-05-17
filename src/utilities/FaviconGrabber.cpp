@@ -3,6 +3,7 @@
 #include <QString>
 #include <QStringList>
 #include <QImage>
+#include <QXmlStreamReader>
 
 #include "Utilities.h"
 #include "NetworkUtilities.h"
@@ -147,67 +148,54 @@ void FaviconGrabber::onRequestFinished(QNetworkReply * reply)
     }
 }
 
-void FaviconGrabber::onWebGrabberReady(QDomDocument *page)
+void FaviconGrabber::onWebGrabberReady(QString *document)
 {
     // Could indicate no internet.
-    if (page == NULL || page->isNull()) {
+    if (document == NULL || document->isEmpty()) {
         machine.setState(CHECK_ICONS);
         
         return;
     }
 
-    traveseXML(*page);
+    findIcons(*document);
     
     machine.setState(CHECK_ICONS);
 }
 
-void FaviconGrabber::traveseXML(const QDomNode &node)
+void FaviconGrabber::findIcons(const QString& document)
 {
-    QDomNode domNode = node;
-    QDomElement domElement;
+    // Examples of what we're looking for:
+    //     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    //     <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+    //     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    const QString S_REL = "rel";
+    const QString S_HREF = "href";
 
-    // Loop sibblings at this level.
-    while(!(domNode.isNull()))
-    {
-        QString nodeName = domNode.nodeName();
-        //qDebug() << "Node: " << nodeName;
-        //qDebug() << "Value: "  << domNode.nodeValue();
+    QXmlStreamReader xml;
+    xml.addData(document);
 
-        // Stop condition.
-        if (nodeName == "body") {
-            // Given that we're only intersted in headers, we can stop when we get to the body node.
+    while (!xml.atEnd()) {
+        // Grab the next thingie.
+        xml.readNext();
 
-            return;
-        }
+        if (xml.isStartElement()) {
+            QString tagName = xml.name().toString().toLower();
+            if (tagName == "body") {
+                // We're done with the header, so bail.
+                return;
+            }
 
-        if (domNode.isElement())
-        {
-            domElement = domNode.toElement();
-            if(!(domElement.isNull()))
-            {
-                // Examples of what we're looking for:
-                //     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-                //     <link rel="icon" href="/favicon.ico" type="image/x-icon" />
-                //     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
-                if (nodeName == "link" && domElement.hasAttribute("href")) {
-                    if (domElement.attribute("rel").toLower() == "apple-touch-icon" ||
-                            domElement.attribute("rel").toLower() == "icon" ||
-                            domElement.attribute("rel").toLower() == "shortcut icon") {
-                        urlsToCheck << QUrl(domElement.attribute("href"));
+            if (tagName == "link") {
+                // This could be a feed...
+                QXmlStreamAttributes attributes = xml.attributes();
+                if (attributes.hasAttribute(S_REL) && attributes.hasAttribute(S_HREF)) {
+                    QString rel = attributes.value("", S_REL).toString().toLower();
+                    if (rel == "apple-touch-icon" || rel == "icon" || rel == "shortcut icon") {
+                        // We got one!
+                        urlsToCheck << QUrl(attributes.value("", S_HREF).toString());
                     }
                 }
             }
         }
-
-        // Recurse children.
-        QDomNode child = domNode.firstChild();
-        while(!child.isNull()) {
-            // Recurse!
-            traveseXML(child);
-            child = child.nextSibling();
-        }
-
-        // Continue outter loop.
-        domNode = domNode.nextSibling();
     }
 }

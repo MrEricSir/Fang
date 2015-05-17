@@ -1,6 +1,6 @@
 TEMPLATE = app
 
-QT += network sql quick webkitwidgets svg xml
+QT += network sql quick webkitwidgets svg
 
 QT -= sensors
 
@@ -16,6 +16,11 @@ include(deployment.pri)
 
 # TidyLib
 include(tidylib/tidylib.pri)
+
+# Fang version
+# From: http://www.openguru.com/2009/11/qt-best-way-to-set-application-version.html
+VERSION = 0.1
+DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
 # Windows icon
 RC_FILE = win32.rc

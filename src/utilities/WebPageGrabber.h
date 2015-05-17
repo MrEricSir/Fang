@@ -1,8 +1,6 @@
 #ifndef WEBPAGEGRABBER_H
 #define WEBPAGEGRABBER_H
 
-#include <QDomElement>
-#include <QDomDocument>
 #include <QObject>
 #include <QString>
 #include <QUrl>
@@ -19,8 +17,6 @@ class WebPageGrabber : public FangObject
 {
     Q_OBJECT
 public:
-    // If handleMetaRefresh is true, we'll perform HTML-based redirects.
-
     /**
      * @brief WebPageGrabber creates an XML document from either a string or a URL.
      * @param handleMetaRefresh If true, handles refreshes from within HTML documents rather than
@@ -33,16 +29,17 @@ public:
     
 signals:
     // If you requested a URL, ready() will be emitted when it's ready!
-    void ready(QDomDocument* page);
+    // If document is null, an error happened. :(
+    void ready(QString* document);
     
 public slots:
-    // Fetches the webpage and emits ready() with the DOM document.
+    // Fetches the webpage and emits ready() with the XHTML document.
     // Signals with null on an error.
     void load(const QUrl &url);
 
-    // Load the HTML string into a DOM document and returns it (no signal is emmitted.)
+    // Load the HTML string into a Tidy'd XHTML document and returns it (no signal is emmitted.)
     // Returns null on an error.
-    QDomDocument* load(const QString& htmlString);
+    QString* load(const QString& htmlString);
     
 private slots:
     // Uh oh, an error!
@@ -51,15 +48,14 @@ private slots:
     // We got some HTTP content!
     void onDownloadFinished(QByteArray array);
 
-    // Recursively searches for a meta refresh in the XHTML DOM.
-    // Sets redirectURL if one is found.
-    void traveseXML(const QDomNode& node);
+    // Searches the XHTML'd document for a redirect URL.
+    // Returns the redirect URL, or the empty string.
+    QString searchForRedirect(const QString& document);
     
 private:
     SimpleHTTPDownloader downloader;
-    QDomDocument document;
+    QString document;
     bool handleMetaRefresh;
-    QString redirectURL;
 };
 
 #endif // WEBPAGEGRABBER_H

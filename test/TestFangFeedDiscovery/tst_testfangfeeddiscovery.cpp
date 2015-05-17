@@ -56,10 +56,12 @@ void TestFangFeedDiscovery::testCase1_data()
     
     // Truly good sites.
     QTest::newRow("MrEricSir") << "http://www.mrericsir.com/blog/feed/" << true;
+    QTest::newRow("MrEricSir minimal") << "mrericsir.com" << true;
     QTest::newRow("SFist") << "http://feeds.gothamistllc.com/SFist" << true;
     QTest::newRow("SFist Minimal") << "sfist.com" << true;
     QTest::newRow("LaughingSquid Minimal") << "laughingsquid.com" << true;
     QTest::newRow("Fark Minimal") << "fark.com" << true;
+    QTest::newRow("yourkickstartersucks") << "yourkickstartersucks.tumblr.com" << true;
 }
 
 QTEST_MAIN(TestFangFeedDiscovery)

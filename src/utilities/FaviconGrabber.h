@@ -67,10 +67,10 @@ private slots:
     /**
      * @brief Completion for WEB_GRABBER
      */
-    void onWebGrabberReady(QDomDocument* page);
+    void onWebGrabberReady(QString* document);
 
-    // Recursively searches for images in the XHTML DOM.
-    void traveseXML(const QDomNode& node);
+    // Searches for icons in our XHTML doc.
+    void findIcons(const QString& document);
     
 private:
     SimpleStateMachine machine;

@@ -1,6 +1,8 @@
 #include "WebPageGrabber.h"
+#include <QXmlStreamReader>
 
 #include <QDebug>
+//#include <iostream>
 
 // TidyLib
 #include <tidy.h>
@@ -20,12 +22,13 @@ WebPageGrabber::~WebPageGrabber()
 
 void WebPageGrabber::load(const QUrl& url)
 {
-    redirectURL = "";
     downloader.load(url);
 }
 
-QDomDocument* WebPageGrabber::load(const QString& htmlString)
+QString *WebPageGrabber::load(const QString& htmlString)
 {
+    document = "";
+
     // Tidy up the string!
     TidyBuffer output = {0};
     TidyBuffer errbuf = {0};
@@ -71,12 +74,15 @@ QDomDocument* WebPageGrabber::load(const QString& htmlString)
     tidyBufFree( &errbuf );
     tidyRelease( tdoc );
 
-    // Shove into QtXML doc.
-    document.setContent(result);
+
+    //std::cout << "Tidy: " << result.toStdString();
+
+    // Remember </spock>
+    document = result;
 
     if (handleMetaRefresh) {
         // Recursively walk the DOM to check for a meta refresh.
-        traveseXML(document);
+        QString redirectURL = searchForRedirect(document);
         if (redirectURL.size()) {
             QUrl url(redirectURL);
             if (url.isValid()) {
@@ -104,39 +110,43 @@ void WebPageGrabber::onDownloadFinished(QByteArray array)
     load(array);
 }
 
-void WebPageGrabber::traveseXML(const QDomNode &node)
+QString WebPageGrabber::searchForRedirect(const QString& document)
 {
-    QDomNode domNode = node;
-    QDomElement domElement;
+    // Examples of what we're looking for:
+    //     <meta http-equiv="refresh" content="0; url=http://example.com/">
+    //     <meta http-equiv="refresh" content="0;URL='http://thetudors.example.com/'" />
+    //     <meta http-equiv="refresh" content="0;URL=http://www.mrericsir.com/blog/" />
+    const QString S_HTTP_EQUIV = "http-equiv";
+    const QString S_CONTENT = "content";
+    const QString URL_TOKEN = "url=";
 
-    // Loop sibblings at this level.
-    while(!(domNode.isNull()))
-    {
-        QString nodeName = domNode.nodeName();
-        //qDebug() << "Node: " << nodeName;
-        //qDebug() << "Value: "  << domNode.nodeValue();
+    QXmlStreamReader xml;
+    xml.addData(document);
 
-        // Stop conditions.
-        if (nodeName == "body" || redirectURL.size()) {
-            return;
-        }
+    while (!xml.atEnd()) {
+        // Grab the next thingie.
+        xml.readNext();
 
-        if (domNode.isElement())
-        {
-            domElement = domNode.toElement();
-            if(!(domElement.isNull()))
-            {
-                // Examples of what we're looking for:
-                //     <meta http-equiv="refresh" content="0; url=http://example.com/">
-                //     <meta http-equiv="refresh" content="0;URL='http://thetudors.example.com/'" />
-                //     <meta http-equiv="refresh" content="0;URL=http://www.mrericsir.com/blog/" />
-                if (nodeName == "meta" && domElement.attribute("http-equiv").toLower() == "refresh"
-                        && domElement.hasAttribute("content")) {
-                    const QString URL_TOKEN = "url=";
-                    QString content = domElement.attribute("content");
+        if (xml.isStartElement()) {
+            QString tagName = xml.name().toString().toLower();
+            if (tagName == "body") {
+                // We're done with the header, so bail.
+                return "";
+            }
+
+            if (tagName == "meta") {
+                // Possible redirect! Let's examine further, shall we?
+                QXmlStreamAttributes attributes = xml.attributes();
+
+                if (attributes.hasAttribute(S_HTTP_EQUIV) && attributes.hasAttribute(S_CONTENT) &&
+                        attributes.value("", S_HTTP_EQUIV).toString().toLower() == "refresh") {
+
+                    // For this method we're assuming that URL is always the last parameter in
+                    // the content attribute.
+                    QString content = attributes.value("", "content").toString();
                     int index = content.indexOf(URL_TOKEN, 0, Qt::CaseInsensitive);
                     if (index >= 0) {
-                        // So there is a URL. Now we just have to defuckify it.
+                        // URLs are allowed to be in quotes, so we have to check for that.
                         QString url = content.mid(index + URL_TOKEN.size()).trimmed();
                         QChar firstChar = url.at(0);
                         if (firstChar == '\"' || firstChar == '\"') {
@@ -144,26 +154,18 @@ void WebPageGrabber::traveseXML(const QDomNode &node)
                             if (url.endsWith('\'') || url.endsWith('\"')) {
                                 url.left(1);
                             }
-                            redirectURL = url;
+                            return url;
                         } else {
-                            redirectURL = url;
+                            return url;
                         }
                     }
                 }
             }
         }
-
-        // Recurse children.
-        QDomNode child = domNode.firstChild();
-        while(!child.isNull()) {
-            // Recurse!
-            traveseXML(child);
-            child = child.nextSibling();
-        }
-
-        // Continue outter loop.
-        domNode = domNode.nextSibling();
     }
+
+    // We didn't find a redirect (and we never encountered a body tag either. Weird!)
+    return "";
 }
 
 
