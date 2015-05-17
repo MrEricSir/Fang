@@ -42,6 +42,10 @@ public slots:
     QString* load(const QString& htmlString);
     
 private slots:
+    // Internal load methods.
+    void loadInternal(const QUrl &url);
+    QString* loadInternal(const QString& htmlString, bool handleRefresh);
+
     // Uh oh, an error!
     void onDownloadError(QString err);
 
@@ -56,6 +60,7 @@ private:
     SimpleHTTPDownloader downloader;
     QString document;
     bool handleMetaRefresh;
+    int redirectAttempts;
 };
 
 #endif // WEBPAGEGRABBER_H

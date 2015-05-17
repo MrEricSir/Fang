@@ -8,8 +8,11 @@
 #include <tidy.h>
 #include <buffio.h>
 
+// Fang will bite you if you try too many HTML redirects. (Qt handles HTTP redirects.)
+#define MAX_REDIRECTS 10
+
 WebPageGrabber::WebPageGrabber(bool handleMetaRefresh, int timeoutMS, QObject *parent) :
-    handleMetaRefresh(handleMetaRefresh), downloader(timeoutMS), FangObject(parent)
+    handleMetaRefresh(handleMetaRefresh), redirectAttempts(0), downloader(timeoutMS), FangObject(parent)
 {
     connect(&downloader, &SimpleHTTPDownloader::error, this, &WebPageGrabber::onDownloadError);
     connect(&downloader, &SimpleHTTPDownloader::finished, this, &WebPageGrabber::onDownloadFinished);
@@ -22,10 +25,24 @@ WebPageGrabber::~WebPageGrabber()
 
 void WebPageGrabber::load(const QUrl& url)
 {
-    downloader.load(url);
+    // Reset counter!
+    redirectAttempts = 0;
+
+    // Now GO!
+    loadInternal(url);
 }
 
 QString *WebPageGrabber::load(const QString& htmlString)
+{
+    return loadInternal(htmlString, false);
+}
+
+void WebPageGrabber::loadInternal(const QUrl& url)
+{
+    downloader.load(url);
+}
+
+QString *WebPageGrabber::loadInternal(const QString& htmlString, bool handleRefresh)
 {
     document = "";
 
@@ -80,13 +97,20 @@ QString *WebPageGrabber::load(const QString& htmlString)
     // Remember </spock>
     document = result;
 
-    if (handleMetaRefresh) {
-        // Recursively walk the DOM to check for a meta refresh.
+    // Check for an HTML meta refresh if requested.
+    if (handleRefresh) {
         QString redirectURL = searchForRedirect(document);
-        if (redirectURL.size()) {
+        if (redirectAttempts > MAX_REDIRECTS) {
+            qDebug() << "Error: Maximum HTML redirects";
+            emit ready(NULL);
+
+            return NULL;
+        } else if (redirectURL.size()) {
             QUrl url(redirectURL);
             if (url.isValid()) {
-                load(url);
+                // Bump counter and call our internal load method that doesn't reset it.
+                redirectAttempts++;
+                loadInternal(url);
 
                 return NULL;
             }
@@ -107,7 +131,7 @@ void WebPageGrabber::onDownloadError(QString err)
 
 void WebPageGrabber::onDownloadFinished(QByteArray array)
 {
-    load(array);
+    loadInternal(array, handleMetaRefresh);
 }
 
 QString WebPageGrabber::searchForRedirect(const QString& document)

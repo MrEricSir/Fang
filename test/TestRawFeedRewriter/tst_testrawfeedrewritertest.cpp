@@ -48,8 +48,8 @@ void TestRawFeedRewriterTest::testCase1()
     
     QCOMPARE(spy.count(), 1);
     
-    qDebug() << "Expected output: " << output;
-    qDebug() << "Output: " << news.description;
+    //qDebug() << "Expected output: " << output;
+    //qDebug() << "Output: " << news.description;
     
     // Check to see what we got!
     QCOMPARE(news.description, output);
@@ -69,7 +69,7 @@ void TestRawFeedRewriterTest::testCase1_data()
     QTest::newRow("Anchor") << "<a href=\"http://www.google.com\">link</a>" << "<a href=\"http://www.google.com\">link</a>" << false;
 
     // Newlines need to work within a pre tag.
-    QTest::newRow("Pre tag") << "<pre> hello\n\nhi</pre>" << "<pre>hello\n\nhi </pre>"
+    QTest::newRow("Pre tag") << "<pre>hello\n\nhi</pre>" << "<pre> hello\n\nhi </pre>"
                              << false;
 
     // Kill line breaks at the end.
@@ -158,7 +158,7 @@ void TestRawFeedRewriterTest::testCase1_data()
                                  "too much into it. Either way.</p><p>Spotted this wheatpaste during the Cinco de Mayo "
                                  "festival on Valencia.</p>"
                               << false; // No need for le grabber de image
-*/
+
     QTest::newRow("Burrito Justice") << "<p>Come ride the Bikes to Books tour with us on Saturday, May 30! Both the foldable maps and <a href=\"http://burritojustice.com/2015/03/08/bike-to-books-poster-bigger-stronger-faster/\">our new posters</a> will be available for sale.</p>\n"
                                         "<p>It&#8217;s a surprisingly easy ride, and you can have an IPA at the end.</p>\n"
                                         "<p><a href=\"https://burritojustice.files.wordpress.com/2013/10/bikes-to-books-map-crop.jpg\"><img class=\"alignnone size-large wp-image-9283\" src=\"https://burritojustice.files.wordpress.com/2013/10/bikes-to-books-map-crop.jpg?w=600&#038;h=867\" alt=\"bikes to books map crop\" width=\"600\" height=\"867\" /><img class=\"alignnone size-large wp-image-10591\" src=\"https://burritojustice.files.wordpress.com/2015/03/bikes-to-books-timeline-crop.png?w=600&#038;h=635\" alt=\"bikes to books timeline crop\" width=\"600\" height=\"635\" /></a></p>\n"
