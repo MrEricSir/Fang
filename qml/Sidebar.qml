@@ -125,6 +125,10 @@ Item {
                 ListView {
                     id: feedListView
                     anchors.fill: parent
+
+                    // Don't show this unless there's something in the list.
+                    // (There's always 1 item -- all news.)
+                    visible: model.count > 1;
                     
                     // Only scroll if there's a need.
                     interactive: height < childrenRect.height

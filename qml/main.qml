@@ -16,6 +16,9 @@ Window {
     
     minimumWidth: Math.max(640, sidebar.width + minimumNewsWidth);
     minimumHeight: 450;
+
+    // Read-only: Tells you if the news view is busy.
+    property alias isInProgress: news.isInProgress;
     
     // Treat as const
     property int minimumSidebarWidth: 230;

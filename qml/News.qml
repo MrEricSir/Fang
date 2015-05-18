@@ -11,6 +11,9 @@ Item {
 
     // Read-only: Whether bookmarks are enabled for this feed.
     property bool bookmarksEnabled: true;
+
+    // Read-only: Whether the news view is loading stuff.
+    property alias isInProgress: newsView.isInProgress;
     
     // Used by main for double clicking on feed titles.
     function jumpToBookmark() {

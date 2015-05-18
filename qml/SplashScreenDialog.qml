@@ -1,6 +1,9 @@
 import QtQuick 2.4
 import Fang 1.0
 
+
+// This is the dialog that's open when Fang starts.  Aside from showing off our snazzy logo, it
+// also gives the sidebar and news view time to load.
 Dialog {
     id: splashScreenDialog;
 
@@ -40,16 +43,32 @@ Dialog {
         }
 
         Timer {
-            id: splashCompleteTimer
-            interval: 700
-            running: false
-            repeat: false
+            id: splashCompleteTimer;
+            interval: 350;
+            running: false;
+            repeat: false;
 
-            onTriggered: close()
+            onTriggered: {
+                // It will either be closed here if the load's already complete,
+                // or in the Connections handler.
+                if (!main.isInProgress) {
+                    close();
+                }
+            }
+        }
+
+        Connections {
+            target: main;
+            onIsInProgressChanged: {
+                // If we didn't close in the above timer, we're closing here.
+                if (!splashScreenDialog.isClosed && !main.isInProgress && !splashCompleteTimer.running) {
+                    close();
+                }
+            }
         }
 
         Component.onCompleted: {
-
+            // Start here:
             splashFadeIn.start();
             splashCompleteTimer.restart();
         }
