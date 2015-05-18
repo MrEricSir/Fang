@@ -28,7 +28,6 @@ void TestRawFeedRewriterTest::testCase1()
 
     QFETCH(QString, input);
     QFETCH(QString, output);
-    QFETCH(bool,    images);
     
     // Setup our "fake" raw news list.
     RawNews news;
@@ -41,8 +40,8 @@ void TestRawFeedRewriterTest::testCase1()
     QSignalSpy spy(&rewriter, SIGNAL(finished()));
     rewriter.rewrite(&newsList);
     
-    if (images) {
-        // There's images, so we need to wait for the download.
+    if (!spy.count()) {
+        // If the signal hasn't fired yet it's because there's images to be downloaded.
         QVERIFY(spy.wait());  // default: up to 5 seconds
     }
     
@@ -59,62 +58,58 @@ void TestRawFeedRewriterTest::testCase1_data()
 {
     QTest::addColumn<QString>("input");  // HTML input
     QTest::addColumn<QString>("output"); // Expected HTML output
-    QTest::addColumn<bool>("images");    // Set to true if we have to wait for image rewriter.
 
     // Simplest edge cases.
-    QTest::newRow("Empty String") << "" << "" << false;
-    QTest::newRow("Bad HTML") << "</div>" << "" << false;
-    QTest::newRow("Bad HTML 2") << "<b>bold text" << "<b>bold text</b>" << false;
-    QTest::newRow("NBSP") << "Hello good sir&nbsp;<b>bold</b>" << "Hello good sir <b>bold</b>" << false;
-    QTest::newRow("Anchor") << "<a href=\"http://www.google.com\">link</a>" << "<a href=\"http://www.google.com\">link</a>" << false;
+    QTest::newRow("Empty String") << "" << "";
+    QTest::newRow("Bad HTML") << "</div>" << "";
+    QTest::newRow("Bad HTML 2") << "<b>bold text" << "<b>bold text</b>";
+    QTest::newRow("NBSP") << "Hello good sir&nbsp;<b>bold</b>" << "Hello good sir <b>bold</b>";
+    QTest::newRow("Anchor") << "<a href=\"http://www.google.com\">link</a>" << "<a href=\"http://www.google.com\">link</a>";
 
     // Newlines need to work within a pre tag.
-    QTest::newRow("Pre tag") << "<pre>hello\n\nhi</pre>" << "<pre> hello\n\nhi </pre>"
-                             << false;
+    QTest::newRow("Pre tag") << "<pre>hello\n\nhi</pre>" << "<pre> hello\n\nhi </pre>";
 
     // Kill line breaks at the end.
     QTest::newRow("Line breaks") << "<p>Bunch of line breaks after last paragraph</p><br><br><br>"
-                                 << "<p>Bunch of line breaks after last paragraph</p>"
-                                 << false;
+                                 << "<p>Bunch of line breaks after last paragraph</p>";
 
     // 99 Percent Invisible does this very visible annoyance.
     QTest::newRow("Empty ps") << "<p>Empty paragraphs at end</p><p></p><p>&nbsp;</p><p> </p><p>\n\n</p>"
-                              << "<p>Empty paragraphs at end</p>" << false;
+                              << "<p>Empty paragraphs at end</p>";
 
     // Yeah, WTF, W3C.
-    QTest::newRow("Javascript") << "<script>document.write('u eat poop');</script>lol" << "lol"
-                                << false;
+    QTest::newRow("Javascript") << "<script>document.write('u eat poop');</script>lol" << "lol";
     QTest::newRow("Javascript 2") << "<h1 onclick=\"alert('OH HAI')\">headline</h1>"
-                                  << "<h1>headline</h1>" << false;
+                                  << "<h1>headline</h1>";
     
     // "Share this" images.
     QTest::newRow("Share me") << "<p>hi</p><a href=\"http://www.facebook.com/share.php?u="
                                  "http://www.missionmission.org/2014/07/03/bingo/\"><img src=\""
                                  "http://i.imgur.com/ohnlAzj.png\">Share on Facebook</a>"
-                              << "<p>hi</p>"  << false; // The image gets removed by the share detector
+                              << "<p>hi</p>";
 
     // Image size rewriter (and reducer.)
     QTest::newRow("Image test") << "<img src=\"http://i.imgur.com/ohnlAzj.png\">"
                               << "<img src=\"http://i.imgur.com/ohnlAzj.png\""
-                                 " width=\"400\" height=\"286\" align=\"left\"/>" << true;
+                                 " width=\"400\" height=\"286\" align=\"left\"/>";
 
     // Image size rewriter (and reducer) with STYLE.
     QTest::newRow("Image test 2") << "<img src=\"http://i.imgur.com/ohnlAzj.png\" style=\""
                                  "width: 500px;\">"
                               << "<img src=\"http://i.imgur.com/ohnlAzj.png\""
-                                 " width=\"400\" height=\"286\" align=\"left\"/>" << true;
+                                 " width=\"400\" height=\"286\" align=\"left\"/>";
 
     // Image size WITHOUT rewriter.
     QTest::newRow("Image test 3") << "<img src=\"http://i.imgur.com/ohnlAzj.png\" align=\"left\""
                                      " width=\"400\" height=\"286\"/>"
                               << "<img src=\"http://i.imgur.com/ohnlAzj.png\""
-                                 " width=\"400\" height=\"286\" align=\"left\"/>" << false;
+                                 " width=\"400\" height=\"286\" align=\"left\"/>";
 
     // Embedded Vine video.
     QTest::newRow("Vine") << "<iframe class=\"vine-embed\" src=\""
                              "https://vine.co/v/MwxwzKAupL6/embed/postcard\" "
                              "width=\"560\" height=\"560\" frameborder=\"0\"></iframe>"
-                          << ""  << false;
+                          << "";
 
     // Streetsblog formatting
     QTest::newRow("Streetsblog") << "<p><div class=\"wp-caption aligncenter\" id=\"attachment_98788\" "
@@ -131,7 +126,7 @@ void TestRawFeedRewriterTest::testCase1_data()
                                     "<img src=\"http://i.imgur.com/523Qeov.jpg\" width=\"400\" height=\"185\" "
                                     "align=\"left\"/></a><p>How should California’s high speed rail interface with "
                                     "Los Angeles County? Give your input at an upcoming meeting or via email. "
-                                    "Image via CAHSRA</p></div>"  << false; // No image resize
+                                    "Image via CAHSRA</p></div>";
 
     // MissionLocal whitespace issues
     QTest::newRow("MissionLocal") << "<p>As construction nears completion at V20, the 18 unit condo at 20th and Valencia, Sutter "
@@ -141,8 +136,7 @@ void TestRawFeedRewriterTest::testCase1_data()
                                   << "<p>As construction nears completion at V20, the 18 unit condo at 20th and Valencia, Sutter "
                                      "Pacific Medical Foundation plans to open a medical facility in the ground floor commercial "
                                      "space – if it’s approved by the Planning Commission. Some Valencia Street neighbors, "
-                                     "however, are working to prevent that from happening or at least working to get it downsized.</p>"
-                                  << false;
+                                     "however, are working to prevent that from happening or at least working to get it downsized.</p>";
 
     // From MrEricSir.com
     QTest::newRow("Grump Cat") << "<p><a href=\"https://www.flickr.com/photos/mrericsir/17161096410\" title=\"GOOD. by MrEricSir, on Flickr\">"
@@ -156,8 +150,7 @@ void TestRawFeedRewriterTest::testCase1_data()
                                  "</a></p><p>Grump Cat wearing a bicycle helmet? I have no idea. "
                                  "Perhaps it’s a statement about bicycle helmet laws, or maybe I’m reading "
                                  "too much into it. Either way.</p><p>Spotted this wheatpaste during the Cinco de Mayo "
-                                 "festival on Valencia.</p>"
-                              << false; // No need for le grabber de image
+                                 "festival on Valencia.</p>";
 
     QTest::newRow("Burrito Justice") << "<p>Come ride the Bikes to Books tour with us on Saturday, May 30! Both the foldable maps and <a href=\"http://burritojustice.com/2015/03/08/bike-to-books-poster-bigger-stronger-faster/\">our new posters</a> will be available for sale.</p>\n"
                                         "<p>It&#8217;s a surprisingly easy ride, and you can have an IPA at the end.</p>\n"
@@ -181,8 +174,7 @@ void TestRawFeedRewriterTest::testCase1_data()
                                         "<p><em><b>Ride will commence at 1:00 p.m. sharp</b></em></p>"
                                         "<p><em><b>Ride will end at approximately 4:00 p.m. in North Beach, outside City Lights Books</b></em></p><p><em>Bring bikes with gears, snacks, and enthusiasm.</em></p><p><em>Event is free. Maps and posters will be available for purchase.</em></p>"
                                         "<p><em>Combining San Francisco history, art, literature, cycling, and urban exploration, “Bikes to Books” began as an bike ride homage to the 1988 street-naming project spearheaded by City Lights founder and former San Francisco Poet Laureate, Lawrence Ferlinghetti, in which twelve San Francisco streets were renamed for famous artists and authors who had once made San Francisco their home. The 7.1 mile tour, which takes between two and three hours to complete, is admittedly not for the faint of heart nor gear—these streets were not chosen for their proximity to bike lanes, and there is plenty of traffic to dodge, hills to climb, one-way streets, and even a set of stairs. But it’s a diverting and unique way to celebrate both the literary and the adventurous spirit of San Francisco. First published in 2013 in the San Francisco Bay Guardian, and later in partnership with City Lights Books, the physical map can be found in many of San Francisco’s finest book emporiums, and is appropriate for use as a navigational tool, a history lesson, and a unique work of art in its own right.</em></p><p><em><a href=\"http://burritojustice.com/bikes-to-books-map/\">http://burritojustice.com/bikes-to-books-map/</a></em></p>"
-                                        "<a href=\"http://feeds.wordpress.com/1.0/gocomments/burritojustice.wordpress.com/10603/\"/>"
-                                     << true;
+                                        "<a href=\"http://feeds.wordpress.com/1.0/gocomments/burritojustice.wordpress.com/10603/\"/>";
 
     QTest::newRow("Burrito Law") << "<p>As burritos transcend the Mission, we here at Burrito Justice keep a watchful eye on quality worldwide and frankly, it&#8217;s not looking good. One of our agents has just reported in from the United Kingdom:</p>"
                                     "<p>&nbsp;</p>"
@@ -199,8 +191,7 @@ void TestRawFeedRewriterTest::testCase1_data()
                                      "<p>you need new friends RT <a href=\"https://twitter.com/ellaraff\">@ellaraff</a>: a British friend claims 'this' is how to eat burritos. Repulsive. <a href=\"https://twitter.com/hhickmore\">@hhickmore</a><a href=\"http://t.co/MAG147j3NT\">pic.twitter.com/MAG147j3NT</a></p>"
                                      "<p>— Burrito Justice (@burritojustice) <a href=\"https://twitter.com/burritojustice/status/598580353012400128\">May 13, 2015</a></p></blockquote>"
                                      "</div>"
-                                     "<p>WTAF England. Looks like Gibbons needs to get cracking on a new book.</p>"
-                                 << false;
+                                     "<p>WTAF England. Looks like Gibbons needs to get cracking on a new book.</p>";
 
     QTest::newRow("Stripe") << "<p>Starting at 10am Pacific Time this morning, you can watch "
                                "<a href=\"http://en.wikipedia.org/wiki/The_Interview_(2014_film)\">"
@@ -209,14 +200,12 @@ void TestRawFeedRewriterTest::testCase1_data()
                             << "<p>Starting at 10am Pacific Time this morning, you can watch "
                                "<a href=\"http://en.wikipedia.org/wiki/The_Interview_(2014_film)\">"
                                "The Interview</a> at <a href=\"https://www.seetheinterview.com\">"
-                               "SeeTheInterview.com</a>, powered by Stripe.</p>"
-                            << false;
+                               "SeeTheInterview.com</a>, powered by Stripe.</p>";
 
     QTest::newRow("Stripe 2") << "<p>There’s also equivalent functionality available in the API—check out "
                                  "<a href=\"https://stripe.com/docs/fraud\">the documentation</a> for more details.</p>"
                               << "<p>There’s also equivalent functionality available in the API—check out "
-                                 "<a href=\"https://stripe.com/docs/fraud\">the documentation</a> for more details.</p>"
-                              << false;
+                                 "<a href=\"https://stripe.com/docs/fraud\">the documentation</a> for more details.</p>";
 }
 
 QTEST_MAIN(TestRawFeedRewriterTest)
