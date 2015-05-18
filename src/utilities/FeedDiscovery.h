@@ -13,10 +13,11 @@
 
 /**
  * @brief Attempts to match a user-submitted, URL like "bob.com" to an actual news feed.
- * This is done by massaging the URL, then attempting to parse it.  If that fails we 
- * treat it as a web page and look for a feed URL embedded in it, then try to parse that.
- * 
- * Both the feed and final URL are returned if the error flag is not set.
+ * This is done by massaging the URL so that Qt can fetch a document.  If that document is
+ * a web page, we search for a link to the RSS or Atom feed in the HTML.  Then we check
+ * that document to see if it's an RSS feed.
+ *
+ * HTTP and HTML redirects are handled.
  * 
  * State machine diagram:
  * 

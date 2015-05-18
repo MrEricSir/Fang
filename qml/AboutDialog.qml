@@ -45,8 +45,8 @@ Dialog {
     DialogSpacer {}
     
     DialogText {
-        text: "Copyright 2013-2015 Eric P. Gregory.  All rights reserved.  " +
-              "Designed in San Francisco, California";
+        text: "Copyright 2013-2015 Eric Gregory.  All rights reserved.  " +
+              "Made in San Francisco";
     }
     
     DialogSpacer {}

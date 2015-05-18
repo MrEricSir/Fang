@@ -18,7 +18,7 @@ FeedDiscovery::FeedDiscovery(QObject *parent) :
     machine.addStateChange(WEB_GRABBER, TRY_FEED_AGAIN, SLOT(onTryFeedAgain()));
     machine.addStateChange(TRY_FEED_AGAIN, FEED_FOUND, SLOT(onFeedFound()));
     
-    machine.addStateChange(-1, FEED_ERROR, SLOT(onError())); // Many errors, one slot.
+    machine.addStateChange(-1, FEED_ERROR, SLOT(onError())); // All errors.
     
     // Parser signals.
     connect(&parserFirstTry, SIGNAL(done()), this, SLOT(onFirstParseDone()));
