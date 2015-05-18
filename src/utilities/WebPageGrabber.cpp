@@ -12,7 +12,11 @@
 #define MAX_REDIRECTS 10
 
 WebPageGrabber::WebPageGrabber(bool handleMetaRefresh, int timeoutMS, QObject *parent) :
-    handleMetaRefresh(handleMetaRefresh), redirectAttempts(0), downloader(timeoutMS), FangObject(parent)
+    handleMetaRefresh(handleMetaRefresh),
+    redirectAttempts(0),
+    downloader(timeoutMS),
+    error(true),
+    FangObject(parent)
 {
     connect(&downloader, &SimpleHTTPDownloader::error, this, &WebPageGrabber::onDownloadError);
     connect(&downloader, &SimpleHTTPDownloader::finished, this, &WebPageGrabber::onDownloadFinished);
@@ -25,8 +29,9 @@ WebPageGrabber::~WebPageGrabber()
 
 void WebPageGrabber::load(const QUrl& url)
 {
-    // Reset counter!
+    // Reset!
     redirectAttempts = 0;
+    error = true;
 
     // Now GO!
     loadInternal(url);
@@ -34,6 +39,9 @@ void WebPageGrabber::load(const QUrl& url)
 
 QString *WebPageGrabber::load(const QString& htmlString)
 {
+    // Reset!
+    error = true;
+
     return loadInternal(htmlString, false);
 }
 
@@ -117,6 +125,7 @@ QString *WebPageGrabber::loadInternal(const QString& htmlString, bool handleRefr
         }
     }
 
+    error = false;
     emit ready(&document);
     return &document;
 }

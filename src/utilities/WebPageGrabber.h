@@ -40,6 +40,9 @@ public slots:
     // Load the HTML string into a Tidy'd XHTML document and returns it (no signal is emmitted.)
     // Returns null on an error.
     QString* load(const QString& htmlString);
+
+    // Returns the previously loaded document, or the empty string if there was an error.
+    QString* getDocument() { return error ? NULL : &document; }
     
 private slots:
     // Internal load methods.
@@ -61,6 +64,7 @@ private:
     QString document;
     bool handleMetaRefresh;
     int redirectAttempts;
+    bool error;
 };
 
 #endif // WEBPAGEGRABBER_H
