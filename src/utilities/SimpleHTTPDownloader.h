@@ -10,6 +10,9 @@
 #include "../network/FangNetworkAccessManager.h"
 #include "../FangObject.h"
 
+// Fang will bite you if you try too many HTML redirects.
+#define MAX_REDIRECTS 10
+
 /**
  * @brief The SimpleHTTPDownloader class downloads a web page.
  *
@@ -40,6 +43,10 @@ public slots:
     void load(const QUrl &url);
 
 private slots:
+
+    // Load function used internally.
+    void loadInternal(const QUrl &url);
+
     // Request is done!
     void onRequestFinished(QNetworkReply* reply);
 
@@ -54,6 +61,7 @@ private:
     int timeoutMS;
     QNetworkReply* currentReply;
     QTimer timeout;
+    int redirectAttempts;
 };
 
 #endif // SIMPLEHTTPDOWNLOADER_H

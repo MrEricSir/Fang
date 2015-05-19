@@ -1,7 +1,7 @@
 #include "SimpleHTTPDownloader.h"
 
 SimpleHTTPDownloader::SimpleHTTPDownloader(int timeoutMS, QObject *parent) :
-    timeoutMS(timeoutMS), currentReply(NULL), FangObject(parent)
+    timeoutMS(timeoutMS), currentReply(NULL), redirectAttempts(0), FangObject(parent)
 {
     timeout.setSingleShot(true);
 
@@ -19,6 +19,14 @@ SimpleHTTPDownloader::~SimpleHTTPDownloader()
 }
 
 void SimpleHTTPDownloader::load(const QUrl &url)
+{
+    // Reset our counter.
+    redirectAttempts = 0;
+
+    loadInternal(url);
+}
+
+void SimpleHTTPDownloader::loadInternal(const QUrl &url)
 {
     // Delete last reply if needed.
     if (currentReply) {
@@ -53,8 +61,17 @@ void SimpleHTTPDownloader::onRequestFinished(QNetworkReply *reply)
     // Handle HTTP redirects.
     QVariant redirectVariant = reply->attribute(QNetworkRequest::RedirectionTargetAttribute);
     if (!redirectVariant.isNull()) {
+        if (redirectAttempts > MAX_REDIRECTS) {
+            emit error("Maximum HTTP redirects");
+
+            return;
+        }
+
+        // Bump counter and call our internal load method that doesn't reset it.
+        redirectAttempts++;
+
         QUrl redirectURL = redirectVariant.toUrl();
-        load(redirectURL);
+        loadInternal(redirectURL);
 
         return;
     }

@@ -30,6 +30,8 @@ inline QString DBSettingsKeyDefaultValue(DBSettingsKey key) {
  * @param value
  */
 inline void DBSettingsKeyAssert(DBSettingsKey key, const QString& value) {
+    Q_UNUSED(value); // TODO: Will this param ever be used?
+
     switch (key) {
     case CACHE_LENGTH:
          Q_ASSERT(value == TWO_WEEKS || value == THREE_MONTH ||

@@ -8,9 +8,6 @@
 #include <tidy.h>
 #include <buffio.h>
 
-// Fang will bite you if you try too many HTML redirects. (Qt handles HTTP redirects.)
-#define MAX_REDIRECTS 10
-
 WebPageGrabber::WebPageGrabber(bool handleMetaRefresh, int timeoutMS, QObject *parent) :
     handleMetaRefresh(handleMetaRefresh),
     redirectAttempts(0),
