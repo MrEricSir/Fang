@@ -188,7 +188,7 @@ void TestRawFeedRewriterTest::testCase1_data()
                                  << "<p>As burritos transcend the Mission, we here at Burrito Justice keep a watchful eye on quality worldwide and frankly, it’s not looking good. One of our agents has just reported in from the United Kingdom:</p>"
                                      "<div>"
                                      "<blockquote>"
-                                     "<p>you need new friends RT <a href=\"https://twitter.com/ellaraff\">@ellaraff</a>: a British friend claims 'this' is how to eat burritos. Repulsive. <a href=\"https://twitter.com/hhickmore\">@hhickmore</a><a href=\"http://t.co/MAG147j3NT\">pic.twitter.com/MAG147j3NT</a></p>"
+                                     "<p>you need new friends RT <a href=\"https://twitter.com/ellaraff\">@ellaraff</a>: a British friend claims 'this' is how to eat burritos. Repulsive. <a href=\"https://twitter.com/hhickmore\">@hhickmore</a> <a href=\"http://t.co/MAG147j3NT\">pic.twitter.com/MAG147j3NT</a></p>"
                                      "<p>— Burrito Justice (@burritojustice) <a href=\"https://twitter.com/burritojustice/status/598580353012400128\">May 13, 2015</a></p></blockquote>"
                                      "</div>"
                                      "<p>WTAF England. Looks like Gibbons needs to get cracking on a new book.</p>";
@@ -206,6 +206,19 @@ void TestRawFeedRewriterTest::testCase1_data()
                                  "<a href=\"https://stripe.com/docs/fraud\">the documentation</a> for more details.</p>"
                               << "<p>There’s also equivalent functionality available in the API—check out "
                                  "<a href=\"https://stripe.com/docs/fraud\">the documentation</a> for more details.</p>";
+
+    QTest::newRow("ML 2") << "<p>3.) Books on Socialism and Stalinism sell well regularly. Everything from <a href=\""
+                             "https://www.etsy.com/listing/220145869/alexander-rodchenko-photographs-moscow\"><em>"
+                             "Moscow</em> </a><em><a href=\"https://www.etsy.com/listing/220145869/alexander-rodchenko-photographs-moscow\""
+                             ">1939</a>, </em>a Stalinist photography book, to hows and whys of the socialist party, such as <em><a href=\""
+                             "http://www.amazon.co.uk/What-Socialist-Frederick-William-Jowett/dp/B000IUC17C\">"
+                             "What Made Me a Socialist</a> </em>by Frederick William Jowett .</p>"
+                          << "<p>3.) Books on Socialism and Stalinism sell well regularly. Everything from <a href=\""
+                             "https://www.etsy.com/listing/220145869/alexander-rodchenko-photographs-moscow\"><em>"
+                             "Moscow</em></a> <em><a href=\"https://www.etsy.com/listing/220145869/alexander-rodchenko-photographs-moscow\""
+                             "> 1939</a>,</em> a Stalinist photography book, to hows and whys of the socialist party, such as <em><a href=\""
+                             "http://www.amazon.co.uk/What-Socialist-Frederick-William-Jowett/dp/B000IUC17C\">"
+                             " What Made Me a Socialist</a></em> by Frederick William Jowett .</p>";
 }
 
 QTEST_MAIN(TestRawFeedRewriterTest)

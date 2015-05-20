@@ -245,8 +245,8 @@ QString RawFeedRewriter::rewriteFirstPass(const QString &document, QSet<QUrl> &i
             QString text = xml.text().toString();
             bool isEmpty = isHTMLEmpty(text);
 
-            // Don't allow newlines outside of pre tags.
-            if (stack.top().tagName == "pre" || !isEmpty) {
+            // Don't allow pure empty tags, though a single space is ok.
+            if (!isEmpty || text == " ") {
                 bool addSpaceStart = text.startsWith('\n');
                 bool addSpaceEnd = text.endsWith('\n');
 
@@ -262,8 +262,12 @@ QString RawFeedRewriter::rewriteFirstPass(const QString &document, QSet<QUrl> &i
                     text = text + ' ';
                 }
 
+                // Write the text!
                 writer.writeCharacters(text);
-                stack.top().nonEmptyTextCount++;
+
+                if (!isEmpty) {
+                    stack.top().nonEmptyTextCount++;
+                }
 
                 lastWasText = true;
             }
@@ -390,7 +394,7 @@ QString RawFeedRewriter::rewriteSecondPass(QString &docString)
         } else if (xml.isCharacters() && 0 == skip) {
             // Text
             QString text = xml.text().toString();
-            if (lastTag != "pre") {
+            if (lastTag != "pre" && lastTag != "code") {
                 // This happens due to some kind of auto-formatting glitch.
                 text.replace("\n", " ");
             }
