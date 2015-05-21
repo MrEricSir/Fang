@@ -224,6 +224,12 @@ void TestRawFeedRewriterTest::testCase1_data()
                                "Now this one -- this is the second paragraph.  "
                             << "<p>This is the first paragraph. I hope you like it!</p>"
                                "<p>Now this one -- this is the second paragraph.</p>";
+
+    QTest::newRow("Text only 2") << "Just one line of text!"
+                            << "<p>Just one line of text!</p>";
+
+    QTest::newRow("Text only 3") << "Here's our first paragraph, ok?  You like?\r\n\r\n  \r\n   Here is the second one."
+                            << "<p>Here's our first paragraph, ok?  You like?</p><p>Here is the second one.</p>";
 }
 
 QTEST_MAIN(TestRawFeedRewriterTest)

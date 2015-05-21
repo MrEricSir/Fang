@@ -511,7 +511,11 @@ QString RawFeedRewriter::rewriteTextOnlyNews(QString input)
 
     QStringList list = input.split('\n', QString::SkipEmptyParts);
     foreach(QString line, list) {
-        output += "<p>" + line + "</p>";
+        // Trim lines, and skip empty ones.
+        QString trimmed = line.trimmed();
+        if (!trimmed.isEmpty()) {
+            output += "<p>" + trimmed + "</p>";
+        }
     }
 
     // As a signal to the 2nd pass, we prepend the output with an ASCII beep character.  2nd pass
