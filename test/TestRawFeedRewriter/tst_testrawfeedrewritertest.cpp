@@ -219,6 +219,11 @@ void TestRawFeedRewriterTest::testCase1_data()
                              "> 1939</a>,</em> a Stalinist photography book, to hows and whys of the socialist party, such as <em><a href=\""
                              "http://www.amazon.co.uk/What-Socialist-Frederick-William-Jowett/dp/B000IUC17C\">"
                              " What Made Me a Socialist</a></em> by Frederick William Jowett .</p>";
+
+    QTest::newRow("Text only") << " This is the first paragraph. I hope you like it!\n"
+                               "Now this one -- this is the second paragraph.  "
+                            << "<p>This is the first paragraph. I hope you like it!</p>"
+                               "<p>Now this one -- this is the second paragraph.</p>";
 }
 
 QTEST_MAIN(TestRawFeedRewriterTest)

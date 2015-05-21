@@ -93,6 +93,9 @@ protected:
     // Removes excessive newlines.
     void removeNewlinesBothSides(QString& docString);
 
+    // Some news is text instead of HTML (Hearst's papers, for example.)
+    QString rewriteTextOnlyNews(QString input);
+
 protected slots:
     // We've grabbed our images.
     void onImageGrabberFinished();

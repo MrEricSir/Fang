@@ -128,6 +128,10 @@ QString RawFeedRewriter::rewriteFirstPass(const QString &document, QSet<QUrl> &i
     // Swap out non-breaking spaces here since QXmlStreamReader doesn't handle them well.
     doc->replace("&nbsp;", " ", Qt::CaseInsensitive);
 
+    // We're going to count the number of tags to determine if this is a real HTML document,
+    // or a text document.
+    int tagCount = 0;
+
     QXmlStreamReader xml;
     xml.addData(*doc);
 
@@ -151,6 +155,8 @@ QString RawFeedRewriter::rewriteFirstPass(const QString &document, QSet<QUrl> &i
 
         if (xml.isStartElement()) {
             // Start
+            tagCount++;
+
             if (0 == skip) {
                 QString tagName = xml.name().toString().toLower();
                 QString classValue = xml.attributes().value("class").toString();
@@ -292,6 +298,15 @@ QString RawFeedRewriter::rewriteFirstPass(const QString &document, QSet<QUrl> &i
         qDebug() << "QXmlStreamWriter had an error of some kind.";
     }
 
+
+    if (tagCount <= 5 && output !=
+            "<?xml version=\"1.0\"?><html id=\"FangID_1\"><body id=\"FangID_2\"/></html>") {
+        // Turns out we're not dealing with an HTML document: there's not enough tags, and it's
+        // not an empty document (which can be caused by bad HTML.)
+        // Ditch the Tidy'd doc and rewrite as plain text from the original.
+        return rewriteTextOnlyNews(document);
+    }
+
     // Return new document.
     return output;
 }
@@ -313,6 +328,12 @@ void RawFeedRewriter::rewriteAllSecondPass()
 QString RawFeedRewriter::rewriteSecondPass(QString &docString)
 {
     //qDebug() << "Second pass: " << docString;
+
+    // If it was a text-only document, we've prepended it with an ASCII beep.  All we have to do
+    // here is remove the beep and return it.
+    if (docString.startsWith('\07')) {
+        return docString.mid(1);
+    }
 
     QXmlStreamReader xml;
     xml.addData(docString);
@@ -477,6 +498,27 @@ void RawFeedRewriter::removeNewlinesBothSides(QString &docString)
     while (docString.endsWith("\n")) {
         docString = docString.left(docString.length() - 1);
     }
+}
+
+QString RawFeedRewriter::rewriteTextOnlyNews(QString input)
+{
+    QString output;
+
+    // Keep it simple, stupid.
+    input = input.trimmed();
+    input.replace("\r\n", "\r");
+    input.replace("\r", "\n");
+
+    QStringList list = input.split('\n', QString::SkipEmptyParts);
+    foreach(QString line, list) {
+        output += "<p>" + line + "</p>";
+    }
+
+    // As a signal to the 2nd pass, we prepend the output with an ASCII beep character.  2nd pass
+    // will remove this and return the string without further modification.s
+    output = '\07' + output;
+
+    return output;
 }
 
 void RawFeedRewriter::onImageGrabberFinished()
