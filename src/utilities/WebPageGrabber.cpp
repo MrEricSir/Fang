@@ -9,11 +9,12 @@
 #include <buffio.h>
 
 WebPageGrabber::WebPageGrabber(bool handleMetaRefresh, int timeoutMS, QObject *parent) :
+    FangObject(parent),
+    downloader(timeoutMS),
     handleMetaRefresh(handleMetaRefresh),
     redirectAttempts(0),
-    downloader(timeoutMS),
-    error(true),
-    FangObject(parent)
+    error(true)
+
 {
     connect(&downloader, &SimpleHTTPDownloader::error, this, &WebPageGrabber::onDownloadError);
     connect(&downloader, &SimpleHTTPDownloader::finished, this, &WebPageGrabber::onDownloadFinished);
@@ -52,8 +53,8 @@ QString *WebPageGrabber::loadInternal(const QString& htmlString, bool handleRefr
     document = "";
 
     // Tidy up the string!
-    TidyBuffer output = {0};
-    TidyBuffer errbuf = {0};
+    TidyBuffer output = {0,0,0,0};
+    TidyBuffer errbuf = {0,0,0,0};
 
     int rc = -1;
     Bool ok;
@@ -182,7 +183,7 @@ QString WebPageGrabber::searchForRedirect(const QString& document)
                         if (firstChar == '\"' || firstChar == '\"') {
                             url = url.mid(1);
                             if (url.endsWith('\'') || url.endsWith('\"')) {
-                                url.left(1);
+                                url = url.left(1);
                             }
                             return url;
                         } else {

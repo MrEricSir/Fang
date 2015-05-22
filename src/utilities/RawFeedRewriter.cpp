@@ -19,9 +19,9 @@
 
 RawFeedRewriter::RawFeedRewriter(QObject *parent) :
     FangObject(parent),
+    newsList(NULL),
     webPageGrabber(false),
     imageGrabber(),
-    newsList(NULL),
     intID(0)
 {
     connect(&imageGrabber, SIGNAL(finished()), this, SLOT(onImageGrabberFinished()));

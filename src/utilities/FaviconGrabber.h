@@ -6,6 +6,7 @@
 #include <QNetworkReply>
 #include <QList>
 #include <QPair>
+#include <QImage>
 
 #include "WebPageGrabber.h"
 #include "SimpleStateMachine.h"

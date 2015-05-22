@@ -10,6 +10,9 @@ INCLUDEPATH += tidylib tidylib/include
 # Disable deprecation warnings.
 win32:DEFINES += "_CRT_SECURE_NO_WARNINGS" "_CRT_NONSTDC_NO_DEPRECATE"
 
+# TidyLib doesn't initialize all fields. :(
+macx:QMAKE_CXXFLAGS_WARN_OFF += "-Wmissing-field-initializers"
+
 
 # Input
 HEADERS += access.h \
