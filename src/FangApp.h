@@ -19,6 +19,7 @@
 #include "models/ListModel.h"
 #include "models/FangSettings.h"
 #include "models/WebInteractor.h"
+#include "models/NewsWebSocketServer.h"
 #include "parser/NewsParser.h"
 #include "FangObject.h"
 #include "notifications/NotificationBase.h"
@@ -60,6 +61,9 @@ signals:
 
     // The number of special feeds has changed, huzzah!
     void specialFeedCountChanged();
+
+    // Some news got loaded! If you care, listen for this signal.
+    void loadNewsFinished(LoadNews* loader);
     
 public slots:
     inline int feedCount() { return feedList->rowCount(); }
@@ -117,7 +121,44 @@ public slots:
      * @brief Fetches the feed with the given ID.
      */
     FeedItem* feedForId(const qint64 id);
-    
+
+    /**
+     * @brief Sets the bookmark, and fires a draw event.
+     */
+    void setBookmark(qint64 id, bool allowBackward = false);
+
+    /**
+     * @brief Pin or unpins an item.
+     */
+    void setPin(qint64 id, bool pin);
+
+    /**
+     * @brief Removes news from the list from either the top or bottom.
+     * This is used to prevent too many items from clogging up the news view.
+     */
+    void removeNews(bool fromTop, int numberToRemove);
+
+    /**
+     * @brief Used to change the current feed.
+     * @param feed
+     */
+    void setCurrentFeed(FeedItem* feed);
+
+    /**
+     * @return Pointer to the current feed.
+     */
+    FeedItem* getCurrentFeed() { return currentFeed; }
+
+    /**
+     * @return The last feed selected; feed may not be active yet due to startup order of operations.
+     */
+    FeedItem* getLastFeedSelected() { return lastFeedSelected; }
+
+    /**
+     * @brief loadNews Loads another batch of news into memory.  See also the loadNewsFinished signal.
+     * @param mode
+     */
+    void loadNews(LoadNews::LoadMode mode);
     
 private slots:
     /**
@@ -160,17 +201,6 @@ private slots:
     void onLoadAllFinished(Operation* op);
     
     /**
-     * @brief Tells the web view to display the current feed.
-     */
-    void displayFeed();
-    
-    /**
-     * @brief Used to change the current feed.
-     * @param feed
-     */
-    void setCurrentFeed(FeedItem* feed);
-    
-    /**
      * @brief Updates the feed's title.
      * @param feed
      */
@@ -185,6 +215,15 @@ private slots:
      * @brief Adds/removes the pinned news item to the list.
      */
     void pinnedNewsWatcher();
+
+    // Called when a bookmark has been set.
+    void onSetBookmarkFinished(Operation* operation);
+
+    // Called when a pin has ben set or unset.
+    void onSetPinFinished(Operation* operation);
+
+    // Called when a load has completed.
+    void onLoadNewsFinished(Operation* operation);
     
 private:
     static FangApp* _instance;
@@ -202,12 +241,19 @@ private:
     QMap<qint64, FeedItem*> feedIdMap;
     QQuickWindow* window;
     NotificationBase* notifications;
+    NewsWebSocketServer newsServer;
 
     // Special feeds.
     AllNewsFeedItem* allNews;
     PinnedFeedItem* pinnedNews;
 
     bool isPinnedNewsVisible;
+
+    // Reentrancy guards
+    bool isSettingBookmark;
+    bool loadNewsInProgress;
+
+    FeedItem* lastFeedSelected;
 };
 
 #endif // FANGAPP_H

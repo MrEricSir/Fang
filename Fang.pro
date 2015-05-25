@@ -1,6 +1,6 @@
 TEMPLATE = app
 
-QT += network sql quick webkitwidgets svg
+QT += network sql quick webkitwidgets svg websockets
 
 QT -= sensors
 
@@ -86,7 +86,8 @@ SOURCES += src/main.cpp \
     src/db/DBSettings.cpp \
     src/operations/GetAllDBSettingsOperation.cpp \
     src/parser/NewsParser.cpp \
-    src/utilities/SimpleHTTPDownloader.cpp
+    src/utilities/SimpleHTTPDownloader.cpp \
+    src/models/NewsWebSocketServer.cpp
 	
 HEADERS += \
     src/models/ListModel.h \
@@ -144,7 +145,8 @@ HEADERS += \
     src/operations/GetAllDBSettingsOperation.h \
     src/db/DBSettingsKey.h \
     src/parser/NewsParser.h \
-    src/utilities/SimpleHTTPDownloader.h
+    src/utilities/SimpleHTTPDownloader.h \
+    src/models/NewsWebSocketServer.h
 
 mac {
     QT += macextras

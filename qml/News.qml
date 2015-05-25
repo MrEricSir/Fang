@@ -67,64 +67,6 @@ Item {
                             );
             }
             
-            onAddInProgress: {
-                //console.log("on add in progress")
-                newsView.experimental.evaluateJavaScript("inProgress("
-                                                         + started + ", '"
-                                                         + operation + "');");
-                if (started) {
-                    newsView.isInProgress = true;
-                }
-            }
-            
-            onAdd: {
-                //console.log("on add, first id is: ", firstNewsID)
-                newsView.experimental.evaluateJavaScript("appendNews("
-                                                         + append + ", "
-                                                         + firstNewsID + ", '"
-                                                         + jsonNews + "');");
-            }
-            
-            onNothingToAdd: {
-                //console.log('nothing to add')
-                newsView.experimental.evaluateJavaScript("stopInProgress();");
-            }
-            
-            onClear: {
-                //console.log("Clear!");
-                newsView.experimental.evaluateJavaScript("clearNews();");
-                newsView.contentY = 0;  // reset scroll
-                
-                // Wipe the view clean; it will be set to visible again when ready.
-                newsView.visible = false;
-            }
-            
-            onJumpTo: {
-                //console.log("jump to: ", newsID);
-                newsView.experimental.evaluateJavaScript("jumpTo('" + newsID + "');");
-            }
-            
-            onDrawBookmark: {
-                //console.log("Draw bookmark: ", newsID);
-                newsView.experimental.evaluateJavaScript("drawBookmark('" + newsID + "');");
-            }
-            
-            onDrawBookmarkAndJumpTo: {
-                console.log("Draw bookmark and jump to: ", newsID, " bookmarks enabled? ", bookmarksEnabled);
-                if (news.bookmarksEnabled !== bookmarksEnabled) {
-                    // Enable/disable bookmarking.
-                    news.bookmarksEnabled = bookmarksEnabled;
-                    newsView.updateCSS();
-                }
-
-                newsView.experimental.evaluateJavaScript("drawBookmarkAndJumpTo('" + newsID + "');");
-            }
-
-            onUpdatePin: {
-                //console.log("Update pin: ", newsID, " set to: ", pin);
-                newsView.experimental.evaluateJavaScript("updatePin(" + newsID + ", " + pin + ");");
-            }
-            
             onFontSizeChanged: {
                 //console.log("Font size changed, alert!  Need to jump to bookmark!")
                 newsView.updateCSS();
@@ -159,7 +101,7 @@ Item {
                     width / experimental.preferredMinimumContentsWidth;
                 
                 // Start invisible
-                visible: false;
+                visible: true;
                 
                 // Stops scrolling while we're loading.
                 enabled: !isInProgress;
@@ -225,7 +167,7 @@ Item {
                     if (state === "welcome") {
                         // Welcome screen.
                         if (cssUpdated) {
-                            visible = true;
+                            //visible = true;
                             isInProgress = false;
                         }
                     } else {
@@ -278,7 +220,9 @@ Item {
                 // No plugins and such.
                 experimental.preferences.pluginsEnabled: false;
                 
+                // dis is allll old!loadNext
                 // Communication from WebKit layer to QML.
+                /*
                 experimental.preferences.navigatorQtObjectEnabled: true;
                 experimental.onMessageReceived: {
                     //console.log("get msg from javascript:", message.data)
@@ -289,15 +233,6 @@ Item {
                         webInteractor.loadNext();
                     } else if (cmd === "loadPrevious" && !newsView.isInProgress) {
                         webInteractor.loadPrevious();
-                    } else if (cmd === "setBookmark") {
-                        webInteractor.setBookmark(commandArray[1]);
-                    } else if (cmd === "forceBookmark") {
-                        webInteractor.setBookmark(commandArray[1], true);
-                    } else if (cmd === "setPin") {
-                        // Stupid Javascript hack!  This forceces the expression to evaluate to a boolean.
-                        webInteractor.setPin(commandArray[1], commandArray[2] === 'true');
-                    } else if (cmd === "openLink") {
-                        webInteractor.openLink(commandArray[1]);
                     } else if (cmd === "stopProgress" ) {
                         newsView.experimental.evaluateJavaScript("stopInProgress();");
                         newsView.isInProgress = false;
@@ -306,10 +241,6 @@ Item {
                         //console.log("draw book jump to finished");
                         newsView.drawBookmarkAndJumpToFinished = true;
                         checkReady();
-                    } else if (cmd === "removeNewsTop") {
-                        webInteractor.removeNews(true, commandArray[1]);
-                    } else if (cmd === "removeNewsBottom") {
-                        webInteractor.removeNews(false, commandArray[1]);
                     }
                     
                     
@@ -317,7 +248,7 @@ Item {
                     //                } else if (cmd === "scrollToPosition" ) {
                     //                    console.log("Scroll to position: ", commandArray[1]);
                     //                    newsScroll.scrollTo(commandArray[1]);
-                }
+                }*/
                 
                 // Set style, and update when needed.
                 onLoadingChanged: {
@@ -328,13 +259,13 @@ Item {
                             return;
                         }
                         
-                        webInteractor.pageLoaded();  // tell 'em the page is loaded now.
+                        ///webInteractor.pageLoaded();  // tell 'em the page is loaded now.
                         updateCSS(); // set our page's style
                         
                         // update height (if not already updated)
                         webInteractor.heightChanged(newsMargin.height);
                     } else if (loadRequest.status === WebView.LoadStartedStatus) {
-                        visible = false;
+                        //visible = false;
                     }
                 }
                 

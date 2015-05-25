@@ -1,0 +1,261 @@
+#include "NewsWebSocketServer.h"
+
+#include <QDesktopServices>
+#include <QDebug>
+#include <QTextStream>
+
+#include "../FangApp.h"
+
+NewsWebSocketServer::NewsWebSocketServer(QObject *parent) :
+    QObject(parent),
+    server("Fang WebSocket", QWebSocketServer::NonSecureMode),
+    pSocket(NULL),
+    isReady(false),
+    loadInProgress(false)
+{
+    // Listen for incoming connections!
+    if (!server.listen(QHostAddress::LocalHost, 2842)) {
+        //
+        // TODO: Panic! (at the disco?)
+        //
+    }
+
+    connect(&server, &QWebSocketServer::newConnection, this, &NewsWebSocketServer::onNewConnection);
+}
+
+void NewsWebSocketServer::onNewConnection()
+{
+    // Kill any existing connections.
+    socketDisconnected();
+
+    // Accept our new connection!
+    pSocket = server.nextPendingConnection();
+
+    connect(pSocket, &QWebSocket::textMessageReceived, this, &NewsWebSocketServer::processMessage);
+    connect(pSocket, &QWebSocket::disconnected, this, &NewsWebSocketServer::socketDisconnected);
+
+    // Can't do this in the c'tor because FangApp hasn't fully initialized yet.
+    connect(FangApp::instance(), &FangApp::loadNewsFinished, this, &NewsWebSocketServer::onLoadNewsFinished);
+}
+
+void NewsWebSocketServer::processMessage(QString message)
+{
+    //qDebug() << "NewsWebSocketServer: " << message;
+
+    // Break up our message into a command and execute it.
+    int spaceIndex = message.indexOf(' ');
+    if (spaceIndex <= 0) {
+        qDebug() << "NewsWebSocketServer didn't understand this command: " << message;
+
+        return;
+    }
+
+    execute(message.left(spaceIndex), message.mid(spaceIndex + 1));
+}
+
+void NewsWebSocketServer::socketDisconnected()
+{
+    if (pSocket) {
+        pSocket->deleteLater();
+        pSocket = NULL;
+
+        isReady = false;
+    }
+}
+
+void NewsWebSocketServer::execute(const QString &command, const QString &data)
+{
+    //qDebug() << "command: " << command;
+    //qDebug() << "data: " << data;
+
+    FangApp* app = FangApp::instance();
+    if ("pageLoaded" == command) {
+        isReady = true;
+        loadInProgress = true;
+        app->setCurrentFeed(app->getLastFeedSelected());
+    } else if ("setBookmark" == command) {
+        app->setBookmark(data.toLongLong());
+    } else if ("forceBookmark" == command) {
+        app->setBookmark(data.toLongLong(), true);
+    } else if ("openLink" == command) {
+        QDesktopServices::openUrl(QUrl(data));
+    } else if ("setPin" == command) {
+        QString dataCopy(data);
+        QTextStream stream(&dataCopy);
+        qint64 id;
+        int pin;
+        stream >> id >> pin;
+
+        app->setPin(id, (bool) pin);
+    } else if ("removeNewsTop" == command) {
+        app->removeNews(true, data.toInt());
+    } else if ("removeNewsBottom" == command) {
+        app->removeNews(false, data.toInt());
+    } else if ("loadComplete" == command) {
+        loadInProgress = false;
+    } else if ("loadNext" == command) {
+        if (!loadInProgress) {
+            app->loadNews(LoadNews::Append);
+        }
+    } else if ("loadPrevious" == command) {
+        if (!loadInProgress) {
+            app->loadNews(LoadNews::Prepend);
+        }
+    }
+}
+
+void NewsWebSocketServer::sendCommand(const QString &command, const QString &data)
+{
+    // TODO: Should we queue up messages before the socket's ready, or is that CrazyTalk (SM)?
+    if (!pSocket) {
+        qDebug() << "The socket is not connected yet! Slow down!";
+
+        return;
+    }
+
+    pSocket->sendTextMessage(command + " " + data);
+}
+
+void NewsWebSocketServer::onLoadNewsFinished(LoadNews *loader)
+{
+    qDebug() << "Load complete for news feed: " << loader->getFeedItem()->getTitle();
+
+    QString operationName = loader->getMode() == LoadNews::Initial ? "initial" :
+                            loader->getMode() == LoadNews::Append ? "append" : "prepend";
+
+    QVariantMap document;
+    QVariantList newsList;
+
+    // Load mode.
+    document.insert("mode", operationName);
+
+    // Bookmark (if needed)
+    FeedItem* currentFeed = FangApp::instance()->getCurrentFeed();
+    if (loader->getMode() == LoadNews::Initial && currentFeed->bookmarksEnabled()) {
+        qint64 idOfBookmark = currentFeed->getBookmarkID();
+        document.insert("bookmark", idOfBookmark);
+    }
+
+    // First news ID.
+    document.insert("firstNewsID", currentFeed->getFirstNewsID());
+
+    // Build our news list.
+    if (loader->getPrependList() != NULL) {
+        foreach(NewsItem* item, *loader->getPrependList()) {
+            addNewsItem(item, &newsList);
+        }
+
+        // Emmit prepend signal.
+        //emit add(false, currentFeed->getFirstNewsID(), escapeCharacters(QJsonDocument::fromVariant(prependList).toJson()));
+    }
+
+    // Stuff the new items into our feed.
+    if (loader->getAppendList() != NULL) {
+        foreach(NewsItem* item, *loader->getAppendList()) {
+            addNewsItem(item, &newsList);
+        }
+
+        // Emmit append signal.
+        //emit add(true, currentFeed->getFirstNewsID(), escapeCharacters(QJsonDocument::fromVariant(appendList).toJson()));
+    }
+
+
+
+    // Add our news list.
+    document.insert("news", newsList);
+
+   // emit addInProgress(false, operationName);
+
+    QString json = QString::fromUtf8(QJsonDocument::fromVariant(document).toJson());
+    //qDebug() << "JSON:" << json;
+
+    sendCommand("load", json);
+}
+
+void NewsWebSocketServer::addNewsItem(NewsItem *item, QVariantList *newsList)
+{
+    //qDebug() << "Add news: " << item->id();
+
+    // Make sure we get the real feed title for All News.te
+    QString feedTitle = !item->getFeed()->isSpecialFeed() ?
+                            item->getFeed()->getTitle() :
+                            FangApp::instance()->feedForId(item->getFeedId())->getTitle();
+
+    QVariantMap itemMap;
+    itemMap["id"] = item->getDbID();
+    itemMap["title"] = item->getTitle();
+    itemMap["url"] = item->getURL().toString();
+    itemMap["feedTitle"] = feedTitle;
+    itemMap["timestamp"] = item->getTimestamp().toMSecsSinceEpoch();
+    itemMap["content"] = item->getContent() != "" ? item->getContent() : item->getSummary();
+    itemMap["pinned"] = item->getPinned();
+
+    // Add to the list.
+    *newsList << itemMap;
+}
+
+void NewsWebSocketServer::drawBookmark(qint64 bookmarkID)
+{
+    sendCommand("drawBookmark", QString::number(bookmarkID));
+}
+
+void NewsWebSocketServer::updatePin(qint64 newsID, bool pinned)
+{
+    QVariantMap document;
+    document.insert("id", newsID);
+    document.insert("pinned", pinned);
+
+    QString json = QString::fromUtf8(QJsonDocument::fromVariant(document).toJson());
+    sendCommand("updatePin", json);
+}
+
+/*
+
+    if (!loader->getAppendList() && !loader->getPrependList()) {
+        isLoading = false;
+
+        if (loader->getMode() == LoadNews::Initial) {
+            emit nothingToAdd();
+            emit drawBookmarkAndJumpTo(-1, currentFeed->bookmarksEnabled());
+        }
+
+        return; // Nothing to do.
+    }
+
+    QString operationName = loader->getMode() == LoadNews::Initial ? "initial" :
+                            loader->getMode() == LoadNews::Append ? "append" : "prepend";
+
+    emit addInProgress(true, operationName);
+
+    // Stuff the new items into our feed.
+    if (loader->getAppendList() != NULL) {
+        QVariantList appendList;
+        foreach(NewsItem* item, *loader->getAppendList()) {
+            addNewsItem(item, &appendList);
+        }
+
+        // Emmit append signal.
+        emit add(true, currentFeed->getFirstNewsID(), escapeCharacters(QJsonDocument::fromVariant(appendList).toJson()));
+    }
+
+    if (loader->getPrependList() != NULL) {
+        QVariantList prependList;
+        foreach(NewsItem* item, *loader->getPrependList()) {
+            addNewsItem(item, &prependList);
+        }
+
+        // Emmit prepend signal.
+        emit add(false, currentFeed->getFirstNewsID(), escapeCharacters(QJsonDocument::fromVariant(prependList).toJson()));
+    }
+
+    // If this is the initial load, draw and jump to the bookmark.
+    if (loader->getMode() == LoadNews::Initial) {
+        qint64 idOfBookmark = currentFeed->getBookmarkID();
+        emit drawBookmarkAndJumpTo(idOfBookmark, currentFeed->bookmarksEnabled());
+    }
+
+    emit addInProgress(false, operationName);
+
+
+} */
+
