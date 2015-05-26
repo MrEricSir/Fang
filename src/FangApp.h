@@ -174,6 +174,11 @@ public slots:
      * @return Fang's news WebSocket server.
      */
     NewsWebSocketServer* getNewsServer() { return &newsServer; }
+
+    /**
+     * @return QML interactor
+     */
+    WebInteractor* getWebInteractor() { return interactor; }
     
 private slots:
     /**

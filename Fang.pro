@@ -1,8 +1,13 @@
 TEMPLATE = app
 
-QT += network sql quick widgets webengine svg websockets
+QT += network sql quick svg websockets
 
 QT -= sensors
+
+qtHaveModule(webengine) {
+        QT += webengine
+        DEFINES += QT_WEBVIEW_WEBENGINE_BACKEND
+}
 
 # Resource files
 # Qt zips these and stashes them inside the executable.

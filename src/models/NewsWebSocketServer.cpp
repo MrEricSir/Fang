@@ -29,6 +29,9 @@ void NewsWebSocketServer::init(FangSettings *fangSettings)
     this->fangSettings = fangSettings;
     connect(fangSettings, &FangSettings::fontSizeChanged, this, &NewsWebSocketServer::onFontSizeChanged);
     connect(fangSettings, &FangSettings::styleChanged, this, &NewsWebSocketServer::onStyleChanged);
+
+    connect(FangApp::instance()->getWebInteractor(), &WebInteractor::windowHeightChanged,
+            this, &NewsWebSocketServer::onWindowHeightChanged);
 }
 
 void NewsWebSocketServer::onNewConnection()
@@ -130,7 +133,7 @@ void NewsWebSocketServer::onLoadNewsFinished(LoadNews *loader)
 {
     //qDebug() << "Load complete for news feed: " << loader->getFeedItem()->getTitle();
 
-    if (!loader->getMode() == LoadNews::Initial && !loader->getPrependList() &&
+    if (loader->getMode() != LoadNews::Initial && !loader->getPrependList() &&
             !loader->getAppendList()) {
         // Nothing to do!
         return;
@@ -156,6 +159,10 @@ void NewsWebSocketServer::onLoadNewsFinished(LoadNews *loader)
         // CSS
         document.insert("css", getCSS());
     }
+
+    // Window height.
+    document.insert("windowHeight", QString::number(
+                        FangApp::instance()->getWebInteractor()->getWindowHeight()));
 
     // First news ID.
     document.insert("firstNewsID", currentFeed->getFirstNewsID());
@@ -246,6 +253,12 @@ void NewsWebSocketServer::onFontSizeChanged(QString font)
 {
     Q_UNUSED(font);
     updateCSS();
+}
+
+void NewsWebSocketServer::onWindowHeightChanged()
+{
+    sendCommand("windowHeight", QString::number(
+                    FangApp::instance()->getWebInteractor()->getWindowHeight()));
 }
 
 void NewsWebSocketServer::drawBookmark(qint64 bookmarkID)

@@ -20,6 +20,7 @@ class WebInteractor : public QQuickItem
     
     Q_PROPERTY(qint32 specialFeedCount READ specialFeedCount NOTIFY specialFeedCountChanged)
     Q_PROPERTY(bool loadInProgress READ loadInProgress NOTIFY onIsLoadInProgressChanged)
+    Q_PROPERTY(int windowHeight READ getWindowHeight WRITE setWindowHeight NOTIFY windowHeightChanged)
 
 
 public:
@@ -40,6 +41,13 @@ public:
     // Returns true if a news load is in progress.
     bool loadInProgress();
 
+    // Returns the window height.
+    int getWindowHeight() { return windowHeight; }
+
+    // Sets the window height.
+    void setWindowHeight(int windowHeight);
+
+
 signals:
 
     /**
@@ -51,6 +59,9 @@ signals:
      * @brief News is being loaded, or the load just ended. YAY!
      */
     void onIsLoadInProgressChanged();
+
+    // The window height changed!
+    void windowHeightChanged();
 
 public slots:
 
@@ -66,6 +77,8 @@ private:
     
     // Pointer to the global feed list.
     ListModel *feedList;
+
+    int windowHeight;
 };
 
 #endif // WEBINTERACTOR_H

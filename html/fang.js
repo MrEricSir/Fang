@@ -72,6 +72,10 @@ function processMessage(message)
         drawBookmark(data);
     } else if ('updatePin' == command) {
         setUpdatePin(data);
+    } else if ('windowHeight' == command) {
+        setWindowHeight(data);
+    } else if ('updateCSS' == command) {
+        updateCSS(JSON.parse(data));
     }
 }
 
@@ -82,6 +86,8 @@ function loadNews(json)
     // Might consider an evil eval() alternative if needed.
     var newsObject = JSON.parse( json );
     console.log("News: ", newsObject);
+
+    setWindowHeight(newsObject.windowHeight);
 
     if ('initial' == newsObject.mode) {
         // Redo the view.
@@ -126,13 +132,15 @@ function updateCSS(bodyClassList)
 
 var newsContainerSelector = 'body>.newsContainer:not(#model)';
 
+// This will be reset later.
+var windowHeight = 50000;
+
 
 // When the window is resized, jump to bookmark after a short delay.
 $(window).resize(function() {
     if(this.resizeTO) clearTimeout(this.resizeTO);
         this.resizeTO = window.setTimeout(function() {
             //console.log("RESIZE");
-            resizeBottomSpacer();
             jumpToBookmark();
     }, 50);
     
@@ -340,7 +348,7 @@ function getLastNewsContainer() {
 
 // Resizes the bottom spacer to allow the last item to be bookmarked.
 function resizeBottomSpacer() {
-     var numPix = $(window).height();
+     var numPix = windowHeight;
      console.log("Bottom spacer height: ", numPix)
      $( '#bottom' ).height( numPix );
 
@@ -409,22 +417,24 @@ function drawBookmarkAndJumpTo(id) {
 
 
 function jumpToBookmark() {
-    //console.log("Jump to bookmark");
+    console.log("Jump to bookmark");
     
     resizeBottomSpacer();
     
     // If there's a bookmark, this will jump to it.
     var element = $( ".bookmarked > .bookmark" );
-    if (!element || element.length === 0)
+    if (!element || element.length === 0) {
+        console.log("No bookmark found!")
         return;
+    }
     
     var scrollTo = element.offset().top - 10;
     
-    //console.log("Scroll to: ", scrollTo, " window height: ", windowHeight, " document h: ", $(document).height());
+    console.log("Scroll to: ", scrollTo, " window height: ", windowHeight, " document h: ", $(document).height());
     
     // Set max jump. (It overshoots on first load.)
-    if (scrollTo > $(document).height() - $(window).height()) {
-        scrollTo = $(document).height() - $(window).height();
+    if (scrollTo > $(document).height() - windowHeight) {
+        scrollTo = $(document).height() - windowHeight;
     }
     
     $(document).scrollTop( scrollTo );
@@ -571,12 +581,12 @@ function jumpNextPrev(jumpNext) {
 }
 
 // Called by QML to tell us the height of the window.
-//function setWindowHeight(height) {
-//    //console.log("height is now: ", height)
-//    windowHeight = height;
+function setWindowHeight(height) {
+    console.log("height is now: ", height)
+    windowHeight = height;
     
-//    resizeBottomSpacer();
-//}
+    resizeBottomSpacer();
+}
 
 // Main method
 $(document).ready(function() {
@@ -601,7 +611,7 @@ $(document).ready(function() {
             if (prevScrollTop === scrollTop) {
                 
                 // If we're at the bottom, always trigger the callback.
-                var bottom = $document.height() - $(window).height() - distance - $( '#bottom' ).height();
+                var bottom = $document.height() - windowHeight - distance - $( '#bottom' ).height();
                 if (scrollTop >= bottom) {
                     // Only proceed with the callback if it's been more than 5 seconds since we last
                     // hit bottom and hadn't scrolled.
@@ -625,7 +635,7 @@ $(document).ready(function() {
             }
             
             // Check bottom (note: calculation MUST be done after topCallback()!!!!)
-            var bottomTwo = $document.height() - $(window).height() - distance - $( '#bottom' ).height();
+            var bottomTwo = $document.height() - windowHeight - distance - $( '#bottom' ).height();
             if (scrollTop >= bottomTwo) {
                 bottomCallback();
             }

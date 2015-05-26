@@ -77,6 +77,9 @@ private slots:
     // Alert us to font size changes.
     void onFontSizeChanged(QString font);
 
+    // The window height changed!
+    void onWindowHeightChanged();
+
 private:
     QWebSocketServer server;
     QWebSocket *pSocket;

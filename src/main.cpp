@@ -7,6 +7,11 @@
 #include <QtSvg> // Required for OS X SVG support (yes, really.)
 #endif
 
+// The qmake file decides if we need WebEngine
+#ifdef QT_WEBVIEW_WEBENGINE_BACKEND
+#include <QtWebEngine>
+#endif // QT_WEBVIEW_WEBENGINE_BACKEND
+
 #include "FangApp.h"
 
 #include "models/FeedValidator.h"
@@ -36,6 +41,10 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     app.setOrganizationDomain("EricSoft.com");
     app.setApplicationName("Fang");
     app.setApplicationVersion(APP_VERSION);
+
+#ifdef QT_WEBVIEW_WEBENGINE_BACKEND
+    QtWebEngine::initialize();
+#endif // QT_WEBVIEW_WEBENGINE_BACKEND
     
     // Only run one Fang at a time, fellas.
     SingleInstanceCheck single("FangNewsReader", "FangSettings");

@@ -8,7 +8,8 @@
 WebInteractor::WebInteractor(QQuickItem *parent) :
     QQuickItem(parent),
     manager(NULL),
-    feedList(NULL)
+    feedList(NULL),
+    windowHeight(0)
 {
     
 }
@@ -32,6 +33,16 @@ qint32 WebInteractor::specialFeedCount()
 bool WebInteractor::loadInProgress()
 {
     return FangApp::instance()->getNewsServer()->isLoadInProgress();
+}
+
+void WebInteractor::setWindowHeight(int windowHeight)
+{
+    if (windowHeight == this->windowHeight) {
+        return;
+    }
+
+    this->windowHeight = windowHeight;
+    emit windowHeightChanged();
 }
 
 void WebInteractor::orderChanged()

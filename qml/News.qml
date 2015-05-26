@@ -1,5 +1,6 @@
 import QtQuick 2.4
 import QtWebEngine 1.0
+//import QtWebView 1.0
 import Fang 1.0
 
 Item {
@@ -17,7 +18,7 @@ Item {
     // Used by main for double clicking on feed titles.
     function jumpToBookmark() {
         //console.log("Jump to bmark");
-        newsView.experimental.evaluateJavaScript("jumpToBookmark();");
+//        newsView.experimental.evaluateJavaScript("jumpToBookmark();");
     }
     
     function orderChanged() {
@@ -45,56 +46,56 @@ Item {
     }
     
     // Sets focus on the news view when dialogs are closed.
-    property alias newsFocus: newsScrollView.focus;
+//    property alias newsFocus: newsScrollView.focus;
+    property bool newsFocus: true
     
     Item {
         id: newsMargin;
         
         anchors.fill: parent;
         
-        //onHeightChanged: webInteractor.heightChanged(height);
+        onHeightChanged: webInteractor.windowHeight = height;
         
         // The "interactor" is what talks to the C++ layer.
         // See WebInteractor.h and .cpp
         WebInteractor {
             id: webInteractor;
             objectName: "webInteractor"; // Do not change!! PENALTY OF DEATH AND ELECTROCUTION
-            
-//            function heightChanged(height) {
-//                newsView.experimental.evaluateJavaScript(
-//                            "setWindowHeight('" + height + "')"
-//                            );
-//            }
         }
         
         // Web view for our HTML-based RSS display.
-        FangScrollView {
-            id: newsScrollView;
+//        FangScrollView {
+//            id: newsScrollView;
             
-            anchors.fill: parent;
+//            anchors.fill: parent;
             
-            focus: true;
+//            focus: true;
             
-            WebView {
+            WebEngineView {
+//            WebView {
                 id: newsView;
+
+
+
                 
                 // Enable the web inspector by setting this to true.  First set QTWEBKIT_INSPECTOR_SERVER
                 // in the Project->Run setting to 9999 (or any other port number.)
                 // Then open Chrome/Safari to:  http://127.0.0.1:9999/webkit/inspector/inspector.html?page=1
-                property bool devMode: isDebugBuild;
+//                property bool devMode: isDebugBuild;
                 
                 // Read-only
-                property real scaleFactor: (width >= experimental.preferredMinimumContentsWidth) ? 1.0 :
-                    width / experimental.preferredMinimumContentsWidth;
+//                property real scaleFactor: (width >= experimental.preferredMinimumContentsWidth) ? 1.0 :
+//                    width / experimental.preferredMinimumContentsWidth;
                 
                 // Start visible
                 visible: true;
+                anchors.fill: parent;
                 
                 // Stops scrolling while we're loading.
                 enabled: !webInteractor.loadInProgress;
                 
                 // Turn the inspek0r off and on.
-                experimental.preferences.developerExtrasEnabled: devMode;
+                //experimental.preferences.developerExtrasEnabled: devMode;
                 
                 state: (feedListModel.count > 1) ? "news" : "welcome";
                 states: [
@@ -187,25 +188,25 @@ Item {
 //                }
                 
                 // Jumpts to the next news item.
-                function jumpNext() {
-                    newsView.experimental.evaluateJavaScript("jumpNextPrev(true);");
-                }
+//                function jumpNext() {
+//                    newsView.experimental.evaluateJavaScript("jumpNextPrev(true);");
+//                }
                 
-                // Jumps to the previous news item.
-                function jumpPrevious() {
-                    newsView.experimental.evaluateJavaScript("jumpNextPrev(false);");
-                }
+//                // Jumps to the previous news item.
+//                function jumpPrevious() {
+//                    newsView.experimental.evaluateJavaScript("jumpNextPrev(false);");
+//                }
                 
                 // Leave margin for scroll bar.
-                anchors.fill: parent;
-                anchors.rightMargin: 16;
-                anchors.leftMargin: 12;
+                //anchors.fill: parent;
+//                anchors.rightMargin: 16;
+//                anchors.leftMargin: 12;
                 
                 // Resize a bit more intelligently.
-                experimental.preferredMinimumContentsWidth: 300;
+//                experimental.preferredMinimumContentsWidth: 300;
                 
-                // No plugins and such.
-                experimental.preferences.pluginsEnabled: false;
+//                // No plugins and such.
+//                experimental.preferences.pluginsEnabled: false;
                 
                 // dis is allll old!loadNext
                 // Communication from WebKit layer to QML.
@@ -238,23 +239,23 @@ Item {
                 }*/
                 
                 // Set style, and update when needed.
-                onLoadingChanged: {
-                    if (loadRequest.status === WebView.LoadSucceededStatus) {
-                        if (state === "closing") {
-                            Qt.quit();
+//                onLoadingChanged: {
+//                    if (loadRequest.status === WebView.LoadSucceededStatus) {
+//                        if (state === "closing") {
+//                            Qt.quit();
                             
-                            return;
-                        }
+//                            return;
+//                        }
                         
-                        ///webInteractor.pageLoaded();  // tell 'em the page is loaded now.
-                        //updateCSS(); // set our page's style
+//                        ///webInteractor.pageLoaded();  // tell 'em the page is loaded now.
+//                        //updateCSS(); // set our page's style
                         
-                        // update height (if not already updated)
-                        //webInteractor.heightChanged(newsMargin.height);
-//                    } else if (loadRequest.status === WebView.LoadStartedStatus) {
-//                        visible = false;
-                    }
-                }
+//                        // update height (if not already updated)
+//                        //webInteractor.heightChanged(newsMargin.height);
+////                    } else if (loadRequest.status === WebView.LoadStartedStatus) {
+////                        visible = false;
+//                    }
+//                }
                 
                 
                 
@@ -283,7 +284,7 @@ Item {
                         
                         break;
                     }
-                }
+//                }
             }
         }
     }

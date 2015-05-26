@@ -1,6 +1,9 @@
 #ifndef __TIDY_H__
 #define __TIDY_H__
 
+// Required on Android for ulong
+#include <QtGlobal>
+
 /** @file tidy.h - Defines HTML Tidy API implemented by tidy library.
 
   Public interface is const-correct and doesn't explicitly depend
