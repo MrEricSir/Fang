@@ -11,7 +11,8 @@ NewsWebSocketServer::NewsWebSocketServer(QObject *parent) :
     server("Fang WebSocket", QWebSocketServer::NonSecureMode),
     pSocket(NULL),
     isReady(false),
-    loadInProgress(false)
+    loadInProgress(false),
+    fangSettings(NULL)
 {
     // Listen for incoming connections!
     if (!server.listen(QHostAddress::LocalHost, 2842)) {
@@ -21,6 +22,13 @@ NewsWebSocketServer::NewsWebSocketServer(QObject *parent) :
     }
 
     connect(&server, &QWebSocketServer::newConnection, this, &NewsWebSocketServer::onNewConnection);
+}
+
+void NewsWebSocketServer::init(FangSettings *fangSettings)
+{
+    this->fangSettings = fangSettings;
+    connect(fangSettings, &FangSettings::fontSizeChanged, this, &NewsWebSocketServer::onFontSizeChanged);
+    connect(fangSettings, &FangSettings::styleChanged, this, &NewsWebSocketServer::onStyleChanged);
 }
 
 void NewsWebSocketServer::onNewConnection()
@@ -72,6 +80,7 @@ void NewsWebSocketServer::execute(const QString &command, const QString &data)
     if ("pageLoaded" == command) {
         isReady = true;
         loadInProgress = true;
+        emit isLoadInProgressChanged();
         app->setCurrentFeed(app->getLastFeedSelected());
     } else if ("setBookmark" == command) {
         app->setBookmark(data.toLongLong());
@@ -93,6 +102,7 @@ void NewsWebSocketServer::execute(const QString &command, const QString &data)
         app->removeNews(false, data.toInt());
     } else if ("loadComplete" == command) {
         loadInProgress = false;
+        emit isLoadInProgressChanged();
     } else if ("loadNext" == command) {
         if (!loadInProgress) {
             app->loadNews(LoadNews::Append);
@@ -118,7 +128,13 @@ void NewsWebSocketServer::sendCommand(const QString &command, const QString &dat
 
 void NewsWebSocketServer::onLoadNewsFinished(LoadNews *loader)
 {
-    qDebug() << "Load complete for news feed: " << loader->getFeedItem()->getTitle();
+    //qDebug() << "Load complete for news feed: " << loader->getFeedItem()->getTitle();
+
+    if (!loader->getMode() == LoadNews::Initial && !loader->getPrependList() &&
+            !loader->getAppendList()) {
+        // Nothing to do!
+        return;
+    }
 
     QString operationName = loader->getMode() == LoadNews::Initial ? "initial" :
                             loader->getMode() == LoadNews::Append ? "append" : "prepend";
@@ -129,11 +145,16 @@ void NewsWebSocketServer::onLoadNewsFinished(LoadNews *loader)
     // Load mode.
     document.insert("mode", operationName);
 
-    // Bookmark (if needed)
     FeedItem* currentFeed = FangApp::instance()->getCurrentFeed();
-    if (loader->getMode() == LoadNews::Initial && currentFeed->bookmarksEnabled()) {
-        qint64 idOfBookmark = currentFeed->getBookmarkID();
-        document.insert("bookmark", idOfBookmark);
+    if (loader->getMode() == LoadNews::Initial)  {
+        // Bookmark (if needed)
+        if (currentFeed->bookmarksEnabled()) {
+            qint64 idOfBookmark = currentFeed->getBookmarkID();
+            document.insert("bookmark", idOfBookmark);
+        }
+
+        // CSS
+        document.insert("css", getCSS());
     }
 
     // First news ID.
@@ -192,6 +213,39 @@ void NewsWebSocketServer::addNewsItem(NewsItem *item, QVariantList *newsList)
 
     // Add to the list.
     *newsList << itemMap;
+}
+
+QVariantList NewsWebSocketServer::getCSS()
+{
+    FangApp* app = FangApp::instance();
+    QVariantList classes;
+
+    classes << app->getPlatform();
+    classes << "FONT_" + app->getSettings()->getFontSize();
+    classes << app->getSettings()->getStyle();
+
+    if (!app->getCurrentFeed()->bookmarksEnabled()) {
+        classes << "bookmarksDisabled";
+    }
+
+    return classes;
+}
+
+void NewsWebSocketServer::updateCSS()
+{
+    sendCommand("updateCSS", QString::fromUtf8(QJsonDocument::fromVariant(getCSS()).toJson()));
+}
+
+void NewsWebSocketServer::onStyleChanged(QString style)
+{
+    Q_UNUSED(style);
+    updateCSS();
+}
+
+void NewsWebSocketServer::onFontSizeChanged(QString font)
+{
+    Q_UNUSED(font);
+    updateCSS();
 }
 
 void NewsWebSocketServer::drawBookmark(qint64 bookmarkID)

@@ -3,30 +3,35 @@
 #include <QList>
 #include <QJsonDocument>
 #include "../FangApp.h"
+#include "NewsWebSocketServer.h"
 
 WebInteractor::WebInteractor(QQuickItem *parent) :
     QQuickItem(parent),
     manager(NULL),
-    feedList(NULL),
-    fangSettings(NULL)
+    feedList(NULL)
 {
     
 }
 
-void WebInteractor::init(OperationManager *manager, ListModel *feedList, FangSettings *fangSettings)
+void WebInteractor::init(OperationManager *manager, ListModel *feedList)
 {
     this->manager = manager;
     this->feedList = feedList;
-    this->fangSettings = fangSettings;
 
-    connect(fangSettings, SIGNAL(styleChanged(QString)), this, SLOT(onStyleChanged(QString)));
-    connect(fangSettings, SIGNAL(fontSizeChanged(QString)), this, SLOT(onFontSizeChanged(QString)));
-    connect(FangApp::instance(), SIGNAL(specialFeedCountChanged()), this, SIGNAL(specialFeedCountChanged()));
+    connect(FangApp::instance(), &FangApp::specialFeedCountChanged,
+            this, &WebInteractor::specialFeedCountChanged);
+    connect(FangApp::instance()->getNewsServer(), &NewsWebSocketServer::isLoadInProgressChanged,
+            this, &WebInteractor::onIsLoadInProgressChanged);
 }
 
 qint32 WebInteractor::specialFeedCount()
 {
     return FangApp::instance()->specialFeedCount();
+}
+
+bool WebInteractor::loadInProgress()
+{
+    return FangApp::instance()->getNewsServer()->isLoadInProgress();
 }
 
 void WebInteractor::orderChanged()
@@ -53,16 +58,3 @@ void WebInteractor::refreshCurrentFeed()
 {
     FangApp::instance()->refreshCurrentFeed();
 }
-
-void WebInteractor::onStyleChanged(QString style)
-{
-    Q_UNUSED(style);
-    emit styleChanged();
-}
-
-void WebInteractor::onFontSizeChanged(QString font)
-{
-    Q_UNUSED(font);
-    emit fontSizeChanged();
-}
-

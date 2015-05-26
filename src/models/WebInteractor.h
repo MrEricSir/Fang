@@ -6,12 +6,8 @@
 
 #include "FeedItem.h"
 #include "NewsItem.h"
-#include "FangSettings.h"
 #include "../operations/OperationManager.h"
 #include "../operations/Operation.h"
-#include "../operations/LoadNews.h"
-#include "../operations/LoadAllNewsOperation.h"
-#include "../operations/LoadPinnedNewsOperation.h"
 #include "../operations/UpdateOrdinalsOperation.h"
 
 /**
@@ -23,6 +19,7 @@ class WebInteractor : public QQuickItem
     Q_DISABLE_COPY(WebInteractor)
     
     Q_PROPERTY(qint32 specialFeedCount READ specialFeedCount NOTIFY specialFeedCountChanged)
+    Q_PROPERTY(bool loadInProgress READ loadInProgress NOTIFY onIsLoadInProgressChanged)
 
 
 public:
@@ -33,31 +30,28 @@ public:
      * @brief The stuff the interactor needs to do its job properly.
      * @param manager
      * @param feedList
-     * @param fangSettings
      */
-    void init(OperationManager* manager, ListModel *feedList, FangSettings *fangSettings);
+    void init(OperationManager* manager, ListModel *feedList);
 
 
     // Returns the number of special feeds.
     qint32 specialFeedCount();
-    
+
+    // Returns true if a news load is in progress.
+    bool loadInProgress();
+
 signals:
-    
-    /**
-     * @brief The style has changed in FangSettings, so the news viewer needs to refresh its css.
-     */
-    void styleChanged();
-    
-    /**
-     * @brief The font size has changed, so to a jump to bookmark.
-     */
-    void fontSizeChanged();
 
     /**
      * @brief The number of special feeds in the feed list has changed.
      */
     void specialFeedCountChanged();
-    
+
+    /**
+     * @brief News is being loaded, or the load just ended. YAY!
+     */
+    void onIsLoadInProgressChanged();
+
 public slots:
 
     // The order of the feed list changed!  Better record that.
@@ -66,23 +60,12 @@ public slots:
     // Refreshes the current feed.
     Q_INVOKABLE void refreshCurrentFeed();
     
-private slots:
-    
-    // Alert us to style changes.
-    void onStyleChanged(QString style);
-    
-    // Alert us to font size changes.
-    void onFontSizeChanged(QString font);
-    
 private:
     // Op man!
     OperationManager* manager;
     
     // Pointer to the global feed list.
     ListModel *feedList;
-    
-    // Pointer to the global settings object.
-    FangSettings *fangSettings;
 };
 
 #endif // WEBINTERACTOR_H

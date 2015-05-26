@@ -81,11 +81,12 @@ function loadNews(json)
 {
     // Might consider an evil eval() alternative if needed.
     var newsObject = JSON.parse( json );
-    //console.log("News: ", newsObject);
+    console.log("News: ", newsObject);
 
-    // Clear the news if needed.
     if ('initial' == newsObject.mode) {
+        // Redo the view.
         clearNews();
+        updateCSS(newsObject.css);
     }
 
     // Append or prepend?
@@ -109,22 +110,29 @@ function setUpdatePin(json)
     updatePin(pinObject.id, pinObject.pinned);
 }
 
+function updateCSS(bodyClassList)
+{
+    // Clear the current styles.
+    clearBodyClasses();
+
+    // Add 'em!
+    for (var i = 0; i < bodyClassList.length; i++) {
+        addBodyClass(bodyClassList[i]);
+    }
+}
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 var newsContainerSelector = 'body>.newsContainer:not(#model)';
 
-// Large default to prevent accidental bookmarks.
-var defaultWindowHeight = 50000;
-
-// Height of window.  We can't use $(window).height() because Qt embeds WebView in a flickable.
-var windowHeight = defaultWindowHeight;
 
 // When the window is resized, jump to bookmark after a short delay.
 $(window).resize(function() {
     if(this.resizeTO) clearTimeout(this.resizeTO);
         this.resizeTO = window.setTimeout(function() {
             //console.log("RESIZE");
+            resizeBottomSpacer();
             jumpToBookmark();
     }, 50);
     
@@ -332,26 +340,30 @@ function getLastNewsContainer() {
 
 // Resizes the bottom spacer to allow the last item to be bookmarked.
 function resizeBottomSpacer() {
-    // Grab the last (non model) news item.
-    var lastItem = getLastNewsContainer();
-    //console.log("Reszie bottom spacer. last item: ", lastItem)
+     var numPix = $(window).height();
+     console.log("Bottom spacer height: ", numPix)
+     $( '#bottom' ).height( numPix );
+
+//    // Grab the last (non model) news item.
+//    var lastItem = getLastNewsContainer();
+//    //console.log("Reszie bottom spacer. last item: ", lastItem)
     
-    // By default, bottom spacer is the window height.  This allows the user
-    // to scroll the last item off the page, bookmarking it.
-    var numPix = windowHeight;
+//    // By default, bottom spacer is the window height.  This allows the user
+//    // to scroll the last item off the page, bookmarking it.
+//    var numPix = windowHeight;
     
-    // If the final item is already bookmarked, collapse the bottom spacer a bit.
-    if ( lastItem.hasClass( 'bookmarked' ) ) {
+//    // If the final item is already bookmarked, collapse the bottom spacer a bit.
+//    if ( lastItem.hasClass( 'bookmarked' ) ) {
         
-        var removePix = lastItem.height();
-        if (removePix > numPix)
-            removePix = numPix; // Don't exceed window height.
+//        var removePix = lastItem.height();
+//        if (removePix > numPix)
+//            removePix = numPix; // Don't exceed window height.
         
-        numPix -= removePix;
-    }
+//        numPix -= removePix;
+//    }
     
-    //console.log("Bottom spacer is now: ", numPix)
-    $( '#bottom' ).height( numPix + 'px' );
+//    //console.log("Bottom spacer is now: ", numPix)
+//    $( '#bottom' ).height( numPix + 'px' );
 }
 
 // Scrolls to the element with the given ID.
@@ -411,8 +423,9 @@ function jumpToBookmark() {
     //console.log("Scroll to: ", scrollTo, " window height: ", windowHeight, " document h: ", $(document).height());
     
     // Set max jump. (It overshoots on first load.)
-    if (scrollTo > $(document).height() - windowHeight)
-        scrollTo = $(document).height() - windowHeight;
+    if (scrollTo > $(document).height() - $(window).height()) {
+        scrollTo = $(document).height() - $(window).height();
+    }
     
     $(document).scrollTop( scrollTo );
 }
@@ -558,12 +571,12 @@ function jumpNextPrev(jumpNext) {
 }
 
 // Called by QML to tell us the height of the window.
-function setWindowHeight(height) {
-    //console.log("height is now: ", height)
-    windowHeight = height;
+//function setWindowHeight(height) {
+//    //console.log("height is now: ", height)
+//    windowHeight = height;
     
-    resizeBottomSpacer();
-}
+//    resizeBottomSpacer();
+//}
 
 // Main method
 $(document).ready(function() {
@@ -588,7 +601,7 @@ $(document).ready(function() {
             if (prevScrollTop === scrollTop) {
                 
                 // If we're at the bottom, always trigger the callback.
-                var bottom = $document.height() - windowHeight - distance - $( '#bottom' ).height();
+                var bottom = $document.height() - $(window).height() - distance - $( '#bottom' ).height();
                 if (scrollTop >= bottom) {
                     // Only proceed with the callback if it's been more than 5 seconds since we last
                     // hit bottom and hadn't scrolled.
@@ -612,7 +625,7 @@ $(document).ready(function() {
             }
             
             // Check bottom (note: calculation MUST be done after topCallback()!!!!)
-            var bottomTwo = $document.height() - windowHeight - distance - $( '#bottom' ).height();
+            var bottomTwo = $document.height() - $(window).height() - distance - $( '#bottom' ).height();
             if (scrollTop >= bottomTwo) {
                 bottomCallback();
             }
@@ -716,4 +729,7 @@ $(document).ready(function() {
     
     // Setup the bookmark forcer on the top bookmark.
     installMouseHandlers('#topBookmark');
+
+    // Set bottom sizer.
+    resizeBottomSpacer();
 });

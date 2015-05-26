@@ -1,6 +1,5 @@
 import QtQuick 2.4
-import QtWebKit 3.0
-import QtWebKit.experimental 1.0
+import QtWebEngine 1.0
 import Fang 1.0
 
 Item {
@@ -13,7 +12,7 @@ Item {
     property bool bookmarksEnabled: true;
 
     // Read-only: Whether the news view is loading stuff.
-    property alias isInProgress: newsView.isInProgress;
+    property alias isInProgress: webInteractor.loadInProgress;
     
     // Used by main for double clicking on feed titles.
     function jumpToBookmark() {
@@ -53,7 +52,7 @@ Item {
         
         anchors.fill: parent;
         
-        onHeightChanged: webInteractor.heightChanged(height);
+        //onHeightChanged: webInteractor.heightChanged(height);
         
         // The "interactor" is what talks to the C++ layer.
         // See WebInteractor.h and .cpp
@@ -61,22 +60,11 @@ Item {
             id: webInteractor;
             objectName: "webInteractor"; // Do not change!! PENALTY OF DEATH AND ELECTROCUTION
             
-            function heightChanged(height) {
-                newsView.experimental.evaluateJavaScript(
-                            "setWindowHeight('" + height + "')"
-                            );
-            }
-            
-            onFontSizeChanged: {
-                //console.log("Font size changed, alert!  Need to jump to bookmark!")
-                newsView.updateCSS();
-                newsView.experimental.evaluateJavaScript("jumpToBookmark();");
-            }
-            
-            onStyleChanged: {
-                //console.log("I was told to update the css?");
-                newsView.updateCSS();
-            }
+//            function heightChanged(height) {
+//                newsView.experimental.evaluateJavaScript(
+//                            "setWindowHeight('" + height + "')"
+//                            );
+//            }
         }
         
         // Web view for our HTML-based RSS display.
@@ -96,15 +84,14 @@ Item {
                 property bool devMode: isDebugBuild;
                 
                 // Read-only
-                property bool isInProgress: false;
                 property real scaleFactor: (width >= experimental.preferredMinimumContentsWidth) ? 1.0 :
                     width / experimental.preferredMinimumContentsWidth;
                 
-                // Start invisible
+                // Start visible
                 visible: true;
                 
                 // Stops scrolling while we're loading.
-                enabled: !isInProgress;
+                enabled: !webInteractor.loadInProgress;
                 
                 // Turn the inspek0r off and on.
                 experimental.preferences.developerExtrasEnabled: devMode;
@@ -135,13 +122,13 @@ Item {
                 onStateChanged: {
                     switch (state) {
                     case "welcome":
-                        newsView.cssUpdated = false;
+                        //newsView.cssUpdated = false;
                         newsView.url = "qrc:///html/Welcome.html";
                         break;
                     
                     case "news":
-                        newsView.cssUpdated = false;
-                        newsView.firstRun = true;
+                        //newsView.cssUpdated = false;
+                        //newsView.firstRun = true;
                         newsView.url = "qrc:///html/NewsPage.html";
                         
                         break;
@@ -157,47 +144,47 @@ Item {
                     }
                 }
                 
-                property bool firstRun: true;        // On first run, we need to wait for both.
-                property bool cssUpdated: false;     // Check for this on first run.
+                //property bool firstRun: true;        // On first run, we need to wait for both.
+                //property bool cssUpdated: false;     // Check for this on first run.
                 // Whether the bookmark has been jumped to
-                property bool drawBookmarkAndJumpToFinished: false;
+                //property bool drawBookmarkAndJumpToFinished: false;
                 
                 // Checks if we should become visible or not.  (Internal)
-                function checkReady() {
-                    if (state === "welcome") {
-                        // Welcome screen.
-                        if (cssUpdated) {
-                            //visible = true;
-                            isInProgress = false;
-                        }
-                    } else {
-                        // We're showing the news!
-                        if (firstRun) {
-                            if (drawBookmarkAndJumpToFinished && cssUpdated) {
-                                visible = true;
-                                firstRun = false;
-                            }
-                        } else {
-                            if (drawBookmarkAndJumpToFinished)
-                                visible = true;
-                        }
-                    }
-                }
+//                function checkReady() {
+//                    if (state === "welcome") {
+//                        // Welcome screen.
+//                        if (cssUpdated) {
+//                            //visible = true;
+//                            isInProgress = false;
+//                        }
+//                    } else {
+//                        // We're showing the news!
+//                        if (firstRun) {
+//                            if (drawBookmarkAndJumpToFinished && cssUpdated) {
+//                                visible = true;
+//                                firstRun = false;
+//                            }
+//                        } else {
+//                            if (drawBookmarkAndJumpToFinished)
+//                                visible = true;
+//                        }
+//                    }
+//                }
                 
                 focus: true;
                 
-                function updateCSS() {
-                    var cssJS = "clearBodyClasses(); " +
-                            "addBodyClass('" + platform + "'); " +
-                            "addBodyClass('FONT_" + fangSettings.fontSize + "'); " +
-                            "addBodyClass('" + fangSettings.style + "'); " +
-                            (news.bookmarksEnabled ? "" : " addBodyClass('bookmarksDisabled'); ");
+//                function updateCSS() {
+//                    var cssJS = "clearBodyClasses(); " +
+//                            "addBodyClass('" + platform + "'); " +
+//                            "addBodyClass('FONT_" + fangSettings.fontSize + "'); " +
+//                            "addBodyClass('" + fangSettings.style + "'); " +
+//                            (news.bookmarksEnabled ? "" : " addBodyClass('bookmarksDisabled'); ");
 
-                    newsView.experimental.evaluateJavaScript(cssJS);
+//                    newsView.experimental.evaluateJavaScript(cssJS);
                     
-                    cssUpdated = true;
-                    checkReady();
-                }
+//                    cssUpdated = true;
+//                    checkReady();
+//                }
                 
                 // Jumpts to the next news item.
                 function jumpNext() {
@@ -260,12 +247,12 @@ Item {
                         }
                         
                         ///webInteractor.pageLoaded();  // tell 'em the page is loaded now.
-                        updateCSS(); // set our page's style
+                        //updateCSS(); // set our page's style
                         
                         // update height (if not already updated)
-                        webInteractor.heightChanged(newsMargin.height);
-                    } else if (loadRequest.status === WebView.LoadStartedStatus) {
-                        //visible = false;
+                        //webInteractor.heightChanged(newsMargin.height);
+//                    } else if (loadRequest.status === WebView.LoadStartedStatus) {
+//                        visible = false;
                     }
                 }
                 

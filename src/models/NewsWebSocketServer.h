@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QtWebSockets>
 #include "../operations/LoadNews.h"
+#include "FangSettings.h"
 
 /**
  * @brief This is the WebSocket server that manages the news page.
@@ -14,7 +15,13 @@ class NewsWebSocketServer : public QObject
 public:
     explicit NewsWebSocketServer(QObject *parent = 0);
 
+    // Users MUST call this before using any method.
+    void init(FangSettings *fangSettings);
+
 signals:
+
+    // Signals when a load is starting or ending.
+    void isLoadInProgressChanged();
 
 public slots:
 
@@ -36,6 +43,11 @@ public slots:
      */
     void updatePin(qint64 newsID, bool pinned);
 
+    /**
+     * @return True if a load is in progress, else false.
+     */
+    bool isLoadInProgress() { return loadInProgress; }
+
 private slots:
     void onNewConnection();
     void processMessage(QString message);
@@ -53,11 +65,24 @@ private slots:
     // Adds a news item to a variant list (to be turned into JSON)
     void addNewsItem(NewsItem *item, QVariantList* newsList);
 
+    // Returns a list of CSS body classes.
+    QVariantList getCSS();
+
+    // Sends a command to update the CSS.
+    void updateCSS();
+
+    // Alert us to style changes.
+    void onStyleChanged(QString style);
+
+    // Alert us to font size changes.
+    void onFontSizeChanged(QString font);
+
 private:
     QWebSocketServer server;
     QWebSocket *pSocket;
     bool isReady;
     bool loadInProgress;
+    FangSettings *fangSettings;
 };
 
 #endif // NEWSWEBSOCKETSERVER_H

@@ -12,6 +12,8 @@
 #include "operations/ExpireNewsOperation.h"
 #include "operations/SetBookmarkOperation.h"
 #include "operations/SetPinOperation.h"
+#include "operations/LoadAllNewsOperation.h"
+#include "operations/LoadPinnedNewsOperation.h"
 
 #if defined(Q_OS_MAC)
     #include "notifications/NotificationMac.h"
@@ -359,7 +361,10 @@ void FangApp::onObjectCreated(QObject* object, const QUrl& url)
    // displayFeed();
     
     // Init interactor with Mr. Manager, our list of feeds, and the settings.
-    interactor->init(&manager, feedList, fangSettings);
+    interactor->init(&manager, feedList);
+
+    // Init WebSocket server.
+    newsServer.init(fangSettings);
     
     // Grab the All News item.
     AllNewsFeedItem* allNews = qobject_cast<AllNewsFeedItem*>(feedList->row(0));

@@ -159,6 +159,21 @@ public slots:
      * @param mode
      */
     void loadNews(LoadNews::LoadMode mode);
+
+    /**
+     * @return The settings object, or null if the app hasn't initialized yet.
+     */
+    FangSettings* getSettings() { return fangSettings; }
+
+    /**
+     * @return String representing the platform.
+     */
+    QString getPlatform();
+
+    /**
+     * @return Fang's news WebSocket server.
+     */
+    NewsWebSocketServer* getNewsServer() { return &newsServer; }
     
 private slots:
     /**
@@ -205,11 +220,6 @@ private slots:
      * @param feed
      */
     void onFeedTitleChanged();
-    
-    /**
-     * @return String representing the platform.
-     */
-    QString getPlatform();
 
     /**
      * @brief Adds/removes the pinned news item to the list.
