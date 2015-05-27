@@ -2,13 +2,175 @@
   This is Fang's Javascript logic.  But I mean, you knew that.  DUH!
   */
 
-var newsContainerSelector = 'body>.newsContainer:not(#model)';
+// Selects all news containers
+var newsContainerSelector = 'body>#newsView>.newsContainer:not(#model)';
 
-// Large default to prevent accidental bookmarks.
-var defaultWindowHeight = 50000;
+// This will be reset later.
+var windowHeight = 50000;
 
-// Height of window.  We can't use $(window).height() because Qt embeds WebView in a flickable.
-var windowHeight = defaultWindowHeight;
+// Current mode
+var currentMode = "newsView";
+
+var wsUri = "ws://localhost:2842";
+var websocket = null;
+
+// Call this to connect to Fang's WebSocket.
+function initWebSocket()
+{
+    try {
+        if (typeof MozWebSocket == 'function')
+            WebSocket = MozWebSocket;
+        if ( websocket && websocket.readyState == 1 )
+            websocket.close();
+        websocket = new WebSocket( wsUri );
+        websocket.onopen = function (evt) {
+            console.log("WebSocket: CONNECTED");
+
+            // Let Fang know we're good n' ready!
+            sendCommand("pageLoaded", "");
+        };
+        websocket.onclose = function (evt) {
+            console.log("WebSocket: DISCONNECTED");
+        };
+        websocket.onmessage = function (evt) {
+            //console.log( "WebSocket message received :", evt.data );
+            processMessage(evt.data);
+        };
+        websocket.onerror = function (evt) {
+            console.log('ERROR: ' + evt.data);
+        };
+    } catch (exception) {
+        console.log('WebSocket ERROR: ' + exception);
+    }
+}
+
+// Ends the WebSocket session.
+function stopWebSocket() {
+    if (websocket) {
+        websocket.close();
+        websocket = null;
+    }
+}
+
+// Send a command to the server.
+function sendCommand(command, data)
+{
+    websocket.send( command + ' ' + data );
+}
+
+// Fang sent us a message, horray!
+function processMessage(message)
+{
+    var spaceIndex = message.indexOf( ' ' );
+    if (spaceIndex < 0) {
+        console.log("Error! Could not understand message: ", message);
+
+        return;
+    }
+
+    var command = message.substring(0, spaceIndex);
+    var data = message.substring(spaceIndex + 1);
+
+    //console.log("Command:", '[' + command + ']')
+    //console.log("Data:", '[' + data + ']')
+
+
+    if ('load' == command) {
+        loadNews(data);
+    } else if ('drawBookmark' == command) {
+        drawBookmark(data);
+    } else if ('updatePin' == command) {
+        setUpdatePin(data);
+    } else if ('windowHeight' == command) {
+        setWindowHeight(data);
+    } else if ('updateCSS' == command) {
+        updateCSS(JSON.parse(data));
+    } else if ('jumpToBookmark' == command) {
+        jumpToBookmark();
+    } else if ('jumpNext' == command) {
+        jumpNextPrev(true);
+    } else if ('jumpPrevious' == command) {
+        jumpNextPrev(false);
+    } else if ('showNews' == command) {
+       setMode('newsView');
+    } else if ('showWelcome' == command) {
+       setMode('welcome');
+    }
+}
+
+
+function loadNews(json)
+{
+    // Might consider an evil eval() alternative if needed.
+    var newsObject = JSON.parse( json );
+    //console.log("News: ", newsObject);
+
+    setWindowHeight(newsObject.windowHeight);
+
+    if ('initial' == newsObject.mode) {
+        // Redo the view.
+        setMode('newsView');
+        clearNews();
+        updateCSS(newsObject.css);
+    }
+
+    // Append or prepend?
+    var toAppend = ('prepend' == newsObject.mode ? false : true);
+
+    // Add all our news!
+    appendNews(toAppend, newsObject.firstNewsID, newsObject.news);
+
+    // If we have a new bookmark, draw it and jump there.
+    if (newsObject.bookmark) {
+        drawBookmarkAndJumpTo(newsObject.bookmark);
+    }
+
+    sendCommand('loadComplete');
+}
+
+
+function setUpdatePin(json)
+{
+    var pinObject = JSON.parse( json );
+    updatePin(pinObject.id, pinObject.pinned);
+}
+
+function updateCSS(bodyClassList)
+{
+    // Clear the current styles.
+    clearBodyClasses();
+
+    // Add 'em!
+    for (var i = 0; i < bodyClassList.length; i++) {
+        addBodyClass(bodyClassList[i]);
+    }
+}
+
+function setMode(mode)
+{
+    if (mode == currentMode) {
+        return;
+    }
+
+    console.log("Switching mode to: ", mode);
+    currentMode = mode;
+
+    // Switch out the HTML
+    if ('newsView' == currentMode) {
+        $('#welcome').hide();
+        $('#newsView').show();
+        jumpToBookmark();
+    } else if ('welcome' == currentMode) {
+        $('#newsView').hide();
+        $('#welcome').show();
+        $(document).scrollTop(0); // Scroll back up
+
+        sendCommand('loadComplete'); // Send a load complete
+    }
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 // When the window is resized, jump to bookmark after a short delay.
 $(window).resize(function() {
@@ -37,60 +199,35 @@ function htmlIdToId(htmlID) {
 
 // Intercept clix.
 function delegateLink() {
-    navigator.qt.postMessage( 'openLink ' + $(this).attr( 'href' ) );
+    sendCommand( 'openLink', $(this).attr('href')) ;
     return false; // Don't propogate link.
 };
-
-// True if an operation is in progress.  Set to true by clearNews().
-var isInProgress = false;
-
-var currentOperation = "";
-
-// We're either about to append, prepend, or do the initial load.
-function inProgress(started, operation) {
-    if (started) {
-        currentOperation = operation;
-    } else {
-        currentOperation = "";
-    }
-    
-    // Let the stop go through both processes so we can ensure the view has moved.
-    if (!started) {
-        window.setTimeout(function() {
-            navigator.qt.postMessage( 'stopProgress' );
-        }, 50);
-    }
-}
-
-// Used above.
-function stopInProgress() {
-    isInProgress = false;
-}
 
 // Given a parent element, setup the bookmark forcer and pin handler.
 function installMouseHandlers(parentElement) {
     // Setup manual bookmarks.
     $(parentElement).find( '.stripe' ).on( "click", function() { 
         var elementID = $(this).parent().parent().attr( 'id' );
-        
-        navigator.qt.postMessage( 'forceBookmark ' + htmlIdToId( elementID ) );
+
+        sendCommand( 'forceBookmark', htmlIdToId(elementID) );
     } );
 
     // Setup the pin... pinner?  Pinteresting.
     $(parentElement).find( '.pin' ).on( "click", function() {
         var element = $(this).parent().parent();
         var isPinned = element.find( '.pin' ).hasClass( 'pinned' );
-        navigator.qt.postMessage( 'setPin ' + htmlIdToId( element.attr( 'id' ) ) + ' ' + !isPinned );
+
+        sendCommand('setPin', htmlIdToId( element.attr( 'id' ) ) + ' ' + (+!isPinned)); // Unary + operator converts to number :)
     } );
 }
 
 // Appends (or prepends) a news item.
-function appendNews(append, firstNewsID, jsonNews) {
+function appendNews(append, firstNewsID, newsList) {
     // Unescape newlines.  (This allows pre tags to work.)
-    jsonNews = jsonNews.replace(/[\u0018]/g, "\n");
+    //jsonNews = jsonNews.replace(/[\u0018]/g, "\n");
     
     // Unroll the JSON string into a Javascript object.
-    var newsList = eval('(' + jsonNews + ')');
+    //var newsList = eval('(' + jsonNews + ')');
     //console.log("News list: ", newsList);
     
     // Remember where we are.
@@ -102,7 +239,7 @@ function appendNews(append, firstNewsID, jsonNews) {
         //console.log("news item:", newsItem);
         
         // Copy the model.
-        var item = $( 'body>.newsContainer#model' ).clone();
+        var item = $( 'body>#newsView>.newsContainer#model' ).clone();
         
         // I'm a model, you know what I mean...
         // (but not anymore!! HAHA!)
@@ -134,10 +271,10 @@ function appendNews(append, firstNewsID, jsonNews) {
         // Stick 'er in!
         if (append) {
             console.log("Append!")
-            item.insertAfter('body>.newsContainer:last');
+            item.insertAfter('body>#newsView>.newsContainer:last');
         } else {
             console.log("Prepend!")
-            item.insertBefore( 'body>.newsContainer:first' );
+            item.insertBefore( 'body>#newsView>.newsContainer:first' );
             
             // Calculate the size and add it to our prepend scroll tally.
             //var verticalMargins = parseInt( item.css("marginBottom") ) + parseInt( item.css("marginTop") );
@@ -155,7 +292,7 @@ function appendNews(append, firstNewsID, jsonNews) {
         // The assumption here is this will never be on the initial load; it will
         // always occur during a manual append or prepend.
         if (append) {
-            var itemsOnTop = $('body>.newsContainer:lt(' + extraItems + '):not(#model)');
+            var itemsOnTop = $('body>#newsView>.newsContainer:lt(' + extraItems + '):not(#model)');
             console.log("# Items to remove on the top:", itemsOnTop.length)
             
             // We have to iterate over all the items to get an accurate height.
@@ -166,12 +303,12 @@ function appendNews(append, firstNewsID, jsonNews) {
             });
             
             removeMatchingItems(itemsOnTop);
-            navigator.qt.postMessage( 'removeNewsTop ' + itemsOnTop.length );
+            sendCommand( 'removeNewsTop', itemsOnTop.length );
         } else {
-            var itemsOnBottom = $('body>.newsContainer:gt(-' + (extraItems + 1) + '):not(#model)');
+            var itemsOnBottom = $('body>#newsView>.newsContainer:gt(-' + (extraItems + 1) + '):not(#model)');
             //console.log("# Items to remove on the bottom:", itemsOnBottom.length)
             removeMatchingItems(itemsOnBottom);
-            navigator.qt.postMessage( 'removeNewsBottom ' + itemsOnBottom.length );
+            sendCommand( 'removeNewsBottom', itemsOnBottom.length );
         }
     }
     
@@ -231,8 +368,9 @@ function removeMatchingItems(item) {
 
 // Clears out all the news from the view.
 function clearNews() {
-    isInProgress = true;
     removeMatchingItems( $(newsContainerSelector) );
+
+    $(document).scrollTop( 0 );
 }
 
 // Returns the last news container.
@@ -242,26 +380,15 @@ function getLastNewsContainer() {
 
 // Resizes the bottom spacer to allow the last item to be bookmarked.
 function resizeBottomSpacer() {
-    // Grab the last (non model) news item.
-    var lastItem = getLastNewsContainer();
-    //console.log("Reszie bottom spacer. last item: ", lastItem)
-    
-    // By default, bottom spacer is the window height.  This allows the user
-    // to scroll the last item off the page, bookmarking it.
     var numPix = windowHeight;
-    
-    // If the final item is already bookmarked, collapse the bottom spacer a bit.
-    if ( lastItem.hasClass( 'bookmarked' ) ) {
-        
-        var removePix = lastItem.height();
-        if (removePix > numPix)
-            removePix = numPix; // Don't exceed window height.
-        
-        numPix -= removePix;
+
+    // Feeds without bookmarks don't need the bottom spacer.
+    if ($('body').hasClass('bookmarksDisabled')) {
+        numPix = 0;
     }
-    
-    //console.log("Bottom spacer is now: ", numPix)
-    $( '#bottom' ).height( numPix + 'px' );
+
+    // console.log("Bottom spacer height: ", numPix)
+    $( '#bottom' ).height( numPix );
 }
 
 // Scrolls to the element with the given ID.
@@ -274,14 +401,13 @@ function jumpTo(id) {
     var scrollTo = $( elementId ).offset().top;
     
     //console.log("jump to: ", elementId, "scrolling to: ", scrollTo);
-    
-    //navigator.qt.postMessage( 'scrollToPosition ' + scrollTo );
+
     $(document).scrollTop( scrollTo );
 }
 
 // Draws a bookmark on the given news container ID.
 function drawBookmark(id) {
-    console.log("draw bookmark: ", id)
+    //console.log("draw bookmark: ", id)
     
     // Remove any existing bookmark(s).
     $( ".bookmarked" ).removeClass('bookmarked');
@@ -299,55 +425,34 @@ function drawBookmark(id) {
 var bookmarkIdWeAreJumpingTo = -100;
 function drawBookmarkAndJumpTo(id) {
     console.log("drawBookmarkAndJumpTo", id)
-    bookmarkIdWeAreJumpingTo = id;
-    drawBookmarkAndJumpToJumpingToId();
+//    bookmarkIdWeAreJumpingTo = id;
+//    drawBookmarkAndJumpToJumpingToId();
+
+    drawBookmark(id);
+    jumpToBookmark();
 }
 
-// Internal method for above function.
-function drawBookmarkAndJumpToJumpingToId() {
-    console.log("Draw and jumping to jump jump")
-    if (isInProgress) {
-        window.setTimeout(function() {
-            drawBookmarkAndJumpToJumpingToId();
-        }, 1);
-        
-        return;
-    }
-    
-    //console.log("Jump out complete: ", bookmarkIdWeAreJumpingTo)
-    
-    // If there's a bookmark, jump to it!
-    if (bookmarkIdWeAreJumpingTo !== -100) {
-        // Draw our bookmark and jump to it!
-        console.log("Draw bookmark & jump to: ", bookmarkIdWeAreJumpingTo)
-        drawBookmark(bookmarkIdWeAreJumpingTo);
-        jumpToBookmark();
-        
-        // Reset.
-        bookmarkIdWeAreJumpingTo = -100;
-    }
-    
-    // Tell NewsView that we're ready to ROCK and ROLL.
-    navigator.qt.postMessage( 'drawBookmarkAndJumpToFinished' );
-}
 
 function jumpToBookmark() {
-    //console.log("Jump to bookmark");
+    console.log("Jump to bookmark");
     
     resizeBottomSpacer();
     
     // If there's a bookmark, this will jump to it.
     var element = $( ".bookmarked > .bookmark" );
-    if (!element || element.length === 0)
+    if (!element || element.length === 0) {
+        console.log("No bookmark found!")
         return;
+    }
     
     var scrollTo = element.offset().top - 10;
     
     //console.log("Scroll to: ", scrollTo, " window height: ", windowHeight, " document h: ", $(document).height());
     
     // Set max jump. (It overshoots on first load.)
-    if (scrollTo > $(document).height() - windowHeight)
+    if (scrollTo > $(document).height() - windowHeight) {
         scrollTo = $(document).height() - windowHeight;
+    }
     
     $(document).scrollTop( scrollTo );
 }
@@ -488,14 +593,13 @@ function jumpNextPrev(jumpNext) {
         //console.log("No length! ABORT ABORT");
         return;
     }
-    
-    //navigator.qt.postMessage( 'scrollToPosition ' + jumpTo.offset().top );
+
     $(document).scrollTop( jumpTo.offset().top );
 }
 
 // Called by QML to tell us the height of the window.
 function setWindowHeight(height) {
-    //console.log("height is now: ", height)
+    console.log("height is now: ", height)
     windowHeight = height;
     
     resizeBottomSpacer();
@@ -503,6 +607,10 @@ function setWindowHeight(height) {
 
 // Main method
 $(document).ready(function() {
+    // Start our WebSocket client
+    initWebSocket();
+
+    ////////////////////////////////////////////////////////////////////////////////////////////
     /**
      * distance: pixels from bottom that triggers callback.
      * interval is how often the check will run (in milliseconds; 250-1000 is reasonable).
@@ -514,6 +622,10 @@ $(document).ready(function() {
         var lastVeryBottom = 0;
         
         var checkScrollPosition = function() {
+            if (currentMode != 'newsView') {
+                return;
+            }
+
             var scrollTop =  $(document).scrollTop();
             
             // If the user hasn't scrolled, check bottom and bail.
@@ -559,9 +671,6 @@ $(document).ready(function() {
     
     // Adjust the bookmark if necessary.
     function checkBookmark() {
-        if (isInProgress)
-            return; // Wait for news items to appear, dummy!
-        
         if ($(newsContainerSelector).length === 0) {
             //console.log("NO NEWS CONTAINERS to deal with, no need to set bmkar")
             
@@ -595,7 +704,7 @@ $(document).ready(function() {
             
             // Move the bookmark down one.
             console.log("SET BOOKMKAR! ", nextItem.attr('id'))
-            navigator.qt.postMessage( 'setBookmark ' + htmlIdToId(nextItem.attr('id')) );
+            sendCommand( 'setBookmark', htmlIdToId(nextItem.attr('id')) );
             
             // Continue to next item.
             nextItem = nextNewsContainer(nextItem);
@@ -603,19 +712,13 @@ $(document).ready(function() {
     }
     
     function loadNext() {
-        if (isInProgress)
-            return;
-        
         //console.log("loadNext")
-        navigator.qt.postMessage( 'loadNext' );
+        sendCommand( 'loadNext', '' );
     }
     
     function loadPrevious() {
-        if (isInProgress)
-            return;
-        
-        //console.log("load prev")
-        navigator.qt.postMessage( 'loadPrevious' );
+        //console.log("loadPrevious")
+        sendCommand( 'loadPrevious', '' );
     }
     
     
@@ -654,4 +757,7 @@ $(document).ready(function() {
     
     // Setup the bookmark forcer on the top bookmark.
     installMouseHandlers('#topBookmark');
+
+    // Set bottom sizer.
+    resizeBottomSpacer();
 });

@@ -47,8 +47,8 @@ void TestRawFeedRewriterTest::testCase1()
     
     QCOMPARE(spy.count(), 1);
     
-    //qDebug() << "Expected output: " << output;
-    //qDebug() << "Output: " << news.description;
+    qDebug() << "Expected output: " << output;
+    qDebug() << "Output: " << news.description;
     
     // Check to see what we got!
     QCOMPARE(news.description, output);
@@ -58,7 +58,7 @@ void TestRawFeedRewriterTest::testCase1_data()
 {
     QTest::addColumn<QString>("input");  // HTML input
     QTest::addColumn<QString>("output"); // Expected HTML output
-
+/*
     // Simplest edge cases.
     QTest::newRow("Empty String") << "" << "";
     QTest::newRow("Bad HTML") << "</div>" << "";
@@ -230,6 +230,29 @@ void TestRawFeedRewriterTest::testCase1_data()
 
     QTest::newRow("Text only 3") << "Here's our first paragraph, ok?  You like?\r\n\r\n  \r\n   Here is the second one."
                             << "<p>Here's our first paragraph, ok?  You like?</p><p>Here is the second one.</p>";
+                            */
+    QTest::newRow("Mission Loco") << "<p>San Francisco’s 37th<span style=\"font-size: 10px; line-height: 9.09090900421143px;\"> </span>annual Carnaval festival is about the samba its way into the world once more. The two-day event kicks off with <a href=\"http://www.eventbrite.com/e/sf-carnaval-2015-kick-off-celebration-tickets-4393908298\">a party Thursday night at the Elbo Room</a>, followed on Saturday by a street festival and Sunday&#8217;s always epic parade of dancing, music, and costumed-extravagance.</p>"
+                                    "<p>This year’s theme: Agua Sagrada, Spanish for &#8220;sacred water,&#8221; a reference to the current drought.</p>"
+                                    "<p>Saturday’s festival, which takes over Harrison Street from 16th to 24th Street, has a musical lineup of nearly 20 bands playing across various stages, and includes a performance by Latin Jazz artist and Sheila E.’s father Pete Escovedo with Ray Obiedo. Other performers will be a Jimi Hendrix tribute band, <em>Harold Day and the Experience</em> and <em>Jose Najera and the Bernal Beat</em>.</p>"
+                                    "<p><a href=\"http://www.nowmap.com/carnavalsf\">The parade </a> on Sunday will start at 9:30 am from 24<sup>th</sup> and Bryant St. to 24<sup>th</sup> and Mission, then north on Mission towards 17<sup>th</sup> and South Van Ness. The festival and parade have seen 400,000 visitors in previous years. But if you don&#8217;t want to be in the crowd, you can buy tickets to your own <a href=\"http://www.carnavalsanfrancisco.org/2015-events\">private reserved seating</a>, $30 dollars per ticket.  Otherwise, admission is free.</p>"
+                                    "<p>The one and only Sheila E., best known as artist Prince’s drummer, will be leading the parade as this year’s Parade Grand Marshal. Former parade dignitaries have been actor Benjamin Pratt and his brother Peter Pratt, and San Francisco born actor Danny Glover.</p>"
+                                    "<p>Parking will be restricted along the parade route starting on Friday the 22nd at 7 pm.  <a href=\"http://www.carnavalsanfrancisco.org/neighborhood--residents\">Check here</a> before  you park, for a full list of streets that will be towing cars.</p>"
+                                    "<p>Carnaval is traditionally a festival held 40-50 days before Easter as a farewell to bad things and a beginning of a season of religious discipline. Carnaval translates to “to remove meat,” because Catholics traditionally give up meat for Lent.</p>"
+                                    "<p>For a flavor of the flavor to come, check out our video fête:<br />"
+                                    "<iframe src=\"https://player.vimeo.com/video/96467804\" width=\"600\" height=\"337\" frameborder=\"0\" allowfullscreen=\"allowfullscreen\"></iframe></p>"
+                                    "<h2><em><a href=\"http://missionlocal.org/calendar-14/\">Events in the Mission Today</a></em></h2>"
+                                    "<h2><em><a href=\"http://missionlocal.org/newcomers/\">The Essential Mission Guide</a></em></h2>"
+                                  << "<p>San Francisco’s 37th annual Carnaval festival is about the samba its way into the world once more. The two-day event kicks off with <a href=\"http://www.eventbrite.com/e/sf-carnaval-2015-kick-off-celebration-tickets-4393908298\"> a party Thursday night at the Elbo Room</a>, followed on Saturday by a street festival and Sunday’s always epic parade of dancing, music, and costumed-extravagance.</p>"
+                                     "<p>This year’s theme: Agua Sagrada, Spanish for “sacred water,” a reference to the current drought.</p>"
+                                     "<p>Saturday’s festival, which takes over Harrison Street from 16th to 24th Street, has a musical lineup of nearly 20 bands playing across various stages, and includes a performance by Latin Jazz artist and Sheila E.’s father Pete Escovedo with Ray Obiedo. Other performers will be a Jimi Hendrix tribute band, <em>Harold Day and the Experience</em> and <em>Jose Najera and the Bernal Beat</em>.</p>"
+                                     "<p><a href=\"http://www.nowmap.com/carnavalsf\">The parade</a> on Sunday will start at 9:30 am from 24<sup>th</sup> and Bryant St. to 24<sup>th</sup> and Mission, then north on Mission towards 17<sup>th</sup> and South Van Ness. The festival and parade have seen 400,000 visitors in previous years. But if you don’t want to be in the crowd, you can buy tickets to your own <a href=\"http://www.carnavalsanfrancisco.org/2015-events\">private reserved seating</a>, $30 dollars per ticket. Otherwise, admission is free.</p>"
+                                     "<p>The one and only Sheila E., best known as artist Prince’s drummer, will be leading the parade as this year’s Parade Grand Marshal. Former parade dignitaries have been actor Benjamin Pratt and his brother Peter Pratt, and San Francisco born actor Danny Glover.</p>"
+                                     "<p>Parking will be restricted along the parade route starting on Friday the 22nd at 7 pm. <a href=\"http://www.carnavalsanfrancisco.org/neighborhood--residents\">Check here</a> before you park, for a full list of streets that will be towing cars.</p>"
+                                     "<p>Carnaval is traditionally a festival held 40-50 days before Easter as a farewell to bad things and a beginning of a season of religious discipline. Carnaval translates to “to remove meat,” because Catholics traditionally give up meat for Lent.</p>"
+                                     "<p>For a flavor of the flavor to come, check out our video fête:<br/>"
+                                     "</p>"
+                                     "<h2><em><a href=\"http://missionlocal.org/calendar-14/\">Events in the Mission Today</a></em></h2>"
+                                     "<h2><em><a href=\"http://missionlocal.org/newcomers/\">The Essential Mission Guide</a></em></h2>";
 }
 
 QTEST_MAIN(TestRawFeedRewriterTest)

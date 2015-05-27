@@ -1,0 +1,586 @@
+<html>
+<head>
+<style>
+
+body {
+    padding: 0;
+    margin: 0;
+    padding-left: 10px;
+    padding-right: 10px;
+    word-wrap: break-word !important; /* Prevents super long words from breaking layout. */
+    -webkit-tap-highlight-color: rgba(0,0,0,0); /* Webkit draws an annoying grey box on active links without this. */
+}
+
+pre {
+    white-space: pre-wrap !important;
+}
+
+/* Contains a NewsItem */
+.newsItemStyle {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.newsItemStyle > .bookmark {
+    height: 3.0em;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    clear: both;
+}
+
+/* Draws the bookmark's stripe. */
+.newsItemStyle > .bookmark > .stripe {
+    width: 80%;
+    height: 22px;
+    margin: 0;
+    padding: 0;
+    margin-top: 1.8em;
+    position: relative;
+    
+    /* Center */
+    margin-left: auto;
+    margin-right: auto;
+    
+    opacity: 0.0; /* Don't show by default */
+    transition: opacity 0.25s ease-in-out;
+}
+
+.newsItemStyle > .bookmark > .stripe > .stripe_left {
+    width: 18px;
+    height: 22px;
+    background-size: 18px 22px;
+    
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    height: 22px;
+    width: 18px;
+}
+
+.newsItemStyle > .bookmark > .stripe > .stripe_mid {
+    background-repeat: repeat-x;
+    background-size: 10px 22px;
+    
+    position: absolute;
+    left: 18px;
+    right: 6px;
+    top: 0px;
+    height: 22px;
+}
+
+.newsItemStyle > .bookmark > .stripe > .stripe_right {
+    background-repeat: no-repeat;
+    background-size: 6px 22px;
+    
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    height: 22px;
+    width: 6px;
+}
+
+.bookmarked > .bookmark > .stripe {
+    opacity: 1.0;
+    transition: opacity 0.25s ease-in-out;
+}
+
+.newsItemStyle:not(.bookmarked) > .bookmark > .stripe:hover {
+    opacity: 1.0;
+    transition: opacity 0.25s ease-in-out;
+}
+
+/* When bookmarks are disabled (pinned feed) */
+body.bookmarksDisabled > #newsView > .newsItemStyle > .bookmark > .stripe {
+    display: none;
+}
+
+body.bookmarksDisabled > #newsView > .newsItemStyle#topBookmark {
+    display: none;
+    height: 8px;
+}
+
+
+.newsItemStyle > .content {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    margin-top: 0.3em;
+    overflow: auto;
+}
+
+.newsItemStyle > .content img {
+    margin-right: 8px;
+    margin-bottom: 8px;
+}
+
+.newsItemStyle > .content p:before {
+  /* Prevent narrow text cols around images. From: http://css-tricks.com/minimum-paragraph-widths/ */
+  content: "";
+  width: 10em;
+  display: block;
+  overflow: hidden;
+  /* For Demonstration */
+  /* border: 1px solid green; */
+}
+
+/* Don't display the original copy. */
+.newsItemStyle#model {
+    display: none;
+}
+
+/* By default, don't display the top bookmark. */
+.newsItemStyle#topBookmark {
+    display: none;
+}
+
+.newsItemStyle > .siteTitle {
+    width: 50%;
+    display: inline-block;
+    text-overflow: ellipsis-word;
+}
+
+.newsItemStyle > .dateDiv {
+    width: 50%;
+    display: inline-block;
+    text-align: right;
+    text-overflow: ellipsis-word;
+}
+
+.newsItemStyle > .timestamp {
+    display: none;
+}
+
+.newsItemStyle > .divider {
+    height: 1px;
+    width: 100%;
+    margin: 0;
+    margin-bottom: 0.3em;
+}
+
+.newsItemStyle > h1 {
+    font-weight: normal;
+    margin: 0;
+    margin-bottom: 0.2em;
+}
+
+a { text-decoration: none; }
+
+a:hover { text-decoration: underline; }
+
+.newsItemStyle > h1 > a:hover {
+    text-decoration: none;
+    border-bottom-style: solid;
+    border-bottom-width: 2px;
+}
+
+a:active { text-decoration: underline; }
+
+.newsItemStyle > h1 > a:active {
+    text-decoration: none;
+    border-bottom-style: solid;
+    border-bottom-width: 2px;
+}
+
+body > #newsView > #bottom {
+    height: 100%;
+    position: relative;
+    text-align:center;
+    font-family: Futura, "Trebuchet MS", Arial, sans-serif;
+    font-style: italic;
+}
+
+body > #newsView > #bottom > #bottomText {
+    position: absolute;
+    width: 100%;
+    left: 0;
+    bottom: 1.0em;
+}
+
+body > #newsView > .newsItemStyle > .dateDiv > .pin {
+    background-size: contain;
+    background-repeat: no-repeat;
+    margin-left: 5px;
+    background-position: right center;
+
+    width: 30px;
+    height: 15px;
+    display: inline-block;
+}
+
+
+/**** Light theme ****/
+
+body.LIGHT {
+    background-color: white;
+    color: black;
+}
+
+body.LIGHT > #newsView a { color: #00c; }
+body.LIGHT > #newsView a:visited { color: #a33; }
+body.LIGHT > #newsView a:hover, body.LIGHT a:active { color: #04f; }
+body.LIGHT > #newsView > .newsItemStyle > h1 > a:hover,
+  body.LIGHT > #newsView > .newsItemStyle > h1 > a:active { border-bottom-color: #00f; }
+
+body.LIGHT > #newsView > .newsItemStyle > .siteTitle, body.LIGHT > #newsView > .newsItemStyle > .dateDiv > .date { color: #777; }
+body.LIGHT > #newsView > .newsItemStyle > .divider { background-color: #ccc; }
+body.LIGHT > #newsView > .newsItemStyle > h1, body.LIGHT > #newsView > .newsItemStyle > h1 > a { color: black; }
+
+body.LIGHT > #newsView > #bottom > #bottomText  { color: #777; }
+
+body.LIGHT > #newsView > .bookmarked > .bookmark > .stripe > .stripe_left { background-image: url('qrc:///qml/images/bookmark_left.svg'); }
+body.LIGHT > #newsView > .bookmarked > .bookmark > .stripe > .stripe_mid { background-image: url('qrc:///qml/images/bookmark_mid.svg'); }
+body.LIGHT > #newsView > .bookmarked > .bookmark > .stripe > .stripe_right { background-image: url('qrc:///qml/images/bookmark_right.svg'); }
+
+body.LIGHT > #newsView > .newsItemStyle:not(.bookmarked) > .bookmark > .stripe > .stripe_left { background-image: url('qrc:///qml/images/bookmark_hover_left.svg'); }
+body.LIGHT > #newsView > .newsItemStyle:not(.bookmarked) > .bookmark > .stripe > .stripe_mid { background-image: url('qrc:///qml/images/bookmark_hover_mid.svg'); }
+body.LIGHT > #newsView > .newsItemStyle:not(.bookmarked) > .bookmark > .stripe > .stripe_right { background-image: url('qrc:///qml/images/bookmark_hover_right.svg'); }
+
+body.LIGHT > #newsView > .newsItemStyle > .dateDiv > .pin { background-image: url('qrc:///qml/images/pin_dim.svg'); }
+body.LIGHT > #newsView > .newsItemStyle:not(.pinned) > .dateDiv > .pin:hover { background-image: url('qrc:///qml/images/pin_dim_dark.svg'); }
+body.LIGHT > #newsView > .newsItemStyle > .dateDiv > .pinned { background-image: url('qrc:///qml/images/pin_selected.svg'); }
+
+/**** Dark theme ****/
+
+body.DARK {
+    background-color: black;
+    color: white;
+}
+
+body.DARK a { color: #6af; }
+body.DARK a:visited { color: #6af; }
+body.DARK a:hover, body.DARK a:active { color: #f10; }
+body.DARK > #newsView > .newsItemStyle > h1 > a:hover,
+  body.DARK > #newsView > .newsItemStyle > h1 > a:active { border-bottom-color: #f10; }
+
+body.DARK > #newsView > .newsItemStyle > .siteTitle, body.DARK > .newsItemStyle > .dateDiv > .date { color: #ccc; }
+body.DARK > #newsView > .newsItemStyle > .divider { background-color: #888; }
+body.DARK > #newsView > .newsItemStyle > h1, body.DARK > .newsItemStyle > h1 a { color: white; }
+
+body.DARK > #newsView > #bottom > #bottomText  { color: #ccc; }
+
+body.DARK > #newsView > .bookmarked > .bookmark > .stripe > .stripe_left { background-image: url('qrc:///qml/images/bookmark_dark_left.svg'); }
+body.DARK > #newsView > .bookmarked > .bookmark > .stripe > .stripe_mid { background-image: url('qrc:///qml/images/bookmark_dark_mid.svg'); }
+body.DARK > #newsView > .bookmarked > .bookmark > .stripe > .stripe_right { background-image: url('qrc:///qml/images/bookmark_dark_right.svg'); }
+
+body.DARK > #newsView > .newsItemStyle:not(.bookmarked) > .bookmark > .stripe > .stripe_left { background-image: url('qrc:///qml/images/bookmark_dark_hover_left.svg'); }
+body.DARK > #newsView > .newsItemStyle:not(.bookmarked) > .bookmark > .stripe > .stripe_mid { background-image: url('qrc:///qml/images/bookmark_dark_hover_mid.svg'); }
+body.DARK > #newsView > .newsItemStyle:not(.bookmarked) > .bookmark > .stripe > .stripe_right { background-image: url('qrc:///qml/images/bookmark_dark_hover_right.svg'); }
+
+body.DARK > #newsView > .newsItemStyle > .dateDiv > .pin { background-image: url('qrc:///qml/images/pin_dim_dark.svg'); }
+body.DARK > #newsView > .newsItemStyle:not(.pinned) > .dateDiv > .pin:hover { background-image: url('qrc:///qml/images/pin_dim.svg'); }
+body.DARK > #newsView > .newsItemStyle > .dateDiv > .pinned { background-image: url('qrc:///qml/images/pin_selected_dark.svg'); }
+
+
+/**** Platforms ****/
+
+body.MAC { font-family: "Lucida Grande", Helvetica, sans-serif !important; }
+body.WIN { font-family: "Segoe UI", Arial, sans-serif !important; }
+body.LINUX { font-family: "Geneva", Arial, sans-serif !important; }
+
+/**** Font size ****/
+
+body.FONT_SMALL > #newsView > .newsItemStyle > .content { font-size: 9pt; }
+body.FONT_SMALL > #newsView > .newsItemStyle > h1 { font-size: 13pt; }
+body.FONT_SMALL > #newsView > #bottom > #bottomText { font-size: 10pt; }
+body.FONT_SMALL > #newsView > .newsItemStyle > .content > h1,
+body.FONT_SMALL > #newsView > .newsItemStyle > .content > h2,
+body.FONT_SMALL > #newsView > .newsItemStyle > .content > h3,
+body.FONT_SMALL > #newsView > .newsItemStyle > .content > h4,
+body.FONT_SMALL > #newsView > .newsItemStyle > .content > h5,
+body.FONT_SMALL > #newsView > .newsItemStyle > .content > h6 { font-size: 9pt; font-weight: bold; font-style: none; }
+
+body.FONT_MEDIUM > #newsView > .newsItemStyle > .content { font-size: 12pt; }
+body.FONT_MEDIUM > #newsView > .newsItemStyle > h1 { font-size: 16pt; }
+body.FONT_MEDIUM > #newsView >  #bottom > #bottomText { font-size: 14pt; }
+body.FONT_MEDIUM > #newsView > .newsItemStyle > .content > h1,
+body.FONT_MEDIUM > #newsView > .newsItemStyle > .content > h2,
+body.FONT_MEDIUM > #newsView > .newsItemStyle > .content > h3,
+body.FONT_MEDIUM > #newsView > .newsItemStyle > .content > h4,
+body.FONT_MEDIUM > #newsView > .newsItemStyle > .content > h5,
+body.FONT_MEDIUM > #newsView > .newsItemStyle > .content > h6 { font-size: 12pt; font-weight: bold; font-style: none; }
+
+
+body.FONT_LARGE > #newsView > .newsItemStyle > .content { font-size: 16pt; }
+body.FONT_LARGE > #newsView > .newsItemStyle > h1 { font-size: 26pt; }
+body.FONT_LARGE > #newsView > #bottom > #bottomText { font-size: 20pt; }
+body.FONT_LARGE > #newsView > .newsItemStyle > .content > h1,
+body.FONT_LARGE > #newsView > .newsItemStyle > .content > h2,
+body.FONT_LARGE > #newsView > .newsItemStyle > .content > h3,
+body.FONT_LARGE > #newsView > .newsItemStyle > .content > h4,
+body.FONT_LARGE > #newsView > .newsItemStyle > .content > h5,
+body.FONT_LARGE > #newsView > .newsItemStyle > .content > h6 { font-size: 16pt; font-weight: bold; font-style: none; }
+
+</style>
+
+
+<!-- Welcome styles -->
+<style>
+#welcome > .divider {
+    height: 1px;
+    width: 100%;
+    margin: 0;
+}
+#welcome > h1 {
+    font-weight: normal;
+    margin: 0;
+    margin-bottom: 0.2em;
+    margin-top: .8em;
+}
+
+#welcome > h1 > a:hover {
+    text-decoration: none;
+    border-bottom-style: solid;
+    border-bottom-width: 2px;
+}
+
+#welcome > h1 > a:active {
+    text-decoration: none;
+    border-bottom-style: solid;
+    border-bottom-width: 2px;
+}
+
+p#slogan { text-align: center; }
+/*** Keyboard shortcuts ***/
+/* Loosely based on: http://cssdeck.com/labs/apple-keyboard-via-css3 */
+.keyboard {
+    display:table-cell;
+    padding: 8px;
+
+    text-align: center;
+    margin: 5px;
+    vertical-align: middle;
+    border-radius: 4px;
+}
+.helpText {
+    display:table-cell;
+    padding: 8px;
+
+    font-style: italic;
+    text-align: center;
+    margin: 5px;
+    text-align: center;
+}
+.shortcut {
+    display: table; border-spacing: 8px 0;
+}
+table {
+    border-spacing: 4px 6px;
+}
+/**** Light theme ****/
+body.LIGHT > #welcome > .divider { background-color: #ccc; }
+body.LIGHT > #welcome > h1, body.LIGHT > #welcome > h1 > a { color: black; }
+body.LIGHT .keyboard {
+    border-top: 1px solid #f5f5f5;
+    box-shadow:
+        inset 0 0 25px #fff,
+        0 1px 0 #ddd,
+        0 3px 0 #ddd,
+        0 3px 3px #333;
+    text-shadow: 0px 1px 0px #f5f5f5;
+}
+/**** Dark theme ****/
+body.DARK > #welcome > .divider { background-color: #888; }
+body.DARK > #welcome > h1, body.DARK > #welcome > h1 a { color: white; }
+body.DARK .keyboard {
+    border-top: 1px solid #0A0A0A;
+    box-shadow:
+        inset 0 0 25px #000,
+        0 1px 0 #222,
+        0 3px 0 #222,
+        0 3px 3px #ccc;
+    text-shadow: 0px 1px 0px #0A0A0A;
+}
+/**** Platforms ****/
+body.WIN .winKey { display: table-cell; }
+body.WIN .macKey { display: none; }
+body.MAC .macKey { display: table-cell; }
+body.MAC .winKey { display: none; }
+/**** Font size ****/
+table { font-size: inherit; }
+body.FONT_SMALL > #welcome > h1 { font-size: 13pt; }
+body.FONT_SMALL > #welcome > #slogan { font-size: 15pt; }
+body.FONT_MEDIUM > #welcome > h1 { font-size: 16pt; }
+body.FONT_MEDIUM > #welcome  > #slogan { font-size: 18pt; }
+body.FONT_LARGE > #welcome > h1 { font-size: 26pt; }
+body.FONT_LARGE > #welcome > #slogan { font-size: 30pt; }
+</style> <!-- Help styles -->
+
+
+<style>
+#welcome { display: none; }
+</style>
+
+<script type="text/javascript" src="jquery-2.0.3.js"></script>
+<script type="text/javascript" src="formatDateSimply.js"></script>
+<script type="text/javascript" src="fangStyleSwitch.js"></script>
+<script type="text/javascript" src="fang.js"></script>
+
+
+</head>
+<body>
+
+<div id="newsView">
+
+    <div class="newsItemStyle" id="topBookmark">
+        <div class="bookmark">
+            <div class="stripe">
+                <div class="stripe_left"></div>
+                <div class="stripe_mid"></div>
+                <div class="stripe_right"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="newsContainer newsItemStyle" id="model">
+        <h1><a href="" class="link"></a></h1>
+        <div class="divider"></div>
+        <div class="siteTitle"></div><div class="dateDiv"><span class="date"></span><div class="pin"></div></div>
+        <span class="timestamp"></span>
+        <div class="content"></div>
+
+        <div class="bookmark">
+            <div class="stripe">
+                <div class="stripe_left"></div>
+                <div class="stripe_mid"></div>
+                <div class="stripe_right"></div>
+            </div>
+        </div>
+    </div>
+
+<div class="bottom" id="bottom"><span id="bottomText">~</span><div>
+
+</div></div></div> <!-- newsView -->
+
+
+
+<div id="welcome">
+
+<h1>Welcome</h1>
+<div class="divider"></div>
+
+<p>Fang helps you stay up to date with your favorites news websites and blogs.</p>
+
+<p>RSS and Atom news feeds are supported.  For the latest information please visit
+<a href="http://www.getfang.com">www.GetFang.com</a>.<p>
+
+<p><strong>Tip:</strong> To return to this screen later, press the ? button at the top of the sidebar.</p>
+
+
+
+<h1>Add a feed</h1>
+<div class="divider"></div>
+
+<p>Press the + button at the bottom of the sidebar to add a feed.</p>
+
+<p>Enter the URL and press &quot;Continue.&quot;</p>
+
+<p>Once the feed is located, edit the title if you like and press "Add Feed."</p>
+
+<p><strong>Tip:</strong> If Fang wasn&#39;t able to locate an RSS or Atom news feed, don&#39;t give up!
+Try searching for the site&#39;s news feed exact URL on the web.</p>
+
+
+<h1>Import from other news readers</h1>
+<div class="divider"></div>
+
+<p>Do you already have a news reader and want to try Fang?  No problem.</p>
+
+<p>Most news readers (including this one) have an option to export their feed list to a file format
+called OPML. Check the news reader you&#39;re currently using for the option to export an OPML file.</p>
+
+<p>Once you have an OPML file, back in Fang press the gear button at the top of the sidebar,
+then press the &quot;Import&quot; button under &quot;OPML feed list.&quot;</p>
+
+
+
+<h1>Reading a feed</h1>
+<div class="divider"></div>
+
+<p>Reading the news is as easy as scrolling.  Select a feed in the sidebar and scroll down as you
+read. A bookmark appears if you scroll back up. That&#39;s it!</p>
+
+<p>Lost your place?  Double-click the feed in the sidebar to jump back to the bookmark.</p>
+
+<p><strong>Tip:</strong> Some news feeds only include a preview of the article. To see the complete
+article, click the headline and it will open in your default web browser.</p>
+
+
+
+<h1>Keyboard shortcuts</h1>
+<div class="divider"></div>
+
+<!-- Keyboard shortcuts go here -->
+<table>
+
+<tr><td>
+    <span class="shortcut">
+        <span class="keyboard">&uarr;</span>
+        <span class="helpText">or</span>
+        <span class="keyboard">&darr;</span>
+    </span>
+</td><td>
+        Scroll up or down
+</td></tr>
+
+<tr><td>
+    <span class="shortcut">
+        <span class="keyboard">&rarr;</span>
+        <span class="helpText">or</span>
+        <span class="keyboard">&larr;</span>
+    </span>
+</td><td>
+    Scroll to the next or previous news item
+</td></tr>
+
+<tr><td>
+    <span class="shortcut">
+        <span class="keyboard">PgUp</span>
+        <span class="helpText">or</span>
+        <span class="keyboard">PgDn</span>
+    </span>
+</td><td>
+    Scroll up or down by one screen
+</td></tr>
+
+<tr><td>
+    <span class="shortcut">
+        <span class="keyboard">Home</span>
+        <span class="helpText">or</span>
+        <span class="keyboard">End</span>
+    </span>
+</td><td>
+    Scroll to the first or the bottom of the last currently loaded news item
+</td></tr>
+
+<tr><td>
+    <div class="shortcut">
+        <span class="keyboard macKey">Command</span><span class="keyboard winKey">Ctrl</span><span class="keyboard">R</span>
+        <span class="helpText">or</span>
+        <span class="keyboard">F5</span>
+    </div>
+</td><td>
+    Refresh current feed
+</td></tr>
+
+<tr><td>
+    <div class="shortcut">
+        <span class="keyboard macKey">Command</span><span class="keyboard winKey">Ctrl</span><span class="keyboard">Q</span>
+    </div>
+</td> <td>
+    Quit
+</td></tr>
+
+
+</table>
+<!-- /shortcuts -->
+
+
+<br clear="all" /><br />
+<div class="divider"></div>
+<p>&copy; <i>Copyright 2013-2015 Eric Gregory</i></p>
+
+</div> <!-- welcome -->
+
+</body></html>

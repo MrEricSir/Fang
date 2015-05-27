@@ -1,42 +1,41 @@
 import QtQuick 2.4
-import QtWebKit 3.0
-import QtWebKit.experimental 1.0
+import QtWebEngine 1.0
+//import QtWebView 1.0
 import Fang 1.0
 
 Item {
     id: news
 
     // Read-only: The number of special feeds in the feed list
-    property alias specialFeedCount: webInteractor.specialFeedCount;
+    property alias specialFeedCount: qmlNewsInteractor.specialFeedCount;
 
     // Read-only: Whether bookmarks are enabled for this feed.
     property bool bookmarksEnabled: true;
 
     // Read-only: Whether the news view is loading stuff.
-    property alias isInProgress: newsView.isInProgress;
+    property alias isInProgress: qmlNewsInteractor.loadInProgress;
     
     // Used by main for double clicking on feed titles.
     function jumpToBookmark() {
-        //console.log("Jump to bmark");
-        newsView.experimental.evaluateJavaScript("jumpToBookmark();");
+        qmlNewsInteractor.jumpToBookmark();
     }
     
     function orderChanged() {
-        webInteractor.orderChanged();
+        qmlNewsInteractor.orderChanged();
     }
     
     function refreshFeed() {
-        webInteractor.refreshCurrentFeed();
+        qmlNewsInteractor.refreshCurrentFeed();
     }
     
     // Switch to news.
     function showNews() {
-        newsView.state = "news";
+        qmlNewsInteractor.showNews();
     }
     
     // Switch to the welcome/help screen.
     function showWelcome() {
-        newsView.state = "welcome";
+        qmlNewsInteractor.showWelcome();
     }
     
     // This is a workaround for a bug on Winows; see the comment
@@ -45,327 +44,97 @@ Item {
         newsView.state = "closing";
     }
     
-    // Sets focus on the news view when dialogs are closed.
-    property alias newsFocus: newsScrollView.focus;
+    // Don't propagate key events while dialogs are up.
+    property bool newsFocus: true;
     
     Item {
         id: newsMargin;
         
         anchors.fill: parent;
         
-        onHeightChanged: webInteractor.heightChanged(height);
+        onHeightChanged: qmlNewsInteractor.windowHeight = height;
         
         // The "interactor" is what talks to the C++ layer.
-        // See WebInteractor.h and .cpp
-        WebInteractor {
-            id: webInteractor;
-            objectName: "webInteractor"; // Do not change!! PENALTY OF DEATH AND ELECTROCUTION
-            
-            function heightChanged(height) {
-                newsView.experimental.evaluateJavaScript(
-                            "setWindowHeight('" + height + "')"
-                            );
-            }
-            
-            onAddInProgress: {
-                //console.log("on add in progress")
-                newsView.experimental.evaluateJavaScript("inProgress("
-                                                         + started + ", '"
-                                                         + operation + "');");
-                if (started) {
-                    newsView.isInProgress = true;
-                }
-            }
-            
-            onAdd: {
-                //console.log("on add, first id is: ", firstNewsID)
-                newsView.experimental.evaluateJavaScript("appendNews("
-                                                         + append + ", "
-                                                         + firstNewsID + ", '"
-                                                         + jsonNews + "');");
-            }
-            
-            onNothingToAdd: {
-                //console.log('nothing to add')
-                newsView.experimental.evaluateJavaScript("stopInProgress();");
-            }
-            
-            onClear: {
-                //console.log("Clear!");
-                newsView.experimental.evaluateJavaScript("clearNews();");
-                newsView.contentY = 0;  // reset scroll
-                
-                // Wipe the view clean; it will be set to visible again when ready.
-                newsView.visible = false;
-            }
-            
-            onJumpTo: {
-                //console.log("jump to: ", newsID);
-                newsView.experimental.evaluateJavaScript("jumpTo('" + newsID + "');");
-            }
-            
-            onDrawBookmark: {
-                //console.log("Draw bookmark: ", newsID);
-                newsView.experimental.evaluateJavaScript("drawBookmark('" + newsID + "');");
-            }
-            
-            onDrawBookmarkAndJumpTo: {
-                console.log("Draw bookmark and jump to: ", newsID, " bookmarks enabled? ", bookmarksEnabled);
-                if (news.bookmarksEnabled !== bookmarksEnabled) {
-                    // Enable/disable bookmarking.
-                    news.bookmarksEnabled = bookmarksEnabled;
-                    newsView.updateCSS();
-                }
-
-                newsView.experimental.evaluateJavaScript("drawBookmarkAndJumpTo('" + newsID + "');");
-            }
-
-            onUpdatePin: {
-                //console.log("Update pin: ", newsID, " set to: ", pin);
-                newsView.experimental.evaluateJavaScript("updatePin(" + newsID + ", " + pin + ");");
-            }
-            
-            onFontSizeChanged: {
-                //console.log("Font size changed, alert!  Need to jump to bookmark!")
-                newsView.updateCSS();
-                newsView.experimental.evaluateJavaScript("jumpToBookmark();");
-            }
-            
-            onStyleChanged: {
-                //console.log("I was told to update the css?");
-                newsView.updateCSS();
-            }
+        // See QMLNewsInteractor.h and .cpp
+        QMLNewsInteractor {
+            id: qmlNewsInteractor;
+            objectName: "QMLNewsInteractor"; // Do not change!! PENALTY OF DEATH AND ELECTROCUTION
         }
         
-        // Web view for our HTML-based RSS display.
-        FangScrollView {
-            id: newsScrollView;
             
-            anchors.fill: parent;
-            
-            focus: true;
-            
-            WebView {
-                id: newsView;
-                
-                // Enable the web inspector by setting this to true.  First set QTWEBKIT_INSPECTOR_SERVER
-                // in the Project->Run setting to 9999 (or any other port number.)
-                // Then open Chrome/Safari to:  http://127.0.0.1:9999/webkit/inspector/inspector.html?page=1
-                property bool devMode: isDebugBuild;
-                
-                // Read-only
-                property bool isInProgress: false;
-                property real scaleFactor: (width >= experimental.preferredMinimumContentsWidth) ? 1.0 :
-                    width / experimental.preferredMinimumContentsWidth;
-                
-                // Start invisible
-                visible: false;
-                
-                // Stops scrolling while we're loading.
-                enabled: !isInProgress;
-                
-                // Turn the inspek0r off and on.
-                experimental.preferences.developerExtrasEnabled: devMode;
-                
-                state: (feedListModel.count > 1) ? "news" : "welcome";
-                states: [
-                    // Shows welcome screen.
-                    State { name: "welcome" },
-                    
-                    // The typical news mode.
-                    State { name: "news" },
-                    
-                    // Let WebKit load a safe, empty page before shutdown.
-                    State { name: "closing" }
-                ]
-                
-                Connections {
-                    target: feedListModel;
-                    onCountChanged: {
-                        if (feedListModel.count > 1 && "welcome" === newsView.state) {
-                            newsView.state = "news";
-                        } else if (feedListModel.count <= 1 && "news" === newsView.state) {
-                            newsView.state = "welcome";
-                        }
-                    }
-                }
-                
-                onStateChanged: {
-                    switch (state) {
-                    case "welcome":
-                        newsView.cssUpdated = false;
-                        newsView.url = "qrc:///html/Welcome.html";
-                        break;
-                    
-                    case "news":
-                        newsView.cssUpdated = false;
-                        newsView.firstRun = true;
-                        newsView.url = "qrc:///html/NewsPage.html";
-                        
-                        break;
-                    
-                    case "closing":
-                        newsView.url = "qrc:///html/Blank.html";
-                        
-                        break;
-                    
-                    default:
-                         // Shouldn't get here.
-                        console.error("You didn't handle state: ", state)
-                    }
-                }
-                
-                property bool firstRun: true;        // On first run, we need to wait for both.
-                property bool cssUpdated: false;     // Check for this on first run.
-                // Whether the bookmark has been jumped to
-                property bool drawBookmarkAndJumpToFinished: false;
-                
-                // Checks if we should become visible or not.  (Internal)
-                function checkReady() {
-                    if (state === "welcome") {
-                        // Welcome screen.
-                        if (cssUpdated) {
-                            visible = true;
-                            isInProgress = false;
-                        }
-                    } else {
-                        // We're showing the news!
-                        if (firstRun) {
-                            if (drawBookmarkAndJumpToFinished && cssUpdated) {
-                                visible = true;
-                                firstRun = false;
-                            }
-                        } else {
-                            if (drawBookmarkAndJumpToFinished)
-                                visible = true;
-                        }
-                    }
-                }
-                
-                focus: true;
-                
-                function updateCSS() {
-                    var cssJS = "clearBodyClasses(); " +
-                            "addBodyClass('" + platform + "'); " +
-                            "addBodyClass('FONT_" + fangSettings.fontSize + "'); " +
-                            "addBodyClass('" + fangSettings.style + "'); " +
-                            (news.bookmarksEnabled ? "" : " addBodyClass('bookmarksDisabled'); ");
+        WebEngineView {
+//            WebView {
+            id: newsView;
 
-                    newsView.experimental.evaluateJavaScript(cssJS);
-                    
-                    cssUpdated = true;
-                    checkReady();
+            // Start visible
+            visible: true;
+            anchors.fill: parent;
+
+            // Stops scrolling while we're loading or a dialog is displayed.
+            enabled: !qmlNewsInteractor.loadInProgress && newsFocus;
+
+            state: "news";
+            states: [
+                // The typical news/help mode.
+                State { name: "news" },
+
+                // Let WebKit load a safe, empty page before shutdown.
+                State { name: "closing" }
+            ]
+
+            onStateChanged: {
+                switch (state) {
+                case "news":
+                    newsView.url = "qrc:///html/index.html";
+
+                    break;
+
+                case "closing":
+                    newsView.url = "qrc:///html/blank.html";
+
+                    break;
+
+                default:
+                     // Shouldn't get here.
+                    console.error("You didn't handle state: ", state)
                 }
-                
-                // Jumpts to the next news item.
-                function jumpNext() {
-                    newsView.experimental.evaluateJavaScript("jumpNextPrev(true);");
+            }
+
+            onLoadingChanged: {
+                // Windows hack to allow Fang to exit.
+                // This bug seems to be a holdout from Qt's flirtation with WebKit.
+                if (state == "closing" && loadRequest.status == WebEngineView.LoadSucceededStatus) {
+                    Qt.quit();
                 }
-                
-                // Jumps to the previous news item.
-                function jumpPrevious() {
-                    newsView.experimental.evaluateJavaScript("jumpNextPrev(false);");
+            }
+        }
+
+        Keys.onPressed: {
+            switch (event.key) {
+            case Qt.Key_Left:
+                qmlNewsInteractor.jumpPrevious();
+
+                break;
+            case Qt.Key_Right:
+                qmlNewsInteractor.jumpNext();
+
+                break;
+            case Qt.Key_F5:
+                qmlNewsInteractor.refreshCurrentFeed();
+
+                break;
+            case Qt.Key_R:
+                if (event.modifiers & Qt.ControlModifier) {
+                    qmlNewsInteractor.refreshCurrentFeed();
                 }
-                
-                // Leave margin for scroll bar.
-                anchors.fill: parent;
-                anchors.rightMargin: 16;
-                anchors.leftMargin: 12;
-                
-                // Resize a bit more intelligently.
-                experimental.preferredMinimumContentsWidth: 300;
-                
-                // No plugins and such.
-                experimental.preferences.pluginsEnabled: false;
-                
-                // Communication from WebKit layer to QML.
-                experimental.preferences.navigatorQtObjectEnabled: true;
-                experimental.onMessageReceived: {
-                    //console.log("get msg from javascript:", message.data)
-                    var commandArray = message.data.split(" ");
-                    var cmd = commandArray[0];
-                    
-                    if (cmd === "loadNext" && !newsView.isInProgress) {
-                        webInteractor.loadNext();
-                    } else if (cmd === "loadPrevious" && !newsView.isInProgress) {
-                        webInteractor.loadPrevious();
-                    } else if (cmd === "setBookmark") {
-                        webInteractor.setBookmark(commandArray[1]);
-                    } else if (cmd === "forceBookmark") {
-                        webInteractor.setBookmark(commandArray[1], true);
-                    } else if (cmd === "setPin") {
-                        // Stupid Javascript hack!  This forceces the expression to evaluate to a boolean.
-                        webInteractor.setPin(commandArray[1], commandArray[2] === 'true');
-                    } else if (cmd === "openLink") {
-                        webInteractor.openLink(commandArray[1]);
-                    } else if (cmd === "stopProgress" ) {
-                        newsView.experimental.evaluateJavaScript("stopInProgress();");
-                        newsView.isInProgress = false;
-                    } else if (cmd === "drawBookmarkAndJumpToFinished" ) {
-                        // Check if it's time to become visible again.
-                        //console.log("draw book jump to finished");
-                        newsView.drawBookmarkAndJumpToFinished = true;
-                        checkReady();
-                    } else if (cmd === "removeNewsTop") {
-                        webInteractor.removeNews(true, commandArray[1]);
-                    } else if (cmd === "removeNewsBottom") {
-                        webInteractor.removeNews(false, commandArray[1]);
-                    }
-                    
-                    
-                    // Not used in Qt 5.3
-                    //                } else if (cmd === "scrollToPosition" ) {
-                    //                    console.log("Scroll to position: ", commandArray[1]);
-                    //                    newsScroll.scrollTo(commandArray[1]);
+
+                break;
+            case Qt.Key_Q:
+                if (event.modifiers & Qt.ControlModifier) {
+                    Qt.quit();
                 }
-                
-                // Set style, and update when needed.
-                onLoadingChanged: {
-                    if (loadRequest.status === WebView.LoadSucceededStatus) {
-                        if (state === "closing") {
-                            Qt.quit();
-                            
-                            return;
-                        }
-                        
-                        webInteractor.pageLoaded();  // tell 'em the page is loaded now.
-                        updateCSS(); // set our page's style
-                        
-                        // update height (if not already updated)
-                        webInteractor.heightChanged(newsMargin.height);
-                    } else if (loadRequest.status === WebView.LoadStartedStatus) {
-                        visible = false;
-                    }
-                }
-                
-                
-                
-                Keys.onPressed: {
-                    switch (event.key) {
-                    case Qt.Key_Left:
-                        newsView.jumpPrevious();
-                        
-                        break;
-                    case Qt.Key_Right:
-                        newsView.jumpNext();
-                        
-                        break;
-                    case Qt.Key_F5:
-                        news.refreshFeed();
-                        
-                        break;
-                    case Qt.Key_R:
-                        if (event.modifiers & Qt.ControlModifier)
-                            news.refreshFeed();
-                        
-                        break;
-                    case Qt.Key_Q:
-                        if (event.modifiers & Qt.ControlModifier)
-                            Qt.quit();
-                        
-                        break;
-                    }
-                }
+
+                break;
             }
         }
     }
