@@ -1,6 +1,4 @@
 import QtQuick 2.4
-import QtWebEngine 1.0
-//import QtWebView 1.0
 import Fang 1.0
 
 Item {
@@ -41,7 +39,7 @@ Item {
     // This is a workaround for a bug on Winows; see the comment
     // in main.qml where this is called for more information.
     function close() {
-        newsView.state = "closing";
+        newsView.close();
     }
     
     // Don't propagate key events while dialogs are up.
@@ -61,9 +59,8 @@ Item {
             objectName: "QMLNewsInteractor"; // Do not change!! PENALTY OF DEATH AND ELECTROCUTION
         }
         
-            
-        WebEngineView {
-//            WebView {
+        // Our web page!
+        FangWebView {
             id: newsView;
 
             // Start visible
@@ -72,41 +69,6 @@ Item {
 
             // Stops scrolling while we're loading or a dialog is displayed.
             enabled: !qmlNewsInteractor.loadInProgress && newsFocus;
-
-            state: "news";
-            states: [
-                // The typical news/help mode.
-                State { name: "news" },
-
-                // Let WebKit load a safe, empty page before shutdown.
-                State { name: "closing" }
-            ]
-
-            onStateChanged: {
-                switch (state) {
-                case "news":
-                    newsView.url = "qrc:///html/index.html";
-
-                    break;
-
-                case "closing":
-                    newsView.url = "qrc:///html/blank.html";
-
-                    break;
-
-                default:
-                     // Shouldn't get here.
-                    console.error("You didn't handle state: ", state)
-                }
-            }
-
-            onLoadingChanged: {
-                // Windows hack to allow Fang to exit.
-                // This bug seems to be a holdout from Qt's flirtation with WebKit.
-                if (state == "closing" && loadRequest.status == WebEngineView.LoadSucceededStatus) {
-                    Qt.quit();
-                }
-            }
         }
 
         Keys.onPressed: {

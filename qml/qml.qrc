@@ -29,5 +29,6 @@
         <file>FangScrollView.qml</file>
         <file>FangIcon.qml</file>
         <file>SplashScreenDialog.qml</file>
+        <file>FangWebView.qml</file>
     </qresource>
 </RCC>
