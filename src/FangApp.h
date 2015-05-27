@@ -18,7 +18,7 @@
 #include "models/PinnedFeedItem.h"
 #include "models/ListModel.h"
 #include "models/FangSettings.h"
-#include "models/WebInteractor.h"
+#include "models/QMLNewsInteractor.h"
 #include "models/NewsWebSocketServer.h"
 #include "parser/NewsParser.h"
 #include "FangObject.h"
@@ -178,7 +178,32 @@ public slots:
     /**
      * @return QML interactor
      */
-    WebInteractor* getWebInteractor() { return interactor; }
+    QMLNewsInteractor* getQMLNewsInteractor() { return interactor; }
+
+    /**
+     * @brief Jumps the view to the bookmark (if any)
+     */
+    void jumpToBookmark();
+
+    /**
+     * @brief Jumps to the next news item (if any)
+     */
+    void jumpNext();
+
+    /**
+     * @brief Jumps to the previous news item (if any)
+     */
+    void jumpPrevious();
+
+    /**
+     * @brief Show the news view.
+     */
+    void showNews();
+
+    /**
+     * @brief Show the welcome/help view.
+     */
+    void showWelcome();
     
 private slots:
     /**
@@ -198,6 +223,9 @@ private slots:
     void onFeedRemoved(ListItem*);
     
     void onFeedSelected(ListItem *item);
+
+    // Load page changed!
+    void onLoadPageChanged();
     
     // When a new feed is added, and we want to immediately select it.
     void onNewFeedAddedSelect(Operation* addFeedOperation);
@@ -251,7 +279,7 @@ private:
     bool loadAllFinished;
     FangSettings *fangSettings;
     DBSettings dbSettings;
-    WebInteractor *interactor;
+    QMLNewsInteractor *interactor;
     QTimer *updateTimer;
     QMap<qint64, FeedItem*> feedIdMap;
     QQuickWindow* window;

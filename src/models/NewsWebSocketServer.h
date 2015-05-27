@@ -48,6 +48,31 @@ public slots:
      */
     bool isLoadInProgress() { return loadInProgress; }
 
+    /**
+     * @brief Jumps the view to the bookmark (if any)
+     */
+    void jumpToBookmark();
+
+    /**
+     * @brief Jumps to the next news item (if any)
+     */
+    void jumpNext();
+
+    /**
+     * @brief Jumps to the previous news item (if any)
+     */
+    void jumpPrevious();
+
+    /**
+     * @brief Show the news view.
+     */
+    void showNews();
+
+    /**
+     * @brief Show the welcome/help view.
+     */
+    void showWelcome();
+
 private slots:
     void onNewConnection();
     void processMessage(QString message);

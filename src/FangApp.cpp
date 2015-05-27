@@ -55,6 +55,9 @@ FangApp::FangApp(QApplication *parent, QQmlApplicationEngine* engine, SingleInst
     connect(feedList, SIGNAL(added(ListItem*)), this, SLOT(onFeedAdded(ListItem*)));
     connect(feedList, SIGNAL(removed(ListItem*)), this, SLOT(onFeedRemoved(ListItem*)));
     connect(feedList, SIGNAL(selectedChanged(ListItem*)), this, SLOT(onFeedSelected(ListItem*)));
+
+    connect(&newsServer, &NewsWebSocketServer::isLoadInProgressChanged, this,
+            &FangApp::onLoadPageChanged);
 }
 
 void FangApp::init()
@@ -136,6 +139,17 @@ void FangApp::onFeedSelected(ListItem* _item)
     FeedItem* item = qobject_cast<FeedItem *>(_item);
     setCurrentFeed(item);
     lastFeedSelected = item;
+}
+
+void FangApp::onLoadPageChanged()
+{
+    static bool first = false;
+    if (!first && !newsServer.isLoadInProgress()) {
+        first = true;
+
+        // Perform first feed update!
+        updateAllFeeds();
+    }
 }
 
 void FangApp::onNewFeedAddedSelect(Operation* addFeedOperation)
@@ -344,7 +358,7 @@ void FangApp::onObjectCreated(QObject* object, const QUrl& url)
     window = qobject_cast<QQuickWindow*>(object);
     
     single->setWindow(window);
-    interactor = object->findChild<WebInteractor*>("webInteractor");
+    interactor = object->findChild<QMLNewsInteractor*>("QMLNewsInteractor");
     fangSettings = object->findChild<FangSettings*>("fangSettings");
     
     // Do a sanity check.
@@ -377,9 +391,6 @@ void FangApp::onObjectCreated(QObject* object, const QUrl& url)
     notifications = new NotificationWindows(fangSettings, feedList,
                                             allNews, window, this);
 #endif
-    
-    // Update!.
-    updateAllFeeds();
     
     // Set a timer to update the feeds every ten minutes.
     // TODO: Customize news update timer frequency.
@@ -422,6 +433,13 @@ void FangApp::setCurrentFeed(FeedItem *feed)
 
     if (previousFeed == pinnedNews) {
         pinnedNewsWatcher(); // If we were on pinned items, it can be removed now.
+    }
+
+    // Show welcome screen if there's no feeds.
+    if (feedCount() <= 1) {
+        newsServer.showWelcome();
+
+        return;
     }
 
     // Load up our new batch o' news!
@@ -483,6 +501,31 @@ QString FangApp::getPlatform()
     Q_ASSERT(false);
     return "UNKNOWN";
 #endif
+}
+
+void FangApp::jumpToBookmark()
+{
+    newsServer.jumpToBookmark();
+}
+
+void FangApp::jumpNext()
+{
+    newsServer.jumpNext();
+}
+
+void FangApp::jumpPrevious()
+{
+    newsServer.jumpPrevious();
+}
+
+void FangApp::showNews()
+{
+    newsServer.showNews();
+}
+
+void FangApp::showWelcome()
+{
+    newsServer.showWelcome();
 }
 
 void FangApp::pinnedNewsWatcher()

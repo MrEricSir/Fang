@@ -11,7 +11,7 @@ NewsWebSocketServer::NewsWebSocketServer(QObject *parent) :
     server("Fang WebSocket", QWebSocketServer::NonSecureMode),
     pSocket(NULL),
     isReady(false),
-    loadInProgress(false),
+    loadInProgress(true),
     fangSettings(NULL)
 {
     // Listen for incoming connections!
@@ -30,7 +30,7 @@ void NewsWebSocketServer::init(FangSettings *fangSettings)
     connect(fangSettings, &FangSettings::fontSizeChanged, this, &NewsWebSocketServer::onFontSizeChanged);
     connect(fangSettings, &FangSettings::styleChanged, this, &NewsWebSocketServer::onStyleChanged);
 
-    connect(FangApp::instance()->getWebInteractor(), &WebInteractor::windowHeightChanged,
+    connect(FangApp::instance()->getQMLNewsInteractor(), &QMLNewsInteractor::windowHeightChanged,
             this, &NewsWebSocketServer::onWindowHeightChanged);
 }
 
@@ -121,7 +121,8 @@ void NewsWebSocketServer::sendCommand(const QString &command, const QString &dat
 {
     // TODO: Should we queue up messages before the socket's ready, or is that CrazyTalk (SM)?
     if (!pSocket) {
-        qDebug() << "The socket is not connected yet! Slow down!";
+        qDebug() << "WebSocket: The socket is not connected yet! Slow down!";
+        qDebug() << "WebSocket: Tried to send command " << command;
 
         return;
     }
@@ -162,7 +163,7 @@ void NewsWebSocketServer::onLoadNewsFinished(LoadNews *loader)
 
     // Window height.
     document.insert("windowHeight", QString::number(
-                        FangApp::instance()->getWebInteractor()->getWindowHeight()));
+                        FangApp::instance()->getQMLNewsInteractor()->getWindowHeight()));
 
     // First news ID.
     document.insert("firstNewsID", currentFeed->getFirstNewsID());
@@ -172,9 +173,6 @@ void NewsWebSocketServer::onLoadNewsFinished(LoadNews *loader)
         foreach(NewsItem* item, *loader->getPrependList()) {
             addNewsItem(item, &newsList);
         }
-
-        // Emmit prepend signal.
-        //emit add(false, currentFeed->getFirstNewsID(), escapeCharacters(QJsonDocument::fromVariant(prependList).toJson()));
     }
 
     // Stuff the new items into our feed.
@@ -182,9 +180,6 @@ void NewsWebSocketServer::onLoadNewsFinished(LoadNews *loader)
         foreach(NewsItem* item, *loader->getAppendList()) {
             addNewsItem(item, &newsList);
         }
-
-        // Emmit append signal.
-        //emit add(true, currentFeed->getFirstNewsID(), escapeCharacters(QJsonDocument::fromVariant(appendList).toJson()));
     }
 
 
@@ -258,7 +253,7 @@ void NewsWebSocketServer::onFontSizeChanged(QString font)
 void NewsWebSocketServer::onWindowHeightChanged()
 {
     sendCommand("windowHeight", QString::number(
-                    FangApp::instance()->getWebInteractor()->getWindowHeight()));
+                    FangApp::instance()->getQMLNewsInteractor()->getWindowHeight()));
 }
 
 void NewsWebSocketServer::drawBookmark(qint64 bookmarkID)
@@ -276,53 +271,28 @@ void NewsWebSocketServer::updatePin(qint64 newsID, bool pinned)
     sendCommand("updatePin", json);
 }
 
-/*
+void NewsWebSocketServer::jumpToBookmark()
+{
+    sendCommand("jumpToBookmark", "");
+}
 
-    if (!loader->getAppendList() && !loader->getPrependList()) {
-        isLoading = false;
+void NewsWebSocketServer::jumpNext()
+{
+    sendCommand("jumpNext", "");
+}
 
-        if (loader->getMode() == LoadNews::Initial) {
-            emit nothingToAdd();
-            emit drawBookmarkAndJumpTo(-1, currentFeed->bookmarksEnabled());
-        }
+void NewsWebSocketServer::jumpPrevious()
+{
+    sendCommand("jumpPrevious", "");
+}
 
-        return; // Nothing to do.
-    }
+void NewsWebSocketServer::showNews()
+{
+    sendCommand("showNews", "");
+}
 
-    QString operationName = loader->getMode() == LoadNews::Initial ? "initial" :
-                            loader->getMode() == LoadNews::Append ? "append" : "prepend";
-
-    emit addInProgress(true, operationName);
-
-    // Stuff the new items into our feed.
-    if (loader->getAppendList() != NULL) {
-        QVariantList appendList;
-        foreach(NewsItem* item, *loader->getAppendList()) {
-            addNewsItem(item, &appendList);
-        }
-
-        // Emmit append signal.
-        emit add(true, currentFeed->getFirstNewsID(), escapeCharacters(QJsonDocument::fromVariant(appendList).toJson()));
-    }
-
-    if (loader->getPrependList() != NULL) {
-        QVariantList prependList;
-        foreach(NewsItem* item, *loader->getPrependList()) {
-            addNewsItem(item, &prependList);
-        }
-
-        // Emmit prepend signal.
-        emit add(false, currentFeed->getFirstNewsID(), escapeCharacters(QJsonDocument::fromVariant(prependList).toJson()));
-    }
-
-    // If this is the initial load, draw and jump to the bookmark.
-    if (loader->getMode() == LoadNews::Initial) {
-        qint64 idOfBookmark = currentFeed->getBookmarkID();
-        emit drawBookmarkAndJumpTo(idOfBookmark, currentFeed->bookmarksEnabled());
-    }
-
-    emit addInProgress(false, operationName);
-
-
-} */
-
+void NewsWebSocketServer::showWelcome()
+{
+    updateCSS();
+    sendCommand("showWelcome", "");
+}

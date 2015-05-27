@@ -1,5 +1,5 @@
-#ifndef WEBINTERACTOR_H
-#define WEBINTERACTOR_H
+#ifndef QMLNEWSINTERACTOR_H
+#define QMLNEWSINTERACTOR_H
 
 #include <QQuickItem>
 #include <QString>
@@ -11,12 +11,12 @@
 #include "../operations/UpdateOrdinalsOperation.h"
 
 /**
- * @brief Passes news between the JavaScript and C++ layers, yo.
+ * @brief Interacts with the QML layer of the news view.
  */
-class WebInteractor : public QQuickItem
+class QMLNewsInteractor : public QQuickItem
 {
     Q_OBJECT
-    Q_DISABLE_COPY(WebInteractor)
+    Q_DISABLE_COPY(QMLNewsInteractor)
     
     Q_PROPERTY(qint32 specialFeedCount READ specialFeedCount NOTIFY specialFeedCountChanged)
     Q_PROPERTY(bool loadInProgress READ loadInProgress NOTIFY onIsLoadInProgressChanged)
@@ -24,8 +24,8 @@ class WebInteractor : public QQuickItem
 
 
 public:
-    explicit WebInteractor(QQuickItem *parent = 0);
-    virtual ~WebInteractor() {}
+    explicit QMLNewsInteractor(QQuickItem *parent = 0);
+    virtual ~QMLNewsInteractor() {}
     
     /**
      * @brief The stuff the interactor needs to do its job properly.
@@ -66,10 +66,25 @@ signals:
 public slots:
 
     // The order of the feed list changed!  Better record that.
-    Q_INVOKABLE void orderChanged();
+    void orderChanged();
     
     // Refreshes the current feed.
-    Q_INVOKABLE void refreshCurrentFeed();
+    void refreshCurrentFeed();
+
+    // User wants to jump to the bookmark!
+    void jumpToBookmark();
+
+    // User wants to jump to the next news item!
+    void jumpNext();
+
+    // User wants to jump to the previous news item!!!1
+    void jumpPrevious();
+
+    // Show the news view.
+    void showNews();
+
+    // Show the welcome/help view.
+    void showWelcome();
     
 private:
     // Op man!
@@ -81,4 +96,4 @@ private:
     int windowHeight;
 };
 
-#endif // WEBINTERACTOR_H
+#endif // QMLNEWSINTERACTOR_H

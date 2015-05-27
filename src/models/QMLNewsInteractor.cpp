@@ -1,11 +1,11 @@
-#include "WebInteractor.h"
+#include "QMLNewsInteractor.h"
 #include <QDebug>
 #include <QList>
 #include <QJsonDocument>
 #include "../FangApp.h"
 #include "NewsWebSocketServer.h"
 
-WebInteractor::WebInteractor(QQuickItem *parent) :
+QMLNewsInteractor::QMLNewsInteractor(QQuickItem *parent) :
     QQuickItem(parent),
     manager(NULL),
     feedList(NULL),
@@ -14,28 +14,28 @@ WebInteractor::WebInteractor(QQuickItem *parent) :
     
 }
 
-void WebInteractor::init(OperationManager *manager, ListModel *feedList)
+void QMLNewsInteractor::init(OperationManager *manager, ListModel *feedList)
 {
     this->manager = manager;
     this->feedList = feedList;
 
     connect(FangApp::instance(), &FangApp::specialFeedCountChanged,
-            this, &WebInteractor::specialFeedCountChanged);
+            this, &QMLNewsInteractor::specialFeedCountChanged);
     connect(FangApp::instance()->getNewsServer(), &NewsWebSocketServer::isLoadInProgressChanged,
-            this, &WebInteractor::onIsLoadInProgressChanged);
+            this, &QMLNewsInteractor::onIsLoadInProgressChanged);
 }
 
-qint32 WebInteractor::specialFeedCount()
+qint32 QMLNewsInteractor::specialFeedCount()
 {
     return FangApp::instance()->specialFeedCount();
 }
 
-bool WebInteractor::loadInProgress()
+bool QMLNewsInteractor::loadInProgress()
 {
     return FangApp::instance()->getNewsServer()->isLoadInProgress();
 }
 
-void WebInteractor::setWindowHeight(int windowHeight)
+void QMLNewsInteractor::setWindowHeight(int windowHeight)
 {
     if (windowHeight == this->windowHeight) {
         return;
@@ -45,7 +45,7 @@ void WebInteractor::setWindowHeight(int windowHeight)
     emit windowHeightChanged();
 }
 
-void WebInteractor::orderChanged()
+void QMLNewsInteractor::orderChanged()
 {
     for (int i = 0; i < feedList->rowCount(); i++)
     {
@@ -65,7 +65,32 @@ void WebInteractor::orderChanged()
     manager->add(updateOp);
 }
 
-void WebInteractor::refreshCurrentFeed()
+void QMLNewsInteractor::refreshCurrentFeed()
 {
     FangApp::instance()->refreshCurrentFeed();
+}
+
+void QMLNewsInteractor::jumpToBookmark()
+{
+    FangApp::instance()->jumpToBookmark();
+}
+
+void QMLNewsInteractor::jumpNext()
+{
+    FangApp::instance()->jumpNext();
+}
+
+void QMLNewsInteractor::jumpPrevious()
+{
+    FangApp::instance()->jumpPrevious();
+}
+
+void QMLNewsInteractor::showNews()
+{
+    FangApp::instance()->showNews();
+}
+
+void QMLNewsInteractor::showWelcome()
+{
+    FangApp::instance()->showWelcome();
 }

@@ -2,6 +2,15 @@
   This is Fang's Javascript logic.  But I mean, you knew that.  DUH!
   */
 
+// Selects all news containers
+var newsContainerSelector = 'body>#newsView>.newsContainer:not(#model)';
+
+// This will be reset later.
+var windowHeight = 50000;
+
+// Current mode
+var currentMode = "newsView";
+
 var wsUri = "ws://localhost:2842";
 var websocket = null;
 
@@ -76,21 +85,31 @@ function processMessage(message)
         setWindowHeight(data);
     } else if ('updateCSS' == command) {
         updateCSS(JSON.parse(data));
+    } else if ('jumpToBookmark' == command) {
+        jumpToBookmark();
+    } else if ('jumpNext' == command) {
+        jumpNextPrev(true);
+    } else if ('jumpPrevious' == command) {
+        jumpNextPrev(false);
+    } else if ('showNews' == command) {
+       setMode('newsView');
+    } else if ('showWelcome' == command) {
+       setMode('welcome');
     }
 }
-
 
 
 function loadNews(json)
 {
     // Might consider an evil eval() alternative if needed.
     var newsObject = JSON.parse( json );
-    console.log("News: ", newsObject);
+    //console.log("News: ", newsObject);
 
     setWindowHeight(newsObject.windowHeight);
 
     if ('initial' == newsObject.mode) {
         // Redo the view.
+        setMode('newsView');
         clearNews();
         updateCSS(newsObject.css);
     }
@@ -127,13 +146,30 @@ function updateCSS(bodyClassList)
     }
 }
 
+function setMode(mode)
+{
+    if (mode == currentMode) {
+        return;
+    }
+
+    console.log("Switching mode to: ", mode);
+    currentMode = mode;
+
+    // Switch out the HTML
+    if ('newsView' == currentMode) {
+        $('#welcome').hide();
+        $('#newsView').show();
+        jumpToBookmark();
+    } else if ('welcome' == currentMode) {
+        $('#newsView').hide();
+        $('#welcome').show();
+        $(document).scrollTop(0); // Scroll back up
+
+        sendCommand('loadComplete'); // Send a load complete
+    }
+}
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-var newsContainerSelector = 'body>.newsContainer:not(#model)';
-
-// This will be reset later.
-var windowHeight = 50000;
 
 
 // When the window is resized, jump to bookmark after a short delay.
@@ -163,7 +199,6 @@ function htmlIdToId(htmlID) {
 
 // Intercept clix.
 function delegateLink() {
-    //navigator.qt.postMessage( 'openLink ' + $(this).attr( 'href' ) ); oldold old
     sendCommand( 'openLink', $(this).attr('href')) ;
     return false; // Don't propogate link.
 };
@@ -173,8 +208,7 @@ function installMouseHandlers(parentElement) {
     // Setup manual bookmarks.
     $(parentElement).find( '.stripe' ).on( "click", function() { 
         var elementID = $(this).parent().parent().attr( 'id' );
-        
-        //navigator.qt.postMessage( 'forceBookmark ' + htmlIdToId( elementID ) );  SO OLD LOL
+
         sendCommand( 'forceBookmark', htmlIdToId(elementID) );
     } );
 
@@ -182,7 +216,7 @@ function installMouseHandlers(parentElement) {
     $(parentElement).find( '.pin' ).on( "click", function() {
         var element = $(this).parent().parent();
         var isPinned = element.find( '.pin' ).hasClass( 'pinned' );
-        //navigator.qt.postMessage( 'setPin ' + htmlIdToId( element.attr( 'id' ) ) + ' ' + !isPinned );  haha old
+
         sendCommand('setPin', htmlIdToId( element.attr( 'id' ) ) + ' ' + (+!isPinned)); // Unary + operator converts to number :)
     } );
 }
@@ -205,7 +239,7 @@ function appendNews(append, firstNewsID, newsList) {
         //console.log("news item:", newsItem);
         
         // Copy the model.
-        var item = $( 'body>.newsContainer#model' ).clone();
+        var item = $( 'body>#newsView>.newsContainer#model' ).clone();
         
         // I'm a model, you know what I mean...
         // (but not anymore!! HAHA!)
@@ -237,10 +271,10 @@ function appendNews(append, firstNewsID, newsList) {
         // Stick 'er in!
         if (append) {
             console.log("Append!")
-            item.insertAfter('body>.newsContainer:last');
+            item.insertAfter('body>#newsView>.newsContainer:last');
         } else {
             console.log("Prepend!")
-            item.insertBefore( 'body>.newsContainer:first' );
+            item.insertBefore( 'body>#newsView>.newsContainer:first' );
             
             // Calculate the size and add it to our prepend scroll tally.
             //var verticalMargins = parseInt( item.css("marginBottom") ) + parseInt( item.css("marginTop") );
@@ -258,7 +292,7 @@ function appendNews(append, firstNewsID, newsList) {
         // The assumption here is this will never be on the initial load; it will
         // always occur during a manual append or prepend.
         if (append) {
-            var itemsOnTop = $('body>.newsContainer:lt(' + extraItems + '):not(#model)');
+            var itemsOnTop = $('body>#newsView>.newsContainer:lt(' + extraItems + '):not(#model)');
             console.log("# Items to remove on the top:", itemsOnTop.length)
             
             // We have to iterate over all the items to get an accurate height.
@@ -269,13 +303,11 @@ function appendNews(append, firstNewsID, newsList) {
             });
             
             removeMatchingItems(itemsOnTop);
-            //navigator.qt.postMessage( 'removeNewsTop ' + itemsOnTop.length ); old
             sendCommand( 'removeNewsTop', itemsOnTop.length );
         } else {
-            var itemsOnBottom = $('body>.newsContainer:gt(-' + (extraItems + 1) + '):not(#model)');
+            var itemsOnBottom = $('body>#newsView>.newsContainer:gt(-' + (extraItems + 1) + '):not(#model)');
             //console.log("# Items to remove on the bottom:", itemsOnBottom.length)
             removeMatchingItems(itemsOnBottom);
-            //navigator.qt.postMessage( 'removeNewsBottom ' + itemsOnBottom.length ); ooooold! so old
             sendCommand( 'removeNewsBottom', itemsOnBottom.length );
         }
     }
@@ -348,30 +380,15 @@ function getLastNewsContainer() {
 
 // Resizes the bottom spacer to allow the last item to be bookmarked.
 function resizeBottomSpacer() {
-     var numPix = windowHeight;
-     console.log("Bottom spacer height: ", numPix)
-     $( '#bottom' ).height( numPix );
+    var numPix = windowHeight;
 
-//    // Grab the last (non model) news item.
-//    var lastItem = getLastNewsContainer();
-//    //console.log("Reszie bottom spacer. last item: ", lastItem)
-    
-//    // By default, bottom spacer is the window height.  This allows the user
-//    // to scroll the last item off the page, bookmarking it.
-//    var numPix = windowHeight;
-    
-//    // If the final item is already bookmarked, collapse the bottom spacer a bit.
-//    if ( lastItem.hasClass( 'bookmarked' ) ) {
-        
-//        var removePix = lastItem.height();
-//        if (removePix > numPix)
-//            removePix = numPix; // Don't exceed window height.
-        
-//        numPix -= removePix;
-//    }
-    
-//    //console.log("Bottom spacer is now: ", numPix)
-//    $( '#bottom' ).height( numPix + 'px' );
+    // Feeds without bookmarks don't need the bottom spacer.
+    if ($('body').hasClass('bookmarksDisabled')) {
+        numPix = 0;
+    }
+
+    // console.log("Bottom spacer height: ", numPix)
+    $( '#bottom' ).height( numPix );
 }
 
 // Scrolls to the element with the given ID.
@@ -390,7 +407,7 @@ function jumpTo(id) {
 
 // Draws a bookmark on the given news container ID.
 function drawBookmark(id) {
-    console.log("draw bookmark: ", id)
+    //console.log("draw bookmark: ", id)
     
     // Remove any existing bookmark(s).
     $( ".bookmarked" ).removeClass('bookmarked');
@@ -430,7 +447,7 @@ function jumpToBookmark() {
     
     var scrollTo = element.offset().top - 10;
     
-    console.log("Scroll to: ", scrollTo, " window height: ", windowHeight, " document h: ", $(document).height());
+    //console.log("Scroll to: ", scrollTo, " window height: ", windowHeight, " document h: ", $(document).height());
     
     // Set max jump. (It overshoots on first load.)
     if (scrollTo > $(document).height() - windowHeight) {
@@ -605,6 +622,10 @@ $(document).ready(function() {
         var lastVeryBottom = 0;
         
         var checkScrollPosition = function() {
+            if (currentMode != 'newsView') {
+                return;
+            }
+
             var scrollTop =  $(document).scrollTop();
             
             // If the user hasn't scrolled, check bottom and bail.
@@ -684,7 +705,6 @@ $(document).ready(function() {
             // Move the bookmark down one.
             console.log("SET BOOKMKAR! ", nextItem.attr('id'))
             sendCommand( 'setBookmark', htmlIdToId(nextItem.attr('id')) );
-            //navigator.qt.postMessage( 'setBookmark ' + htmlIdToId(nextItem.attr('id')) );  // <--- old!
             
             // Continue to next item.
             nextItem = nextNewsContainer(nextItem);
@@ -693,13 +713,11 @@ $(document).ready(function() {
     
     function loadNext() {
         //console.log("loadNext")
-        //navigator.qt.postMessage( 'loadNext' ); OLD
         sendCommand( 'loadNext', '' );
     }
     
     function loadPrevious() {
         //console.log("loadPrevious")
-        // navigator.qt.postMessage( 'loadPrevious' ); oooolllld old!
         sendCommand( 'loadPrevious', '' );
     }
     

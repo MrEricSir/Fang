@@ -5,8 +5,8 @@ QT += network sql quick svg websockets
 QT -= sensors
 
 qtHaveModule(webengine) {
-        QT += webengine
-        DEFINES += QT_WEBVIEW_WEBENGINE_BACKEND
+    QT += webengine
+    DEFINES += QT_WEBVIEW_WEBENGINE_BACKEND
 }
 
 # Resource files
@@ -62,7 +62,6 @@ SOURCES += src/main.cpp \
     src/operations/UpdateTitleOperation.cpp \
     src/parser/ParserInterface.cpp \
     src/models/FangSettings.cpp \
-    src/models/WebInteractor.cpp \
     src/operations/LoadNews.cpp \
     src/utilities/RawFeedRewriter.cpp \
     src/operations/LoadAllNewsOperation.cpp \
@@ -92,7 +91,8 @@ SOURCES += src/main.cpp \
     src/operations/GetAllDBSettingsOperation.cpp \
     src/parser/NewsParser.cpp \
     src/utilities/SimpleHTTPDownloader.cpp \
-    src/models/NewsWebSocketServer.cpp
+    src/models/NewsWebSocketServer.cpp \
+    src/models/QMLNewsInteractor.cpp
 	
 HEADERS += \
     src/models/ListModel.h \
@@ -120,7 +120,6 @@ HEADERS += \
     src/operations/UpdateTitleOperation.h \
     src/parser/ParserInterface.h \
     src/models/FangSettings.h \
-    src/models/WebInteractor.h \
     src/operations/LoadNews.h \
     src/utilities/RawFeedRewriter.h \
     src/operations/LoadAllNewsOperation.h \
@@ -151,7 +150,8 @@ HEADERS += \
     src/db/DBSettingsKey.h \
     src/parser/NewsParser.h \
     src/utilities/SimpleHTTPDownloader.h \
-    src/models/NewsWebSocketServer.h
+    src/models/NewsWebSocketServer.h \
+    src/models/QMLNewsInteractor.h
 
 mac {
     QT += macextras
