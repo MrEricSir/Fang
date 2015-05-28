@@ -12,6 +12,9 @@ Item {
 
     // Read-only: Whether the news view is loading stuff.
     property alias isInProgress: qmlNewsInteractor.loadInProgress;
+
+    // Set this if you want the news to be visible (native WebView only)
+    property alias isVisible: newsView.isVisible;
     
     // Used by main for double clicking on feed titles.
     function jumpToBookmark() {
@@ -65,7 +68,6 @@ Item {
 
             // Start visible
             visible: true;
-            anchors.fill: parent;
 
             // Stops scrolling while we're loading or a dialog is displayed.
             enabled: !qmlNewsInteractor.loadInProgress && newsFocus;

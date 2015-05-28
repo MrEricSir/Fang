@@ -4,9 +4,18 @@ import QtWebEngine 1.0
 WebEngineView {
     id: newsView;
 
+    ///// START API /////
+
+    // Unused for WebEngine
+    property bool isVisible: false;
+
     function close() {
         state = "closing";
     }
+
+    ///// END API /////
+
+    anchors.fill: parent; // WebView version needs to set own dimensions, so we'll do it here too.
 
     state: "news";
     states: [

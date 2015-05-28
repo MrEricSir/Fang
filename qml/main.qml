@@ -6,20 +6,31 @@ import QtQuick.Controls.Styles 1.2
 import QtQuick.Layouts 1.0
 import Qt.labs.settings 1.0
 
-Window {
+ApplicationWindow {
     id: main;
-    
+
     width: windowSettings.width;
     height: windowSettings.height;
-    visibility: windowSettings.maximized ?
-                    Window.Maximized : Window.Windowed;
+
+    visibility: {
+        if (platform == "ANDROID") {
+            return Window.Maximized;
+        }
+
+        if (windowSettings.maximized) {
+            return Window.Maximized;
+        }
+
+        // Default
+        return Window.Windowed;
+    }
     
     minimumWidth: Math.max(640, sidebar.width + minimumNewsWidth);
     minimumHeight: 450;
 
     // Read-only: Tells you if the news view is busy.
     property alias isInProgress: news.isInProgress;
-    
+
     // Treat as const
     property int minimumSidebarWidth: 230;
     property int minimumNewsWidth: 400;
@@ -92,6 +103,7 @@ Window {
     // Creates and opens a dialog.  The dialog is returned in
     // case you wanna mess with it and shit.
     function openDialog(dialogName) {
+        news.isVisible = false; // webview hack
         var component = Qt.createComponent(dialogName);
         var dialog = component.createObject(
                     main, {"x": 0, "y": 0, "listView": sidebar.listView});
@@ -152,8 +164,8 @@ Window {
     Component.onCompleted: {
         openDialog("SplashScreenDialog.qml");
     }
-    
-    // Seein in transitions.
+
+    // Seen in transitions.
     color: style.color.blockerBackground;
 
     /**
@@ -169,6 +181,11 @@ Window {
      */
     FangScreen {
         id: mainFrame;
+
+        // WebView visibility hack
+        onFadeInComplete: {
+            news.isVisible = true;
+        }
 
         // Let them drag the sidebar if they want to!
         SplitView {

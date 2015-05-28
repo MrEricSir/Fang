@@ -8,6 +8,9 @@ Rectangle {
     
     // Index of this screen (used for z transitions)
     property double index: 0;
+
+    // When the fade-in is done.
+    signal fadeInComplete();
     
     // Fades the screen out, man.
     function fadeOut() {
@@ -80,7 +83,13 @@ Rectangle {
         Transition {
             from: "out";
             to: "in";
-           
+
+            onRunningChanged: {
+                if (!running) {
+                    screen.fadeInComplete();
+                }
+            }
+
             ParallelAnimation {
                 // Show the dialog.
                 ColorAnimation {

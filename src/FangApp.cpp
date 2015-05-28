@@ -60,8 +60,37 @@ FangApp::FangApp(QApplication *parent, QQmlApplicationEngine* engine, SingleInst
             &FangApp::onLoadPageChanged);
 }
 
+// http://stackoverflow.com/questions/8052460/recursively-iterate-over-all-the-files-in-a-directory-and-its-subdirectories-in
+void scanDir(QDir dir)
+{
+    dir.setFilter(QDir::Files | QDir::NoDotAndDotDot | QDir::NoSymLinks);
+
+    qDebug() << "Scanning: " << dir.path();
+
+    QStringList fileList = dir.entryList();
+    for (int i=0; i<fileList.count(); i++)
+    {
+        qDebug() << "Found file: " << fileList[i];
+    }
+
+    dir.setFilter(QDir::AllDirs | QDir::NoDotAndDotDot);// | QDir::NoSymLinks);
+    QStringList dirList = dir.entryList();
+    for (int i=0; i<dirList.size(); ++i)
+    {
+        QString newPath = QString("%1/%2").arg(dir.absolutePath()).arg(dirList.at(i));
+        scanDir(QDir(newPath));
+    }
+}
+
 void FangApp::init()
 {
+    // For debugging purposes on mobile.
+//    qDebug() << "Scanning folders...";
+//    QDir dir;
+//    dir.cdUp();
+//    scanDir(dir);
+//    qDebug() << "...scan done!";
+
     // Setup our QML.
     engine->rootContext()->setContextProperty("feedListModel", feedList); // list of feeds
     engine->rootContext()->setContextProperty("importListModel", importList); // list of feeds to be batch imported

@@ -51,7 +51,7 @@ Dialog {
             onTriggered: {
                 // It will either be closed here if the load's already complete,
                 // or in the Connections handler.
-                if (!main.isInProgress) {
+                if (!main.isInProgress) {  // don't leave this one in!
                     console.log("Wasn't in progress")
                     close();
                 }

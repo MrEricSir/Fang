@@ -13,7 +13,7 @@ Item {
         case "MAC": return macFontStyle;
         case "WIN": return winFontStyle;
 //        case "IOS": return iosFontStyle;
-//        case "ANDROID": return androidFontStyle;
+        case "ANDROID": return androidFontStyle;
         case "LINUX": return linuxFontStyle;
 //        case "UNIX": return unixFontStyle;
         }
@@ -44,6 +44,15 @@ Item {
         property int defaultSize: 11
         property int titleSize: 20
         property string defaultFamily: "Geneva"
+    }
+
+    QtObject {
+        id: androidFontStyle
+
+        // Default UI font.
+        property int defaultSize: 11
+        property int titleSize: 20
+        property string defaultFamily: "Roboto"
     }
 
     QtObject {

@@ -41,16 +41,20 @@ FangScreen {
     
     // Immediately closes the dialog.
     function close() {
-        if (dialogMainContainer.state === "open")
-            dialogClosing(dialog)
+        if (dialogMainContainer.state === "open") {
+            dialogClosing(dialog);
+            Qt.inputMethod.hide(); // Ditch mobile keyboard
+        }
         
         dialogMainContainer.state = "closed";
     }
     
     // Send closed signal
     onIsClosedChanged: {
-        if (isClosed && wasOpened)
-            dialogClosed(dialog)
+        if (isClosed && wasOpened) {
+            dialogClosed(dialog);
+            Qt.inputMethod.hide();  // Ditch mobile keyboard
+        }
     }
     
     Keys.onPressed: {

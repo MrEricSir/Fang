@@ -22,6 +22,21 @@ include(deployment.pri)
 # TidyLib
 include(tidylib/tidylib.pri)
 
+android {
+    # Create Android version of html file.
+    QMAKE_PRE_LINK += $$_PRO_FILE_PWD_/androidDeploy.sh
+
+    # Android assets for WebView
+    # Open with file:///android_asset/your_file
+    DEPLOY_HTML.files += html/*
+    DEPLOY_HTML.path = /assets
+
+    DEPLOY_IMG.files += qml/images/*
+    DEPLOY_IMG.path = /assets/qml/images
+
+    INSTALLS += DEPLOY_IMG DEPLOY_HTML
+}
+
 # Fang version
 # From: http://www.openguru.com/2009/11/qt-best-way-to-set-application-version.html
 VERSION = 0.1
@@ -169,4 +184,15 @@ win32 {
 QML_IMPORT_PATH =
 
 OTHER_FILES +=
+
+DISTFILES += \
+    android/AndroidManifest.xml \
+    android/gradle/wrapper/gradle-wrapper.jar \
+    android/gradlew \
+    android/res/values/libs.xml \
+    android/build.gradle \
+    android/gradle/wrapper/gradle-wrapper.properties \
+    android/gradlew.bat
+
+ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
 
