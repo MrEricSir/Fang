@@ -42,14 +42,6 @@ android {
 VERSION = 0.1
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
-# Release build folder (for consistency on TeamCity)
-release: DESTDIR = build-$$QMAKE_HOST.os-$$QMAKE_HOST.arch/release
-debug:   DESTDIR = build-$$QMAKE_HOST.os-$$QMAKE_HOST.arch/debug
-OBJECTS_DIR = $$DESTDIR/.obj
-MOC_DIR = $$DESTDIR/.moc
-RCC_DIR = $$DESTDIR/.qrc
-UI_DIR = $$DESTDIR/.ui
-
 # Windows icon
 RC_FILE = win32.rc
 
