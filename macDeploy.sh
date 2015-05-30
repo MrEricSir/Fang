@@ -7,7 +7,7 @@ echo "| Fang packager for Mac OS X |"
 echo "| Copyright Eric Gregory     |"
 echo "+----------------------------+"
 echo ""
-echo "Last updated for Qt 5.3.1 in September 2014"
+echo "Last updated for Qt 5.5 beta in May 2015"
 echo ""
 
 # Make sure the folder exists!
@@ -25,18 +25,16 @@ if [ ! -d "Fang.app" ]
 	exit 280
 fi
 
+#cat >> Fang.app/Contents/libexec/qt.conf <<EOD
+#[Paths]
+#Plugins = ../PlugIns
+#Imports = ../Resources/qml
+#Qml2Imports = ../Resources/qml
+#EOD
+#cat >> Fang.app/Contents/libexec/qt.conf
 
-# QtWebkit 2 workaround
-# See: https://bugreports.qt-project.org/browse/QTBUG-35211
 
-cp -R ~/Qt/5.3/clang_64/libexec Fang.app/Contents
-
-cat >> Fang.app/Contents/libexec/qt.conf <<EOD
-[Paths]
-Plugins = ../PlugIns
-Imports = ../Resources/qml
-Qml2Imports = ../Resources/qml
-EOD
+export QML2_IMPORT_PATH="../qml"
 
 
 # Run the Mac deploy tool.
@@ -44,9 +42,20 @@ EOD
 # About the arguments:
 #   Fang.app:     The .app file must already exist (as checked above.)
 #   -verbose=2:   Print at a "normal" level of verbosity
-#   -qmldir="...  Scan QML files for dependencies (does NOT include Fang's QML!!!!!!)
+#   -qmldir="...  Scan QML files for dependencies
 
-~/Qt/5.3/clang_64/bin/macdeployqt Fang.app -verbose=2 -qmldir="../Fang/qml" -executable="Fang.app/Contents/libexec/QtWebProcess"
+macdeployqt Fang.app -verbose=3 -qmldir="../qml"
+
+
+# Need to copy SQLite driver.
+# (Seems to be a bug in Qt 5.5 beta?)
+SQLDRIVERS=Fang.app/Contents/PlugIns/sqldrivers
+mkdir -p $SQLDRIVERS
+cp $QTDIR/plugins/sqldrivers/libqsqlite.dylib $SQLDRIVERS
+
+# Fixup load paths for the SQLite driver (macdeployqt does this for all other modules)
+install_name_tool -change $QTDIR/lib/QtSql.framework/Versions/5/QtSql @executable_path/../Frameworks/QtSql.framework/Versions/5/QtSql $SQLDRIVERS/libqsqlite.dylib 
+install_name_tool -change $QTDIR/lib/QtCore.framework/Versions/5/QtCore @executable_path/../Frameworks/QtCore.framework/Versions/5/QtCore $SQLDRIVERS/libqsqlite.dylib 
 
 
 # Sign the app bundle.
