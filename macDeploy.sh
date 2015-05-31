@@ -54,7 +54,7 @@ QMLDIRFULL=$(dirname $PWD)/qml
 
 # Need the "executable" because of a WebEngine bug: https://bugreports.qt.io/browse/QTBUG-41611
 # Need to push/pop the dir because of this bug: https://bugreports.qt.io/browse/QTBUG-46404
-pushd $($QTDIR/bin)
+pushd $QTDIR/bin
 echo "Changed directory to: $PWD"
 ./macdeployqt $FANGAPPFULL -verbose=3 -qmldir=$QMLDIRFULL -executable="$FANGAPPFULL/Contents/MacOS/Fang"
 popd
