@@ -44,7 +44,7 @@ export QML2_IMPORT_PATH="../qml"
 #   -verbose=2:   Print at a "normal" level of verbosity
 #   -qmldir="...  Scan QML files for dependencies
 
-macdeployqt Fang.app -verbose=3 -qmldir="../qml"
+macdeployqt Fang.app -verbose=3 -qmldir=../qml
 
 
 # Need to copy SQLite driver.
