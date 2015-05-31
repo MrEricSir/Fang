@@ -10,6 +10,9 @@ echo ""
 echo "Last updated for Qt 5.5 beta in May 2015"
 echo ""
 
+echo "QTDIR is set to: $QTDIR"
+echo ""
+
 FANGAPP=Fang.app
 
 # Make sure the folder exists!
@@ -51,6 +54,7 @@ QMLDIRFULL=$(dirname $PWD)/qml
 # Need the "executable" because of a WebEngine bug: https://bugreports.qt.io/browse/QTBUG-41611
 # Need to push/pop the dir because of this bug: https://bugreports.qt.io/browse/QTBUG-46404
 pushd $QTDIR/bin
+echo "Changed directory to: $PWD"
 ./macdeployqt $FANGAPPFULL -verbose=3 -qmldir=$QMLDIRFULL -executable="$FANGAPPFULL/Contents/MacOS/Fang"
 popd
 
