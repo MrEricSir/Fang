@@ -9,6 +9,7 @@ qtHaveModule(webengine) {
     DEFINES += QT_WEBVIEW_WEBENGINE_BACKEND
 }
 
+
 # Resource files
 # Qt zips these and stashes them inside the executable.
 RESOURCES += Resources.qrc \
@@ -172,6 +173,7 @@ mac {
     QT += macextras
     HEADERS += src/notifications/NotificationMac.h
     SOURCES += src/notifications/NotificationMac.cpp
+    LIBS+= -dead_strip
 }
 
 win32 {
