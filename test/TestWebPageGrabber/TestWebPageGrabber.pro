@@ -15,7 +15,7 @@ include(../../tidylib/tidylib.pri)
 
 
 TARGET = tst_testwebpagegrabber
-CONFIG   += console
+CONFIG   += console testcase
 CONFIG   -= app_bundle
 
 TEMPLATE = app

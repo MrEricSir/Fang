@@ -9,7 +9,7 @@ QT       += testlib network
 QT       -= gui
 
 TARGET = tst_fangparser
-CONFIG   += console
+CONFIG   += console testcase
 CONFIG   -= app_bundle
 
 TEMPLATE = app

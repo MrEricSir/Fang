@@ -9,7 +9,7 @@ QT       += network testlib
 QT       -= gui
 
 TARGET = tst_testfangfeeddiscovery
-CONFIG   += console
+CONFIG   += console testcase
 CONFIG   -= app_bundle
 
 TEMPLATE = app

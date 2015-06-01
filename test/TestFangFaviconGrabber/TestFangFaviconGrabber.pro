@@ -8,7 +8,7 @@ QT       += network gui testlib
 
 
 TARGET = tst_testfangfavicongrabbertest
-CONFIG   += console
+CONFIG   += console testcase
 CONFIG   -= app_bundle
 
 TEMPLATE = app
