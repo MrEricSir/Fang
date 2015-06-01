@@ -56,9 +56,10 @@ QMLDIRFULL=$(dirname $PWD)/qml
 # Need to push/pop the dir because of this bug: https://bugreports.qt.io/browse/QTBUG-46404
 pushd $QTDIR/bin
 echo "Changed directory to: $PWD"
-./macdeployqt $FANGAPPFULL -verbose=3 -qmldir=$QMLDIRFULL -executable="$FANGAPPFULL/Contents/MacOS/Fang"
+./macdeployqt $FANGAPPFULL -verbose=2 -qmldir=$QMLDIRFULL -executable="$FANGAPPFULL/Contents/MacOS/Fang"
 popd
 
+set -x #echo on
 
 
 # Clean up the WebEngine packaging mess
@@ -108,10 +109,10 @@ install_name_tool -change $QTDIR/lib/QtCore.framework/Versions/5/QtCore @executa
 
 
 # Sign the app bundle.
-
 # TODO
 
 
 # Package into a DMG image
+# TODO
 
-#todo
+set -x #echo ff
