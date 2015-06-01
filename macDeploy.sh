@@ -59,8 +59,30 @@ echo "Changed directory to: $PWD"
 ./macdeployqt $FANGAPPFULL -verbose=3 -qmldir=$QMLDIRFULL -executable="$FANGAPPFULL/Contents/MacOS/Fang"
 popd
 
-# Web Engine exe is now at
-# $FANGAPPFULL/Contents/Frameworks/QtWebEngineCore.framework/Versions/5/Helpers/QtWebEngineProcess
+
+
+# Clean up the WebEngine packaging mess
+# On some Mac systems, Qt deploys multiple copies of everything; this corrects it to use links
+pushd $FANGAPP/Contents/Frameworks/QtWebEngineCore.framework
+
+pushd Versions
+rm -fr Current
+ln -s 5 Current
+popd
+
+rm -fr Helpers
+ln -s Versions/Current/Helpers Helpers
+
+rm -fr Libraries
+ln -s Versions/Current/Libraries Libraries
+
+rm -fr Resources
+ln -s Versions/Current/Resources Resources
+
+rm -fr QtWebEngineCore
+ln Versions/Current/QtWebEngineCore QtWebEngineCore
+
+popd
 
 
 
@@ -81,6 +103,9 @@ install_name_tool -change $QTDIR/lib/QtSvg.framework/Versions/5/QtSvg @executabl
 install_name_tool -change $QTDIR/lib/QtWidgets.framework/Versions/5/QtWidgets @executable_path/../Frameworks/QtWidgets.framework/Versions/5/QtWidgets $IMAGEFORMATS/libqsvg.dylib
 install_name_tool -change $QTDIR/lib/QtGui.framework/Versions/5/QtGui @executable_path/../Frameworks/QtGui.framework/Versions/5/QtGui $IMAGEFORMATS/libqsvg.dylib
 install_name_tool -change $QTDIR/lib/QtCore.framework/Versions/5/QtCore @executable_path/../Frameworks/QtCore.framework/Versions/5/QtCore $IMAGEFORMATS/libqsvg.dylib
+
+
+
 
 # Sign the app bundle.
 
