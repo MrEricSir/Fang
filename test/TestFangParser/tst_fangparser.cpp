@@ -41,8 +41,10 @@ void TestFangParser::parseTest()
     // Parse the file, with a timeout of 1 second.
     parser.parseFile("../TestFangParser/feeds/" + filename);
     
-    // We *may* need to wait here.
-    spy.wait(500); // Lame, but just wait 500 ms
+    if (!spy.count()) {
+        // We *may* need to wait here.
+        spy.wait(500); // Lame, but just wait 500 ms
+    }
     
     // Verify the signal is only emitted once.
     QCOMPARE(spy.count(), 1);
