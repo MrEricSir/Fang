@@ -113,6 +113,6 @@ install_name_tool -change $QTDIR/lib/QtCore.framework/Versions/5/QtCore @executa
 
 
 # Package into a DMG image
-# TODO
+hdiutil create -volname Fang -srcfolder $FANGAPP -ov -format UDZO Fang.dmg
 
 set -x #echo ff
