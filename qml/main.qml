@@ -1,12 +1,13 @@
 import QtQuick 2.4
-import QtQuick.Window 2.1
+import QtQuick.Window 2.2
 import Fang 1.0
 import QtQuick.Controls 1.3
 import QtQuick.Controls.Styles 1.2
 import QtQuick.Layouts 1.0
 import Qt.labs.settings 1.0
 
-ApplicationWindow {
+// Can't use ApplicationWindow because it leaves spaces for an action bar (menu) on Android.
+Window {
     id: main;
 
     width: windowSettings.width;

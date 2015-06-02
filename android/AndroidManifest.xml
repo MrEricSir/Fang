@@ -46,7 +46,6 @@
             <!-- Show translucent UI on top of Qt's surface when system theme mandates it -->
         </activity>
     </application>
-    <application android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen" />
     <uses-sdk android:minSdkVersion="9" android:targetSdkVersion="14"/>
     <supports-screens android:largeScreens="true" android:normalScreens="true" android:anyDensity="true" android:smallScreens="true"/>
 
