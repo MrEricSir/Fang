@@ -66,9 +66,6 @@ Item {
         FangWebView {
             id: newsView;
 
-            // Start visible
-            visible: true;
-
             // Stops scrolling while we're loading or a dialog is displayed.
             enabled: !qmlNewsInteractor.loadInProgress && newsFocus;
         }

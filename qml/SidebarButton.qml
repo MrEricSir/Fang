@@ -6,19 +6,18 @@ Button {
     property url imageHoverURL: ""
     property url imagePressedURL: ""
     
-    property int imageMargin: 7
+    property int imageMargin: 7 * style.scale
     
     radius: width * 0.5
     
-    buttonColor: style.color.sidebarButton
-    hoverColor: style.color.sidebarButtonHover
+    buttonColor: style.color.sidebarButton;
+    hoverColor: style.color.sidebarButtonHover;
     pressedColor: style.color.sidebarButtonPressed
     borderColor: style.color.sidebarButtonBorder
     // We don't set a disabledColor because that hasn't been required (yet!)
     
-    
     Image {
-        source: sidebarButton.state === "hover" ? sidebarButton.imageHoverURL : 
+        source: sidebarButton.state === "hover" ? sidebarButton.imageHoverURL :
                                     sidebarButton.state === "pressed" ?
                                         sidebarButton.imagePressedURL : sidebarButton.imageURL
         

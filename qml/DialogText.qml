@@ -25,7 +25,7 @@ Rectangle {
         font.family: style.font.defaultFamily
         color: dialogText.textColor
         wrapMode: Text.WordWrap
-        renderType: Text.NativeRendering
+        renderType: style.textRendering;
         
         // In case you want teh linkx0rz
         onLinkActivated: Qt.openUrlExternally(link)

@@ -15,7 +15,7 @@ WebEngineView {
 
     ///// END API /////
 
-    anchors.fill: parent; // WebView version needs to set own dimensions, so we'll do it here too.
+    anchors.fill: parent;
 
     state: "news";
     states: [

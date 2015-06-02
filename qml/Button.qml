@@ -142,7 +142,7 @@ Rectangle {
         anchors.fill: parent
         
         onClicked: baseButton.clicked()
-        hoverEnabled: true
+        hoverEnabled: platform !== "ANDROID"; // No hover on touch screens
         enabled: baseButton.enabled
         
         onEntered: baseButton.state = "hover"

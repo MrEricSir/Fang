@@ -139,12 +139,12 @@ FangScreen {
             font.pointSize: style.font.titleSize
             font.family: style.font.defaultFamily
             color: style.color.dialogText
-            renderType: Text.NativeRendering
+            renderType: style.textRendering;
             
             anchors.top: parent.top
             anchors.left: parent.left
-            anchors.topMargin: 20
-            anchors.leftMargin: 15
+            anchors.topMargin: 20 * style.scale
+            anchors.leftMargin: 15 * style.scale
         }
         
         // Catch-alls to prevent clicks under this container.
@@ -160,10 +160,10 @@ FangScreen {
         // Dialog contents
         Item {
             anchors.top: openAtStart? parent.top : dialogTitle.bottom
-            anchors.topMargin: 15
+            anchors.topMargin: 15 * style.scale
             anchors.bottom: parent.bottom
             anchors.left: parent.left
-            anchors.leftMargin: 15
+            anchors.leftMargin: 15 * style.scale
             anchors.right: parent.right
             
             FangScrollView {
@@ -180,7 +180,7 @@ FangScreen {
                     Item {
                         id: container
                         
-                        width: 400
+                        width: 400 * style.scale
                         anchors.horizontalCenter: parent.horizontalCenter
                         
                         // Children go here.
@@ -188,7 +188,7 @@ FangScreen {
                             id: placeholder
                             
                             width: parent.width
-                            spacing: 10
+                            spacing: 10 * style.scale
                         }
                     }
                 }

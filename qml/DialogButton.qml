@@ -26,7 +26,7 @@ Button {
         verticalAlignment: Text.AlignVCenter
         horizontalAlignment: Text.AlignHCenter
         width: parent.width - 12
-        renderType: Text.NativeRendering
+        renderType: style.textRendering;
         
         anchors.centerIn: parent
         font.pointSize: style.font.defaultSize

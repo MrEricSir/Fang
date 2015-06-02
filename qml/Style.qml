@@ -7,7 +7,9 @@ import Fang 1.0
 Item {
     property variant font: getPlatformFont()
     property variant color: fangSettings.style === "LIGHT" ? colorSchemeLight : colorSchemeDark;
-    
+    property double scale: (platform === "ANDROID") ? 1.5 : 1.0;
+    property var textRendering: (platform === "ANDROID") ? Text.QtRendering : Text.NativeRendering;
+
     function getPlatformFont() {
         switch(platform) {
         case "MAC": return macFontStyle;
@@ -25,6 +27,7 @@ Item {
         // Default UI font.
         property int defaultSize: 13
         property int titleSize: 20
+        property int unreadCountSize: 8;
         property string defaultFamily: "Lucida Grande"
     }
     
@@ -34,6 +37,7 @@ Item {
         // Default UI font.
         property int defaultSize: 11
         property int titleSize: 20
+        property int unreadCountSize: 8;
         property string defaultFamily: "Segoe UI"
     }
 
@@ -43,6 +47,7 @@ Item {
         // Default UI font.
         property int defaultSize: 11
         property int titleSize: 20
+        property int unreadCountSize: 8;
         property string defaultFamily: "Geneva"
     }
 
@@ -50,8 +55,9 @@ Item {
         id: androidFontStyle
 
         // Default UI font.
-        property int defaultSize: 11
-        property int titleSize: 20
+        property int defaultSize: 16
+        property int titleSize: 30
+        property int unreadCountSize: 13;
         property string defaultFamily: "Roboto"
     }
 

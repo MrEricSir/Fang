@@ -2,7 +2,7 @@ import QtQuick 2.4
 
 ListViewDragDelegate {
     id: feedTitleDelegate;
-    height: 35;
+    height: 35 * style.scale;
     
     Style {
         id: style;
@@ -34,21 +34,21 @@ ListViewDragDelegate {
                            style.color.sidebarSelected : "transparent";
                 
                 anchors.fill: parent;
-                anchors.topMargin: 5;
+                anchors.topMargin: 5 * style.scale;
                 anchors.leftMargin: 0;
                 anchors.rightMargin: 0;
                 
                 Item {
                     id: feedIconCol
                     
-                    width: isSpecialFeed ? 0 : 35; // no icon for all news
+                    width: isSpecialFeed ? 0 : (35 * style.scale); // no icon for all news
                     visible: !isSpecialFeed
                     
                     anchors.left: parent.left;
                     anchors.top: parent.top;
                     anchors.bottom: parent.bottom;
                     
-                    anchors.leftMargin: 10;
+                    anchors.leftMargin: 10 * style.scale;
                     
                     Image {
                         id: feedIcon;
@@ -59,8 +59,8 @@ ListViewDragDelegate {
                         
                         anchors.verticalCenter: parent.verticalCenter;
                         
-                        width: 24;
-                        height: 24;
+                        width: 24 * style.scale;
+                        height: 24 * style.scale;
                         
                         sourceSize.width: width;
                         sourceSize.height: height;
@@ -77,8 +77,8 @@ ListViewDragDelegate {
                         
                         anchors.verticalCenter: parent.verticalCenter;
                         
-                        width: 24;
-                        height: 24;
+                        width: 24 * style.scale;
+                        height: 24 * style.scale;
                         
                         sourceSize.width: width;
                         sourceSize.height: height;
@@ -93,8 +93,8 @@ ListViewDragDelegate {
                         
                         anchors.verticalCenter: parent.verticalCenter;
                         
-                        width: 23;
-                        height: 23;
+                        width: 23 * style.scale;
+                        height: 23 * style.scale;
                     }
                 }
                 
@@ -106,9 +106,9 @@ ListViewDragDelegate {
                     anchors.left: feedIconCol.right;
                     anchors.right: feedCountCol.left;
                     
-                    anchors.rightMargin: 4;
-                    anchors.bottomMargin: 5;
-                    anchors.topMargin: 5;
+                    anchors.rightMargin: 4 * style.scale;
+                    anchors.bottomMargin: 5 * style.scale;
+                    anchors.topMargin: 5 * style.scale;
                     anchors.leftMargin: 0;
                     
                     Text {
@@ -122,7 +122,7 @@ ListViewDragDelegate {
                         font.pointSize: style.font.defaultSize;
                         font.family: style.font.defaultFamily;
                         color: style.color.sidebarSelectedText;
-                        renderType: Text.NativeRendering;
+                        renderType: style.textRendering;
                         
                         elide: Text.ElideRight;
                     }
@@ -189,21 +189,19 @@ ListViewDragDelegate {
                             
                             text: unreadCount;
                             
-                            anchors.right: parent.right;
-                            anchors.rightMargin: 3;
-                            anchors.topMargin: 3;
+                            anchors.horizontalCenter: parent.horizontalCenter
                             anchors.verticalCenter: parent.verticalCenter;
-                            font.pointSize: 8;
+                            font.pointSize: style.font.unreadCountSize;
                             font.family: style.font.defaultFamily;
                             elide: Text.ElideRight;
                             color: style.color.badgeText;
-                            renderType: Text.NativeRendering;
+                            renderType: style.textRendering;
                         }
                     }
                 }
             }
         }
         
-        spacing: 10;
+        spacing: 10 * style.scale;
     }
 }

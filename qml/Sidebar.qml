@@ -20,12 +20,12 @@ Item {
     property int specialFeedCount: 0;
     
     // Read-only properties.
-    property int buttonSize: 30
+    property int buttonSize: 30 * style.scale;
     property variant listView: feedListView
     
     Rectangle {
         id: sidebarTopControls
-        height: 40
+        height: 40 * style.scale
         
         anchors.top: parent.top
         anchors.left: parent.left
@@ -36,7 +36,7 @@ Item {
         Item {
             id: toolbarTop
             anchors.fill: parent
-            anchors.margins: 5
+            anchors.margins: 5 * style.scale
             
             Image {
                 id: fangLogo
@@ -44,10 +44,10 @@ Item {
                 source: "images/fang_logo.svg"
                 
                 anchors.top: parent.top
-                anchors.topMargin: 5
+                anchors.topMargin: 5 * style.scale
                 anchors.left: parent.left
-                anchors.leftMargin: 5
-                height: 25
+                anchors.leftMargin: 5 * style.scale
+                height: 25 * style.scale
                 asynchronous: true
                 
                 // Hack to make SVGs render with anti-aliasing
@@ -60,7 +60,7 @@ Item {
                 id: helpButton;
                 
                 anchors.right: settingsButton.left;
-                anchors.rightMargin: 10;
+                anchors.rightMargin: 10  * style.scale;
                 
                 width: buttonSize;
                 height: buttonSize;
@@ -116,7 +116,7 @@ Item {
                 anchors.top: parent.top
                 anchors.bottom: parent.bottom
                 anchors.right: parent.right
-                width: 1
+                width: 1 * style.scale
             }
             
             FangScrollView {
@@ -184,7 +184,7 @@ Item {
     // Mini-toolbar under the sidebar.
     Rectangle {
         id: sidebarControls
-        height: 40
+        height: 40 * style.scale
         
         anchors.bottom: parent.bottom
         anchors.left: parent.left
@@ -194,7 +194,7 @@ Item {
         Item {
             id: toolbar
             anchors.fill: parent
-            anchors.margins: 5
+            anchors.margins: 5 * style.scale
             
             // Adds a feed.
             SidebarButton {
@@ -216,7 +216,7 @@ Item {
             SidebarButton {
                 id: editButton
                 
-                x: buttonSize + 10
+                x: buttonSize + (10 * style.scale)
                 
                 width: buttonSize
                 height: buttonSize
@@ -236,7 +236,7 @@ Item {
             SidebarButton {
                 id: removeButton
                 
-                x: buttonSize * 2 + 20
+                x: buttonSize * 2 + (20 * style.scale)
                 
                 width: buttonSize
                 height: buttonSize
