@@ -37,9 +37,17 @@ void TestFangParser::parseTest()
     NewsParser parser(this);
     
     QSignalSpy spy(&parser, SIGNAL(done()));
+
+    QString projectPath = PROJECT_PATH;
+    QString fullFilename = projectPath + "/feeds/" + filename;
+    QFile file(fullFilename);
+    QVERIFY2(file.exists(), "File does not exist");
+    if (!file.exists()) {
+        qDebug() << "Filename: " << file.fileName();
+    }
     
-    // Parse the file, with a timeout of 1 second.
-    parser.parseFile("../TestFangParser/feeds/" + filename);
+    // Parse the file.
+    parser.parseFile(fullFilename);
     
     if (!spy.count()) {
         // We *may* need to wait here.

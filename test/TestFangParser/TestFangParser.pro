@@ -14,6 +14,8 @@ CONFIG   -= app_bundle
 
 TEMPLATE = app
 
+DEFINES += PROJECT_PATH=\\\"$$_PRO_FILE_PWD_\\\"
+
 
 SOURCES += tst_fangparser.cpp \
     ../../src/parser/NewsParser.cpp \
