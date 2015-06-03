@@ -746,7 +746,7 @@ $(document).ready(function() {
     }
     
     /**
-     * Touch off all the timers we just defined.
+     * Initial setup.
      */
     
     // Poll for scroll position every 250 ms.
@@ -760,4 +760,7 @@ $(document).ready(function() {
 
     // Set bottom sizer.
     resizeBottomSpacer();
+
+    // Setup link delegator on all non-news items.
+    $(document).find( 'a' ).on( "click", delegateLink );
 });
