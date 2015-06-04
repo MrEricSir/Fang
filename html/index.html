@@ -50,15 +50,15 @@ pre {
 }
 
 .newsItemStyle > .bookmark > .stripe > .stripe_left {
-    width: 18px;
-    height: 22px;
-    background-size: 18px 22px;
+    background-repeat: no-repeat;
+    background-size: 6px 22px;
     
     position: absolute;
     left: 0px;
     top: 0px;
+
     height: 22px;
-    width: 18px;
+    width: 6px;
 }
 
 .newsItemStyle > .bookmark > .stripe > .stripe_mid {
@@ -66,21 +66,23 @@ pre {
     background-size: 10px 22px;
     
     position: absolute;
-    left: 18px;
-    right: 6px;
+    left: 6px;
+    right: 18px;
+
     top: 0px;
     height: 22px;
 }
 
 .newsItemStyle > .bookmark > .stripe > .stripe_right {
     background-repeat: no-repeat;
-    background-size: 6px 22px;
+    background-size: 18px 22px;
     
     position: absolute;
     right: 0px;
     top: 0px;
+
+    width: 18px;
     height: 22px;
-    width: 6px;
 }
 
 .bookmarked > .bookmark > .stripe {
@@ -451,7 +453,7 @@ body.FONT_LARGE > #welcome > #slogan { font-size: 30pt; }
         </div>
     </div>
 
-<div class="bottom" id="bottom"><span id="bottomText">~</span><div>
+<div class="bottom" id="bottom"><!--<span id="bottomText">~</span>--><div>
 
 </div></div></div> <!-- newsView -->
 

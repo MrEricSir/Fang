@@ -380,7 +380,7 @@ function getLastNewsContainer() {
 
 // Resizes the bottom spacer to allow the last item to be bookmarked.
 function resizeBottomSpacer() {
-    var numPix = windowHeight;
+    var numPix = windowHeight - $( '.bookmark' ).height();
 
     // Feeds without bookmarks don't need the bottom spacer.
     if ($('body').hasClass('bookmarksDisabled')) {
