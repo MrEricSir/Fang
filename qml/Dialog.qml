@@ -58,8 +58,10 @@ FangScreen {
     }
     
     Keys.onPressed: {
-        if (event.key === Qt.Key_Escape) {
+        if (event.key === Qt.Key_Escape || event.key === Qt.Key_Back) {
+            //console.log("close")
             close();
+            event.accepted = true;
         }
     }
     

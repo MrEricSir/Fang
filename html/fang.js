@@ -533,7 +533,7 @@ function isAboveScroll(element) {
     var bookmarkHeight = 0;
     var bookmark = element.find('.bookmark');
     if (bookmark.length) {
-        bookmarkHeight = bookmark.height() + 10; // for consistent results
+        bookmarkHeight = bookmark.height() + 15; // for consistent results
     }
 
     //console.log("Bookmark Height: ", bookmarkHeight);
@@ -557,14 +557,13 @@ function isTopAboveScroll(element) {
 function getFirstVisible() {
     // Go through all the next items.
     var item = $(newsContainerSelector);
-    while (item.length) {
+
+    while (item != null && item.length) {
         if (!isAboveScroll(item))
             return item;
         
         item = nextNewsContainer(item);
     }
-    
-    console.log("GFV: it's LAST: ", item.last())
     
     // Just return the last item, then?
     return getLastNewsContainer();
@@ -584,7 +583,12 @@ function jumpNextPrev(jumpNext) {
     var jumpTo = current;
     if (jumpNext) {
         jumpTo = nextNewsContainer(jumpTo);
-        //console.log("Next valid news container: ", jumpTo);
+        //console.log("Next news container: ", jumpTo);
+        if (jumpTo == null) {
+            // We didn't find a last news item, so jump to the last bookmark instead.
+            jumpTo = current.find(".bookmark > .stripe");
+            //console.log("Jumping to last bookmark: ", jumpTo);
+        }
     } else {
         // Check if we're strattling the top.  If not, jump one back.
         if (!isTopAboveScroll(jumpTo)) {
@@ -598,8 +602,8 @@ function jumpNextPrev(jumpNext) {
     //console.log("Current is: ", current)
     //console.log("Jump to is: ", jumpTo)
     
-    if (!jumpTo.length) {
-        //console.log("No length! ABORT ABORT");
+    if (jumpTo == null || !jumpTo.length) {
+        //console.log("No jumpTo item! Bail!);
         return;
     }
 
@@ -699,11 +703,11 @@ $(document).ready(function() {
         
         // If there's a bookmark, get the next item.  Otherwise, get the first news container.
         var nextItem = bookmarkedItem.length ? nextNewsContainer(bookmarkedItem) : $(newsContainerSelector);
-        
+
         //console.log("Bookmark is above scroll! ", bookmarkedItem);
         //console.log("Next available news item is: ", nextItem);
         
-        while (nextItem.length >= 1) {
+        while (nextItem != null && nextItem.length >= 1) {
             // Nothing more to do.
             if (!isAboveScroll(nextItem)) {
                 //console.log("item not above scroll:", nextItem.attr('id'))
@@ -712,7 +716,7 @@ $(document).ready(function() {
             }
             
             // Move the bookmark down one.
-            console.log("SET BOOKMKAR! ", nextItem.attr('id'))
+            //console.log("set bookmark to ", nextItem.attr('id'))
             sendCommand( 'setBookmark', htmlIdToId(nextItem.attr('id')) );
             
             // Continue to next item.
