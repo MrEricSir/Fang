@@ -30,6 +30,10 @@ pre {
     margin: 0;
     padding: 0;
     clear: both;
+    padding-top: 1.8em;
+
+    opacity: 0.0; /* Don't show by default */
+    transition: opacity 0.25s ease-in-out;
 }
 
 /* Draws the bookmark's stripe. */
@@ -38,15 +42,11 @@ pre {
     height: 22px;
     margin: 0;
     padding: 0;
-    margin-top: 1.8em;
     position: relative;
     
     /* Center */
     margin-left: auto;
     margin-right: auto;
-    
-    opacity: 0.0; /* Don't show by default */
-    transition: opacity 0.25s ease-in-out;
 }
 
 .newsItemStyle > .bookmark > .stripe > .stripe_left {
@@ -85,12 +85,12 @@ pre {
     height: 22px;
 }
 
-.bookmarked > .bookmark > .stripe {
+.bookmarked > .bookmark {
     opacity: 1.0;
     transition: opacity 0.25s ease-in-out;
 }
 
-.newsItemStyle:not(.bookmarked) > .bookmark > .stripe:hover {
+.newsItemStyle:not(.bookmarked) > .bookmark:hover {
     opacity: 1.0;
     transition: opacity 0.25s ease-in-out;
 }
@@ -195,12 +195,6 @@ body > #newsView > #bottom {
     font-style: italic;
 }
 
-body > #newsView > #bottom > #bottomText {
-    position: absolute;
-    width: 100%;
-    left: 0;
-    bottom: 1.0em;
-}
 
 body > #newsView > .newsItemStyle > .dateDiv > .pin {
     background-size: contain;
@@ -453,9 +447,9 @@ body.FONT_LARGE > #welcome > #slogan { font-size: 30pt; }
         </div>
     </div>
 
-<div class="bottom" id="bottom"><!--<span id="bottomText">~</span>--><div>
+<div class="bottom" id="bottom"><!-- TODO --><div></div></div>
 
-</div></div></div> <!-- newsView -->
+</div> <!-- newsView -->
 
 
 

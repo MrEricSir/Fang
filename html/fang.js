@@ -380,7 +380,16 @@ function getLastNewsContainer() {
 
 // Resizes the bottom spacer to allow the last item to be bookmarked.
 function resizeBottomSpacer() {
-    var numPix = windowHeight - $( '.bookmark' ).height();
+    var bookmarkHeight = 0;
+    var item = $(newsContainerSelector);
+    if (item.length) {
+        var bookmark = item.find('.bookmark');
+        if (bookmark.length) {
+            bookmarkHeight = bookmark.height() + 10; // for good measure
+        }
+    }
+
+    var numPix = windowHeight - bookmarkHeight;
 
     // Feeds without bookmarks don't need the bottom spacer.
     if ($('body').hasClass('bookmarksDisabled')) {
@@ -519,16 +528,16 @@ function prevNewsContainer(element) {
 // UTILITY: Returns true if the element is above the scroll position, else false.
 function isAboveScroll(element) {
     //console.log("Is above scroll: ", element)
-    
+
     // We don't want to include the bookmark space this calculation.
     var bookmarkHeight = 0;
     var bookmark = element.find('.bookmark');
     if (bookmark.length) {
-        bookmarkHeight = bookmark.height();
+        bookmarkHeight = bookmark.height() + 10; // for consistent results
     }
-    
+
     //console.log("Bookmark Height: ", bookmarkHeight);
-     
+
     var allHeight = element.offset().top + element.height() - bookmarkHeight;
     var ret = $(window).scrollTop() >= allHeight;
     
