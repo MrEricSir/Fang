@@ -13,4 +13,4 @@ echo ""
 # The qmake script runs this automatically
 
 # Create our new HTML
-sed s,qrc:///,file:///android_asset/,g ../Fang/html/index.html &> ../Fang/html/index_android.html
+sed s,qrc:///,file:///android_asset/,g ../html/index.html &> ../html/index_android.html
