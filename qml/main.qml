@@ -33,7 +33,7 @@ Window {
     property alias isInProgress: news.isInProgress;
 
     // Treat as const
-    property int minimumSidebarWidth: 230;
+    property int minimumSidebarWidth: (platform === "ANDROID") ? 260 : 230;
     property int minimumNewsWidth: 400;
     
     // Style object.
