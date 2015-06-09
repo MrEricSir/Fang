@@ -7,7 +7,7 @@ Dialog {
     
     title: "Edit a Feed";
     
-    property variant listView;
+    property var listView;
     
     onDialogOpened: {
         feedTitle.forceActiveFocus();

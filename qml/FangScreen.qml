@@ -9,6 +9,9 @@ Rectangle {
     // Index of this screen (used for z transitions)
     property double index: 0;
 
+    // Special handling for the splash screen dialog.
+    property bool isSplashScreen: false;
+
     // When the fade-in is done.
     signal fadeInComplete();
     
@@ -43,7 +46,7 @@ Rectangle {
     ]
     
     // Default state is faded out for splash screen.
-    state: "out";
+    state: isSplashScreen ? "out" : "in";
     
     Rectangle {
         id: blocker;

@@ -20,7 +20,7 @@ Dialog {
         iAmOpen = true;
         if (interactor === null)
             return;
-        
+
         doStart();
     }
     

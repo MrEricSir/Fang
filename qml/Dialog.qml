@@ -5,22 +5,22 @@ import Fang 1.0
 // Takes up the entire screen.
 // Note: Mr. T. pitties the fool who uses this with anchors!  Specify x, y, width, height, please.
 FangScreen {
-    id: dialog
+    id: dialog;
     
-    signal dialogOpened() // Open has completed
-    signal dialogClosed(var self)
-    signal dialogClosing(var self)
+    signal dialogOpened(); // Open has completed
+    signal dialogClosed(var self);
+    signal dialogClosing(var self);
     
     // Dialog title text.
-    property string title
+    property string title;
     
     // This allows children to be positioned within the element.
-    default property alias contents: placeholder.children
+    default property alias contents: placeholder.children;
     
     // Read only.
-    property bool isClosing: dialogMainContainer.state === "closed" || dismissTimer.running
-    property bool isClosed: dialogMainContainer.state === "closed"
-    property bool wasOpened: openAtStart ? true : false
+    property bool isClosing: dialogMainContainer.state === "closed" || dismissTimer.running;
+    property bool isClosed: dialogMainContainer.state === "closed";
+    property bool wasOpened: openAtStart ? true : false;
 
     // Only used for splash screen.
     property bool openAtStart: false;
@@ -48,6 +48,11 @@ FangScreen {
         
         dialogMainContainer.state = "closed";
     }
+
+    // Put focus back on this dialog.
+    function forceFocus() {
+        dialog.forceActiveFocus();
+    }
     
     // Send closed signal
     onIsClosedChanged: {
@@ -58,7 +63,7 @@ FangScreen {
     }
     
     Keys.onPressed: {
-        if (event.key === Qt.Key_Escape || event.key === Qt.Key_Back) {
+        if ((event.key === Qt.Key_Escape || event.key === Qt.Key_Back) && !isSplashScreen) {
             //console.log("close")
             close();
             event.accepted = true;
@@ -127,7 +132,13 @@ FangScreen {
                     }
                     
                     ScriptAction {
-                        script: dialog.dialogOpened();
+                        script: {
+                            // Grab focus (you might want to set it to something else after this)
+                            forceFocus();
+
+                            // Emit our signal!
+                            dialog.dialogOpened();
+                        }
                     }
                 }
             }

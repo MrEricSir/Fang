@@ -9,7 +9,8 @@ Dialog {
 
     title: "";
 
-    openAtStart: true
+    isSplashScreen: true;
+    openAtStart: true;
 
     Item {
         id: topSpacer
