@@ -59,12 +59,21 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     engine.setNetworkAccessManagerFactory(new FangQQmlNetworkAccessManagerFactory());
     QQmlFileSelector selector(&engine); // For platform-specific QML files
 
+    // Set QML file selectors.
+    QStringList selectors;
+
 #ifndef QT_WEBVIEW_WEBENGINE_BACKEND
     // Add a selector indicating we need Qt's native WebView
-    QStringList selectors;
     selectors << "webview";
-    selector.setExtraSelectors(selectors);
 #endif // QT_WEBVIEW_WEBENGINE_BACKEND
+
+#if defined(Q_OS_ANDROID) || defined(Q_OS_IOS)
+    selectors << "mobile";
+#endif
+
+    if (selectors.count()) {
+        selector.setExtraSelectors(selectors);
+    }
     
     // Use a code block to ensure FangApp is deleted.
     {

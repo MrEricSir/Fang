@@ -33,7 +33,7 @@ Window {
     property alias isInProgress: news.isInProgress;
 
     // Treat as const
-    property int minimumSidebarWidth: 230;
+    property int minimumSidebarWidth: (platform === "ANDROID") ? 260 : 230;
     property int minimumNewsWidth: 400;
     
     // Style object.
@@ -188,20 +188,18 @@ Window {
             news.isVisible = true;
         }
 
-        // Let them drag the sidebar if they want to!
-        SplitView {
+        // Splitter works differently on desktop vs. mobile.
+        FangSplitView {
             id: mainView;
 
-            anchors.fill: parent
-            orientation: Qt.Horizontal
-
-            handleDelegate: Rectangle { visible: false; }
+            anchors.fill: parent;
         
             // The feed list sidebar.
             Sidebar {
                 id: sidebar;
 
                 Layout.minimumWidth: minimumSidebarWidth;
+                Layout.fillHeight: true;
 
                 width: minimumSidebarWidth;
                 state: "open";
@@ -289,6 +287,7 @@ Window {
                 id: news;
 
                 Layout.fillWidth: true
+                Layout.fillHeight: true;
                 Layout.minimumWidth: minimumNewsWidth;
 
                 newsFocus: true // set by dialog system

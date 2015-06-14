@@ -185,6 +185,7 @@ Dialog {
     onDialogClosed: {
         // Manual memory management.
         opml.destroy();
+
     }
     
     OPMLInteractor {
@@ -232,7 +233,10 @@ Dialog {
     DialogButton {
         id: aboutBox
         text: "About"
-        onClicked: main.openDialog("AboutDialog.qml")
+        onClicked: {
+            var aboutDialog = main.openDialog("AboutDialog.qml");
+            aboutDialog.onDialogClosed.connect(settingsDialog.forceFocus);
+        }
     }
     
     DialogSpacer {}

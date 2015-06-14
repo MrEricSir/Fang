@@ -7,7 +7,7 @@ Dialog {
     
     title: "Remove a Feed"
     
-    property variant listView
+    property var listView;
     
     DialogStatus {
         id: validationStatus
