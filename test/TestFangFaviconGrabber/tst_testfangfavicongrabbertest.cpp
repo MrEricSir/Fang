@@ -41,7 +41,7 @@ void TestFangFaviconGrabberTest::testCase1()
     fg.find(QUrl(siteURL));
     
     // Wait for the signal!
-    QVERIFY(spy.wait());  // default: up to 5 seconds
+    QVERIFY(spy.wait(10000));  // Up to 10 seconds
     QCOMPARE(spy.count(), 1);
     
     QList<QVariant> arguments = spy.takeFirst(); // take the first signal
