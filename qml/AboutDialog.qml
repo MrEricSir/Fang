@@ -24,6 +24,11 @@ Dialog {
         horizontalAlignment: Text.AlignHCenter;
         fontPointSize: style.font.titleSize;
     }
+
+    DialogText {
+        text: "Version " + fangVersion + "\nBuild number " + fangBuildNumber;
+        horizontalAlignment: Text.AlignHCenter;
+    }
     
     DialogText {
         text: "<a href='http://www.getfang.com'>Visit our website</a>";

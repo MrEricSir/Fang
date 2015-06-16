@@ -43,6 +43,18 @@ android {
 VERSION = 0.1
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
+# Try to get TeamCity build number.
+BUILD_NUMBER = $$(BUILD_NUMBER)
+isEmpty(BUILD_NUMBER) {
+    BUILD_NUMBER = "-1"
+}
+
+DEFINES += BUILD_NUMBER=\\\"$${BUILD_NUMBER}\\\"
+
+APP_VERSION_FULL = "$${VERSION}.$${BUILD_NUMBER}"
+DEFINES += APP_VERSION_FULL=\\\"$$APP_VERSION_FULL\\\"
+
+
 # Windows icon
 RC_FILE = win32.rc
 

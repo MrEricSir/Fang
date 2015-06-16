@@ -60,41 +60,18 @@ FangApp::FangApp(QApplication *parent, QQmlApplicationEngine* engine, SingleInst
             &FangApp::onLoadPageChanged);
 }
 
-// http://stackoverflow.com/questions/8052460/recursively-iterate-over-all-the-files-in-a-directory-and-its-subdirectories-in
-void scanDir(QDir dir)
-{
-    dir.setFilter(QDir::Files | QDir::NoDotAndDotDot | QDir::NoSymLinks);
-
-    qDebug() << "Scanning: " << dir.path();
-
-    QStringList fileList = dir.entryList();
-    for (int i=0; i<fileList.count(); i++)
-    {
-        qDebug() << "Found file: " << fileList[i];
-    }
-
-    dir.setFilter(QDir::AllDirs | QDir::NoDotAndDotDot);// | QDir::NoSymLinks);
-    QStringList dirList = dir.entryList();
-    for (int i=0; i<dirList.size(); ++i)
-    {
-        QString newPath = QString("%1/%2").arg(dir.absolutePath()).arg(dirList.at(i));
-        scanDir(QDir(newPath));
-    }
-}
-
 void FangApp::init()
 {
-    // For debugging purposes on mobile.
-//    qDebug() << "Scanning folders...";
-//    QDir dir;
-//    dir.cdUp();
-//    scanDir(dir);
-//    qDebug() << "...scan done!";
+    qDebug() << "FangApp init version: " << APP_VERSION_FULL;
 
     // Setup our QML.
     engine->rootContext()->setContextProperty("feedListModel", feedList); // list of feeds
     engine->rootContext()->setContextProperty("importListModel", importList); // list of feeds to be batch imported
     engine->rootContext()->setContextProperty("platform", getPlatform()); // platform string ID
+    engine->rootContext()->setContextProperty("fangVersion", APP_VERSION);
+    engine->rootContext()->setContextProperty("fangVersionFull", APP_VERSION_FULL);
+    engine->rootContext()->setContextProperty("fangBuildNumber", BUILD_NUMBER);
+
 #ifdef QT_DEBUG
     bool isDebugBuild = true;
 #else
@@ -337,7 +314,7 @@ void FangApp::setBookmark(qint64 id, bool allowBackward)
 
     if (!currentFeed->canBookmark(id, allowBackward)) {
         isSettingBookmark = false;
-        qDebug() << "Cannot set bookmark to: " << id;
+        //qDebug() << "Cannot set bookmark to: " << id;
 
         return;
     }

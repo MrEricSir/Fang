@@ -42,7 +42,7 @@ void FaviconUpdateOperation::onGrabberFinished(const QUrl &faviconUrl)
     
     if (!faviconUrl.isValid() || faviconUrl.isRelative()) {
         // Not a valid URL.
-        reportError("No valid URL to update.");
+        reportError("No valid URL to update. URL is: " + faviconUrl.toString());
         
         return;
     }
