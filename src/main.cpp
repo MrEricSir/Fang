@@ -39,8 +39,8 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     qmlRegisterType<OPMLInteractor>("Fang", 1, 0, "OPMLInteractor");
     
     QApplication app(argc, argv);
-    app.setOrganizationName("EricSoft");
-    app.setOrganizationDomain("EricSoft.com");
+    app.setOrganizationName("EricGregory");
+    app.setOrganizationDomain("GetFang.com");
     app.setApplicationName("Fang");
     app.setApplicationVersion(APP_VERSION);
 
