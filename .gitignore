@@ -5,4 +5,5 @@ Fang_harmattan.desktop
 test/build-*
 *.DS_Store
 html/index_android.html
+APP_VERSION_FULL
 

@@ -54,6 +54,8 @@ DEFINES += BUILD_NUMBER=\\\"$${BUILD_NUMBER}\\\"
 APP_VERSION_FULL = "$${VERSION}.$${BUILD_NUMBER}"
 DEFINES += APP_VERSION_FULL=\\\"$$APP_VERSION_FULL\\\"
 
+# Write our version number to a special file.
+write_file("APP_VERSION_FULL", APP_VERSION_FULL)
 
 # Windows icon
 RC_FILE = win32.rc
