@@ -51,7 +51,7 @@ void TestFangParser::parseTest()
     
     if (!spy.count()) {
         // We *may* need to wait here.
-        spy.wait(5000);
+        spy.wait(10000);
     }
     
     // Verify the signal is only emitted once.
