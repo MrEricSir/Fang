@@ -38,11 +38,6 @@ android {
     INSTALLS += DEPLOY_IMG DEPLOY_HTML
 }
 
-# Fang version
-# From: http://www.openguru.com/2009/11/qt-best-way-to-set-application-version.html
-VERSION = 0.1
-DEFINES += APP_VERSION=\\\"$$VERSION\\\"
-
 # Try to get TeamCity build number.
 BUILD_NUMBER = $$(BUILD_NUMBER)
 isEmpty(BUILD_NUMBER) {
@@ -51,11 +46,13 @@ isEmpty(BUILD_NUMBER) {
 
 DEFINES += BUILD_NUMBER=\\\"$${BUILD_NUMBER}\\\"
 
-APP_VERSION_FULL = "$${VERSION}.$${BUILD_NUMBER}"
-DEFINES += APP_VERSION_FULL=\\\"$$APP_VERSION_FULL\\\"
+# Fang version
+# From: http://www.openguru.com/2009/11/qt-best-way-to-set-application-version.html
+VERSION = 0.1.$${BUILD_NUMBER}
+DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
 # Write our version number to a special file.
-write_file("APP_VERSION_FULL", APP_VERSION_FULL)
+write_file("APP_VERSION", VERSION)
 
 # Windows icon
 RC_FILE = win32.rc

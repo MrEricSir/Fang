@@ -62,15 +62,13 @@ FangApp::FangApp(QApplication *parent, QQmlApplicationEngine* engine, SingleInst
 
 void FangApp::init()
 {
-    qDebug() << "FangApp init version: " << APP_VERSION_FULL;
+    qDebug() << "FangApp init version: " << APP_VERSION;
 
     // Setup our QML.
     engine->rootContext()->setContextProperty("feedListModel", feedList); // list of feeds
     engine->rootContext()->setContextProperty("importListModel", importList); // list of feeds to be batch imported
     engine->rootContext()->setContextProperty("platform", getPlatform()); // platform string ID
     engine->rootContext()->setContextProperty("fangVersion", APP_VERSION);
-    engine->rootContext()->setContextProperty("fangVersionFull", APP_VERSION_FULL);
-    engine->rootContext()->setContextProperty("fangBuildNumber", BUILD_NUMBER);
 
 #ifdef QT_DEBUG
     bool isDebugBuild = true;

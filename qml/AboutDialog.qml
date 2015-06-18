@@ -26,7 +26,7 @@ Dialog {
     }
 
     DialogText {
-        text: "Version " + fangVersion + "\nBuild number " + fangBuildNumber;
+        text: "Version " + fangVersion;
         horizontalAlignment: Text.AlignHCenter;
     }
     
