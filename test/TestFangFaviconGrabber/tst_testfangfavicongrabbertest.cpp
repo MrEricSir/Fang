@@ -57,9 +57,9 @@ void TestFangFaviconGrabberTest::testCase1_data()
             << QUrl("http://www.mrericsir.com/blog/") 
             << QUrl("http://www.mrericsir.com/blog/wp-content/themes/eric-cordobo-green-park-2/favicon.ico");
     
-    QTest::newRow("MissionMission.org")
-            << QUrl("http://www.missionmission.org")
-            << QUrl("http://www.missionmission.org/wp-content/uploads/2012/09/favicon2.ico");
+    QTest::newRow("Fark")
+            << QUrl("http://www.fark.com/")
+            << QUrl("http://www.fark.com/favicon.ico");
     
     QTest::newRow("Slashdot.org")
                 << QUrl("http://slashdot.org/")
