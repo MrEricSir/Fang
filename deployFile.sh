@@ -17,4 +17,4 @@ BASENAME=$(basename $FILENAME)
 HOST="ssh.phx.nearlyfreespeech.net"
 
 scp $FILENAME $USERNAME@$HOST:$BASENAME
-ssh -l $USERNAME $HOST "ln $BASENAME $LINKNAME"
+ssh -l $USERNAME $HOST "ln -f $BASENAME $LINKNAME"
