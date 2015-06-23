@@ -15,20 +15,7 @@ WebView {
 
     ///// END API /////
 
-    // Android hack: Zero-out dimensions until we've gotten past the startup screen.  Otherwise
-    // we'll get a big ugly rectangle.
-    property bool firstIsVisible: false;
-    width: firstIsVisible ? parent.width : 0;
-    height: firstIsVisible ? parent.height : 0;
     visible: isVisible;
-
-     // No overlapping windows in WebView: this is a workaround.
-    onIsVisibleChanged: {
-        parent.visible = isVisible;
-        if (isVisible) {
-            firstIsVisible = true;
-        }
-    }
 
     // The URL is going to be platform-specific.  For now, it's Android-only.
     url: {

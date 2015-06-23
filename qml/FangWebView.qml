@@ -15,8 +15,6 @@ WebEngineView {
 
     ///// END API /////
 
-    anchors.fill: parent;
-
     state: "news";
     states: [
         // The typical news/help mode.

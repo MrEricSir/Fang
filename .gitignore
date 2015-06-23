@@ -4,6 +4,4 @@ Fang_harmattan.desktop
 *.pro.user.*
 test/build-*
 *.DS_Store
-html/index_android.html
 APP_VERSION
-
