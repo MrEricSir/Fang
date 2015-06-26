@@ -44,5 +44,7 @@
         <file>pin_dim_dark.svg</file>
         <file>pin_selected.svg</file>
         <file>pin_selected_dark.svg</file>
+        <file>flag_dark.svg</file>
+        <file>flag.svg</file>
     </qresource>
 </RCC>

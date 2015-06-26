@@ -35,6 +35,11 @@ public:
      * @param request
      */
     static void fakeBrowserHeaders(QNetworkRequest* request);
+
+    /**
+     * @brief (Attempts to) fix a missing protocol on a URL.
+     */
+    static QString urlFixup(const QString& url);
 };
 
 #endif // NETWORKUTILITIES_H

@@ -32,7 +32,8 @@ SOURCES += tst_testfangfeeddiscovery.cpp \
     ../../src/FangObject.cpp \
     ../../src/parser/ParserXMLWorker.cpp \
     ../../src/network/FangNetworkAccessManager.cpp \
-    ../../src/utilities/SimpleHTTPDownloader.cpp
+    ../../src/utilities/SimpleHTTPDownloader.cpp \
+    ../../src/utilities/NetworkUtilities.cpp
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
 HEADERS += \
@@ -47,4 +48,5 @@ HEADERS += \
     ../../src/FangObject.h \
     ../../src/parser/ParserXMLWorker.h \
     ../../src/network/FangNetworkAccessManager.h \
-    ../../src/utilities/SimpleHTTPDownloader.h
+    ../../src/utilities/SimpleHTTPDownloader.h \
+    ../../src/utilities/NetworkUtilities.h

@@ -46,5 +46,24 @@ void NetworkUtilities::fakeBrowserHeaders(QNetworkRequest* request)
     
     // Required for blogs.gnome.org.
     request->setRawHeader("Accept",
-                         "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
+                          "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
+}
+
+QString NetworkUtilities::urlFixup(const QString &url)
+{
+    if (url.startsWith("//")) {
+        // Just assume it's http.
+        return "http:" + url;
+    } else if (url.startsWith("/")) {
+        // Same as above, but we have to add an extra slash.
+        return "http:/" + url;
+    }
+
+    if (!url.contains(':') && url.size() && url.at(0).isLetterOrNumber()) {
+        // Also assume it's http.
+        return "http://" + url;
+    }
+
+    // Hopefully it's correct!
+    return url;
 }

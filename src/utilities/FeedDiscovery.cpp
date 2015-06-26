@@ -1,5 +1,6 @@
 #include "FeedDiscovery.h"
 #include <QXmlStreamReader>
+#include "NetworkUtilities.h"
 
 FeedDiscovery::FeedDiscovery(QObject *parent) :
     FangObject(parent),
@@ -35,7 +36,7 @@ void FeedDiscovery::checkFeed(QString sURL)
     _errorString = "";
     machine.start(CHECK_FEED);
 
-    QUrl url = urlFixup(sURL);
+    QUrl url = NetworkUtilities::urlFixup(sURL);
     
     // Make sure the location isn't a "relative" (and therefore severely invalid) path.
     if (url.isRelative() || url.scheme().isEmpty()) {
@@ -159,9 +160,9 @@ void FeedDiscovery::onPageGrabberReady(QString *document)
     // Check if the page contains a URL.
     QString newUrl = "";
     if (atomURL.size()) {
-        newUrl = urlFixup(atomURL);
+        newUrl = NetworkUtilities::urlFixup(atomURL);
     } else if (rssURL.size()) {
-        newUrl = urlFixup(rssURL);
+        newUrl = NetworkUtilities::urlFixup(rssURL);
     }
     
     // If we got one, set it and try again!
@@ -227,22 +228,6 @@ void FeedDiscovery::findFeeds(const QString& document)
         }
     }
 
-}
-
-QString FeedDiscovery::urlFixup(const QString &url) const
-{
-    if (url.startsWith("//")) {
-        // Just assume it's http.
-        return "http:" + url;
-    }
-
-    if (!url.contains(':') && url.size() && url.at(0).isLetterOrNumber()) {
-        // Also assume it's http.
-        return "http://" + url;
-    }
-
-    // Hopefully it's correct!
-    return url;
 }
 
 void FeedDiscovery::reportError(QString errorString)

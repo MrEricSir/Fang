@@ -107,9 +107,6 @@ private slots:
 
     // Try to find RSS and Atom feed, if available.
     void findFeeds(const QString& document);
-
-    // Fixes a missing protocol on a URL.
-    QString urlFixup(const QString& url) const;
     
 private:
     // Sets the error flag, error string, and triggers the ERROR state.

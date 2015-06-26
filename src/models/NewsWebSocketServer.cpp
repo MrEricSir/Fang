@@ -5,6 +5,7 @@
 #include <QTextStream>
 
 #include "../FangApp.h"
+#include "../utilities/NetworkUtilities.h"
 
 NewsWebSocketServer::NewsWebSocketServer(QObject *parent) :
     QObject(parent),
@@ -90,7 +91,8 @@ void NewsWebSocketServer::execute(const QString &command, const QString &data)
     } else if ("forceBookmark" == command) {
         app->setBookmark(data.toLongLong(), true);
     } else if ("openLink" == command) {
-        QDesktopServices::openUrl(QUrl(data));
+        QString fixed = NetworkUtilities::urlFixup(data);
+        QDesktopServices::openUrl(QUrl(fixed));
     } else if ("setPin" == command) {
         QString dataCopy(data);
         QTextStream stream(&dataCopy);
