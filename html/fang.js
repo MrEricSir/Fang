@@ -123,6 +123,9 @@ function loadNews(json)
     // If we have a new bookmark, draw it and jump there.
     if (newsObject.bookmark) {
         drawBookmarkAndJumpTo(newsObject.bookmark);
+    } else {
+        // Otherwise jump to the top.
+        $(document).scrollTop( 0 );
     }
 
     sendCommand('loadComplete');

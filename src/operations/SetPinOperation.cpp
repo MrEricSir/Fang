@@ -15,7 +15,7 @@ void SetPinOperation::execute()
     // SQLITE HULK HOGAN IS GUNNA DRIVE A BODY SLAM STRAIGHT INTO THAT PINNED COLUMN, OH YEAH!
     QSqlQuery update(db());
     update.prepare("UPDATE NewsItemTable SET pinned = :pin WHERE id = :news_id");
-    update.bindValue(":pin", pin);
+    update.bindValue(":pin", (int) pin);
     update.bindValue(":news_id", newsID);
 
     if (!update.exec()) {
