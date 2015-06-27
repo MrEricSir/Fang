@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
@@ -189,10 +190,12 @@ a:active { text-decoration: underline; }
 
 body > #newsView > #bottom {
     height: 100%;
-    position: relative;
     text-align:center;
     font-family: Futura, "Trebuchet MS", Arial, sans-serif;
-    font-style: italic;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 
@@ -284,7 +287,7 @@ body.ANDROID #keyboard { display:none; }
 
 body.FONT_SMALL > #newsView > .newsItemStyle > .content { font-size: 9pt; }
 body.FONT_SMALL > #newsView > .newsItemStyle > h1 { font-size: 13pt; }
-body.FONT_SMALL > #newsView > #bottom > #bottomText { font-size: 10pt; }
+body.FONT_SMALL > #newsView > #bottom { font-size: 10pt; }
 body.FONT_SMALL > #newsView > .newsItemStyle > .content h1,
 body.FONT_SMALL > #newsView > .newsItemStyle > .content h2,
 body.FONT_SMALL > #newsView > .newsItemStyle > .content h3,
@@ -294,7 +297,7 @@ body.FONT_SMALL > #newsView > .newsItemStyle > .content h6 { font-size: 9pt; fon
 
 body.FONT_MEDIUM > #newsView > .newsItemStyle > .content { font-size: 12pt; }
 body.FONT_MEDIUM > #newsView > .newsItemStyle > h1 { font-size: 16pt; }
-body.FONT_MEDIUM > #newsView >  #bottom > #bottomText { font-size: 14pt; }
+body.FONT_MEDIUM > #newsView >  #bottom { font-size: 14pt; }
 body.FONT_MEDIUM > #newsView > .newsItemStyle > .content h1,
 body.FONT_MEDIUM > #newsView > .newsItemStyle > .content h2,
 body.FONT_MEDIUM > #newsView > .newsItemStyle > .content h3,
@@ -304,7 +307,7 @@ body.FONT_MEDIUM > #newsView > .newsItemStyle > .content h6 { font-size: 12pt; f
 
 body.FONT_LARGE > #newsView > .newsItemStyle > .content { font-size: 16pt; }
 body.FONT_LARGE > #newsView > .newsItemStyle > h1 { font-size: 26pt; }
-body.FONT_LARGE > #newsView > #bottom > #bottomText { font-size: 20pt; }
+body.FONT_LARGE > #newsView > #bottom { font-size: 20pt; }
 body.FONT_LARGE > #newsView > .newsItemStyle > .content h1,
 body.FONT_LARGE > #newsView > .newsItemStyle > .content h2,
 body.FONT_LARGE > #newsView > .newsItemStyle > .content h3,
@@ -449,7 +452,75 @@ body.FONT_LARGE > #welcome > #slogan { font-size: 30pt; }
         </div>
     </div>
 
-<div class="bottom" id="bottom"><!-- TODO --><div></div></div>
+<div class="bottom" id="bottom">
+    <!-- bottom message -->
+    <style>
+
+
+.finish_container {
+    display: flex;
+    align-items: center;
+    width: 100%; height: 100%;
+    border: 1px blue solid;
+}
+
+
+.finish_line {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    width: 100%;
+    height: 279px;
+    margin-left: auto;
+    margin-right: auto;
+
+    background-image: url('qrc:///qml/images/flag.svg');
+    background-repeat: no-repeat;
+    background-size: 339px 279px;
+    background-position: center center;
+
+    border: 1px red solid;
+}
+
+.finish_container img {
+    margin-top: auto;
+    max-width: 100%;
+    height:auto;
+}
+
+.finish_container p {
+    margin-bottom: auto;
+}
+
+.finish_text {
+display: flex;
+align-items: center;
+     width: 100%;
+     margin-left: auto;
+     margin-right: auto;
+}
+
+
+.test1 {
+
+}
+        </style>
+
+
+                <!-- <div class="finish_line"></div> -->
+<div>
+    <img src="qrc:///qml/images/flag.svg" width="339" height="279" />
+    <br clear="all" />
+    <p>Finish Line</p>
+    <br /><br />
+    <p><a href="#fangRefreshAllNews">Refresh all news</a> &nbsp; | &nbsp; <a href="#fangAddFeed">Add another feed</a></p>
+</div>
+
+               <!-- <div class="finish_text">You're finished!</div> -->
+
+    <!-- <img src="qrc:///qml/images/flag_dark.svg" width="339" height="279" style="max-width: 100%; height:auto; margin-top: 20px; margin-bottom: 20px;" align="middle" />
+    <br clear="all" /> -->
+<div>
+</div></div>
 
 </div> <!-- newsView -->
 
