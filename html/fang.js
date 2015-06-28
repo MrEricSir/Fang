@@ -11,6 +11,9 @@ var windowHeight = 50000;
 // Current mode
 var currentMode = "newsView";
 
+// Set to true when there's no more news to load.
+var atNewsEnd = false;
+
 var wsUri = "ws://localhost:2842";
 var websocket = null;
 
@@ -77,6 +80,9 @@ function processMessage(message)
 
     if ('load' == command) {
         loadNews(data);
+        atNewsEnd = false;
+    } else if ('loadEmpty' == command) {
+        atNewsEnd = true;
     } else if ('drawBookmark' == command) {
         drawBookmark(data);
     } else if ('updatePin' == command) {
@@ -653,10 +659,18 @@ $(document).ready(function() {
     
     // Adjust the bookmark if necessary.
     function checkBookmark() {
+        //console.log("check bookmark")
+        bookmarkAll = false; // If true, bookmark every single item.
+
         if ($(newsContainerSelector).length === 0) {
-            //console.log("NO NEWS CONTAINERS to deal with, no need to set bmkar")
+            console.log("NO NEWS CONTAINERS to deal with, no need to set bookmark")
             
             return;
+        }
+
+        // If there's nothing more to load and we've scrolled alllll the way down, bookmark the last item.
+        if (atNewsEnd &&  (($(document).height()- windowHeight) - $(document).scrollTop()) < 10 ) {
+            bookmarkAll = true;
         }
         
         // Start at the current bookmark.
@@ -664,7 +678,7 @@ $(document).ready(function() {
         //console.log("Current bookmark: ", bookmarkedItem)
         
         // Check if the current bookmark is valid.
-        if (bookmarkedItem.length && !isAboveScroll(bookmarkedItem)) {
+        if (!bookmarkAll && bookmarkedItem.length && !isAboveScroll(bookmarkedItem)) {
             //console.log("Currently bookmarked item is not above scroll.  Goodbye!", bookmarkedItem.attr('id'));
             
             return;
@@ -678,7 +692,7 @@ $(document).ready(function() {
         
         while (nextItem != null && nextItem.length >= 1) {
             // Nothing more to do.
-            if (!isAboveScroll(nextItem)) {
+            if (!isAboveScroll(nextItem) && !bookmarkAll) {
                 //console.log("item not above scroll:", nextItem.attr('id'))
                 
                 break;

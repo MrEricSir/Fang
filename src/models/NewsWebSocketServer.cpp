@@ -139,6 +139,8 @@ void NewsWebSocketServer::onLoadNewsFinished(LoadNews *loader)
     if (loader->getMode() != LoadNews::Initial && !loader->getPrependList() &&
             !loader->getAppendList()) {
         // Nothing to do!
+        sendCommand("loadEmpty", "");
+
         return;
     }
 
