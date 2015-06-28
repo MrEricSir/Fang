@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
@@ -161,6 +162,7 @@ body.bookmarksDisabled > #newsView > .newsItemStyle#topBookmark {
     width: 100%;
     margin: 0;
     margin-bottom: 0.3em;
+    margin-top: 0.3em;
 }
 
 .newsItemStyle > h1 {
@@ -189,10 +191,12 @@ a:active { text-decoration: underline; }
 
 body > #newsView > #bottom {
     height: 100%;
-    position: relative;
     text-align:center;
     font-family: Futura, "Trebuchet MS", Arial, sans-serif;
-    font-style: italic;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 
@@ -284,7 +288,7 @@ body.ANDROID #keyboard { display:none; }
 
 body.FONT_SMALL > #newsView > .newsItemStyle > .content { font-size: 9pt; }
 body.FONT_SMALL > #newsView > .newsItemStyle > h1 { font-size: 13pt; }
-body.FONT_SMALL > #newsView > #bottom > #bottomText { font-size: 10pt; }
+body.FONT_SMALL > #newsView > #bottom { font-size: 10pt; }
 body.FONT_SMALL > #newsView > .newsItemStyle > .content h1,
 body.FONT_SMALL > #newsView > .newsItemStyle > .content h2,
 body.FONT_SMALL > #newsView > .newsItemStyle > .content h3,
@@ -294,7 +298,7 @@ body.FONT_SMALL > #newsView > .newsItemStyle > .content h6 { font-size: 9pt; fon
 
 body.FONT_MEDIUM > #newsView > .newsItemStyle > .content { font-size: 12pt; }
 body.FONT_MEDIUM > #newsView > .newsItemStyle > h1 { font-size: 16pt; }
-body.FONT_MEDIUM > #newsView >  #bottom > #bottomText { font-size: 14pt; }
+body.FONT_MEDIUM > #newsView >  #bottom { font-size: 14pt; }
 body.FONT_MEDIUM > #newsView > .newsItemStyle > .content h1,
 body.FONT_MEDIUM > #newsView > .newsItemStyle > .content h2,
 body.FONT_MEDIUM > #newsView > .newsItemStyle > .content h3,
@@ -304,7 +308,7 @@ body.FONT_MEDIUM > #newsView > .newsItemStyle > .content h6 { font-size: 12pt; f
 
 body.FONT_LARGE > #newsView > .newsItemStyle > .content { font-size: 16pt; }
 body.FONT_LARGE > #newsView > .newsItemStyle > h1 { font-size: 26pt; }
-body.FONT_LARGE > #newsView > #bottom > #bottomText { font-size: 20pt; }
+body.FONT_LARGE > #newsView > #bottom { font-size: 20pt; }
 body.FONT_LARGE > #newsView > .newsItemStyle > .content h1,
 body.FONT_LARGE > #newsView > .newsItemStyle > .content h2,
 body.FONT_LARGE > #newsView > .newsItemStyle > .content h3,
@@ -437,6 +441,7 @@ body.FONT_LARGE > #welcome > #slogan { font-size: 30pt; }
         <h1><a href="" class="link"></a></h1>
         <div class="divider"></div>
         <div class="siteTitle"></div><div class="dateDiv"><span class="date"></span><div class="pin"></div></div>
+        <div class="divider"></div>
         <span class="timestamp"></span>
         <div class="content"></div>
 
@@ -448,8 +453,6 @@ body.FONT_LARGE > #welcome > #slogan { font-size: 30pt; }
             </div>
         </div>
     </div>
-
-<div class="bottom" id="bottom"><!-- TODO --><div></div></div>
 
 </div> <!-- newsView -->
 

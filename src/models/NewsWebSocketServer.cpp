@@ -139,6 +139,8 @@ void NewsWebSocketServer::onLoadNewsFinished(LoadNews *loader)
     if (loader->getMode() != LoadNews::Initial && !loader->getPrependList() &&
             !loader->getAppendList()) {
         // Nothing to do!
+        sendCommand("loadEmpty", "");
+
         return;
     }
 
@@ -172,8 +174,16 @@ void NewsWebSocketServer::onLoadNewsFinished(LoadNews *loader)
 
     // Build our news list.
     if (loader->getPrependList() != NULL) {
-        foreach(NewsItem* item, *loader->getPrependList()) {
-            addNewsItem(item, &newsList);
+        if (loader->getMode() == LoadNews::Initial) {
+            // Reverse list.
+            for (int i = loader->getPrependList()->size() - 1; i >= 0; i--) {
+                NewsItem* item = loader->getPrependList()->at(i);
+                addNewsItem(item, &newsList);
+            }
+        } else {
+            foreach(NewsItem* item, *loader->getPrependList()) {
+                addNewsItem(item, &newsList);
+            }
         }
     }
 

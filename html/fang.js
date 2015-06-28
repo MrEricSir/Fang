@@ -11,6 +11,9 @@ var windowHeight = 50000;
 // Current mode
 var currentMode = "newsView";
 
+// Set to true when there's no more news to load.
+var atNewsEnd = false;
+
 var wsUri = "ws://localhost:2842";
 var websocket = null;
 
@@ -77,6 +80,9 @@ function processMessage(message)
 
     if ('load' == command) {
         loadNews(data);
+        atNewsEnd = false;
+    } else if ('loadEmpty' == command) {
+        atNewsEnd = true;
     } else if ('drawBookmark' == command) {
         drawBookmark(data);
     } else if ('updatePin' == command) {
@@ -123,9 +129,6 @@ function loadNews(json)
     // If we have a new bookmark, draw it and jump there.
     if (newsObject.bookmark) {
         drawBookmarkAndJumpTo(newsObject.bookmark);
-    } else {
-        // Otherwise jump to the top.
-        $(document).scrollTop( 0 );
     }
 
     sendCommand('loadComplete');
@@ -355,8 +358,6 @@ function appendNews(append, firstNewsID, newsList) {
         console.log("addToScroll ", addToScroll, " new scroll: ", newScroll)
         $(document).scrollTop( newScroll );
     }
-    
-    resizeBottomSpacer();
 }
 
 function removeMatchingItems(item) {
@@ -381,33 +382,9 @@ function getLastNewsContainer() {
     return $(newsContainerSelector).last();
 }
 
-// Resizes the bottom spacer to allow the last item to be bookmarked.
-function resizeBottomSpacer() {
-    var bookmarkHeight = 0;
-    var item = $(newsContainerSelector);
-    if (item.length) {
-        var bookmark = item.find('.bookmark');
-        if (bookmark.length) {
-            bookmarkHeight = bookmark.height() + 10; // for good measure
-        }
-    }
-
-    var numPix = windowHeight - bookmarkHeight;
-
-    // Feeds without bookmarks don't need the bottom spacer.
-    if ($('body').hasClass('bookmarksDisabled')) {
-        numPix = 0;
-    }
-
-    // console.log("Bottom spacer height: ", numPix)
-    $( '#bottom' ).height( numPix );
-}
-
 // Scrolls to the element with the given ID.
 function jumpTo(id) {
     //console.log("Jump to: ", id)
-    
-    resizeBottomSpacer();
     
     var elementId = '#' + idToHtmlId( id );
     var scrollTo = $( elementId ).offset().top;
@@ -428,8 +405,6 @@ function drawBookmark(id) {
     var elementId = '#' + idToHtmlId(id);
     //console.log("adding bookmarked class to: ", elementId);
     $( elementId ).addClass('bookmarked');
-    
-    resizeBottomSpacer();
 }
 
 
@@ -448,12 +423,11 @@ function drawBookmarkAndJumpTo(id) {
 function jumpToBookmark() {
     console.log("Jump to bookmark");
     
-    resizeBottomSpacer();
-    
     // If there's a bookmark, this will jump to it.
     var element = $( ".bookmarked > .bookmark" );
     if (!element || element.length === 0) {
-        console.log("No bookmark found!")
+        console.log("No bookmark found, jumping to top")
+        $(document).scrollTop( 0 );
         return;
     }
     
@@ -617,8 +591,6 @@ function jumpNextPrev(jumpNext) {
 function setWindowHeight(height) {
     console.log("height is now: ", height)
     windowHeight = height;
-    
-    resizeBottomSpacer();
 }
 
 // Main method
@@ -648,7 +620,7 @@ $(document).ready(function() {
             if (prevScrollTop === scrollTop) {
                 
                 // If we're at the bottom, always trigger the callback.
-                var bottom = $document.height() - windowHeight - distance - $( '#bottom' ).height();
+                var bottom = $document.height() - windowHeight - distance;
                 if (scrollTop >= bottom) {
                     // Only proceed with the callback if it's been more than 5 seconds since we last
                     // hit bottom and hadn't scrolled.
@@ -672,7 +644,7 @@ $(document).ready(function() {
             }
             
             // Check bottom (note: calculation MUST be done after topCallback()!!!!)
-            var bottomTwo = $document.height() - windowHeight - distance - $( '#bottom' ).height();
+            var bottomTwo = $document.height() - windowHeight - distance;
             if (scrollTop >= bottomTwo) {
                 bottomCallback();
             }
@@ -687,10 +659,18 @@ $(document).ready(function() {
     
     // Adjust the bookmark if necessary.
     function checkBookmark() {
+        //console.log("check bookmark")
+        bookmarkAll = false; // If true, bookmark every single item.
+
         if ($(newsContainerSelector).length === 0) {
-            //console.log("NO NEWS CONTAINERS to deal with, no need to set bmkar")
+            console.log("NO NEWS CONTAINERS to deal with, no need to set bookmark")
             
             return;
+        }
+
+        // If there's nothing more to load and we've scrolled alllll the way down, bookmark the last item.
+        if (atNewsEnd &&  (($(document).height()- windowHeight) - $(document).scrollTop()) < 10 ) {
+            bookmarkAll = true;
         }
         
         // Start at the current bookmark.
@@ -698,7 +678,7 @@ $(document).ready(function() {
         //console.log("Current bookmark: ", bookmarkedItem)
         
         // Check if the current bookmark is valid.
-        if (bookmarkedItem.length && !isAboveScroll(bookmarkedItem)) {
+        if (!bookmarkAll && bookmarkedItem.length && !isAboveScroll(bookmarkedItem)) {
             //console.log("Currently bookmarked item is not above scroll.  Goodbye!", bookmarkedItem.attr('id'));
             
             return;
@@ -712,7 +692,7 @@ $(document).ready(function() {
         
         while (nextItem != null && nextItem.length >= 1) {
             // Nothing more to do.
-            if (!isAboveScroll(nextItem)) {
+            if (!isAboveScroll(nextItem) && !bookmarkAll) {
                 //console.log("item not above scroll:", nextItem.attr('id'))
                 
                 break;
@@ -773,9 +753,6 @@ $(document).ready(function() {
     
     // Setup the bookmark forcer on the top bookmark.
     installMouseHandlers('#topBookmark');
-
-    // Set bottom sizer.
-    resizeBottomSpacer();
 
     // Setup link delegator on all non-news items.
     $(document).find( 'a' ).on( "click", delegateLink );
