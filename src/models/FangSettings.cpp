@@ -80,3 +80,17 @@ void FangSettings::setCacheLength(QString s)
 {
     dbSettings->set(CACHE_LENGTH, s);
 }
+
+QString FangSettings::getRefresh()
+{
+    return getStringSetting("refresh", "10MIN");
+}
+
+void FangSettings::setRefresh(QString s)
+{
+    if (s == getRefresh())
+        return; // Nothing to do!
+
+    setStringSetting("refresh", s);
+    emit refreshChanged(s);
+}

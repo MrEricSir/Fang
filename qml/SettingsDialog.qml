@@ -111,6 +111,84 @@ Dialog {
     }
 
     DialogText {
+        text: "Refresh news every"
+    }
+
+    RadioButtonGroup {
+        id: refreshRadioGroup;
+
+        selected: {
+            switch (fangSettings.refresh) {
+                case "1MIN":
+                    return oneMinuteRefresh;
+                case "10MIN":
+                    return tenMinuteRefresh;
+                case "30MIN":
+                    return thirtyMinuteRefresh;
+                case "1HOUR":
+                    return hourRefresh;
+            }
+
+            return "10MIN"; // Default (shouldn't get here)
+        }
+
+        onSelectedChanged: {
+            if (selected === oneMinuteRefresh)
+                fangSettings.refresh = "1MIN";
+            else if (selected === tenMinuteRefresh)
+                fangSettings.refresh = "10MIN";
+            else if (selected === thirtyMinuteRefresh)
+                fangSettings.refresh = "30MIN";
+            else
+                fangSettings.refresh = "1HOUR";
+        }
+    }
+
+    DialogButtonGroup {
+        width: parent.width;
+
+        DialogRadioButton {
+            id: oneMinuteRefresh;
+            radioGroup: refreshRadioGroup;
+
+            text: "1 min";
+            enabled: true;
+
+            width: parent.buttonWidth;
+        }
+
+        DialogRadioButton {
+            id: tenMinuteRefresh;
+            radioGroup: refreshRadioGroup;
+
+            text: "10 min";
+            enabled: true;
+
+            width: parent.buttonWidth;
+        }
+
+        DialogRadioButton {
+            id: thirtyMinuteRefresh;
+            radioGroup: refreshRadioGroup;
+
+            text: "30 min";
+            enabled: true;
+
+            width: parent.buttonWidth;
+        }
+
+        DialogRadioButton {
+            id: hourRefresh;
+            radioGroup: refreshRadioGroup;
+
+            text: "1 hour";
+            enabled: true;
+
+            width: parent.buttonWidth;
+        }
+    }
+
+    DialogText {
         text: "Remove read news after"
     }
 

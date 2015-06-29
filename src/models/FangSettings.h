@@ -20,6 +20,9 @@ class FangSettings : public QQuickItem
 
     // Length of cache size
     Q_PROPERTY(QString cacheLength READ getCacheLength WRITE setCacheLength NOTIFY cacheLengthChanged)
+
+    // Refresh timer.  Values are "1MIN", "10MIN", "30MIN", and "1HOUR" (default: 10MIN)
+    Q_PROPERTY(QString refresh READ getRefresh WRITE setRefresh NOTIFY refreshChanged)
     
 public:
     explicit FangSettings(QQuickItem *parent = 0);
@@ -38,11 +41,15 @@ public:
 
     QString getCacheLength();
     void setCacheLength(QString s);
+
+    QString getRefresh();
+    void setRefresh(QString s);
     
 signals:
     void styleChanged(QString);
     void fontSizeChanged(QString);
     void cacheLengthChanged(QString);
+    void refreshChanged(QString);
     
 private slots:
     /**

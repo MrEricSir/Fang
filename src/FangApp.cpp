@@ -396,11 +396,13 @@ void FangApp::onObjectCreated(QObject* object, const QUrl& url)
                                             allNews, window, this);
 #endif
     
-    // Set a timer to update the feeds every ten minutes.
-    // TODO: Customize news update timer frequency.
+    // Setup the feed refresh timer.
+    setRefreshTimer();
     connect(updateTimer, SIGNAL(timeout()), this, SLOT(updateAllFeeds()));
-    updateTimer->setInterval(10 * 60 * 1000);
     updateTimer->start();
+
+    // Maybe the user wants to change how often we refresh the feeds?  Let 'em.
+    connect(fangSettings, &FangSettings::refreshChanged, this, &FangApp::setRefreshTimer);
 }
 
 void FangApp::onQuit()
@@ -605,6 +607,26 @@ void FangApp::onLoadNewsFinished(Operation *operation)
     // Signal and reset our flag!
     emit loadNewsFinished(loader);
     loadNewsInProgress = false;
+}
+
+void FangApp::setRefreshTimer()
+{
+    int minutes = 10;
+    QString refresh = fangSettings->getRefresh();
+    if (refresh == "1MIN") {
+        minutes = 1;
+    } else if (refresh == "10MIN") {
+        minutes = 10;
+    } else if (refresh == "30MIN") {
+        minutes = 30;
+    } else if (refresh == "1HOUR") {
+        minutes = 60;
+    } else {
+        // You added a new refresh rate timeout but didn't add it here
+        Q_ASSERT(false);
+    }
+
+    updateTimer->setInterval(minutes * 60 * 1000);
 }
 
 

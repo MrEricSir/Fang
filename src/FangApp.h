@@ -267,6 +267,9 @@ private slots:
 
     // Called when a load has completed.
     void onLoadNewsFinished(Operation* operation);
+
+    // Updates the feed refresh timer.
+    void setRefreshTimer();
     
 private:
     static FangApp* _instance;
