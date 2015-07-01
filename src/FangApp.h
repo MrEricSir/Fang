@@ -141,8 +141,9 @@ public slots:
     /**
      * @brief Used to change the current feed.
      * @param feed
+     * @param reloadIfSameFeed If it's the same as the current feed, reinit.
      */
-    void setCurrentFeed(FeedItem* feed);
+    void setCurrentFeed(FeedItem* feed, bool reloadIfSameFeed = false);
 
     /**
      * @return Pointer to the current feed.

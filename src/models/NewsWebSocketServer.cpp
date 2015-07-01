@@ -285,7 +285,29 @@ void NewsWebSocketServer::updatePin(qint64 newsID, bool pinned)
 
 void NewsWebSocketServer::jumpToBookmark()
 {
-    sendCommand("jumpToBookmark", "");
+    FeedItem* currentFeed = FangApp::instance()->getCurrentFeed();
+    if (!currentFeed->bookmarksEnabled()) {
+        // Nothing to do!
+        return;
+    }
+
+    // Find the bookmark.
+    bool bookmarkLoaded = false;
+    for(int i = 0; i < currentFeed->getNewsList()->count(); i++) {
+        if (currentFeed->getNewsList()->at(i)->getDbID() ==
+                currentFeed->getBookmarkID()) {
+            bookmarkLoaded = true;
+            break;
+        }
+    }
+
+    if (bookmarkLoaded) {
+        // Jump straight to the bookmark.
+        sendCommand("jumpToBookmark", "");
+    } else {
+        // Re-init the feed.
+        FangApp::instance()->setCurrentFeed(currentFeed, true);
+    }
 }
 
 void NewsWebSocketServer::jumpNext()

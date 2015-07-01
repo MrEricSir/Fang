@@ -416,13 +416,17 @@ void FangApp::onQuit()
     manager.add(new ExpireNewsOperation(&manager, feedList, olderThan, saveLast));
 }
 
-void FangApp::setCurrentFeed(FeedItem *feed)
+void FangApp::setCurrentFeed(FeedItem *feed, bool reloadIfSameFeed)
 {
     if (!newsServer.isServerReady()) {
         return; // We were called too early.
     }
 
-    if (feed == currentFeed || feed == NULL) {
+    if (feed == NULL) {
+        return;
+    }
+
+    if (feed == currentFeed && !reloadIfSameFeed) {
         return;
     }
 
