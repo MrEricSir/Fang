@@ -18,6 +18,7 @@ class ParserInterface : public FangObject
     
 public:
     enum ParseResult { OK, NETWORK_ERROR, FILE_ERROR, PARSE_ERROR, EMPTY_DOCUMENT, IN_PROGRESS };
+    Q_ENUM(ParseResult)
     
     explicit ParserInterface(QObject *parent = 0);
     virtual ~ParserInterface() {}

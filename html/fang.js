@@ -669,7 +669,7 @@ $(document).ready(function() {
         }
 
         // If there's nothing more to load and we've scrolled alllll the way down, bookmark the last item.
-        if (atNewsEnd &&  (($(document).height()- windowHeight) - $(document).scrollTop()) < 10 ) {
+        if (atNewsEnd &&  (($(document).height()- windowHeight) - $(document).scrollTop()) < 25 ) {
             bookmarkAll = true;
         }
         
