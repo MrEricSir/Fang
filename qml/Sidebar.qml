@@ -23,6 +23,7 @@ Item {
     // Read-only properties.
     property int buttonSize: 30 * style.scale;
     property variant listView: feedListView
+    property bool feedsExist:  feedListModel.count > 1; // (There's always 1 item -- all news.)
     
     Rectangle {
         id: sidebarTopControls
@@ -128,8 +129,7 @@ Item {
                     anchors.fill: parent
 
                     // Don't show this unless there's something in the list.
-                    // (There's always 1 item -- all news.)
-                    visible: model.count > 1;
+                    visible: feedsExist;
                     
                     // Only scroll if there's a need.
                     interactive: height < childrenRect.height
@@ -261,6 +261,8 @@ Item {
 
                 width: buttonSize;
                 height: buttonSize;
+
+                visible: feedsExist;
 
                 imageURL: fangSettings.style === "LIGHT" ? "images/symbol_reload.svg"
                                                          : "images/symbol_dark_reload.svg"
