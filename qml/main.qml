@@ -276,6 +276,7 @@ Window {
                 onFeedDoubleClicked: news.jumpToBookmark();
                 onOrderChanged: news.orderChanged();
                 onHelpClicked: news.showWelcome();
+                onRefreshClicked: news.refreshFeed();
 
                 onSettingsClicked: openDialog("SettingsDialog.qml");
                 onAddClicked: openDialog("AddDialog.qml");
@@ -291,7 +292,7 @@ Window {
                 Layout.minimumWidth: minimumNewsWidth;
 
                 newsFocus: true // set by dialog system
-
+/*
                 Item {
                     id: openButtonContainer;
 
@@ -308,7 +309,6 @@ Window {
                     // Disabled -- see Sidebar.qml to understand why.
                     //
                     // Button to re-open sidebar
-                    /*
                     SidebarButton {
                         id: openSidebarButton
 
@@ -329,8 +329,7 @@ Window {
 
                         onClicked: sidebar.state = "open";
                     }
-                    */
-                }
+                } */
             }
         }
     }

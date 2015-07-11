@@ -8,6 +8,7 @@ Item {
     signal addClicked();
     signal removeClicked();
     signal editClicked();
+    signal refreshClicked();
     signal closeClicked();
     signal feedSelected();
     signal feedClicked();
@@ -251,6 +252,24 @@ Item {
                                                                 : "images/minus_dark.png"
                 
                 onClicked: removeClicked()
+            }
+
+            SidebarButton {
+                id: refreshButton;
+
+                x: toolbar.width - buttonSize;
+
+                width: buttonSize;
+                height: buttonSize;
+
+                imageURL: fangSettings.style === "LIGHT" ? "images/symbol_reload.svg"
+                                                         : "images/symbol_dark_reload.svg"
+                imageHoverURL: fangSettings.style === "LIGHT" ? "images/symbol_dark_reload.svg"
+                                                              : "images/symbol_reload.svg"
+                imagePressedURL: fangSettings.style === "LIGHT" ? "images/symbol_dark_reload.svg"
+                                                                : "images/symbol_reload.svg"
+
+                onClicked: refreshClicked();
             }
             
             // Closes the sidebar.
