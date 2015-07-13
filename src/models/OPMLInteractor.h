@@ -45,6 +45,15 @@ public:
     explicit OPMLInteractor(QQuickItem *parent = 0);
     
     virtual ~OPMLInteractor();
+
+    // Whether or not import is in progress.
+    bool importInProgress() { return _importInProgress; }
+
+    // Whether or not we're validating all of your feeds.
+    bool validationInProgress() { return _validationInProgress; }
+
+    // Whether or not at least one feed is currently selected.
+    bool isAnyFeedSelected() { return _isAnyFeedSelected; }
     
 signals:
     
@@ -68,31 +77,22 @@ signals:
     // At least one feed selected/unselected.
     void isAnyFeedSelectedChanged();
     
-public:
+public slots:
     
     // Opens file import dialog.
-    Q_INVOKABLE void importFile();
+    void importFile();
     
     // Begin the import.
-    Q_INVOKABLE void importStart();
+    void importStart();
     
     // Confirms the import options.
-    Q_INVOKABLE void confirmImport();
+    void confirmImport();
     
     // Opens file export dialog.
-    Q_INVOKABLE void exportFile();
+    void exportFile();
     
     // Add the selected feeds.
-    Q_INVOKABLE void addSelected();
-    
-    // Whether or not import is in progress.
-    bool importInProgress() { return _importInProgress; }
-    
-    // Whether or not we're validating all of your feeds.
-    bool validationInProgress() { return _validationInProgress; }
-    
-    // Whether or not at least one feed is currently selected.
-    bool isAnyFeedSelected() { return _isAnyFeedSelected; }
+    void addSelected();
     
 private slots:
     

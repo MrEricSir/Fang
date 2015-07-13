@@ -45,9 +45,7 @@ public:
   inline int count() const { return rowCount(); }
   QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
   bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
-  Q_INVOKABLE void setData(int row, const QString &field_name, QVariant new_value);
   Qt::ItemFlags flags(const QModelIndex &index) const;
-  Q_INVOKABLE void move(int from, int to);
   void appendRow(ListItem* item);
   void appendRows(const QList<ListItem*> &items);
   void insertRow(int row, ListItem* item);
@@ -64,6 +62,10 @@ public:
   void setSelected(ListItem* selected);
   int selectedIndex();
   void setSelectedIndex(int selectedIndex);
+
+public slots:
+  void setData(int row, const QString &field_name, QVariant new_value);
+  void move(int from, int to);
   
 signals:
   void added(ListItem* item);

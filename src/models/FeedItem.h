@@ -83,7 +83,7 @@ public:
 
 public slots:
     
-    Q_INVOKABLE inline QString getTitle() const { return title; }
+    inline QString getTitle() const { return title; }
     inline QString getSubtitle() const { return subtitle; }
     inline QDateTime getLastUpdated() const { return lastUpdated; }
     inline quint32 getMinutesToUpdate() const { return minutesToUpdate; }
@@ -95,15 +95,15 @@ public slots:
     inline QString getDropTarget() const { return dropTarget; }
     inline FeedItem* getSelf() const { return const_cast<FeedItem*>(this); }
     inline qint64 getDbId() const { return _id; }
-    Q_INVOKABLE inline bool isSpecialFeed() const { return _id < 0; }
+    inline bool isSpecialFeed() const { return _id < 0; }
     
     void setImageURL(const QUrl& url);
     
-    Q_INVOKABLE void setTitle(const QString& newTitle);
+    void setTitle(const QString& newTitle);
     
-    Q_INVOKABLE void setDropTarget(const QString& dropTarget);
+    void setDropTarget(const QString& dropTarget);
     
-    Q_INVOKABLE void setIsSelected(bool s);
+    void setIsSelected(bool s);
     
     /**
      * @brief Clears all news items.  Does NOT signal.

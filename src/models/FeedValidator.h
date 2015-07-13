@@ -22,16 +22,6 @@ public:
     explicit FeedValidator(QQuickItem *parent = 0);
     virtual ~FeedValidator() {}
     
-    // Performs the URL check.
-    // Set the URL, then call this and wait for validationComplete().
-    Q_INVOKABLE void check();
-    
-    // If check was OK, call this to add the feed!
-    Q_INVOKABLE void addFeed();
-    
-    // HAHA this class has a "secret" property; it can also remove feeds. :)
-    Q_INVOKABLE void removeFeed(FeedItem* feed);
-    
     inline bool validating() { return _validating; }
     inline QString url() { return _url; }
     inline QString siteTitle() { return _siteTitle; }
@@ -39,6 +29,17 @@ public:
     void setUrl(QString url);
     void setSiteTitle(QString title);
     void setSiteImageURL(QString url);
+
+public slots:
+    // Performs the URL check.
+    // Set the URL, then call this and wait for validationComplete().
+    void check();
+
+    // If check was OK, call this to add the feed!
+    void addFeed();
+
+    // HAHA this class has a "secret" property; it can also remove feeds. :)
+    void removeFeed(FeedItem* feed);
     
 signals:
     void urlChanged(QString url);
