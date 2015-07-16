@@ -58,7 +58,7 @@ void TestRawFeedRewriterTest::testCase1_data()
 {
     QTest::addColumn<QString>("input");  // HTML input
     QTest::addColumn<QString>("output"); // Expected HTML output
-/*
+
     // Simplest edge cases.
     QTest::newRow("Empty String") << "" << "";
     QTest::newRow("Bad HTML") << "</div>" << "";
@@ -230,7 +230,7 @@ void TestRawFeedRewriterTest::testCase1_data()
 
     QTest::newRow("Text only 3") << "Here's our first paragraph, ok?  You like?\r\n\r\n  \r\n   Here is the second one."
                             << "<p>Here's our first paragraph, ok?  You like?</p><p>Here is the second one.</p>";
-                            */
+
     QTest::newRow("Mission Loco") << "<p>San Francisco’s 37th<span style=\"font-size: 10px; line-height: 9.09090900421143px;\"> </span>annual Carnaval festival is about the samba its way into the world once more. The two-day event kicks off with <a href=\"http://www.eventbrite.com/e/sf-carnaval-2015-kick-off-celebration-tickets-4393908298\">a party Thursday night at the Elbo Room</a>, followed on Saturday by a street festival and Sunday&#8217;s always epic parade of dancing, music, and costumed-extravagance.</p>"
                                     "<p>This year’s theme: Agua Sagrada, Spanish for &#8220;sacred water,&#8221; a reference to the current drought.</p>"
                                     "<p>Saturday’s festival, which takes over Harrison Street from 16th to 24th Street, has a musical lineup of nearly 20 bands playing across various stages, and includes a performance by Latin Jazz artist and Sheila E.’s father Pete Escovedo with Ray Obiedo. Other performers will be a Jimi Hendrix tribute band, <em>Harold Day and the Experience</em> and <em>Jose Najera and the Bernal Beat</em>.</p>"

@@ -6,6 +6,8 @@
 #include <QStack>
 #include <QDebug>
 
+#include "NetworkUtilities.h"
+
 // Image width max.
 #define MAX_ELEMENT_WIDTH 400
 
@@ -190,7 +192,7 @@ QString RawFeedRewriter::rewriteFirstPass(const QString &document, QSet<QUrl> &i
 
                     // Image tags.
                     if (tagName == S_IMG && xml.attributes().hasAttribute(S_SRC)) {
-                        QString imgSrc = xml.attributes().value(S_SRC).toString();
+                        QString imgSrc =  NetworkUtilities::urlFixup(xml.attributes().value(S_SRC).toString());
                         writer.writeAttribute(S_SRC, imgSrc);
 
                         QString sWidth = xml.attributes().value(S_WIDTH).toString();
