@@ -430,14 +430,26 @@ function jumpToBookmark() {
         $(document).scrollTop( 0 );
         return;
     }
+
+    // Check if last element is the bookmark.
+    var lastIsBookmark = getLastNewsContainer().hasClass("bookmarked");
+    //console.log("Last is bookmark: ", lastIsBookmark);
     
     var scrollTo = element.offset().top - 10;
     
     //console.log("Scroll to: ", scrollTo, " window height: ", windowHeight, " document h: ", $(document).height());
     
-    // Set max jump. (It overshoots on first load.)
+    // Set max jump.
     if (scrollTo > $(document).height() - windowHeight) {
         scrollTo = $(document).height() - windowHeight;
+
+        // Rewind slightly if the last item isn't bookmarked (so the user can scroll to it.)
+        if (!lastIsBookmark) {
+            var bookmark = getLastNewsContainer().find('.bookmark');
+            if (bookmark.length) {
+                scrollTo -= bookmark.height();
+            }
+        }
     }
     
     $(document).scrollTop( scrollTo );
