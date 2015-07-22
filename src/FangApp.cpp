@@ -1,6 +1,7 @@
 #include "FangApp.h"
 
 #include <QDebug>
+#include <QImageReader>
 
 #include "utilities/Utilities.h"
 
@@ -63,6 +64,9 @@ FangApp::FangApp(QApplication *parent, QQmlApplicationEngine* engine, SingleInst
 void FangApp::init()
 {
     qDebug() << "FangApp init version: " << APP_VERSION;
+    qDebug() << "";
+
+    qDebug() << "Image formats: " << QImageReader::supportedImageFormats();
 
     // Setup our QML.
     engine->rootContext()->setContextProperty("feedListModel", feedList); // list of feeds

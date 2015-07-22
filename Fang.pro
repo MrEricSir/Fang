@@ -1,6 +1,6 @@
 TEMPLATE = app
 
-QT += network sql quick svg websockets
+QT += qml quick widgets network sql svg websockets
 
 QT -= sensors
 
