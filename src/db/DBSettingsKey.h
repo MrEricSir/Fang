@@ -45,16 +45,16 @@ inline void DBSettingsKeyAssert(DBSettingsKey key, const QString& value) {
 
 inline QDateTime DBSettingsCacheLengthToDateTime(const QString& value) {
     if (TWO_WEEKS == value) {
-        return QDateTime::currentDateTime().addDays(14);
+        return QDateTime::currentDateTime().addDays(-14);
     } else if (THREE_MONTH == value) {
-        return QDateTime::currentDateTime().addMonths(3);
+        return QDateTime::currentDateTime().addMonths(-3);
     } else if (SIX_MONTH == value) {
-        return QDateTime::currentDateTime().addMonths(6);
+        return QDateTime::currentDateTime().addMonths(-6);
     } else if (ONE_YEAR == value) {
-        return QDateTime::currentDateTime().addYears(1);
+        return QDateTime::currentDateTime().addYears(-1);
     } else {
         Q_ASSERT(false); // You forgot to handle your new key here, stupidz.
-        return QDateTime::fromMSecsSinceEpoch(0); // Hella hold so we don't delete anything.
+        return QDateTime::fromMSecsSinceEpoch(0); // Hella old so we don't delete anything.
     }
 }
 
