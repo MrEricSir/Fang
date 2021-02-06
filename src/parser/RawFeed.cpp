@@ -24,20 +24,20 @@ QString RawFeed::toString()
 {
     QString ret;
     QTextStream output(&ret);
-    output << "Title: " << title << endl;
-    output << "Subtitle: " << subtitle << endl;
-    output << "url: " << url.url() << endl;
-    output << "lastUpdated: " << lastUpdated.toString() << endl;
-    output << "minutesToUpdate: " << minutesToUpdate << endl;
-    output << endl;
+    output << "Title: " << title << Qt::endl;
+    output << "Subtitle: " << subtitle << Qt::endl;
+    output << "url: " << url.url() << Qt::endl;
+    output << "lastUpdated: " << lastUpdated.toString() << Qt::endl;
+    output << "minutesToUpdate: " << minutesToUpdate << Qt::endl;
+    output << Qt::endl;
     
     RawNews* item;
     foreach (item, items) {
-        output << "title: " << item->title << endl;
-        output << "author: " << item->author << endl;
-        output << "description: " << item->description << endl;
-        output << "url: " << item->url.toString() << endl;
-        output << endl;
+        output << "title: " << item->title << Qt::endl;
+        output << "author: " << item->author << Qt::endl;
+        output << "description: " << item->description << Qt::endl;
+        output << "url: " << item->url.toString() << Qt::endl;
+        output << Qt::endl;
     }
     
     return ret;

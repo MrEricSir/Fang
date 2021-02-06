@@ -101,6 +101,11 @@ function processMessage(message)
        setMode('newsView');
     } else if ('showWelcome' == command) {
        setMode('welcome');
+    } else if ('forceBottomCheck' == command) {
+        // Forces a bottom check.  (Used when new news is added.)
+        if (isAtBottom(distance)) {
+            loadNext();
+        }
     }
 }
 
@@ -173,6 +178,17 @@ function setMode(mode)
 
         sendCommand('loadComplete'); // Send a load complete
     }
+}
+
+
+// Returns true if we're at the bottom of the document.
+// "distance" is the fudge factor: bottom will be triggered if it's y position is
+// within distance from bottm
+function isAtBottom(distance) {
+    var bottom = $(document).height() - windowHeight - distance;
+    var ret = $(document).scrollTop() >= bottom;
+    //console.log("Is at bottom? ", ret)
+    return ret;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -630,10 +646,8 @@ $(document).ready(function() {
             
             // If the user hasn't scrolled, check bottom and bail.
             if (prevScrollTop === scrollTop) {
-                
-                // If we're at the bottom, always trigger the callback.
-                var bottom = $document.height() - windowHeight - distance;
-                if (scrollTop >= bottom) {
+                // Trigger callback if we're at the bottom.
+                if (isAtBottom(distance)) {
                     // Only proceed with the callback if it's been more than 5 seconds since we last
                     // hit bottom and hadn't scrolled.
                     var now =  Date.now();
@@ -652,12 +666,12 @@ $(document).ready(function() {
             // Check top.
             var top = distance;
             if (scrollTop <= top) {
+                console.log("Top callback")
                 topCallback();
             }
             
             // Check bottom (note: calculation MUST be done after topCallback()!!!!)
-            var bottomTwo = $document.height() - windowHeight - distance;
-            if (scrollTop >= bottomTwo) {
+            if (isAtBottom(distance)) {
                 bottomCallback();
             }
             

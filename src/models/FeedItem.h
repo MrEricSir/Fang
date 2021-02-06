@@ -206,6 +206,7 @@ signals:
     void appended(NewsItem* item);
     void removed(NewsItem* item);
     void titleChanged();
+    void unreadCountChanged(quint32 unread);
         
 private:
     qint64 _id;

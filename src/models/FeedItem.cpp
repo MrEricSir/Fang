@@ -229,6 +229,7 @@ void FeedItem::setUnreadCount(qint32 unreadCount)
     
     this->unreadCount = unreadCount;
     emit dataChanged();
+    emit unreadCountChanged(unreadCount);
 }
 
 void FeedItem::setOrdinal(int newOrdinal)

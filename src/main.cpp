@@ -37,6 +37,10 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     qmlRegisterType<QMLNewsInteractor>("Fang", 1, 0, "QMLNewsInteractor");
     qmlRegisterType<ListItem>("Fang", 1, 0, "ListItem");
     qmlRegisterType<OPMLInteractor>("Fang", 1, 0, "OPMLInteractor");
+
+#ifdef QT_WEBVIEW_WEBENGINE_BACKEND
+    QtWebEngine::initialize();
+#endif // QT_WEBVIEW_WEBENGINE_BACKEND
     
     QApplication app(argc, argv);
     app.setOrganizationName("EricGregory");
@@ -44,10 +48,6 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     app.setApplicationName("Fang");
     app.setApplicationVersion(APP_VERSION);
 
-#ifdef QT_WEBVIEW_WEBENGINE_BACKEND
-    QtWebEngine::initialize();
-#endif // QT_WEBVIEW_WEBENGINE_BACKEND
-    
     // Only run one Fang at a time, fellas.
     SingleInstanceCheck single("FangNewsReader", "FangSettings");
     if (single.isAlreadyRunning()) {

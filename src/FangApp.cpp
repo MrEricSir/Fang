@@ -589,11 +589,7 @@ void FangApp::onSetPinFinished(Operation *operation)
     SetPinOperation* pinOp = qobject_cast<SetPinOperation*>(operation);
     Q_ASSERT(pinOp != NULL);
 
-    // Note: In theory we could update the NewsItem model itself at this point,
-    // but why bother?  It's really only used for going from the database to
-    // the HTML view.
-
-    //emit interactor->updatePin(pinOp->getNewsID(), pinOp->getPin());
+    // Update the view
     newsServer.updatePin(pinOp->getNewsID(), pinOp->getPin());
 }
 

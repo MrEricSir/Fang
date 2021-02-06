@@ -48,7 +48,7 @@ DEFINES += BUILD_NUMBER=\\\"$${BUILD_NUMBER}\\\"
 
 # Fang version
 # From: http://www.openguru.com/2009/11/qt-best-way-to-set-application-version.html
-VERSION = 0.1.$${BUILD_NUMBER}
+VERSION = 0.2.$${BUILD_NUMBER}
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
 # Write our version number to a special file.
@@ -210,4 +210,3 @@ android {
 
     ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
 }
-
