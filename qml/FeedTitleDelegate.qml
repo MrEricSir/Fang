@@ -1,8 +1,7 @@
 import QtQuick 2.4
 
-ListViewDragDelegate {
+RearrangeableDelegate {
     id: feedTitleDelegate;
-    height: 35 * style.scale;
     
     Style {
         id: style;
@@ -19,13 +18,22 @@ ListViewDragDelegate {
     
     dragEnabled: !isSpecialFeed;
 
+    qmlListModel: false;
+
+    openerImage: "images/opener.png";
+    openerOffsetX: 10;
+    openerOffsetY: 10;
+
+    // Folders are always visible, but their children are not.
+    visible: isFolder ? true : (parentFolder == -1 || folderOpen ? true : false);
+    height: visible ? 35 * style.scale : 0
+
     Row {
         id: row1;
         
         Item {
-            width: sidebarFeedList.width;
+            width: sidebarFeedList.width - (isFolder || parentFolder > -1 ? height : 0);
             height: feedTitleDelegate.height;
-            
             
             Rectangle {
                 id: rowBackground;
@@ -41,8 +49,9 @@ ListViewDragDelegate {
                 Item {
                     id: feedIconCol
                     
-                    width: isSpecialFeed ? 0 : (35 * style.scale); // no icon for all news
-                    visible: !isSpecialFeed
+                    // No icon for all news or folders.
+                    width: isSpecialFeed || isFolder ? 0 : (35 * style.scale);
+                    visible: !(isSpecialFeed || isFolder)
                     
                     anchors.left: parent.left;
                     anchors.top: parent.top;
@@ -138,7 +147,7 @@ ListViewDragDelegate {
                     
                     state: unreadCount > 0 ? "unread" : "allread";
                     opacity: unreadCount == 0 ? 0.0 : 1.0 // initial opacity;
-                    visible: true;
+                    visible: !isFolder; // TODO: Add working unread count to folders.
                     
                     transitions: [
                         Transition {

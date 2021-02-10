@@ -38,6 +38,10 @@ public:
         ErrorFlagRole,
         IsSelectedRole,
         IsSpecialFeedRole,
+        IsFolderRole,
+        ParentFolderRole,
+        FolderOpenRole,
+        UIDRole,
         SelfRole
     };
     
@@ -55,6 +59,8 @@ public:
             const QUrl& siteURL,
             const QUrl& imageURL,
             const QDateTime& lastIconUpdate,
+            qint64 parentFolder = -1, // Default values for top level non-folder.
+            bool folderOpen = true,   // TODO: Save folder open state from last session.
             QObject *parent = 0);
     
     virtual ~FeedItem();
@@ -104,6 +110,13 @@ public slots:
     void setDropTarget(const QString& dropTarget);
     
     void setIsSelected(bool s);
+
+    // Override for folders.
+    virtual bool isFolder() const { return false; }
+    virtual void setIsFolder(bool isFolder) { Q_UNUSED(isFolder); Q_ASSERT(false); } // Implement this if desired.
+
+    void setParentFolder(qint64 parentFolder);
+    void setFolderOpen(bool folderOpen);
     
     /**
      * @brief Clears all news items.  Does NOT signal.
@@ -200,6 +213,14 @@ public slots:
      * @return  By default, returns true.  Override if you want it to return false.
      */
     virtual bool bookmarksEnabled();
+
+    /**
+     * @brief getParentFolderID
+     * @return The ID of the parent folder, or -1 if none.
+     */
+    qint64 getParentFolderID() {
+        return _parentFolder;
+    }
     
 signals:
     
@@ -207,6 +228,7 @@ signals:
     void removed(NewsItem* item);
     void titleChanged();
     void unreadCountChanged(quint32 unread);
+    void folderOpenChanged();
         
 private:
     qint64 _id;
@@ -227,6 +249,8 @@ private:
     bool isSelected;
     QDateTime lastIconUpdate;
     qint64 firstNewsID;
+    qint64 _parentFolder;
+    bool _folderOpen;
 };
 
 #endif // FEEDITEM_H

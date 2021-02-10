@@ -46,5 +46,6 @@
         <file>pin_selected_dark.svg</file>
         <file>flag_dark.svg</file>
         <file>flag.svg</file>
+        <file>opener.png</file>
     </qresource>
 </RCC>

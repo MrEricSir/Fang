@@ -86,6 +86,12 @@ public slots:
      * @param feed
      */
     void removeFeed(FeedItem *feed);
+
+    /**
+     * @brief Inserts a new folder at the given index.
+     * @param newIndex
+     */
+    void insertFolder(int newIndex);
     
     /**
      * @brief Updates every single damn feed.

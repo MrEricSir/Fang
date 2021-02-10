@@ -22,7 +22,9 @@ FeedItem::FeedItem(QObject *parent) :
     _errorFlag(false),
     isSelected(false),
     lastIconUpdate(),
-    firstNewsID(-1)
+    firstNewsID(-1),
+    _parentFolder(-1),
+    _folderOpen(true)
     
 {
     newsList = new QList<NewsItem*>();
@@ -31,7 +33,7 @@ FeedItem::FeedItem(QObject *parent) :
 FeedItem::FeedItem(qint64 id, const qint32 ordinal, const QString &title, const QString &subtitle,
                    const QDateTime &lastUpdated, quint32 minutesToUpdate, const QUrl &url,
                    const QUrl& siteURL, const QUrl &imageURL, const QDateTime& lastIconUpdate,
-                   QObject* parent) :
+                   qint64 parentFolder, bool folderOpen, QObject* parent) :
     ListItem(parent),
     _id(id),
     ordinal(ordinal),
@@ -50,7 +52,9 @@ FeedItem::FeedItem(qint64 id, const qint32 ordinal, const QString &title, const 
     _errorFlag(false),
     isSelected(false),
     lastIconUpdate(lastIconUpdate),
-    firstNewsID(-1)
+    firstNewsID(-1),
+    _parentFolder(parentFolder),
+    _folderOpen(folderOpen)
 {
     newsList = new QList<NewsItem*>();
 }
@@ -77,6 +81,10 @@ QHash<int, QByteArray> FeedItem::roleNames() const
     names[ErrorFlagRole] = "errorFlag";
     names[IsSelectedRole] = "isSelected";
     names[IsSpecialFeedRole] = "isSpecialFeed";
+    names[IsFolderRole] = "isFolder";
+    names[ParentFolderRole] = "parentFolder";
+    names[FolderOpenRole] = "folderOpen";
+    names[UIDRole] = "uid";
     return names;
 }
 
@@ -111,6 +119,14 @@ QVariant FeedItem::data(int role) const
             return getIsSelected();
         case IsSpecialFeedRole:
             return isSpecialFeed();
+        case IsFolderRole:
+            return isFolder();
+        case ParentFolderRole:
+            return QVariant::fromValue(_parentFolder);
+        case FolderOpenRole:
+            return QVariant::fromValue(_folderOpen);
+        case UIDRole:
+            return getDbId();
         default:
             return QVariant();
     }
@@ -124,6 +140,15 @@ bool FeedItem::setData(const QVariant &value, int role)
         return true;
     case IsSelectedRole:
         setIsSelected(value.toBool());
+        return true;
+    case IsFolderRole:
+        setIsFolder(value.toBool());
+        return true;
+    case ParentFolderRole:
+        setParentFolder(value.toLongLong());
+        return true;
+    case FolderOpenRole:
+        setFolderOpen(value.toBool());
         return true;
     }
     
@@ -180,6 +205,18 @@ void FeedItem::setIsSelected(bool s)
         return;
     
     isSelected = s;
+    emit dataChanged();
+}
+
+void FeedItem::setParentFolder(qint64 parentFolder)
+{
+    _parentFolder = parentFolder;
+    emit dataChanged();
+}
+
+void FeedItem::setFolderOpen(bool folderOpen)
+{
+    _folderOpen = folderOpen;
     emit dataChanged();
 }
 

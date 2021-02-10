@@ -63,6 +63,25 @@ qint32 UnreadCountReader::forPinned(QSqlDatabase db)
     return ret;
 }
 
+qint32 UnreadCountReader::forFolder(QSqlDatabase db, qint64 folderID)
+{
+    QSqlQuery query(db);
+    query.prepare("SELECT count(id) FROM NewsItemTable N WHERE "
+                  "(SELECT parent_folder FROM FeedItemTable WHERE id = N.feed_id) = :folder_id "
+                  "AND id > "
+                  "(SELECT bookmark_id from FeedItemTable WHERE id = N.feed_id)");
+    query.bindValue(":folder_id", folderID);
+
+    if (!query.exec() || !query.next()) {
+       qDebug() << "Could not update unread count for folder";
+       qDebug() << query.lastError();
+
+       return -1;
+    }
+
+    return query.value(0).toInt();;
+}
+
 qint32 UnreadCountReader::forFeed(QSqlDatabase db, quint64 id)
 {
     QSqlQuery query(db);

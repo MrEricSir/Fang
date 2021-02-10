@@ -47,20 +47,21 @@ void QMLNewsInteractor::setWindowHeight(int windowHeight)
 
 void QMLNewsInteractor::orderChanged()
 {
-    for (int i = 0; i < feedList->rowCount(); i++)
-    {
-        FeedItem* feed = qobject_cast<FeedItem*>(feedList->row(i));
-        Q_ASSERT(feed != NULL);
+    // TODO: Is this code still required?
+//    for (int i = 0; i < feedList->rowCount(); i++)
+//    {
+//        FeedItem* feed = qobject_cast<FeedItem*>(feedList->row(i));
+//        Q_ASSERT(feed != NULL);
         
-        if (feed->isSpecialFeed())
-            continue; // Skip special feeds.
+//        if (feed->isSpecialFeed())
+//            continue; // Skip special feeds.
         
-        // Set the new ordinal.
-        feed->setOrdinal(i);
-        //qDebug() << "Feed " << feed->getTitle() << " #" << feed->getOrdinal();
-    }
+//        // Set the new ordinal.
+//        feed->setOrdinal(i);
+//        //qDebug() << "Feed " << feed->getTitle() << " #" << feed->getOrdinal();
+//    }
     
-    // Write to DB.
+    // Update orinals based on the new list order.
     UpdateOrdinalsOperation* updateOp = new UpdateOrdinalsOperation(manager, feedList);
     manager->add(updateOp);
 }

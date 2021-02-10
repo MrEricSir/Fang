@@ -1,4 +1,5 @@
 import QtQuick 2.4
+import Fang 1.0
 
 // Feed list sidebar
 Item {
@@ -24,6 +25,16 @@ Item {
     property int buttonSize: 30 * style.scale;
     property variant listView: feedListView
     property bool feedsExist:  feedListModel.count > 1; // (There's always 1 item -- all news.)
+
+    // This is called by RearrangableDelegate when the user creates a new folder.  It
+    // expects the folder's database ID to be returned.
+    function insertFolder(firstItemIndex) {
+        return validator.insertFolder(firstItemIndex);
+    }
+
+    FeedValidator {
+        id: validator
+    }
     
     Rectangle {
         id: sidebarTopControls
@@ -147,7 +158,7 @@ Item {
                         }
 
                         // Special feeds won't let themselves get dragged around.
-                        numUndraggable: sidebar.specialFeedCount;
+                        numStationary: sidebar.specialFeedCount;
                         
                         onClicked: {
                             sidebar.feedClicked();
@@ -251,7 +262,7 @@ Item {
                 imagePressedURL: fangSettings.style === "LIGHT" ? "images/minus.png"
                                                                 : "images/minus_dark.png"
                 
-                onClicked: removeClicked()
+                onClicked: removeClicked();
             }
 
             SidebarButton {

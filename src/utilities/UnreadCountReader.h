@@ -28,6 +28,8 @@ public:
     static qint32 forAllNews(QSqlDatabase db);
 
     static qint32 forPinned(QSqlDatabase db);
+
+    static qint32 forFolder(QSqlDatabase db, qint64 folderID);
     
     static qint32 forFeed(QSqlDatabase db, quint64 id);
 };

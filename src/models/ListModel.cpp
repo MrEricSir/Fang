@@ -12,15 +12,19 @@
 ListModel::ListModel(ListItem* prototype, QObject *parent) :
     QAbstractListModel(parent), m_prototype(prototype), _selected(NULL)
 {
-    
+    // Populate our _roleNames reverse lookup map.
+    QHash<int, QByteArray> roleNames = m_prototype->roleNames();
+    foreach(int roleIndex, roleNames.keys()) {
+        _roleNames[ roleNames[roleIndex] ] = roleIndex;
+    }
 }
  
 int ListModel::rowCount(const QModelIndex &parent) const
 {
-  Q_UNUSED(parent);
-  return m_list.size();
+    Q_UNUSED(parent);
+    return m_list.size();
 }
- 
+
 QVariant ListModel::data(const QModelIndex &index, int role) const
 {
   if(index.row() < 0 || index.row() >= m_list.size())
@@ -28,7 +32,17 @@ QVariant ListModel::data(const QModelIndex &index, int role) const
   return m_list.at(index.row())->data(role);
 }
 
-// Added by Eric (TM)
+QVariant ListModel::dataByField(int row, const QString &field_name) const
+{
+    if(row < 0 || row >= m_list.size())
+      return QVariant();
+
+    int roleIndex = roleNameToRole(field_name);
+    Q_ASSERT(roleIndex >= 0);
+
+    return m_list.at(row)->data(roleIndex);
+}
+
 bool ListModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
     if(index.row() < 0 || index.row() >= m_list.size())
@@ -50,6 +64,10 @@ void ListModel::setData(int row, const QString &field_name, QVariant new_value)
             return;
         }
     }
+
+    int roleIndex = roleNameToRole(field_name);
+    Q_ASSERT(roleIndex >= 0);
+    m_list.at(row)->setData(new_value, roleIndex);
 }
 
 Qt::ItemFlags ListModel::flags(const QModelIndex &index) const
@@ -159,6 +177,11 @@ int ListModel::selectedIndex()
 void ListModel::setSelectedIndex(int selectedIndex)
 {
     setSelected(m_list.at(selectedIndex));
+}
+
+int ListModel::roleNameToRole(const QString &field_name) const
+{
+    return _roleNames.contains(field_name) ? _roleNames[field_name] : -1;
 }
  
 bool ListModel::removeRow(int row, const QModelIndex &parent)

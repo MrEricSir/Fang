@@ -9,12 +9,14 @@
 #include "operations/LoadAllFeedsOperation.h"
 #include "operations/AddFeedOperation.h"
 #include "operations/RemoveFeedOperation.h"
+#include "operations/UpdateOrdinalsOperation.h"
 #include "operations/UpdateTitleOperation.h"
 #include "operations/ExpireNewsOperation.h"
 #include "operations/SetBookmarkOperation.h"
 #include "operations/SetPinOperation.h"
 #include "operations/LoadAllNewsOperation.h"
 #include "operations/LoadPinnedNewsOperation.h"
+#include "operations/InsertFolderOperation.h"
 
 #if defined(Q_OS_MAC)
     #include "notifications/NotificationMac.h"
@@ -670,5 +672,15 @@ void FangApp::removeFeed(FeedItem *feed)
     // Say goodbye to these (feeds), Michael.
     //qDebug() << "remove feed";
     manager.add(new RemoveFeedOperation(&manager, feed, feedList));
+
+    // Update orinals based on the new list order.
+    UpdateOrdinalsOperation* updateOp = new UpdateOrdinalsOperation(&manager, feedList);
+    manager.add(updateOp);
+}
+
+void FangApp::insertFolder(int newIndex)
+{
+    // Slap in a new folder, reparent the following two items.
+    manager.add(new InsertFolderOperation(&manager, newIndex, "New folder", feedList));
 }
 

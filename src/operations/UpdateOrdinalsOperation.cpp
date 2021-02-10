@@ -2,6 +2,8 @@
 #include "../models/FeedItem.h"
 #include "../models/ListModel.h"
 
+#include <QList>
+#include <QSet>
 #include <QDebug>
 
 UpdateOrdinalsOperation::UpdateOrdinalsOperation(OperationManager *parent, ListModel *feedList) :
@@ -12,15 +14,26 @@ UpdateOrdinalsOperation::UpdateOrdinalsOperation(OperationManager *parent, ListM
 
 void UpdateOrdinalsOperation::execute()
 {
+    QSet<int> folderIDs;
+    QList<FeedItem*> removedFromFolder;
     db().transaction();
     
-    for (int i = 1; i < feedList->count(); i++) {
+    // Update ordinals and gather folder IDs.
+    for (int i = 0; i < feedList->count(); i++) {
         QSqlQuery update(db());
         FeedItem* feedItem = qobject_cast<FeedItem*>(feedList->row(i));
+        if (feedItem->isSpecialFeed()) {
+            // Item isn't in the db.
+            continue;
+        }
+
+        if (feedItem->isFolder()) {
+            folderIDs << feedItem->getDbId();
+        }
         
         update.prepare("UPDATE FeedItemTable SET ordinal = :ordinal WHERE id = "
                        ":feed_id");
-        update.bindValue(":ordinal", feedItem->getOrdinal());
+        update.bindValue(":ordinal", i);
         update.bindValue(":feed_id", feedItem->getDbId());
         
         if (!update.exec()) {
@@ -30,8 +43,51 @@ void UpdateOrdinalsOperation::execute()
             return;
         }
     }
+
+    // Update ordinals and gather folder IDs.
+    for (int i = 0; i < feedList->count(); i++) {
+        QSqlQuery update(db());
+        FeedItem* feedItem = qobject_cast<FeedItem*>(feedList->row(i));
+        if (feedItem->isSpecialFeed()) {
+            // Item isn't in the db.
+            continue;
+        }
+
+        if (!folderIDs.contains(feedItem->getParentFolderID())) {
+            // Build a list of feeds we've had to reparent so we can update the model later.
+            removedFromFolder << feedItem;
+        }
+
+        update.prepare("UPDATE FeedItemTable SET parent_folder = :parent_folder WHERE id = "
+                       ":feed_id");
+        update.bindValue(":parent_folder", -1);
+        update.bindValue(":feed_id", feedItem->getDbId());
+
+        if (!update.exec()) {
+            reportSQLError(update, "Unable to update parent for feed id " + QString::number(feedItem->getDbId()));
+            db().rollback();
+
+            return;
+        }
+    }
     
-    // And we're done!
+    // Complete the DB transaction.
     db().commit();
+
+    // Now we need to refresh our model. First up: ordinals.
+    for (int i = 0; i < feedList->count(); i++) {
+        FeedItem* feedItem = qobject_cast<FeedItem*>(feedList->row(i));
+        if (feedItem->isSpecialFeed()) {
+            continue;
+        }
+
+        feedItem->setOrdinal(i);
+    }
+
+    // Second: parent folders (or lack thereof.)
+    foreach (FeedItem* item, removedFromFolder) {
+        item->setParentFolder(-1);
+    }
+
     emit finished(this);
 }
