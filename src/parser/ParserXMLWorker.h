@@ -64,6 +64,9 @@ private:
     void elementContents();
     
     void resetParserVars();
+
+    // Call this when we have a summary.
+    void saveSummary();
     
     /**
      * @brief Attempts to convert an unreliable RSS/Atom timestamp string into a real timestamp.

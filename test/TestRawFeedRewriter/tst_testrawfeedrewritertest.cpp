@@ -89,21 +89,21 @@ void TestRawFeedRewriterTest::testCase1_data()
                               << "<p>hi</p>";
 
     // Image size rewriter (and reducer.)
-    QTest::newRow("Image test") << "<img src=\"http://i.imgur.com/ohnlAzj.png\">"
-                              << "<img src=\"http://i.imgur.com/ohnlAzj.png\""
-                                 " width=\"400\" height=\"286\" align=\"left\"/>";
+    QTest::newRow("Image test") << "<img src=\"https://www.mrericsir.com/blog/wp-content/uploads/IMG_9016-768x1024.jpeg\">"
+                              << "<img src=\"https://www.mrericsir.com/blog/wp-content/uploads/IMG_9016-768x1024.jpeg\""
+                                 " width=\"400\" height=\"533\" align=\"left\"/>";
 
     // Image size rewriter (and reducer) with STYLE.
-    QTest::newRow("Image test 2") << "<img src=\"http://i.imgur.com/ohnlAzj.png\" style=\""
+    QTest::newRow("Image test 2") << "<img src=\"https://www.mrericsir.com/blog/wp-content/uploads/IMG_9016-768x1024.jpeg\" style=\""
                                  "width: 500px;\">"
-                              << "<img src=\"http://i.imgur.com/ohnlAzj.png\""
-                                 " width=\"400\" height=\"286\" align=\"left\"/>";
+                              << "<img src=\"https://www.mrericsir.com/blog/wp-content/uploads/IMG_9016-768x1024.jpeg\""
+                                 " width=\"400\" height=\"533\" align=\"left\"/>";
 
     // Image size WITHOUT rewriter.
-    QTest::newRow("Image test 3") << "<img src=\"http://i.imgur.com/ohnlAzj.png\" align=\"left\""
-                                     " width=\"400\" height=\"286\"/>"
-                              << "<img src=\"http://i.imgur.com/ohnlAzj.png\""
-                                 " width=\"400\" height=\"286\" align=\"left\"/>";
+    QTest::newRow("Image test 3") << "<img src=\"https://www.mrericsir.com/blog/wp-content/uploads/IMG_9016-768x1024.jpeg\" align=\"left\""
+                                     " width=\"400\" height=\"533\"/>"
+                              << "<img src=\"https://www.mrericsir.com/blog/wp-content/uploads/IMG_9016-768x1024.jpeg\""
+                                 " width=\"400\" height=\"533\" align=\"left\"/>";
 
     // Embedded Vine video.
     QTest::newRow("Vine") << "<iframe class=\"vine-embed\" src=\""

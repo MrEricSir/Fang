@@ -181,7 +181,7 @@ HEADERS += \
     src/models/QMLNewsInteractor.h
 
 mac {
-    QT += macextras
+#    QT += macextras
     HEADERS += src/notifications/NotificationMac.h
     SOURCES += src/notifications/NotificationMac.cpp
     LIBS+= -dead_strip

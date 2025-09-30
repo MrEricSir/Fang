@@ -54,20 +54,20 @@ void TestFangFaviconGrabberTest::testCase1_data()
     QTest::addColumn<QUrl>("faviconURL");
     
     QTest::newRow("MrEricSir.com") 
-            << QUrl("http://www.mrericsir.com/blog/") 
-            << QUrl("http://www.mrericsir.com/blog/wp-content/themes/eric-cordobo-green-park-2/favicon.ico");
+            << QUrl("http://www.mrericsir.com/blog/")
+            << QUrl("https://www.mrericsir.com/blog/wp-content/uploads/cropped-new-mrericsir-favicon-192x192.png");
     
     QTest::newRow("Fark")
             << QUrl("http://www.fark.com/")
-            << QUrl("http://www.fark.com/favicon.ico");
+            << QUrl("https://img.fark.net/images/2008/site/fark-webclip.png");
     
     QTest::newRow("Slashdot.org")
                 << QUrl("http://slashdot.org/")
-                << QUrl("http://slashdot.org/favicon.ico");
+                << QUrl("https://slashdot.org/favicon.ico");
     
     QTest::newRow("SFGate.com")
             << QUrl("http://www.sfgate.com/bayarea/feed/Bay-Area-News-429.php")
-            << QUrl("http://www.sfgate.com/apple-touch-icon-152x152.png");
+            << QUrl("https://www.sfgate.com/sites/sfgate/apple-touch-icon-196x196.png");
 }
 
 QTEST_MAIN(TestFangFaviconGrabberTest)

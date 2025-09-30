@@ -96,4 +96,5 @@ OTHER_FILES += \
     feeds/thenewrepublic.rss
 
 DISTFILES += \
+    feeds/emptyfeed.rss \
     feeds/missionlocal.rss
