@@ -5,11 +5,6 @@
 #include <QStringList>
 #include <QQmlFileSelector>
 
-// TODO: Is this still needed on Mac? [qt6]
-#if defined(Q_OS_MAC)
-#include <QtSvg> // Required for OS X SVG support (yes, really.)
-#endif
-
 #include "FangApp.h"
 
 #include "models/FeedValidator.h"

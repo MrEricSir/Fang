@@ -80,8 +80,8 @@ void NewsWebSocketServer::socketDisconnected()
 
 void NewsWebSocketServer::execute(const QString &command, const QString &data)
 {
-    qDebug() << "command: " << command;
-    qDebug() << "data: " << data;
+    // qDebug() << "command: " << command;
+    // qDebug() << "data: " << data;
 
     FangApp* app = FangApp::instance();
     if ("pageLoaded" == command) {
