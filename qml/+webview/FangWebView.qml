@@ -1,5 +1,5 @@
-import QtQuick 2.4
-import QtWebView 1.15
+import QtQuick
+import QtWebView
 
 WebView {
     id: newsView;

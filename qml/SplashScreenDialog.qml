@@ -1,4 +1,4 @@
-import QtQuick 2.4
+import QtQuick
 import Fang 1.0
 
 
@@ -50,6 +50,7 @@ Dialog {
             repeat: false;
 
             onTriggered: {
+                console.log("SplashScreen complete timer triggered, in progress:", main.isInProgress)
                 // It will either be closed here if the load's already complete,
                 // or in the Connections handler.
                 if (!main.isInProgress) {  // don't leave this one in!
@@ -61,7 +62,7 @@ Dialog {
 
         Connections {
             target: main;
-            onIsInProgressChanged: {
+            function onIsInProgressChanged(isInProgress) {
                 // If we didn't close in the above timer, we're closing here.
                 if (!splashScreenDialog.isClosed && !main.isInProgress && !splashCompleteTimer.running) {
                     close();
@@ -70,6 +71,7 @@ Dialog {
         }
 
         Component.onCompleted: {
+            console.log("Splash screen logo component.oncompleted")
             // Start here:
             splashFadeIn.start();
             splashCompleteTimer.restart();

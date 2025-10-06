@@ -1,4 +1,5 @@
 #include "ParserXMLWorker.h"
+#include <QtCore/qtimezone.h>
 
 ParserXMLWorker::ParserXMLWorker(QObject *parent) :
     FangObject(parent), feed(NULL), currentItem(NULL), isValid(false), inAtomXHTML(false)
@@ -441,8 +442,8 @@ QDateTime ParserXMLWorker::dateFromFeedString(const QString& _timestamp)
     }
     
     // All times are (supposedly) in UTC.
-    ret.setTimeSpec(Qt::UTC);
-    
+    ret.setTimeZone(QTimeZone::UTC);
+
     return ret;
 }
 

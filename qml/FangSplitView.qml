@@ -1,11 +1,11 @@
-import QtQuick 2.4
-import QtQuick.Controls 1.2
+import QtQuick
+import QtQuick.Controls
 
 // Let them drag the sidebar if they want to!
 SplitView {
     id: fangSplitView;
 
-    orientation: Qt.Horizontal
+    orientation: Qt.Horizontal;
 
-    handleDelegate: Rectangle { visible: false; }
+    // TODO: Make handle invisible again [qt6]
 }

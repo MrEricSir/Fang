@@ -1,4 +1,4 @@
-import QtQuick 2.4
+import QtQuick
 import Fang 1.0
 
 // Edit a feed.
@@ -6,9 +6,7 @@ Dialog {
     id: editDialog;
     
     title: "Edit a Feed";
-    
-    property var listView;
-    
+
     onDialogOpened: {
         feedTitle.forceActiveFocus();
         feedTitle.text = listView.model.selected.getTitle();

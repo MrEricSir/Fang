@@ -1,13 +1,14 @@
 TEMPLATE = app
 
-QT += qml quick widgets network sql svg websockets
+QT += core qml quick quickcontrols2 widgets network sql svg websockets
 
 QT -= sensors
 
-qtHaveModule(webengine) {
-    QT += webengine
+# TODO: Patch this up for all supported OSes [qt6]
+#qtHaveModule(webengine) {
+    QT += webenginequick
     DEFINES += QT_WEBVIEW_WEBENGINE_BACKEND
-}
+#}
 
 
 # Resource files

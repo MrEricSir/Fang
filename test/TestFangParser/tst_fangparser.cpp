@@ -68,8 +68,8 @@ void TestFangParser::parseTest()
     RawNews* firstNews = nullptr;
     
     // All the times are in UTC; it's easier to set that here for the test cases.
-    firstNewsTimestamp.setTimeSpec(Qt::UTC);
-    
+    firstNewsTimestamp.setTimeZone(QTimeZone::UTC);
+
     // Verify our data.
     QCOMPARE(feed->title, title);
     QCOMPARE(feed->items.size(), newsCount);

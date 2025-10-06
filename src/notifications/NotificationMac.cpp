@@ -1,6 +1,5 @@
 #include "NotificationMac.h"
 #include <QDebug>
-#include <QtMac>
 
 NotificationMac::NotificationMac(FangSettings *fangSettings,
                                  ListModel *feedList,
@@ -22,5 +21,6 @@ void NotificationMac::onUnreadCountChanged(quint32 unread)
         unreadText = QString("%1").arg(unread);
     }
 
-    QtMac::setBadgeLabelText(unreadText);
+    // TODO: Port this to Qt6. [qt6]
+    //QtMac::setBadgeLabelText(unreadText);
 }

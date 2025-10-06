@@ -5,14 +5,10 @@
 #include <QStringList>
 #include <QQmlFileSelector>
 
+// TODO: Is this still needed on Mac? [qt6]
 #if defined(Q_OS_MAC)
 #include <QtSvg> // Required for OS X SVG support (yes, really.)
 #endif
-
-// The qmake file decides if we need WebEngine
-#ifdef QT_WEBVIEW_WEBENGINE_BACKEND
-#include <QtWebEngine>
-#endif // QT_WEBVIEW_WEBENGINE_BACKEND
 
 #include "FangApp.h"
 
@@ -37,10 +33,6 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     qmlRegisterType<QMLNewsInteractor>("Fang", 1, 0, "QMLNewsInteractor");
     qmlRegisterType<ListItem>("Fang", 1, 0, "ListItem");
     qmlRegisterType<OPMLInteractor>("Fang", 1, 0, "OPMLInteractor");
-
-#ifdef QT_WEBVIEW_WEBENGINE_BACKEND
-    QtWebEngine::initialize();
-#endif // QT_WEBVIEW_WEBENGINE_BACKEND
     
     QApplication app(argc, argv);
     app.setOrganizationName("EricGregory");

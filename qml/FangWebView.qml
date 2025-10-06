@@ -1,5 +1,5 @@
-import QtQuick 2.4
-import QtWebEngine 1.0
+import QtQuick
+import QtWebEngine
 
 WebEngineView {
     id: newsView;
@@ -25,6 +25,7 @@ WebEngineView {
     ]
 
     onStateChanged: {
+        console.log("webengine state changed:", state)
         switch (state) {
         case "news":
             newsView.url = "qrc:///html/index.html";
@@ -42,11 +43,13 @@ WebEngineView {
         }
     }
 
-    onLoadingChanged: {
-        // Windows hack to allow Fang to exit.
-        // This bug seems to be a holdout from Qt's flirtation with WebKit.
-        if (state == "closing" && loadRequest.status == WebEngineView.LoadSucceededStatus) {
-            Qt.quit();
-        }
-    }
+    // TODO: Test on Windows to see if this is still needed. [qt6]
+    // onLoadingChanged: {
+    //     //console.log("webengine loading changed:", loadRequest.status)
+    //     // Windows hack to allow Fang to exit.
+    //     // This bug seems to be a holdout from Qt's flirtation with WebKit.
+    //     if (state == "closing" && loadRequest.status == WebEngineView.LoadSucceededStatus) {
+    //         Qt.quit();
+    //     }
+    // }
 }
