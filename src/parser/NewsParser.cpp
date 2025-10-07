@@ -21,8 +21,7 @@ NewsParser::NewsParser(QObject *parent) :
     connect(this, &NewsParser::triggerDocStart, worker, &ParserXMLWorker::documentStart);
     connect(this, &NewsParser::triggerDocEnd, worker, &ParserXMLWorker::documentEnd);
     connect(this, &NewsParser::triggerAddXML, worker, &ParserXMLWorker::addXML);
-    connect(worker, SIGNAL(done(RawFeed*)),
-            this, SLOT(workerDone(RawFeed*)));
+    connect(worker, &ParserXMLWorker::done, this, &NewsParser::workerDone);
     
     workerThread.start();
 }

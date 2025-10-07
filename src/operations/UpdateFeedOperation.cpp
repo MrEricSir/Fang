@@ -16,8 +16,8 @@ UpdateFeedOperation::UpdateFeedOperation(OperationManager *parent, FeedItem *fee
     timestamp(),
     useCache(useCache)
 {
-    connect(&parser, SIGNAL(done()), this, SLOT(onFeedFinished()));
-    connect(&rewriter, SIGNAL(finished()), this, SLOT(onRewriterFinished()));
+    connect(&parser, &NewsParser::done, this, &UpdateFeedOperation::onFeedFinished);
+    connect(&rewriter, &RawFeedRewriter::finished, this, &UpdateFeedOperation::onRewriterFinished);
     
     requireObject(feed);
 }

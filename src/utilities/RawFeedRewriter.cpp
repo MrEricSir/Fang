@@ -26,7 +26,7 @@ RawFeedRewriter::RawFeedRewriter(QObject *parent) :
     imageGrabber(),
     intID(0)
 {
-    connect(&imageGrabber, SIGNAL(finished()), this, SLOT(onImageGrabberFinished()));
+    connect(&imageGrabber, &ImageGrabber::finished, this, &RawFeedRewriter::onImageGrabberFinished);
 
     tagsToRemove << "script"    // Javascript
                  << "title"     // Titles WTF?
