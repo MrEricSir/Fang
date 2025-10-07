@@ -168,15 +168,11 @@ Item {
                         target: feedListModel
                         
                         // This allows C++ to set the selected item.
-                        // TODO: Is this still needed? [qt6]
-                        // onSelectedIndexChanged: {
-                        //     if (selectedIndex !== feedListView.currentIndex)
-                        //         feedListView.currentIndex = selectedIndex;
-                        // }
                         function onSelectedIndexChanged(selectedIndex) {
                             console.log("selected index:", feedListModel.selectedIndex)
-                            // if (selectedIndex !== feedListView.currentIndex)
-                            //     feedListView.currentIndex = selectedIndex;
+                            if (selectedIndex !== feedListView.currentIndex) {
+                                feedListView.currentIndex = selectedIndex;
+                            }
                         }
                     }
                     
