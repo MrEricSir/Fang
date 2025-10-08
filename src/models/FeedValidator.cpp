@@ -9,7 +9,7 @@ FeedValidator::FeedValidator(QQuickItem *parent) :
     _siteTitle(""),
     _siteImageURL("")
 {
-    connect(&feedDiscovery, SIGNAL(done(FeedDiscovery*)), this, SLOT(onFeedDiscoveryDone(FeedDiscovery*)));
+    connect(&feedDiscovery, &FeedDiscovery::done, this, &FeedValidator::onFeedDiscoveryDone);
 }
 
 void FeedValidator::check()

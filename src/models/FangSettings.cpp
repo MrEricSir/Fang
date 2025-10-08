@@ -10,7 +10,7 @@ FangSettings::FangSettings(QQuickItem *parent) :
 void FangSettings::init(DBSettings *dbSettings)
 {
     this->dbSettings = dbSettings;
-    connect(this->dbSettings, SIGNAL(settingChanged(DBSettingsKey,QString)), this, SLOT(onDBSettingChanged(DBSettingsKey,QString)));
+    connect(this->dbSettings, &DBSettings::settingChanged, this, &FangSettings::onDBSettingChanged);
 }
 
 QString FangSettings::getStringSetting(const QString& name, const QString& defaultValue)

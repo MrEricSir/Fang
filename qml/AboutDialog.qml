@@ -1,4 +1,4 @@
-import QtQuick 2.4
+import QtQuick
 import Fang 1.0
 
 Dialog {
@@ -50,7 +50,7 @@ Dialog {
     DialogSpacer {}
     
     DialogText {
-        text: "Copyright 2013-2021 Eric Gregory.  All rights reserved.  " +
+        text: "Copyright 2013-2025 Eric Gregory.  All rights reserved.  " +
               "Made in San Francisco";
     }
     

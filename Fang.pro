@@ -1,11 +1,11 @@
 TEMPLATE = app
 
-QT += qml quick widgets network sql svg websockets
+QT += core qml quick quickcontrols2 widgets network sql svg websockets
 
 QT -= sensors
 
-qtHaveModule(webengine) {
-    QT += webengine
+qtHaveModule(webenginequick) {
+    QT += webenginequick
     DEFINES += QT_WEBVIEW_WEBENGINE_BACKEND
 }
 
@@ -181,9 +181,8 @@ HEADERS += \
     src/models/QMLNewsInteractor.h
 
 mac {
-    QT += macextras
     HEADERS += src/notifications/NotificationMac.h
-    SOURCES += src/notifications/NotificationMac.cpp
+    SOURCES += src/notifications/NotificationMac.mm
     LIBS+= -dead_strip
 }
 

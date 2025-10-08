@@ -26,7 +26,7 @@ RawFeedRewriter::RawFeedRewriter(QObject *parent) :
     imageGrabber(),
     intID(0)
 {
-    connect(&imageGrabber, SIGNAL(finished()), this, SLOT(onImageGrabberFinished()));
+    connect(&imageGrabber, &ImageGrabber::finished, this, &RawFeedRewriter::onImageGrabberFinished);
 
     tagsToRemove << "script"    // Javascript
                  << "title"     // Titles WTF?
@@ -87,7 +87,7 @@ void RawFeedRewriter::rewrite(QList<RawNews *> *newsList)
     }
 
     // Do the whole image resizing thang.
-    imageGrabber.fetchUrls(QList<QUrl>::fromSet(imageURLs));
+    imageGrabber.fetchUrls(imageURLs.values());
 }
 
 bool RawFeedRewriter::isHTMLEmpty(QString html)
@@ -139,7 +139,6 @@ QString RawFeedRewriter::rewriteFirstPass(const QString &document, QSet<QUrl> &i
 
     QString output;
     QXmlStreamWriter writer(&output);
-    writer.setCodec("UTF-16"); // Default for QString
     writer.setAutoFormatting(false);
 
     // If we're skipping elements, this is >= 1
@@ -342,7 +341,6 @@ QString RawFeedRewriter::rewriteSecondPass(QString &docString)
 
     QString output;
     QXmlStreamWriter writer(&output);
-    writer.setCodec("UTF-16"); // Default for QString
     writer.setAutoFormatting(false);
     int skip = 0; // Skip stack.
     QString lastTag = "";
@@ -511,7 +509,7 @@ QString RawFeedRewriter::rewriteTextOnlyNews(QString input)
     input.replace("\r\n", "\r");
     input.replace("\r", "\n");
 
-    QStringList list = input.split('\n', QString::SkipEmptyParts);
+    QStringList list = input.split('\n', Qt::SkipEmptyParts);
     foreach(QString line, list) {
         // Trim lines, and skip empty ones.
         QString trimmed = line.trimmed();

@@ -7,7 +7,7 @@ FaviconUpdateOperation::FaviconUpdateOperation(OperationManager *parent, FeedIte
     feed(feed),
     grabber()
 {
-    connect(&grabber, SIGNAL(finished(QUrl)), this, SLOT(onGrabberFinished(QUrl)));
+    connect(&grabber, &FaviconGrabber::finished, this, &FaviconUpdateOperation::onGrabberFinished);
     
     requireObject(feed);
 }

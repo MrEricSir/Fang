@@ -65,18 +65,21 @@ void TestFangParser::parseTest()
         QVERIFY2(newsItem->timestamp.isValid(), "Invalid timestamp.");
     }
     
-    RawNews* firstNews = feed->items.first();
+    RawNews* firstNews = nullptr;
     
     // All the times are in UTC; it's easier to set that here for the test cases.
-    firstNewsTimestamp.setTimeSpec(Qt::UTC);
-    
+    firstNewsTimestamp.setTimeZone(QTimeZone::UTC);
+
     // Verify our data.
     QCOMPARE(feed->title, title);
     QCOMPARE(feed->items.size(), newsCount);
-    QCOMPARE(firstNews->title, firstNewsTitle);
-    QCOMPARE(firstNews->url.toString(), firstNewsURL);
-    QCOMPARE(firstNews->guid, guid);
-    QCOMPARE(firstNews->timestamp, firstNewsTimestamp);
+    if (newsCount) {
+        firstNews = feed->items.first();
+        QCOMPARE(firstNews->title, firstNewsTitle);
+        QCOMPARE(firstNews->url.toString(), firstNewsURL);
+        QCOMPARE(firstNews->guid, guid);
+        QCOMPARE(firstNews->timestamp, firstNewsTimestamp);
+    }
 }
 
 void TestFangParser::parseTest_data()
@@ -445,6 +448,12 @@ void TestFangParser::parseTest_data()
                                   << "http://missionlocal.org/2015/05/medical-center-eyes-valencia-opposition-mounts/"
                                   << "http://missionlocal.org/?p=291167"
                                   << QDateTime::fromString("10 May 2015 21:50:11", dtf);
+
+    QTest::newRow("EmptyFeed") << "emptyfeed.rss" << "Empty Feed" << 0
+                               << ""
+                               << ""
+                               << ""
+                               << QDateTime::currentDateTime();
 }
 
 QTEST_MAIN(TestFangParser)

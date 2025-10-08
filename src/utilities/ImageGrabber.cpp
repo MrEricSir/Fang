@@ -12,7 +12,7 @@ ImageGrabber::ImageGrabber(QObject *parent) :
     results()
 {
     // Signals!
-    connect(&manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onRequestFinished(QNetworkReply*)));
+    connect(&manager, &FangNetworkAccessManager::finished, this, &ImageGrabber::onRequestFinished);
 }
 
 void ImageGrabber::fetchUrl(const QUrl &url)

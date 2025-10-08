@@ -20,7 +20,7 @@ void NotificationBase::init()
     // Handle the global unread count.
     lastUnreadCount = allNews->getUnreadCount();
     onUnreadCountChanged(lastUnreadCount);
-    connect(allNews, SIGNAL(dataChanged()), SLOT(allNewsDataChanged()));
+    connect(allNews, &AllNewsFeedItem::dataChanged, this, &NotificationBase::allNewsDataChanged);
 }
 
 void NotificationBase::allNewsDataChanged()

@@ -7,7 +7,7 @@ OperationManager::OperationManager(QObject *parent) :
     operationTimer()
 {
     operationTimer.setSingleShot(true);
-    connect(&operationTimer, SIGNAL(timeout()), this, SLOT(runNextOperations()));
+    connect(&operationTimer, &QTimer::timeout, this, &OperationManager::runNextOperations);
 }
 
 OperationManager::~OperationManager()
@@ -53,8 +53,7 @@ void OperationManager::executeOperations()
 void OperationManager::runNow(Operation *operation)
 {
     pending.insert(operation);
-    QObject::connect(operation, SIGNAL(finished(Operation*)),
-                     this, SLOT(onOperationFinished(Operation*)));
+    QObject::connect(operation, &Operation::finished, this, &OperationManager::onOperationFinished);
     operation->execute();
 }
 

@@ -5,7 +5,6 @@
 #include <QImage>
 #include <QXmlStreamReader>
 
-#include "Utilities.h"
 #include "NetworkUtilities.h"
 
 FaviconGrabber::FaviconGrabber(QObject *parent) :
@@ -24,7 +23,7 @@ FaviconGrabber::FaviconGrabber(QObject *parent) :
     machine.addStateChange(-1, GRAB_ERROR, SLOT(onError())); // Many errors, one slot.
     
     // Signals!
-    connect(&manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onRequestFinished(QNetworkReply*)));
+    connect(&manager, &FangNetworkAccessManager::finished, this, &FaviconGrabber::onRequestFinished);
     connect(&webGrabber, &WebPageGrabber::ready, this, &FaviconGrabber::onWebGrabberReady);
 }
 

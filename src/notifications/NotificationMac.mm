@@ -1,6 +1,6 @@
 #include "NotificationMac.h"
+#import <AppKit/NSApplication.h>
 #include <QDebug>
-#include <QtMac>
 
 NotificationMac::NotificationMac(FangSettings *fangSettings,
                                  ListModel *feedList,
@@ -22,5 +22,6 @@ void NotificationMac::onUnreadCountChanged(quint32 unread)
         unreadText = QString("%1").arg(unread);
     }
 
-    QtMac::setBadgeLabelText(unreadText);
+    // This Objective-C call is why this is a .mm file instead of a .cpp file.
+    [[[NSApplication sharedApplication] dockTile] setBadgeLabel:unreadText.toNSString()];
 }

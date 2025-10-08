@@ -1,4 +1,4 @@
-import QtQuick 2.4
+import QtQuick
 
 DialogButton {
     id: dialogToggleButton

@@ -1,4 +1,4 @@
-import QtQuick 2.4
+import QtQuick
 
 /**
   * This class exists to keep the basic button functionality, including colors, transitions,
@@ -72,7 +72,7 @@ Rectangle {
         target: fangSettings
         
         // Reset color when style changes.
-        onStyleChanged: {
+        function onStyleChanged() {
             color = getColorForState();
         }
     }

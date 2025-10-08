@@ -1,11 +1,16 @@
-import QtQuick 2.4
-import QtQuick.Controls 1.2
+import QtQuick
+import QtQuick.Controls
 
 // Let them drag the sidebar if they want to!
 SplitView {
     id: fangSplitView;
 
-    orientation: Qt.Horizontal
+    orientation: Qt.Horizontal;
 
-    handleDelegate: Rectangle { visible: false; }
+    // Relevant fields from the parent's handle, with a transparent color.
+    handle: Rectangle {
+        implicitWidth: fangSplitView.orientation === Qt.Horizontal ? 6 : fangSplitView.width;
+        implicitHeight: fangSplitView.orientation === Qt.Horizontal ? fangSplitView.height : 6;
+        color: "transparent";
+    }
 }

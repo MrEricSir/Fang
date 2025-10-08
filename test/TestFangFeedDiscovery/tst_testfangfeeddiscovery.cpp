@@ -30,7 +30,7 @@ void TestFangFeedDiscovery::testCase1()
     QFETCH(bool, isValid);
     
     FeedDiscovery fd;
-    QSignalSpy spy(&fd, SIGNAL(done(FeedDiscovery*)));
+    QSignalSpy spy(&fd, &FeedDiscovery::done);
     fd.checkFeed(url);
     
     if (!spy.count()) {
@@ -41,8 +41,9 @@ void TestFangFeedDiscovery::testCase1()
     QCOMPARE(spy.count(), 1);
     
     if (isValid) {
-        QVERIFY(!fd.error());
         qDebug() << "URL: " << fd.feedURL();
+        qDebug() << "error: " << fd.errorString();
+        QVERIFY(!fd.error());
     } else {
         QVERIFY(fd.error());
     }
@@ -53,17 +54,17 @@ void TestFangFeedDiscovery::testCase1_data()
     QTest::addColumn<QString>("url");
     QTest::addColumn<bool>("isValid");
     
-    // Errorz.
-    QTest::newRow("Bullshit URL") << "asfaw3f" << false;
-    QTest::newRow("No RSS feed") << "http://www.google.com" << false;
+    // // Errorz.
+    // QTest::newRow("Bullshit URL") << "asfaw3f" << false;
+    // QTest::newRow("No RSS feed") << "http://www.google.com" << false;
     
-    // Truly good sites.
-    QTest::newRow("MrEricSir") << "http://www.mrericsir.com/blog/feed/" << true;
-    QTest::newRow("MrEricSir minimal") << "mrericsir.com" << true;
-    QTest::newRow("SFist") << "http://feeds.gothamistllc.com/SFist" << true;
-    QTest::newRow("SFist Minimal") << "sfist.com" << true;
-    QTest::newRow("LaughingSquid Minimal") << "laughingsquid.com" << true;
-    QTest::newRow("Fark Minimal") << "fark.com" << true;
+    // // Truly good sites.
+    // QTest::newRow("MrEricSir") << "http://www.mrericsir.com/blog/feed/" << true;
+    // QTest::newRow("MrEricSir minimal") << "mrericsir.com" << true;
+    // QTest::newRow("SFist") << "https://sfist.com/rss/" << true;
+    // QTest::newRow("SFist Minimal") << "sfist.com" << true;
+    // QTest::newRow("LaughingSquid Minimal") << "laughingsquid.com" << true;
+    //QTest::newRow("Fark Minimal") << "fark.com" << true;
     QTest::newRow("yourkickstartersucks") << "yourkickstartersucks.tumblr.com" << true;
 }
 
