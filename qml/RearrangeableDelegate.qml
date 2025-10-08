@@ -248,8 +248,8 @@ Rectangle {
                 MouseArea {
                     anchors.fill: parent;
 
-                    onClicked: {
-                        //console.log("opener changing folder state")
+                    onClicked: (mouse) => {
+                        // console.log("opener changing folder state")
 
                         // Open/close children.
                         for (var i = index + 1; i < model.count; i++) {
@@ -423,7 +423,7 @@ Rectangle {
 
             drag.axis: Drag.YAxis;
 
-            onClicked: {
+            onClicked: (mouse) => {
                 if (isFolder && mouse.x < placeholder.childrenRect.height) {
                     // Bail and let the opener MouseArea handle this.
                     mouse.accepted = false;
@@ -433,15 +433,17 @@ Rectangle {
                 rearrangeableDelegate.clicked();
             }
 
-            onDoubleClicked: rearrangeableDelegate.doubleClicked();
+            onDoubleClicked: () => {
+                earrangeableDelegate.doubleClicked();
+            }
 
-            onPressed: {
+            onPressed: () => {
                 if (!dragOnLongPress) {
                     beginDrag();
                 }
             }
 
-            onPressAndHold: {
+            onPressAndHold: () => {
                 if (dragOnLongPress) {
                     beginDrag();
                 }
@@ -565,7 +567,7 @@ Rectangle {
                 }
             }
 
-            onReleased: {
+            onReleased: () => {
                 if (!held) {
                     return;
                 }
