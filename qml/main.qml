@@ -88,15 +88,6 @@ Window {
         // Standard settings.
         property alias sidebarWidth: sidebar.width;
     }
-    
-    // TODO: Test to see if this is still needed on Windows. [qt6]
-    // This is a hack to prevent Fang from hanging when closed on
-    // Windows due to a bug in QtWebKit.
-    // Ticket: https://github.com/MrEricSir/Fang/issues/93
-    // onClosing: {
-    //     close.accepted = false;
-    //     news.close();
-    // }
 
     // Read-only: List of all open dialogs
     property var openDialogs: []

@@ -55,7 +55,7 @@ void NewsWebSocketServer::onNewConnection()
 
 void NewsWebSocketServer::processMessage(QString message)
 {
-    //qDebug() << "NewsWebSocketServer: " << message;
+    // qDebug() << "NewsWebSocketServer: " << message;
 
     // Break up our message into a command and execute it.
     int spaceIndex = message.indexOf(' ');
@@ -70,6 +70,7 @@ void NewsWebSocketServer::processMessage(QString message)
 
 void NewsWebSocketServer::socketDisconnected()
 {
+    // qDebug() << "NewsWebSocketServer::socketDisconnected";
     if (pSocket) {
         pSocket->deleteLater();
         pSocket = NULL;

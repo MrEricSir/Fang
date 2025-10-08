@@ -42,14 +42,4 @@ WebEngineView {
             console.error("You didn't handle state: ", state)
         }
     }
-
-    // TODO: Test on Windows to see if this is still needed. [qt6]
-    // onLoadingChanged: {
-    //     //console.log("webengine loading changed:", loadRequest.status)
-    //     // Windows hack to allow Fang to exit.
-    //     // This bug seems to be a holdout from Qt's flirtation with WebKit.
-    //     if (state == "closing" && loadRequest.status == WebEngineView.LoadSucceededStatus) {
-    //         Qt.quit();
-    //     }
-    // }
 }
