@@ -1,4 +1,4 @@
-import QtQuick 2.4
+import QtQuick
 import Fang 1.0
 
 // Dialog container.
@@ -13,6 +13,9 @@ FangScreen {
     
     // Dialog title text.
     property string title;
+
+    // [Optional] Feed list.
+    property var listView;
     
     // This allows children to be positioned within the element.
     default property alias contents: placeholder.children;
@@ -62,7 +65,7 @@ FangScreen {
         }
     }
     
-    Keys.onPressed: {
+    Keys.onPressed: (event)=> {
         if ((event.key === Qt.Key_Escape || event.key === Qt.Key_Back) && !isSplashScreen) {
             //console.log("close")
             close();

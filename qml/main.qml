@@ -1,10 +1,9 @@
-import QtQuick 2.4
-import QtQuick.Window 2.2
+import QtQuick
+import QtQuick.Window
 import Fang 1.0
-import QtQuick.Controls 1.3
-import QtQuick.Controls.Styles 1.2
-import QtQuick.Layouts 1.0
-import Qt.labs.settings 1.0
+import QtQuick.Controls
+import QtQuick.Layouts
+import QtCore
 
 // Can't use ApplicationWindow because it leaves spaces for an action bar (menu) on Android.
 Window {
@@ -89,14 +88,6 @@ Window {
         // Standard settings.
         property alias sidebarWidth: sidebar.width;
     }
-    
-    // This is a hack to prevent Fang from hanging when closed on
-    // Windows due to a bug in QtWebKit.
-    // Ticket: https://github.com/MrEricSir/Fang/issues/93
-    onClosing: {
-        close.accepted = false;
-        news.close();
-    }
 
     // Read-only: List of all open dialogs
     property var openDialogs: []
@@ -104,6 +95,7 @@ Window {
     // Creates and opens a dialog.  The dialog is returned in
     // case you wanna mess with it and shit.
     function openDialog(dialogName) {
+        console.log("openDialog(" + dialogName + ")")
         news.isVisible = false; // webview hack
         var component = Qt.createComponent(dialogName);
         var dialog = component.createObject(
@@ -112,6 +104,7 @@ Window {
         if (dialog === null) {
             // Error Handling
             console.log("Error creating dialog: " + dialogName);
+            console.log("createObject error: ", component.errorString());
             
             return null;
         }
@@ -198,8 +191,8 @@ Window {
             Sidebar {
                 id: sidebar;
 
-                Layout.minimumWidth: minimumSidebarWidth;
-                Layout.fillHeight: true;
+                SplitView.minimumWidth: minimumSidebarWidth;
+                SplitView.fillHeight: true;
 
                 width: minimumSidebarWidth;
                 state: "open";
@@ -287,9 +280,9 @@ Window {
             News {
                 id: news;
 
-                Layout.fillWidth: true
-                Layout.fillHeight: true;
-                Layout.minimumWidth: minimumNewsWidth;
+                SplitView.fillWidth: true
+                SplitView.fillHeight: true;
+                SplitView.minimumWidth: minimumNewsWidth;
 
                 newsFocus: true // set by dialog system
 /*

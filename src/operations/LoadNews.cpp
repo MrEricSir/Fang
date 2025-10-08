@@ -216,12 +216,14 @@ void LoadNews::execute()
     
     // Append/prepend items from our lists.
     if (listAppend != NULL)
-        foreach (NewsItem* newsItem, *listAppend)
+        for (NewsItem* newsItem: *listAppend) {
             feedItem->getNewsList()->append(newsItem);
+        }
     
     if (listPrepend != NULL)
-        foreach (NewsItem* newsItem, *listPrepend)
+        for (NewsItem* newsItem: *listPrepend) {
             feedItem->getNewsList()->prepend(newsItem);
+        }
     
     // Set our bookmark.
     feedItem->setBookmarkID(bookmarkID);

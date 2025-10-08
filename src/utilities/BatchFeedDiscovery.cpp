@@ -15,7 +15,7 @@ void BatchFeedDiscovery::checkFeedList(ListModel* feedList, int maxConcurrent)
         if (i < maxConcurrent) {
             // Run the first few concurrently.
             FeedDiscovery* discovery = new FeedDiscovery();
-            connect(discovery, SIGNAL(done(FeedDiscovery*)), this, SLOT(onFeedDiscoveryFinished(FeedDiscovery*)));
+            connect(discovery, &FeedDiscovery::done, this, &BatchFeedDiscovery::onFeedDiscoveryFinished);
             
             runDiscovery(discovery, item);
         } else {

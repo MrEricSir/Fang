@@ -1,4 +1,4 @@
-import QtQuick 2.4
+import QtQuick
 import Fang 1.0
 
 // Feed list sidebar
@@ -179,9 +179,11 @@ Item {
                         target: feedListModel
                         
                         // This allows C++ to set the selected item.
-                        onSelectedIndexChanged: {
-                            if (selectedIndex !== feedListView.currentIndex)
+                        function onSelectedIndexChanged(selectedIndex) {
+                            console.log("selected index:", feedListModel.selectedIndex)
+                            if (selectedIndex !== feedListView.currentIndex) {
                                 feedListView.currentIndex = selectedIndex;
+                            }
                         }
                     }
                     

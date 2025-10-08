@@ -11,8 +11,8 @@ NewsParser::NewsParser(QObject *parent) :
     fromCache(false), noParseIfCached(false)
 {
     // Connex0r teh siganls.
-    connect(&manager, SIGNAL(finished(QNetworkReply*)),
-            this, SLOT(netFinished(QNetworkReply*)));
+    connect(&manager, &FangNetworkAccessManager::finished,
+            this, &NewsParser::netFinished);
     
     // Setup the worker object.
     ParserXMLWorker* worker = new ParserXMLWorker();
@@ -21,8 +21,7 @@ NewsParser::NewsParser(QObject *parent) :
     connect(this, &NewsParser::triggerDocStart, worker, &ParserXMLWorker::documentStart);
     connect(this, &NewsParser::triggerDocEnd, worker, &ParserXMLWorker::documentEnd);
     connect(this, &NewsParser::triggerAddXML, worker, &ParserXMLWorker::addXML);
-    connect(worker, SIGNAL(done(RawFeed*)),
-            this, SLOT(workerDone(RawFeed*)));
+    connect(worker, &ParserXMLWorker::done, this, &NewsParser::workerDone);
     
     workerThread.start();
 }
@@ -49,10 +48,11 @@ void NewsParser::parse(const QUrl& url, bool noParseIfCached)
     }
     
     currentReply = manager.get(request);
-    connect(currentReply, SIGNAL(readyRead()), this, SLOT(readyRead()));
-    connect(currentReply, SIGNAL(metaDataChanged()), this, SLOT(metaDataChanged()));
-    connect(currentReply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(error(QNetworkReply::NetworkError)));
+    connect(currentReply, &QNetworkReply::readyRead, this, &NewsParser::readyRead);
+    connect(currentReply, &QNetworkReply::metaDataChanged, this, &NewsParser::metaDataChanged);
+    connect(currentReply, &QNetworkReply::errorOccurred, this, &NewsParser::error);
 }
+
 
 void NewsParser::parseFile(const QString &filename)
 {
@@ -159,7 +159,7 @@ void NewsParser::workerDone(RawFeed* rawFeed)
     
     if (rawFeed) {
         feed = rawFeed;
-        
+
         // This means we saw... something.  Do a sanity check here to
         // make sure what we found was an actual feed.
         if (feed->items.size() > 0 || feed->title != "") {

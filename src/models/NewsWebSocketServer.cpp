@@ -20,6 +20,7 @@ NewsWebSocketServer::NewsWebSocketServer(QObject *parent) :
         //
         // TODO: Panic! (at the disco?)
         //
+        qDebug() << "Websocket unable to listen";
     }
 
     connect(&server, &QWebSocketServer::newConnection, this, &NewsWebSocketServer::onNewConnection);
@@ -37,6 +38,8 @@ void NewsWebSocketServer::init(FangSettings *fangSettings)
 
 void NewsWebSocketServer::onNewConnection()
 {
+    qDebug() << "NewsWebSocketServer::onNewConnection()";
+
     // Kill any existing connections.
     socketDisconnected();
 
@@ -52,7 +55,7 @@ void NewsWebSocketServer::onNewConnection()
 
 void NewsWebSocketServer::processMessage(QString message)
 {
-    //qDebug() << "NewsWebSocketServer: " << message;
+    // qDebug() << "NewsWebSocketServer: " << message;
 
     // Break up our message into a command and execute it.
     int spaceIndex = message.indexOf(' ');
@@ -67,6 +70,7 @@ void NewsWebSocketServer::processMessage(QString message)
 
 void NewsWebSocketServer::socketDisconnected()
 {
+    // qDebug() << "NewsWebSocketServer::socketDisconnected";
     if (pSocket) {
         pSocket->deleteLater();
         pSocket = NULL;
@@ -77,8 +81,8 @@ void NewsWebSocketServer::socketDisconnected()
 
 void NewsWebSocketServer::execute(const QString &command, const QString &data)
 {
-    //qDebug() << "command: " << command;
-    //qDebug() << "data: " << data;
+    // qDebug() << "command: " << command;
+    // qDebug() << "data: " << data;
 
     FangApp* app = FangApp::instance();
     if ("pageLoaded" == command) {

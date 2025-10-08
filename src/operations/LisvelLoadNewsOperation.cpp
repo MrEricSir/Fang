@@ -85,7 +85,7 @@ void LisvelLoadNewsOperation::execute()
 
     // Append/prepend items from our lists.
     if (listAppend != NULL)
-        foreach (NewsItem* newsItem, *listAppend) {
+        for (NewsItem* newsItem: *listAppend) {
             // News item list.
             feedItem->getNewsList()->append(newsItem);
 
@@ -96,7 +96,7 @@ void LisvelLoadNewsOperation::execute()
         }
 
     if (listPrepend != NULL)
-        foreach (NewsItem* newsItem, *listPrepend) {
+        for (NewsItem* newsItem: *listPrepend) {
             // News item list.
             feedItem->getNewsList()->prepend(newsItem);
 

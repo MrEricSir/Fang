@@ -18,29 +18,27 @@ OPMLInteractor::OPMLInteractor(QQuickItem *parent) :
     importDialog.setFileMode(QFileDialog::ExistingFile);
     importDialog.setNameFilter(OPML_FILENAME_FILTER);
     importDialog.setDirectory(QDir::home());
-    connect(&importDialog, SIGNAL(finished(int)), this, SLOT(onDialogClosed()));
-    connect(&importDialog, SIGNAL(fileSelected(const QString&)),
-            this, SLOT(onImportFileSelected(const QString&)));
+    connect(&importDialog, &QFileDialog::finished, this, &OPMLInteractor::onDialogClosed);
+    connect(&importDialog, &QFileDialog::fileSelected, this, &OPMLInteractor::onImportFileSelected);
     
     // Setup export dialog.
     exportDialog.setAcceptMode(QFileDialog::AcceptSave);
     exportDialog.setFileMode(QFileDialog::AnyFile);
     exportDialog.setNameFilter(OPML_FILENAME_FILTER);
     exportDialog.setDirectory(QDir::home());
-    connect(&exportDialog, SIGNAL(finished(int)), this, SLOT(onDialogClosed()));
-    connect(&exportDialog, SIGNAL(fileSelected(const QString&)),
-            this, SLOT(onExportFileSelected(const QString&)));
+    connect(&exportDialog, &QFileDialog::finished, this, &OPMLInteractor::onDialogClosed);
+    connect(&exportDialog, &QFileDialog::fileSelected, this, &OPMLInteractor::onExportFileSelected);
     
     // Setup parser.
-    connect(&parser, SIGNAL(done()), this, SLOT(onParserDone()));
+    connect(&parser, &OPMLParser::done, this, &OPMLInteractor::onParserDone);
     
     // Setup batch feed discovery.
-    connect(&batchFeedDiscovery, SIGNAL(done()), this, SLOT(onBatchFeedDiscoveryDone()));
+    connect(&batchFeedDiscovery, &BatchFeedDiscovery::done, this, &OPMLInteractor::onBatchFeedDiscoveryDone);
     
     // Setup feed list.
     // dataChanged
-    connect(FangApp::instance()->getImportList(), SIGNAL(dataChanged(QModelIndex,QModelIndex)),
-            this, SLOT(onImportListDataChanged(QModelIndex,QModelIndex)));
+    connect(FangApp::instance()->getImportList(), &ListModel::dataChanged,
+            this, &OPMLInteractor::onImportListDataChanged);
 }
 
 OPMLInteractor::~OPMLInteractor()

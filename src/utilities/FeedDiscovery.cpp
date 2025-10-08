@@ -22,8 +22,8 @@ FeedDiscovery::FeedDiscovery(QObject *parent) :
     machine.addStateChange(-1, FEED_ERROR, SLOT(onError())); // All errors.
     
     // Parser signals.
-    connect(&parserFirstTry, SIGNAL(done()), this, SLOT(onFirstParseDone()));
-    connect(&parserSecondTry, SIGNAL(done()), this, SLOT(onSecondParseDone()));
+    connect(&parserFirstTry, &NewsParser::done, this, &FeedDiscovery::onFirstParseDone);
+    connect(&parserSecondTry, &NewsParser::done, this, &FeedDiscovery::onSecondParseDone);
     
     // Web page grabber signals.
     connect(&pageGrabber, &WebPageGrabber::ready, this, &FeedDiscovery::onPageGrabberReady);
@@ -68,7 +68,7 @@ void FeedDiscovery::onFeedFound()
 {
     Q_ASSERT(!_error);
     Q_ASSERT(!_feedURL.isEmpty());
-    
+
     emit done(this);
 }
 
@@ -86,7 +86,7 @@ void FeedDiscovery::onError()
 {
     Q_ASSERT(_error);
     Q_ASSERT(!_errorString.isEmpty());
-    
+
     emit done(this);
 }
 

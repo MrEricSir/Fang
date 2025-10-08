@@ -51,13 +51,13 @@ FangApp::FangApp(QApplication *parent, QQmlApplicationEngine* engine, SingleInst
     _instance = this;
     
     // Setup signals.
-    connect(parent, SIGNAL(aboutToQuit()), this, SLOT(onQuit()));
+    connect(parent, &QApplication::aboutToQuit, this, &FangApp::onQuit);
 
-    connect(engine, SIGNAL(objectCreated(QObject*,QUrl)), this, SLOT(onObjectCreated(QObject*,QUrl)));
+    connect(engine, &QQmlApplicationEngine::objectCreated, this, &FangApp::onObjectCreated);
     
-    connect(feedList, SIGNAL(added(ListItem*)), this, SLOT(onFeedAdded(ListItem*)));
-    connect(feedList, SIGNAL(removed(ListItem*)), this, SLOT(onFeedRemoved(ListItem*)));
-    connect(feedList, SIGNAL(selectedChanged(ListItem*)), this, SLOT(onFeedSelected(ListItem*)));
+    connect(feedList, &ListModel::added, this, &FangApp::onFeedAdded);
+    connect(feedList, &ListModel::removed, this, &FangApp::onFeedRemoved);
+    connect(feedList, &ListModel::selectedChanged, this, &FangApp::onFeedSelected);
 
     connect(&newsServer, &NewsWebSocketServer::isLoadInProgressChanged, this,
             &FangApp::onLoadPageChanged);
@@ -86,7 +86,7 @@ void FangApp::init()
     
     // Load feed list.
     LoadAllFeedsOperation* loadAllOp = new LoadAllFeedsOperation(&manager, feedList);
-    connect(loadAllOp, SIGNAL(finished(Operation*)), this, SLOT(onLoadAllFinished(Operation*)));
+    connect(loadAllOp, &LoadAllFeedsOperation::finished, this, &FangApp::onLoadAllFinished);
     manager.add(loadAllOp);
 }
 
@@ -174,12 +174,12 @@ void FangApp::onNewFeedAddedSelect(Operation* addFeedOperation)
 
 void FangApp::connectFeed(FeedItem *feed)
 {
-    connect(feed, SIGNAL(titleChanged()), this, SLOT(onFeedTitleChanged()));
+    connect(feed, &FeedItem::titleChanged, this, &FangApp::onFeedTitleChanged);
 }
 
 void FangApp::disconnectFeed(FeedItem *feed)
 {
-    disconnect(feed, SIGNAL(titleChanged()), this, SLOT(onFeedTitleChanged()));
+    disconnect(feed, &FeedItem::titleChanged, this, &FangApp::onFeedTitleChanged);
 }
 
 void FangApp::onLoadAllFinished(Operation *op)
@@ -208,7 +208,7 @@ void FangApp::onLoadAllFinished(Operation *op)
     }
 
     // We get signal.
-    connect(pinnedNews, SIGNAL(dataChanged()), this, SLOT(pinnedNewsWatcher()));
+    connect(pinnedNews, &PinnedFeedItem::dataChanged, this, &FangApp::pinnedNewsWatcher);
 
     // This has to be manually invoked the first time.
     pinnedNewsWatcher();
@@ -326,7 +326,7 @@ void FangApp::setBookmark(qint64 id, bool allowBackward)
     // I bookmark you!
     SetBookmarkOperation* bookmarkOp = new SetBookmarkOperation(&manager, currentFeed, id);
     isSettingBookmark =  true;
-    connect(bookmarkOp, SIGNAL(finished(Operation*)), this, SLOT(onSetBookmarkFinished(Operation*)));
+    connect(bookmarkOp, &SetBookmarkOperation::finished, this, &FangApp::onSetBookmarkFinished);
     manager.add(bookmarkOp);
 }
 
@@ -340,7 +340,7 @@ void FangApp::setPin(qint64 id, bool pin)
     PinnedFeedItem* pinnedNews = qobject_cast<PinnedFeedItem*>(feedForId(FEED_ID_PINNED));
 
     SetPinOperation* pinOp = new SetPinOperation(&manager, pinnedNews, id, pin);
-    connect(pinOp, SIGNAL(finished(Operation*)), this, SLOT(onSetPinFinished(Operation*)));
+    connect(pinOp, &SetPinOperation::finished, this, &FangApp::onSetPinFinished);
     manager.add(pinOp);
 }
 
@@ -404,7 +404,7 @@ void FangApp::onObjectCreated(QObject* object, const QUrl& url)
     
     // Setup the feed refresh timer.
     setRefreshTimer();
-    connect(updateTimer, SIGNAL(timeout()), this, SLOT(updateAllFeeds()));
+    connect(updateTimer, &QTimer::timeout, this, &FangApp::updateAllFeeds);
     updateTimer->start();
 
     // Maybe the user wants to change how often we refresh the feeds?  Let 'em.
@@ -485,7 +485,7 @@ void FangApp::loadNews(LoadNews::LoadMode mode)
     }
 
     loadNewsInProgress =  true;
-    connect(loader, SIGNAL(finished(Operation*)), this, SLOT(onLoadNewsFinished(Operation*)));
+    connect(loader, &LoadNews::finished, this, &FangApp::onLoadNewsFinished);
     manager.add(loader);
 }
 
@@ -660,8 +660,7 @@ void FangApp::addFeed(const QUrl &feedURL, const RawFeed* rawFeed, bool switchTo
                                   &manager, feedList, feedURL, rawFeed);
     
     if (switchTo) {
-        connect(addOp, SIGNAL(finished(Operation*)),
-                this, SLOT(onNewFeedAddedSelect(Operation*)));
+        connect(addOp, &AddFeedOperation::finished, this, &FangApp::onNewFeedAddedSelect);
     }
     
     manager.add(addOp);

@@ -10,7 +10,7 @@ AddFeedOperation::AddFeedOperation(OperationManager *parent, ListModel *feedList
     parser(),
     title(title)
 {
-    QObject::connect(&parser, SIGNAL(done()), this, SLOT(onFeedFinished()));
+    QObject::connect(&parser, &NewsParser::done, this, &AddFeedOperation::onFeedFinished);
 }
 
 AddFeedOperation::AddFeedOperation(OperationManager *parent, ListModel *feedList, const QUrl &feedURL,

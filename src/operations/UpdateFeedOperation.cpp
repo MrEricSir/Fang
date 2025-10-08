@@ -16,8 +16,8 @@ UpdateFeedOperation::UpdateFeedOperation(OperationManager *parent, FeedItem *fee
     timestamp(),
     useCache(useCache)
 {
-    connect(&parser, SIGNAL(done()), this, SLOT(onFeedFinished()));
-    connect(&rewriter, SIGNAL(finished()), this, SLOT(onRewriterFinished()));
+    connect(&parser, &NewsParser::done, this, &UpdateFeedOperation::onFeedFinished);
+    connect(&rewriter, &RawFeedRewriter::finished, this, &UpdateFeedOperation::onRewriterFinished);
     
     requireObject(feed);
 }
@@ -79,7 +79,7 @@ void UpdateFeedOperation::onFeedFinished()
     }
     
     // Sort the list oldest to newest.
-    qSort(rawFeed->items.begin(), rawFeed->items.end(), RawNews::LessThan);
+    std::sort(rawFeed->items.begin(), rawFeed->items.end(), RawNews::LessThan);
     
     // Check for the newest news item that we know about.
     QDateTime newestLocalNews = QDateTime::fromMSecsSinceEpoch(0); // default to epoch

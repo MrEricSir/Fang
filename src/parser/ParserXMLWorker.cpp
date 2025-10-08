@@ -1,4 +1,5 @@
 #include "ParserXMLWorker.h"
+#include <QtCore/qtimezone.h>
 
 ParserXMLWorker::ParserXMLWorker(QObject *parent) :
     FangObject(parent), feed(NULL), currentItem(NULL), isValid(false), inAtomXHTML(false)
@@ -23,6 +24,11 @@ void ParserXMLWorker::documentStart()
 void ParserXMLWorker::documentEnd()
 {
     if (isValid) {
+        if (feed->items.size() == 0) {
+            // Edge case: we typically save the summary when we encounter the first item. This
+            // handles the case where they were no items but we might have a summary.
+            saveSummary();
+        }
         emit done(feed);
     }
     
@@ -74,29 +80,7 @@ void ParserXMLWorker::elementStart()
         
         if (numItems == 0) {
             // Oh, first item?  Assume we've seen the summary then.
-            
-            // Global space.
-            //
-            //feed->url = finalFeedURL;
-            //
-            feed->title = title;
-            feed->subtitle = subtitle;
-            feed->siteURL = QUrl(url);
-            
-            //qDebug() << "Title " << title;
-            
-            // Clear all local strings.
-            title = "";
-            url = "";
-            subtitle = "";
-            pubdate = "";
-            lastbuilddate = "";
-            updated = "";
-            date = "";
-            author = "";
-            content = "";
-            guid = "";
-            id = "";
+            saveSummary();
         }
         
         currentItem = new RawNews(feed);
@@ -309,6 +293,31 @@ void ParserXMLWorker::resetParserVars()
     tagStack.clear();
 }
 
+void ParserXMLWorker::saveSummary()
+{
+    //qDebug() << "ParserXMLWorker::saveSummary()";
+
+    // Global space.
+    feed->title = title;
+    feed->subtitle = subtitle;
+    feed->siteURL = QUrl(url);
+
+    //qDebug() << "Title " << title;
+
+    // Clear all local strings.
+    title = "";
+    url = "";
+    subtitle = "";
+    pubdate = "";
+    lastbuilddate = "";
+    updated = "";
+    date = "";
+    author = "";
+    content = "";
+    guid = "";
+    id = "";
+}
+
 
 QDateTime ParserXMLWorker::dateFromFeedString(const QString& _timestamp)
 {
@@ -433,8 +442,8 @@ QDateTime ParserXMLWorker::dateFromFeedString(const QString& _timestamp)
     }
     
     // All times are (supposedly) in UTC.
-    ret.setTimeSpec(Qt::UTC);
-    
+    ret.setTimeZone(QTimeZone::UTC);
+
     return ret;
 }
 

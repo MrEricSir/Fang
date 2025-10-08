@@ -1,4 +1,4 @@
-import QtQuick 2.4
+import QtQuick
 import Fang 1.0
 
 // The dialog for adding a feed!
@@ -109,7 +109,7 @@ Dialog {
         
         property bool validationComplete: false;
         
-        onValidationComplete: {
+        onValidationComplete: (result, errorString) => {
             if (!result) {
                 // Uh oh, an error.
                 validationStatus.state = "error";
