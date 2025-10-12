@@ -90,8 +90,9 @@ public slots:
     /**
      * @brief Inserts a new folder at the given index.
      * @param newIndex
+     * @return UUID of folder item
      */
-    void insertFolder(int newIndex);
+    int insertFolder(int newIndex);
     
     /**
      * @brief Updates every single damn feed.

@@ -46,7 +46,7 @@ public slots:
     void removeFeed(FeedItem* feed);
 
     // Insert a folder at the given index and reparent the next two items.
-    void insertFolder(int newIndex);
+    int insertFolder(int newIndex);
     
 signals:
     void urlChanged(QString url);

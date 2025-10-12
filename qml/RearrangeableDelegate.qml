@@ -48,7 +48,7 @@ Rectangle {
     // This allows children to be positioned within the element.
     default property alias contents: placeholder.children;
 
-    width: parent.width;
+    width: placeholder.childrenRect.width;
     height: placeholder.childrenRect.height;
 
     color: "transparent";

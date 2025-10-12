@@ -27,10 +27,12 @@ void InsertFolderOperation::execute()
 
     // Grab next two ids in the list.
     QVector<qint64> nextIDs;
+    QVector<FeedItem *> nextItems;
     for (int i = newIndex; i < newIndex + 2; i++) {
         FeedItem* next = qobject_cast<FeedItem*>(feedList->row(i));
         Q_ASSERT(next);
         nextIDs.append(next->getDbId());
+        nextItems.append(next);
     }
 
     // DB: Insert the new folder into the db and get it's new ID.
@@ -60,6 +62,7 @@ void InsertFolderOperation::execute()
 
     {
         QString ids = Utilities::commaSeparatedStringList(nextIDs);
+        // qDebug() << "inserting folder with id " << insertID << " the following IDs: " << ids;
 
         QSqlQuery query(db());
         query.prepare("UPDATE FeedItemTable SET parent_folder = :parentFolder "
@@ -78,12 +81,10 @@ void InsertFolderOperation::execute()
 
     // Update our model.
     FolderFeedItem* folder = new FolderFeedItem(insertID, newIndex, name, feedList);
-    feedList->insertRow(newIndex, folder);
-    for (int i = newIndex + 1; i < newIndex + 3; i++) {
-        FeedItem* next = qobject_cast<FeedItem*>(feedList->row(i));
-        Q_ASSERT(next);
-        next->setParentFolder(insertID);
+    for (FeedItem* item: nextItems) {
+        item->setParentFolder(insertID);
     }
+    feedList->insertRow(newIndex, folder);
 
     // TODO: Model/DB: Redo all ordinals in the list
 

@@ -23,7 +23,7 @@ Item {
     
     // Read-only properties.
     property int buttonSize: 30 * style.scale;
-    property variant listView: feedListView
+    property variant listView: feedListView;
     property bool feedsExist: feedListModel.count > 1; // (There's always 1 item -- all news.)
 
     // This is called by RearrangableDelegate when the user creates a new folder.  It

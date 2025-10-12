@@ -60,7 +60,7 @@ void UpdateOrdinalsOperation::execute()
 
         update.prepare("UPDATE FeedItemTable SET parent_folder = :parent_folder WHERE id = "
                        ":feed_id");
-        update.bindValue(":parent_folder", -1);
+        update.bindValue(":parent_folder", feedItem->getParentFolderID());
         update.bindValue(":feed_id", feedItem->getDbId());
 
         if (!update.exec()) {

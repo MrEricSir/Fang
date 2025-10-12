@@ -677,9 +677,15 @@ void FangApp::removeFeed(FeedItem *feed)
     manager.add(updateOp);
 }
 
-void FangApp::insertFolder(int newIndex)
+int FangApp::insertFolder(int newIndex)
 {
     // Slap in a new folder, reparent the following two items.
     manager.add(new InsertFolderOperation(&manager, newIndex, "New folder", feedList));
+    FeedItem* item = qobject_cast<FeedItem *>(feedList->row(newIndex));
+    if (item == nullptr || !item->isFolder()) {
+        return -1;
+    }
+
+    return item->getDbId();
 }
 
