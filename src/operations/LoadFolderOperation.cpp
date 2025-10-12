@@ -4,7 +4,7 @@
 LoadFolderOperation::LoadFolderOperation(OperationManager *parent, FolderFeedItem *feedItem, LoadNews::LoadMode mode, int loadLimit)
     : LisvelLoadNewsOperation(parent, feedItem, mode, loadLimit, true)
 {
-
+    qDebug() << "=== LoadFolderOperation ===";
 }
 
 LoadFolderOperation::~LoadFolderOperation()

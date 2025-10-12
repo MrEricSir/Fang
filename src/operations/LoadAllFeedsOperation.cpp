@@ -3,7 +3,6 @@
 #include <QDebug>
 #include <QMap>
 
-#include "../models/NewsItem.h"
 #include "../models/AllNewsFeedItem.h"
 #include "../models/PinnedFeedItem.h"
 #include "../models/FolderFeedItem.h"

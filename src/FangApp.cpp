@@ -3,8 +3,6 @@
 #include <QDebug>
 #include <QImageReader>
 
-#include "utilities/Utilities.h"
-
 #include "operations/UpdateFeedOperation.h"
 #include "operations/LoadAllFeedsOperation.h"
 #include "operations/AddFeedOperation.h"
@@ -15,6 +13,7 @@
 #include "operations/SetBookmarkOperation.h"
 #include "operations/SetPinOperation.h"
 #include "operations/LoadAllNewsOperation.h"
+#include "operations/LoadFolderOperation.h"
 #include "operations/LoadPinnedNewsOperation.h"
 #include "operations/InsertFolderOperation.h"
 
@@ -481,7 +480,11 @@ void FangApp::loadNews(LoadNews::LoadMode mode)
         break;
 
     default:
-        loader = new LoadNews(&manager, currentFeed, mode);
+        if (currentFeed->isFolder()) {
+            loader = new LoadFolderOperation(&manager, qobject_cast<FolderFeedItem *>(currentFeed), mode);
+        } else {
+            loader = new LoadNews(&manager, currentFeed, mode);
+        }
     }
 
     loadNewsInProgress =  true;
