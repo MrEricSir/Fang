@@ -32,7 +32,15 @@ RearrangeableDelegate {
         id: row1;
         
         Item {
-            width: sidebarFeedList.width - (isFolder || parentFolder > -1 ? height : 0);
+            width: {
+                if (isFolder) {
+                    return sidebarFeedList.width - height;
+                } else if (parentFolder > -1) {
+                    return sidebarFeedList.width - folderIndent;
+                } else {
+                    return sidebarFeedList.width;
+                }
+            }
             height: feedTitleDelegate.height;
             
             Rectangle {
@@ -40,7 +48,7 @@ RearrangeableDelegate {
                 
                 color: index == feedListView.currentIndex ? 
                            style.color.sidebarSelected : "transparent";
-                
+
                 anchors.fill: parent;
                 anchors.topMargin: 5 * style.scale;
                 anchors.leftMargin: 0;
@@ -146,8 +154,7 @@ RearrangeableDelegate {
                     ]
                     
                     state: unreadCount > 0 ? "unread" : "allread";
-                    opacity: unreadCount == 0 ? 0.0 : 1.0 // initial opacity;
-                    visible: !isFolder; // TODO: Add working unread count to folders.
+                    opacity: unreadCount == 0 ? 0.0 : 1.0; // initial opacity
                     
                     transitions: [
                         Transition {

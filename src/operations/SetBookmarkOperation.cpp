@@ -55,10 +55,13 @@ void SetBookmarkOperation::bookmarkSingleFeed(FeedItem* feed)
     }
     
     //
-    // Step 2: Update unread count for both the feed and All News.
+    // Step 2: Update unread count for the feed, All News, and the folder (if in one.)
     //
     UnreadCountReader::update(db(), FangApp::instance()->feedForId(feed->getDbId()));
     UnreadCountReader::update(db(), FangApp::instance()->feedForId(FEED_ID_ALLNEWS));
+    if (feed->getParentFolderID() >= 0) {
+        UnreadCountReader::update(db(), FangApp::instance()->feedForId(feed->getParentFolderID()));
+    }
     
     db().commit();
     

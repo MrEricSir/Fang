@@ -25,7 +25,11 @@ void UnreadCountReader::update(QSqlDatabase db, FeedItem *feed)
     }
 
     // All other feed types.
-    feed->setUnreadCount(forFeed(db, feed->getDbId()));
+    if (feed->isFolder()) {
+        feed->setUnreadCount(forFolder(db, feed->getDbId()));
+    } else {
+        feed->setUnreadCount(forFeed(db, feed->getDbId()));
+    }
 }
 
 qint32 UnreadCountReader::forAllNews(QSqlDatabase db)

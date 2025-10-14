@@ -173,8 +173,9 @@ void FeedItem::setIsUpdating(bool isUpdating)
 
 void FeedItem::setImageURL(const QUrl &url)
 {
-    if (imageURL == url)
+    if (imageURL == url) {
         return;
+    }
     
     imageURL = url;
     emit dataChanged();
@@ -182,8 +183,9 @@ void FeedItem::setImageURL(const QUrl &url)
 
 void FeedItem::setTitle(const QString &newTitle)
 {
-    if (title == newTitle)
+    if (title == newTitle) {
         return;
+    }
     
     title = newTitle;
     emit titleChanged();
@@ -192,8 +194,9 @@ void FeedItem::setTitle(const QString &newTitle)
 
 void FeedItem::setDropTarget(const QString& newDropTarget)
 {
-    if (newDropTarget == dropTarget)
+    if (newDropTarget == dropTarget) {
         return;
+    }
     
     dropTarget = newDropTarget;
     emit dataChanged();
@@ -201,8 +204,9 @@ void FeedItem::setDropTarget(const QString& newDropTarget)
 
 void FeedItem::setIsSelected(bool s)
 {
-    if (isSelected == s)
+    if (isSelected == s) {
         return;
+    }
     
     isSelected = s;
     emit dataChanged();
@@ -231,20 +235,24 @@ void FeedItem::clearNews()
 bool FeedItem::canBookmark(qint64 bookmarkID, bool allowBackward)
 {
     // What is this? I don't even.
-    if (bookmarkID < -1)
+    if (bookmarkID < -1) {
         return false;
+    }
     
     // Given no current bookmark, anything will do.
-    if (_bookmark == -1)
+    if (_bookmark == -1) {
         return true;
+    }
     
     // That's a no-op for you, young man.
-    if (_bookmark == bookmarkID)
+    if (_bookmark == bookmarkID) {
         return false;
+    }
     
     // Sure, whatever you want.
-    if (allowBackward)
+    if (allowBackward) {
         return true;
+    }
     
     // We asked SQLite to always increase our IDs, remember.
     return bookmarkID > _bookmark;
@@ -252,8 +260,9 @@ bool FeedItem::canBookmark(qint64 bookmarkID, bool allowBackward)
 
 void FeedItem::setBookmarkID(qint64 bookmark)
 {
-    if (bookmark == _bookmark)
+    if (bookmark == _bookmark) {
         return; // Nothing to do.
+    }
     
     _bookmark = bookmark;
     emit dataChanged();
@@ -261,8 +270,9 @@ void FeedItem::setBookmarkID(qint64 bookmark)
 
 void FeedItem::setUnreadCount(qint32 unreadCount)
 {
-    if (this->unreadCount == unreadCount)
+    if (this->unreadCount == unreadCount) {
         return;
+    }
     
     this->unreadCount = unreadCount;
     emit dataChanged();
@@ -276,8 +286,9 @@ void FeedItem::setOrdinal(int newOrdinal)
 
 void FeedItem::setErrorFlag(bool errorFlag)
 {
-    if (_errorFlag == errorFlag)
+    if (_errorFlag == errorFlag) {
         return;
+    }
     
     _errorFlag = errorFlag;
     emit dataChanged();
@@ -285,8 +296,9 @@ void FeedItem::setErrorFlag(bool errorFlag)
 
 void FeedItem::setURL(QUrl url)
 {
-    if (this->url == url)
+    if (this->url == url) {
         return;
+    }
     
     this->url = url;
     emit dataChanged();
