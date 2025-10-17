@@ -218,7 +218,7 @@ public slots:
      * @brief getParentFolderID
      * @return The ID of the parent folder, or -1 if none.
      */
-    qint64 getParentFolderID() {
+    qint64 getParentFolderID() const {
         return _parentFolder;
     }
     

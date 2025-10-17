@@ -434,7 +434,7 @@ Rectangle {
             }
 
             onDoubleClicked: () => {
-                earrangeableDelegate.doubleClicked();
+                rearrangeableDelegate.doubleClicked();
             }
 
             onPressed: () => {
