@@ -64,9 +64,12 @@ ICON = icons/mac.icns
 QMAKE_INFO_PLIST = Info.plist
 
 SOURCES += src/main.cpp \
+    src/models/FolderFeedItem.cpp \
     src/models/ListModel.cpp \
     src/models/NewsItem.cpp \
     src/models/FeedItem.cpp \
+    src/operations/InsertFolderOperation.cpp \
+    src/operations/LoadFolderOperation.cpp \
     src/parser/RawFeed.cpp \
     src/parser/RawNews.cpp \
     src/FangApp.cpp \
@@ -122,9 +125,12 @@ SOURCES += src/main.cpp \
     src/models/QMLNewsInteractor.cpp
 	
 HEADERS += \
+    src/models/FolderFeedItem.h \
     src/models/ListModel.h \
     src/models/NewsItem.h \
     src/models/FeedItem.h \
+    src/operations/InsertFolderOperation.h \
+    src/operations/LoadFolderOperation.h \
     src/parser/RawFeed.h \
     src/parser/RawNews.h \
     src/FangApp.h \

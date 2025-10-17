@@ -72,7 +72,7 @@ Item {
             enabled: !qmlNewsInteractor.loadInProgress && newsFocus;
         }
 
-        Keys.onPressed: {
+        Keys.onPressed: (event)=> {
             switch (event.key) {
             case Qt.Key_Left:
                 qmlNewsInteractor.jumpPrevious();

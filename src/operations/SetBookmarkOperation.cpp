@@ -19,9 +19,6 @@ SetBookmarkOperation::~SetBookmarkOperation()
 
 void SetBookmarkOperation::execute()
 {
-    //
-    // TODO: Folder support
-    //
     AllNewsFeedItem* allNews = qobject_cast<AllNewsFeedItem*>(feed);
     if (allNews) {
         if (bookmarkID == -1) {
@@ -29,6 +26,8 @@ void SetBookmarkOperation::execute()
         } else {
             bookmarkAllNewsFeed(allNews);
         }
+    } else if (feed->isFolder()) {
+        bookmarkFolderFeed(qobject_cast<FolderFeedItem*>(feed));
     } else {
         bookmarkSingleFeed(feed);
     }
@@ -46,23 +45,53 @@ void SetBookmarkOperation::bookmarkSingleFeed(FeedItem* feed)
                    ":feed_id");
     update.bindValue(":bookmark_id", bookmarkID);
     update.bindValue(":feed_id", feed->getDbId());
-    
+
     if (!update.exec()) {
-        reportSQLError(update, "Unable to set bookmark to " +  QString::number(bookmarkID) + " for feed id: " + QString::number(feed->getDbId()));
+        reportSQLError(update, "Unable to set bookmark to " + QString::number(bookmarkID) +
+                                   " for feed id: " + QString::number(feed->getDbId()));
         db().rollback();
-        
+
+        emit finished(this);
         return;
     }
-    
+
     //
-    // Step 2: Update unread count for both the feed and All News.
+    // Step 2: Update unread count for the feed, All News, and the folder (if in one.)
     //
     UnreadCountReader::update(db(), FangApp::instance()->feedForId(feed->getDbId()));
     UnreadCountReader::update(db(), FangApp::instance()->feedForId(FEED_ID_ALLNEWS));
-    
+    if (feed->getParentFolderID() >= 0) {
+        UnreadCountReader::update(db(), FangApp::instance()->feedForId(feed->getParentFolderID()));
+    }
+
     db().commit();
-    
+
     emit finished(this);
+}
+
+void SetBookmarkOperation::bookmarkFolderFeed(FolderFeedItem* feedFolder)
+{
+    Q_UNUSED(feedFolder);
+
+    //
+    // Step 1: Get the ID of the feed associated with the bookmark we're setting.
+    //
+    QSqlQuery query(db());
+    query.prepare("SELECT feed_id FROM NewsItemTable WHERE id = :bookmark_id LIMIT 1");
+    query.bindValue(":bookmark_id", bookmarkID);
+    if (!query.exec() || !query.next()) {
+        reportSQLError(query, "Unable to locate news item for bookmark " + QString::number(bookmarkID));
+
+        emit finished(this);
+        return;
+    }
+
+    qint64 feedId = query.value("feed_id").toULongLong();
+
+    //
+    // Step 2: Set the feed's bookmark.
+    //
+    bookmarkSingleFeed(FangApp::instance()->feedForId(feedId));
 }
 
 void SetBookmarkOperation::bookmarkAllNewsFeed(AllNewsFeedItem* allNews)
@@ -104,9 +133,10 @@ void SetBookmarkOperation::bookmarkAllNewsFeed(AllNewsFeedItem* allNews)
         update.bindValue(":bookmark_id2", newBookmark);
         
         if (!update.exec()) {
-            reportSQLError(update, "Unable to set bookmark to " +  QString::number(newBookmark));
+            reportSQLError(update, "Unable to set bookmark to " + QString::number(newBookmark));
             db().rollback();
             
+            emit finished(this);
             return;
         }
         
@@ -137,6 +167,7 @@ void SetBookmarkOperation::unbookmarkAll()
         reportSQLError(update, "Unable to unset all bookmarks");
         db().rollback();
         
+        emit finished(this);
         return;
     }
     

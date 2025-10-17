@@ -4,6 +4,7 @@
 #include "DBOperation.h"
 #include "../models/FeedItem.h"
 #include "../models/AllNewsFeedItem.h"
+#include "../models/FolderFeedItem.h"
 
 /**
  * @brief Sets a bookmark to whatever news id you'd like.
@@ -28,6 +29,8 @@ public slots:
 protected:
     
     void bookmarkSingleFeed(FeedItem *feed);
+
+    void bookmarkFolderFeed(FolderFeedItem* folder);
     
     void bookmarkAllNewsFeed(AllNewsFeedItem* allNews);
     

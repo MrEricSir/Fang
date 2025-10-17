@@ -8,6 +8,10 @@
 #include "FeedItem.h"
 #include "../utilities/FeedDiscovery.h"
 
+/**
+ * @brief Initially this class was for validating feed URLs, but has now outgrown that to handle
+ *        adding and removing feeds and folders.
+ */
 class FeedValidator : public QQuickItem 
 {
     Q_OBJECT
@@ -38,8 +42,11 @@ public slots:
     // If check was OK, call this to add the feed!
     void addFeed();
 
-    // HAHA this class has a "secret" property; it can also remove feeds. :)
+    // Remove an existing feed.
     void removeFeed(FeedItem* feed);
+
+    // Insert a folder at the given index and reparent the next two items.
+    int insertFolder(int newIndex);
     
 signals:
     void urlChanged(QString url);

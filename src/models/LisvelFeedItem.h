@@ -25,19 +25,22 @@ public:
 
     /**
      * @brief When the feed changes away from all news, this kills the view.
-     *
-     * TODO: This general solution can work for any folder/container type.
      */
     virtual void clearNews();
 
     /**
      * @brief List of all news IDs that have been in the view.
      *
-     * TODO: This general solution can work for any folder/container type.
-     *
      * @return
      */
     QList<qint64>* newsIDs() { return &_newsIDs; }
+
+    /**
+     * @param item
+     * @param allowBackward
+     * @return True if this item can be bookmarked.
+     */
+    virtual bool canBookmark(qint64 bookmarkID, bool allowBackward);
 
 private:
     // Though the news items are shown temporarily, the view is inifinite.  This

@@ -3,9 +3,9 @@
 #include <QDebug>
 #include <QMap>
 
-#include "../models/NewsItem.h"
 #include "../models/AllNewsFeedItem.h"
 #include "../models/PinnedFeedItem.h"
+#include "../models/FolderFeedItem.h"
 #include "../utilities/UnreadCountReader.h"
 
 LoadAllFeedsOperation::LoadAllFeedsOperation(OperationManager *parent, ListModel *feedList) :
@@ -33,19 +33,33 @@ void LoadAllFeedsOperation::execute()
     
     QList<ListItem*> tempFeedItemList; // Use ListItem so we can do an appendAll later.
     while (query.next()) {
-        FeedItem* item = new FeedItem(
-                    query.value("id").toULongLong(),
-                    query.value("ordinal").toInt(),
-                    query.value("title").toString(),
-                    query.value("subtitle").toString(),
-                    QDateTime::fromMSecsSinceEpoch(query.value("lastUpdated").toLongLong()),
-                    query.value("minutesToUpdate").toUInt(),
-                    query.value("url").toString(),
-                    query.value("siteURL").toString(),
-                    query.value("imageURL").toString(),
-                    QDateTime::fromMSecsSinceEpoch(query.value("lastIconUpdate").toLongLong()),
-                    NULL
-                    );
+        FeedItem* item = NULL;
+        bool isFolder = query.value("is_folder").toBool();
+        if (isFolder) {
+            item = new FolderFeedItem(
+                        query.value("id").toULongLong(),
+                        query.value("ordinal").toInt(),
+                        query.value("title").toString(),
+                        query.value("folder_open").toBool(),
+                        NULL
+                        );
+        } else {
+            item = new FeedItem(
+                        query.value("id").toULongLong(),
+                        query.value("ordinal").toInt(),
+                        query.value("title").toString(),
+                        query.value("subtitle").toString(),
+                        QDateTime::fromMSecsSinceEpoch(query.value("lastUpdated").toLongLong()),
+                        query.value("minutesToUpdate").toUInt(),
+                        query.value("url").toString(),
+                        query.value("siteURL").toString(),
+                        query.value("imageURL").toString(),
+                        QDateTime::fromMSecsSinceEpoch(query.value("lastIconUpdate").toLongLong()),
+                        query.value("parent_folder").toULongLong(),
+                        query.value("folder_open").toBool(),
+                        NULL
+                        );
+        }
         
         tempFeedItemList.append(item);
     }
@@ -55,7 +69,11 @@ void LoadAllFeedsOperation::execute()
     pinnedNews->setUnreadCount(UnreadCountReader::forPinned(db()));
     foreach(ListItem* li, tempFeedItemList) {
         FeedItem* item = qobject_cast<FeedItem*>(li);
-        item->setUnreadCount(UnreadCountReader::forFeed(db(), item->getDbId()));
+        if (item->isFolder()) {
+            item->setUnreadCount(UnreadCountReader::forFolder(db(), item->getDbId()));
+        } else {
+            item->setUnreadCount(UnreadCountReader::forFeed(db(), item->getDbId()));
+        }
     }
     
     // Finally, put special items at the front (in reverse order, since we're prepending.)

@@ -33,5 +33,6 @@
         <file>+webview/FangWebView.qml</file>
         <file>FangSplitView.qml</file>
         <file>+mobile/FangSplitView.qml</file>
+        <file>RearrangeableDelegate.qml</file>
     </qresource>
 </RCC>

@@ -25,7 +25,11 @@ void UnreadCountReader::update(QSqlDatabase db, FeedItem *feed)
     }
 
     // All other feed types.
-    feed->setUnreadCount(forFeed(db, feed->getDbId()));
+    if (feed->isFolder()) {
+        feed->setUnreadCount(forFolder(db, feed->getDbId()));
+    } else {
+        feed->setUnreadCount(forFeed(db, feed->getDbId()));
+    }
 }
 
 qint32 UnreadCountReader::forAllNews(QSqlDatabase db)
@@ -61,6 +65,25 @@ qint32 UnreadCountReader::forPinned(QSqlDatabase db)
     int ret = query.value(0).toInt();
     //qDebug() << "Unread count for pinned: " << ret;
     return ret;
+}
+
+qint32 UnreadCountReader::forFolder(QSqlDatabase db, qint64 folderID)
+{
+    QSqlQuery query(db);
+    query.prepare("SELECT count(id) FROM NewsItemTable N WHERE "
+                  "(SELECT parent_folder FROM FeedItemTable WHERE id = N.feed_id) = :folder_id "
+                  "AND id > "
+                  "(SELECT bookmark_id from FeedItemTable WHERE id = N.feed_id)");
+    query.bindValue(":folder_id", folderID);
+
+    if (!query.exec() || !query.next()) {
+       qDebug() << "Could not update unread count for folder";
+       qDebug() << query.lastError();
+
+       return -1;
+    }
+
+    return query.value(0).toInt();;
 }
 
 qint32 UnreadCountReader::forFeed(QSqlDatabase db, quint64 id)

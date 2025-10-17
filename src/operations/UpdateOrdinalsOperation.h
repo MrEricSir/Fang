@@ -6,7 +6,8 @@
 #include "../models/ListModel.h"
 
 /**
- * @brief Saves the current ordinal for each feed to the database.
+ * @brief Saves the current ordinal for each feed to the database. Also responsible for reparenting
+ *        items when they're removed from a folder.
  */
 class UpdateOrdinalsOperation : public DBOperation
 {

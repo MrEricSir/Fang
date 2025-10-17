@@ -43,6 +43,12 @@ void FeedValidator::setUrl(QString url)
     emit urlChanged(_url);
 }
 
+int FeedValidator::insertFolder(int newIndex)
+{
+    // qDebug() << "FeedValidator::insertFolder at: " << newIndex;
+    return FangApp::instance()->insertFolder(newIndex);
+}
+
 void FeedValidator::setSiteTitle(QString title)
 {
     if (title == _siteTitle)

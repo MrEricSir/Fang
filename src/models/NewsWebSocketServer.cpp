@@ -215,8 +215,8 @@ void NewsWebSocketServer::addNewsItem(NewsItem *item, QVariantList *newsList)
 {
     //qDebug() << "Add news: " << item->id();
 
-    // Make sure we get the real feed title for All News.te
-    QString feedTitle = !item->getFeed()->isSpecialFeed() ?
+    // Make sure we get the real feed title for All News and folders.
+    QString feedTitle = (!item->getFeed()->isSpecialFeed() && !item->getFeed()->isFolder()) ?
                             item->getFeed()->getTitle() :
                             FangApp::instance()->feedForId(item->getFeedId())->getTitle();
 

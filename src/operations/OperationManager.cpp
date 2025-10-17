@@ -39,8 +39,7 @@ void OperationManager::onOperationFinished(Operation* operation)
 {
     pending.remove(operation);
     emit(operationFinished(operation));
-    
-    //qDebug() << "Operation finished";
+
     operation->deleteLater(); // Trigger safe deletion.
 }
 
