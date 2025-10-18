@@ -6,7 +6,7 @@
 #include "../models/ListModel.h"
 
 /**
- * @brief Exports a given feed list to 
+ * @brief Exports a given feed list to an OPML file.
  * 
  * That's all.  Nothing more to see here, sir.
  */
@@ -15,7 +15,7 @@ class OPMLExport
 public:
     OPMLExport();
     
-    static void save(const QString &file, ListModel* feedList);
+    static bool save(const QString &file, ListModel* feedList);
 };
 
 #endif // OPMLEXPORT_H

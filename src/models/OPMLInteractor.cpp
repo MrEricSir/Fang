@@ -107,7 +107,10 @@ void OPMLInteractor::onImportFileSelected(const QString &file)
 void OPMLInteractor::onExportFileSelected(const QString &file)
 {
     qDebug() << "Export: " << file;
-    OPMLExport::save(file, FangApp::instance()->getFeedList());
+    bool res = OPMLExport::save(file, FangApp::instance()->getFeedList());
+    if (!res) {
+        qWarning() << "Error: unable to write file.";
+    }
 }
 
 void OPMLInteractor::onDialogClosed()

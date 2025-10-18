@@ -9,11 +9,14 @@ OPMLExport::OPMLExport()
 {
 }
 
-void OPMLExport::save(const QString &sFile, ListModel* feedList)
+bool OPMLExport::save(const QString &sFile, ListModel* feedList)
 {
     QFile file(sFile);
     
-    file.open(QIODevice::WriteOnly);
+    if (file.open(QIODevice::WriteOnly)) {
+        qWarning() << "Could not open file: " << sFile << " error code: " << file.errorString();
+        return false;
+    }
     
     // Create date time string.
     // Format example: Tue, 18 Mar 2014 04:09:51 GMT
@@ -50,7 +53,7 @@ void OPMLExport::save(const QString &sFile, ListModel* feedList)
     // <outline text="MrEricSir.com" title="MrEricSir.com" type="rss" xmlUrl="http://www.mrericsir.com/blog/feed/" htmlUrl="http://www.mrericsir.com/blog"/>
     for (int i = 1; i < feedList->count(); i++) {
         FeedItem* feedItem = qobject_cast<FeedItem*>(feedList->row(i));
-        Q_ASSERT(feedItem != NULL);
+        Q_ASSERT(feedItem != nullptr);
         
         xmlWriter.writeStartElement("outline");
         
@@ -75,4 +78,6 @@ void OPMLExport::save(const QString &sFile, ListModel* feedList)
     // Finish 'er up.
     xmlWriter.writeEndDocument();
     file.close();
+
+    return true;
 }
