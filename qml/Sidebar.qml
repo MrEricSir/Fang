@@ -112,48 +112,49 @@ Item {
     }
     
     Item {
-        id: sidebarFeedList
-        anchors.right: parent.right
-        anchors.left: parent.left
-        anchors.top: sidebarTopControls.bottom
-        anchors.bottom: sidebarControls.top
+        id: sidebarFeedList;
+        anchors.right: parent.right;
+        anchors.left: parent.left;
+        anchors.top: sidebarTopControls.bottom;
+        anchors.bottom: sidebarControls.top;
         
         Rectangle {
-            id: rectangle2
-            color: style.color.sidebar
-            anchors.fill: parent
+            id: rectangle2;
+            color: style.color.sidebar;
+            anchors.fill: parent;
             
             Rectangle {
-                id: sidebarRightLine
-                color: style.color.sidebarRightLine
-                anchors.top: parent.top
-                anchors.bottom: parent.bottom
-                anchors.right: parent.right
-                width: 1 * style.scale
+                id: sidebarRightLine;
+                color: style.color.sidebarRightLine;
+                anchors.top: parent.top;
+                anchors.bottom: parent.bottom;
+                anchors.right: parent.right;
+                width: 1 * style.scale;
             }
             
             FangScrollView {
-                anchors.fill: parent
+                id: scrollView;
+                anchors.fill: parent;
                 
                 ListView {
-                    id: feedListView
-                    anchors.fill: parent
+                    id: feedListView;
+                    anchors.fill: parent;
 
                     // Don't show this unless there's something in the list.
                     visible: feedsExist;
                     
                     // Only scroll if there's a need.
-                    interactive: height < childrenRect.height
+                    interactive: height < childrenRect.height;
                     
                     delegate: FeedTitleDelegate {
-                        id: titleDelegate
+                        id: titleDelegate;
                         
                         // This sets the selected item in the C++ layer.
                         ListView.onIsCurrentItemChanged: {
                             if (ListView.isCurrentItem) {
                                 //console.log("Item selected: ", feedListView.currentIndex)
                                 sidebar.feedSelected();
-                                feedListView.model.selectedIndex = feedListView.currentIndex
+                                feedListView.model.selectedIndex = feedListView.currentIndex;
                             }
                         }
 
@@ -173,14 +174,14 @@ Item {
                         }
                     }
                     
-                    model: feedListModel
+                    model: feedListModel;
                     
                     Connections {
-                        target: feedListModel
+                        target: feedListModel;
                         
                         // This allows C++ to set the selected item.
                         function onSelectedIndexChanged(selectedIndex) {
-                            console.log("selected index:", feedListModel.selectedIndex)
+                            console.log("selected index:", feedListModel.selectedIndex);
                             if (selectedIndex !== feedListView.currentIndex) {
                                 feedListView.currentIndex = selectedIndex;
                             }

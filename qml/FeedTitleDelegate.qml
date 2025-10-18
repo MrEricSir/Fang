@@ -26,7 +26,7 @@ RearrangeableDelegate {
 
     // Folders are always visible, but their children are not.
     visible: isFolder ? true : (parentFolder == -1 || folderOpen ? true : false);
-    height: visible ? 35 * style.scale : 0
+    height: visible ? 35 * style.scale : 0;
 
     Row {
         id: row1;
@@ -59,12 +59,11 @@ RearrangeableDelegate {
                     
                     // No icon for all news or folders.
                     width: isSpecialFeed || isFolder ? 0 : (35 * style.scale);
-                    visible: !(isSpecialFeed || isFolder)
+                    visible: !(isSpecialFeed || isFolder);
                     
                     anchors.left: parent.left;
                     anchors.top: parent.top;
                     anchors.bottom: parent.bottom;
-                    
                     anchors.leftMargin: 10 * style.scale;
                     
                     Image {
@@ -187,7 +186,12 @@ RearrangeableDelegate {
                     anchors.right: parent.right;
                     anchors.top: parent.top;
                     anchors.bottom: parent.bottom;
-                    anchors.rightMargin: 7;
+                    anchors.rightMargin: 7 + scrollView.effectiveScrollBarWidth;
+                    Behavior on anchors.rightMargin { PropertyAnimation {
+                            easing.type: Easing.InOutQuad;
+                            duration: 250;
+                        }
+                    }
                     
                     width: childrenRect.width;
                     height: parent.height;
