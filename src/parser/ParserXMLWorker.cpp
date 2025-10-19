@@ -75,8 +75,9 @@ void ParserXMLWorker::elementStart()
     //qDebug() << "XML node: " << xml.name().toString() << " " << xml.prefix().toString();
     if ((tagName == "item" || tagName == "entry") && !inAtomXHTML) {
         
-        if (url.isEmpty())
-            url = xml.attributes().value("rss:about").toString();
+        if (urlHref.isEmpty()) {
+            urlHref = xml.attributes().value("rss:about").toString();
+        }
         
         if (numItems == 0) {
             // Oh, first item?  Assume we've seen the summary then.
@@ -111,9 +112,9 @@ void ParserXMLWorker::elementStart()
     currentPrefix = xml.prefix().toString().toLower();
     hasType = xml.attributes().hasAttribute("type");
     
-    if (currentTag == "link" && url.isEmpty() && xml.attributes().hasAttribute("href")) {
+    if (currentTag == "link" && urlHref.isEmpty() && xml.attributes().hasAttribute("href")) {
         // Used by atom feeds to grab the first link.
-        url = xml.attributes().value("href").toString();
+        urlHref = xml.attributes().value("href").toString();
     }
     
     // Add this new tag to our stack. :)
@@ -157,8 +158,10 @@ void ParserXMLWorker::elementEnd()
             myGuid = id.trimmed();
         } else if (!guid.trimmed().isEmpty()) {
             myGuid = guid.trimmed();
+        } else if (!urlData.trimmed().isEmpty()) {
+            myGuid = urlData.trimmed();
         } else {
-            myGuid = url.trimmed();
+            myGuid = urlHref.trimmed();
         }
         
         // Yes, we need a guid!
@@ -169,7 +172,7 @@ void ParserXMLWorker::elementEnd()
         currentItem->title = title;
         currentItem->description = subtitle;
         currentItem->content = content;
-        currentItem->url = QUrl(url);
+        currentItem->url = urlData.isEmpty() ? QUrl(urlHref) : QUrl(urlData);
         currentItem->timestamp = dateFromFeedString(timestamp);
         currentItem->guid = myGuid;
         
@@ -185,7 +188,8 @@ void ParserXMLWorker::elementEnd()
         
         // Clear all strings.
         title = "";
-        url = "";
+        urlHref = "";
+        urlData = "";
         subtitle = "";
         pubdate = "";
         lastbuilddate = "";
@@ -231,7 +235,7 @@ void ParserXMLWorker::elementContents()
         if (currentTag == "title" && currentPrefix == "") {
             title += xml.text().toString();
         } else if (currentTag == "link" && currentPrefix == "") {
-            url += xml.text().toString();
+            urlData += xml.text().toString();
         } else if (currentTag == "description" || currentTag == "summary") {
             subtitle += xml.text().toString();
         } else if (currentTag == "name") {
@@ -262,7 +266,7 @@ void ParserXMLWorker::elementContents()
         if (currentTag == "title" && currentPrefix == "") {
             title += xml.text().toString();
         } else if (currentTag == "link" && currentPrefix == "") {
-            url += xml.text().toString();
+            urlData += xml.text().toString();
         } else if (currentTag == "description" || currentTag == "summary") {
             subtitle += xml.text().toString();
         }
@@ -276,7 +280,7 @@ void ParserXMLWorker::resetParserVars()
     numItems = 0;
     currentTag = "";
     currentPrefix = "";
-    url = "";
+    urlHref = "";
     title = "";
     subtitle = "";
     content = "";
@@ -300,13 +304,14 @@ void ParserXMLWorker::saveSummary()
     // Global space.
     feed->title = title;
     feed->subtitle = subtitle;
-    feed->siteURL = QUrl(url);
+    feed->siteURL = urlData.isEmpty() ? QUrl(urlHref) : QUrl(urlData);
 
     //qDebug() << "Title " << title;
 
     // Clear all local strings.
     title = "";
-    url = "";
+    urlHref = "";
+    urlData = "";
     subtitle = "";
     pubdate = "";
     lastbuilddate = "";

@@ -113,7 +113,8 @@ private:
     int numItems;
     QString currentTag;
     QString currentPrefix;
-    QString url;
+    QString urlHref;
+    QString urlData;
     QString title;
     QString subtitle;
     QString content;

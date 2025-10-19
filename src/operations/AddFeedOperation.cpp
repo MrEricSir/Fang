@@ -6,7 +6,7 @@ AddFeedOperation::AddFeedOperation(OperationManager *parent, ListModel *feedList
     DBOperation(IMMEDIATE, parent),
     feedList(feedList),
     feedURL(feedURL),
-    rawFeed(NULL),
+    rawFeed(nullptr),
     parser(),
     title(title)
 {
@@ -25,7 +25,7 @@ AddFeedOperation::AddFeedOperation(OperationManager *parent, ListModel *feedList
 
 void AddFeedOperation::execute()
 {
-    if (rawFeed != NULL) {
+    if (rawFeed != nullptr) {
         commitRawFeed();
     } else {
         // Need to fetch the feed first.
@@ -37,7 +37,7 @@ void AddFeedOperation::onFeedFinished()
 {
     // Ooh, data.
     rawFeed = parser.getFeed();
-    if (rawFeed == NULL) {
+    if (rawFeed == nullptr) {
         reportError("Parse error");
         
         return;
@@ -47,11 +47,14 @@ void AddFeedOperation::onFeedFinished()
 }
 
 void AddFeedOperation::commitRawFeed() {
-    if (rawFeed == NULL) {
+    if (rawFeed == nullptr) {
         reportError("RawFeed not provided");
         
         return;
     }
+
+    qDebug() << "Commit raw feed for feed URL: " << rawFeed->url << " and site URL: " << rawFeed->siteURL;
+    qDebug() << "  - User URL:" << feedURL;
     
     // We'll wrap this in a transaction.  (Not really necessary at the moment.)
     db().transaction();
@@ -97,7 +100,7 @@ void AddFeedOperation::commitRawFeed() {
     
     db().commit();
     
-    qDebug() << "Insert ID: " << insertID;
+    qDebug() << "Insert new feed with ID: " << insertID;
     
     // Create our item.
     item = Utilities::feedItemFromRaw(rawFeed, insertID, feedList);

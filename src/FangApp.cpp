@@ -660,7 +660,7 @@ qint32 FangApp::specialFeedCount()
 
 void FangApp::addFeed(const QUrl &feedURL, const RawFeed* rawFeed, bool switchTo)
 {
-    //qDebug() << "Add feed " << siteTitle << " " << feedURL;
+    qDebug() << "Add feed: " << feedURL;
     AddFeedOperation* addOp = new AddFeedOperation(
                                   &manager, feedList, feedURL, rawFeed);
     
