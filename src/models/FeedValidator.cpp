@@ -26,7 +26,7 @@ void FeedValidator::addFeed()
 {
     RawFeed* feed = feedDiscovery.feedResult();
     feed->title = siteTitle();
-    FangApp::instance()->addFeed(feedDiscovery.feedURL(), feed, true);
+    FangApp::instance()->addFeed(_url, feed, true);
 }
 
 void FeedValidator::removeFeed(FeedItem *feed)

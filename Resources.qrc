@@ -4,6 +4,7 @@
         <file>sql/2.sql</file>
         <file>sql/3.sql</file>
         <file>sql/4.sql</file>
+        <file>sql/5.sql</file>
     </qresource>
     <qresource prefix="/icons">
         <file>icons/icon_circle.svg</file>

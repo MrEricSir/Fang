@@ -16,8 +16,9 @@ DB::DB(QObject *parent) :
 
 DB *DB::instance()
 {
-    if (_instance == NULL)
+    if (_instance == nullptr) {
         _instance = new DB();
+    }
     
     return _instance;
 }
@@ -48,9 +49,6 @@ void DB::init()
         qDebug() << "Could not create database.";
         return;
     }
-    
-    
-    QSqlQuery q(db());
     
     // Set database mode.
     executeSimpleQuery("PRAGMA journal_mode = WAL");
@@ -83,8 +81,9 @@ int DB::getSchemaVersion()
     q.exec("PRAGMA user_version");
     
     // SQLite should auto-init value to zero, but just in case...
-    if (!q.next())
+    if (!q.next()) {
         return 0;
+    }
     
     return q.value(0).toInt();
 }
@@ -113,12 +112,14 @@ void DB::upgrade()
         QTextStream output(&filename);
         output << ":/sql/sql/" << nextVersion << ".sql";
         QFile schemaFile(filename);
-        if (!schemaFile.exists())
+        if (!schemaFile.exists()) {
             break; // We're up to date!
+        }
         
         // Do the upgrade.
-        if (!executeSqlFile(schemaFile))
+        if (!executeSqlFile(schemaFile)) {
             return; // BAIL!
+        }
         
         setSchemaVersion(nextVersion);
         nextVersion++;
@@ -140,10 +141,11 @@ bool DB::executeSqlFile(QFile& sqlFile)
         line = input.readLine().trimmed();
         
         // Ignore comments and whitespace.
-        if (line.startsWith("--") || line.isEmpty()) 
+        if (line.startsWith("--") || line.isEmpty()) {
             continue;
+        }
         
-        entireFile += line;
+        entireFile += line + "\n ";
     }
     
     sqlFile.close();

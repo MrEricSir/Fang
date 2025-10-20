@@ -93,7 +93,7 @@ void OPMLInteractor::addSelected()
         //qDebug() << "Add feed " << item->getTitle() << " " << item->getURL();
         
         // Add it!
-        FangApp::instance()->addFeed(item->getURL(), feedToRaw[item], first);
+        FangApp::instance()->addFeed(item->getURL().toString(), feedToRaw[item], first);
         first = false;
     }
 }

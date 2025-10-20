@@ -75,11 +75,11 @@ public slots:
     
     /**
      * @brief Adds a known, pre-processed feed.
-     * @param feedURL
+     * @param userURL
      * @param rawFeed
      * @param switchTo  If true, switch to the feed after adding it.
      */
-    void addFeed(const QUrl &feedURL, const RawFeed* rawFeed, bool switchTo);
+    void addFeed(const QString userURL, const RawFeed* rawFeed, bool switchTo);
     
     /**
      * @brief Removes an existing feed.

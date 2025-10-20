@@ -658,11 +658,11 @@ qint32 FangApp::specialFeedCount()
     return 1;
 }
 
-void FangApp::addFeed(const QUrl &feedURL, const RawFeed* rawFeed, bool switchTo)
+void FangApp::addFeed(const QString userURL, const RawFeed* rawFeed, bool switchTo)
 {
-    qDebug() << "Add feed: " << feedURL;
+    qDebug() << "Add feed: " << userURL;
     AddFeedOperation* addOp = new AddFeedOperation(
-                                  &manager, feedList, feedURL, rawFeed);
+                                  &manager, feedList, userURL, rawFeed);
     
     if (switchTo) {
         connect(addOp, &AddFeedOperation::finished, this, &FangApp::onNewFeedAddedSelect);

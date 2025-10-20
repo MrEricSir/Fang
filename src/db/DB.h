@@ -18,7 +18,7 @@ class DB : public FangObject
 {
     Q_OBJECT
 public:
-    explicit DB(QObject *parent = 0);
+    explicit DB(QObject *parent = nullptr);
     
     
 signals:

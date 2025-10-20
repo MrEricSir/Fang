@@ -2,10 +2,10 @@
 #include "../utilities/Utilities.h"
 
 AddFeedOperation::AddFeedOperation(OperationManager *parent, ListModel *feedList,
-                                   const QUrl &feedURL, QString title) :
+                                   const QString userURL, QString title) :
     DBOperation(IMMEDIATE, parent),
     feedList(feedList),
-    feedURL(feedURL),
+    userURL(userURL),
     rawFeed(nullptr),
     parser(),
     title(title)
@@ -13,11 +13,11 @@ AddFeedOperation::AddFeedOperation(OperationManager *parent, ListModel *feedList
     QObject::connect(&parser, &NewsParser::done, this, &AddFeedOperation::onFeedFinished);
 }
 
-AddFeedOperation::AddFeedOperation(OperationManager *parent, ListModel *feedList, const QUrl &feedURL,
+AddFeedOperation::AddFeedOperation(OperationManager *parent, ListModel *feedList, const QString userURL,
                                    const RawFeed* rawFeed) :
     DBOperation(IMMEDIATE, parent),
     feedList(feedList),
-    feedURL(feedURL),
+    userURL(userURL),
     rawFeed(rawFeed),
     parser()
 {
@@ -29,7 +29,7 @@ void AddFeedOperation::execute()
         commitRawFeed();
     } else {
         // Need to fetch the feed first.
-        parser.parse(feedURL);
+        parser.parse(userURL);
     }
 }
 
@@ -54,7 +54,7 @@ void AddFeedOperation::commitRawFeed() {
     }
 
     qDebug() << "Commit raw feed for feed URL: " << rawFeed->url << " and site URL: " << rawFeed->siteURL;
-    qDebug() << "  - User URL:" << feedURL;
+    qDebug() << "  - User URL:" << userURL;
     
     // We'll wrap this in a transaction.  (Not really necessary at the moment.)
     db().transaction();
@@ -79,16 +79,17 @@ void AddFeedOperation::commitRawFeed() {
     // Insert feed.
     QSqlQuery query(db());
     query.prepare("INSERT INTO FeedItemTable (title, subtitle, lastUpdated, minutesToUpdate, "
-                  "url, siteURL, ordinal) VALUES (:title, :subtitle, :lastUpdated, "
-                  ":minutesToUpdate, :url, :siteURL, :ordinal)");
+                  "url, siteURL, user_url, ordinal) VALUES (:title, :subtitle, :lastUpdated, "
+                  ":minutesToUpdate, :url, :siteURL, :user_url, :ordinal)");
     query.bindValue(":title", !title.isEmpty() ? title : rawFeed->title);
     query.bindValue(":subtitle", rawFeed->subtitle);
     query.bindValue(":lastUpdated", rawFeed->lastUpdated.toMSecsSinceEpoch());
     query.bindValue(":minutesToUpdate", rawFeed->minutesToUpdate);
     query.bindValue(":url", rawFeed->url);
     query.bindValue(":siteURL", rawFeed->siteURL);
+    query.bindValue(":user_url", userURL);
     query.bindValue(":ordinal", ordinal);
-    
+
     if (!query.exec()) {
         reportSQLError(query, "Could not add feed");
         db().rollback();
