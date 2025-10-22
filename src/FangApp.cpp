@@ -233,15 +233,15 @@ void FangApp::refreshFeed(FeedItem *feed)
     bool useCache = true; // Use cache by default.
     
     // Special handling for all news.
-    // TODO: Handle folders
     if (feed->isSpecialFeed()) {
         // Update ALL the feeds.
         for (int i = 0; i < feedList->rowCount(); i++)
         {
             FeedItem* item = qobject_cast<FeedItem*>(feedList->row(i));
             Q_ASSERT(item != nullptr);
-            if (item->isSpecialFeed())
-                continue; // Skip special feeds
+            if (item->isSpecialFeed() || item->isFolder()) {
+                continue; // Skip special feeds and folders.
+            }
 
             feedsToUpdate.append(item);
         }

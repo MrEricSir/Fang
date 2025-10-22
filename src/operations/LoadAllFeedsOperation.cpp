@@ -53,6 +53,7 @@ void LoadAllFeedsOperation::execute()
                         query.value("minutesToUpdate").toUInt(),
                         query.value("url").toString(),
                         query.value("siteURL").toString(),
+                        query.value("user_url").toString(),
                         query.value("imageURL").toString(),
                         QDateTime::fromMSecsSinceEpoch(query.value("lastIconUpdate").toLongLong()),
                         query.value("parent_folder").toULongLong(),

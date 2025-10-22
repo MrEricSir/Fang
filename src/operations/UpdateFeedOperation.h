@@ -8,7 +8,7 @@
 #include "../utilities/RawFeedRewriter.h"
 #include "../parser/NewsParser.h"
 #include "../models/FeedItem.h"
-#include "../models/NewsItem.h"
+#include "../utilities/FeedDiscovery.h"
 
 /**
  * @brief Updates a feed.
@@ -30,7 +30,7 @@ public:
      * @param rawFeed  Optional: include this if you've already downloaded the feed and parsed it.
      * @param useCache If we're fetching the feed, should we use the cache? (Ignored if RawFeed isn't null.)
      */
-    explicit UpdateFeedOperation(OperationManager *parent, FeedItem* feed, RawFeed* rawFeed = NULL, bool useCache = true);
+    explicit UpdateFeedOperation(OperationManager *parent, FeedItem* feed, RawFeed* rawFeed = nullptr, bool useCache = true);
     virtual ~UpdateFeedOperation();
     
     
@@ -52,6 +52,17 @@ private slots:
      * @brief When the rewriter is done with the feed
      */
     void onRewriterFinished();
+
+    /**
+     * @brief onDiscoveryDone
+     */
+    void onDiscoveryDone(FeedDiscovery* feedDiscovery);
+
+    /**
+     * @brief onUpdateFeedURLFinished
+     * @param op
+     */
+    void onUpdateFeedURLFinished(Operation * op);
     
 private:
     NewsParser parser;
@@ -61,6 +72,7 @@ private:
     QList<RawNews*> newsList;
     QDateTime timestamp;
     bool useCache;
+    FeedDiscovery discovery;
 };
 
 #endif // UPDATEFEEDOPERATION_H

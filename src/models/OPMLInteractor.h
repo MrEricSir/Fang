@@ -42,7 +42,7 @@ class OPMLInteractor : public QQuickItem
     Q_PROPERTY(bool isAnyFeedSelected READ isAnyFeedSelected NOTIFY isAnyFeedSelectedChanged)
     
 public:
-    explicit OPMLInteractor(QQuickItem *parent = 0);
+    explicit OPMLInteractor(QQuickItem *parent = nullptr);
     
     virtual ~OPMLInteractor();
 

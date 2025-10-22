@@ -2,7 +2,7 @@
 #include <QtAlgorithms>
 #include <QDateTime>
 
-#include "../utilities/Utilities.h"
+#include "UpdateFeedURLOperation.h"
 #include "../models/AllNewsFeedItem.h"
 #include "../utilities/UnreadCountReader.h"
 #include "../FangApp.h"
@@ -18,6 +18,7 @@ UpdateFeedOperation::UpdateFeedOperation(OperationManager *parent, FeedItem *fee
 {
     connect(&parser, &NewsParser::done, this, &UpdateFeedOperation::onFeedFinished);
     connect(&rewriter, &RawFeedRewriter::finished, this, &UpdateFeedOperation::onRewriterFinished);
+    connect(&discovery, &FeedDiscovery::done, this, &UpdateFeedOperation::onDiscoveryDone);
     
     requireObject(feed);
 }
@@ -43,7 +44,7 @@ void UpdateFeedOperation::execute()
     timestamp = QDateTime::currentDateTime();
     
     
-    if (rawFeed == NULL) {
+    if (rawFeed == nullptr) {
         // Send network request.
         parser.parse(feed->getURL(), useCache);
     } else {
@@ -54,13 +55,23 @@ void UpdateFeedOperation::execute()
 void UpdateFeedOperation::onFeedFinished()
 {
     FANG_BACKGROUND_CHECK;
+
+    // Try feed rediscovery if needed. This will update the URL and refresh.
+    if (parser.getResult() == ParserInterface::NETWORK_ERROR &&
+        parser.getNetworkError() == QNetworkReply::NetworkError::ContentNotFoundError) {
+        qDebug() << "UpdateFeedOperation: Feed not found. Attempting to rediscover feed.";
+        discovery.checkFeed(feed->getUserURL());
+
+        return;
+    }
     
     feed->setIsUpdating(false);
     
-    if (rawFeed == NULL)
+    if (rawFeed == nullptr) {
         rawFeed = parser.getFeed();
+    }
     
-    if (rawFeed == NULL) {
+    if (rawFeed == nullptr) {
         // This is often the result of the feed not having been updated, and thus
         // it was already cached.  We return null in that case to save time.
         
@@ -92,8 +103,9 @@ void UpdateFeedOperation::onFeedFinished()
         return;
     }
     
-    if (query.next())
+    if (query.next()) {
         newestLocalNews = QDateTime::fromMSecsSinceEpoch(query.value("timestamp").toLongLong());
+    }
     
     // Check if we really need to update by comparing the dates of the most recent news items.
     QDateTime newestNewNews = rawFeed->items.last()->timestamp;
@@ -110,8 +122,9 @@ void UpdateFeedOperation::onFeedFinished()
     // If newIndex remains at -1, no new news items were found.
     int newIndex = -1;
     for (int i = rawFeed->items.size() - 1; i >= 0; i--) {
-        if (rawFeed->items.at(i)->timestamp > newestLocalNews)
+        if (rawFeed->items.at(i)->timestamp > newestLocalNews) {
             newIndex = i;
+        }
     }
     
     // Check should be a duplicate of the one above, but just in case...
@@ -124,8 +137,9 @@ void UpdateFeedOperation::onFeedFinished()
     
     // Add all new items to our list.
     newsList.clear();
-    for (int i = newIndex; i < rawFeed->items.size(); i++)
+    for (int i = newIndex; i < rawFeed->items.size(); i++) {
         newsList.append(rawFeed->items.at(i));
+    }
     
     // Start the rewriter!  (See the next method below.)
     rewriter.rewrite(&newsList);
@@ -178,10 +192,42 @@ void UpdateFeedOperation::onRewriterFinished()
     // Update unread count & All News's unread count.
     UnreadCountReader::update(db(), feed);
     UnreadCountReader::update(db(), FangApp::instance()->getFeed(0));
+    // TODO: update folders' unread count?
     
     db().commit(); // Done with db!
     
-    // TODO: update unread count
-    
     emit finished(this);
+}
+
+void UpdateFeedOperation::onDiscoveryDone(FeedDiscovery* feedDiscovery)
+{
+    Q_UNUSED(feedDiscovery);
+
+    if (discovery.error() || // Error trying to find feed.
+        (feed->getURL() == discovery.feedURL()) // No change to URL, so nothing to do.
+        ) {
+        qDebug() << "UpdateFeedOperation: Could not rediscover URL for feed: "
+                 << feed->getTitle() << " -- " << feed->getUserURL();
+
+        feed->setIsUpdating(false);
+        emit finished(this);
+        return;
+    }
+
+    qDebug() << "UpdateFeedOperation: For feed: " << feed->getUserURL();
+    qDebug() << "                     Updated URL is: " << discovery.feedURL();
+
+    // Update DB. Note that this will also update the feed object's URL.
+    UpdateFeedURLOperation* op = new UpdateFeedURLOperation(getOperationManager(), feed, discovery.feedURL());
+    connect(op, &UpdateFeedURLOperation::finished, this, &UpdateFeedOperation::onUpdateFeedURLFinished);
+    getOperationManager()->add(op);
+}
+
+void UpdateFeedOperation::onUpdateFeedURLFinished(Operation * op)
+{
+    Q_UNUSED(op);
+
+    // Send network request.
+    qDebug() << "Finished updating feed URL, updating feed " << feed->getURL();
+    parser.parse(feed->getURL(), useCache);
 }

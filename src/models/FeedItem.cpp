@@ -32,8 +32,8 @@ FeedItem::FeedItem(QObject *parent) :
 
 FeedItem::FeedItem(qint64 id, const qint32 ordinal, const QString &title, const QString &subtitle,
                    const QDateTime &lastUpdated, quint32 minutesToUpdate, const QUrl &url,
-                   const QUrl& siteURL, const QUrl &imageURL, const QDateTime& lastIconUpdate,
-                   qint64 parentFolder, bool folderOpen, QObject* parent) :
+                   const QUrl& siteURL, const QString& userURL, const QUrl &imageURL,
+                   const QDateTime& lastIconUpdate, qint64 parentFolder, bool folderOpen, QObject* parent) :
     ListItem(parent),
     _id(id),
     ordinal(ordinal),
@@ -43,6 +43,7 @@ FeedItem::FeedItem(qint64 id, const qint32 ordinal, const QString &title, const 
     minutesToUpdate(minutesToUpdate),
     url(url),
     siteURL(siteURL),
+    userURL(userURL),
     imageURL(imageURL),
     newsList(NULL),
     isUpdating(false),

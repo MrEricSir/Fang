@@ -53,8 +53,8 @@ void AddFeedOperation::commitRawFeed() {
         return;
     }
 
-    qDebug() << "Commit raw feed for feed URL: " << rawFeed->url << " and site URL: " << rawFeed->siteURL;
-    qDebug() << "  - User URL:" << userURL;
+    // qDebug() << "Commit raw feed for feed URL: " << rawFeed->url << " and site URL: " << rawFeed->siteURL;
+    // qDebug() << "  - User URL:" << userURL;
     
     // We'll wrap this in a transaction.  (Not really necessary at the moment.)
     db().transaction();
@@ -104,7 +104,7 @@ void AddFeedOperation::commitRawFeed() {
     qDebug() << "Insert new feed with ID: " << insertID;
     
     // Create our item.
-    item = Utilities::feedItemFromRaw(rawFeed, insertID, feedList);
+    item = Utilities::feedItemFromRaw(rawFeed, insertID, userURL, feedList);
     
     // Finally, add item to the model and signal completion.
     feedList->appendRow(item);

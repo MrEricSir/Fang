@@ -57,6 +57,7 @@ public:
             quint32 minutesToUpdate,
             const QUrl& url,
             const QUrl& siteURL,
+            const QString& userURL,
             const QUrl& imageURL,
             const QDateTime& lastIconUpdate,
             qint64 parentFolder = -1, // Default values for top level non-folder.
@@ -95,6 +96,7 @@ public slots:
     inline quint32 getMinutesToUpdate() const { return minutesToUpdate; }
     inline QUrl getURL() const { return url; }
     inline QUrl getSiteURL() const { return siteURL; }
+    inline QString getUserURL() const { return userURL; }
     inline QUrl getImageURL() const { return imageURL; }
     inline int getIsUpdating() const { return isUpdating; }
     inline quint32 getUnreadCount() const { return unreadCount; }
@@ -239,6 +241,7 @@ private:
     quint32 minutesToUpdate;
     QUrl url;
     QUrl siteURL;
+    QString userURL;
     QUrl imageURL;
     QList<NewsItem*>* newsList;
     int isUpdating;

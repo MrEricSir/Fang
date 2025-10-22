@@ -18,10 +18,11 @@ public:
      * @brief Converts a RawFeed object into a good, proper FeedItem.
      * @param raw
      * @param dbId
+     * @param userURL
      * @param parent
      * @return 
      */
-    static FeedItem* feedItemFromRaw(const RawFeed *raw, qint64 dbId, QObject* parent);
+    static FeedItem* feedItemFromRaw(const RawFeed *raw, qint64 dbId, const QString& userURL, QObject* parent);
 
     /**
      * @brief Generates a comma separated string list from a vector (no trailing comma)

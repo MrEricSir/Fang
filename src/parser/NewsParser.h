@@ -9,7 +9,6 @@
 
 #include "../network/FangNetworkAccessManager.h"
 #include "ParserInterface.h"
-#include "ParserXMLWorker.h"
 
 // PaRSSes RSS/Atom feeds into RawFeed/RawNews objects.
 class NewsParser : public ParserInterface
@@ -17,7 +16,7 @@ class NewsParser : public ParserInterface
     Q_OBJECT
     
 public:
-    explicit NewsParser(QObject *parent = 0);
+    explicit NewsParser(QObject *parent = nullptr);
     virtual ~NewsParser();
     
 public slots:
@@ -27,6 +26,7 @@ public slots:
     void parseFile(const QString& filename);
     
     virtual ParseResult getResult(); // Override.
+    virtual QNetworkReply::NetworkError getNetworkError() { return networkError; }
     virtual RawFeed* getFeed(); // Override.
     virtual inline QUrl getURL() { return finalFeedURL; } // Override.
     
@@ -58,6 +58,7 @@ private:
     
     RawFeed* feed;
     ParseResult result;
+    QNetworkReply::NetworkError networkError;
     
     FangNetworkAccessManager manager;
     QNetworkReply *currentReply;
