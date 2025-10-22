@@ -70,6 +70,7 @@ SOURCES += src/main.cpp \
     src/models/FeedItem.cpp \
     src/operations/InsertFolderOperation.cpp \
     src/operations/LoadFolderOperation.cpp \
+    src/operations/UpdateFeedURLOperation.cpp \
     src/parser/RawFeed.cpp \
     src/parser/RawNews.cpp \
     src/FangApp.cpp \
@@ -131,6 +132,7 @@ HEADERS += \
     src/models/FeedItem.h \
     src/operations/InsertFolderOperation.h \
     src/operations/LoadFolderOperation.h \
+    src/operations/UpdateFeedURLOperation.h \
     src/parser/RawFeed.h \
     src/parser/RawNews.h \
     src/FangApp.h \

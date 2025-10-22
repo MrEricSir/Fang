@@ -87,13 +87,14 @@ void OPMLInteractor::addSelected()
     ListModel* importList = FangApp::instance()->getImportList();
     for (int i = 0; i < importList->count(); i++) {
         FeedItem* item = qobject_cast<FeedItem*>(importList->row(i));
-        if (!item->getIsSelected())
+        if (!item->getIsSelected()) {
             continue;
+        }
         
         //qDebug() << "Add feed " << item->getTitle() << " " << item->getURL();
         
         // Add it!
-        FangApp::instance()->addFeed(item->getURL(), feedToRaw[item], first);
+        FangApp::instance()->addFeed(item->getURL().toString(), feedToRaw[item], first);
         first = false;
     }
 }
@@ -131,7 +132,7 @@ void OPMLInteractor::onParserDone()
     
     // Convert and append our news items.
     foreach (RawFeed* rawFeed, list) {
-        FeedItem* feedItem = Utilities::feedItemFromRaw(rawFeed, 0, NULL);
+        FeedItem* feedItem = Utilities::feedItemFromRaw(rawFeed, 0, rawFeed->url.toString(), nullptr);
         feedToRaw.insert(feedItem, rawFeed);
         importList->appendRow(feedItem);
     }

@@ -4,10 +4,12 @@
 #include <QFile>
 #include <QFileInfo>
 
+#include "ParserXMLWorker.h"
+
 NewsParser::NewsParser(QObject *parent) :
     ParserInterface(parent),
-    feed(NULL), result(OK),
-    currentReply(NULL), redirectReply(NULL),
+    feed(nullptr), result(OK), networkError(QNetworkReply::NetworkError::NoError),
+    currentReply(nullptr), redirectReply(nullptr),
     fromCache(false), noParseIfCached(false)
 {
     // Connex0r teh siganls.
@@ -84,6 +86,7 @@ void NewsParser::error(QNetworkReply::NetworkError ne)
     currentReply = 0;
     
     result = NewsParser::NETWORK_ERROR;
+    networkError = ne;
     emit done();
 }
 
@@ -135,13 +138,14 @@ NewsParser::ParseResult NewsParser::getResult()
 
 RawFeed* NewsParser::getFeed()
 {
-    return result == NewsParser::OK ? feed : NULL;
+    return result == NewsParser::OK ? feed : nullptr;
 }
 
 void NewsParser::netFinished(QNetworkReply *reply)
 {
-    if (redirectReply == reply)
+    if (redirectReply == reply) {
         return; // This was the previous redirect.
+    }
     
     // Remember this URL.
     finalFeedURL = reply->url();
@@ -181,6 +185,7 @@ void NewsParser::workerDone(RawFeed* rawFeed)
 void NewsParser::initParse(const QUrl& url)
 {
     result = NewsParser::IN_PROGRESS;
+    networkError = QNetworkReply::NetworkError::NoError;
     finalFeedURL = url;
     emit triggerDocStart();
 }

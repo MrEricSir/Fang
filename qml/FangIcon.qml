@@ -41,36 +41,22 @@ Image {
     Style {
         id: style;
     }
-    
-    transitions: [
-        Transition {
-            from: "*";
-            to: "spinner";
-            RotationAnimation {
-                id: spinAnimation;
-                
-                running: false;
-                direction: RotationAnimation.Clockwise;
-                loops: Animation.Infinite;
-                
-                target: fangIcon;
-                from: 0;
-                to: 360;
-                duration: 750;
-                
-                // Hack to supress warning message.
-                property: "rotation";
-            }
-        },
-        // This is needed to reset our rotation.
-        Transition {
-            from: "spinner";
-            to: "*";
-            PropertyAction {
-                target: fangIcon;
-                property: "rotation";
-                value: 0;
-            }
-        }
-    ]
+
+    // Spinner animation.
+    RotationAnimation {
+        id: spinAnimation;
+
+        running: state === "spinner";
+        direction: RotationAnimation.Clockwise;
+        loops: Animation.Infinite;
+
+        target: fangIcon;
+        from: 0;
+        to: 360;
+        duration: 750;
+
+        onStopped: () => {
+           target.rotation = 0;
+       }
+    }
 }

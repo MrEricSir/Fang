@@ -233,15 +233,15 @@ void FangApp::refreshFeed(FeedItem *feed)
     bool useCache = true; // Use cache by default.
     
     // Special handling for all news.
-    // TODO: Handle folders
     if (feed->isSpecialFeed()) {
         // Update ALL the feeds.
         for (int i = 0; i < feedList->rowCount(); i++)
         {
             FeedItem* item = qobject_cast<FeedItem*>(feedList->row(i));
             Q_ASSERT(item != nullptr);
-            if (item->isSpecialFeed())
-                continue; // Skip special feeds
+            if (item->isSpecialFeed() || item->isFolder()) {
+                continue; // Skip special feeds and folders.
+            }
 
             feedsToUpdate.append(item);
         }
@@ -658,11 +658,11 @@ qint32 FangApp::specialFeedCount()
     return 1;
 }
 
-void FangApp::addFeed(const QUrl &feedURL, const RawFeed* rawFeed, bool switchTo)
+void FangApp::addFeed(const QString userURL, const RawFeed* rawFeed, bool switchTo)
 {
-    qDebug() << "Add feed: " << feedURL;
+    qDebug() << "Add feed: " << userURL;
     AddFeedOperation* addOp = new AddFeedOperation(
-                                  &manager, feedList, feedURL, rawFeed);
+                                  &manager, feedList, userURL, rawFeed);
     
     if (switchTo) {
         connect(addOp, &AddFeedOperation::finished, this, &FangApp::onNewFeedAddedSelect);

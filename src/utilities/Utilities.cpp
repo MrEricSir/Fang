@@ -6,7 +6,7 @@ Utilities::Utilities()
 {
 }
 
-FeedItem *Utilities::feedItemFromRaw(const RawFeed *raw, qint64 dbId, QObject* parent)
+FeedItem *Utilities::feedItemFromRaw(const RawFeed *raw, qint64 dbId, const QString& userURL, QObject* parent)
 {
     return new FeedItem(dbId,
                         0,
@@ -16,6 +16,7 @@ FeedItem *Utilities::feedItemFromRaw(const RawFeed *raw, qint64 dbId, QObject* p
                         raw->minutesToUpdate,
                         raw->url,
                         raw->siteURL,
+                        userURL,
                         raw->imageURL,
                         QDateTime(),
                         -1,
