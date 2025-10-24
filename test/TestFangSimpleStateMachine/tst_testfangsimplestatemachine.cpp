@@ -1,5 +1,5 @@
 #include <QString>
-#include <QtTest>
+#include <QTest>
 #include <QSignalSpy>
 
 #include "../../src/utilities/SimpleStateMachine.h"

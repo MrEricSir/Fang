@@ -24,7 +24,7 @@ public:
      * @param timeoutMS         Timeout after last download activity in milliseconds
      * @param parent
      */
-    explicit WebPageGrabber(bool handleMetaRefresh = true, int timeoutMS = 5000, QObject *parent = 0);
+    explicit WebPageGrabber(bool handleMetaRefresh = true, int timeoutMS = 5000, QObject *parent = nullptr);
     virtual ~WebPageGrabber();
     
 signals:
@@ -42,7 +42,7 @@ public slots:
     QString* load(const QString& htmlString);
 
     // Returns the previously loaded document, or the empty string if there was an error.
-    QString* getDocument() { return error ? NULL : &document; }
+    QString* getDocument() { return error ? nullptr : &document; }
     
 private slots:
     // Internal load methods.

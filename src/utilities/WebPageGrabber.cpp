@@ -88,8 +88,8 @@ QString *WebPageGrabber::loadInternal(const QString& htmlString, bool handleRefr
         result = QString::fromUtf8((char*)output.bp);
     } else {
         qDebug() << "WebPageGrabber error!";
-        emit ready(NULL);
-        return NULL;
+        emit ready(nullptr);
+        return nullptr;
     }
 
     // Free memory.
@@ -108,9 +108,9 @@ QString *WebPageGrabber::loadInternal(const QString& htmlString, bool handleRefr
         QString redirectURL = searchForRedirect(document);
         if (redirectAttempts > MAX_REDIRECTS) {
             qDebug() << "Error: Maximum HTML redirects";
-            emit ready(NULL);
+            emit ready(nullptr);
 
-            return NULL;
+            return nullptr;
         } else if (redirectURL.size()) {
             QUrl url(redirectURL);
             if (url.isValid()) {
@@ -118,7 +118,7 @@ QString *WebPageGrabber::loadInternal(const QString& htmlString, bool handleRefr
                 redirectAttempts++;
                 loadInternal(url);
 
-                return NULL;
+                return nullptr;
             }
         }
     }
@@ -133,7 +133,7 @@ void WebPageGrabber::onDownloadError(QString err)
     Q_UNUSED(err);
 
     // Crap. :(
-    emit ready(NULL);
+    emit ready(nullptr);
 }
 
 void WebPageGrabber::onDownloadFinished(QByteArray array)

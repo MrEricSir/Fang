@@ -8,7 +8,7 @@ FeedDiscovery::FeedDiscovery(QObject *parent) :
     _error(false),
     _errorString(""),
     pageGrabber(true),
-    _feedResult(NULL)
+    _feedResult(nullptr)
 {
     // Set up our state machine.
     machine.setReceiver(this);
@@ -41,8 +41,9 @@ void FeedDiscovery::checkFeed(QString sURL)
     // Make sure the location isn't a "relative" (and therefore severely invalid) path.
     if (url.isRelative() || url.scheme().isEmpty()) {
         // Try adjusting the scheme.
-        if (url.scheme() == "")
+        if (url.scheme() == "") {
             url.setScheme("http");
+        }
         
         //qDebug() << "Location is adjusted to: " << location;
         
@@ -148,7 +149,7 @@ void FeedDiscovery::onSecondParseDone()
 
 void FeedDiscovery::onPageGrabberReady(QString *document)
 {
-    if (NULL == document || document->isEmpty()) {
+    if (nullptr == document || document->isEmpty()) {
         reportError("No page found");
         
         return;

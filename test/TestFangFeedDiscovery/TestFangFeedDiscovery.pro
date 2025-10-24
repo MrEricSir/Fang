@@ -14,6 +14,9 @@ CONFIG   -= app_bundle
 
 TEMPLATE = app
 
+DEFINES += PROJECT_PATH=\\\"$$_PRO_FILE_PWD_\\\"
+DEFINES -= QT_NO_DEBUG_OUPUT
+
 # TidyLib
 VPATH += ../../tidylib ../../tidylib/include
 INCLUDEPATH += ../../tidylib ../../tidylib/include
@@ -50,3 +53,15 @@ HEADERS += \
     ../../src/network/FangNetworkAccessManager.h \
     ../../src/utilities/SimpleHTTPDownloader.h \
     ../../src/utilities/NetworkUtilities.h
+
+OTHER_FILES += \
+    feeds/mrericsir.com \
+    feeds/laughingsquid.com \
+    feeds/sfgate.com \
+    feeds/sf.eater.com \
+    feeds/sfist.com \
+    feeds/fark.com \
+    feeds/google.com \
+    feeds/yourkickstartersucks.tumblr.com \
+    feeds/avclub.com \
+    feeds/blog.mozilla.org

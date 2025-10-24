@@ -1,0 +1,1162 @@
+<!doctype html>
+<html class="no-js" lang="en-US">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="profile" href="https://gmpg.org/xfn/11">
+
+  <meta name='robots' content='index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1' />
+<meta name="blog-name" content="The Mozilla Blog" />
+<link rel="alternate" hreflang="en" href="https://blog.mozilla.org/en/" />
+<link rel="alternate" hreflang="de" href="https://blog.mozilla.org/de/" />
+<link rel="alternate" hreflang="x-default" href="https://blog.mozilla.org/en/" />
+
+	<!-- This site is optimized with the Yoast SEO plugin v22.5 - https://yoast.com/wordpress/plugins/seo/ -->
+	<title>The Mozilla Blog</title>
+	<link rel="canonical" href="https://blog.mozilla.org/en/" />
+	<script type="application/ld+json" class="yoast-schema-graph">{"@context":"https://schema.org","@graph":[{"@type":"WebPage","@id":"https://blog.mozilla.org/en/","url":"https://blog.mozilla.org/en/","name":"The Mozilla Blog","isPartOf":{"@id":"https://blog.mozilla.org/en/#website"},"datePublished":"2020-12-03T15:16:12+00:00","dateModified":"2025-04-21T23:12:06+00:00","breadcrumb":{"@id":"https://blog.mozilla.org/en/#breadcrumb"},"inLanguage":"en-US","potentialAction":[{"@type":"ReadAction","target":["https://blog.mozilla.org/en/"]}]},{"@type":"BreadcrumbList","@id":"https://blog.mozilla.org/en/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Home"}]},{"@type":"WebSite","@id":"https://blog.mozilla.org/en/#website","url":"https://blog.mozilla.org/en/","name":"The Mozilla Blog","description":"News and Updates about Mozilla","potentialAction":[{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://blog.mozilla.org/en/?s={search_term_string}"},"query-input":"required name=search_term_string"}],"inLanguage":"en-US"}]}</script>
+	<!-- / Yoast SEO plugin. -->
+
+
+<link rel="alternate" type="application/rss+xml" title="The Mozilla Blog &raquo; Feed" href="https://blog.mozilla.org/en/feed/" />
+<link rel="alternate" type="application/rss+xml" title="The Mozilla Blog &raquo; Comments Feed" href="https://blog.mozilla.org/en/comments/feed/" />
+<script type="text/javascript">
+window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/14.0.0\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/14.0.0\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/blog.mozilla.org\/wp-includes\/js\/wp-emoji-release.min.js?ver=6.3.7"}};
+/*! This file is auto-generated */
+!function(i,n){var o,s,e;function c(e){try{var t={supportTests:e,timestamp:(new Date).valueOf()};sessionStorage.setItem(o,JSON.stringify(t))}catch(e){}}function p(e,t,n){e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(t,0,0);var t=new Uint32Array(e.getImageData(0,0,e.canvas.width,e.canvas.height).data),r=(e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(n,0,0),new Uint32Array(e.getImageData(0,0,e.canvas.width,e.canvas.height).data));return t.every(function(e,t){return e===r[t]})}function u(e,t,n){switch(t){case"flag":return n(e,"\ud83c\udff3\ufe0f\u200d\u26a7\ufe0f","\ud83c\udff3\ufe0f\u200b\u26a7\ufe0f")?!1:!n(e,"\ud83c\uddfa\ud83c\uddf3","\ud83c\uddfa\u200b\ud83c\uddf3")&&!n(e,"\ud83c\udff4\udb40\udc67\udb40\udc62\udb40\udc65\udb40\udc6e\udb40\udc67\udb40\udc7f","\ud83c\udff4\u200b\udb40\udc67\u200b\udb40\udc62\u200b\udb40\udc65\u200b\udb40\udc6e\u200b\udb40\udc67\u200b\udb40\udc7f");case"emoji":return!n(e,"\ud83e\udef1\ud83c\udffb\u200d\ud83e\udef2\ud83c\udfff","\ud83e\udef1\ud83c\udffb\u200b\ud83e\udef2\ud83c\udfff")}return!1}function f(e,t,n){var r="undefined"!=typeof WorkerGlobalScope&&self instanceof WorkerGlobalScope?new OffscreenCanvas(300,150):i.createElement("canvas"),a=r.getContext("2d",{willReadFrequently:!0}),o=(a.textBaseline="top",a.font="600 32px Arial",{});return e.forEach(function(e){o[e]=t(a,e,n)}),o}function t(e){var t=i.createElement("script");t.src=e,t.defer=!0,i.head.appendChild(t)}"undefined"!=typeof Promise&&(o="wpEmojiSettingsSupports",s=["flag","emoji"],n.supports={everything:!0,everythingExceptFlag:!0},e=new Promise(function(e){i.addEventListener("DOMContentLoaded",e,{once:!0})}),new Promise(function(t){var n=function(){try{var e=JSON.parse(sessionStorage.getItem(o));if("object"==typeof e&&"number"==typeof e.timestamp&&(new Date).valueOf()<e.timestamp+604800&&"object"==typeof e.supportTests)return e.supportTests}catch(e){}return null}();if(!n){if("undefined"!=typeof Worker&&"undefined"!=typeof OffscreenCanvas&&"undefined"!=typeof URL&&URL.createObjectURL&&"undefined"!=typeof Blob)try{var e="postMessage("+f.toString()+"("+[JSON.stringify(s),u.toString(),p.toString()].join(",")+"));",r=new Blob([e],{type:"text/javascript"}),a=new Worker(URL.createObjectURL(r),{name:"wpTestEmojiSupports"});return void(a.onmessage=function(e){c(n=e.data),a.terminate(),t(n)})}catch(e){}c(n=f(s,u,p))}t(n)}).then(function(e){for(var t in e)n.supports[t]=e[t],n.supports.everything=n.supports.everything&&n.supports[t],"flag"!==t&&(n.supports.everythingExceptFlag=n.supports.everythingExceptFlag&&n.supports[t]);n.supports.everythingExceptFlag=n.supports.everythingExceptFlag&&!n.supports.flag,n.DOMReady=!1,n.readyCallback=function(){n.DOMReady=!0}}).then(function(){return e}).then(function(){var e;n.supports.everything||(n.readyCallback(),(e=n.source||{}).concatemoji?t(e.concatemoji):e.wpemoji&&e.twemoji&&(t(e.twemoji),t(e.wpemoji)))}))}((window,document),window._wpemojiSettings);
+</script>
+<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 0.07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+	<link rel='stylesheet' id='wp-block-library-css' href='https://blog.mozilla.org/wp-includes/css/dist/block-library/style.min.css?ver=6.3.7' type='text/css' media='all' />
+<style id='co-authors-plus-coauthors-style-inline-css' type='text/css'>
+.wp-block-co-authors-plus-coauthors.is-layout-flow [class*=wp-block-co-authors-plus]{display:inline}
+
+</style>
+<style id='co-authors-plus-avatar-style-inline-css' type='text/css'>
+.wp-block-co-authors-plus-avatar :where(img){height:auto;max-width:100%;vertical-align:bottom}.wp-block-co-authors-plus-coauthors.is-layout-flow .wp-block-co-authors-plus-avatar :where(img){vertical-align:middle}.wp-block-co-authors-plus-avatar:is(.alignleft,.alignright){display:table}.wp-block-co-authors-plus-avatar.aligncenter{display:table;margin-inline:auto}
+
+</style>
+<style id='co-authors-plus-image-style-inline-css' type='text/css'>
+.wp-block-co-authors-plus-image{margin-bottom:0}.wp-block-co-authors-plus-image :where(img){height:auto;max-width:100%;vertical-align:bottom}.wp-block-co-authors-plus-coauthors.is-layout-flow .wp-block-co-authors-plus-image :where(img){vertical-align:middle}.wp-block-co-authors-plus-image:is(.alignfull,.alignwide) :where(img){width:100%}.wp-block-co-authors-plus-image:is(.alignleft,.alignright){display:table}.wp-block-co-authors-plus-image.aligncenter{display:table;margin-inline:auto}
+
+</style>
+<style id='classic-theme-styles-inline-css' type='text/css'>
+/*! This file is auto-generated */
+.wp-block-button__link{color:#fff;background-color:#32373c;border-radius:9999px;box-shadow:none;text-decoration:none;padding:calc(.667em + 2px) calc(1.333em + 2px);font-size:1.125em}.wp-block-file__button{background:#32373c;color:#fff;text-decoration:none}
+</style>
+<style id='global-styles-inline-css' type='text/css'>
+body{--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgba(6,147,227,1) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgba(252,185,0,1) 0%,rgba(255,105,0,1) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgba(255,105,0,1) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgba(255, 255, 255, 1), 6px 6px rgba(0, 0, 0, 1);--wp--preset--shadow--crisp: 6px 6px 0px rgba(0, 0, 0, 1);}:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flow > .alignleft{float: left;margin-inline-start: 0;margin-inline-end: 2em;}body .is-layout-flow > .alignright{float: right;margin-inline-start: 2em;margin-inline-end: 0;}body .is-layout-flow > .aligncenter{margin-left: auto !important;margin-right: auto !important;}body .is-layout-constrained > .alignleft{float: left;margin-inline-start: 0;margin-inline-end: 2em;}body .is-layout-constrained > .alignright{float: right;margin-inline-start: 2em;margin-inline-end: 0;}body .is-layout-constrained > .aligncenter{margin-left: auto !important;margin-right: auto !important;}body .is-layout-constrained > :where(:not(.alignleft):not(.alignright):not(.alignfull)){max-width: var(--wp--style--global--content-size);margin-left: auto !important;margin-right: auto !important;}body .is-layout-constrained > .alignwide{max-width: var(--wp--style--global--wide-size);}body .is-layout-flex{display: flex;}body .is-layout-flex{flex-wrap: wrap;align-items: center;}body .is-layout-flex > *{margin: 0;}body .is-layout-grid{display: grid;}body .is-layout-grid > *{margin: 0;}:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+.wp-block-navigation a:where(:not(.wp-element-button)){color: inherit;}
+:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}
+:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}
+.wp-block-pullquote{font-size: 1.5em;line-height: 1.6;}
+</style>
+<link rel='stylesheet' id='wpml-blocks-css' href='https://blog.mozilla.org/wp-content/plugins/sitepress-multilingual-cms/dist/css/blocks/styles.css?ver=4.6.11' type='text/css' media='all' />
+<link rel='stylesheet' id='wpml-legacy-post-translations-0-css' href='https://blog.mozilla.org/wp-content/plugins/sitepress-multilingual-cms/templates/language-switchers/legacy-post-translations/style.min.css?ver=1' type='text/css' media='all' />
+<link rel='stylesheet' id='foxtail-style-css' href='https://blog.mozilla.org/wp-content/themes/foxtail/assets/css/main.min.css?ver=0.7.0' type='text/css' media='all' />
+<script type='text/javascript' src='https://blog.mozilla.org/wp-content/mu-plugins/mozilla-custom/ga-snippet.js?ver=.4' id='ga-snippet-js'></script>
+<link rel="https://api.w.org/" href="https://blog.mozilla.org/en/wp-json/" /><link rel="alternate" type="application/json" href="https://blog.mozilla.org/en/wp-json/wp/v2/pages/63618" /><link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://blog.mozilla.org/xmlrpc.php?rsd" />
+<link rel='shortlink' href='https://blog.mozilla.org/en/' />
+<link rel="alternate" type="application/json+oembed" href="https://blog.mozilla.org/en/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fblog.mozilla.org%2Fen%2F" />
+<link rel="alternate" type="text/xml+oembed" href="https://blog.mozilla.org/en/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fblog.mozilla.org%2Fen%2F&#038;format=xml" />
+<meta name="generator" content="WPML ver:4.6.11 stt:59,1,4,3,25,27,40,42,45,2;" />
+		<style type="text/css" id="wp-custom-css">
+			.ft-ai-time {
+	margin-top: 36px;
+  margin-bottom: 18px;
+  font-size: 18px;
+}
+
+.ft-ai-time__date {
+	font-size: 16px;
+  color: #4a4a4a;
+  display: block;
+}
+
+.ft-ai-time__title {
+	font-size: 24px;
+  display: block;
+  line-height: 1.3;
+	font-weight: 800;
+}
+
+.ft-ai-time__sub {
+	display: block;
+	font-style: italic;
+}
+
+.pocket-btn {
+  display: none;
+}
+
+/* CSS changes to incorporate later */
+
+.ft-c-hamburger, .ft-c-hamburger::after, .ft-c-hamburger::before {
+  height: 2px;
+}
+
+.ft-c-hamburger::before { 
+bottom: 6px;
+}
+
+.ft-c-hamburger::after {
+  top: 6px;
+}
+
+.ft-c-primary-nav__link { 
+letter-spacing: 1px;
+font-size: 14px
+}
+
+#nav-download {
+  font-size: 14px;
+  padding: 6px 18px;
+}
+
+.ft-c-primary-nav__sub-menu__link.ft-c-primary-nav__sub-menu--1__link {
+  font-size: 14px;
+  padding: 4px;
+  margin-bottom: 10px;
+}
+
+/* END CSS changes to incorporate later */		</style>
+		    <!-- Basic meta & SEO -->
+  <title>The Mozilla Blog</title>
+  <meta name="description" content="Perspectives on the internet from Mozilla" />
+  <meta name="robots" content="index,follow">
+
+   <!-- OpenGraph -->
+  <meta property="og:title" content="The Mozilla Blog" />
+  <meta property="og:description" content="Perspectives on the internet from Mozilla" />
+  <meta property="og:image" content="https://blog.mozilla.org/wp-content/blogs.dir/278/files/2021/02/moz_blog_header_som_002_1200x600.jpg" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:creator" content="@firefox" />
+  <meta name="twitter:title" content="The Mozilla Blog" />
+  <meta name="twitter:description" content="Perspectives on the internet from Mozilla" />
+  <meta name="twitter:image" content="https://blog.mozilla.org/wp-content/blogs.dir/278/files/2021/02/moz_blog_header_som_002_1200x600.jpg" />
+
+  <!-- Favicons & Icons -->
+  <link rel="apple-touch-icon" sizes="180x180" href="https://blog.mozilla.org/wp-content/themes/foxtail/assets/images/favicons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://blog.mozilla.org/wp-content/themes/foxtail/assets/images/favicons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://blog.mozilla.org/wp-content/themes/foxtail/assets/images/favicons/favicon-16x16.png">
+  <link rel="manifest" href="https://blog.mozilla.org/wp-content/themes/foxtail/assets/images/favicons/site.webmanifest">
+  <link rel="mask-icon" href="https://blog.mozilla.org/wp-content/themes/foxtail/assets/images/favicons/safari-pinned-tab.svg" color="#20123a">
+  <link rel="shortcut icon" href="https://blog.mozilla.org/wp-content/themes/foxtail/assets/images/favicons/favicon.ico">
+  <meta name="msapplication-TileColor" content="#20123a">
+  <meta name="msapplication-config" content="https://blog.mozilla.org/wp-content/themes/foxtail/assets/images/favicons/browserconfig.xml">
+  <meta name="theme-color" content="#7542E5">
+
+  </head>
+
+<body class="home page-template-default page page-id-63618 no-sidebar" data-blogname="The Mozilla Blog">
+  <div id="page" class="site">
+    <a class="skip-link screen-reader-text" href="#content">Skip to content</a>
+
+    <header class="ft-c-header">
+      <div class="ft-c-header__toggle">
+        <div class="ft-c-hamburger"></div>
+      </div>
+      <div class="ft-c-header__logo">
+        <a href="https://blog.mozilla.org/en/">Mozilla</a>
+      </div>
+      <div class="ft-c-header__search ft-c-header__search--mobile">
+        <img class="ft-c-header__search-icon" src="https://blog.mozilla.org/wp-content/themes/foxtail/assets/images/icons/search.svg" alt="search" />
+      </div>
+      <div id="nav" class="ft-c-header__nav">
+        <ul class="ft-c-primary-nav "><li class="ft-c-primary-nav__item  ft-c-primary-nav__item--parent  ft-c-primary-nav__item--461998"><a href="https://blog.mozilla.org/en/category/internet-culture/" class="ft-c-primary-nav__link">Internet Culture</a>
+	<ul class="ft-c-primary-nav__sub-menu ft-c-primary-nav__sub-menu--1">
+    <li class="ft-c-primary-nav__sub-menu__item ft-c-primary-nav__sub-menu--1__item  ft-c-primary-nav__item--464326"><a href="https://blog.mozilla.org/en/category/internet-culture/life-online/" class="ft-c-primary-nav__sub-menu__link  ft-c-primary-nav__sub-menu--1__link">Life Online</a></li>
+    <li class="ft-c-primary-nav__sub-menu__item ft-c-primary-nav__sub-menu--1__item  ft-c-primary-nav__item--464058"><a href="https://blog.mozilla.org/en/category/internet-culture/deep-dives/" class="ft-c-primary-nav__sub-menu__link  ft-c-primary-nav__sub-menu--1__link">Deep Dives</a></li>
+    <li class="ft-c-primary-nav__sub-menu__item ft-c-primary-nav__sub-menu--1__item  ft-c-primary-nav__item--464320"><a href="https://blog.mozilla.org/en/category/internet-culture/interviews/" class="ft-c-primary-nav__sub-menu__link  ft-c-primary-nav__sub-menu--1__link">Q&amp;As</a></li>
+</ul>
+</li>
+<li class="ft-c-primary-nav__item  ft-c-primary-nav__item--parent  ft-c-primary-nav__item--30"><a href="https://blog.mozilla.org/en/category/firefox/" class="ft-c-primary-nav__link">Firefox</a>
+	<ul class="ft-c-primary-nav__sub-menu ft-c-primary-nav__sub-menu--1">
+    <li class="ft-c-primary-nav__sub-menu__item ft-c-primary-nav__sub-menu--1__item  ft-c-primary-nav__item--464325"><a href="https://blog.mozilla.org/en/category/firefox/firefox-features/" class="ft-c-primary-nav__sub-menu__link  ft-c-primary-nav__sub-menu--1__link">Firefox Features</a></li>
+    <li class="ft-c-primary-nav__sub-menu__item ft-c-primary-nav__sub-menu--1__item  ft-c-primary-nav__item--11377"><a href="https://blog.mozilla.org/en/category/firefox/firefox-tips/" class="ft-c-primary-nav__sub-menu__link  ft-c-primary-nav__sub-menu--1__link">Tips and Tricks</a></li>
+    <li class="ft-c-primary-nav__sub-menu__item ft-c-primary-nav__sub-menu--1__item  ft-c-primary-nav__item--464303"><a href="https://blog.mozilla.org/en/category/firefox/firefox-ai/" class="ft-c-primary-nav__sub-menu__link  ft-c-primary-nav__sub-menu--1__link">Firefox AI</a></li>
+    <li class="ft-c-primary-nav__sub-menu__item ft-c-primary-nav__sub-menu--1__item  ft-c-primary-nav__item--464321"><a href="https://blog.mozilla.org/en/category/firefox/mozilla-vpn/" class="ft-c-primary-nav__sub-menu__link  ft-c-primary-nav__sub-menu--1__link">Mozilla VPN</a></li>
+</ul>
+</li>
+<li class="ft-c-primary-nav__item  ft-c-primary-nav__item--464324"><a href="https://blog.mozilla.org/en/category/mozilla-new-products/" class="ft-c-primary-nav__link">New Products</a></li>
+<li class="ft-c-primary-nav__item  ft-c-primary-nav__item--parent  ft-c-primary-nav__item--464282"><a href="https://blog.mozilla.org/en/category/advertising/" class="ft-c-primary-nav__link">Advertising</a>
+	<ul class="ft-c-primary-nav__sub-menu ft-c-primary-nav__sub-menu--1">
+    <li class="ft-c-primary-nav__sub-menu__item ft-c-primary-nav__sub-menu--1__item  ft-c-primary-nav__item--464322"><a href="https://blog.mozilla.org/en/category/advertising/anonym/" class="ft-c-primary-nav__sub-menu__link  ft-c-primary-nav__sub-menu--1__link">Anonym</a></li>
+    <li class="ft-c-primary-nav__sub-menu__item ft-c-primary-nav__sub-menu--1__item  ft-c-primary-nav__item--464323"><a href="https://blog.mozilla.org/en/category/advertising/principles/" class="ft-c-primary-nav__sub-menu__link  ft-c-primary-nav__sub-menu--1__link">Principles</a></li>
+</ul>
+</li>
+<li class="ft-c-primary-nav__item  ft-c-primary-nav__item--parent  ft-c-primary-nav__item--5"><a href="https://blog.mozilla.org/en/category/mozilla/" class="ft-c-primary-nav__link">Our Work</a>
+	<ul class="ft-c-primary-nav__sub-menu ft-c-primary-nav__sub-menu--1">
+    <li class="ft-c-primary-nav__sub-menu__item ft-c-primary-nav__sub-menu--1__item  ft-c-primary-nav__item--290364"><a href="https://blog.mozilla.org/en/category/mozilla/internet-policy/" class="ft-c-primary-nav__sub-menu__link  ft-c-primary-nav__sub-menu--1__link">Internet Policy</a></li>
+    <li class="ft-c-primary-nav__sub-menu__item ft-c-primary-nav__sub-menu--1__item  ft-c-primary-nav__item--30710"><a href="https://blog.mozilla.org/en/category/mozilla/leadership/" class="ft-c-primary-nav__sub-menu__link  ft-c-primary-nav__sub-menu--1__link">From the Team</a></li>
+</ul>
+</li>
+</ul>      </div>
+      <div class="ft-c-header__cta-wrap">
+        <a id="nav-download"
+          href="https://www.mozilla.org/firefox/new/?utm_source=blog.mozilla.org&amp;utm_medium=referral&amp;utm_campaign=blog-nav"
+          rel="external" class="mzp-c-button mzp-t-product mzp-t-lg">Download Firefox</a>
+      </div>
+      <div class="ft-c-header__search">
+        <img class="ft-c-header__search-icon" src="https://blog.mozilla.org/wp-content/themes/foxtail/assets/images/icons/search.svg" alt="search" />
+      </div>
+
+
+    </header><!-- #masthead -->
+    <div class="ft-c-search">
+      <h4>Search</h4>
+      <form role="search" method="get" class="search-form" action="https://blog.mozilla.org/en/">
+				<label>
+					<span class="screen-reader-text">Search for:</span>
+					<input type="search" class="search-field" placeholder="Search &hellip;" value="" name="s" />
+				</label>
+				<input type="submit" class="search-submit" value="Search" />
+			</form>    </div>
+
+    <div id="content" class="site-content">
+  <!-- This is the large featured post section -->
+  <section class="ft-c-featured-hero">
+  
+  <div class="ft-l-container ft-c-featured-hero__wrap">
+    <div class="ft-c-featured-hero__image">
+      <img width="1080" height="720" src="https://blog.mozilla.org/wp-content/blogs.dir/278/files/2025/10/Firefox-ProfileManagement-1920x1080-Static-v1.3-Dark2-1080x720.png" class="attachment-3x2 size-3x2 wp-post-image" alt="llustration showing Firefox’s browser interface with a focus on search options. A bar labeled “Use visual search” overlaps an image of a floral painting, while another option labeled “with the Perplexity icon” appears below it. A small browser window shows a cropped view of the same artwork. The Firefox toolbar is visible at the bottom with a highlighted smiley face icon. The background is a gradient of purple and blue with grid lines and sparkles, conveying a playful, tech-inspired design." decoding="async" fetchpriority="high" />    </div>
+    <div class="ft-c-featured-hero__body">
+      <span class="ft-c-label ft-c-label--dark">Featured Article</span>
+      <h1 class="ft-c-featured-hero__title">
+        Choose how you search and stay organized with Firefox      </h1>
+
+      <div class="ft-c-featured-hero__desc">
+        <p>
+          At Mozilla, we build Firefox around one principle: putting you in control. With today’s release, we’re introducing new features that make browsing smarter and more personal while staying true to the values you care about most: privacy and choice. A new option for search, still on your terms. Earlier this year, we gave you more ...        </p>
+      </div>
+
+      <p class="ft-c-featured-hero__cta">
+        <a class="mzp-c-button mzp-t-dark mzp-t-xl" href="https://blog.mozilla.org/en/firefox/firefox-144/">
+          Read More        </a>
+      </p>
+    </div>
+  </div>
+  </section>
+
+  <div class="ft-l-space-unrelated"></div>
+
+  <!-- The 2nd featured section which has 3 items -->
+  <!-- First, some JS that handles the mouseover hover -->
+<script type="text/javascript" async>
+function secondaryFeatured() {
+  document.querySelector(".ft-c-featured-secondary__image--1").classList.add("is-active");
+  document.getElementById("ft-js-first").addEventListener("mouseover", function() {
+    document.querySelector(".ft-c-featured-secondary__image--1").classList.add("is-active");
+    document.querySelector(".ft-c-featured-secondary__image--2").classList.remove("is-active");
+    document.querySelector(".ft-c-featured-secondary__image--3").classList.remove("is-active");
+  })
+  document.getElementById("ft-js-second").addEventListener("mouseover", function() {
+    document.querySelector(".ft-c-featured-secondary__image--1").classList.remove("is-active");
+    document.querySelector(".ft-c-featured-secondary__image--2").classList.add("is-active");
+    document.querySelector(".ft-c-featured-secondary__image--3").classList.remove("is-active");
+  })
+  document.getElementById("ft-js-third").addEventListener("mouseover", function() {
+    document.querySelector(".ft-c-featured-secondary__image--1").classList.remove("is-active");
+    document.querySelector(".ft-c-featured-secondary__image--2").classList.remove("is-active");
+    document.querySelector(".ft-c-featured-secondary__image--3").classList.add("is-active");
+  })
+}
+window.addEventListener("load", secondaryFeatured, false);
+</script>
+
+
+<section class="ft-c-featured-secondary">
+  <div class="ft-c-featured-secondary__wrap ft-l-container">
+    <div class="ft-c-featured-secondary__media">
+      <img width="800" height="800" src="https://blog.mozilla.org/wp-content/blogs.dir/278/files/2025/10/andrew-neel-A9Msi-vUNKg-unsplash-r-800x800.jpg" class="ft-c-featured-secondary__image--1 wp-post-image" alt="Person browsing photo gallery on laptop while sitting on wooden floor." decoding="async" srcset="https://blog.mozilla.org/wp-content/blogs.dir/278/files/2025/10/andrew-neel-A9Msi-vUNKg-unsplash-r-800x800.jpg 800w, https://blog.mozilla.org/wp-content/blogs.dir/278/files/2025/10/andrew-neel-A9Msi-vUNKg-unsplash-r-150x150.jpg 150w" sizes="(max-width: 800px) 100vw, 800px" />      <img width="800" height="800" src="https://blog.mozilla.org/wp-content/blogs.dir/278/files/2025/10/MCOTI_John-Sabine-Merriam-Webster-800x800.png" class="ft-c-featured-secondary__image--2 wp-post-image" alt="A bearded man in a denim shirt over a dark T-shirt, against a green background with a layered pixel effect." decoding="async" srcset="https://blog.mozilla.org/wp-content/blogs.dir/278/files/2025/10/MCOTI_John-Sabine-Merriam-Webster-800x800.png 800w, https://blog.mozilla.org/wp-content/blogs.dir/278/files/2025/10/MCOTI_John-Sabine-Merriam-Webster-150x150.png 150w" sizes="(max-width: 800px) 100vw, 800px" />      <img width="800" height="800" src="https://blog.mozilla.org/wp-content/blogs.dir/278/files/2025/10/Blog-Header-3-800x800.png" class="ft-c-featured-secondary__image--3 wp-post-image" alt="Illustration featuring a TIME magazine cover titled “Best Inventions of 2025,” showing a humanoid robot folding clothes, alongside a smartphone displaying the Firefox logo and a screen reading “Summarizing…” with a dessert recipe below it." decoding="async" srcset="https://blog.mozilla.org/wp-content/blogs.dir/278/files/2025/10/Blog-Header-3-800x800.png 800w, https://blog.mozilla.org/wp-content/blogs.dir/278/files/2025/10/Blog-Header-3-150x150.png 150w" sizes="(max-width: 800px) 100vw, 800px" />    </div>
+    <div class="ft-c-featured-secondary__item-list">
+
+      <div class="ft-c-featured-secondary__item-wrap" id="ft-js-first">
+        <img width="800" height="800" src="https://blog.mozilla.org/wp-content/blogs.dir/278/files/2025/10/andrew-neel-A9Msi-vUNKg-unsplash-r-800x800.jpg" class="ft-c-featured-secondary__image--1 wp-post-image" alt="Person browsing photo gallery on laptop while sitting on wooden floor." decoding="async" srcset="https://blog.mozilla.org/wp-content/blogs.dir/278/files/2025/10/andrew-neel-A9Msi-vUNKg-unsplash-r-800x800.jpg 800w, https://blog.mozilla.org/wp-content/blogs.dir/278/files/2025/10/andrew-neel-A9Msi-vUNKg-unsplash-r-150x150.jpg 150w" sizes="(max-width: 800px) 100vw, 800px" />        <div class="ft-c-featured-secondary__item">
+          <span class="ft-c-label">Extensions + Addons</span>
+          <a href="https://blog.mozilla.org/en/firefox/firefox-recap/">
+            <h2 class="ft-c-featured-secondary__title">Fox Recap: A student-built tool that analyzes your browsing habits </h2>
+            <span class="ft-c-more">Read More</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="ft-c-featured-secondary__item-wrap" id="ft-js-second">
+        <img width="800" height="800" src="https://blog.mozilla.org/wp-content/blogs.dir/278/files/2025/10/MCOTI_John-Sabine-Merriam-Webster-800x800.png" class="ft-c-featured-secondary__image--2 wp-post-image" alt="A bearded man in a denim shirt over a dark T-shirt, against a green background with a layered pixel effect." decoding="async" srcset="https://blog.mozilla.org/wp-content/blogs.dir/278/files/2025/10/MCOTI_John-Sabine-Merriam-Webster-800x800.png 800w, https://blog.mozilla.org/wp-content/blogs.dir/278/files/2025/10/MCOTI_John-Sabine-Merriam-Webster-150x150.png 150w" sizes="(max-width: 800px) 100vw, 800px" />        <div class="ft-c-featured-secondary__item">
+          <span class="ft-c-label">Internet Culture</span>
+          <a href="https://blog.mozilla.org/en/internet-culture/interviews/merriam-webster-social/">
+            <h2 class="ft-c-featured-secondary__title">The social media director who helps make Merriam-Webster go viral</h2>
+            <span class="ft-c-more">Read More</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="ft-c-featured-secondary__item-wrap" id="ft-js-third">
+        <img width="800" height="800" src="https://blog.mozilla.org/wp-content/blogs.dir/278/files/2025/10/Blog-Header-3-800x800.png" class="ft-c-featured-secondary__image--3 wp-post-image" alt="Illustration featuring a TIME magazine cover titled “Best Inventions of 2025,” showing a humanoid robot folding clothes, alongside a smartphone displaying the Firefox logo and a screen reading “Summarizing…” with a dessert recipe below it." decoding="async" srcset="https://blog.mozilla.org/wp-content/blogs.dir/278/files/2025/10/Blog-Header-3-800x800.png 800w, https://blog.mozilla.org/wp-content/blogs.dir/278/files/2025/10/Blog-Header-3-150x150.png 150w" sizes="(max-width: 800px) 100vw, 800px" />        <div class="ft-c-featured-secondary__item">
+          <span class="ft-c-label">Firefox</span>
+          <a href="https://blog.mozilla.org/en/firefox/shake-to-summarize-time-best-inventions/">
+            <h2 class="ft-c-featured-secondary__title">Shake to Summarize recognized with special mention in TIME’s Best Inventions of 2025</h2>
+            <span class="ft-c-more">Read More</span>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <div class="ft-c-post-list__cta">
+        <a href="https://blog.mozilla.org/latest/" class="mzp-c-cta-link">
+      View All Posts    </a>
+  </div>
+</section>
+
+  <div class="ft-l-space-unrelated"></div>
+
+  <!-- The Featured Video section -->
+  <!-- First, some JS that loads the video whent he thumbnail is clicked -->
+<script type="text/javascript" async>
+function featuredVideo() {
+  // fetch the video link
+  var videoURLElement = document.getElementById("featuredvideourl");
+  var videoUrl = videoURLElement.innerHTML;
+
+  // a function that takes a youtuve URl and returns the ID
+  function youtube_parser(url) {
+    var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+    var match = url.match(regExp);
+    return (match && match[7].length == 11) ? match[7] : false;
+  }
+
+  const videoId = youtube_parser(videoUrl);
+
+  // listen for a click. Then remoe the image and replace with the video iframe
+  const youtube = document.getElementById("featuredvideo");
+  youtube.addEventListener("click", function() {
+    var videoiframe = document.createElement("iframe");
+    videoiframe.setAttribute("frameborder", "0");
+    videoiframe.setAttribute("allowfullscreen", "");
+    videoiframe.setAttribute("src", "https://www.youtube-nocookie.com/embed/" + videoId +
+      "?rel=0&showinfo=0&autoplay=1");
+    youtube.innerHTML = "";
+    youtube.classList.add('responsive-video');
+    youtube.appendChild(videoiframe);
+  });
+}
+window.addEventListener("load", featuredVideo, false);
+</script>
+
+<section class="ft-c-featured-video">
+  <div class="ft-c-featured-video__background">
+    <div class="ft-l-container">
+      <span class="ft-c-label ft-c-label--white">Featured Video</span>
+      <h2>Podcast: Outside the Fox</h2>
+      <div id="featuredvideo" class="ft-c-featured-video__media ">
+        <div class="ft-c-featured-video__play-icon">
+          <img src="https://blog.mozilla.org/wp-content/themes/foxtail/assets/images/play.svg" alt="play button" />
+        </div>
+
+        <img width="1280" height="720" src="https://blog.mozilla.org/wp-content/blogs.dir/278/files/2025/08/outside-the-fox-thumbnail-1280x720.jpg" class="attachment-16x9 size-16x9" alt="Podcast hosts in a studio talking, with a neon fox flame logo in the background and text reading “#034 You missed this shift.”" decoding="async" srcset="https://blog.mozilla.org/wp-content/blogs.dir/278/files/2025/08/outside-the-fox-thumbnail.jpg 1280w, https://blog.mozilla.org/wp-content/blogs.dir/278/files/2025/08/outside-the-fox-thumbnail-300x169.jpg 300w, https://blog.mozilla.org/wp-content/blogs.dir/278/files/2025/08/outside-the-fox-thumbnail-1024x576.jpg 1024w, https://blog.mozilla.org/wp-content/blogs.dir/278/files/2025/08/outside-the-fox-thumbnail-768x432.jpg 768w, https://blog.mozilla.org/wp-content/blogs.dir/278/files/2025/08/outside-the-fox-thumbnail-1000x563.jpg 1000w" sizes="(max-width: 1280px) 100vw, 1280px" />        <span id="featuredvideourl" style="display: none">https://www.youtube.com/watch?v=20UCS9PRYgA</span>
+      </div>
+    </div>
+  </div>
+  <div class="ft-l-container">
+    <div class="ft-c-featured-video__cta">
+      <a class="mzp-c-cta-link" href="https://www.youtube.com/@firefox" target="
+          ">
+          Watch more videos        </a>
+    </div>
+  </div>
+</section>
+  <div class="ft-l-space-unrelated"></div>
+
+  <!-- Collection #1 -->
+  
+<section class="ft-c-post-list">
+  <div class="ft-l-container">
+    <span class="ft-c-label">Featured Collection</span>
+    <h2 class="ft-c-post-list__title">Latest Mozilla news</h2>
+    <div class="ft-c-post-list__wrap--two-column">
+    <article class="ft-c-card">
+  <a class="ft-c-card__link" href="https://blog.mozilla.org/en/mozilla/leadership/mozilla-welcomes-raffi-krikorian-chief-technology-officer/">
+    <div class="ft-c-card__image">
+      <img width="800" height="800" src="https://blog.mozilla.org/wp-content/blogs.dir/278/files/2025/09/Distilled_Raffi-800x800.png" class="attachment-1x1 size-1x1 wp-post-image" alt="Picture of Raffi Krikorian on green background" decoding="async" srcset="https://blog.mozilla.org/wp-content/blogs.dir/278/files/2025/09/Distilled_Raffi-800x800.png 800w, https://blog.mozilla.org/wp-content/blogs.dir/278/files/2025/09/Distilled_Raffi-150x150.png 150w" sizes="(max-width: 800px) 100vw, 800px" />    </div>
+    <div class="ft-c-card__content">
+      <h2 class="ft-c-card__title">Mozilla welcomes Raffi Krikorian as Chief Technology Officer</h2>
+      <span class="ft-c-more">Read More</span>
+    </div>
+  </a>
+</article>
+<article class="ft-c-card">
+  <a class="ft-c-card__link" href="https://blog.mozilla.org/en/mozilla/internet-policy/defending-an-open-web/">
+    <div class="ft-c-card__image">
+      <img width="800" height="800" src="https://blog.mozilla.org/wp-content/blogs.dir/278/files/2025/03/Mozilla-Blog-Thumbnail@2x-800x800.png" class="attachment-1x1 size-1x1 wp-post-image" alt="The Mozilla logo in green on a black background" decoding="async" srcset="https://blog.mozilla.org/wp-content/blogs.dir/278/files/2025/03/Mozilla-Blog-Thumbnail@2x-800x800.png 800w, https://blog.mozilla.org/wp-content/blogs.dir/278/files/2025/03/Mozilla-Blog-Thumbnail@2x-150x150.png 150w" sizes="(max-width: 800px) 100vw, 800px" />    </div>
+    <div class="ft-c-card__content">
+      <h2 class="ft-c-card__title">Defending an open web: What the Google search ruling means for the future</h2>
+      <span class="ft-c-more">Read More</span>
+    </div>
+  </a>
+</article>
+<article class="ft-c-card">
+  <a class="ft-c-card__link" href="https://blog.mozilla.org/en/firefox/firefox-ai/speeding-up-firefox-local-ai-runtime/">
+    <div class="ft-c-card__image">
+      <img width="800" height="800" src="https://blog.mozilla.org/wp-content/blogs.dir/278/files/2025/08/Firefox-native-onnx-800x800.png" class="attachment-1x1 size-1x1 wp-post-image" alt="This image shows the logo of Firefox with onnx written in the background." decoding="async" srcset="https://blog.mozilla.org/wp-content/blogs.dir/278/files/2025/08/Firefox-native-onnx-800x800.png 800w, https://blog.mozilla.org/wp-content/blogs.dir/278/files/2025/08/Firefox-native-onnx-150x150.png 150w" sizes="(max-width: 800px) 100vw, 800px" />    </div>
+    <div class="ft-c-card__content">
+      <h2 class="ft-c-card__title">Speeding up Firefox Local AI Runtime</h2>
+      <span class="ft-c-more">Read More</span>
+    </div>
+  </a>
+</article>
+<article class="ft-c-card">
+  <a class="ft-c-card__link" href="https://blog.mozilla.org/en/firefox/crlite/">
+    <div class="ft-c-card__image">
+      <img width="800" height="800" src="https://blog.mozilla.org/wp-content/blogs.dir/278/files/2020/01/firefox-browser-logo-800x800.png" class="attachment-1x1 size-1x1 wp-post-image" alt="An illustration shows the Firefox logo, a fox curled up in a circle." decoding="async" srcset="https://blog.mozilla.org/wp-content/blogs.dir/278/files/2020/01/firefox-browser-logo-800x800.png 800w, https://blog.mozilla.org/wp-content/blogs.dir/278/files/2020/01/firefox-browser-logo-150x150.png 150w" sizes="(max-width: 800px) 100vw, 800px" />    </div>
+    <div class="ft-c-card__content">
+      <h2 class="ft-c-card__title">Fast, private and secure (pick three): Introducing CRLite in Firefox</h2>
+      <span class="ft-c-more">Read More</span>
+    </div>
+  </a>
+</article>
+<article class="ft-c-card">
+  <a class="ft-c-card__link" href="https://blog.mozilla.org/en/mozilla/responsible-tech/">
+    <div class="ft-c-card__image">
+      <img width="800" height="800" src="https://blog.mozilla.org/wp-content/blogs.dir/278/files/2025/03/Mozilla-Blog-Thumbnail@2x-800x800.png" class="attachment-1x1 size-1x1 wp-post-image" alt="The Mozilla logo in green on a black background" decoding="async" srcset="https://blog.mozilla.org/wp-content/blogs.dir/278/files/2025/03/Mozilla-Blog-Thumbnail@2x-800x800.png 800w, https://blog.mozilla.org/wp-content/blogs.dir/278/files/2025/03/Mozilla-Blog-Thumbnail@2x-150x150.png 150w" sizes="(max-width: 800px) 100vw, 800px" />    </div>
+    <div class="ft-c-card__content">
+      <h2 class="ft-c-card__title">Driving towards a double bottom line, through participation and choice</h2>
+      <span class="ft-c-more">Read More</span>
+    </div>
+  </a>
+</article>
+<article class="ft-c-card">
+  <a class="ft-c-card__link" href="https://blog.mozilla.org/en/firefox/promoted/">
+    <div class="ft-c-card__image">
+      <img width="800" height="800" src="https://blog.mozilla.org/wp-content/blogs.dir/278/files/2025/07/Anthony_01-800x800.png" class="attachment-1x1 size-1x1 wp-post-image" alt="Anthony Enzor-DeMeo smiling in professional headshot with green background." decoding="async" srcset="https://blog.mozilla.org/wp-content/blogs.dir/278/files/2025/07/Anthony_01-800x800.png 800w, https://blog.mozilla.org/wp-content/blogs.dir/278/files/2025/07/Anthony_01-150x150.png 150w" sizes="(max-width: 800px) 100vw, 800px" />    </div>
+    <div class="ft-c-card__content">
+      <h2 class="ft-c-card__title">Anthony Enzor-DeMeo promoted to General Manager, Firefox</h2>
+      <span class="ft-c-more">Read More</span>
+    </div>
+  </a>
+</article>
+
+    </div>
+    <div class="ft-c-post-list__cta">
+      <a href="https://blog.mozilla.org/en/category/mozilla/" class="mzp-c-cta-link">
+        Read more Mozilla news      </a>
+    </div>
+  </div>
+</section>
+
+  <div class="ft-l-space-unrelated"></div>
+
+  <!-- Collection #2 -->
+  
+<section class="ft-c-post-list">
+  <div class="ft-l-container">
+    <span class="ft-c-label">Featured Collection</span>
+    <h2 class="ft-c-post-list__title">Latest Firefox news</h2>
+    <div class="ft-c-post-list__wrap--three-column ft-c-post-list__wrap--frontpage ">
+    <section class="mzp-c-card mzp-has-aspect-1-1">
+  <a class="mzp-c-card-block-link" href="https://blog.mozilla.org/en/firefox/windows-10-updates-support/">
+    <div class="mzp-c-card-media-wrapper">
+    <img width="800" height="800" src="https://blog.mozilla.org/wp-content/blogs.dir/278/files/2025/10/Press_Firefox_Brand_800x800_2-800x800.png" class="mzp-c-card-image wp-post-image" alt="Firefox logo with orange fox wrapped around purple globe." decoding="async" srcset="https://blog.mozilla.org/wp-content/blogs.dir/278/files/2025/10/Press_Firefox_Brand_800x800_2.png 800w, https://blog.mozilla.org/wp-content/blogs.dir/278/files/2025/10/Press_Firefox_Brand_800x800_2-300x300.png 300w, https://blog.mozilla.org/wp-content/blogs.dir/278/files/2025/10/Press_Firefox_Brand_800x800_2-150x150.png 150w, https://blog.mozilla.org/wp-content/blogs.dir/278/files/2025/10/Press_Firefox_Brand_800x800_2-768x768.png 768w" sizes="(max-width: 800px) 100vw, 800px" />    </div>
+    <div class="mzp-c-card-content">
+      <div class="mzp-c-card-content">
+                        <div class="ft-c-pill__wrap">
+          <div class="ft-c-pill">Firefox</div>
+        </div>
+                <h2 class="mzp-c-card-title">Windows 10 updates are ending. Here’s what it means for Firefox users.</h2>
+        <span class="ft-c-more">Read More</span>
+      </div>
+    </div>
+  </a>
+</section>
+<section class="mzp-c-card mzp-has-aspect-1-1">
+  <a class="mzp-c-card-block-link" href="https://blog.mozilla.org/en/firefox/profile-management/">
+    <div class="mzp-c-card-media-wrapper">
+    <img width="800" height="800" src="https://blog.mozilla.org/wp-content/blogs.dir/278/files/2025/10/profiles-1-800x800.png" class="mzp-c-card-image wp-post-image" alt="Firefox Profile Manager showing Work and Personal profiles, with an option to create a new one, on a desktop with a forest background." decoding="async" srcset="https://blog.mozilla.org/wp-content/blogs.dir/278/files/2025/10/profiles-1-800x800.png 800w, https://blog.mozilla.org/wp-content/blogs.dir/278/files/2025/10/profiles-1-150x150.png 150w" sizes="(max-width: 800px) 100vw, 800px" />    </div>
+    <div class="mzp-c-card-content">
+      <div class="mzp-c-card-content">
+                        <div class="ft-c-pill__wrap">
+          <div class="ft-c-pill">Firefox</div>
+        </div>
+                <h2 class="mzp-c-card-title">Firefox profiles: Private, focused spaces for all the ways you browse</h2>
+        <span class="ft-c-more">Read More</span>
+      </div>
+    </div>
+  </a>
+</section>
+<section class="mzp-c-card mzp-has-aspect-1-1">
+  <a class="mzp-c-card-block-link" href="https://blog.mozilla.org/en/firefox/firefox-celebrates-browser-choice-house-blend-events/">
+    <div class="mzp-c-card-media-wrapper">
+    <img width="800" height="800" src="https://blog.mozilla.org/wp-content/blogs.dir/278/files/2025/10/Fx_Coffee-Rave_Blog-Header-800x800.jpg" class="mzp-c-card-image wp-post-image" alt="" decoding="async" srcset="https://blog.mozilla.org/wp-content/blogs.dir/278/files/2025/10/Fx_Coffee-Rave_Blog-Header-800x800.jpg 800w, https://blog.mozilla.org/wp-content/blogs.dir/278/files/2025/10/Fx_Coffee-Rave_Blog-Header-150x150.jpg 150w" sizes="(max-width: 800px) 100vw, 800px" />    </div>
+    <div class="mzp-c-card-content">
+      <div class="mzp-c-card-content">
+                        <div class="ft-c-pill__wrap">
+          <div class="ft-c-pill">Firefox</div>
+        </div>
+                <h2 class="mzp-c-card-title">Celebrate the power of browser choice with Firefox. Join us live.</h2>
+        <span class="ft-c-more">Read More</span>
+      </div>
+    </div>
+  </a>
+</section>
+<section class="mzp-c-card mzp-has-aspect-1-1">
+  <a class="mzp-c-card-block-link" href="https://blog.mozilla.org/en/firefox/billionaire-blast-off/">
+    <div class="mzp-c-card-media-wrapper">
+    <img width="800" height="800" src="https://blog.mozilla.org/wp-content/blogs.dir/278/files/2025/10/Header-3-2-800x800.png" class="mzp-c-card-image wp-post-image" alt="Cartoon billionaires float in space on toy rockets, yachts, and boxes with text: “Billionaire Blast Off — Powered by Firefox.”" decoding="async" srcset="https://blog.mozilla.org/wp-content/blogs.dir/278/files/2025/10/Header-3-2-800x800.png 800w, https://blog.mozilla.org/wp-content/blogs.dir/278/files/2025/10/Header-3-2-150x150.png 150w" sizes="(max-width: 800px) 100vw, 800px" />    </div>
+    <div class="mzp-c-card-content">
+      <div class="mzp-c-card-content">
+                        <div class="ft-c-pill__wrap">
+          <div class="ft-c-pill">Firefox</div>
+        </div>
+                <h2 class="mzp-c-card-title">Blast off! Firefox turns data power plays into a game</h2>
+        <span class="ft-c-more">Read More</span>
+      </div>
+    </div>
+  </a>
+</section>
+<section class="mzp-c-card mzp-has-aspect-1-1">
+  <a class="mzp-c-card-block-link" href="https://blog.mozilla.org/en/firefox/dns-android/">
+    <div class="mzp-c-card-media-wrapper">
+    <img width="660" height="660" src="https://blog.mozilla.org/wp-content/blogs.dir/278/files/2020/02/ff-blog-header-doh-1_2-660x660.jpg" class="mzp-c-card-image wp-post-image" alt="Stylized graphic showing network nodes and locks, representing encrypted DNS." decoding="async" srcset="https://blog.mozilla.org/wp-content/blogs.dir/278/files/2020/02/ff-blog-header-doh-1_2-660x660.jpg 660w, https://blog.mozilla.org/wp-content/blogs.dir/278/files/2020/02/ff-blog-header-doh-1_2-150x150.jpg 150w" sizes="(max-width: 660px) 100vw, 660px" />    </div>
+    <div class="mzp-c-card-content">
+      <div class="mzp-c-card-content">
+                        <div class="ft-c-pill__wrap">
+          <div class="ft-c-pill">Firefox</div>
+        </div>
+                <h2 class="mzp-c-card-title">Firefox DNS privacy: Faster than ever, now on Android</h2>
+        <span class="ft-c-more">Read More</span>
+      </div>
+    </div>
+  </a>
+</section>
+<section class="mzp-c-card mzp-has-aspect-1-1">
+  <a class="mzp-c-card-block-link" href="https://blog.mozilla.org/en/firefox/shake-to-summarize/">
+    <div class="mzp-c-card-media-wrapper">
+    <img width="800" height="800" src="https://blog.mozilla.org/wp-content/blogs.dir/278/files/2025/08/shake-to-summarize-summaries-800x800.png" class="mzp-c-card-image wp-post-image" alt="Three smartphone screens showing Firefox article summarized with Apple Intelligence on translation updates for Chinese, Japanese, and Korean users." decoding="async" srcset="https://blog.mozilla.org/wp-content/blogs.dir/278/files/2025/08/shake-to-summarize-summaries-800x800.png 800w, https://blog.mozilla.org/wp-content/blogs.dir/278/files/2025/08/shake-to-summarize-summaries-150x150.png 150w" sizes="(max-width: 800px) 100vw, 800px" />    </div>
+    <div class="mzp-c-card-content">
+      <div class="mzp-c-card-content">
+                        <div class="ft-c-pill__wrap">
+          <div class="ft-c-pill">Firefox</div>
+        </div>
+                <h2 class="mzp-c-card-title">On Firefox for iOS, summarize a page with a shake or a tap</h2>
+        <span class="ft-c-more">Read More</span>
+      </div>
+    </div>
+  </a>
+</section>
+    </div>
+    <div class="ft-c-post-list__cta">
+      <a href="https://blog.mozilla.org/en/category/products/firefox/" class="mzp-c-cta-link">
+        Read more Firefox news      </a>
+    </div>
+  </div>
+</section>
+
+  <div class="ft-l-space-unrelated"></div>
+
+  <!-- Collection #3 -->
+  
+<section class="ft-c-post-list">
+  <div class="ft-l-container">
+    <span class="ft-c-label">Featured Collection</span>
+    <h2 class="ft-c-post-list__title">Recently published</h2>
+    <div class="ft-c-post-list__wrap--three-column ft-c-post-list__wrap--frontpage ">
+    <section class="mzp-c-card mzp-has-aspect-1-1">
+  <a class="mzp-c-card-block-link" href="https://blog.mozilla.org/en/firefox/windows-10-updates-support/">
+    <div class="mzp-c-card-media-wrapper">
+    <img width="800" height="800" src="https://blog.mozilla.org/wp-content/blogs.dir/278/files/2025/10/Press_Firefox_Brand_800x800_2-800x800.png" class="mzp-c-card-image wp-post-image" alt="Firefox logo with orange fox wrapped around purple globe." decoding="async" srcset="https://blog.mozilla.org/wp-content/blogs.dir/278/files/2025/10/Press_Firefox_Brand_800x800_2.png 800w, https://blog.mozilla.org/wp-content/blogs.dir/278/files/2025/10/Press_Firefox_Brand_800x800_2-300x300.png 300w, https://blog.mozilla.org/wp-content/blogs.dir/278/files/2025/10/Press_Firefox_Brand_800x800_2-150x150.png 150w, https://blog.mozilla.org/wp-content/blogs.dir/278/files/2025/10/Press_Firefox_Brand_800x800_2-768x768.png 768w" sizes="(max-width: 800px) 100vw, 800px" />    </div>
+    <div class="mzp-c-card-content">
+      <div class="mzp-c-card-content">
+                        <div class="ft-c-pill__wrap">
+          <div class="ft-c-pill">Firefox</div>
+        </div>
+                <h2 class="mzp-c-card-title">Windows 10 updates are ending. Here’s what it means for Firefox users.</h2>
+        <span class="ft-c-more">Read More</span>
+      </div>
+    </div>
+  </a>
+</section>
+<section class="mzp-c-card mzp-has-aspect-1-1">
+  <a class="mzp-c-card-block-link" href="https://blog.mozilla.org/en/firefox/profile-management/">
+    <div class="mzp-c-card-media-wrapper">
+    <img width="800" height="800" src="https://blog.mozilla.org/wp-content/blogs.dir/278/files/2025/10/profiles-1-800x800.png" class="mzp-c-card-image wp-post-image" alt="Firefox Profile Manager showing Work and Personal profiles, with an option to create a new one, on a desktop with a forest background." decoding="async" srcset="https://blog.mozilla.org/wp-content/blogs.dir/278/files/2025/10/profiles-1-800x800.png 800w, https://blog.mozilla.org/wp-content/blogs.dir/278/files/2025/10/profiles-1-150x150.png 150w" sizes="(max-width: 800px) 100vw, 800px" />    </div>
+    <div class="mzp-c-card-content">
+      <div class="mzp-c-card-content">
+                        <div class="ft-c-pill__wrap">
+          <div class="ft-c-pill">Firefox</div>
+        </div>
+                <h2 class="mzp-c-card-title">Firefox profiles: Private, focused spaces for all the ways you browse</h2>
+        <span class="ft-c-more">Read More</span>
+      </div>
+    </div>
+  </a>
+</section>
+<section class="mzp-c-card mzp-has-aspect-1-1">
+  <a class="mzp-c-card-block-link" href="https://blog.mozilla.org/en/advertising/anonym/anonym-snap-partnership/">
+    <div class="mzp-c-card-media-wrapper">
+    <img width="800" height="800" src="https://blog.mozilla.org/wp-content/blogs.dir/278/files/2025/10/Distilled_SnapAnonym@2x-800x800.png" class="mzp-c-card-image wp-post-image" alt="The Anonym wordmark and the Snap, Inc. logo are shown side by side." decoding="async" srcset="https://blog.mozilla.org/wp-content/blogs.dir/278/files/2025/10/Distilled_SnapAnonym@2x-800x800.png 800w, https://blog.mozilla.org/wp-content/blogs.dir/278/files/2025/10/Distilled_SnapAnonym@2x-150x150.png 150w" sizes="(max-width: 800px) 100vw, 800px" />    </div>
+    <div class="mzp-c-card-content">
+      <div class="mzp-c-card-content">
+                        <div class="ft-c-pill__wrap">
+          <div class="ft-c-pill">Anonym</div>
+        </div>
+                <h2 class="mzp-c-card-title">Anonym and Snap partner to unlock increased performance for advertisers</h2>
+        <span class="ft-c-more">Read More</span>
+      </div>
+    </div>
+  </a>
+</section>
+<section class="mzp-c-card mzp-has-aspect-1-1">
+  <a class="mzp-c-card-block-link" href="https://blog.mozilla.org/en/firefox/firefox-celebrates-browser-choice-house-blend-events/">
+    <div class="mzp-c-card-media-wrapper">
+    <img width="800" height="800" src="https://blog.mozilla.org/wp-content/blogs.dir/278/files/2025/10/Fx_Coffee-Rave_Blog-Header-800x800.jpg" class="mzp-c-card-image wp-post-image" alt="" decoding="async" srcset="https://blog.mozilla.org/wp-content/blogs.dir/278/files/2025/10/Fx_Coffee-Rave_Blog-Header-800x800.jpg 800w, https://blog.mozilla.org/wp-content/blogs.dir/278/files/2025/10/Fx_Coffee-Rave_Blog-Header-150x150.jpg 150w" sizes="(max-width: 800px) 100vw, 800px" />    </div>
+    <div class="mzp-c-card-content">
+      <div class="mzp-c-card-content">
+                        <div class="ft-c-pill__wrap">
+          <div class="ft-c-pill">Firefox</div>
+        </div>
+                <h2 class="mzp-c-card-title">Celebrate the power of browser choice with Firefox. Join us live.</h2>
+        <span class="ft-c-more">Read More</span>
+      </div>
+    </div>
+  </a>
+</section>
+<section class="mzp-c-card mzp-has-aspect-1-1">
+  <a class="mzp-c-card-block-link" href="https://blog.mozilla.org/en/internet-culture/cozy-games/">
+    <div class="mzp-c-card-media-wrapper">
+    <img width="800" height="800" src="https://blog.mozilla.org/wp-content/blogs.dir/278/files/2025/09/Fishing-800x800.png" class="mzp-c-card-image wp-post-image" alt="Pixel art fish in a browser window with a cursor hovering on a fishing rod." decoding="async" srcset="https://blog.mozilla.org/wp-content/blogs.dir/278/files/2025/09/Fishing-800x800.png 800w, https://blog.mozilla.org/wp-content/blogs.dir/278/files/2025/09/Fishing-150x150.png 150w" sizes="(max-width: 800px) 100vw, 800px" />    </div>
+    <div class="mzp-c-card-content">
+      <div class="mzp-c-card-content">
+                        <div class="ft-c-pill__wrap">
+          <div class="ft-c-pill">Internet Culture</div>
+        </div>
+                <h2 class="mzp-c-card-title">Cozy games: A slower pace, and a place to belong </h2>
+        <span class="ft-c-more">Read More</span>
+      </div>
+    </div>
+  </a>
+</section>
+<section class="mzp-c-card mzp-has-aspect-1-1">
+  <a class="mzp-c-card-block-link" href="https://blog.mozilla.org/en/mozilla/leadership/mozilla-welcomes-raffi-krikorian-chief-technology-officer/">
+    <div class="mzp-c-card-media-wrapper">
+    <img width="800" height="800" src="https://blog.mozilla.org/wp-content/blogs.dir/278/files/2025/09/Distilled_Raffi-800x800.png" class="mzp-c-card-image wp-post-image" alt="Picture of Raffi Krikorian on green background" decoding="async" srcset="https://blog.mozilla.org/wp-content/blogs.dir/278/files/2025/09/Distilled_Raffi-800x800.png 800w, https://blog.mozilla.org/wp-content/blogs.dir/278/files/2025/09/Distilled_Raffi-150x150.png 150w" sizes="(max-width: 800px) 100vw, 800px" />    </div>
+    <div class="mzp-c-card-content">
+      <div class="mzp-c-card-content">
+                        <div class="ft-c-pill__wrap">
+          <div class="ft-c-pill">From the Team</div>
+        </div>
+                <h2 class="mzp-c-card-title">Mozilla welcomes Raffi Krikorian as Chief Technology Officer</h2>
+        <span class="ft-c-more">Read More</span>
+      </div>
+    </div>
+  </a>
+</section>
+    </div>
+    <div class="ft-c-post-list__cta">
+      <a href="https://blog.mozilla.org/en/latest/" class="mzp-c-cta-link">
+        Read more posts      </a>
+    </div>
+  </div>
+</section>
+
+  <div class="ft-l-space-unrelated"></div>
+
+<!-- Collection #4 -->
+
+
+<!-- Collection #5 -->
+
+  <!-- Featured CTA -->
+  <section class="ft-c-featured-extra">
+  <div class="ft-c-featured-extra__wrap ft-l-container">
+    <div class="ft-c-featured-extra__image">
+      <img width="800" height="800" src="https://blog.mozilla.org/wp-content/blogs.dir/278/files/2021/07/vpn-mega-cta-800x800.png" class="attachment-1x1 size-1x1" alt="" decoding="async" srcset="https://blog.mozilla.org/wp-content/blogs.dir/278/files/2021/07/vpn-mega-cta-800x800.png 800w, https://blog.mozilla.org/wp-content/blogs.dir/278/files/2021/07/vpn-mega-cta-300x300.png 300w, https://blog.mozilla.org/wp-content/blogs.dir/278/files/2021/07/vpn-mega-cta-150x150.png 150w, https://blog.mozilla.org/wp-content/blogs.dir/278/files/2021/07/vpn-mega-cta-768x768.png 768w, https://blog.mozilla.org/wp-content/blogs.dir/278/files/2021/07/vpn-mega-cta.png 961w" sizes="(max-width: 800px) 100vw, 800px" />    </div>
+    <div class="ft-c-featured-extra__content">
+      <span class="ft-c-label ft-c-label--dark">Mozilla VPN</span>
+      <h3>Security, reliability and speed — on every device, anywhere you go</h3>
+      <p>Get the Virtual Private Network from the makers of Firefox.</p>
+      <div class="ft-c-featured-extra__ctas">
+        <a class="mzp-c-button mzp-t-secondary mzp-t-dark" href="https://www.mozilla.org/products/vpn/" target="
+          ">
+          Learn more        </a>
+        
+      </div>
+    </div>
+  </div>
+</section>
+<!-- endif -->
+
+
+
+
+
+</div><!-- #content -->
+
+<!-- Newsletter -->
+<div class="ft-l-container">
+  <aside id="newsletter-subscribe" class="mzp-c-newsletter">
+    <div class="mzp-c-newsletter-image">
+      <!-- <img src="../../../static/img/newsletter/newsletter-image.png" width="346" height="346" alt=""> -->
+      <img src="https://blog.mozilla.org/wp-content/themes/foxtail/assets/images/newsletter.png" alt="newsletter" />
+    </div>
+    <form id="newsletter-form" class="mzp-c-newsletter-form" name="newsletter-form"
+      action="https://www.mozilla.org/en-US/newsletter/" method="post"
+      data-blog="The Mozilla Blog">
+      <input type="hidden" id="newsletters" name="newsletters" value="mozilla-and-you">
+      <input type="hidden" id="source_url" name="source_url" value="https://blog.mozilla.org/en/">
+
+      <fieldset id="newsletter-content" class="mzp-c-newsletter-content">
+        <header class="mzp-c-newsletter-header">
+          <h3 class="mzp-c-newsletter-title">Keep up with all things Firefox</h3>
+          <p class="mzp-c-newsletter-tagline">Get how-tos, advice and news to make your Firefox experience work best for you.</p>
+        </header>
+        <div class="mzp-c-form-errors" id="newsletter-errors"></div>
+
+        <div>
+          <label for="email">Your e-mail address</label>
+                    <input type="email" class="mzp-js-email-field" id="email" name="email" required aria-required="true"
+            placeholder="yourname@example.com" size="30">
+        </div>
+
+        <div id="newsletter-details" class="mzp-c-newsletter-details">
+          <label for="country">Country</label>
+          <select id="country" name="country" required aria-required="true">
+            <option value="" selected="selected">- select -</option>
+            <option value="af">Afghanistan</option>
+            <option value="qz">Akrotiri</option>
+            <option value="al">Albania</option>
+            <option value="dz">Algeria</option>
+            <option value="as">American Samoa</option>
+            <option value="ad">Andorra</option>
+            <option value="ao">Angola</option>
+            <option value="ai">Anguilla</option>
+            <option value="aq">Antarctica</option>
+            <option value="ag">Antigua and Barbuda</option>
+            <option value="ar">Argentina</option>
+            <option value="am">Armenia</option>
+            <option value="aw">Aruba</option>
+            <option value="xa">Ashmore and Cartier Islands</option>
+            <option value="au">Australia</option>
+            <option value="at">Austria</option>
+            <option value="az">Azerbaijan</option>
+            <option value="bs">Bahamas, The</option>
+            <option value="bh">Bahrain</option>
+            <option value="xb">Baker Island</option>
+            <option value="bd">Bangladesh</option>
+            <option value="bb">Barbados</option>
+            <option value="qs">Bassas da India</option>
+            <option value="by">Belarus</option>
+            <option value="be">Belgium</option>
+            <option value="bz">Belize</option>
+            <option value="bj">Benin</option>
+            <option value="bm">Bermuda</option>
+            <option value="bt">Bhutan</option>
+            <option value="bo">Bolivia</option>
+            <option value="bq">Bonaire, Sint Eustatius, and Saba</option>
+            <option value="ba">Bosnia and Herzegovina</option>
+            <option value="bw">Botswana</option>
+            <option value="bv">Bouvet Island</option>
+            <option value="br">Brazil</option>
+            <option value="io">British Indian Ocean Territory</option>
+            <option value="bn">Brunei</option>
+            <option value="bg">Bulgaria</option>
+            <option value="bf">Burkina Faso</option>
+            <option value="mm">Burma</option>
+            <option value="bi">Burundi</option>
+            <option value="cv">Cabo Verde</option>
+            <option value="kh">Cambodia</option>
+            <option value="cm">Cameroon</option>
+            <option value="ca">Canada</option>
+            <option value="ky">Cayman Islands</option>
+            <option value="cf">Central African Republic</option>
+            <option value="td">Chad</option>
+            <option value="cl">Chile</option>
+            <option value="cn">China</option>
+            <option value="cx">Christmas Island</option>
+            <option value="cp">Clipperton Island</option>
+            <option value="cc">Cocos (Keeling) Islands</option>
+            <option value="co">Colombia</option>
+            <option value="km">Comoros</option>
+            <option value="cg">Congo (Brazzaville)</option>
+            <option value="cd">Congo (Kinshasa)</option>
+            <option value="ck">Cook Islands</option>
+            <option value="xc">Coral Sea Islands</option>
+            <option value="cr">Costa Rica</option>
+            <option value="hr">Croatia</option>
+            <option value="cu">Cuba</option>
+            <option value="cw">Curaçao</option>
+            <option value="cy">Cyprus</option>
+            <option value="cz">Czech Republic</option>
+            <option value="ci">Côte d’Ivoire</option>
+            <option value="dk">Denmark</option>
+            <option value="xd">Dhekelia</option>
+            <option value="dg">Diego Garcia</option>
+            <option value="dj">Djibouti</option>
+            <option value="dm">Dominica</option>
+            <option value="do">Dominican Republic</option>
+            <option value="ec">Ecuador</option>
+            <option value="eg">Egypt</option>
+            <option value="sv">El Salvador</option>
+            <option value="gq">Equatorial Guinea</option>
+            <option value="er">Eritrea</option>
+            <option value="ee">Estonia</option>
+            <option value="et">Ethiopia</option>
+            <option value="xe">Europa Island</option>
+            <option value="fk">Falkland Islands (Islas Malvinas)</option>
+            <option value="fo">Faroe Islands</option>
+            <option value="fj">Fiji</option>
+            <option value="fi">Finland</option>
+            <option value="fr">France</option>
+            <option value="gf">French Guiana</option>
+            <option value="pf">French Polynesia</option>
+            <option value="tf">French Southern and Antarctic Lands</option>
+            <option value="ga">Gabon</option>
+            <option value="gm">Gambia, The</option>
+            <option value="xg">Gaza Strip</option>
+            <option value="ge">Georgia</option>
+            <option value="de">Germany</option>
+            <option value="gh">Ghana</option>
+            <option value="gi">Gibraltar</option>
+            <option value="qx">Glorioso Islands</option>
+            <option value="gr">Greece</option>
+            <option value="gl">Greenland</option>
+            <option value="gd">Grenada</option>
+            <option value="gp">Guadeloupe</option>
+            <option value="gu">Guam</option>
+            <option value="gt">Guatemala</option>
+            <option value="gg">Guernsey</option>
+            <option value="gn">Guinea</option>
+            <option value="gw">Guinea-Bissau</option>
+            <option value="gy">Guyana</option>
+            <option value="ht">Haiti</option>
+            <option value="hm">Heard Island and McDonald Islands</option>
+            <option value="hn">Honduras</option>
+            <option value="hk">Hong Kong</option>
+            <option value="xh">Howland Island</option>
+            <option value="hu">Hungary</option>
+            <option value="is">Iceland</option>
+            <option value="in">India</option>
+            <option value="id">Indonesia</option>
+            <option value="ir">Iran</option>
+            <option value="iq">Iraq</option>
+            <option value="ie">Ireland</option>
+            <option value="im">Isle of Man</option>
+            <option value="il">Israel</option>
+            <option value="it">Italy</option>
+            <option value="jm">Jamaica</option>
+            <option value="xj">Jan Mayen</option>
+            <option value="jp">Japan</option>
+            <option value="xq">Jarvis Island</option>
+            <option value="je">Jersey</option>
+            <option value="xu">Johnston Atoll</option>
+            <option value="jo">Jordan</option>
+            <option value="qu">Juan de Nova Island</option>
+            <option value="kz">Kazakhstan</option>
+            <option value="ke">Kenya</option>
+            <option value="xm">Kingman Reef</option>
+            <option value="ki">Kiribati</option>
+            <option value="kp">Korea, North</option>
+            <option value="kr">Korea, South</option>
+            <option value="xk">Kosovo</option>
+            <option value="kw">Kuwait</option>
+            <option value="kg">Kyrgyzstan</option>
+            <option value="la">Laos</option>
+            <option value="lv">Latvia</option>
+            <option value="lb">Lebanon</option>
+            <option value="ls">Lesotho</option>
+            <option value="lr">Liberia</option>
+            <option value="ly">Libya</option>
+            <option value="li">Liechtenstein</option>
+            <option value="lt">Lithuania</option>
+            <option value="lu">Luxembourg</option>
+            <option value="mo">Macau</option>
+            <option value="mk">Macedonia</option>
+            <option value="mg">Madagascar</option>
+            <option value="mw">Malawi</option>
+            <option value="my">Malaysia</option>
+            <option value="mv">Maldives</option>
+            <option value="ml">Mali</option>
+            <option value="mt">Malta</option>
+            <option value="mh">Marshall Islands</option>
+            <option value="mq">Martinique</option>
+            <option value="mr">Mauritania</option>
+            <option value="mu">Mauritius</option>
+            <option value="yt">Mayotte</option>
+            <option value="mx">Mexico</option>
+            <option value="fm">Micronesia, Federated States of</option>
+            <option value="qm">Midway Islands</option>
+            <option value="md">Moldova</option>
+            <option value="mc">Monaco</option>
+            <option value="mn">Mongolia</option>
+            <option value="me">Montenegro</option>
+            <option value="ms">Montserrat</option>
+            <option value="ma">Morocco</option>
+            <option value="mz">Mozambique</option>
+            <option value="na">Namibia</option>
+            <option value="nr">Nauru</option>
+            <option value="xv">Navassa Island</option>
+            <option value="np">Nepal</option>
+            <option value="nl">Netherlands</option>
+            <option value="nc">New Caledonia</option>
+            <option value="nz">New Zealand</option>
+            <option value="ni">Nicaragua</option>
+            <option value="ne">Niger</option>
+            <option value="ng">Nigeria</option>
+            <option value="nu">Niue</option>
+            <option value="nf">Norfolk Island</option>
+            <option value="mp">Northern Mariana Islands</option>
+            <option value="no">Norway</option>
+            <option value="om">Oman</option>
+            <option value="pk">Pakistan</option>
+            <option value="pw">Palau</option>
+            <option value="xl">Palmyra Atoll</option>
+            <option value="pa">Panama</option>
+            <option value="pg">Papua New Guinea</option>
+            <option value="xp">Paracel Islands</option>
+            <option value="py">Paraguay</option>
+            <option value="pe">Peru</option>
+            <option value="ph">Philippines</option>
+            <option value="pn">Pitcairn Islands</option>
+            <option value="pl">Poland</option>
+            <option value="pt">Portugal</option>
+            <option value="pr">Puerto Rico</option>
+            <option value="qa">Qatar</option>
+            <option value="re">Reunion</option>
+            <option value="ro">Romania</option>
+            <option value="ru">Russia</option>
+            <option value="rw">Rwanda</option>
+            <option value="bl">Saint Barthelemy</option>
+            <option value="sh">Saint Helena, Ascension, and Tristan da Cunha</option>
+            <option value="kn">Saint Kitts and Nevis</option>
+            <option value="lc">Saint Lucia</option>
+            <option value="mf">Saint Martin</option>
+            <option value="pm">Saint Pierre and Miquelon</option>
+            <option value="vc">Saint Vincent and the Grenadines</option>
+            <option value="ws">Samoa</option>
+            <option value="sm">San Marino</option>
+            <option value="st">Sao Tome and Principe</option>
+            <option value="sa">Saudi Arabia</option>
+            <option value="sn">Senegal</option>
+            <option value="rs">Serbia</option>
+            <option value="sc">Seychelles</option>
+            <option value="sl">Sierra Leone</option>
+            <option value="sg">Singapore</option>
+            <option value="sx">Sint Maarten</option>
+            <option value="sk">Slovakia</option>
+            <option value="si">Slovenia</option>
+            <option value="sb">Solomon Islands</option>
+            <option value="so">Somalia</option>
+            <option value="za">South Africa</option>
+            <option value="gs">South Georgia and South Sandwich Islands</option>
+            <option value="ss">South Sudan</option>
+            <option value="es">Spain</option>
+            <option value="xs">Spratly Islands</option>
+            <option value="lk">Sri Lanka</option>
+            <option value="sd">Sudan</option>
+            <option value="sr">Suriname</option>
+            <option value="xr">Svalbard</option>
+            <option value="sz">Swaziland</option>
+            <option value="se">Sweden</option>
+            <option value="ch">Switzerland</option>
+            <option value="sy">Syria</option>
+            <option value="tw">Taiwan</option>
+            <option value="tj">Tajikistan</option>
+            <option value="tz">Tanzania</option>
+            <option value="th">Thailand</option>
+            <option value="tl">Timor-Leste</option>
+            <option value="tg">Togo</option>
+            <option value="tk">Tokelau</option>
+            <option value="to">Tonga</option>
+            <option value="tt">Trinidad and Tobago</option>
+            <option value="xt">Tromelin Island</option>
+            <option value="tn">Tunisia</option>
+            <option value="tr">Turkey</option>
+            <option value="tm">Turkmenistan</option>
+            <option value="tc">Turks and Caicos Islands</option>
+            <option value="tv">Tuvalu</option>
+            <option value="ug">Uganda</option>
+            <option value="ua">Ukraine</option>
+            <option value="ae">United Arab Emirates</option>
+            <option value="gb">United Kingdom</option>
+            <option value="us">United States</option>
+            <option value="uy">Uruguay</option>
+            <option value="uz">Uzbekistan</option>
+            <option value="vu">Vanuatu</option>
+            <option value="va">Vatican City</option>
+            <option value="ve">Venezuela</option>
+            <option value="vn">Vietnam</option>
+            <option value="vg">Virgin Islands, British</option>
+            <option value="vi">Virgin Islands, U.S.</option>
+            <option value="qw">Wake Island</option>
+            <option value="wf">Wallis and Futuna</option>
+            <option value="xw">West Bank</option>
+            <option value="eh">Western Sahara</option>
+            <option value="ye">Yemen</option>
+            <option value="zm">Zambia</option>
+            <option value="zw">Zimbabwe</option>
+          </select>
+
+          <label for="language">Language</label>
+          <select id="language" name="lang" required aria-required="true">
+            <option value="en" selected="selected">English</option>
+            <option value="id">Bahasa Indonesia</option>
+            <option value="de">Deutsch</option>
+            <option value="es">Español</option>
+            <option value="fr">Français</option>
+            <option value="pl">Polski</option>
+            <option value="pt">Português</option>
+            <option value="ru">Русский</option>
+            <option value="zh-TW">正體中文</option>
+          </select>
+
+          <fieldset class="mzp-u-inline">
+            <legend>Format</legend>
+            <p>
+              <label for="format-html" class="mzp-u-inline">
+                <input type="radio" id="format-html" name="fmt" value="H" checked> HTML
+              </label>
+              <label for="format-text" class="mzp-u-inline">
+                <input type="radio" id="format-text" name="fmt" value="T"> Text
+              </label>
+            </p>
+          </fieldset>
+
+          <p>
+            <label for="privacy" class="mzp-u-inline">
+              <input type="checkbox" id="privacy" name="privacy" required aria-required="true">
+                            I’m okay with Mozilla handling my info as explained in this <a href="https://www.mozilla.org/privacy/">Privacy Policy</a>.            </label>
+          </p>
+        </div>
+
+        <p class="mzp-c-form-submit">
+          <button type="submit" class="mzp-c-button" id="newsletter-submit">Sign up now</button>
+          <span class="mzp-c-fieldnote">We will only send you
+            Mozilla-related information.</span>
+        </p>
+      </fieldset>
+
+      <div id="newsletter-thanks" class="thanks" style="display: none">
+        <h2>Thanks!</h2>
+        <p>
+          If you haven’t previously confirmed a subscription to a Mozilla-related newsletter you may have to do so.          Please check your inbox or your spam filter for an e-mail from us.        </p>
+      </div>
+
+    </form>
+  </aside>
+</div>
+
+<footer class="mzp-c-footer">
+  <div class="mzp-l-content">
+    <nav class="mzp-c-footer-primary">
+      <div class="mzp-c-footer-primary-logo">
+        <a href="https://www.mozilla.org/?utm_source=blog.mozilla.org&utm_campaign=footer&utm_medium=referral">Mozilla</a>
+      </div>
+
+      <div class="mzp-c-footer-sections">
+        <section class="mzp-c-footer-section">
+          <h5 class="mzp-c-footer-heading">Mozilla</h5>
+          <ul class="mzp-c-footer-list">
+            <li>
+              <a href="https://www.mozilla.org/about/?utm_source=blog.mozilla.org&utm_campaign=footer&utm_medium=referral">About</a>
+            </li>
+            <li>
+              <a href="https://www.mozilla.org/contact/?utm_source=blog.mozilla.org&utm_campaign=footer&utm_medium=referral">Contact Us</a>
+            </li>
+            <li>
+              <a href="https://mozillafoundation.org/?form=blog-footer">Donate</a>
+            </li>
+          </ul>
+        </section>
+
+        <section class="mzp-c-footer-section">
+          <h5 class="mzp-c-footer-heading">Firefox</h5>
+          <ul class="mzp-c-footer-list">
+            <li>
+              <a href="https://www.mozilla.org/firefox/new/?utm_source=blog.mozilla.org&utm_campaign=footer&utm_medium=referral">Download Firefox</a>
+            </li>
+            <li>
+              <a href="https://www.mozilla.org/firefox/?utm_source=blog.mozilla.org&utm_campaign=footer&utm_medium=referral">Desktop</a>
+            </li>
+            <li>
+              <a href="https://www.mozilla.org/firefox/mobile/?utm_source=blog.mozilla.org&utm_campaign=footer&utm_medium=referral">Mobile</a>
+            </li>
+            <li>
+              <a href="https://www.mozilla.org/firefox/features/?utm_source=blog.mozilla.org&utm_campaign=footer&utm_medium=referral">Features</a>
+            </li>
+            <li>
+              <a href="https://www.mozilla.org/firefox/channel/desktop/?utm_source=blog.mozilla.org&utm_campaign=footer&utm_medium=referral">Beta, Nightly, Developer Edition</a>
+            </li>
+          </ul>
+        </section>
+
+        <section class="mzp-c-footer-section">
+          <h5 class="mzp-c-footer-heading">Resources</h5>
+          <ul class="mzp-c-footer-list">
+            <li>
+              <a href="https://www.mozilla.org/privacy/?utm_source=blog.mozilla.org&utm_campaign=footer&utm_medium=referral">Privacy Hub</a>
+            </li>
+            <li>
+              <a href="https://www.mozilla.org/firefox/browsers/compare/?utm_source=blog.mozilla.org&utm_campaign=footer&utm_medium=referral">Browser Comparison</a>
+            </li>
+            <li>
+              <a href="https://mozilla.design/?utm_source=blog.mozilla.org&utm_campaign=footer&utm_medium=referral">Brand Standards</a>
+            </li>
+          </ul>
+        </section>
+
+        <section class="mzp-c-footer-section">
+          <h5 class="mzp-c-footer-heading">Social</h5>
+          <p class="ft-c-footer-social-header">Follow @Firefox</p>
+          <ul class="ft-c-footer-social">
+            <li><a class="twitter" href="https://twitter.com/firefox">Twitter<span> (@mozilla)</span></a></li>
+            <li><a class="instagram" href="https://www.instagram.com/firefox/">Instagram<span> (@mozilla)</span></a></li>
+            <li><a class="youtube" href="https://www.youtube.com/user/firefoxchannel">YouTube<span> (@firefoxchannel)</span></a></li>
+          </ul>
+          <p class="ft-c-footer-social-header">Follow @Mozilla</p>
+          <ul class="ft-c-footer-social">
+            <li><a class="twitter" href="https://twitter.com/mozilla">Twitter<span> (@mozilla)</span></a></li>
+            <li><a class="instagram" href="https://www.instagram.com/mozilla/">Instagram<span> (@mozilla)</span></a></li>
+          </ul>
+        </section>
+      </div>
+    </nav>
+
+    <nav class="mzp-c-footer-secondary">
+      <div class="mzp-c-footer-legal">
+        <ul class="mzp-c-footer-terms">
+          <li>
+            <a href="https://www.mozilla.org/privacy/websites/?utm_source=blog.mozilla.org&utm_campaign=footer&utm_medium=referral">Website Privacy Notice</a>
+          </li>
+          <li>
+            <a href="https://www.mozilla.org/privacy/websites/#cookies?utm_source=blog.mozilla.org&utm_campaign=footer&utm_medium=referral">Cookies</a>
+          </li>
+          <li>
+            <a href="https://www.mozilla.org/about/legal/?utm_source=blog.mozilla.org&utm_campaign=footer&utm_medium=referral">Legal</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+</footer>
+</div><!-- #page -->
+
+<script type='text/javascript' src='https://blog.mozilla.org/wp-content/themes/foxtail/assets/js/vendor.min.js?ver=0.7.0' id='foxtail-vendorjs-js'></script>
+<script type='text/javascript' src='https://blog.mozilla.org/wp-content/themes/foxtail/assets/js/custom.min.js?ver=0.7.0' id='foxtail-customjs-js'></script>
+
+</body>
+
+</html>

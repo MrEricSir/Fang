@@ -51,7 +51,7 @@ private:
     };
     
 public:
-    explicit FeedDiscovery(QObject *parent = 0);
+    explicit FeedDiscovery(QObject *parent = nullptr);
     
     /**
      * @return After done(), this returns true if there was an error.
@@ -69,9 +69,19 @@ public:
     QUrl feedURL() { return _error ? QUrl("") : _feedURL; }
     
     /**
-     * @return The raw feed or null if there was an error.
+     * @return The raw feed or nullptr if there was an error.
      */
-    RawFeed* feedResult() { return _error ? NULL : _feedResult; }
+    RawFeed* feedResult() { return _error ? nullptr : _feedResult; }
+
+    /**
+     * @return String representation of RSS URL, if found.
+     */
+    QString getRssURL() { return rssURL; }
+
+    /**
+     * @return String representation of Atom URL, if found.
+     */
+    QString getAtomURL() { return atomURL; }
     
 signals:
     
@@ -88,6 +98,13 @@ public slots:
      * @param sURL
      */
     void checkFeed(QString sURL);
+
+    /**
+     * @brief Try to find RSS and Atom feed, if available.
+     *        External use: Intended for use in unit tests.
+     * @param document
+     */
+    void findFeeds(const QString& document);
     
 private slots:
     
@@ -104,9 +121,6 @@ private slots:
     
     // WebPageGrabber slots.
     void onPageGrabberReady(QString* document);
-
-    // Try to find RSS and Atom feed, if available.
-    void findFeeds(const QString& document);
     
 private:
     // Sets the error flag, error string, and triggers the ERROR state.

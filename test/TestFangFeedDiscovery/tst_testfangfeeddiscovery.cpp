@@ -1,10 +1,10 @@
 #include <QString>
-#include <QtTest>
-#include <QSignalSpy>
+#include <QTest>
 #include <QCoreApplication>
 #include <QUrl>
 
 #include "../../src/utilities/FeedDiscovery.h"
+#include "../../src/utilities/WebPageGrabber.h"
 
 class TestFangFeedDiscovery : public QObject
 {
@@ -26,46 +26,90 @@ TestFangFeedDiscovery::TestFangFeedDiscovery()
 
 void TestFangFeedDiscovery::testCase1()
 {
-    QFETCH(QString, url);
+    QFETCH(QString, filename);
     QFETCH(bool, isValid);
-    
-    FeedDiscovery fd;
-    QSignalSpy spy(&fd, &FeedDiscovery::done);
-    fd.checkFeed(url);
-    
-    if (!spy.count()) {
-        // Wait for the signal!
-        QVERIFY(spy.wait(6000));  // Up to 6 seconds
+    QFETCH(QString, rssURL);
+    QFETCH(QString, atomURL);
+
+    QString projectPath = PROJECT_PATH;
+    QString fullFilename = projectPath + "/feeds/" + filename;
+    QFile file(fullFilename);
+    if (isValid) {
+        QVERIFY2(file.exists(), "Input file does not exist");
     }
 
-    QCOMPARE(spy.count(), 1);
-    
+    bool couldOpen = file.open(QFile::ReadOnly | QFile::Text);
+    if (!couldOpen) {
+        qDebug() << "File: " << fullFilename;
+        QVERIFY2(!isValid, "Unable to open file");
+        return;
+    }
+
+    // We use WebPageGrabber for its ability to turn HTML into XML. Should not download anything.
+    WebPageGrabber grabber;
+    QString* xmlDoc = grabber.load(file.readAll());
+    if (xmlDoc == nullptr) {
+        QVERIFY2(!isValid, "Null document returned");
+        return;
+    }
+
+    // Check to see if we found the expected RSS and/or Atom feeds.
+    FeedDiscovery fd;
+    fd.findFeeds(*xmlDoc);
+
+    // qDebug() << "rss: " << fd.getRssURL();
+    // qDebug() << "atom: " << fd.getAtomURL();
+
+    // Check results.
     if (isValid) {
-        qDebug() << "URL: " << fd.feedURL();
-        qDebug() << "error: " << fd.errorString();
-        QVERIFY(!fd.error());
+        QCOMPARE(fd.getRssURL(), rssURL);
+        QCOMPARE(fd.getAtomURL(), atomURL);
     } else {
-        QVERIFY(fd.error());
+        QVERIFY2(fd.getRssURL() == "", "Unexpected RSS URL found");
+        QVERIFY2(fd.getAtomURL() == "", "Unexpected Atom URL found");
     }
 }
 
 void TestFangFeedDiscovery::testCase1_data()
 {
-    QTest::addColumn<QString>("url");
-    QTest::addColumn<bool>("isValid");
+    QTest::addColumn<QString>("filename"); // Has to be in the feeds subfolder
+    QTest::addColumn<bool>("isValid");     // True if we expect to get a URL
+    QTest::addColumn<QString>("rssURL");   // The RSS URL we expect (or empty string if none)
+    QTest::addColumn<QString>("atomURL");  // The Atom URL we expect (or empty string if none)
+
+    //
+    // Typical situations /////////////////////////////////////////////////////////////////////////
+    //
     
-    // // Errorz.
-    // QTest::newRow("Bullshit URL") << "asfaw3f" << false;
-    // QTest::newRow("No RSS feed") << "http://www.google.com" << false;
+    // Expected: Errors
+    QTest::newRow("Bullshit URL") << "asfaw3f" << false << "" << "";
+    QTest::newRow("No RSS feed") << "google.com" << false << "" << "";
     
-    // // Truly good sites.
-    // QTest::newRow("MrEricSir") << "http://www.mrericsir.com/blog/feed/" << true;
-    // QTest::newRow("MrEricSir minimal") << "mrericsir.com" << true;
-    // QTest::newRow("SFist") << "https://sfist.com/rss/" << true;
-    // QTest::newRow("SFist Minimal") << "sfist.com" << true;
-    // QTest::newRow("LaughingSquid Minimal") << "laughingsquid.com" << true;
-    //QTest::newRow("Fark Minimal") << "fark.com" << true;
-    QTest::newRow("yourkickstartersucks") << "yourkickstartersucks.tumblr.com" << true;
+    // Expected: Valid feeds.
+    QTest::newRow("MrEricSir") << "mrericsir.com" << true
+                               << "https://www.mrericsir.com/blog/feed/" << "";
+    QTest::newRow("LaughingSquid") << "laughingsquid.com" << true
+                                   << "https://laughingsquid.com/feed/" << "";
+    QTest::newRow("Eater SF") << "sf.eater.com" << true
+                           << "/rss/index.xml" << "";
+    QTest::newRow("SFist") << "sfist.com" << true
+                           << "https://sfist.com/rss/" << "";
+    QTest::newRow("Fark") << "fark.com" << true
+                          << "https://www.fark.com/fark.rss" << "";
+    QTest::newRow("Old defunct Your Kickstarter Sucks Tumblr") << "yourkickstartersucks.tumblr.com" << true
+                                                               << "https://yourkickstartersucks.tumblr.com/rss" << "";
+    QTest::newRow("Mozilla Blog") << "blog.mozilla.org" << true
+                                  << "https://blog.mozilla.org/en/feed/" << "";
+
+    //
+    // Unusual situations /////////////////////////////////////////////////////////////////////////
+    //
+
+    // HTML contains an error: the RSS link is inside of another tag's attribute string.
+    QTest::newRow("AV Club") << "avclub.com" << true << "" << "";
+
+    // Mostly Javascript, no feed links.
+    QTest::newRow("SFGate") << "sfgate.com" << true << "" << "";
 }
 
 QTEST_MAIN(TestFangFeedDiscovery)
