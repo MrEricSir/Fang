@@ -64,4 +64,14 @@ OTHER_FILES += \
     feeds/google.com \
     feeds/yourkickstartersucks.tumblr.com \
     feeds/avclub.com \
-    feeds/blog.mozilla.org
+    feeds/blog.mozilla.org \
+    feeds/kqed.org \
+    feeds/kron4.com \
+    feeds/mcsweeneys.net \
+    feeds/planet.gnome.org \
+    feeds/boingboing.net \
+    feeds/news.ycombinator.com \
+    feeds/techcrunch.com \
+    feeds/thisamericanlife.org \
+    feeds/theguardian.com \
+    feeds/nerd4cities.bsky.social

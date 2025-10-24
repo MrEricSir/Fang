@@ -1,0 +1,1447 @@
+
+<!doctype html>
+
+<html class="no-js" lang="en-US">
+
+<head>
+    <meta charset="utf-8">
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Boing Boing - A Directory of Mostly Wonderful Things</title>
+
+	
+	
+    <link rel="pingback" href="https://boingboing.net/xmlrpc.php">
+
+	<style id="jetpack-boost-critical-css">body{--fsAddBuffer:0px;}[id=boingboing_300x250_300x600_Right_2],[id=boingboing_pushdown-pushdown-cls]{display:flex;align-items:center;justify-content:center;flex-direction:column;min-height:calc(var(--height) + var(--fsAddBuffer));height:calc(var(--height) + var(--fsAddBuffer));width:100%;}[id=boingboing_300x250_300x600_Right_2]{--height:280px;}[id=boingboing_pushdown-pushdown-cls]{--height:100px;}@media only screen and (min-width:768px){[id=boingboing_300x250_300x600_Right_2]{--height:600px;}[id=boingboing_pushdown-pushdown-cls]{--height:90px;}}@media only screen and (min-width:970px){[id=boingboing_pushdown-pushdown-cls]{--height:90px;}}@media all{.navbar{background-color:#fff;min-height:3.25rem;position:relative;z-index:30;}.navbar-brand{-ms-flex-align:stretch;align-items:stretch;display:-ms-flexbox;display:flex;-ms-flex-negative:0;flex-shrink:0;min-height:3.25rem;}.navbar-burger{color:#4a4a4a;display:block;height:3.25rem;position:relative;width:3.25rem;margin-left:auto;}.navbar-item{color:#4a4a4a;display:block;line-height:1.5;padding:.5rem .75rem;position:relative;}.navbar-item{display:block;-ms-flex-positive:0;flex-grow:0;-ms-flex-negative:0;flex-shrink:0;}.navbar-item img{max-height:1.75rem;}@media screen and (max-width:1023px){.navbar-brand .navbar-item{-ms-flex-align:center;align-items:center;display:-ms-flexbox;display:flex;}.navbar-menu{background-color:#fff;box-shadow:0 8px 16px hsla(0,0%,4%,.1);padding:.5rem 0;}}@media screen and (min-width:1024px){.navbar,.navbar-menu,.navbar-start{-ms-flex-align:stretch;align-items:stretch;display:-ms-flexbox;display:flex;}.navbar{min-height:3.25rem;}.navbar-burger{display:none;}.navbar-item{-ms-flex-align:center;align-items:center;}.navbar-item{display:-ms-flexbox;display:flex;}.navbar-menu{-ms-flex-positive:1;flex-grow:1;-ms-flex-negative:0;flex-shrink:0;}.navbar-start{-ms-flex-pack:start;justify-content:flex-start;margin-right:auto;}}.column{display:block;-ms-flex-preferred-size:0;flex-basis:0;-ms-flex-positive:1;flex-grow:1;-ms-flex-negative:1;flex-shrink:1;padding:.75rem;}@media screen and (min-width:769px){.column.is-8{-ms-flex:none;flex:none;width:66.66667%;}}.columns{margin-left:-.75rem;margin-right:-.75rem;margin-top:-.75rem;}.columns:not(:last-child){margin-bottom:.75rem;}@media screen and (min-width:769px){.columns:not(.is-desktop){display:-ms-flexbox;display:flex;}}.columns.is-variable{--columnGap:.75rem;margin-left:calc(-1 * var(--columnGap));margin-right:calc(-1 * var(--columnGap));}.columns.is-variable .column{padding-left:var(--columnGap);padding-right:var(--columnGap);}.columns.is-variable.is-3{--columnGap:.75rem;}ul{font-family:"Libre Baskerville",serif;line-height:1.5;font-size:14px;letter-spacing:.01rem;color:#333;}@media screen and (min-width:964px){ul{font-size:16px;}}ul li{margin-bottom:5px;}ul a{font-weight:700;text-decoration:none;}ul img{margin-bottom:20px;}body{margin:0;}.container{margin:0 auto;padding:0 22px;}@media screen and (min-width:964px){.container{width:964px;padding:0 32px;}}.column,.columns:not(:last-child){margin-bottom:0;}.column{box-sizing:border-box;}.column img{width:100%;height:auto;}.column li,.column ul{margin-bottom:0;}#sidebar1{height:100%;}.row{padding:0 .75rem;}.columns.is-variable{margin-left:0;margin-right:0;}.columns,.tile>ul{margin:0;padding:0;list-style:none;}.centered{text-align:center;}.boingarticle{position:relative;list-style:none;margin:0;display:-ms-flexbox;display:flex;-ms-flex-direction:row;flex-direction:row;-ms-flex-wrap:wrap;flex-wrap:wrap;}@media screen and (min-width:768px){.boingarticle{-ms-flex-direction:column;flex-direction:column;}}.boingarticle .article-image{-ms-flex:2 !important;flex:2 !important;}.boingarticle .article-image img{border:4px solid #000;-ms-flex:unset;flex:unset;vertical-align:top;display:inline-block;height:auto;width:93.5%;}@media screen and (min-width:768px){.boingarticle .article-image img{max-width:inherit;margin-bottom:3px;object-fit:cover;width:96.5%;}}.boingarticle .content{-ms-flex:4;flex:4;padding-left:4%;}@media screen and (min-width:768px){.boingarticle .content{margin-top:5px;-ms-flex-direction:column;flex-direction:column;padding-left:0;}}.boingarticle .byline,.boingarticle .category,.boingarticle .headline{display:block;margin-bottom:3px;font-family:Raleway,sans-serif;text-decoration:none;}.boingarticle .category{font-size:12px;font-weight:700;text-transform:uppercase;}.boingarticle .headline{color:#000;font-size:17px;font-weight:800;line-height:1;}@media screen and (min-width:768px){.boingarticle .headline{font-size:20px;}}.boingarticle .byline{color:#888;font-size:13px;font-weight:600;text-transform:uppercase;margin-bottom:0;}@media screen and (min-width:768px){.boingarticle .byline{font-size:15px;}}.boingarticle.horizontal{-ms-flex-direction:row;flex-direction:row;}@media screen and (min-width:768px){.boingarticle.horizontal{padding:25px 0;}}.boingarticle.horizontal img{vertical-align:top;display:inline-block;-ms-flex:1;flex:1;}@media screen and (min-width:768px){.boingarticle.horizontal img{margin-bottom:0;}}.boingarticle.horizontal .content{margin-top:0;vertical-align:top;display:inline-block;padding-left:4%;}.boingarticle.latest-post{padding-bottom:25px;}@media screen and (min-width:768px){.boingarticle.latest-post{border-top:4px solid #ddd;}}.top-three .column:first-of-type .boingarticle{-ms-flex-direction:column;flex-direction:column;display:block;}@media screen and (min-width:768px){.top-three .column:first-of-type .boingarticle{display:-ms-flexbox;display:flex;}}.top-three .column:first-of-type .boingarticle img{max-width:inherit;margin-bottom:3px;object-fit:cover;width:97.5%;}.top-three .column:first-of-type .boingarticle .content{margin-top:5px;-ms-flex-direction:column;flex-direction:column;padding-left:0;}.boing-homepage-after-first-article-in-list{height:222px;}@media screen and (min-width:768px){.boing-homepage-after-first-article-in-list{height:366px;margin-bottom:19px;}}.header{margin-bottom:10px;}.site-header>.row{padding:0;}@media screen and (max-width:767px){.ad_pushdown{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;-ms-flex-pack:center;justify-content:center;height:50px;}}.navbar-menu{font-family:Raleway,sans-serif;-ms-flex-positive:unset;flex-grow:unset;box-shadow:none;display:none;padding:0;}@media screen and (min-width:964px){.navbar-menu{display:block;}}.navbar-menu a{font-weight:800;text-decoration:none;font-size:14px;color:#67bbff;padding:8px 15px;}@media screen and (min-width:768px){.navbar-menu a{font-size:20px;}}@media screen and (min-width:964px){.navbar-menu a{padding:20px 15px;}}.navbar{display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;-ms-flex-align:center;align-items:center;}.navbar img{height:auto;margin-right:5px;-ms-interpolation-mode:nearest-neighbor;image-rendering:-moz-crisp-edges;image-rendering:pixelated;}.navbar .navbar-start .navbar-item{display:none;}@media screen and (min-width:964px){.navbar .navbar-start .navbar-item{display:inline-block;}}.navbar .navbar-start .navbar-item:before{color:silver;content:"/";vertical-align:middle;display:inline-block;font-size:20px;font-weight:800;margin-left:12px;position:absolute;left:-20px;}.navbar .navbar-start .navbar-item:first-of-type{color:#1066ff;}.navbar .navbar-start .navbar-item:first-of-type .navbar-item{color:#67bbff;}.navbar .navbar-start .navbar-item:nth-child(2){color:#39f;}.navbar .navbar-start .navbar-item:nth-child(3){color:#67bbff;}.navbar .navbar-start .navbar-item.bb-menu-toggle{display:none;}@media screen and (min-width:964px){.navbar .navbar-start .navbar-item.bb-menu-toggle{display:inline-block;}}.navbar .bb-menu-toggle{padding:9px 15px;}.navbar .bb-menu-toggle:before{padding:11px 0;}.navbar .bb-menu-toggle .navbar-burger:before{display:none;}.navbar .navbar-burger{width:65px;border:inherit;outline:inherit;font-size:20px;font-weight:800;text-decoration:none;padding:0;background:0 0;}@media screen and (min-width:964px){.navbar .navbar-burger{width:auto;height:50px;}}.navbar .navbar-burger:before{display:none;}.bb-menu{display:block;position:absolute;list-style:none;background-color:#fff;top:50px;left:0;right:0;margin:0;padding:15px 0 10px;text-align:center;border-top:4px solid #67bbff;border-bottom:4px solid silver;}@media screen and (min-width:768px){.bb-menu{padding:20px 15px 15px;}}@media screen and (min-width:964px){.bb-menu{display:none;top:65px;}}.bb-menu li{font-family:Raleway,sans-serif;text-transform:uppercase;font-size:14px;color:silver;font-weight:800;margin-bottom:0;}@media screen and (min-width:768px){.bb-menu li{font-size:20px;}}.bb-menu li a{padding:0;}.bb-menu li.mobile-only{display:block;margin-bottom:5px;}.bb-menu li.mobile-only a{line-height:1.2;}@media screen and (min-width:964px){.bb-menu li.mobile-only{display:none;}}.navbar-burger{color:#67bbff;display:inline-block;}@media screen and (min-width:964px){.navbar-burger{display:none;}}body.home main .container{padding:0 10px;}@media screen and (min-width:964px){body.home main .container{padding:0;width:984px;}}}@media all{ul{box-sizing:border-box;}}</style><meta name='robots' content='index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1' />
+	<style>img:is([sizes="auto" i], [sizes^="auto," i]) { contain-intrinsic-size: 3000px 1500px }</style>
+	<!-- Jetpack Site Verification Tags -->
+<meta name="google-site-verification" content="2Z2CdDZoCt3kedjrHnPrbA3HjYnoXwwgy2pjFo552ws" />
+<meta name="msvalidate.01" content="24ECEF65525D0D014895DB1255B1A9D0" />
+
+	<!-- This site is optimized with the Yoast SEO Premium plugin v25.8 (Yoast SEO v25.8) - https://yoast.com/wordpress/plugins/seo/ -->
+	<meta name="description" content="Boing Boing is the Web&#039;s favorite site devoted to technology, entertainment, and culture. Launched in 1989 as a print &#039;zine and still..." />
+	<link rel="canonical" href="https://boingboing.net/" />
+	<meta property="og:locale" content="en_US" />
+	<meta property="og:type" content="website" />
+	<meta property="og:title" content="Boing Boing - A Directory of Mostly Wonderful Things" />
+	<meta property="og:description" content="Boing Boing is the Web&#039;s favorite site devoted to technology, entertainment, and culture. Launched in 1989 as a print &#039;zine and still..." />
+	<meta property="og:url" content="https://boingboing.net/" />
+	<meta property="og:site_name" content="Boing Boing" />
+	<meta property="article:publisher" content="https://www.facebook.com/boingboing" />
+	<meta property="article:modified_time" content="2024-03-06T18:04:28+00:00" />
+	<meta property="og:image" content="https://boingboing.net/wp-content/uploads/2022/06/bbstacked.jpg" />
+	<meta property="og:image:width" content="1500" />
+	<meta property="og:image:height" content="1047" />
+	<meta property="og:image:type" content="image/jpeg" />
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:site" content="@boingboing" />
+	<script data-jetpack-boost="ignore" type="application/ld+json" class="yoast-schema-graph">{"@context":"https://schema.org","@graph":[{"@type":"WebPage","@id":"https://boingboing.net/","url":"https://boingboing.net/","name":"Boing Boing - A Directory of Mostly Wonderful Things","isPartOf":{"@id":"https://boingboing.net/#website"},"about":{"@id":"https://boingboing.net/#organization"},"primaryImageOfPage":{"@id":"https://boingboing.net/#primaryimage"},"image":{"@id":"https://boingboing.net/#primaryimage"},"thumbnailUrl":"https://i0.wp.com/boingboing.net/wp-content/uploads/2022/06/bbstacked.jpg?fit=1500%2C1047&quality=60&ssl=1","datePublished":"2015-09-16T00:58:51+00:00","dateModified":"2024-03-06T18:04:28+00:00","description":"Boing Boing is the Web's favorite site devoted to technology, entertainment, and culture. Launched in 1989 as a print 'zine and still...","breadcrumb":{"@id":"https://boingboing.net/#breadcrumb"},"inLanguage":"en-US","potentialAction":[{"@type":"ReadAction","target":["https://boingboing.net/"]}]},{"@type":"ImageObject","inLanguage":"en-US","@id":"https://boingboing.net/#primaryimage","url":"https://i0.wp.com/boingboing.net/wp-content/uploads/2022/06/bbstacked.jpg?fit=1500%2C1047&quality=60&ssl=1","contentUrl":"https://i0.wp.com/boingboing.net/wp-content/uploads/2022/06/bbstacked.jpg?fit=1500%2C1047&quality=60&ssl=1","width":1500,"height":1047},{"@type":"BreadcrumbList","@id":"https://boingboing.net/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Home"}]},{"@type":"WebSite","@id":"https://boingboing.net/#website","url":"https://boingboing.net/","name":"Boing Boing","description":"A directory of mostly wonderful things","publisher":{"@id":"https://boingboing.net/#organization"},"potentialAction":[{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://boingboing.net/?s={search_term_string}"},"query-input":{"@type":"PropertyValueSpecification","valueRequired":true,"valueName":"search_term_string"}}],"inLanguage":"en-US"},{"@type":"Organization","@id":"https://boingboing.net/#organization","name":"Happy Mutants, LLC.","url":"https://boingboing.net/","logo":{"@type":"ImageObject","inLanguage":"en-US","@id":"https://boingboing.net/#/schema/logo/image/","url":"https://i0.wp.com/boingboing.net/wp-content/uploads/2023/12/bb-900x900-1.png?fit=288%2C288&ssl=1","contentUrl":"https://i0.wp.com/boingboing.net/wp-content/uploads/2023/12/bb-900x900-1.png?fit=288%2C288&ssl=1","width":288,"height":288,"caption":"Happy Mutants, LLC."},"image":{"@id":"https://boingboing.net/#/schema/logo/image/"},"sameAs":["https://www.facebook.com/boingboing","https://x.com/boingboing","https://mastodon.cloud/@boingboing"]}]}</script>
+	<link rel="me" href="https://mastodon.cloud/@boingboing" />
+	<!-- / Yoast SEO Premium plugin. -->
+
+
+<link rel='dns-prefetch' href='//www.googletagmanager.com' />
+<link rel='dns-prefetch' href='//stats.wp.com' />
+<link rel='dns-prefetch' href='//v0.wordpress.com' />
+<link rel='preconnect' href='//i0.wp.com' />
+<link rel='preconnect' href='//c0.wp.com' />
+<link rel="alternate" type="application/rss+xml" title="Boing Boing &raquo; Feed" href="https://boingboing.net/feed" />
+
+<!-- boingboing.net is managing ads with Advanced Ads 2.0.11 – https://wpadvancedads.com/ -->
+		<style id='wp-emoji-styles-inline-css' type='text/css'>
+
+	img.wp-smiley, img.emoji {
+		display: inline !important;
+		border: none !important;
+		box-shadow: none !important;
+		height: 1em !important;
+		width: 1em !important;
+		margin: 0 0.07em !important;
+		vertical-align: -0.1em !important;
+		background: none !important;
+		padding: 0 !important;
+	}
+</style>
+<noscript><link rel='stylesheet' id='wp-block-library-css' href='https://c0.wp.com/c/6.8.3/wp-includes/css/dist/block-library/style.min.css' type='text/css' media='all' />
+</noscript><link rel='stylesheet' id='wp-block-library-css' href='https://c0.wp.com/c/6.8.3/wp-includes/css/dist/block-library/style.min.css' type='text/css' media="not all" data-media="all" onload="this.media=this.dataset.media; delete this.dataset.media; this.removeAttribute( 'onload' );" />
+<style id='classic-theme-styles-inline-css' type='text/css'>
+/*! This file is auto-generated */
+.wp-block-button__link{color:#fff;background-color:#32373c;border-radius:9999px;box-shadow:none;text-decoration:none;padding:calc(.667em + 2px) calc(1.333em + 2px);font-size:1.125em}.wp-block-file__button{background:#32373c;color:#fff;text-decoration:none}
+</style>
+<noscript><link rel='stylesheet' id='mediaelement-css' href='https://c0.wp.com/c/6.8.3/wp-includes/js/mediaelement/mediaelementplayer-legacy.min.css' type='text/css' media='all' />
+</noscript><link rel='stylesheet' id='mediaelement-css' href='https://c0.wp.com/c/6.8.3/wp-includes/js/mediaelement/mediaelementplayer-legacy.min.css' type='text/css' media="not all" data-media="all" onload="this.media=this.dataset.media; delete this.dataset.media; this.removeAttribute( 'onload' );" />
+<noscript><link rel='stylesheet' id='wp-mediaelement-css' href='https://c0.wp.com/c/6.8.3/wp-includes/js/mediaelement/wp-mediaelement.min.css' type='text/css' media='all' />
+</noscript><link rel='stylesheet' id='wp-mediaelement-css' href='https://c0.wp.com/c/6.8.3/wp-includes/js/mediaelement/wp-mediaelement.min.css' type='text/css' media="not all" data-media="all" onload="this.media=this.dataset.media; delete this.dataset.media; this.removeAttribute( 'onload' );" />
+<style id='jetpack-sharing-buttons-style-inline-css' type='text/css'>
+.jetpack-sharing-buttons__services-list{display:flex;flex-direction:row;flex-wrap:wrap;gap:0;list-style-type:none;margin:5px;padding:0}.jetpack-sharing-buttons__services-list.has-small-icon-size{font-size:12px}.jetpack-sharing-buttons__services-list.has-normal-icon-size{font-size:16px}.jetpack-sharing-buttons__services-list.has-large-icon-size{font-size:24px}.jetpack-sharing-buttons__services-list.has-huge-icon-size{font-size:36px}@media print{.jetpack-sharing-buttons__services-list{display:none!important}}.editor-styles-wrapper .wp-block-jetpack-sharing-buttons{gap:0;padding-inline-start:0}ul.jetpack-sharing-buttons__services-list.has-background{padding:1.25em 2.375em}
+</style>
+<style id='global-styles-inline-css' type='text/css'>
+:root{--wp--preset--aspect-ratio--square: 1;--wp--preset--aspect-ratio--4-3: 4/3;--wp--preset--aspect-ratio--3-4: 3/4;--wp--preset--aspect-ratio--3-2: 3/2;--wp--preset--aspect-ratio--2-3: 2/3;--wp--preset--aspect-ratio--16-9: 16/9;--wp--preset--aspect-ratio--9-16: 9/16;--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgba(6,147,227,1) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgba(252,185,0,1) 0%,rgba(255,105,0,1) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgba(255,105,0,1) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgba(255, 255, 255, 1), 6px 6px rgba(0, 0, 0, 1);--wp--preset--shadow--crisp: 6px 6px 0px rgba(0, 0, 0, 1);}:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flex{display: flex;}.is-layout-flex{flex-wrap: wrap;align-items: center;}.is-layout-flex > :is(*, div){margin: 0;}body .is-layout-grid{display: grid;}.is-layout-grid > :is(*, div){margin: 0;}:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}
+:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}
+:root :where(.wp-block-pullquote){font-size: 1.5em;line-height: 1.6;}
+</style>
+<noscript><link rel='stylesheet' id='site-css-css' href='https://boingboing.net/wp-content/themes/boing/assets/styles/style.min.css?ver=1742769517' type='text/css' media='all' />
+</noscript><link rel='stylesheet' id='site-css-css' href='https://boingboing.net/wp-content/themes/boing/assets/styles/style.min.css?ver=1742769517' type='text/css' media="not all" data-media="all" onload="this.media=this.dataset.media; delete this.dataset.media; this.removeAttribute( 'onload' );" />
+
+
+
+
+
+<!-- Google tag (gtag.js) snippet added by Site Kit -->
+<!-- Google Analytics snippet added by Site Kit -->
+
+
+<link rel="alternate" title="oEmbed (JSON)" type="application/json+oembed" href="https://boingboing.net/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fboingboing.net%2F" />
+<link rel="alternate" title="oEmbed (XML)" type="text/xml+oembed" href="https://boingboing.net/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fboingboing.net%2F&#038;format=xml" />
+<meta name="generator" content="Site Kit by Google 1.160.1" />	<style>img#wpstats{display:none}</style>
+		<link rel="apple-touch-icon" sizes="180x180" href="/wp-content/uploads/fbrfg/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/wp-content/uploads/fbrfg/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/wp-content/uploads/fbrfg/favicon-16x16.png">
+<link rel="manifest" href="/wp-content/uploads/fbrfg/site.webmanifest">
+<link rel="mask-icon" href="/wp-content/uploads/fbrfg/safari-pinned-tab.svg" color="#5bbad5">
+<link rel="shortcut icon" href="/wp-content/uploads/fbrfg/favicon.ico">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="msapplication-config" content="/wp-content/uploads/fbrfg/browserconfig.xml">
+<meta name="theme-color" content="#ffffff">
+<!-- Google AdSense meta tags added by Site Kit -->
+<meta name="google-adsense-platform-account" content="ca-host-pub-2644536267352236">
+<meta name="google-adsense-platform-domain" content="sitekit.withgoogle.com">
+<!-- End Google AdSense meta tags added by Site Kit -->
+		
+		<!-- There is no amphtml version available for this URL. --><!-- begin AA "Head JS - CLS" -->
+<!-- Site Logo -->
+<script data-jetpack-boost="ignore" type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "url": "https://boingboing.net",
+      "logo": "https://boingboing.net/logos/bb-900x900.png"
+    }
+</script>
+<!-- End Site Logo -->
+<!-- Google Tag Manager -->
+
+<!-- End Google Tag Manager -->
+
+<!-- UnrulyX tag -->
+
+
+<!-- End UnrulyX tag -->
+
+<!-- Facebook Pixel Code -->
+
+<noscript><img decoding="async" height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1174428159312267&ev=PageView&noscript=1" /></noscript>
+<!-- DO NOT MODIFY -->
+<!-- End Facebook Pixel Code -->
+
+<!-- AD CODE -->
+<!-- freestar -->
+<link rel="preconnect" href="https://a.pub.network/" crossorigin />
+<link rel="preconnect" href="https://b.pub.network/" crossorigin />
+<link rel="preconnect" href="https://c.pub.network/" crossorigin />
+<link rel="preconnect" href="https://d.pub.network/" crossorigin />
+<link rel="preconnect" href="https://c.amazon-adsystem.com" crossorigin />
+<link rel="preconnect" href="https://s.amazon-adsystem.com" crossorigin />
+<link rel="preconnect" href="https://secure.quantserve.com/" crossorigin />
+<link rel="preconnect" href="https://rules.quantcount.com/" crossorigin />
+<link rel="preconnect" href="https://pixel.quantserve.com/" crossorigin />
+<link rel="preconnect" href="https://cmp.quantcast.com/" crossorigin />
+<link rel="preconnect" href="https://btloader.com/" crossorigin />
+<link rel="preconnect" href="https://api.btloader.com/" crossorigin />
+<link rel="preconnect" href="https://cdn.confiant-integrations.net" crossorigin />
+<link rel="stylesheet" href="https://a.pub.network/boingboing-net/cls.css">
+
+
+
+<!-- AIR.TV -->
+<!-- script async='async' data-cfasync='false' src='https://embed.air.tv/v1/twoview_bootstrap.js?organization=hhEg2vg9TPS42CHLfgIziA'></script -->
+<!-- END OF AD CODE -->
+<!-- End AA "Head JS" --><link rel="icon" href="https://i0.wp.com/boingboing.net/wp-content/uploads/2018/04/apple-touch-icon-1.png?fit=32%2C32&#038;quality=55&#038;ssl=1" sizes="32x32" />
+<link rel="icon" href="https://i0.wp.com/boingboing.net/wp-content/uploads/2018/04/apple-touch-icon-1.png?fit=158%2C158&#038;quality=55&#038;ssl=1" sizes="192x192" />
+<link rel="apple-touch-icon" href="https://i0.wp.com/boingboing.net/wp-content/uploads/2018/04/apple-touch-icon-1.png?fit=158%2C158&#038;quality=55&#038;ssl=1" />
+<meta name="msapplication-TileImage" content="https://i0.wp.com/boingboing.net/wp-content/uploads/2018/04/apple-touch-icon-1.png?fit=158%2C158&#038;quality=55&#038;ssl=1" />
+
+</head>
+
+<body class="home wp-singular page-template-default page page-id-421667 wp-theme-boing aa-prefix-boing-"><div class="boing-body-top-for-gumgum" id="boing-2501661783">
+</div>
+
+<div class="ad_pushdown" data-freestar-ad="__320x50" id="boingboing_pushdown-pushdown-cls"></div>
+
+<header class="header" role="banner">
+	<div class="site-header">
+    
+    <div class="row">
+
+        <nav class="navbar" role="navigation" aria-label="main navigation">
+
+            <div class="navbar-brand">
+								                    <a class="navbar-item" href="https://boingboing.net">
+                        <img alt="BoingBoing"
+                             src="https://boingboing.net/wp-content/themes/boing/assets/images/logo-boingboing-176x27.png"
+                             width="176"
+                             height="27">
+                    </a>
+				
+                <button role="button"
+                        class="navbar-burger burger"
+                        aria-label="menu"
+                        aria-expanded="false"
+                        data-target="bb_navbar">
+					MENU                </button>
+            </div>
+
+            <div id="bb_navbar" class="navbar-menu">
+
+                <div class="navbar-start">
+
+                    <a href="https://premium.boingboing.net/subscribe" class="navbar-item">
+						SUBSCRIBE                    </a>
+
+                    <a href="https://store.boingboing.net" class="navbar-item">
+						STORE                    </a>
+
+                    <div class="navbar-item bb-menu-toggle">
+                        <button
+                                class="navbar-burger navbar-item"
+                                aria-label="menu"
+                                aria-expanded="false"
+                                data-target="bb_menu">
+							MENU                        </button>
+                    </div>
+
+                </div>
+
+                <ul id="bb_menu" class="bb-menu menu-items">
+                    <li>
+                        <a href="https://boingboing.net/search">
+							SEARCH                        </a>
+                    </li>
+                    <li class="mobile-only">
+                        <a href="https://store.boingboing.net" class="navbar-item">
+							STORE                        </a>
+                    </li>
+                    <li>
+                        <a href="https://boingboing.net/blog">
+							Blog                        </a> : The posts                    </li>
+                    <li>
+                        <a href="https://bbs.boingboing.net">Forums</a> : Read the                        <a href="https://bbs.boingboing.net/faq">rules</a>
+                    </li>
+                    <li>
+                        <a href="https://store.boingboing.net">Store</a> : Wonderful Products                        <a href="https://bit.ly/boingboingdealssupport">(Contact Support)</a>
+                    </li>
+                    <li>
+                        <a href="https://boingboing.net/signup">
+							Newsletter                        </a> : Daily wonderful things                    </li>
+                    <li>
+                        <a href="https://boingboing.net/about">About Us</a> : Writers and staff                    </li>
+                    <li>
+                        <a href="https://boingboing.net/contact">Contact Us</a> : Get satisfaction                    </li>
+                    <li>
+                        <a href="https://ads.boingboing.net">Advertise</a> : Thank you for reading                    </li>
+                    <li>
+                        <a href="https://boingboing.net/privacy">Privacy Policy</a> : The data you generate                    </li>
+                    <li>
+                        <a href="https://boingboing.net/tos">TOS</a> : What you agree to                    </li>
+                    <li>
+                        <a href="https://boingboing.net/features/getthumbs">
+							Thumbnails                        </a> : Youtube Thumbnail generator                    </li>
+                </ul>
+
+            </div>
+        </nav>
+    </div>
+</div>
+
+</header>
+
+    <main role="main">
+
+		        <div class="container">
+			<!-- Horizontal Ad block -->
+
+	    <ul class="columns is-variable is-3 top-three">
+					            <li class="column">
+                <div class="boingarticle feature">
+                    <a class="article-image" href="https://boingboing.net/2025/10/23/watch-the-birth-of-a-tardigrade-under-a-microscope-a-rare-glimpse-of-a-water-bear-hatching.html">
+								<img alt="Tardigrade, also known as a water bear (TajdidProtik/shutterstock.com)"
+			title="Watch the birth of a tardigrade under a microscope: a rare glimpse of a water bear hatching"
+			width="300"
+			height="175"
+			src="https://i0.wp.com/boingboing.net/wp-content/uploads/2025/10/tardigrade.jpg?fit=300%2C241&quality=60&ssl=1&resize=300%2C175"
+			loading="lazy">
+	                    </a>
+                    <div class="content">
+						    <a class="category" style="color:#6170dd;"
+       href=" https://boingboing.net/tag/science">Science</a>
+                        <a class="headline" href="https://boingboing.net/2025/10/23/watch-the-birth-of-a-tardigrade-under-a-microscope-a-rare-glimpse-of-a-water-bear-hatching.html">Watch the birth of a tardigrade under a microscope: a rare glimpse of a water bear hatching</a>
+						<a class="byline"
+   itemprop="author"
+   href="https://boingboing.net/author/popkin">
+	Popkin</a>
+                        </a>
+                    </div>
+                </div>
+            </li>
+					            <li class="column">
+                <div class="boingarticle feature">
+                    <a class="article-image" href="https://boingboing.net/2025/10/23/a-60-solution-to-rayban-metas-02-cent-problem.html">
+								<img alt="Image: JLStock/shutterstock.com"
+			title="A $60 solution to RayBan Meta&#039;s .02 cent problem"
+			width="300"
+			height="175"
+			src="https://i0.wp.com/boingboing.net/wp-content/uploads/2025/10/shutterstock_2525483325.jpg?fit=300%2C188&quality=60&ssl=1&resize=300%2C175"
+			loading="lazy">
+	                    </a>
+                    <div class="content">
+						    <a class="category" style="color:#9261dd;"
+       href=" https://boingboing.net/tag/junk">junk</a>
+                        <a class="headline" href="https://boingboing.net/2025/10/23/a-60-solution-to-rayban-metas-02-cent-problem.html">A $60 solution to RayBan Meta's .02 cent problem</a>
+						<a class="byline"
+   itemprop="author"
+   href="https://boingboing.net/author/jason">
+	Jason Weisberger</a>
+                        </a>
+                    </div>
+                </div>
+            </li>
+					            <li class="column">
+                <div class="boingarticle feature">
+                    <a class="article-image" href="https://boingboing.net/2025/10/23/portal-to-report-use-of-u-s-weapons-on-civilians-has-vanished-from-the-internet.html">
+								<img alt=""
+			title="Portal to report use of U.S. weapons on civilians has vanished from the Internet"
+			width="300"
+			height="175"
+			src="https://i0.wp.com/boingboing.net/wp-content/uploads/2022/11/ar-15-scaled-e1761231943772.jpeg?fit=300%2C184&quality=60&ssl=1&resize=300%2C175"
+			loading="lazy">
+	                    </a>
+                    <div class="content">
+						    <a class="category" style="color:#70dd15;"
+       href=" https://boingboing.net/tag/weapons">weapons</a>
+                        <a class="headline" href="https://boingboing.net/2025/10/23/portal-to-report-use-of-u-s-weapons-on-civilians-has-vanished-from-the-internet.html">Portal to report use of U.S. weapons on civilians has vanished from the Internet</a>
+						<a class="byline"
+   itemprop="author"
+   href="https://boingboing.net/author/seamus">
+	Séamus Bellamy</a>
+                        </a>
+                    </div>
+                </div>
+            </li>
+				    </ul>
+
+
+
+            <div class="columns tile is-ancestor">
+
+                <div class="tile column is-vertical is-8">
+					    <ul class="posts-list is-variable is-3">
+								            <li class="post-1096069">
+                <article class="boingarticle horizontal latest-post"
+                         role="article"
+                         itemscope
+                         itemtype="http://schema.org/BlogPosting">
+                    <a class="article-image" href="https://boingboing.net/2025/10/24/trumps-beef-deal-argentina-gets-the-steak-us-ranchers-get-boned.html">
+								<img alt="Image: Stepanek Photography / shutterstock.com"
+			title="Trump&#039;s beef deal: Argentina gets the steak, US ranchers get boned"
+			width="200"
+			height="135"
+			src="https://i0.wp.com/boingboing.net/wp-content/uploads/2024/01/hamburger-e1761326222820.jpeg?fit=300%2C199&quality=60&ssl=1&resize=200%2C135"
+			loading="lazy">
+	                    </a>
+                    <div class="content">
+						    <a class="category" style="color:#47dd65;"
+       href=" https://boingboing.net/tag/groceries">groceries</a>
+                        <a href="https://boingboing.net/2025/10/24/trumps-beef-deal-argentina-gets-the-steak-us-ranchers-get-boned.html" class="headline">Trump's beef deal: Argentina gets the steak, US ranchers get boned</a>
+						<a class="byline"
+   itemprop="author"
+   href="https://boingboing.net/author/jason">
+	Jason Weisberger</a>
+                    </div>
+					                </article>
+            </li><div class="boing-homepage-after-first-article-in-list" id="boing-4026249775" style="margin-bottom: 25px;"><div id="FreeStarVideoAdContainerInContent">
+  <div id="freestar-video-parent-incontent">
+    <div id="freestar-video-child"></div>
+  </div>
+</div></div>
+											            <li class="post-1096065">
+                <article class="boingarticle horizontal latest-post"
+                         role="article"
+                         itemscope
+                         itemtype="http://schema.org/BlogPosting">
+                    <a class="article-image" href="https://boingboing.net/2025/10/24/jacqueline-kennedy-garden-at-white-house-destroyed-to-make-space-for-350m-epstein-ballroom.html">
+								<img alt="The Kennedy Garden in 2023. Photo: U.S. National Park Service / Nathan King"
+			title="Jacqueline Kennedy Garden at White House destroyed to make space for $350m &quot;Epstein Ballroom&quot;"
+			width="200"
+			height="135"
+			src="https://i0.wp.com/boingboing.net/wp-content/uploads/2025/10/WHHO_Commemorative-Trees_Jacqueline-Kennedy-Garden_20230821_NKing_01.webp?fit=300%2C200&quality=55&ssl=1&resize=200%2C135"
+			loading="lazy">
+	                    </a>
+                    <div class="content">
+						    <a class="category" style="color:#20dd64;"
+       href=" https://boingboing.net/tag/politics">politics</a>
+                        <a href="https://boingboing.net/2025/10/24/jacqueline-kennedy-garden-at-white-house-destroyed-to-make-space-for-350m-epstein-ballroom.html" class="headline">Jacqueline Kennedy Garden at White House destroyed to make space for $350m "Epstein Ballroom"</a>
+						<a class="byline"
+   itemprop="author"
+   href="https://boingboing.net/author/rob_beschizza">
+	Rob Beschizza</a>
+                    </div>
+					                </article>
+            </li>
+											            <li class="post-1096054">
+                <article class="boingarticle horizontal latest-post"
+                         role="article"
+                         itemscope
+                         itemtype="http://schema.org/BlogPosting">
+                    <a class="article-image" href="https://boingboing.net/2025/10/24/ikea-is-giving-away-a-tiny-bed-for-phones-but-only-in-the-uae.html">
+								<img alt="IKEA phone bed"
+			title="IKEA is giving away a tiny bed for phones – but only in the UAE"
+			width="200"
+			height="135"
+			src="https://i0.wp.com/boingboing.net/wp-content/uploads/2025/10/Image-YouTube-IKEA-UAE.jpg?fit=300%2C149&quality=60&ssl=1&resize=200%2C135"
+			loading="lazy">
+	                    </a>
+                    <div class="content">
+						    <a class="category" style="color:#48dd76;"
+       href=" https://boingboing.net/tag/sleep">sleep</a>
+                        <a href="https://boingboing.net/2025/10/24/ikea-is-giving-away-a-tiny-bed-for-phones-but-only-in-the-uae.html" class="headline">IKEA is giving away a tiny bed for phones – but only in the UAE</a>
+						<a class="byline"
+   itemprop="author"
+   href="https://boingboing.net/author/gail-sherman">
+	Gail Sherman</a>
+                    </div>
+					                </article>
+            </li>
+											            <li class="post-1096055">
+                <article class="boingarticle horizontal latest-post"
+                         role="article"
+                         itemscope
+                         itemtype="http://schema.org/BlogPosting">
+                    <a class="article-image" href="https://boingboing.net/2025/10/24/new-leica-m-ev1-loses-the-rangefinder.html">
+								<img alt="Image: Leica"
+			title="New Leica M EV1 loses the rangefinder"
+			width="200"
+			height="135"
+			src="https://i0.wp.com/boingboing.net/wp-content/uploads/2025/10/20229_Leica_M_EV1_front_1920px__75644.jpg?fit=300%2C179&quality=60&ssl=1&resize=200%2C135"
+			loading="lazy">
+	                    </a>
+                    <div class="content">
+						    <a class="category" style="color:#4595dd;"
+       href=" https://boingboing.net/tag/gadgets-2">gadgets</a>
+                        <a href="https://boingboing.net/2025/10/24/new-leica-m-ev1-loses-the-rangefinder.html" class="headline">New Leica M EV1 loses the rangefinder</a>
+						<a class="byline"
+   itemprop="author"
+   href="https://boingboing.net/author/rob_beschizza">
+	Rob Beschizza</a>
+                    </div>
+					                </article>
+            </li>
+											            <li class="post-1096061">
+                <article class="boingarticle horizontal latest-post"
+                         role="article"
+                         itemscope
+                         itemtype="http://schema.org/BlogPosting">
+                    <a class="article-image" href="https://boingboing.net/2025/10/24/jack-smith-asks-congress-for-a-microphone-and-a-chair.html">
+								<img alt="Special Counsel Jack Smith. Screenshot: U.S. Department of Justice"
+			title="Jack Smith asks Congress for a microphone and a chair"
+			width="200"
+			height="135"
+			src="https://i0.wp.com/boingboing.net/wp-content/uploads/2024/08/jacksmith-e1761324100585.jpg?fit=300%2C177&quality=60&ssl=1&resize=200%2C135"
+			loading="lazy">
+	                    </a>
+                    <div class="content">
+						    <a class="category" style="color:#20dd64;"
+       href=" https://boingboing.net/tag/politics">politics</a>
+                        <a href="https://boingboing.net/2025/10/24/jack-smith-asks-congress-for-a-microphone-and-a-chair.html" class="headline">Jack Smith asks Congress for a microphone and a chair</a>
+						<a class="byline"
+   itemprop="author"
+   href="https://boingboing.net/author/jason">
+	Jason Weisberger</a>
+                    </div>
+					                </article>
+            </li>
+											            <li class="post-1096028">
+                <article class="boingarticle horizontal latest-post"
+                         role="article"
+                         itemscope
+                         itemtype="http://schema.org/BlogPosting">
+                    <a class="article-image" href="https://boingboing.net/2025/10/24/bee-positivity-is-contagious.html">
+								<img alt="bumblebees"
+			title="Bee positivity is contagious"
+			width="200"
+			height="135"
+			src="https://i0.wp.com/boingboing.net/wp-content/uploads/2025/10/Image-Trofimov-Denis-Shutterstock.jpg?fit=300%2C215&quality=60&ssl=1&resize=200%2C135"
+			loading="lazy">
+	                    </a>
+                    <div class="content">
+						    <a class="category" style="color:#55dd00;"
+       href=" https://boingboing.net/tag/bugs">bugs</a>
+                        <a href="https://boingboing.net/2025/10/24/bee-positivity-is-contagious.html" class="headline">Bee positivity is contagious</a>
+						<a class="byline"
+   itemprop="author"
+   href="https://boingboing.net/author/gail-sherman">
+	Gail Sherman</a>
+                    </div>
+					                </article>
+            </li>
+											            <li class="post-1096056">
+                <article class="boingarticle horizontal latest-post"
+                         role="article"
+                         itemscope
+                         itemtype="http://schema.org/BlogPosting">
+                    <a class="article-image" href="https://boingboing.net/2025/10/24/trump-says-nps-staff-arent-needed-fires-and-trash-say-otherwise.html">
+								<img alt="Yosemite National Park. Image: f11photo/shutterstock.com"
+			title="Trump says NPS staff aren&#039;t needed. Fires and trash say otherwise"
+			width="200"
+			height="135"
+			src="https://i0.wp.com/boingboing.net/wp-content/uploads/2024/03/shutterstock_258887714-e1761322968942.jpg?fit=300%2C200&quality=60&ssl=1&resize=200%2C135"
+			loading="lazy">
+	                    </a>
+                    <div class="content">
+						    <a class="category" style="color:#2233dd;"
+       href=" https://boingboing.net/tag/shutdown">shutdown</a>
+                        <a href="https://boingboing.net/2025/10/24/trump-says-nps-staff-arent-needed-fires-and-trash-say-otherwise.html" class="headline">Trump says NPS staff aren't needed. Fires and trash say otherwise</a>
+						<a class="byline"
+   itemprop="author"
+   href="https://boingboing.net/author/jason">
+	Jason Weisberger</a>
+                    </div>
+					                </article>
+            </li>
+											            <li class="post-1095999">
+                <article class="boingarticle horizontal latest-post"
+                         role="article"
+                         itemscope
+                         itemtype="http://schema.org/BlogPosting">
+                    <a class="article-image" href="https://boingboing.net/2025/10/24/2025s-best-rpg-is-constantly-getting-bigger.html">
+								<img alt="Kingdom Come: Deliverance II. Image via Warhorse Studios"
+			title="2025&#039;s best RPG is constantly getting bigger"
+			width="200"
+			height="135"
+			src="https://i0.wp.com/boingboing.net/wp-content/uploads/2025/03/Kingdom-Come-Deliverance-II.-Image-via-Warhorse.jpg?fit=300%2C169&quality=60&ssl=1&resize=200%2C135"
+			loading="lazy">
+	                    </a>
+                    <div class="content">
+						    <a class="category" style="color:#27dd94;"
+       href=" https://boingboing.net/tag/games">Games</a>
+                        <a href="https://boingboing.net/2025/10/24/2025s-best-rpg-is-constantly-getting-bigger.html" class="headline">2025's best RPG is constantly getting bigger</a>
+						<a class="byline"
+   itemprop="author"
+   href="https://boingboing.net/author/gstclair">
+	Grant St. Clair</a>
+                    </div>
+					                </article>
+            </li>
+											            <li class="post-1096052">
+                <article class="boingarticle horizontal latest-post"
+                         role="article"
+                         itemscope
+                         itemtype="http://schema.org/BlogPosting">
+                    <a class="article-image" href="https://boingboing.net/2025/10/24/trump-hates-this-canadian-ad-so-much.html">
+								<img alt="Mugshots of Jeffrey Epstein and Donald Trump"
+			title="Trump hates this Canadian ad so much"
+			width="200"
+			height="135"
+			src="https://i0.wp.com/boingboing.net/wp-content/uploads/2025/07/trump-epstein.jpg?fit=300%2C207&quality=60&ssl=1&resize=200%2C135"
+			loading="lazy">
+	                    </a>
+                    <div class="content">
+						    <a class="category" style="color:#20dd64;"
+       href=" https://boingboing.net/tag/politics">politics</a>
+                        <a href="https://boingboing.net/2025/10/24/trump-hates-this-canadian-ad-so-much.html" class="headline">Trump hates this Canadian ad so much</a>
+						<a class="byline"
+   itemprop="author"
+   href="https://boingboing.net/author/jason">
+	Jason Weisberger</a>
+                    </div>
+					                </article>
+            </li>
+											            <li class="post-1096006">
+                <article class="boingarticle horizontal latest-post"
+                         role="article"
+                         itemscope
+                         itemtype="http://schema.org/BlogPosting">
+                    <a class="article-image" href="https://boingboing.net/2025/10/24/neal-stephenson-and-weta-workshops-new-project-is-something.html">
+								<img alt=""
+			title="Neal Stephenson and Weta Workshop&#039;s new project is&#8230; something?"
+			width="200"
+			height="135"
+			src="https://i0.wp.com/boingboing.net/wp-content/uploads/2025/10/Image-greenbutterfly-Shutterstock.jpg?fit=300%2C117&quality=60&ssl=1&resize=200%2C135"
+			loading="lazy">
+	                    </a>
+                    <div class="content">
+						    <a class="category" style="color:#1178dd;"
+       href=" https://boingboing.net/tag/blockchain">blockchain</a>
+                        <a href="https://boingboing.net/2025/10/24/neal-stephenson-and-weta-workshops-new-project-is-something.html" class="headline">Neal Stephenson and Weta Workshop's new project is&#8230; something?</a>
+						<a class="byline"
+   itemprop="author"
+   href="https://boingboing.net/author/gail-sherman">
+	Gail Sherman</a>
+                    </div>
+					                </article>
+            </li>
+											            <li class="post-1095998">
+                <article class="boingarticle horizontal latest-post"
+                         role="article"
+                         itemscope
+                         itemtype="http://schema.org/BlogPosting">
+                    <a class="article-image" href="https://boingboing.net/2025/10/24/superhero-management-sim-dispatch-is-a-lot-of-fun.html">
+								<img alt="Dispatch. Image via AdHoc Games"
+			title="Superhero management sim Dispatch is a lot of fun"
+			width="200"
+			height="135"
+			src="https://i0.wp.com/boingboing.net/wp-content/uploads/2025/10/dispatch-e1761320814875.png?fit=300%2C168&quality=55&ssl=1&resize=200%2C135"
+			loading="lazy">
+	                    </a>
+                    <div class="content">
+						    <a class="category" style="color:#27dd94;"
+       href=" https://boingboing.net/tag/games">Games</a>
+                        <a href="https://boingboing.net/2025/10/24/superhero-management-sim-dispatch-is-a-lot-of-fun.html" class="headline">Superhero management sim Dispatch is a lot of fun</a>
+						<a class="byline"
+   itemprop="author"
+   href="https://boingboing.net/author/gstclair">
+	Grant St. Clair</a>
+                    </div>
+					                </article>
+            </li>
+											            <li class="post-1096049">
+                <article class="boingarticle horizontal latest-post"
+                         role="article"
+                         itemscope
+                         itemtype="http://schema.org/BlogPosting">
+                    <a class="article-image" href="https://boingboing.net/2025/10/24/anthem-for-the-age-cluck-the-police.html">
+								<img alt=""
+			title="Anthem for the age: Cluck the Police"
+			width="200"
+			height="135"
+			src="https://i0.wp.com/boingboing.net/wp-content/uploads/2024/07/trumpchicken-e1741735431255.jpg?fit=300%2C300&quality=60&ssl=1&resize=200%2C135"
+			loading="lazy">
+	                    </a>
+                    <div class="content">
+						    <a class="category" style="color:#dd3881;"
+       href=" https://boingboing.net/tag/music">music</a>
+                        <a href="https://boingboing.net/2025/10/24/anthem-for-the-age-cluck-the-police.html" class="headline">Anthem for the age: Cluck the Police</a>
+						<a class="byline"
+   itemprop="author"
+   href="https://boingboing.net/author/jason">
+	Jason Weisberger</a>
+                    </div>
+					                </article>
+            </li>
+											            <li class="post-1095996">
+                <article class="boingarticle horizontal latest-post"
+                         role="article"
+                         itemscope
+                         itemtype="http://schema.org/BlogPosting">
+                    <a class="article-image" href="https://boingboing.net/2025/10/24/fallout-4-to-get-ten-year-anniversary-dlc-switch-2-release.html">
+								<img alt=""
+			title="Fallout 4 to get ten-year anniversary DLC, Switch 2 release"
+			width="200"
+			height="135"
+			src="https://i0.wp.com/boingboing.net/wp-content/uploads/2022/12/50166716386_570f86b865_b-e1761320178927.jpg?fit=300%2C169&quality=60&ssl=1&resize=200%2C135"
+			loading="lazy">
+	                    </a>
+                    <div class="content">
+						    <a class="category" style="color:#27dd94;"
+       href=" https://boingboing.net/tag/games">Games</a>
+                        <a href="https://boingboing.net/2025/10/24/fallout-4-to-get-ten-year-anniversary-dlc-switch-2-release.html" class="headline">Fallout 4 to get ten-year anniversary DLC, Switch 2 release</a>
+						<a class="byline"
+   itemprop="author"
+   href="https://boingboing.net/author/gstclair">
+	Grant St. Clair</a>
+                    </div>
+					                </article>
+            </li>
+											            <li class="post-1087799">
+                <article class="boingarticle horizontal latest-post"
+                         role="article"
+                         itemscope
+                         itemtype="http://schema.org/BlogPosting">
+                    <a class="article-image" href="https://boingboing.net/2025/10/24/ais-impact-not-about-killer-robots-but-about-power-control-and-who-benefits-from-automation.html">
+								<img alt=""
+			title="AI&#039;s impact: not about killer robots, but about power, control, and who benefits from automation"
+			width="200"
+			height="135"
+			src="https://i0.wp.com/boingboing.net/wp-content/uploads/2025/07/means-of-prediction.jpg?fit=300%2C450&quality=60&ssl=1&resize=200%2C135"
+			loading="lazy">
+	                    </a>
+                    <div class="content">
+						    <a class="category" style="color:#29dd71;"
+       href=" https://boingboing.net/tag/technology">Technology</a>
+                        <a href="https://boingboing.net/2025/10/24/ais-impact-not-about-killer-robots-but-about-power-control-and-who-benefits-from-automation.html" class="headline">AI's impact: not about killer robots, but about power, control, and who benefits from automation</a>
+						<a class="byline"
+   itemprop="author"
+   href="https://boingboing.net/author/ellsworthtoohey">
+	Ellsworth Toohey</a>
+                    </div>
+					                </article>
+            </li>
+											            <li class="post-1096025">
+                <article class="boingarticle horizontal latest-post"
+                         role="article"
+                         itemscope
+                         itemtype="http://schema.org/BlogPosting">
+                    <a class="article-image" href="https://boingboing.net/2025/10/24/left-leaning-plaid-cymru-crushes-labour-party-in-welsh-by-election.html">
+								<img alt="Wales is known for its cool flag."
+			title="Left-leaning Plaid Cymru crushes Labour Party in Welsh by-election"
+			width="200"
+			height="135"
+			src="https://i0.wp.com/boingboing.net/wp-content/uploads/2025/10/shutterstock_2542323815-scaled.jpg?fit=300%2C204&quality=60&ssl=1&resize=200%2C135"
+			loading="lazy">
+	                    </a>
+                    <div class="content">
+						                        <a href="https://boingboing.net/2025/10/24/left-leaning-plaid-cymru-crushes-labour-party-in-welsh-by-election.html" class="headline">Left-leaning Plaid Cymru crushes Labour Party in Welsh by-election</a>
+						<a class="byline"
+   itemprop="author"
+   href="https://boingboing.net/author/rob_beschizza">
+	Rob Beschizza</a>
+                    </div>
+					                </article>
+            </li>
+											            <li class="post-1096015">
+                <article class="boingarticle horizontal latest-post"
+                         role="article"
+                         itemscope
+                         itemtype="http://schema.org/BlogPosting">
+                    <a class="article-image" href="https://boingboing.net/2025/10/24/satellite-image-shows-east-wing-of-white-house-completely-demolished-to-make-way-for-epstein-ballroom.html">
+								<img alt=""
+			title="Satellite image shows East Wing of White House completely demolished to make way for &quot;Epstein Ballroom&quot;"
+			width="200"
+			height="135"
+			src="https://i0.wp.com/boingboing.net/wp-content/uploads/2025/10/Untitled-1.jpg?fit=300%2C110&quality=60&ssl=1&resize=200%2C135"
+			loading="lazy">
+	                    </a>
+                    <div class="content">
+						    <a class="category" style="color:#20dd64;"
+       href=" https://boingboing.net/tag/politics">politics</a>
+                        <a href="https://boingboing.net/2025/10/24/satellite-image-shows-east-wing-of-white-house-completely-demolished-to-make-way-for-epstein-ballroom.html" class="headline">Satellite image shows East Wing of White House completely demolished to make way for "Epstein Ballroom"</a>
+						<a class="byline"
+   itemprop="author"
+   href="https://boingboing.net/author/rob_beschizza">
+	Rob Beschizza</a>
+                    </div>
+					                </article>
+            </li>
+											            <li class="post-1095895">
+                <article class="boingarticle horizontal latest-post"
+                         role="article"
+                         itemscope
+                         itemtype="http://schema.org/BlogPosting">
+                    <a class="article-image" href="https://boingboing.net/2025/10/23/never-fear-another-presentation-with-microsofts-go-to-diagramming-tool-now-just-15-for-life.html">
+								<img alt="Microsoft Visio 2021 Professional: Lifetime License for Windows"
+			title="Never fear another presentation with Microsoft&#039;s go-to diagramming tool, now just $15 for life"
+			width="200"
+			height="135"
+			src="https://i0.wp.com/boingboing.net/wp-content/uploads/2025/10/Microsoft-Visio-2021-Professional.jpg?fit=300%2C225&quality=60&ssl=1&resize=200%2C135"
+			loading="lazy">
+	                    </a>
+                    <div class="content">
+						    <a class="category" style="color:#35dd57;"
+       href=" https://boingboing.net/tag/gadgets">Boing Boing Gadgets</a>
+                        <a href="https://boingboing.net/2025/10/23/never-fear-another-presentation-with-microsofts-go-to-diagramming-tool-now-just-15-for-life.html" class="headline">Never fear another presentation with Microsoft's go-to diagramming tool, now just $15 for life</a>
+						<a class="byline"
+   itemprop="author"
+   href="https://boingboing.net/author/treymartin">
+	Boing Boing's Shop</a>
+                    </div>
+					                </article>
+            </li>
+											            <li class="post-1096003">
+                <article class="boingarticle horizontal latest-post"
+                         role="article"
+                         itemscope
+                         itemtype="http://schema.org/BlogPosting">
+                    <a class="article-image" href="https://boingboing.net/2025/10/23/rest-assured-trumps-top-priority-is-the-great-ballroom-of-people-who-can-afford-the-cover-charge.html">
+								<img alt="Image: Press Secretary Karoline Leavitt / White House Press Conference"
+			title="Rest assured, Trump&#039;s top priority is The Great Ballroom of People Who Can Afford the Cover Charge"
+			width="200"
+			height="135"
+			src="https://i0.wp.com/boingboing.net/wp-content/uploads/2025/02/Leavitt-1.jpeg?fit=300%2C164&quality=60&ssl=1&resize=200%2C135"
+			loading="lazy">
+	                    </a>
+                    <div class="content">
+						    <a class="category" style="color:#5.5235;"
+       href=" https://boingboing.net/tag/evil-pure-and-simple">Evil Pure and Simple</a>
+                        <a href="https://boingboing.net/2025/10/23/rest-assured-trumps-top-priority-is-the-great-ballroom-of-people-who-can-afford-the-cover-charge.html" class="headline">Rest assured, Trump's top priority is The Great Ballroom of People Who Can Afford the Cover Charge</a>
+						<a class="byline"
+   itemprop="author"
+   href="https://boingboing.net/author/jason">
+	Jason Weisberger</a>
+                    </div>
+					                </article>
+            </li>
+											            <li class="post-1095997">
+                <article class="boingarticle horizontal latest-post"
+                         role="article"
+                         itemscope
+                         itemtype="http://schema.org/BlogPosting">
+                    <a class="article-image" href="https://boingboing.net/2025/10/23/jail-time-for-offended-bigot-who-attacked-a-starbucks-pride-flag.html">
+								<img alt=""
+			title="Jail time for offended bigot who attacked a Starbucks Pride flag"
+			width="200"
+			height="135"
+			src="https://i0.wp.com/boingboing.net/wp-content/uploads/2014/06/Gay-Pride-500x245-680x340.jpg?fit=300%2C150&quality=60&ssl=1&resize=200%2C135"
+			loading="lazy">
+	                    </a>
+                    <div class="content">
+						    <a class="category" style="color:#33dd31;"
+       href=" https://boingboing.net/tag/florida">florida</a>
+                        <a href="https://boingboing.net/2025/10/23/jail-time-for-offended-bigot-who-attacked-a-starbucks-pride-flag.html" class="headline">Jail time for offended bigot who attacked a Starbucks Pride flag</a>
+						<a class="byline"
+   itemprop="author"
+   href="https://boingboing.net/author/jason">
+	Jason Weisberger</a>
+                    </div>
+					                </article>
+            </li>
+											            <li class="post-1095994">
+                <article class="boingarticle horizontal latest-post"
+                         role="article"
+                         itemscope
+                         itemtype="http://schema.org/BlogPosting">
+                    <a class="article-image" href="https://boingboing.net/2025/10/23/idaho-races-florida-to-see-who-can-bring-back-polio-first.html">
+								<img alt="vaccine"
+			title="Idaho races Florida to see who can bring back polio first"
+			width="200"
+			height="135"
+			src="https://i0.wp.com/boingboing.net/wp-content/uploads/2015/09/vaccine.jpg?fit=300%2C300&quality=60&ssl=1&resize=200%2C135"
+			loading="lazy">
+	                    </a>
+                    <div class="content">
+						    <a class="category" style="color:#dd2081;"
+       href=" https://boingboing.net/tag/antivax">antivax</a>
+                        <a href="https://boingboing.net/2025/10/23/idaho-races-florida-to-see-who-can-bring-back-polio-first.html" class="headline">Idaho races Florida to see who can bring back polio first</a>
+						<a class="byline"
+   itemprop="author"
+   href="https://boingboing.net/author/jason">
+	Jason Weisberger</a>
+                    </div>
+					                </article>
+            </li>
+							    </ul>
+                </div>
+
+				                <div class="tile column is-vertical is-parent">
+					
+<div id="sidebar1" role="complementary">
+
+	
+		<div id="block-4" class="sidebarbox widget widget_block"><!-- Tag ID: boingboing_300x250_300x600_Right_2 -->
+<div class="centered" data-freestar-ad="__336x280 __300x600" id="boingboing_300x250_300x600_Right_2">
+  
+</div></div><div id="block-12" class="sidebarbox widget widget_block">
+<div style="height:30px" aria-hidden="true" class="wp-block-spacer"></div>
+</div><div id="block-9" class="sidebarbox widget widget_block"><div class="stickyAdBlock" id="boing-1831280145"><div style="position: -webkit-sticky;position: sticky;top: 0; padding-top: 95px;">
+<!-- Tag ID: boingboing_300x250_300x600_Right_3 -->
+<div class="centered" data-freestar-ad="__336x280 __300x600" id="boingboing_300x250_300x600_Right_3">
+  
+</div>
+</div></div></div>
+	
+    
+</div>                </div>
+
+            </div>
+
+			    <div class="columns is-multiline">
+					            <ul class="column is-one-third">
+                <li class="boingarticle feature">
+                    <article role="article"
+                             itemscope
+                             itemtype="http://schema.org/BlogPosting">
+
+                        <a class="article-image" href="https://boingboing.net/2025/10/23/inside-tehrans-grand-bazaar-the-magical-colored-pencil-shop-of-mohammad-rafi.html">
+									<img alt="talyonen/shutterstock.com"
+			title="Inside Tehran&#039;s Grand Bazaar: the magical colored pencil shop of Mohammad Rafi"
+			width="300"
+			height="175"
+			src="https://i0.wp.com/boingboing.net/wp-content/uploads/2025/10/colored-pencils.jpg?fit=300%2C200&quality=60&ssl=1&resize=300%2C175"
+			loading="lazy">
+	                        </a>
+                        <div class="content">
+							    <a class="category" style="color:#1396dd;"
+       href=" https://boingboing.net/tag/art">art</a>
+                            <a href="https://boingboing.net/2025/10/23/inside-tehrans-grand-bazaar-the-magical-colored-pencil-shop-of-mohammad-rafi.html" class="headline">Inside Tehran's Grand Bazaar: the magical colored pencil shop of Mohammad Rafi</a>
+							<a class="byline"
+   itemprop="author"
+   href="https://boingboing.net/author/popkin">
+	Popkin</a>
+                        </div>
+                    </article>
+                </li>
+            </ul>
+					            <ul class="column is-one-third">
+                <li class="boingarticle feature">
+                    <article role="article"
+                             itemscope
+                             itemtype="http://schema.org/BlogPosting">
+
+                        <a class="article-image" href="https://boingboing.net/2025/10/23/the-beanie-baby-wars-when-plush-toys-turned-america-into-a-nation-of-feral-raccoons.html">
+									<img alt="The Image Party/shutterstock.com"
+			title="The Beanie Baby Wars: When plush toys turned America into a nation of feral raccoons"
+			width="300"
+			height="175"
+			src="https://i0.wp.com/boingboing.net/wp-content/uploads/2025/10/beanie-babies.jpg?fit=300%2C200&quality=60&ssl=1&resize=300%2C175"
+			loading="lazy">
+	                        </a>
+                        <div class="content">
+							    <a class="category" style="color:#11dd2;"
+       href=" https://boingboing.net/tag/90s">90s</a>
+                            <a href="https://boingboing.net/2025/10/23/the-beanie-baby-wars-when-plush-toys-turned-america-into-a-nation-of-feral-raccoons.html" class="headline">The Beanie Baby Wars: When plush toys turned America into a nation of feral raccoons</a>
+							<a class="byline"
+   itemprop="author"
+   href="https://boingboing.net/author/popkin">
+	Popkin</a>
+                        </div>
+                    </article>
+                </li>
+            </ul>
+					            <ul class="column is-one-third">
+                <li class="boingarticle feature">
+                    <article role="article"
+                             itemscope
+                             itemtype="http://schema.org/BlogPosting">
+
+                        <a class="article-image" href="https://boingboing.net/2025/10/23/watch-the-birth-of-a-tardigrade-under-a-microscope-a-rare-glimpse-of-a-water-bear-hatching.html">
+									<img alt="Tardigrade, also known as a water bear (TajdidProtik/shutterstock.com)"
+			title="Watch the birth of a tardigrade under a microscope: a rare glimpse of a water bear hatching"
+			width="300"
+			height="175"
+			src="https://i0.wp.com/boingboing.net/wp-content/uploads/2025/10/tardigrade.jpg?fit=300%2C241&quality=60&ssl=1&resize=300%2C175"
+			loading="lazy">
+	                        </a>
+                        <div class="content">
+							    <a class="category" style="color:#6170dd;"
+       href=" https://boingboing.net/tag/science">Science</a>
+                            <a href="https://boingboing.net/2025/10/23/watch-the-birth-of-a-tardigrade-under-a-microscope-a-rare-glimpse-of-a-water-bear-hatching.html" class="headline">Watch the birth of a tardigrade under a microscope: a rare glimpse of a water bear hatching</a>
+							<a class="byline"
+   itemprop="author"
+   href="https://boingboing.net/author/popkin">
+	Popkin</a>
+                        </div>
+                    </article>
+                </li>
+            </ul>
+					            <ul class="column is-one-third">
+                <li class="boingarticle feature">
+                    <article role="article"
+                             itemscope
+                             itemtype="http://schema.org/BlogPosting">
+
+                        <a class="article-image" href="https://boingboing.net/2025/10/23/google-paying-for-nearly-10-of-trumps-gilded-resentment-hall.html">
+									<img alt="Image via Google"
+			title="Google paying for nearly 10% of Trump&#039;s Gilded Resentment Hall"
+			width="300"
+			height="175"
+			src="https://i0.wp.com/boingboing.net/wp-content/uploads/2025/08/Chrome.jpg?fit=300%2C170&quality=60&ssl=1&resize=300%2C175"
+			loading="lazy">
+	                        </a>
+                        <div class="content">
+							    <a class="category" style="color:#1669dd;"
+       href=" https://boingboing.net/tag/conservation">conservation</a>
+                            <a href="https://boingboing.net/2025/10/23/google-paying-for-nearly-10-of-trumps-gilded-resentment-hall.html" class="headline">Google paying for nearly 10% of Trump's Gilded Resentment Hall</a>
+							<a class="byline"
+   itemprop="author"
+   href="https://boingboing.net/author/jason">
+	Jason Weisberger</a>
+                        </div>
+                    </article>
+                </li>
+            </ul>
+					            <ul class="column is-one-third">
+                <li class="boingarticle feature">
+                    <article role="article"
+                             itemscope
+                             itemtype="http://schema.org/BlogPosting">
+
+                        <a class="article-image" href="https://boingboing.net/2025/10/23/tom-the-dancing-bug-the-president-trumps-all-over-chagrin-falls-usa.html">
+									<img alt=""
+			title="Tom the Dancing Bug: The President Trumps all over Chagrin Falls, USA"
+			width="300"
+			height="175"
+			src="https://i0.wp.com/boingboing.net/wp-content/uploads/2025/10/1757teaser1200-chagrin-falls-50-my-country.jpg?fit=300%2C169&quality=60&ssl=1&resize=300%2C175"
+			loading="lazy">
+	                        </a>
+                        <div class="content">
+							    <a class="category" style="color:#dd5624;"
+       href=" https://boingboing.net/tag/tomthedancingbug">Tom The Dancing Bug</a>
+                            <a href="https://boingboing.net/2025/10/23/tom-the-dancing-bug-the-president-trumps-all-over-chagrin-falls-usa.html" class="headline">Tom the Dancing Bug: The President Trumps all over Chagrin Falls, USA</a>
+							<a class="byline"
+   itemprop="author"
+   href="https://boingboing.net/author/ruben_bolling">
+	Ruben Bolling</a>
+                        </div>
+                    </article>
+                </li>
+            </ul>
+					            <ul class="column is-one-third">
+                <li class="boingarticle feature">
+                    <article role="article"
+                             itemscope
+                             itemtype="http://schema.org/BlogPosting">
+
+                        <a class="article-image" href="https://boingboing.net/2025/10/23/a-60-solution-to-rayban-metas-02-cent-problem.html">
+									<img alt="Image: JLStock/shutterstock.com"
+			title="A $60 solution to RayBan Meta&#039;s .02 cent problem"
+			width="300"
+			height="175"
+			src="https://i0.wp.com/boingboing.net/wp-content/uploads/2025/10/shutterstock_2525483325.jpg?fit=300%2C188&quality=60&ssl=1&resize=300%2C175"
+			loading="lazy">
+	                        </a>
+                        <div class="content">
+							    <a class="category" style="color:#9261dd;"
+       href=" https://boingboing.net/tag/junk">junk</a>
+                            <a href="https://boingboing.net/2025/10/23/a-60-solution-to-rayban-metas-02-cent-problem.html" class="headline">A $60 solution to RayBan Meta's .02 cent problem</a>
+							<a class="byline"
+   itemprop="author"
+   href="https://boingboing.net/author/jason">
+	Jason Weisberger</a>
+                        </div>
+                    </article>
+                </li>
+            </ul>
+					            <ul class="column is-one-third">
+                <li class="boingarticle feature">
+                    <article role="article"
+                             itemscope
+                             itemtype="http://schema.org/BlogPosting">
+
+                        <a class="article-image" href="https://boingboing.net/2025/10/23/casual-kh-patel-not-exactly-inspiring-confidence.html">
+									<img alt="Kash Patel"
+			title="Casual K$H Patel not exactly inspiring confidence"
+			width="300"
+			height="175"
+			src="https://i0.wp.com/boingboing.net/wp-content/uploads/2025/09/Kash-Patel.jpg?fit=300%2C169&quality=60&ssl=1&resize=300%2C175"
+			loading="lazy">
+	                        </a>
+                        <div class="content">
+							    <a class="category" style="color:#dd854;"
+       href=" https://boingboing.net/tag/fbi">fbi</a>
+                            <a href="https://boingboing.net/2025/10/23/casual-kh-patel-not-exactly-inspiring-confidence.html" class="headline">Casual K$H Patel not exactly inspiring confidence</a>
+							<a class="byline"
+   itemprop="author"
+   href="https://boingboing.net/author/jason">
+	Jason Weisberger</a>
+                        </div>
+                    </article>
+                </li>
+            </ul>
+					            <ul class="column is-one-third">
+                <li class="boingarticle feature">
+                    <article role="article"
+                             itemscope
+                             itemtype="http://schema.org/BlogPosting">
+
+                        <a class="article-image" href="https://boingboing.net/2025/10/23/portal-to-report-use-of-u-s-weapons-on-civilians-has-vanished-from-the-internet.html">
+									<img alt=""
+			title="Portal to report use of U.S. weapons on civilians has vanished from the Internet"
+			width="300"
+			height="175"
+			src="https://i0.wp.com/boingboing.net/wp-content/uploads/2022/11/ar-15-scaled-e1761231943772.jpeg?fit=300%2C184&quality=60&ssl=1&resize=300%2C175"
+			loading="lazy">
+	                        </a>
+                        <div class="content">
+							    <a class="category" style="color:#70dd15;"
+       href=" https://boingboing.net/tag/weapons">weapons</a>
+                            <a href="https://boingboing.net/2025/10/23/portal-to-report-use-of-u-s-weapons-on-civilians-has-vanished-from-the-internet.html" class="headline">Portal to report use of U.S. weapons on civilians has vanished from the Internet</a>
+							<a class="byline"
+   itemprop="author"
+   href="https://boingboing.net/author/seamus">
+	Séamus Bellamy</a>
+                        </div>
+                    </article>
+                </li>
+            </ul>
+					            <ul class="column is-one-third">
+                <li class="boingarticle feature">
+                    <article role="article"
+                             itemscope
+                             itemtype="http://schema.org/BlogPosting">
+
+                        <a class="article-image" href="https://boingboing.net/2025/10/23/adbreak-lets-you-jailbreak-your-amazon-kindle-again.html">
+									<img alt="Kindle (ada Images / Shutterstock.com)"
+			title="AdBreak lets you jailbreak your Amazon Kindle (again)"
+			width="300"
+			height="175"
+			src="https://i0.wp.com/boingboing.net/wp-content/uploads/2025/05/kindle-1.jpg?fit=300%2C200&quality=60&ssl=1&resize=300%2C175"
+			loading="lazy">
+	                        </a>
+                        <div class="content">
+							    <a class="category" style="color:#6421dd;"
+       href=" https://boingboing.net/tag/amazon">amazon</a>
+                            <a href="https://boingboing.net/2025/10/23/adbreak-lets-you-jailbreak-your-amazon-kindle-again.html" class="headline">AdBreak lets you jailbreak your Amazon Kindle (again)</a>
+							<a class="byline"
+   itemprop="author"
+   href="https://boingboing.net/author/seamus">
+	Séamus Bellamy</a>
+                        </div>
+                    </article>
+                </li>
+            </ul>
+				    </div>
+    <div class="row centered spacer">
+        <a href="https://boingboing.net/page/2"
+           class="button large"><span>Next</span></a>
+    </div>
+<div class="boing-homepage-end-of-main-container" id="boing-2400099362">
+<sellwild></sellwild></div>
+        </div>
+
+    </main>
+
+<footer class="footer" role="contentinfo">
+    <div class="container">
+        <div class="columns">
+
+            <div class="column">
+
+                <div class="footer-left">
+                    <p>Read the rules you agree to by using this website in our <a
+                                href="https://boingboing.net/tos">Terms of Service</a>.</p>
+                    <p>We are a participant in the Amazon Services LLC Associates Program, an affiliate advertising program
+                        designed to provide a means for us to earn fees by linking to Amazon.com and affiliated sites.</p>
+                    <p>Boing Boing uses cookies and analytics trackers, and is supported by advertising, merchandise sales
+                        and affiliate links. Read about what we do with the data we gather in our <a
+                                href="https://boingboing.net/privacy">Privacy Policy</a>.</p>
+                    <p>Who will be eaten first? Our forum rules are detailed in the <a
+                                href="https://bbs.boingboing.net/faq">Community Guidelines</a>.</p>
+                    <p>Boing Boing is published under <a
+                                href="https://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US">a Creative Commons license</a> except where otherwise noted.</p>
+                    <p><button id="pmLink">Privacy Manager</button></p>
+                </div>
+
+            </div>
+
+            <div class="column">
+
+                <div class="footer-right">
+
+                    <ul class="footer-links">
+                        <li>
+                            <ul>
+                                <li><a href="https://twitter.com/frauenfelder">Mark Frauenfelder</a></li>
+                                <li><a href="https://twitter.com/pesco">David Pescovitz</a></li>
+                                <li><a href="https://twitter.com/beschizza">Rob Beschizza</a></li>
+                                <li><a href="https://twitter.com/carla_sinclair">Carla Sinclair</a></li>
+                            </ul>
+                            <span class="job">Editors</span>
+                        </li>
+                        <li>
+                            <ul>
+                                <li>
+                                    <a href="https://twitter.com/jlw">Jason Weisberger</a>
+                                </li>
+                            </ul>
+                            <span class="job">Publisher</span>
+                        </li>
+                        <li>
+                            <ul>
+                                <li>
+                                    <a href="https://twitter.com/orenwolf">Ken Snider</a>
+                                </li>
+                            </ul>
+                            <span class="job">Sysadmin</span>
+                        </li>
+                        <li>
+                            <ul>
+                                <li>
+                                    <a href="https://boingboing.net/about">About Us</a>
+                                </li>
+                                <li>
+                                    <a href="https://premium.boingboing.net">Newsletter</a>
+                                </li>
+                                <li>
+                                    <a href="https://boingboing.net/contact">Contact Us</a>
+                                </li>
+                                <li>
+                                    <a href="https://boingboing.net/advertise">Advertise</a>
+                                </li>
+                                <li>
+                                    <a href="https://bbs.boingboing.net">Forums</a>
+                                </li>
+                                <li>
+                                    <a href="https://store.boingboing.net">Shop</a>
+                                </li>
+                                <li>
+                                    <a href="https://www.stacksocial.com/contact">Shop Support</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+</footer>
+
+
+
+		<!-- Quantcast Tag -->
+		
+
+		<noscript>
+		<div style="display:none;">
+			<img src="//pixel.quantserve.com/pixel/p-gz35SZjJgwWt-.gif" border="0" height="1" width="1" alt="Quantcast"/>
+		</div>
+		</noscript>
+		<!-- End Quantcast tag -->
+				
+		
+
+
+
+
+
+<div class="boing-footer-js" id="boing-3525750712"><!-- Begin AA "Footer JS" -->
+<!-- Begin Analytics -->
+<!-- Facebook Pixel Code -->
+
+<noscript><img loading="lazy" decoding="async" height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1174428159312267&ev=PageView&noscript=1" /></noscript>
+<!-- DO NOT MODIFY -->
+<!-- End Facebook Pixel Code -->
+<!-- Begin comScore Tag -->
+
+<noscript><img decoding="async" src="https://sb.scorecardresearch.com/p?c1=2&c2=7518287&cv=2.0&cj=1" /></noscript>
+<!-- End comScore Tag -->
+<!-- End Analytics -->
+
+<!-- record page author for analytics -->
+
+<!-- end record page author --></div><div class="boing-premium-modal-placement" id="boing-3785493238"><style>
+	div.pageOverlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.4);z-index:999999}
+	div.pageOverlay *{box-sizing:border-box}
+	div.pageOverlay div.modal{
+		position:fixed;
+		top:50%;
+		left:50%;
+		transform:translate(-50%, -50%);
+		display:flex;
+		flex-direction:column;
+		justify-content:flex-start;
+		min-height:25vh;
+		width:50%;
+		background-color:#fff;
+		border:none;
+		border-radius:1em;
+		box-shadow:0 0 10px rgba(0,0,0,.3);
+		text-align:center;
+		font-family:Raleway,sans-serif;
+		color:#000;
+	}
+
+	@media screen and (max-width: 479px){ div.pageOverlay div.modal{font-size:13px;width:90%;padding:2%}}
+	@media screen and (min-width: 480px){div.pageOverlay div.modal{font-size:14px;width:80%;padding:2%}}
+	@media screen and (min-width: 608px){div.pageOverlay div.modal{font-size:14px;width:70%}}
+	@media screen and (min-width: 960px){div.pageOverlay div.modal{font-size:16px;width:70%}}
+	@media screen and (min-width: 1200px){div.pageOverlay div.modal{font-size:16px;width:840px;padding:2rem}}
+
+	div.pageOverlay div.modal *:before,div.pageOverlay div.modal *:after{content:"";display:none}
+
+	div.pageOverlay .btn-wrap {
+		position: absolute;
+		right: 10px;
+		top: 5px;
+	}
+	div.pageOverlay .btn-close {
+		cursor: pointer;
+		background-color: transparent;
+		margin: 0;
+		border-style: none;
+		padding: 0;
+		border: 0;
+		-webkit-appearance: none;
+		font-size: 200%;
+		font-weight: 700;
+		line-height: 1;
+		color: #000;
+		text-shadow: 0 1px 0 #fff;
+		opacity: .5;
+		text-transform: none;
+		overflow: visible;
+		font-family: inherit;
+		border-radius: 0;
+	}
+	div.pageOverlay div.modal .title {
+		font-size: 250%;
+		font-weight: bold;
+		margin-bottom: 1.5rem;
+		padding: 0 18px;
+	}
+	div.pageOverlay div.modal .description {
+		font-size: 200%;
+		font-weight: bold;
+		margin-bottom: 2rem;
+	}
+	div.pageOverlay div.modal .subscribe-button {
+		display: block;
+		background-color: #79b8ff;
+		color: white;
+		text-decoration: none;
+		padding: 1rem;
+		border-radius: 0.5rem;
+		font-size: 150%;
+		font-weight: bold;
+		transition: background-color 0.2s;
+	}
+	div.pageOverlay div.modal .subscribe-button:hover {
+		background-color: #5ca3ff;
+	}
+</style>
+<div class="pageOverlay" id="modalOverlay" dir="auto" style="display:none;">
+	<div class="modal" id="modalActual">
+		<div class="title">Please support Boing Boing!</div>
+		<div class="btn-wrap">
+			<button type="button" class="btn-close" id="modalCloseBtn" data-dismiss="modal" aria-label="Close">
+				<span aria-hidden="true">×</span>
+			</button>
+		</div>
+		<div class="description">Get all the day's posts in one ad-free email for just $5 a month.</div>
+		<a href="https://premium.boingboing.net/subscribe?coupon=9709a3bd" class="subscribe-button">Subscribe now!</a>
+	</div>
+</div>
+</div>
+<script type="text/javascript">
+/* <![CDATA[ */
+window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/16.0.1\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/16.0.1\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/boingboing.net\/wp-includes\/js\/wp-emoji-release.min.js?ver=6.8.3"}};
+/*! This file is auto-generated */
+!function(s,n){var o,i,e;function c(e){try{var t={supportTests:e,timestamp:(new Date).valueOf()};sessionStorage.setItem(o,JSON.stringify(t))}catch(e){}}function p(e,t,n){e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(t,0,0);var t=new Uint32Array(e.getImageData(0,0,e.canvas.width,e.canvas.height).data),a=(e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(n,0,0),new Uint32Array(e.getImageData(0,0,e.canvas.width,e.canvas.height).data));return t.every(function(e,t){return e===a[t]})}function u(e,t){e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(t,0,0);for(var n=e.getImageData(16,16,1,1),a=0;a<n.data.length;a++)if(0!==n.data[a])return!1;return!0}function f(e,t,n,a){switch(t){case"flag":return n(e,"\ud83c\udff3\ufe0f\u200d\u26a7\ufe0f","\ud83c\udff3\ufe0f\u200b\u26a7\ufe0f")?!1:!n(e,"\ud83c\udde8\ud83c\uddf6","\ud83c\udde8\u200b\ud83c\uddf6")&&!n(e,"\ud83c\udff4\udb40\udc67\udb40\udc62\udb40\udc65\udb40\udc6e\udb40\udc67\udb40\udc7f","\ud83c\udff4\u200b\udb40\udc67\u200b\udb40\udc62\u200b\udb40\udc65\u200b\udb40\udc6e\u200b\udb40\udc67\u200b\udb40\udc7f");case"emoji":return!a(e,"\ud83e\udedf")}return!1}function g(e,t,n,a){var r="undefined"!=typeof WorkerGlobalScope&&self instanceof WorkerGlobalScope?new OffscreenCanvas(300,150):s.createElement("canvas"),o=r.getContext("2d",{willReadFrequently:!0}),i=(o.textBaseline="top",o.font="600 32px Arial",{});return e.forEach(function(e){i[e]=t(o,e,n,a)}),i}function t(e){var t=s.createElement("script");t.src=e,t.defer=!0,s.head.appendChild(t)}"undefined"!=typeof Promise&&(o="wpEmojiSettingsSupports",i=["flag","emoji"],n.supports={everything:!0,everythingExceptFlag:!0},e=new Promise(function(e){s.addEventListener("DOMContentLoaded",e,{once:!0})}),new Promise(function(t){var n=function(){try{var e=JSON.parse(sessionStorage.getItem(o));if("object"==typeof e&&"number"==typeof e.timestamp&&(new Date).valueOf()<e.timestamp+604800&&"object"==typeof e.supportTests)return e.supportTests}catch(e){}return null}();if(!n){if("undefined"!=typeof Worker&&"undefined"!=typeof OffscreenCanvas&&"undefined"!=typeof URL&&URL.createObjectURL&&"undefined"!=typeof Blob)try{var e="postMessage("+g.toString()+"("+[JSON.stringify(i),f.toString(),p.toString(),u.toString()].join(",")+"));",a=new Blob([e],{type:"text/javascript"}),r=new Worker(URL.createObjectURL(a),{name:"wpTestEmojiSupports"});return void(r.onmessage=function(e){c(n=e.data),r.terminate(),t(n)})}catch(e){}c(n=g(i,f,p,u))}t(n)}).then(function(e){for(var t in e)n.supports[t]=e[t],n.supports.everything=n.supports.everything&&n.supports[t],"flag"!==t&&(n.supports.everythingExceptFlag=n.supports.everythingExceptFlag&&n.supports[t]);n.supports.everythingExceptFlag=n.supports.everythingExceptFlag&&!n.supports.flag,n.DOMReady=!1,n.readyCallback=function(){n.DOMReady=!0}}).then(function(){return e}).then(function(){var e;n.supports.everything||(n.readyCallback(),(e=n.source||{}).concatemoji?t(e.concatemoji):e.wpemoji&&e.twemoji&&(t(e.twemoji),t(e.wpemoji)))}))}((window,document),window._wpemojiSettings);
+/* ]]> */
+</script><script id="boing-ready">
+			window.advanced_ads_ready=function(e,a){a=a||"complete";var d=function(e){return"interactive"===a?"loading"!==e:"complete"===e};d(document.readyState)?e():document.addEventListener("readystatechange",(function(a){d(a.target.readyState)&&e()}),{once:"interactive"===a})},window.advanced_ads_ready_queue=window.advanced_ads_ready_queue||[];		</script><script type="text/javascript" src="https://c0.wp.com/c/6.8.3/wp-includes/js/jquery/jquery.min.js" id="jquery-core-js"></script><script type="text/javascript" src="https://c0.wp.com/c/6.8.3/wp-includes/js/jquery/jquery-migrate.min.js" id="jquery-migrate-js"></script><script type="text/javascript" id="advanced-ads-advanced-js-js-extra">
+/* <![CDATA[ */
+var advads_options = {"blog_id":"1","privacy":{"custom-cookie-name":"","custom-cookie-value":"","consent-method":"iab_tcf_20","enabled":false,"state":"not_needed"}};
+/* ]]> */
+</script><script type="text/javascript" src="https://boingboing.net/wp-content/plugins/advanced-ads/public/assets/js/advanced.min.js?ver=2.0.11" id="advanced-ads-advanced-js-js"></script><script type="text/javascript" src="https://www.googletagmanager.com/gtag/js?id=G-X0MTXTYEJ1" id="google_gtagjs-js" async></script><script type="text/javascript" id="google_gtagjs-js-after">
+/* <![CDATA[ */
+window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}
+gtag("set","linker",{"domains":["boingboing.net"]});
+gtag("js", new Date());
+gtag("set", "developer_id.dZTNiMT", true);
+gtag("config", "G-X0MTXTYEJ1");
+/* ]]> */
+</script><script type="text/javascript">
+			var advadsCfpQueue = [];
+			var advadsCfpAd = function( adID ) {
+				if ( 'undefined' === typeof advadsProCfp ) {
+					advadsCfpQueue.push( adID )
+				} else {
+					advadsProCfp.addElement( adID )
+				}
+			}
+		</script><script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-NNJ24Q2');</script><script>var unruly=window.unruly || {};unruly.native=unruly.native || {};unruly.native.siteId=1021419;</script><script src="//video.unrulymedia.com/native/native-loader.js"></script><script>!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init', '1174428159312267');fbq('track', 'PageView');</script><script data-cfasync="false" type="text/javascript">
+  var freestar = freestar || {};
+  freestar.queue = freestar.queue || [];
+  freestar.config = freestar.config || {};
+  freestar.config.enabled_slots = [];
+  freestar.initCallback = function () { (freestar.config.enabled_slots.length === 0) ? freestar.initCallbackCalled = false : freestar.newAdSlots(freestar.config.enabled_slots) }
+</script><script src="https://a.pub.network/boingboing-net/pubfig.min.js" data-cfasync="false" async></script><script type="text/javascript">ggv2id='pbtibqqw';</script><script type="text/javascript" src="https://js.gumgum.com/services.js"></script><script data-cfasync="false" type="text/javascript">
+    freestar.config.enabled_slots.push({ placementName: "boingboing_300x250_300x600_Right_2", slotId: "boingboing_300x250_300x600_Right_2" });
+  </script><script data-cfasync="false" type="text/javascript">
+    freestar.config.enabled_slots.push({ placementName: "boingboing_300x250_300x600_Right_3", slotId: "boingboing_300x250_300x600_Right_3" });
+  </script><script src="//widget.sellwild.com/boingboing/boingboing-boing-boing-home-page.js"></script><script>(function(){var advanced_ads_ga_UID="G-X0MTXTYEJ1",advanced_ads_ga_anonymIP=!!1;window.advanced_ads_check_adblocker=function(){var t=[],n=null;function e(t){var n=window.requestAnimationFrame||window.mozRequestAnimationFrame||window.webkitRequestAnimationFrame||function(t){return setTimeout(t,16)};n.call(window,t)}return e((function(){var a=document.createElement("div");a.innerHTML="&nbsp;",a.setAttribute("class","ad_unit ad-unit text-ad text_ad pub_300x250"),a.setAttribute("style","width: 1px !important; height: 1px !important; position: absolute !important; left: 0px !important; top: 0px !important; overflow: hidden !important;"),document.body.appendChild(a),e((function(){var e,o,i=null===(e=(o=window).getComputedStyle)||void 0===e?void 0:e.call(o,a),d=null==i?void 0:i.getPropertyValue("-moz-binding");n=i&&"none"===i.getPropertyValue("display")||"string"==typeof d&&-1!==d.indexOf("about:");for(var c=0,r=t.length;c<r;c++)t[c](n);t=[]}))})),function(e){"undefined"==typeof advanced_ads_adblocker_test&&(n=!0),null!==n?e(n):t.push(e)}}(),(()=>{function t(t){this.UID=t,this.analyticsObject="function"==typeof gtag;var n=this;return this.count=function(){gtag("event","AdBlock",{event_category:"Advanced Ads",event_label:"Yes",non_interaction:!0,send_to:n.UID})},function(){if(!n.analyticsObject){var e=document.createElement("script");e.src="https://www.googletagmanager.com/gtag/js?id="+t,e.async=!0,document.body.appendChild(e),window.dataLayer=window.dataLayer||[],window.gtag=function(){dataLayer.push(arguments)},n.analyticsObject=!0,gtag("js",new Date)}var a={send_page_view:!1,transport_type:"beacon"};window.advanced_ads_ga_anonymIP&&(a.anonymize_ip=!0),gtag("config",t,a)}(),this}advanced_ads_check_adblocker((function(n){n&&new t(advanced_ads_ga_UID).count()}))})();})();</script><script type="speculationrules">
+{"prefetch":[{"source":"document","where":{"and":[{"href_matches":"\/*"},{"not":{"href_matches":["\/wp-*.php","\/wp-admin\/*","\/wp-content\/uploads\/*","\/wp-content\/*","\/wp-content\/plugins\/*","\/wp-content\/themes\/boing\/*","\/*\\?(.+)"]}},{"not":{"selector_matches":"a[rel~=\"nofollow\"]"}},{"not":{"selector_matches":".no-prefetch, .no-prefetch a"}}]},"eagerness":"conservative"}]}
+</script><script type="text/javascript" async="async">
+/* <![CDATA[ */
+(()=>{"use strict";var t={164:(t,e,r)=>{function n(){return window.devicePixelRatio||1}function i(t){const e=new URL(t).searchParams.get("resize");return e?function(t){const[e,r]=t.split(",").map(Number);return isNaN(e)||isNaN(r)?null:{width:e,height:r}}(e):null}function s(t,e){if(e<=0)return!1;const r=e-t;if(r<0)return!1;if(r<50)return!0;const n=t/e;return n>.9&&n<=1}function o(t){if(!(t.getAttribute("width")&&t.getAttribute("height")&&t.srcset&&t.src&&t.src.includes(".wp.com")))return;const e=function(t){const e=n(),r=t.width/t.height,i=10*Math.ceil(t.width*e/10);return{width:i,height:Math.ceil(i/r)}}(t.getBoundingClientRect()),r=t.srcset.split(","),o=function(t,e){for(const r of t){const[t,n]=r.trim().split(" ");if(!n?.trim().endsWith("w"))continue;const o=i(t);if(o&&s(e,o.width))return{url:new URL(t),...o}}}([`${t.src} 0w`,...r],e.width);if(o)o.url.searchParams.set("_jb","closest"),r.push(`${o.url} ${window.innerWidth*n()}w`),t.srcset=r.join(","),t.sizes="auto";else{const i=function(t,e){const r=new URL(t);return r.searchParams.set("resize",`${e.width},${e.height}`),r}(t.src,e);i.searchParams.set("_jb","custom"),r.push(`${i} ${window.innerWidth*n()}w`),t.srcset=r.join(","),t.sizes="auto"}}r.d(e,{Er:()=>o})}},e={};function r(n){var i=e[n];if(void 0!==i)return i.exports;var s=e[n]={exports:{}};return t[n](s,s.exports,r),s.exports}r.d=(t,e)=>{for(var n in e)r.o(e,n)&&!r.o(t,n)&&Object.defineProperty(t,n,{enumerable:!0,get:e[n]})},r.o=(t,e)=>Object.prototype.hasOwnProperty.call(t,e);var n=r(164);document.querySelectorAll("img[loading=lazy]").forEach(n.Er)})();
+/* ]]> */
+</script><script type="text/javascript">
+			var _qevents = _qevents || [];
+
+			(function() {
+				var elem = document.createElement('script');
+				elem.src = (document.location.protocol == "https:" ? "https://secure" : "http://edge") + ".quantserve.com/quant.js";
+				elem.async = true;
+				elem.type = "text/javascript";
+				var scpt = document.getElementsByTagName('script')[0];
+				scpt.parentNode.insertBefore(elem, scpt);
+			})();
+
+			_qevents.push({
+				qacct:"p-gz35SZjJgwWt-",
+				source:"wp"
+			});
+		</script><script>window.addEventListener( 'load', function() {
+				document.querySelectorAll( 'link' ).forEach( function( e ) {'not all' === e.media && e.dataset.media && ( e.media = e.dataset.media, delete e.dataset.media );} );
+				var e = document.getElementById( 'jetpack-boost-critical-css' );
+				e && ( e.media = 'not all' );
+			} );</script><script type="text/javascript" src="https://boingboing.net/wp-content/plugins/advanced-ads/admin/assets/js/advertisement.js?ver=2.0.11" id="advanced-ads-find-adblocker-js"></script><script type="text/javascript" id="advanced-ads-pro-main-js-extra">
+/* <![CDATA[ */
+var advanced_ads_cookies = {"cookie_path":"\/","cookie_domain":""};
+var advadsCfpInfo = {"cfpExpHours":"3","cfpClickLimit":"3","cfpBan":"7","cfpPath":"","cfpDomain":"","cfpEnabled":""};
+/* ]]> */
+</script><script type="text/javascript" src="https://boingboing.net/wp-content/plugins/advanced-ads-pro/assets/dist/advanced-ads-pro.js?ver=3.0.7" id="advanced-ads-pro-main-js"></script><script type="text/javascript" id="jetpack-stats-js-before">
+/* <![CDATA[ */
+_stq = window._stq || [];
+_stq.push([ "view", JSON.parse("{\"v\":\"ext\",\"blog\":\"87954168\",\"post\":\"421667\",\"tz\":\"-7\",\"srv\":\"boingboing.net\",\"j\":\"1:15.0\"}") ]);
+_stq.push([ "clickTrackerInit", "87954168", "421667" ]);
+/* ]]> */
+</script><script type="text/javascript" src="https://stats.wp.com/e-202543.js" id="jetpack-stats-js" defer="defer" data-wp-strategy="defer"></script><script type="text/javascript" src="https://boingboing.net/wp-content/themes/boing/assets/scripts/scripts.min.js?ver=6.8.3" id="site-js-js"></script><script>!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init', '1174428159312267');fbq('track', 'PageView');</script><script>
+  var _comscore = _comscore || [];
+  _comscore.push({ c1: "2", c2: "7518287" });
+  (function() {
+    var s = document.createElement("script"), el = document.getElementsByTagName("script")[0]; s.async = true;
+    s.src = (document.location.protocol == "https:" ? "https://sb" : "http://b") + ".scorecardresearch.com/beacon.js";
+    el.parentNode.insertBefore(s, el);
+  })();
+</script><script>
+gtag('Author', 'Boing Boing')
+var waitForGlobal = function(key, callback) {
+  if (window[key]) {
+    callback();
+  } else {
+    setTimeout(function() {
+      waitForGlobal(key, callback);
+    }, 100);
+  }
+};
+ 
+waitForGlobal("ga", function() {
+  // ga('set', 'dimension1', 'Boing Boing');
+  ga('send', 'pageview', {
+    'dimension1':  'Boing Boing'
+  });
+  console.log("logged author");
+});
+</script><script>
+	const ovl = document.getElementById("modalOverlay");
+	const bClos = document.getElementById("modalCloseBtn");
+	ovl.addEventListener("click", (event) => {
+		ovl.style.display = "none";
+	});
+	modalActual.addEventListener("click", (event) => {
+		event.stopPropagation();
+	});
+	bClos.addEventListener("click", (event) => {
+		ovl.style.display = "none";
+		event.stopPropagation();
+	});
+	document.addEventListener('keydown', (event) => {
+		if (event.key === "Escape" || event.keyCode === 27) {
+			ovl.style.display = "none";
+		}
+	});
+	const bbPv = parseInt(localStorage.getItem("bbPv")) || 0;
+	if (bbPv % 5 == 0) {
+		ovl.style.display = "block";
+		console.log('showing modal, bb pageviews = ' + bbPv);
+	}
+	console.log('premium modal loaded');
+	localStorage.setItem("bbPv", bbPv+1);
+</script><script>window.advads_admin_bar_items = [{"title":"Head JS - CLS","type":"ad","count":1},{"title":"Head JS","type":"placement","count":1},{"title":"boingboing_300x250_300x600_Right_2","type":"ad","count":1},{"title":"boingboing_300x250_300x600_Right_3","type":"ad","count":1},{"title":"SellWild Homepage","type":"ad","count":1},{"title":"Homepage: end of main.container","type":"placement","count":1},{"title":"body top, gumgum","type":"ad","count":1},{"title":"body top, for gumgum","type":"placement","count":1},{"title":"Primis in-content","type":"ad","count":1},{"title":"Homepage: after first article in list","type":"placement","count":1},{"title":"Footer JS","type":"ad","count":1},{"title":"Footer JS","type":"placement","count":1},{"title":"Premium Modal","type":"ad","count":1},{"title":"Premium modal placement","type":"placement","count":1}];</script><script>!function(){window.advanced_ads_ready_queue=window.advanced_ads_ready_queue||[],advanced_ads_ready_queue.push=window.advanced_ads_ready;for(var d=0,a=advanced_ads_ready_queue.length;d<a;d++)advanced_ads_ready(advanced_ads_ready_queue[d])}();</script><script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015" integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ==" data-cf-beacon='{"version":"2024.11.0","token":"ef305b4fa5924085acc6719152468be2","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'993c0eb92caf88f5',t:'MTc2MTMzNTk5Ng=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+
+</html>
+
+<!-- plugin=object-cache-pro client=phpredis metric#hits=8717 metric#misses=776 metric#hit-ratio=91.8 metric#bytes=3184144 metric#prefetches=397 metric#store-reads=62 metric#store-writes=35 metric#store-hits=440 metric#store-misses=41 metric#sql-queries=36 metric#ms-total=466.54 metric#ms-cache=21.28 metric#ms-cache-avg=0.2217 metric#ms-cache-ratio=4.6 -->

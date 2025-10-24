@@ -100,6 +100,26 @@ void TestFangFeedDiscovery::testCase1_data()
                                                                << "https://yourkickstartersucks.tumblr.com/rss" << "";
     QTest::newRow("Mozilla Blog") << "blog.mozilla.org" << true
                                   << "https://blog.mozilla.org/en/feed/" << "";
+    QTest::newRow("KQED") << "kqed.org" << true
+                          << "https://ww2.kqed.org/news/feed/" << "";
+    QTest::newRow("KRON") << "kron4.com" << true
+                          << "https://www.kron4.com/feed/" << "";
+    QTest::newRow("McSweeney's") << "mcsweeneys.net" << true
+                                 << "https://feeds.feedburner.com/mcsweeneys" << "";
+    QTest::newRow("Planet GNOME") << "planet.gnome.org" << true
+                                  << "https://planet.gnome.org//rss20.xml" << "";
+    QTest::newRow("BoingBoing") << "boingboing.net" << true
+                                << "https://boingboing.net/feed" << "";
+    QTest::newRow("Hacker News") << "news.ycombinator.com" << true
+                                 << "rss" << "";
+    QTest::newRow("TechCrunch") << "techcrunch.com" << true
+                                << "https://techcrunch.com/feed/" << "";
+    QTest::newRow("This American Life") << "thisamericanlife.org" << true
+                                        << "https://www.thisamericanlife.org/podcast/rss.xml" << "";
+    QTest::newRow("The Guardian") << "theguardian.com" << true
+                                  << "https://www.theguardian.com/us/rss" << "";
+    QTest::newRow("City Nerd on Bluesky") << "nerd4cities.bsky.social" << true
+                                  << "https://bsky.app/profile/did:plc:wkflkbryiylhva4wg5jitzrv/rss" << "";
 
     //
     // Unusual situations /////////////////////////////////////////////////////////////////////////
