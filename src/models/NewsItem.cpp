@@ -3,7 +3,7 @@
 
 NewsItem::NewsItem(QObject *parent) :
     FangObject(parent),
-    feed(NULL),
+    feed(nullptr),
     _id(-1),
     _feedId(-1),
     title(""),

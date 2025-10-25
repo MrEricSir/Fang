@@ -22,7 +22,7 @@ public:
                               ListModel *feedList,
                               AllNewsFeedItem *allNews,
                               QQuickWindow* window,
-                              FangObject *parent = 0);
+                              FangObject *parent = nullptr);
     
 protected:
     

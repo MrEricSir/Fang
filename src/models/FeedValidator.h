@@ -23,7 +23,7 @@ class FeedValidator : public QQuickItem
     Q_PROPERTY(QString siteImageURL READ siteImageURL WRITE setSiteImageURL NOTIFY siteImageURLChanged)
     
 public:
-    explicit FeedValidator(QQuickItem *parent = 0);
+    explicit FeedValidator(QQuickItem *parent = nullptr);
     virtual ~FeedValidator() {}
     
     inline bool validating() { return _validating; }

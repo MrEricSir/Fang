@@ -14,7 +14,7 @@ class ImageGrabber : public FangObject
 {
     Q_OBJECT
 public:
-    explicit ImageGrabber(QObject *parent = 0);
+    explicit ImageGrabber(QObject *parent = nullptr);
     
 signals:
     /**

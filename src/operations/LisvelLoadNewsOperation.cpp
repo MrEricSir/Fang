@@ -12,7 +12,7 @@ void LisvelLoadNewsOperation::execute()
 {
     // For an initial load, make sure the feed isn't populated yet.
     if (getMode() == LoadNews::Initial)
-        Q_ASSERT(feedItem->getNewsList() != NULL || feedItem->getNewsList()->isEmpty());
+        Q_ASSERT(feedItem->getNewsList() != nullptr || feedItem->getNewsList()->isEmpty());
 
     // DB query/ies.
     bool dbResult = true;
@@ -57,19 +57,20 @@ void LisvelLoadNewsOperation::execute()
 
     if (getMode() == Initial) {
         // For the initial load, set the bookmark if we have one.
-        NewsItem* bookmark = NULL;
+        NewsItem* bookmark = nullptr;
 
         // Bookmark is prepended item.
-        if (listPrepend != NULL)
+        if (listPrepend != nullptr) {
             bookmark = listPrepend->first();
+        }
 
         // Set the bookmark -- or set it to -1 if there isn't one.
         feedItem->setBookmarkID(bookmark ? bookmark->getDbID() : -1);
 
         // As an optimization, we only want to present *one* list -- an append list.
         // So we rewind our prepend list on top of it, then delete the prepend list.
-        if (listPrepend != NULL) {
-            if (listAppend == NULL) {
+        if (listPrepend != nullptr) {
+            if (listAppend == nullptr) {
                 listAppend = new QList<NewsItem*>();
             }
 
@@ -79,12 +80,12 @@ void LisvelLoadNewsOperation::execute()
             }
 
             delete listPrepend;
-            listPrepend = NULL;
+            listPrepend = nullptr;
         }
     }
 
     // Append/prepend items from our lists.
-    if (listAppend != NULL)
+    if (listAppend != nullptr)
         for (NewsItem* newsItem: *listAppend) {
             // News item list.
             feedItem->getNewsList()->append(newsItem);
@@ -95,7 +96,7 @@ void LisvelLoadNewsOperation::execute()
             }
         }
 
-    if (listPrepend != NULL)
+    if (listPrepend != nullptr)
         for (NewsItem* newsItem: *listPrepend) {
             // News item list.
             feedItem->getNewsList()->prepend(newsItem);
@@ -192,7 +193,7 @@ bool LisvelLoadNewsOperation::doPrepend()
     // Delete our list if it's empty.
     if (listPrepend->size() == 0) {
         delete listPrepend;
-        listPrepend = NULL;
+        listPrepend = nullptr;
     }
 
     return true;
@@ -276,7 +277,7 @@ bool LisvelLoadNewsOperation::doAppend()
     // Delete our list if it's empty.
     if (listAppend->size() == 0) {
         delete listAppend;
-        listAppend = NULL;
+        listAppend = nullptr;
     }
 
     return true;

@@ -6,7 +6,7 @@
 SimpleStateMachine::SimpleStateMachine(QObject *parent) :
     FangObject(parent),
     currentState(-1),
-    receiver(NULL)
+    receiver(nullptr)
 {
 }
 

@@ -43,7 +43,7 @@ class SimpleStateMachine : public FangObject
     Q_OBJECT
     
 public:
-    explicit SimpleStateMachine(QObject *parent = 0);
+    explicit SimpleStateMachine(QObject *parent = nullptr);
     
 signals:
     /**

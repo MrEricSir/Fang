@@ -3,7 +3,7 @@
 
 FangSettings::FangSettings(QQuickItem *parent) :
     QQuickItem(parent),
-    dbSettings(NULL)
+    dbSettings(nullptr)
 {
 }
 

@@ -2,7 +2,7 @@
 
 BatchFeedDiscovery::BatchFeedDiscovery(QObject *parent) :
     FangObject(parent),
-    feedList(NULL)
+    feedList(nullptr)
 {
 }
 

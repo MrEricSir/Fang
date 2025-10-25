@@ -25,7 +25,7 @@ class FangSettings : public QQuickItem
     Q_PROPERTY(QString refresh READ getRefresh WRITE setRefresh NOTIFY refreshChanged)
     
 public:
-    explicit FangSettings(QQuickItem *parent = 0);
+    explicit FangSettings(QQuickItem *parent = nullptr);
 
     /**
      * @brief The stuff the settings object needs to do its job properly.

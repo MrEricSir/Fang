@@ -4,8 +4,8 @@
 LoadNews::LoadNews(OperationManager *parent, FeedItem* feedItem, LoadMode mode, int loadLimit) :
     DBOperation(IMMEDIATE, parent),
     feedItem(feedItem),
-    listAppend(NULL),
-    listPrepend(NULL),
+    listAppend(nullptr),
+    listPrepend(nullptr),
     mode(mode),
     loadLimit(loadLimit)
 {
@@ -133,7 +133,7 @@ bool LoadNews::executeLoadQuery(qint64 startId, bool append)
 qint64 LoadNews::getStartIDForAppend()
 {
     qint64 startId = -1;
-    if (feedItem->getNewsList() != NULL && feedItem->getNewsList()->size() > 0) {
+    if (feedItem->getNewsList() != nullptr && feedItem->getNewsList()->size() > 0) {
         startId = feedItem->getNewsList()->last()->getDbID() + 1; // Advance to next item
     }
 
@@ -143,7 +143,7 @@ qint64 LoadNews::getStartIDForAppend()
 qint64 LoadNews::getStartIDForPrepend()
 {
     qint64 startId = -1;
-    if (feedItem->getNewsList() != NULL && feedItem->getNewsList()->size() > 0) {
+    if (feedItem->getNewsList() != nullptr && feedItem->getNewsList()->size() > 0) {
         startId = feedItem->getNewsList()->first()->getDbID();
     }
 
@@ -168,7 +168,7 @@ void LoadNews::execute()
     case Initial:
     {
         // For an initial load, make sure the feed isn't populated yet.
-        Q_ASSERT(feedItem->getNewsList() == NULL || feedItem->getNewsList()->isEmpty());
+        Q_ASSERT(feedItem->getNewsList() == nullptr || feedItem->getNewsList()->isEmpty());
             
         qint64 startId = bookmarkID;
         if (startId > 0) {
@@ -190,7 +190,7 @@ void LoadNews::execute()
     case Append:
     {
         dbResult &= doAppend(getStartIDForAppend());
-        //qDebug() << "Adding: " << (listAppend != NULL ? listAppend->size() : 0);
+        //qDebug() << "Adding: " << (listAppend != nullptrNULL ? listAppend->size() : 0);
         
         break;
     }
@@ -215,12 +215,12 @@ void LoadNews::execute()
     }
     
     // Append/prepend items from our lists.
-    if (listAppend != NULL)
+    if (listAppend != nullptr)
         for (NewsItem* newsItem: *listAppend) {
             feedItem->getNewsList()->append(newsItem);
         }
     
-    if (listPrepend != NULL)
+    if (listPrepend != nullptr)
         for (NewsItem* newsItem: *listPrepend) {
             feedItem->getNewsList()->prepend(newsItem);
         }

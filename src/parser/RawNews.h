@@ -14,7 +14,7 @@ class RawNews : public FangObject
 {
     Q_OBJECT
 public:
-    explicit RawNews(QObject *parent = 0);
+    explicit RawNews(QObject *parent = nullptr);
     
     virtual ~RawNews() {}
     

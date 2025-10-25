@@ -8,7 +8,7 @@ class FolderFeedItem : public LisvelFeedItem
 {
     Q_OBJECT
 public:
-    explicit FolderFeedItem(const qint64 id, const qint32 ordinal, const QString &title, bool folder_open, QObject *parent = 0);
+    explicit FolderFeedItem(const qint64 id, const qint32 ordinal, const QString &title, bool folder_open, QObject *parent = nullptr);
 
 public slots:
 

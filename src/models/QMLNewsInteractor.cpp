@@ -7,8 +7,8 @@
 
 QMLNewsInteractor::QMLNewsInteractor(QQuickItem *parent) :
     QQuickItem(parent),
-    manager(NULL),
-    feedList(NULL),
+    manager(nullptr),
+    feedList(nullptr),
     windowHeight(0)
 {
     
@@ -51,7 +51,7 @@ void QMLNewsInteractor::orderChanged()
 //    for (int i = 0; i < feedList->rowCount(); i++)
 //    {
 //        FeedItem* feed = qobject_cast<FeedItem*>(feedList->row(i));
-//        Q_ASSERT(feed != NULL);
+//        Q_ASSERT(feed != nullptr);
         
 //        if (feed->isSpecialFeed())
 //            continue; // Skip special feeds.

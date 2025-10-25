@@ -150,7 +150,7 @@ void FaviconGrabber::onRequestFinished(QNetworkReply * reply)
 void FaviconGrabber::onWebGrabberReady(QString *document)
 {
     // Could indicate no internet.
-    if (document == NULL || document->isEmpty()) {
+    if (document == nullptr || document->isEmpty()) {
         machine.setState(CHECK_ICONS);
         
         return;

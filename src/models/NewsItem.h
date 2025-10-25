@@ -17,7 +17,7 @@ class NewsItem : public FangObject
     
 public:
     
-    NewsItem(QObject *parent = 0);
+    NewsItem(QObject *parent = nullptr);
     
     // This is the c'tor you'll want to use.
     explicit NewsItem(

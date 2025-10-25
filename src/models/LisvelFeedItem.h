@@ -21,7 +21,7 @@ class LisvelFeedItem : public FeedItem
 {
     Q_OBJECT
 public:
-    explicit LisvelFeedItem(const qint64 id, const qint32 ordinal, const QString &title, QObject *parent = 0);
+    explicit LisvelFeedItem(const qint64 id, const qint32 ordinal, const QString &title, QObject *parent = nullptr);
 
     /**
      * @brief When the feed changes away from all news, this kills the view.

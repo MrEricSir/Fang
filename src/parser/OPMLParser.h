@@ -18,7 +18,7 @@ class OPMLParser : public FangObject
 {
     Q_OBJECT
 public:
-    explicit OPMLParser(QObject *parent = 0);
+    explicit OPMLParser(QObject *parent = nullptr);
     virtual ~OPMLParser();
     
 signals:

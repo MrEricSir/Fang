@@ -19,7 +19,7 @@ class ListItem: public FangObject {
   Q_OBJECT
  
 public:
-  ListItem(QObject* parent = 0) : FangObject(parent) {}
+  ListItem(QObject* parent = nullptr) : FangObject(parent) {}
   virtual ~ListItem() {}
   virtual QString id() const { return "invalid id"; }
   virtual QVariant data(int role) const { Q_UNUSED(role); return QVariant(); }
@@ -41,7 +41,7 @@ class ListModel : public QAbstractListModel
   Q_PROPERTY(int count READ count NOTIFY countChanged)
   
 public:
-  explicit ListModel(ListItem* prototype, QObject* parent = 0);
+  explicit ListModel(ListItem* prototype, QObject* parent = nullptr);
   ~ListModel();
   int rowCount(const QModelIndex &parent = QModelIndex()) const;
   inline int count() const { return rowCount(); }

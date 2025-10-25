@@ -18,7 +18,7 @@ class FangObject : public QObject
 {
     Q_OBJECT
 public:
-    explicit FangObject(QObject *parent = 0);
+    explicit FangObject(QObject *parent = nullptr);
     virtual ~FangObject();
     
     static void printRemainingObjects();

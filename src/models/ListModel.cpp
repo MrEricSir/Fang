@@ -10,7 +10,7 @@
 #include <QDebug>
  
 ListModel::ListModel(ListItem* prototype, QObject *parent) :
-    QAbstractListModel(parent), m_prototype(prototype), _selected(NULL)
+    QAbstractListModel(parent), m_prototype(prototype), _selected(nullptr)
 {
     // Populate our _roleNames reverse lookup map.
     QHash<int, QByteArray> roleNames = m_prototype->roleNames();
@@ -27,15 +27,17 @@ int ListModel::rowCount(const QModelIndex &parent) const
 
 QVariant ListModel::data(const QModelIndex &index, int role) const
 {
-  if(index.row() < 0 || index.row() >= m_list.size())
-    return QVariant();
-  return m_list.at(index.row())->data(role);
+    if(index.row() < 0 || index.row() >= m_list.size()) {
+        return QVariant();
+    }
+    return m_list.at(index.row())->data(role);
 }
 
 QVariant ListModel::dataByField(int row, const QString &field_name) const
 {
-    if(row < 0 || row >= m_list.size())
+    if(row < 0 || row >= m_list.size()) {
       return QVariant();
+    }
 
     int roleIndex = roleNameToRole(field_name);
     Q_ASSERT(roleIndex >= 0);
@@ -45,16 +47,18 @@ QVariant ListModel::dataByField(int row, const QString &field_name) const
 
 bool ListModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
-    if(index.row() < 0 || index.row() >= m_list.size())
+    if(index.row() < 0 || index.row() >= m_list.size()) {
       return false;
+    }
     
     return m_list.at(index.row())->setData(value, role);
 }
 
 void ListModel::setData(int row, const QString &field_name, QVariant new_value)
 {
-    if (row < 0 || row >= m_list.size())
+    if (row < 0 || row >= m_list.size()) {
       return;
+    }
     
     QHash<int, QByteArray> roleNames = m_list.at(row)->roleNames();
     foreach(int roleIndex, roleNames.keys()) {
@@ -72,8 +76,9 @@ void ListModel::setData(int row, const QString &field_name, QVariant new_value)
 
 Qt::ItemFlags ListModel::flags(const QModelIndex &index) const
 {
-    if(index.row() < 0 || index.row() >= m_list.size())
+    if(index.row() < 0 || index.row() >= m_list.size()) {
       return Qt::NoItemFlags;
+    }
     
     return m_list.at(index.row())->flags();
 }
@@ -81,8 +86,9 @@ Qt::ItemFlags ListModel::flags(const QModelIndex &index) const
 void ListModel::move(int from, int to)
 {
     // From: https://qt.gitorious.org/qt-labs/qml-object-model/source/7c2207640a65dc59a420ebf71a45e38350840313:qobjectlistmodel.cpp
-    if (!beginMoveRows(QModelIndex(), from, from, QModelIndex(), to > from ? to+1 : to))
+    if (!beginMoveRows(QModelIndex(), from, from, QModelIndex(), to > from ? to+1 : to)) {
         return;
+    }
     
     m_list.move(from, to);
     endMoveRows();
@@ -130,8 +136,9 @@ void ListModel::handleItemChange()
 {
   ListItem* item = static_cast<ListItem*>(sender());
   QModelIndex index = indexFromItem(item);
-  if(index.isValid())
+  if(index.isValid()) {
     emit dataChanged(index, index);
+  }
 }
  
 ListItem * ListModel::find(const QString &id) const
@@ -146,7 +153,7 @@ QModelIndex ListModel::indexFromItem(const ListItem *item) const
 {
   Q_ASSERT(item);
   for(int row=0; row<m_list.size(); ++row) {
-    if(m_list.at(row) == item) return index(row);
+      if(m_list.at(row) == item) return index(row);
   }
   return QModelIndex();
 }
@@ -187,7 +194,7 @@ int ListModel::roleNameToRole(const QString &field_name) const
 bool ListModel::removeRow(int row, const QModelIndex &parent)
 {
   Q_UNUSED(parent);
-  ListItem* toRemove = NULL;
+  ListItem* toRemove = nullptr;
   if(row < 0 || row >= m_list.size()) return false;
   beginRemoveRows(QModelIndex(), row, row);
   toRemove = m_list.takeAt(row);
@@ -227,8 +234,9 @@ bool ListModel::removeItem(const ListItem *item)
     
     qDebug() << "Remove item at: " << row;
     
-    if (row == -1)
+    if (row == -1) {
         return false; // Not found.
+    }
     
     return removeRow(row);
 }

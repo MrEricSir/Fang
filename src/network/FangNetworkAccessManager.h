@@ -10,7 +10,7 @@ class FangNetworkAccessManager : public QNetworkAccessManager
 {
     Q_OBJECT
 public:
-    explicit FangNetworkAccessManager(QObject *parent = 0);
+    explicit FangNetworkAccessManager(QObject *parent = nullptr);
     
 signals:
     

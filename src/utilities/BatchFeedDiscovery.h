@@ -30,7 +30,7 @@ class BatchFeedDiscovery : public FangObject
 {
     Q_OBJECT
 public:
-    explicit BatchFeedDiscovery(QObject *parent = 0);
+    explicit BatchFeedDiscovery(QObject *parent = nullptr);
     
 signals:
     

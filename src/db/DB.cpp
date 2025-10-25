@@ -6,7 +6,7 @@
 #include <QStandardPaths>
 #include <QSqlError>
 
-DB* DB::_instance = NULL;
+DB* DB::_instance = nullptr;
 
 DB::DB(QObject *parent) :
     FangObject(parent)

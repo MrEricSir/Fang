@@ -76,7 +76,7 @@ void OperationManager::runNextOperations()
         
         i++;
         Operation* operation = queue.dequeue();
-        if (operation == NULL) {
+        if (operation == nullptr) {
             qDebug() << "Op null";
             continue;
         }

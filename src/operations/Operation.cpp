@@ -25,7 +25,7 @@ void Operation::reportError(const QString& errorString)
 
 void Operation::requireObject(QObject *object)
 {
-    Q_ASSERT(object != NULL);
+    Q_ASSERT(object != nullptr);
     connect(object, &QObject::destroyed, this, &Operation::onRequiredQObjectDestroyed);
 }
 

@@ -1,7 +1,7 @@
 #include "SimpleHTTPDownloader.h"
 
 SimpleHTTPDownloader::SimpleHTTPDownloader(int timeoutMS, QObject *parent) :
-    FangObject(parent), timeoutMS(timeoutMS), currentReply(NULL), redirectAttempts(0)
+    FangObject(parent), timeoutMS(timeoutMS), currentReply(nullptr), redirectAttempts(0)
 {
     timeout.setSingleShot(true);
 

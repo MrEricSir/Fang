@@ -45,7 +45,7 @@ public:
         SelfRole
     };
     
-    FeedItem(QObject *parent = 0);
+    FeedItem(QObject *parent = nullptr);
     
     // This class is immutable, so this is the c'tor you'll want to use.
     explicit FeedItem(
@@ -62,7 +62,7 @@ public:
             const QDateTime& lastIconUpdate,
             qint64 parentFolder = -1, // Default values for top level non-folder.
             bool folderOpen = true,   // TODO: Save folder open state from last session.
-            QObject *parent = 0);
+            QObject *parent = nullptr);
     
     virtual ~FeedItem();
     

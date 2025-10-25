@@ -59,7 +59,7 @@ void TestFangParser::parseTest()
     QCOMPARE(spy.count(), 1);
     
     RawFeed* feed = parser.getFeed();
-    QVERIFY2(feed != NULL, "Feed was null");
+    QVERIFY2(feed != nullptr, "Feed was null");
     
     // Check all dates in the feed for validity, as this is a common issue.
     foreach (RawNews* newsItem, feed->items) {

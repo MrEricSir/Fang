@@ -11,8 +11,8 @@ RemoveFeedOperation::RemoveFeedOperation(OperationManager *parent, FeedItem* fee
     feed(feed),
     feedList(feedList)
 {
-    Q_ASSERT(feed != NULL);
-    Q_ASSERT(feedList != NULL);
+    Q_ASSERT(feed != nullptr);
+    Q_ASSERT(feedList != nullptr);
 }
 
 void RemoveFeedOperation::execute()

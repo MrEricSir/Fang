@@ -33,7 +33,7 @@ void LoadAllFeedsOperation::execute()
     
     QList<ListItem*> tempFeedItemList; // Use ListItem so we can do an appendAll later.
     while (query.next()) {
-        FeedItem* item = NULL;
+        FeedItem* item = nullptr;
         bool isFolder = query.value("is_folder").toBool();
         if (isFolder) {
             item = new FolderFeedItem(
@@ -41,7 +41,7 @@ void LoadAllFeedsOperation::execute()
                         query.value("ordinal").toInt(),
                         query.value("title").toString(),
                         query.value("folder_open").toBool(),
-                        NULL
+                        nullptr
                         );
         } else {
             item = new FeedItem(
@@ -58,7 +58,7 @@ void LoadAllFeedsOperation::execute()
                         QDateTime::fromMSecsSinceEpoch(query.value("lastIconUpdate").toLongLong()),
                         query.value("parent_folder").toULongLong(),
                         query.value("folder_open").toBool(),
-                        NULL
+                        nullptr
                         );
         }
         

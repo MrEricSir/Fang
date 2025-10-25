@@ -7,9 +7,9 @@ InsertFolderOperation::InsertFolderOperation(OperationManager *parent, int newIn
       newIndex(newIndex),
       name(name),
       feedList(feedList),
-      newItem(NULL)
+      newItem(nullptr)
 {
-    Q_ASSERT(feedList != NULL);
+    Q_ASSERT(feedList != nullptr);
 }
 
 InsertFolderOperation::~InsertFolderOperation()

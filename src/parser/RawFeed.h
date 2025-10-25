@@ -11,7 +11,7 @@ class RawFeed : public FangObject
     Q_OBJECT
     
 public:
-    explicit RawFeed(QObject *parent = 0);
+    explicit RawFeed(QObject *parent = nullptr);
     virtual ~RawFeed();
     
     QString title;

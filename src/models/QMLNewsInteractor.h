@@ -24,7 +24,7 @@ class QMLNewsInteractor : public QQuickItem
 
 
 public:
-    explicit QMLNewsInteractor(QQuickItem *parent = 0);
+    explicit QMLNewsInteractor(QQuickItem *parent = nullptr);
     virtual ~QMLNewsInteractor() {}
     
     /**

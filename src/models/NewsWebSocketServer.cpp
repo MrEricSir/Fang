@@ -10,10 +10,10 @@
 NewsWebSocketServer::NewsWebSocketServer(QObject *parent) :
     QObject(parent),
     server("Fang WebSocket", QWebSocketServer::NonSecureMode),
-    pSocket(NULL),
+    pSocket(nullptr),
     isReady(false),
     loadInProgress(true),
-    fangSettings(NULL)
+    fangSettings(nullptr)
 {
     // Listen for incoming connections!
     if (!server.listen(QHostAddress::LocalHost, 2842)) {
@@ -177,7 +177,7 @@ void NewsWebSocketServer::onLoadNewsFinished(LoadNews *loader)
     document.insert("firstNewsID", currentFeed->getFirstNewsID());
 
     // Build our news list.
-    if (loader->getPrependList() != NULL) {
+    if (loader->getPrependList() != nullptr) {
         if (loader->getMode() == LoadNews::Initial) {
             // Reverse list.
             for (int i = loader->getPrependList()->size() - 1; i >= 0; i--) {
@@ -192,7 +192,7 @@ void NewsWebSocketServer::onLoadNewsFinished(LoadNews *loader)
     }
 
     // Stuff the new items into our feed.
-    if (loader->getAppendList() != NULL) {
+    if (loader->getAppendList() != nullptr) {
         foreach(NewsItem* item, *loader->getAppendList()) {
             addNewsItem(item, &newsList);
         }

@@ -112,7 +112,7 @@ void TestWebPageGrabber::testCase2()
         QVERIFY(document);
     } else {
         // Make sure we got nothin' back.
-        QVERIFY(document == NULL);
+        QVERIFY(document == nullptr);
     }
 }
 

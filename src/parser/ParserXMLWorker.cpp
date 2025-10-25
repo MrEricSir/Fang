@@ -2,7 +2,7 @@
 #include <QtCore/qtimezone.h>
 
 ParserXMLWorker::ParserXMLWorker(QObject *parent) :
-    FangObject(parent), feed(NULL), currentItem(NULL), isValid(false), inAtomXHTML(false)
+    FangObject(parent), feed(nullptr), currentItem(nullptr), isValid(false), inAtomXHTML(false)
 {
 }
 
@@ -61,7 +61,7 @@ void ParserXMLWorker::addXML(QByteArray data)
             xml.error() != QXmlStreamReader::NotWellFormedError) {
         isValid = false;
         qWarning() << "XML ERROR:" << xml.lineNumber() << ": " << xml.errorString();
-        emit done(NULL);
+        emit done(nullptr);
     }
     
 }
@@ -131,7 +131,7 @@ void ParserXMLWorker::elementEnd()
     
     if ((tagName == "item" || tagName == "entry") && !inAtomXHTML) {
         //qDebug() << "End element:" << xml.name().toString();
-        if (currentItem == NULL) {
+        if (currentItem == nullptr) {
             // Throw some kinda error, this can't happen.
             qDebug() << "Current item is null!";
             qDebug() << "Current title: " << title;
@@ -184,7 +184,7 @@ void ParserXMLWorker::elementEnd()
         
         
         feed->items.append(currentItem);
-        currentItem = NULL;
+        currentItem = nullptr;
         
         // Clear all strings.
         title = "";

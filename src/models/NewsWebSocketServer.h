@@ -13,7 +13,7 @@ class NewsWebSocketServer : public QObject
 {
     Q_OBJECT
 public:
-    explicit NewsWebSocketServer(QObject *parent = 0);
+    explicit NewsWebSocketServer(QObject *parent = nullptr);
 
     // Users MUST call this before using any method.
     void init(FangSettings *fangSettings);

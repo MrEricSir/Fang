@@ -21,9 +21,9 @@ public:
     
     /**
      * @brief Sets or clears the saved window ID.
-     * @param Either the program's main window, or null.
+     * @param Either the program's main window, or nullptr.
      */
-    void setWindow(QWindow* window = NULL);
+    void setWindow(QWindow* window = nullptr);
     
 private:
     WId checkWindow();

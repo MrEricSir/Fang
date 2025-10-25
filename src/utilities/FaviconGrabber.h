@@ -28,7 +28,7 @@ private:
     };
     
 public:
-    explicit FaviconGrabber(QObject *parent = 0);
+    explicit FaviconGrabber(QObject *parent = nullptr);
     
 signals:
     /**

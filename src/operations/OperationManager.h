@@ -15,7 +15,7 @@ class OperationManager : public FangObject
 {
     Q_OBJECT
 public:
-    explicit OperationManager(QObject *parent = 0);
+    explicit OperationManager(QObject *parent = nullptr);
     virtual ~OperationManager();
     
 signals:
