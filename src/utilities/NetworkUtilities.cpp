@@ -49,8 +49,23 @@ void NetworkUtilities::fakeBrowserHeaders(QNetworkRequest* request)
                           "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
 }
 
-QString NetworkUtilities::urlFixup(const QString &url)
+QString NetworkUtilities::urlFixup(const QString &url, QUrl baseURL)
 {
+
+    QUrl qURL(url);
+
+    // If the URL is valid and not relative, there's nothing more to do.
+    if (!qURL.isRelative() && qURL.isValid()) {
+        return url;
+    }
+
+    // If the URL is relative, try prepending the base URL.
+    if (qURL.isRelative() && !baseURL.isRelative()) {
+        QUrl urlRet(baseURL.toString() + "//" + url);
+        return urlRet.toString();
+    }
+
+    // Attempt to correct basic protocol errors.
     if (url.startsWith("//")) {
         // Just assume it's http.
         return "http:" + url;

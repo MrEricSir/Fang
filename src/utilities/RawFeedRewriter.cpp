@@ -21,7 +21,7 @@
 
 RawFeedRewriter::RawFeedRewriter(QObject *parent) :
     FangObject(parent),
-    newsList(NULL),
+    newsList(nullptr),
     webPageGrabber(false),
     imageGrabber(),
     intID(0)
@@ -121,7 +121,7 @@ QString RawFeedRewriter::rewriteFirstPass(const QString &document, QSet<QUrl> &i
     // XHTML.  This will add a doctype and other unwanted headers/footers, so we strip those
     // out in a separate post-processing method.  You'll see.
     QString* doc = webPageGrabber.load("<html><body>" + document + "</body></html>");
-    if (doc == NULL) {
+    if (doc == nullptr) {
         qDebug() << "Error loading HTML document";
 
         return "";

@@ -27,7 +27,7 @@ class SimpleHTTPDownloader : public FangObject
 {
     Q_OBJECT
 public:
-    explicit SimpleHTTPDownloader(int timeoutMS = 5000, QObject *parent = 0);
+    explicit SimpleHTTPDownloader(int timeoutMS = 5000, QObject *parent = nullptr);
     ~SimpleHTTPDownloader();
 
 signals:
