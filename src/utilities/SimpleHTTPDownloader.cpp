@@ -14,7 +14,7 @@ SimpleHTTPDownloader::~SimpleHTTPDownloader()
 {
     if (currentReply) {
         currentReply->deleteLater();
-        currentReply = NULL;
+        currentReply = nullptr;
     }
 }
 
@@ -31,7 +31,7 @@ void SimpleHTTPDownloader::loadInternal(const QUrl &url)
     // Delete last reply if needed.
     if (currentReply) {
         currentReply->deleteLater();
-        currentReply = NULL;
+        currentReply = nullptr;
     }
 
     if (url.isRelative()) {
@@ -94,7 +94,7 @@ void SimpleHTTPDownloader::onTimeout()
     if (currentReply) {
         currentReply->abort();
         currentReply->deleteLater();
-        currentReply = NULL;
+        currentReply = nullptr;
 
         emit error("SimpleHTTPDownloader timeout!");
     }

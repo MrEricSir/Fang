@@ -44,7 +44,7 @@ class RawFeedRewriter : public FangObject
 {
     Q_OBJECT
 public:
-    explicit RawFeedRewriter(QObject *parent = 0);
+    explicit RawFeedRewriter(QObject *parent = nullptr);
     
     
 signals:

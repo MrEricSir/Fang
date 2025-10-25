@@ -161,9 +161,9 @@ void FeedDiscovery::onPageGrabberReady(QString *document)
     // Check if the page contains a URL.
     QString newUrl = "";
     if (atomURL.size()) {
-        newUrl = NetworkUtilities::urlFixup(atomURL);
+        newUrl = NetworkUtilities::urlFixup(atomURL, _feedURL);
     } else if (rssURL.size()) {
-        newUrl = NetworkUtilities::urlFixup(rssURL);
+        newUrl = NetworkUtilities::urlFixup(rssURL, _feedURL);
     }
     
     // If we got one, set it and try again!

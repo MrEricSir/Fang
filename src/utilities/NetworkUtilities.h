@@ -37,9 +37,9 @@ public:
     static void fakeBrowserHeaders(QNetworkRequest* request);
 
     /**
-     * @brief (Attempts to) fix a missing protocol on a URL.
+     * @brief (Attempts to) fix a missing protocol or base URL on a URL.
      */
-    static QString urlFixup(const QString& url);
+    static QString urlFixup(const QString& url, QUrl baseURL = QUrl());
 };
 
 #endif // NETWORKUTILITIES_H
