@@ -127,10 +127,8 @@ void TestWebPageGrabber::testCase2_data()
     QTest::newRow("Nope.") << QUrl("http://safjdsafalskdfjasdlf")
                            << false;
 
-    // TODO: This is disabled because of a problem with OpenSSL for OS X.
-    //       Qt says they'll have a new SSL backend on Mac soon(?)
-//    QTest::newRow("Google") << QUrl("https://www.google.com/")
-//                           << true;
+    QTest::newRow("Google") << QUrl("https://www.google.com/")
+                            << true;
 }
 
 
