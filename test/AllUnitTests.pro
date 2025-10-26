@@ -7,5 +7,6 @@ SUBDIRS = TestFangFaviconGrabber \
           TestFangParser \
           TestFangSimpleStateMachine \
           TestRawFeedRewriter \
+          TestURLFixup \
           TestWebPageGrabber
 

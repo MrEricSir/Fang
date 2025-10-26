@@ -12,7 +12,7 @@ class TestFangFaviconGrabberTest : public QObject
 public:
     TestFangFaviconGrabberTest();
     
-private Q_SLOTS:
+private slots:
     void initTestCase();
     void cleanupTestCase();
     void testCase1();
