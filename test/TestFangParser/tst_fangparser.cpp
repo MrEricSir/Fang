@@ -37,7 +37,7 @@ void TestFangParser::parseTest()
     
     NewsParser parser(this);
     
-    QSignalSpy spy(&parser, SIGNAL(done()));
+    QSignalSpy spy(&parser, &NewsParser::done);
 
     QString projectPath = PROJECT_PATH;
     QString fullFilename = projectPath + "/feeds/" + filename;

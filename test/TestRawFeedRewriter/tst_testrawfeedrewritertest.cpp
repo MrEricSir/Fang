@@ -37,7 +37,7 @@ void TestRawFeedRewriterTest::testCase1()
     
     // Send it to the rewriter.
     RawFeedRewriter rewriter;
-    QSignalSpy spy(&rewriter, SIGNAL(finished()));
+    QSignalSpy spy(&rewriter, &RawFeedRewriter::finished);
     rewriter.rewrite(&newsList);
     
     if (!spy.count()) {

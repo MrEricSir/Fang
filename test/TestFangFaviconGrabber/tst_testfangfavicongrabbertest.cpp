@@ -37,7 +37,7 @@ void TestFangFaviconGrabberTest::testCase1()
     QFETCH(QUrl, faviconURL);
     
     FaviconGrabber fg;
-    QSignalSpy spy(&fg, SIGNAL(finished(QUrl)));
+    QSignalSpy spy(&fg, &FaviconGrabber::finished);
     fg.find(QUrl(siteURL));
     
     // Wait for the signal!

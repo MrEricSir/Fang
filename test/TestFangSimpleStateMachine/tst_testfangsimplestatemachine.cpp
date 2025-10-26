@@ -78,7 +78,7 @@ void TestFangSimpleStateMachine::onStateComplete()
 
 void TestFangSimpleStateMachine::testCase1()
 {
-    QSignalSpy spy(this, SIGNAL(done()));
+    QSignalSpy spy(this, &TestFangSimpleStateMachine::done);
     
     machine.start(START);
     machine.setState(STATE_A);
