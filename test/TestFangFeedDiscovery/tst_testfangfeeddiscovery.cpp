@@ -13,7 +13,7 @@ class TestFangFeedDiscovery : public QObject
 public:
     TestFangFeedDiscovery();
     
-private Q_SLOTS:
+private slots:
     void testCase1();
     void testCase1_data();
     

@@ -12,7 +12,7 @@ class TestRawFeedRewriterTest : public QObject
 public:
     TestRawFeedRewriterTest();
     
-private Q_SLOTS:
+private slots:
     void testCase1();
     void testCase1_data();
 };

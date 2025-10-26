@@ -61,7 +61,17 @@ QString NetworkUtilities::urlFixup(const QString &url, QUrl baseURL)
 
     // If the URL is relative, try prepending the base URL.
     if (qURL.isRelative() && !baseURL.isRelative()) {
-        QUrl urlRet(baseURL.toString() + "//" + url);
+        QUrl urlRet(baseURL);
+        if (url.startsWith("/")) {
+            // Absolute path
+            urlRet.setPath(url);
+        } else {
+            // Relative path
+            QString urlPath = baseURL.path() + "/" + url; // Build new path
+            urlPath = urlPath.replace("//", "/");  // Remove redudant slashes
+            urlRet.setPath(urlPath);
+        }
+
         return urlRet.toString();
     }
 
@@ -72,6 +82,9 @@ QString NetworkUtilities::urlFixup(const QString &url, QUrl baseURL)
     } else if (url.startsWith("/")) {
         // Same as above, but we have to add an extra slash.
         return "http:/" + url;
+    } else if (url.startsWith(":")) {
+        // Starts with a :, assume everything after it is valid.
+        return "http" + url;
     }
 
     if (!url.contains(':') && url.size() && url.at(0).isLetterOrNumber()) {

@@ -32,7 +32,7 @@ class TestWebPageGrabber : public QObject
 public:
     TestWebPageGrabber();
 
-private Q_SLOTS:
+private slots:
     void testCase1_data();
     void testCase1();
 

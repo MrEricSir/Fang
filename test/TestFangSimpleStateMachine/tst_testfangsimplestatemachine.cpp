@@ -27,7 +27,7 @@ public slots:
     void onStateB();
     void onStateComplete();
     
-private Q_SLOTS:
+private slots:
     void initTestCase();
     void cleanupTestCase();
     void testCase1();

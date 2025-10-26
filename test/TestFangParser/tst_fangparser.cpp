@@ -15,7 +15,7 @@ class TestFangParser : public QObject
 public:
     TestFangParser();
     
-private Q_SLOTS:
+private slots:
     void parseTest();
     void parseTest_data();
 };
