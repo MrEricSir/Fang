@@ -10,9 +10,7 @@
 #include <QMap>
 
 #include "operations/OperationManager.h"
-#include "operations/FaviconUpdateOperation.h"
 
-#include "models/NewsItem.h"
 #include "models/FeedItem.h"
 #include "models/AllNewsFeedItem.h"
 #include "models/PinnedFeedItem.h"
@@ -20,7 +18,7 @@
 #include "models/FangSettings.h"
 #include "models/QMLNewsInteractor.h"
 #include "models/NewsWebSocketServer.h"
-#include "parser/NewsParser.h"
+#include "parser/RawFeed.h"
 #include "FangObject.h"
 #include "notifications/NotificationBase.h"
 #include "utilities/SingleInstanceCheck.h"

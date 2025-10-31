@@ -16,6 +16,8 @@
 #include "operations/LoadFolderOperation.h"
 #include "operations/LoadPinnedNewsOperation.h"
 #include "operations/InsertFolderOperation.h"
+#include "operations/MarkAllReadOrUnreadOperation.h"
+#include "operations/FaviconUpdateOperation.h"
 
 #if defined(Q_OS_MAC)
     #include "notifications/NotificationMac.h"
@@ -698,11 +700,11 @@ int FangApp::insertFolder(int newIndex)
 
 void FangApp::markAllAsRead(FeedItem* feed)
 {
-    // TODO
+    manager.add(new MarkAllReadOrUnreadOperation(&manager, feed, true));
 }
 
 void FangApp::markAllAsUnread(FeedItem* feed)
 {
-    // TODO
+    manager.add(new MarkAllReadOrUnreadOperation(&manager, feed, false));
 }
 

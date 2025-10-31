@@ -269,8 +269,10 @@ Window {
                 onFeedDoubleClicked: news.jumpToBookmark();
                 onOrderChanged: news.orderChanged();
                 onHelpClicked: news.showWelcome();
-                onRefreshFeedClicked: (id) => { news.refreshFeed(id); }
+                onRefreshFeedClicked: (feed) => { news.refreshFeed(feed); }
                 onRefreshCurrentFeedClicked: news.refreshCurrentFeed();
+                onMarkAllAsUnreadClicked: (feed) => { news.markAllAsUnread(feed); }
+                onMarkAllAsReadClicked: (feed) => { news.markAllAsRead(feed); }
 
                 onSettingsClicked: openDialog("SettingsDialog.qml");
                 onAddClicked: openDialog("AddDialog.qml");

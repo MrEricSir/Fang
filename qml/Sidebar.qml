@@ -10,7 +10,9 @@ Item {
     signal addClicked();
     signal removeClicked();
     signal editClicked();
-    signal refreshFeedClicked(int id);
+    signal refreshFeedClicked(var feed);
+    signal markAllAsReadClicked(var feed);
+    signal markAllAsUnreadClicked(var feed);
     signal refreshCurrentFeedClicked();
     signal closeClicked();
     signal feedSelected();
@@ -150,6 +152,9 @@ Item {
                     
                     delegate: FeedTitleDelegate {
                         id: titleDelegate;
+
+                        // Represents this current feed when its index is valid (not being removed, etc.)
+                        readonly property var thisFeed: index >= 0 ? feedListView.model.rowAs(index) : null;
                         
                         // This sets the selected item in the C++ layer.
                         ListView.onIsCurrentItemChanged: {
@@ -183,28 +188,28 @@ Item {
                             //
                             MenuItem {
                                 text: "Refresh";
-                                onTriggered: refreshFeedClicked(uid);
+                                onTriggered: refreshFeedClicked(thisFeed);
                             }
 
                             MenuItem {
-                                text: unreadCount === 0 ? "Mark all as unread" : "Mark all as read";
+                                text: unreadCount !== 0 ? "Mark all as read" : "Mark all as unread";
                                 visible: bookmarksEnabled;
                                 height: visible ? implicitHeight : 0;
-                                //onTriggered: validator
+                                onTriggered: unreadCount !== 0 ? markAllAsReadClicked(thisFeed) : markAllAsUnreadClicked(thisFeed);
                             }
 
                             MenuItem {
                                 text: "Edit";
                                 visible: !isSpecialFeed;
                                 height: visible ? implicitHeight : 0;
-                                onTriggered: openDialog("EditDialog.qml", feedListView.model.rowAs(index));
+                                onTriggered: openDialog("EditDialog.qml", thisFeed);
                             }
 
                             MenuItem {
                                 text: "Remove";
                                 visible: !isSpecialFeed;
                                 height: visible ? implicitHeight : 0;
-                                onTriggered: openDialog("RemoveDialog.qml", feedListView.model.rowAs(index));
+                                onTriggered: openDialog("RemoveDialog.qml", thisFeed);
                             }
                         }
                     }

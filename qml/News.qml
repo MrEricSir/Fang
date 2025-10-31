@@ -29,8 +29,16 @@ Item {
         qmlNewsInteractor.refreshCurrentFeed();
     }
 
-    function refreshFeed(id) {
-        qmlNewsInteractor.refreshFeed(id);
+    function refreshFeed(feed) {
+        qmlNewsInteractor.refreshFeed(feed);
+    }
+
+    function markAllAsRead(feed) {
+        qmlNewsInteractor.markAllAsRead(feed);
+    }
+
+    function markAllAsUnread(feed) {
+        qmlNewsInteractor.markAllAsUnread(feed);
     }
     
     // Switch to news.

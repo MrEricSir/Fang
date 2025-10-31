@@ -72,7 +72,11 @@ public slots:
     void refreshCurrentFeed();
 
     // Refreshes any feed.
-    void refreshFeed(const qint64 id);
+    void refreshFeed(FeedItem* feed);
+
+    // Marks all news items in a feed as read or unread.
+    void markAllAsRead(FeedItem* feed);
+    void markAllAsUnread(FeedItem* feed);
 
     // User wants to jump to the bookmark!
     void jumpToBookmark();
