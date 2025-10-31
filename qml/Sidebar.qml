@@ -1,4 +1,5 @@
 import QtQuick
+import QtQuick.Controls
 import Fang 1.0
 
 // Feed list sidebar
@@ -9,7 +10,8 @@ Item {
     signal addClicked();
     signal removeClicked();
     signal editClicked();
-    signal refreshClicked();
+    signal refreshFeedClicked(int id);
+    signal refreshCurrentFeedClicked();
     signal closeClicked();
     signal feedSelected();
     signal feedClicked();
@@ -22,9 +24,9 @@ Item {
     property int specialFeedCount: 0;
     
     // Read-only properties.
-    property int buttonSize: 30 * style.scale;
-    property variant listView: feedListView;
-    property bool feedsExist: feedListModel.count > 1; // (There's always 1 item -- all news.)
+    readonly property int buttonSize: 30 * style.scale;
+    readonly property var listView: feedListView;
+    readonly property bool feedsExist: feedListModel.count > 1; // (There's always 1 item -- all news.)
 
     // This is called by RearrangableDelegate when the user creates a new folder.  It
     // expects the folder's database ID to be returned.
@@ -172,6 +174,39 @@ Item {
                         onOrderChanged: {
                             sidebar.orderChanged();
                         }
+
+                        ContextMenu.menu: Menu {
+                            id: contextMenu;
+
+                            //
+                            //Other items: open/close folder
+                            //
+                            MenuItem {
+                                text: "Refresh";
+                                onTriggered: refreshFeedClicked(uid);
+                            }
+
+                            MenuItem {
+                                text: unreadCount === 0 ? "Mark all as unread" : "Mark all as read";
+                                visible: bookmarksEnabled;
+                                height: visible ? implicitHeight : 0;
+                                //onTriggered: validator
+                            }
+
+                            MenuItem {
+                                text: "Edit";
+                                visible: !isSpecialFeed;
+                                height: visible ? implicitHeight : 0;
+                                onTriggered: openDialog("EditDialog.qml", feedListView.model.rowAs(index));
+                            }
+
+                            MenuItem {
+                                text: "Remove";
+                                visible: !isSpecialFeed;
+                                height: visible ? implicitHeight : 0;
+                                onTriggered: openDialog("RemoveDialog.qml", feedListView.model.rowAs(index));
+                            }
+                        }
                     }
                     
                     model: feedListModel;
@@ -285,7 +320,7 @@ Item {
                 imagePressedURL: fangSettings.style === "LIGHT" ? "images/symbol_dark_reload.svg"
                                                                 : "images/symbol_reload.svg"
 
-                onClicked: refreshClicked();
+                onClicked: refreshCurrentFeedClicked();
             }
             
             // Closes the sidebar.

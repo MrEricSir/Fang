@@ -29,7 +29,7 @@ Window {
     minimumHeight: 450;
 
     // Read-only: Tells you if the news view is busy.
-    property alias isInProgress: news.isInProgress;
+    readonly property alias isInProgress: news.isInProgress;
 
     // Treat as const
     property int minimumSidebarWidth: (platform === "ANDROID") ? 260 : 230;
@@ -94,12 +94,12 @@ Window {
     
     // Creates and opens a dialog.  The dialog is returned in
     // case you wanna mess with it and shit.
-    function openDialog(dialogName) {
+    function openDialog(dialogName, feed=null) {
         console.log("openDialog(" + dialogName + ")")
         news.isVisible = false; // webview hack
         var component = Qt.createComponent(dialogName);
         var dialog = component.createObject(
-                    main, {"x": 0, "y": 0, "listView": sidebar.listView});
+                    main, {"x": 0, "y": 0, "feed": feed});
         
         if (dialog === null) {
             // Error Handling
@@ -269,12 +269,13 @@ Window {
                 onFeedDoubleClicked: news.jumpToBookmark();
                 onOrderChanged: news.orderChanged();
                 onHelpClicked: news.showWelcome();
-                onRefreshClicked: news.refreshFeed();
+                onRefreshFeedClicked: (id) => { news.refreshFeed(id); }
+                onRefreshCurrentFeedClicked: news.refreshCurrentFeed();
 
                 onSettingsClicked: openDialog("SettingsDialog.qml");
                 onAddClicked: openDialog("AddDialog.qml");
-                onRemoveClicked: openDialog("RemoveDialog.qml");
-                onEditClicked: openDialog("EditDialog.qml");
+                onRemoveClicked: openDialog("RemoveDialog.qml", listView.model.selected);
+                onEditClicked: openDialog("EditDialog.qml", listView.model.selected);
             }
 
             News {

@@ -9,13 +9,18 @@ RearrangeableDelegate {
     
     signal jumpToBookmark();
     
-    onClicked: feedListView.currentIndex = index;
-    
-    onDoubleClicked: {
-        if (feedListView.currentIndex == index)
-            feedTitleDelegate.jumpToBookmark();
+    onClicked: (mouse) => {
+        if (mouse.button === Qt.LeftButton) {
+            feedListView.currentIndex = index;
+        }
     }
     
+    onDoubleClicked: (mouse) => {
+        if (feedListView.currentIndex == index) {
+            feedTitleDelegate.jumpToBookmark();
+        }
+    }
+
     dragEnabled: !isSpecialFeed;
 
     qmlListModel: false;

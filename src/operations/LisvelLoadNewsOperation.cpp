@@ -11,8 +11,9 @@ LisvelLoadNewsOperation::LisvelLoadNewsOperation(OperationManager *parent, Lisve
 void LisvelLoadNewsOperation::execute()
 {
     // For an initial load, make sure the feed isn't populated yet.
-    if (getMode() == LoadNews::Initial)
+    if (getMode() == LoadNews::Initial) {
         Q_ASSERT(feedItem->getNewsList() != nullptr || feedItem->getNewsList()->isEmpty());
+    }
 
     // DB query/ies.
     bool dbResult = true;
@@ -85,7 +86,7 @@ void LisvelLoadNewsOperation::execute()
     }
 
     // Append/prepend items from our lists.
-    if (listAppend != nullptr)
+    if (listAppend != nullptr) {
         for (NewsItem* newsItem: *listAppend) {
             // News item list.
             feedItem->getNewsList()->append(newsItem);
@@ -95,8 +96,9 @@ void LisvelLoadNewsOperation::execute()
                 lisvelNews->newsIDs()->append(newsItem->getDbID());
             }
         }
+    }
 
-    if (listPrepend != nullptr)
+    if (listPrepend != nullptr) {
         for (NewsItem* newsItem: *listPrepend) {
             // News item list.
             feedItem->getNewsList()->prepend(newsItem);
@@ -106,6 +108,7 @@ void LisvelLoadNewsOperation::execute()
                 lisvelNews->newsIDs()->prepend(newsItem->getDbID());
             }
         }
+    }
 
     // Set the first possible ID for that top bookmark display action.
     lisvelNews->setFirstNewsID(getFirstNewsID());
@@ -139,8 +142,9 @@ bool LisvelLoadNewsOperation::doPrepend()
         QString whenString; // List if WHEN statements for ordering switch statement.
         int index = 0;
         for(int i = initial; i >= previous; i--, index++) {
-            if (index != 0)
+            if (index != 0) {
                 idString += ", ";
+            }
 
             QString currentID = QString::number(lisvelNews->newsIDs()->at(i));
             idString += currentID;
@@ -148,7 +152,7 @@ bool LisvelLoadNewsOperation::doPrepend()
         }
 
         // Load the items.
-        QString queryString = "SELECT * FROM NewsItemTable N where id IN (" + idString +
+        QString queryString = "SELECT * FROM NewsItemTable N WHERE id IN (" + idString +
                               ") ORDER BY CASE id " + whenString + " END LIMIT :load_limit";
         QSqlQuery query(db());
         query.prepare(queryString);
@@ -224,8 +228,9 @@ bool LisvelLoadNewsOperation::doAppend()
         QString whenString; // List if WHEN statements for ordering switch statement.
         int index = 0;
         for(int i = initial; i <= next; i++, index++) {
-            if (index != 0)
+            if (index != 0) {
                 idString += ", ";
+            }
 
             QString currentID = QString::number(lisvelNews->newsIDs()->at(i));
             idString += currentID;
@@ -233,8 +238,9 @@ bool LisvelLoadNewsOperation::doAppend()
         }
 
         // Load the items.
-        QString queryString = "SELECT * FROM NewsItemTable N where id IN (" + idString +
+        QString queryString = "SELECT * FROM NewsItemTable N WHERE id IN (" + idString +
                               ") ORDER BY CASE id " + whenString + " END LIMIT :load_limit";
+        // qDebug() << " ===== doAppend query: " << queryString;
         QSqlQuery query(db());
         query.prepare(queryString);
         query.bindValue(":load_limit", remainingLoadLimit);
@@ -260,6 +266,7 @@ bool LisvelLoadNewsOperation::doAppend()
     // Do we still have items to load?  If so, load 'em now.
     if (remainingLoadLimit > 0) {
         QSqlQuery query(db());
+        // qDebug() << " ===== doAppend new query: " << appendNewQueryString();
         query.prepare(appendNewQueryString());
         query.bindValue(":load_limit", remainingLoadLimit);
 

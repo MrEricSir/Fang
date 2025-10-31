@@ -10,7 +10,7 @@ Image {
     asynchronous: true;
     
     // Set state to change graphic.
-    state: "ok";
+    state: "";
     
     states: [
         State { name: "ok" },
@@ -19,23 +19,23 @@ Image {
         State { name: "spinner" }
     ]
     
-    source: getImage(state);
-    
-    function getImage(newState) {
-        if (newState === "ok")
+    source: {
+        switch (fangIcon.state) {
+        case "ok":
             return fangSettings.style === "LIGHT" ?
                         "images/symbol_ok.svg" : "images/symbol_dark_ok.svg";
-        else if (newState === "help")
+        case "help":
             return fangSettings.style === "LIGHT" ?
                         "images/symbol_question.svg" : "images/symbol_dark_question.svg";
-        else if (newState === "error")
+        case "error":
             return fangSettings.style === "LIGHT" ?
                         "images/symbol_error.svg" : "images/symbol_dark_error.svg";
-        else if (newState === "spinner")
+        case "spinner":
             return fangSettings.style === "LIGHT" ?
                         "images/symbol_reload.svg" : "images/symbol_dark_reload.svg";
-        else
-            console.log("Unknown state of FangIcon: ", newState);
+        default:
+            console.log("Unknown state of FangIcon: ", fangIcon.state);
+        }
     }
     
     Style {

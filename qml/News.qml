@@ -25,8 +25,12 @@ Item {
         qmlNewsInteractor.orderChanged();
     }
     
-    function refreshFeed() {
+    function refreshCurrentFeed() {
         qmlNewsInteractor.refreshCurrentFeed();
+    }
+
+    function refreshFeed(id) {
+        qmlNewsInteractor.refreshFeed(id);
     }
     
     // Switch to news.

@@ -17,20 +17,20 @@ Rectangle {
     }
     
     Text {
-        id: dialogTextText
+        id: dialogTextText;
         
-        text: dialogText.text
+        text: dialogText.text;
         
-        font.pointSize: style.font.defaultSize
-        font.family: style.font.defaultFamily
-        color: dialogText.textColor
-        wrapMode: Text.WordWrap
+        font.pointSize: style.font.defaultSize;
+        font.family: style.font.defaultFamily;
+        color: dialogText.textColor;
+        wrapMode: Text.WordWrap;
         renderType: style.textRendering;
         
         // In case you want teh linkx0rz
-        onLinkActivated: Qt.openUrlExternally(link)
+        onLinkActivated: Qt.openUrlExternally(link);
         
-        width: parent.width
+        width: parent.width;
     }
 }
 

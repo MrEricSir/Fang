@@ -93,6 +93,18 @@ public slots:
      * @return UUID of folder item
      */
     int insertFolder(int newIndex);
+
+    /**
+     * @brief Marks all items in a feed as read.
+     * @param feed
+     */
+    void markAllAsRead(FeedItem* feed);
+
+    /**
+     * @brief Marks all items in a feed as unread.
+     * @param feed
+     */
+    void markAllAsUnread(FeedItem* feed);
     
     /**
      * @brief Updates every single damn feed.

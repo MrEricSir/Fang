@@ -35,7 +35,7 @@ Dialog {
         width: parent.width;
         
         // Don't allow editing while we're checking the feed.
-        readOnly: addDialog.state === "validating" || addDialog.state === "add"
+        readOnly: addDialog.state === "validating" || addDialog.state === "add";
     }
     
     TextEntry {
@@ -55,6 +55,7 @@ Dialog {
         
         text: "";
         visible: false;
+        state: "spinner";
         
         width: parent.width;
     }

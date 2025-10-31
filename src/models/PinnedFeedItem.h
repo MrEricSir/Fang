@@ -6,7 +6,6 @@
 #include <QObject>
 
 #include "ListModel.h"
-#include "NewsItem.h"
 
 /**
  * @brief A pseudo-feed of all pinned news items.
@@ -21,7 +20,7 @@ public:
     virtual bool canBookmark(qint64 bookmarkID, bool allowBackward);
 
     // No bookmarks! No! Not for you!
-    virtual bool bookmarksEnabled();
+    virtual bool bookmarksEnabled() const;
 
 signals:
 

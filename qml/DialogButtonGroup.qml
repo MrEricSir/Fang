@@ -1,10 +1,10 @@
 import QtQuick
 
 Row {
-    id: dialogButtonGroup
+    id: dialogButtonGroup;
     
     // Read-only: set the width of each child button to this
-    property int buttonWidth: (width - (spacing * (children.length - 1))) / children.length
+    readonly property int buttonWidth: (width - (spacing * (children.length - 1))) / children.length;
     
-    spacing: 10
+    spacing: 10;
 }

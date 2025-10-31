@@ -71,6 +71,11 @@ void QMLNewsInteractor::refreshCurrentFeed()
     FangApp::instance()->refreshCurrentFeed();
 }
 
+void QMLNewsInteractor::refreshFeed(const qint64 id)
+{
+    FangApp::instance()->refreshFeed(id);
+}
+
 void QMLNewsInteractor::jumpToBookmark()
 {
     FangApp::instance()->jumpToBookmark();

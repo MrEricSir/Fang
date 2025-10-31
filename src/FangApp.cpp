@@ -303,8 +303,9 @@ FeedItem* FangApp::feedForId(const qint64 id)
         FeedItem* feed = qobject_cast<FeedItem*>(feedList->row(i));
         Q_ASSERT(feed != nullptr);
         
-        if (feed->getDbId() == id)
+        if (feed->getDbId() == id) {
             return feed;
+        }
     }
     
     return nullptr;
@@ -498,8 +499,9 @@ void FangApp::onFeedTitleChanged()
 {
     // The sender is the feed itself, so grab it and do a DB update.
     FeedItem* feed = qobject_cast<FeedItem *>(sender());
-    if (feed == nullptr)
+    if (feed == nullptr) {
         return;
+    }
     
     manager.add(new UpdateTitleOperation(&manager, feed));
 }
@@ -692,5 +694,15 @@ int FangApp::insertFolder(int newIndex)
     }
 
     return item->getDbId();
+}
+
+void FangApp::markAllAsRead(FeedItem* feed)
+{
+    // TODO
+}
+
+void FangApp::markAllAsUnread(FeedItem* feed)
+{
+    // TODO
 }
 

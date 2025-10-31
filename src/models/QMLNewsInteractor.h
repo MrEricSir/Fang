@@ -71,6 +71,9 @@ public slots:
     // Refreshes the current feed.
     void refreshCurrentFeed();
 
+    // Refreshes any feed.
+    void refreshFeed(const qint64 id);
+
     // User wants to jump to the bookmark!
     void jumpToBookmark();
 

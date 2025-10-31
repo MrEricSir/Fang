@@ -36,8 +36,9 @@ void FeedValidator::removeFeed(FeedItem *feed)
 
 void FeedValidator::setUrl(QString url)
 {
-    if (url == _url)
+    if (url == _url) {
         return;
+    }
     
     _url = url;
     emit urlChanged(_url);
@@ -49,10 +50,21 @@ int FeedValidator::insertFolder(int newIndex)
     return FangApp::instance()->insertFolder(newIndex);
 }
 
+void FeedValidator::markAllAsRead(FeedItem* feed)
+{
+    FangApp::instance()->markAllAsRead(feed);
+}
+
+void FeedValidator::markAllAsUnread(FeedItem* feed)
+{
+    FangApp::instance()->markAllAsUnread(feed);
+}
+
 void FeedValidator::setSiteTitle(QString title)
 {
-    if (title == _siteTitle)
+    if (title == _siteTitle) {
         return;
+    }
     
     _siteTitle = title;
     emit siteTitleChanged(_siteTitle);

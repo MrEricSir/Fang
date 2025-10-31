@@ -9,8 +9,8 @@ Rectangle {
     // PUBLIC:
 
     // Don't use a MouseArea!!  Instead, use these signals to find when the item is clicked.
-    signal clicked();
-    signal doubleClicked();
+    signal clicked(MouseEvent mouse);
+    signal doubleClicked(MouseEvent mouse);
 
     // Subscribe to this signal to know when the list may have changed order.
     signal orderChanged();
@@ -48,7 +48,7 @@ Rectangle {
     // This allows children to be positioned within the element.
     default property alias contents: placeholder.children;
 
-    width: parent.width;
+    width: parent ? parent.width : 0;
     height: placeholder.childrenRect.height;
 
     color: "transparent";
@@ -423,18 +423,22 @@ Rectangle {
 
             drag.axis: Drag.YAxis;
 
+            acceptedButtons: Qt.LeftButton | Qt.RightButton;
+
             onClicked: (mouse) => {
-                if (isFolder && mouse.x < placeholder.childrenRect.height) {
-                    // Bail and let the opener MouseArea handle this.
-                    mouse.accepted = false;
-                    return;
+                if (mouse.button === Qt.LeftButton) {
+                    if (isFolder && mouse.x < placeholder.childrenRect.height) {
+                        // Bail and let the opener MouseArea handle this.
+                        mouse.accepted = false;
+                        return;
+                    }
                 }
 
-                rearrangeableDelegate.clicked();
+                rearrangeableDelegate.clicked(mouse);
             }
 
-            onDoubleClicked: () => {
-                rearrangeableDelegate.doubleClicked();
+            onDoubleClicked: (mouse) => {
+                rearrangeableDelegate.doubleClicked(mouse);
             }
 
             onPressed: () => {
