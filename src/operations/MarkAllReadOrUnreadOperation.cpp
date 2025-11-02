@@ -1,8 +1,10 @@
 #include "MarkAllReadOrUnreadOperation.h"
 
+#include "../models/AllNewsFeedItem.h"
+#include "../models/FolderFeedItem.h"
+
 MarkAllReadOrUnreadOperation::MarkAllReadOrUnreadOperation(OperationManager *parent, FeedItem* feed, bool markAsRead) :
-    DBOperation(IMMEDIATE, parent),
-    feed(feed),
+    BookmarkOperation(parent, feed),
     markAsRead(markAsRead)
 {
 
@@ -10,8 +12,40 @@ MarkAllReadOrUnreadOperation::MarkAllReadOrUnreadOperation(OperationManager *par
 
 void MarkAllReadOrUnreadOperation::execute()
 {
-    // TODO
-    Q_ASSERT(false);
-    //
+    if (!feed) {
+        qWarning() << "Unable to update bookmark; feed is null";
+
+        emit finished(this);
+        return;
+    }
+
+    if (!feed->bookmarksEnabled()) {
+        qDebug() << "Requested to update bookmark but feed does not support bookmarks.";
+
+        emit finished(this);
+        return;
+    }
+
+    if (markAsRead) {
+        // Set bookmark to end of one or more feeds.
+        if (qobject_cast<AllNewsFeedItem*>(feed)) {
+            qDebug() << "Bookmark all";
+            bookmarkAll();
+        } else if (feed->isFolder()) {
+            bookmarkAllInFolder(qobject_cast<FolderFeedItem*>(feed));
+        } else {
+            bookmarkAllInFeed(feed);
+        }
+    } else {
+        // Remove all bookmarks for one or more feeds.
+        if (qobject_cast<AllNewsFeedItem*>(feed)) {
+            qDebug() << "Unbookmark all";
+            unbookmarkAll();
+        } else if (feed->isFolder()) {
+            unbookmarkAllInFolder(qobject_cast<FolderFeedItem*>(feed));
+        } else {
+            unbookmarkAllInFeed(feed);
+        }
+    }
 }
 

@@ -1,7 +1,7 @@
 #ifndef SETBOOKMARKOPERATION_H
 #define SETBOOKMARKOPERATION_H
 
-#include "DBOperation.h"
+#include "BookmarkOperation.h"
 #include "../models/FeedItem.h"
 #include "../models/AllNewsFeedItem.h"
 #include "../models/FolderFeedItem.h"
@@ -9,7 +9,7 @@
 /**
  * @brief Sets a bookmark to whatever news id you'd like.
  */
-class SetBookmarkOperation : public DBOperation
+class SetBookmarkOperation : public BookmarkOperation
 {
     Q_OBJECT
 public:
@@ -34,12 +34,7 @@ protected:
     
     void bookmarkAllNewsFeed(AllNewsFeedItem* allNews);
     
-    // If the bookmark is -1 for all news, that's a special case; we must un-bookmark
-    // ALL feeds.
-    void unbookmarkAll();
-    
 private:
-    FeedItem *feed;
     qint64 bookmarkID;
 };
 

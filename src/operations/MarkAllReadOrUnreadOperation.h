@@ -3,10 +3,10 @@
 
 #include <QObject>
 
-#include "DBOperation.h"
+#include "BookmarkOperation.h"
 #include "../models/FeedItem.h"
 
-class MarkAllReadOrUnreadOperation : public DBOperation
+class MarkAllReadOrUnreadOperation : public BookmarkOperation
 {
     Q_OBJECT
 public:
@@ -16,7 +16,6 @@ public slots:
     virtual void execute();
 
 private:
-    FeedItem *feed;
     bool markAsRead;
 };
 

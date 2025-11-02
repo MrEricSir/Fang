@@ -2,12 +2,10 @@
 #include <QDebug>
 
 #include "../models/AllNewsFeedItem.h"
-#include "../utilities/UnreadCountReader.h"
 #include "../FangApp.h"
 
 SetBookmarkOperation::SetBookmarkOperation(OperationManager *parent, FeedItem* feed, qint64 bookmarkID) :
-    DBOperation(IMMEDIATE, parent),
-    feed(feed),
+    BookmarkOperation(parent, feed),
     bookmarkID(bookmarkID)
 {
 }
@@ -55,14 +53,7 @@ void SetBookmarkOperation::bookmarkSingleFeed(FeedItem* feed)
         return;
     }
 
-    //
-    // Step 2: Update unread count for the feed, All News, and the folder (if in one.)
-    //
-    UnreadCountReader::update(db(), FangApp::instance()->feedForId(feed->getDbId()));
-    UnreadCountReader::update(db(), FangApp::instance()->feedForId(FEED_ID_ALLNEWS));
-    if (feed->getParentFolderID() >= 0) {
-        UnreadCountReader::update(db(), FangApp::instance()->feedForId(feed->getParentFolderID()));
-    }
+    updateUnreadCounts();
 
     db().commit();
 
@@ -146,35 +137,7 @@ void SetBookmarkOperation::bookmarkAllNewsFeed(AllNewsFeedItem* allNews)
         }
     }
     
-    // Update all unread counts
-    for (int i = 0; i < FangApp::instance()->feedCount(); i++) {
-        UnreadCountReader::update(db(), FangApp::instance()->getFeed(i));
-    }
-    
-    db().commit();
-    
-    emit finished(this);
-}
-
-void SetBookmarkOperation::unbookmarkAll()
-{
-    db().transaction();
-    
-    QSqlQuery update(db());
-    update.prepare("UPDATE FeedItemTable SET bookmark_id = -1");
-    
-    if (!update.exec()) {
-        reportSQLError(update, "Unable to unset all bookmarks");
-        db().rollback();
-        
-        emit finished(this);
-        return;
-    }
-    
-    // Update all unread counts
-    for (int i = 0; i < FangApp::instance()->feedCount(); i++) {
-        UnreadCountReader::update(db(), FangApp::instance()->getFeed(i));
-    }
+    updateUnreadCounts();
     
     db().commit();
     

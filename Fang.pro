@@ -68,6 +68,7 @@ SOURCES += src/main.cpp \
     src/models/ListModel.cpp \
     src/models/NewsItem.cpp \
     src/models/FeedItem.cpp \
+    src/operations/BookmarkOperation.cpp \
     src/operations/InsertFolderOperation.cpp \
     src/operations/LoadFolderOperation.cpp \
     src/operations/MarkAllReadOrUnreadOperation.cpp \
@@ -131,6 +132,7 @@ HEADERS += \
     src/models/ListModel.h \
     src/models/NewsItem.h \
     src/models/FeedItem.h \
+    src/operations/BookmarkOperation.h \
     src/operations/InsertFolderOperation.h \
     src/operations/LoadFolderOperation.h \
     src/operations/MarkAllReadOrUnreadOperation.h \
