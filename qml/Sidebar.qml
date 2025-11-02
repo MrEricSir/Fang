@@ -183,9 +183,6 @@ Item {
                         ContextMenu.menu: Menu {
                             id: contextMenu;
 
-                            //
-                            //Other items: open/close folder
-                            //
                             MenuItem {
                                 text: "Refresh";
                                 onTriggered: refreshFeedClicked(thisFeed);
