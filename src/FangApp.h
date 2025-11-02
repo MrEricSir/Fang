@@ -125,11 +125,6 @@ public slots:
     void refreshAllFeeds();
     
     /**
-     * @brief Refreshes a given feed.
-     */
-    void refreshFeed(const qint64 id);
-    
-    /**
      * @brief Refreshes the current feed.
      */
     void refreshCurrentFeed();
