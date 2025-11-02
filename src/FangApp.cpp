@@ -250,6 +250,18 @@ void FangApp::refreshFeed(FeedItem *feed)
         
         // Reset the "update all" timer.
         updateTimer->start();
+    } else if (feed->isFolder()) {
+        // Update the feeds in this folder.
+        qint64 folderID = feed->getDbId();
+        for (int i = 0; i < feedList->rowCount(); i++)
+        {
+            FeedItem* item = qobject_cast<FeedItem*>(feedList->row(i));
+            Q_ASSERT(item != nullptr);
+            if (item->getParentFolderID() == folderID) {
+                feedsToUpdate.append(item);
+            }
+        }
+
     } else {
         feedsToUpdate.append(feed);
         useCache = false; // Don't check cache if we're just checking a single feed.
@@ -266,11 +278,6 @@ void FangApp::refreshAllFeeds()
 {
     // Use the "all news" trick (see above)
     refreshFeed(allNews);
-}
-
-void FangApp::refreshFeed(const qint64 id)
-{
-    refreshFeed(feedForId(id));
 }
 
 void FangApp::refreshCurrentFeed()

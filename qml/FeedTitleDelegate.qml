@@ -70,52 +70,117 @@ RearrangeableDelegate {
                     anchors.top: parent.top;
                     anchors.bottom: parent.bottom;
                     anchors.leftMargin: 10 * style.scale;
-                    
-                    Image {
-                        id: feedIcon;
-                        
-                        source: imageURL;
-                        
-                        visible: !isUpdating && status === Image.Ready;
-                        
+
+                    Item {
+                        id: feedIconContainer;
+
                         anchors.verticalCenter: parent.verticalCenter;
-                        
+
                         width: 24 * style.scale;
                         height: 24 * style.scale;
-                        
-                        sourceSize.width: width;
-                        sourceSize.height: height;
-                        asynchronous: true;
-                    }
-                    
-                    Image {
-                        id: defaultFeedIcon;
-                        
-                        visible: !isUpdating && (feedIcon.status !== Image.Ready);
-                        
-                        source: (fangSettings.style === "LIGHT" ? "images/symbol_rss.svg"
-                                                        : "images/symbol_dark_rss.svg");
-                        
-                        anchors.verticalCenter: parent.verticalCenter;
-                        
-                        width: 24 * style.scale;
-                        height: 24 * style.scale;
-                        
-                        sourceSize.width: width;
-                        sourceSize.height: height;
-                        asynchronous: true;
+
+                        opacity: 1;
+
+                        Image {
+                            id: feedIcon;
+
+                            source: imageURL;
+
+                            // Only display when there is something loaded.
+                            visible: status === Image.Ready;
+
+                            anchors.fill: parent;
+
+                            sourceSize.width: width;
+                            sourceSize.height: height;
+                            asynchronous: true;
+                        }
+
+                        Image {
+                            id: defaultFeedIcon;
+
+                            visible: !feedIcon.visible;
+
+                            source: (fangSettings.style === "LIGHT" ? "images/symbol_rss.svg"
+                                                            : "images/symbol_dark_rss.svg");
+
+                            anchors.fill: parent;
+
+                            sourceSize.width: width;
+                            sourceSize.height: height;
+                            asynchronous: true;
+                        }
+
+                        property bool updating: isUpdating;
+                        onUpdatingChanged: {
+                            if (updating) {
+                                iconFadeOut.restart();
+                            } else {
+                                iconFadeIn.restart();
+                            }
+                        }
+
+                        OpacityAnimator {
+                            id: iconFadeIn;
+
+                            target: feedIconContainer;
+                            from: 0;
+                            to: 1;
+                            duration: 300;
+                            easing.type: Easing.InQuad;
+                        }
+
+                        OpacityAnimator {
+                            id: iconFadeOut;
+
+                            target: feedIconContainer;
+                            from: 1;
+                            to: 0;
+                            duration: 300;
+                            easing.type: Easing.OutQuad;
+                        }
                     }
                     
                     FangIcon {
                         id: feedBusySpinner;
                         
                         state: "spinner";
-                        visible: isUpdating;
+                        visible: true;
+                        opacity: 0;
                         
                         anchors.verticalCenter: parent.verticalCenter;
                         
                         width: 23 * style.scale;
                         height: 23 * style.scale;
+
+                        property bool updating: isUpdating;
+                        onUpdatingChanged: {
+                            if (updating) {
+                                spinnerFadeIn.restart();
+                            } else {
+                                spinnerFadeOut.restart();
+                            }
+                        }
+
+                        OpacityAnimator {
+                            id: spinnerFadeIn;
+
+                            target: feedBusySpinner;
+                            from: 0;
+                            to: 1;
+                            duration: 300;
+                            easing.type: Easing.InQuad;
+                        }
+
+                        OpacityAnimator {
+                            id: spinnerFadeOut;
+
+                            target: feedBusySpinner;
+                            from: 1;
+                            to: 0;
+                            duration: 300;
+                            easing.type: Easing.OutQuad;
+                        }
                     }
                 }
                 
