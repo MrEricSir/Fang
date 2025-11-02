@@ -30,12 +30,19 @@ Dialog {
         placeholderText: "Website or feed URL";
         
         onTextChanged: validationStatus.visible = false;
-        onAccepted: continueButton.click();
+        onAccepted: {
+            if (continueButton.visible) {
+                continueButton.click();
+            } else if (addButton.visible) {
+                addButton.clicked();
+            } else
+                console.warn("Accepted enter key but neither continue nor add button visible");
+        }
         
         width: parent.width;
         
         // Don't allow editing while we're checking the feed.
-        readOnly: addDialog.state === "validating" || addDialog.state === "add"
+        readOnly: addDialog.state === "validating" || addDialog.state === "add";
     }
     
     TextEntry {
@@ -45,7 +52,7 @@ Dialog {
         
         onAccepted: addButton.click();
         
-        visible: addDialog.state === "add"
+        visible: addDialog.state === "add";
         
         width: parent.width;
     }
@@ -55,6 +62,7 @@ Dialog {
         
         text: "";
         visible: false;
+        state: "spinner";
         
         width: parent.width;
     }

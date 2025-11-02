@@ -71,6 +71,21 @@ void QMLNewsInteractor::refreshCurrentFeed()
     FangApp::instance()->refreshCurrentFeed();
 }
 
+void QMLNewsInteractor::refreshFeed(FeedItem* feed)
+{
+    FangApp::instance()->refreshFeed(feed);
+}
+
+void QMLNewsInteractor::markAllAsRead(FeedItem *feed)
+{
+    FangApp::instance()->markAllAsRead(feed);
+}
+
+void QMLNewsInteractor::markAllAsUnread(FeedItem *feed)
+{
+    FangApp::instance()->markAllAsUnread(feed);
+}
+
 void QMLNewsInteractor::jumpToBookmark()
 {
     FangApp::instance()->jumpToBookmark();

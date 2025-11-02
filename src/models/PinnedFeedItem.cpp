@@ -13,7 +13,7 @@ bool PinnedFeedItem::canBookmark(qint64 bookmarkID, bool allowBackward)
     return false;
 }
 
-bool PinnedFeedItem::bookmarksEnabled()
+bool PinnedFeedItem::bookmarksEnabled() const
 {
     return false;
 }

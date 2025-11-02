@@ -10,9 +10,7 @@
 #include <QMap>
 
 #include "operations/OperationManager.h"
-#include "operations/FaviconUpdateOperation.h"
 
-#include "models/NewsItem.h"
 #include "models/FeedItem.h"
 #include "models/AllNewsFeedItem.h"
 #include "models/PinnedFeedItem.h"
@@ -20,7 +18,7 @@
 #include "models/FangSettings.h"
 #include "models/QMLNewsInteractor.h"
 #include "models/NewsWebSocketServer.h"
-#include "parser/NewsParser.h"
+#include "parser/RawFeed.h"
 #include "FangObject.h"
 #include "notifications/NotificationBase.h"
 #include "utilities/SingleInstanceCheck.h"
@@ -93,6 +91,18 @@ public slots:
      * @return UUID of folder item
      */
     int insertFolder(int newIndex);
+
+    /**
+     * @brief Marks all items in a feed as read.
+     * @param feed
+     */
+    void markAllAsRead(FeedItem* feed);
+
+    /**
+     * @brief Marks all items in a feed as unread.
+     * @param feed
+     */
+    void markAllAsUnread(FeedItem* feed);
     
     /**
      * @brief Updates every single damn feed.

@@ -47,6 +47,12 @@ public slots:
 
     // Insert a folder at the given index and reparent the next two items.
     int insertFolder(int newIndex);
+
+    // Marks all items in a feed as read.
+    void markAllAsRead(FeedItem* feed);
+
+    // Marks all items in a feed as read.
+    void markAllAsUnread(FeedItem* feed);
     
 signals:
     void urlChanged(QString url);

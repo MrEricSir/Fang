@@ -41,6 +41,7 @@ public:
         IsFolderRole,
         ParentFolderRole,
         FolderOpenRole,
+        BookmarksEnabledRole,
         UIDRole,
         SelfRole
     };
@@ -214,7 +215,7 @@ public slots:
      * @brief If true, the feed supports bookmarks.  Otherwise false.
      * @return  By default, returns true.  Override if you want it to return false.
      */
-    virtual bool bookmarksEnabled();
+    virtual bool bookmarksEnabled() const;
 
     /**
      * @brief getParentFolderID

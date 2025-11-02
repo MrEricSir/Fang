@@ -14,8 +14,8 @@ FangScreen {
     // Dialog title text.
     property string title;
 
-    // [Optional] Feed list.
-    property var listView;
+    // [Optional] FeedItem object.
+    property var feed;
     
     // This allows children to be positioned within the element.
     default property alias contents: placeholder.children;

@@ -9,8 +9,8 @@ Dialog {
 
     onDialogOpened: {
         feedTitle.forceActiveFocus();
-        feedTitle.text = listView.model.selected.getTitle();
-        feedURL.text = listView.model.selected.getURL();
+        feedTitle.text = feed.getTitle();
+        feedURL.text = feed.getURL();
     }
 
     DialogStatus {
@@ -42,21 +42,12 @@ Dialog {
         text: "Save";
         onClicked: {
             // Save the new title.
-            listView.model.selected.setTitle(feedTitle.text);
+            feed.setTitle(feedTitle.text);
             
             // Dismiss the dialog.
             dismiss();
         }
         enabled: !isClosing && feedTitle.text.trim() !== "";
-        
-        // Yes this is cheating, but so what?
-        FeedValidator {
-            id: validator;
-        }
-    }
-    
-    onDialogClosed: {
-        validator.destroy();
     }
     
     DialogButton {

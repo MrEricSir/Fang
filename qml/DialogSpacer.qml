@@ -2,6 +2,6 @@ import QtQuick
 
 // Spacer
 DialogText {
-    id: dialogSpacer 
-    text: ""
+    id: dialogSpacer;
+    text: "";
 }

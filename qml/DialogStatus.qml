@@ -2,14 +2,14 @@ import QtQuick
 
 Rectangle {
     id: dialogStatus
-    property string text: ""
-    color: "transparent"
+    property string text: "";
+    color: "transparent";
     
-    width: parent.width
-    height: dialogStatusText.paintedHeight
+    width: parent.width;
+    height: dialogStatusText.paintedHeight;
     
     Style {
-        id: style
+        id: style;
     }
     
     FangIcon {
@@ -21,18 +21,18 @@ Rectangle {
     }
     
     Text {
-        id: dialogStatusText
+        id: dialogStatusText;
         
-        text: dialogStatus.text
+        text: dialogStatus.text;
         
-        x: statusImage.width + 10 // margin
+        x: statusImage.width + 10; // margin
         
-        font.pointSize: style.font.defaultSize
-        font.family: style.font.defaultFamily
-        color: style.color.dialogText
+        font.pointSize: style.font.defaultSize;
+        font.family: style.font.defaultFamily;
+        color: style.color.dialogText;
         renderType: style.textRendering;
         
-        width: parent.width - x
+        width: parent.width - x;
     }
 }
 

@@ -3,36 +3,36 @@ import Fang 1.0
 
 // Psst hey kid, you wanna remove a feed?
 Dialog {
-    id: removeDialog
+    id: removeDialog;
     
-    title: "Remove a Feed"
+    title: "Remove a Feed";
     
-    property var listView;
+    property var feed;
     
     DialogStatus {
-        id: validationStatus
+        id: validationStatus;
         
-        state: "help"
-        text: "Are you sure you want to delete this feed?"
+        state: "help";
+        text: "Are you sure you want to remove this feed?";
     }
     
     DialogButton {
-        id: removeButton
+        id: removeButton;
         
-        text: "Remove Feed"
+        text: "Remove Feed";
         onClicked: {
-            // Remove the selected item.
-            //console.log("current index ", listView.model.selected)
-            validator.removeFeed(listView.model.selected);
+            // Remove a specific feed.
+            //console.log("Feed to remove: ", feed)
+            validator.removeFeed(feed);
             
             // Dismiss the dialog.
             dismiss();
         }
-        enabled: !isClosing
+        enabled: !isClosing;
         
         // Yes this is cheating, but so what?
         FeedValidator {
-            id: validator
+            id: validator;
         }
     }
     
@@ -41,10 +41,10 @@ Dialog {
     }
     
     DialogButton {
-        id: cancelButton
+        id: cancelButton;
         
-        text: "Cancel"
-        onClicked: close()
-        enabled: !isClosing
+        text: "Cancel";
+        onClicked: close();
+        enabled: !isClosing;
     }
 }

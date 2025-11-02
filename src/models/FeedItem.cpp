@@ -85,6 +85,7 @@ QHash<int, QByteArray> FeedItem::roleNames() const
     names[IsFolderRole] = "isFolder";
     names[ParentFolderRole] = "parentFolder";
     names[FolderOpenRole] = "folderOpen";
+    names[BookmarksEnabledRole] = "bookmarksEnabled";
     names[UIDRole] = "uid";
     return names;
 }
@@ -126,6 +127,8 @@ QVariant FeedItem::data(int role) const
             return QVariant::fromValue(_parentFolder);
         case FolderOpenRole:
             return QVariant::fromValue(_folderOpen);
+        case BookmarksEnabledRole:
+            return bookmarksEnabled();
         case UIDRole:
             return getDbId();
         default:
@@ -305,7 +308,7 @@ void FeedItem::setURL(QUrl url)
     emit dataChanged();
 }
 
-bool FeedItem::bookmarksEnabled()
+bool FeedItem::bookmarksEnabled() const
 {
     return true;
 }
