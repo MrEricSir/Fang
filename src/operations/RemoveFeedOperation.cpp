@@ -17,37 +17,55 @@ RemoveFeedOperation::RemoveFeedOperation(OperationManager *parent, FeedItem* fee
 
 void RemoveFeedOperation::execute()
 {
-    if (feed->getDbId() >= 0) {
-        // Delete that feed, bro.
-        db().transaction();
-        QSqlQuery query(db());
-        if (!query.prepare("DELETE FROM FeedItemTable WHERE id = :feed_id")) {
-            reportSQLError(query, "Error preping SQL statement to remove a feed");
-                    
-            return;
-        }
-        query.bindValue(":feed_id", feed->getDbId());
-        
-        if (!query.exec()) {
-            reportSQLError(query, "Unable to remove feed.");
-            db().rollback();
-            
-            return;
-        } else {
-            // Good to go!
-            //qDebug() << "Removal allegedly worked!";
-            db().commit();
-            feed->clearDbId(); // Remember that we did this.
-        }
-        
-        // Well, that's it.  If SQLite did what we asked, all the corresponding
-        // news items were removed as well.  And if not, D. Richard ain't so Hipp.
-    } else {
-        qDebug() << "Could not delete feed from database, id is: " << feed->getDbId();
+    Q_ASSERT(feed);
+
+    bool isFolder = feed->isFolder();
+    qint64 dbID = feed->getDbId();
+
+    if (dbID < 0) {
+        qDebug() << "Cannot remove feed with invalid ID:: " << dbID;
     }
-    
-    // Remove from the model (if it hasn't been already!)
+
+    // Delete the feed.
+    db().transaction();
+    QSqlQuery removeFeed(db());
+    removeFeed.prepare("DELETE FROM FeedItemTable WHERE id = :feed_id");
+    if (!removeFeed.exec()) {
+        reportSQLError(removeFeed, "Unable to remove feed.");
+        db().rollback();
+
+        return;
+    }
+
+    if (isFolder) {
+        // Unset folder for feeds previously in the folder.
+        QSqlQuery unlinkFolder(db());
+        unlinkFolder.prepare("UPDATE FeedItemTable SET parent_folder = 0 WHERE parent_folder = :folder_id");
+        unlinkFolder.bindValue(":folder_id", dbID);
+        if (!unlinkFolder.exec()) {
+            reportSQLError(removeFeed, "Unable to unlink feed.");
+            db().rollback();
+
+            return;
+        }
+    }
+
+    // Good to go!
+    db().commit();
+    feed->clearDbId(); // Remember that we did this.
+
+        
+    // Remove from the model.
     feedList->removeItem(feed);
+    if (isFolder) {
+        // TODO: Set model's parent feed to -1
+        ListModel * feedList = FangApp::instance()->getFeedList();
+        for (int i = 0; i < feedList->rowCount(); i++) {
+            FeedItem* feed = qobject_cast<FeedItem*>(feedList->row(i));
+            Q_ASSERT(feed);
+            feed->setParentFolder(-1);
+        }
+    }
     
     // Update the unread count of our special feeds.
     UnreadCountReader::update(db(), FangApp::instance()->feedForId(FEED_ID_ALLNEWS));
