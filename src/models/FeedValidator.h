@@ -5,7 +5,6 @@
 #include <QObject>
 #include <QUrl>
 
-#include "FeedItem.h"
 #include "../utilities/FeedDiscovery.h"
 
 /**
@@ -41,18 +40,6 @@ public slots:
 
     // If check was OK, call this to add the feed!
     void addFeed();
-
-    // Remove an existing feed.
-    void removeFeed(FeedItem* feed);
-
-    // Insert a folder at the given index and reparent the next two items.
-    int insertFolder(int newIndex);
-
-    // Marks all items in a feed as read.
-    void markAllAsRead(FeedItem* feed);
-
-    // Marks all items in a feed as read.
-    void markAllAsUnread(FeedItem* feed);
     
 signals:
     void urlChanged(QString url);
@@ -60,8 +47,6 @@ signals:
     void siteTitleChanged(QString title);
     void siteImageURLChanged(QString url);
     void validationComplete(bool result, QString errorString);
-    
-public slots:
     
 private slots:
     // Feed discovered!  Yay!

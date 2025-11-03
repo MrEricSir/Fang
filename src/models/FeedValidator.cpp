@@ -29,35 +29,14 @@ void FeedValidator::addFeed()
     FangApp::instance()->addFeed(_url, feed, true);
 }
 
-void FeedValidator::removeFeed(FeedItem *feed)
-{
-    FangApp::instance()->removeFeed(feed);
-}
-
 void FeedValidator::setUrl(QString url)
 {
     if (url == _url) {
         return;
     }
-    
+
     _url = url;
     emit urlChanged(_url);
-}
-
-int FeedValidator::insertFolder(int newIndex)
-{
-    // qDebug() << "FeedValidator::insertFolder at: " << newIndex;
-    return FangApp::instance()->insertFolder(newIndex);
-}
-
-void FeedValidator::markAllAsRead(FeedItem* feed)
-{
-    FangApp::instance()->markAllAsRead(feed);
-}
-
-void FeedValidator::markAllAsUnread(FeedItem* feed)
-{
-    FangApp::instance()->markAllAsUnread(feed);
 }
 
 void FeedValidator::setSiteTitle(QString title)

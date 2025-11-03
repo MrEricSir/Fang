@@ -66,6 +66,7 @@ QMAKE_INFO_PLIST = Info.plist
 SOURCES += src/main.cpp \
     src/models/FolderFeedItem.cpp \
     src/models/ListModel.cpp \
+    src/models/NewsFeedInteractor.cpp \
     src/models/NewsItem.cpp \
     src/models/FeedItem.cpp \
     src/operations/BookmarkOperation.cpp \
@@ -124,12 +125,12 @@ SOURCES += src/main.cpp \
     src/operations/GetAllDBSettingsOperation.cpp \
     src/parser/NewsParser.cpp \
     src/utilities/SimpleHTTPDownloader.cpp \
-    src/models/NewsWebSocketServer.cpp \
-    src/models/QMLNewsInteractor.cpp
+    src/models/NewsWebSocketServer.cpp
 	
 HEADERS += \
     src/models/FolderFeedItem.h \
     src/models/ListModel.h \
+    src/models/NewsFeedInteractor.h \
     src/models/NewsItem.h \
     src/models/FeedItem.h \
     src/operations/BookmarkOperation.h \
@@ -189,8 +190,7 @@ HEADERS += \
     src/db/DBSettingsKey.h \
     src/parser/NewsParser.h \
     src/utilities/SimpleHTTPDownloader.h \
-    src/models/NewsWebSocketServer.h \
-    src/models/QMLNewsInteractor.h
+    src/models/NewsWebSocketServer.h
 
 mac {
     HEADERS += src/notifications/NotificationMac.h
