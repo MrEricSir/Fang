@@ -1,22 +1,20 @@
-#ifndef QMLNEWSINTERACTOR_H
-#define QMLNEWSINTERACTOR_H
+#ifndef NEWSFEEDINTERACTOR_H
+#define NEWSFEEDINTERACTOR_H
 
 #include <QQuickItem>
 #include <QString>
 
 #include "FeedItem.h"
-#include "NewsItem.h"
 #include "../operations/OperationManager.h"
 #include "../operations/Operation.h"
-#include "../operations/UpdateOrdinalsOperation.h"
 
 /**
  * @brief Interacts with the QML layer of the news view.
  */
-class QMLNewsInteractor : public QQuickItem
+class NewsFeedInteractor : public QQuickItem
 {
     Q_OBJECT
-    Q_DISABLE_COPY(QMLNewsInteractor)
+    Q_DISABLE_COPY(NewsFeedInteractor)
     
     Q_PROPERTY(qint32 specialFeedCount READ specialFeedCount NOTIFY specialFeedCountChanged)
     Q_PROPERTY(bool loadInProgress READ loadInProgress NOTIFY onIsLoadInProgressChanged)
@@ -24,16 +22,8 @@ class QMLNewsInteractor : public QQuickItem
 
 
 public:
-    explicit QMLNewsInteractor(QQuickItem *parent = nullptr);
-    virtual ~QMLNewsInteractor() {}
-    
-    /**
-     * @brief The stuff the interactor needs to do its job properly.
-     * @param manager
-     * @param feedList
-     */
-    void init(OperationManager* manager, ListModel *feedList);
-
+    explicit NewsFeedInteractor(QQuickItem *parent = nullptr);
+    virtual ~NewsFeedInteractor() {}
 
     // Returns the number of special feeds.
     qint32 specialFeedCount();
@@ -42,7 +32,7 @@ public:
     bool loadInProgress();
 
     // Returns the window height.
-    int getWindowHeight() { return windowHeight; }
+    int getWindowHeight();
 
     // Sets the window height.
     void setWindowHeight(int windowHeight);
@@ -64,6 +54,12 @@ signals:
     void windowHeightChanged();
 
 public slots:
+
+    // Remove an existing feed.
+    void removeFeed(FeedItem* feed);
+
+    // Insert a folder at the given index and reparent the next two items.
+    int insertFolder(int newIndex);
 
     // The order of the feed list changed!  Better record that.
     void orderChanged();
@@ -99,8 +95,6 @@ private:
     
     // Pointer to the global feed list.
     ListModel *feedList;
-
-    int windowHeight;
 };
 
-#endif // QMLNEWSINTERACTOR_H
+#endif // NEWSFEEDINTERACTOR_H

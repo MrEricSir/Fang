@@ -16,7 +16,6 @@
 #include "models/PinnedFeedItem.h"
 #include "models/ListModel.h"
 #include "models/FangSettings.h"
-#include "models/QMLNewsInteractor.h"
 #include "models/NewsWebSocketServer.h"
 #include "parser/RawFeed.h"
 #include "FangObject.h"
@@ -41,9 +40,14 @@ public:
     FeedItem *getFeed(int index);
     
     /**
-     * @return A (read-only) list of teh feedz.
+     * @return A list of our feedz.
      */
     ListModel* getFeedList() const { return feedList; }
+
+    /**
+     * @return Our operation manager instance.
+     */
+    OperationManager* getOperationManager() { return &manager; }
     
     /**
      * @brief Sets the focus on the app window.
@@ -56,6 +60,9 @@ public:
     static FangApp *instance();
     
 signals:
+
+    // The window height changed!
+    void windowHeightChanged();
 
     // The number of special feeds has changed, huzzah!
     void specialFeedCountChanged();
@@ -70,6 +77,12 @@ public slots:
      * @return The number of visible special feeds (all news, pinned, etc.)
      */
     qint32 specialFeedCount();
+
+    // Returns the window height.
+    int getWindowHeight() { return windowHeight; }
+
+    // Sets the window height.
+    void setWindowHeight(int windowHeight);
     
     /**
      * @brief Adds a known, pre-processed feed.
@@ -189,11 +202,6 @@ public slots:
     NewsWebSocketServer* getNewsServer() { return &newsServer; }
 
     /**
-     * @return QML interactor
-     */
-    QMLNewsInteractor* getQMLNewsInteractor() { return interactor; }
-
-    /**
      * @brief Jumps the view to the bookmark (if any)
      */
     void jumpToBookmark();
@@ -289,13 +297,13 @@ private:
     QQmlApplicationEngine* engine;
     SingleInstanceCheck* single;
     OperationManager manager;
+    int windowHeight;
     ListModel *feedList;
     ListModel *importList;
     FeedItem* currentFeed;
     bool loadAllFinished;
     FangSettings *fangSettings;
     DBSettings dbSettings;
-    QMLNewsInteractor *interactor;
     QTimer *updateTimer;
     QMap<qint64, FeedItem*> feedIdMap;
     QQuickWindow* window;

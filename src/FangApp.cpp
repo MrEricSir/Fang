@@ -32,13 +32,13 @@ FangApp::FangApp(QApplication *parent, QQmlApplicationEngine* engine, SingleInst
     engine(engine),
     single(single),
     manager(this),
+    windowHeight(0),
     feedList(new ListModel(new FeedItem, this)),
     importList(new ListModel(new FeedItem, this)),
     currentFeed(nullptr),
     loadAllFinished(false),
     fangSettings(nullptr),
     dbSettings(&manager),
-    interactor(nullptr),
     updateTimer(new QTimer(this)),
     window(nullptr),
     allNews(nullptr),
@@ -379,11 +379,10 @@ void FangApp::onObjectCreated(QObject* object, const QUrl& url)
     window = qobject_cast<QQuickWindow*>(object);
     
     single->setWindow(window);
-    interactor = object->findChild<QMLNewsInteractor*>("QMLNewsInteractor");
     fangSettings = object->findChild<FangSettings*>("fangSettings");
     
     // Do a sanity check.
-    if (interactor == nullptr || fangSettings == nullptr) {
+    if (fangSettings == nullptr) {
         qDebug() << "Could not find QML objects!!!11";
         
         return;
@@ -391,12 +390,6 @@ void FangApp::onObjectCreated(QObject* object, const QUrl& url)
 
     // Init settings.
     fangSettings->init(&dbSettings);
-    
-    // Show the current feed.
-   // displayFeed();
-    
-    // Init interactor with Mr. Manager, our list of feeds, and the settings.
-    interactor->init(&manager, feedList);
 
     // Init WebSocket server.
     newsServer.init(fangSettings);
@@ -595,7 +588,6 @@ void FangApp::onSetBookmarkFinished(Operation *operation)
 
     currentFeed->setBookmarkID(bookmarkOp->getBookmarkID());
     newsServer.drawBookmark(currentFeed->getBookmarkID());
-    //emit interactor->drawBookmark(currentFeed->getBookmarkID());
 }
 
 void FangApp::onSetPinFinished(Operation *operation)
@@ -667,6 +659,16 @@ qint32 FangApp::specialFeedCount()
 
     // Otherwise just one for all news.
     return 1;
+}
+
+void FangApp::setWindowHeight(int windowHeight)
+{
+    if (windowHeight == this->windowHeight) {
+        return;
+    }
+
+    this->windowHeight = windowHeight;
+    emit windowHeightChanged();
 }
 
 void FangApp::addFeed(const QString userURL, const RawFeed* rawFeed, bool switchTo)

@@ -33,11 +33,12 @@ Item {
     // This is called by RearrangableDelegate when the user creates a new folder.  It
     // expects the folder's database ID to be returned.
     function insertFolder(firstItemIndex) {
-        return validator.insertFolder(firstItemIndex);
+        return newsFeedInteractor.insertFolder(firstItemIndex);
     }
 
-    FeedValidator {
-        id: validator
+    // The "interactor" is what talks to the C++ layer.
+    NewsFeedInteractor {
+        id: newsFeedInteractor;
     }
     
     Rectangle {

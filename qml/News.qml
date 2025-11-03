@@ -5,50 +5,50 @@ Item {
     id: news
 
     // Read-only: The number of special feeds in the feed list
-    property alias specialFeedCount: qmlNewsInteractor.specialFeedCount;
+    property alias specialFeedCount: newsFeedInteractor.specialFeedCount;
 
     // Read-only: Whether bookmarks are enabled for this feed.
     property bool bookmarksEnabled: true;
 
     // Read-only: Whether the news view is loading stuff.
-    property alias isInProgress: qmlNewsInteractor.loadInProgress;
+    property alias isInProgress: newsFeedInteractor.loadInProgress;
 
     // Set this if you want the news to be visible (native WebView only)
     property alias isVisible: newsView.isVisible;
     
     // Used by main for double clicking on feed titles.
     function jumpToBookmark() {
-        qmlNewsInteractor.jumpToBookmark();
+        newsFeedInteractor.jumpToBookmark();
     }
     
     function orderChanged() {
-        qmlNewsInteractor.orderChanged();
+        newsFeedInteractor.orderChanged();
     }
     
     function refreshCurrentFeed() {
-        qmlNewsInteractor.refreshCurrentFeed();
+        newsFeedInteractor.refreshCurrentFeed();
     }
 
     function refreshFeed(feed) {
-        qmlNewsInteractor.refreshFeed(feed);
+        newsFeedInteractor.refreshFeed(feed);
     }
 
     function markAllAsRead(feed) {
-        qmlNewsInteractor.markAllAsRead(feed);
+        newsFeedInteractor.markAllAsRead(feed);
     }
 
     function markAllAsUnread(feed) {
-        qmlNewsInteractor.markAllAsUnread(feed);
+        newsFeedInteractor.markAllAsUnread(feed);
     }
     
     // Switch to news.
     function showNews() {
-        qmlNewsInteractor.showNews();
+        newsFeedInteractor.showNews();
     }
     
     // Switch to the welcome/help screen.
     function showWelcome() {
-        qmlNewsInteractor.showWelcome();
+        newsFeedInteractor.showWelcome();
     }
     
     // This is a workaround for a bug on Winows; see the comment
@@ -65,13 +65,11 @@ Item {
         
         anchors.fill: parent;
         
-        onHeightChanged: qmlNewsInteractor.windowHeight = height;
+        onHeightChanged: newsFeedInteractor.windowHeight = height;
         
         // The "interactor" is what talks to the C++ layer.
-        // See QMLNewsInteractor.h and .cpp
-        QMLNewsInteractor {
-            id: qmlNewsInteractor;
-            objectName: "QMLNewsInteractor"; // Do not change!! PENALTY OF DEATH AND ELECTROCUTION
+        NewsFeedInteractor {
+            id: newsFeedInteractor;
         }
         
         // Our web page!
@@ -81,26 +79,26 @@ Item {
             anchors.fill: parent;
 
             // Stops scrolling while we're loading or a dialog is displayed.
-            enabled: !qmlNewsInteractor.loadInProgress && newsFocus;
+            enabled: !newsFeedInteractor.loadInProgress && newsFocus;
         }
 
         Keys.onPressed: (event)=> {
             switch (event.key) {
             case Qt.Key_Left:
-                qmlNewsInteractor.jumpPrevious();
+                newsFeedInteractor.jumpPrevious();
 
                 break;
             case Qt.Key_Right:
-                qmlNewsInteractor.jumpNext();
+                newsFeedInteractor.jumpNext();
 
                 break;
             case Qt.Key_F5:
-                qmlNewsInteractor.refreshCurrentFeed();
+                newsFeedInteractor.refreshCurrentFeed();
 
                 break;
             case Qt.Key_R:
                 if (event.modifiers & Qt.ControlModifier) {
-                    qmlNewsInteractor.refreshCurrentFeed();
+                    newsFeedInteractor.refreshCurrentFeed();
                 }
 
                 break;

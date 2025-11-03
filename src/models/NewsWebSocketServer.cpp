@@ -32,7 +32,7 @@ void NewsWebSocketServer::init(FangSettings *fangSettings)
     connect(fangSettings, &FangSettings::fontSizeChanged, this, &NewsWebSocketServer::onFontSizeChanged);
     connect(fangSettings, &FangSettings::styleChanged, this, &NewsWebSocketServer::onStyleChanged);
 
-    connect(FangApp::instance()->getQMLNewsInteractor(), &QMLNewsInteractor::windowHeightChanged,
+    connect(FangApp::instance(), &FangApp::windowHeightChanged,
             this, &NewsWebSocketServer::onWindowHeightChanged);
 }
 
@@ -171,7 +171,7 @@ void NewsWebSocketServer::onLoadNewsFinished(LoadNews *loader)
 
     // Window height.
     document.insert("windowHeight", QString::number(
-                        FangApp::instance()->getQMLNewsInteractor()->getWindowHeight()));
+                        FangApp::instance()->getWindowHeight()));
 
     // First news ID.
     document.insert("firstNewsID", currentFeed->getFirstNewsID());
@@ -269,7 +269,7 @@ void NewsWebSocketServer::onFontSizeChanged(QString font)
 void NewsWebSocketServer::onWindowHeightChanged()
 {
     sendCommand("windowHeight", QString::number(
-                    FangApp::instance()->getQMLNewsInteractor()->getWindowHeight()));
+                    FangApp::instance()->getWindowHeight()));
 }
 
 void NewsWebSocketServer::drawBookmark(qint64 bookmarkID)

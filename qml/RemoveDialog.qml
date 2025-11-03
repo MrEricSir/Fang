@@ -23,21 +23,17 @@ Dialog {
         onClicked: {
             // Remove a specific feed.
             //console.log("Feed to remove: ", feed)
-            validator.removeFeed(feed);
+            newsFeedInteractor.removeFeed(feed);
             
             // Dismiss the dialog.
             dismiss();
         }
         enabled: !isClosing;
         
-        // Yes this is cheating, but so what?
-        FeedValidator {
-            id: validator;
+        // The "interactor" is what talks to the C++ layer.
+        NewsFeedInteractor {
+            id: newsFeedInteractor;
         }
-    }
-    
-    onDialogClosed: {
-        validator.destroy();
     }
     
     DialogButton {
