@@ -19,12 +19,12 @@ void RemoveFeedOperation::execute()
 {
     Q_ASSERT(feed);
 
+    if (feed->isSpecialFeed()) {
+        qDebug() << "Cannot remove special feed";
+    }
+
     bool isFolder = feed->isFolder();
     qint64 dbID = feed->getDbId();
-
-    if (dbID < 0) {
-        qDebug() << "Cannot remove feed with invalid ID:: " << dbID;
-    }
 
     // Delete the feed.
     db().transaction();

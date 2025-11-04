@@ -30,9 +30,16 @@ UpdateFeedOperation::~UpdateFeedOperation()
 void UpdateFeedOperation::execute()
 {
     FANG_BACKGROUND_CHECK;
+    Q_ASSERT(feed);
     
-    if (feed->metaObject() == &AllNewsFeedItem::staticMetaObject) {
-        qDebug() <<  "Cannot update all news";
+    if (feed->isSpecialFeed()) {
+        qDebug() <<  "Cannot update special feed";
+        emit finished(this);
+        return;
+    }
+
+    if (feed->isFolder()) {
+        qDebug() <<  "Cannot update folder";
         emit finished(this);
         return;
     }
