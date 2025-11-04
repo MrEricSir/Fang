@@ -30,6 +30,7 @@ void RemoveFeedOperation::execute()
     db().transaction();
     QSqlQuery removeFeed(db());
     removeFeed.prepare("DELETE FROM FeedItemTable WHERE id = :feed_id");
+    removeFeed.bindValue(":feed_id", dbID);
     if (!removeFeed.exec()) {
         reportSQLError(removeFeed, "Unable to remove feed.");
         db().rollback();
@@ -52,18 +53,20 @@ void RemoveFeedOperation::execute()
 
     // Good to go!
     db().commit();
-    feed->clearDbId(); // Remember that we did this.
 
         
     // Remove from the model.
+    feed->clearDbId();
     feedList->removeItem(feed);
     if (isFolder) {
-        // TODO: Set model's parent feed to -1
+        // Set model's parent feed to -1
         ListModel * feedList = FangApp::instance()->getFeedList();
         for (int i = 0; i < feedList->rowCount(); i++) {
             FeedItem* feed = qobject_cast<FeedItem*>(feedList->row(i));
             Q_ASSERT(feed);
-            feed->setParentFolder(-1);
+            if (feed->getParentFolderID() == dbID) {
+                feed->setParentFolder(-1);
+            }
         }
     }
     
