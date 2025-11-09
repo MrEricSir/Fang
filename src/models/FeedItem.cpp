@@ -15,7 +15,7 @@ FeedItem::FeedItem(QObject *parent) :
     url(),
     siteURL(),
     imageURL(),
-    newsList(nullptr),
+    newsList(),
     isUpdating(false),
     unreadCount(0),
     _bookmark(nullptr),
@@ -28,7 +28,6 @@ FeedItem::FeedItem(QObject *parent) :
     _folderOpen(true)
     
 {
-    newsList = new class NewsList();
 }
 
 FeedItem::FeedItem(qint64 id, const qint32 ordinal, const QString &title, const QString &subtitle,
@@ -46,7 +45,7 @@ FeedItem::FeedItem(qint64 id, const qint32 ordinal, const QString &title, const 
     siteURL(siteURL),
     userURL(userURL),
     imageURL(imageURL),
-    newsList(nullptr),
+    newsList(),
     isUpdating(false),
     unreadCount(0),
     _bookmark(nullptr),
@@ -58,7 +57,6 @@ FeedItem::FeedItem(qint64 id, const qint32 ordinal, const QString &title, const 
     _parentFolder(parentFolder),
     _folderOpen(folderOpen)
 {
-    newsList = new class NewsList();
 }
 
 FeedItem::~FeedItem()
@@ -231,7 +229,7 @@ void FeedItem::setFolderOpen(bool folderOpen)
 
 void FeedItem::clearNews()
 {
-    newsList->clear();
+    newsList.clear();
 }
 
 bool FeedItem::canBookmark(qint64 bookmarkID, bool allowBackward)

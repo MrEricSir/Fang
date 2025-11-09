@@ -9,6 +9,7 @@
 
 #include "DBObject.h"
 #include "ListModel.h"
+#include "src/models/NewsList.h"
 
 class NewsItem;
 class NewsList;
@@ -135,7 +136,7 @@ public slots:
      * Note: This represents news items that are loaded and can be viewed. As such it will
      * slowly grow as more news items are added to the feed.
      */
-    inline NewsList* getNewsList() { return newsList; }
+    inline NewsList* getNewsList() { return &newsList; }
     
     /**
      * @brief Used to set the bookmark internally.  External classes shouldn't need to call this.
@@ -249,7 +250,7 @@ private:
     QUrl siteURL;
     QString userURL;
     QUrl imageURL;
-    class NewsList* newsList;
+    NewsList newsList;
     int isUpdating;
     qint32 unreadCount;
     NewsItem* _bookmark;
