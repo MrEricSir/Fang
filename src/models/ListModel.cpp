@@ -14,7 +14,7 @@ ListModel::ListModel(ListItem* prototype, QObject *parent) :
 {
     // Populate our _roleNames reverse lookup map.
     QHash<int, QByteArray> roleNames = m_prototype->roleNames();
-    foreach(int roleIndex, roleNames.keys()) {
+    for (int roleIndex : roleNames.keys()) {
         _roleNames[ roleNames[roleIndex] ] = roleIndex;
     }
 }
@@ -61,7 +61,7 @@ void ListModel::setData(int row, const QString &field_name, QVariant new_value)
     }
     
     QHash<int, QByteArray> roleNames = m_list.at(row)->roleNames();
-    foreach(int roleIndex, roleNames.keys()) {
+    for (int roleIndex : roleNames.keys()) {
         if (field_name == roleNames[roleIndex]) {
              m_list.at(row)->setData(new_value, roleIndex);
             
@@ -107,13 +107,13 @@ void ListModel::appendRow(ListItem *item)
 void ListModel::appendRows(const QList<ListItem *> &items)
 {
   beginInsertRows(QModelIndex(), rowCount(), rowCount()+items.size()-1);
-  foreach(ListItem *item, items) {
+  for (ListItem *item : items) {
     connect(item, &ListItem::dataChanged, this, &ListModel::handleItemChange);
     m_list.append(item);
   }
   endInsertRows();
   
-  foreach(ListItem* item, items) {
+  for (ListItem* item : items) {
       emit added(item);
   }
   
@@ -143,7 +143,7 @@ void ListModel::handleItemChange()
  
 ListItem * ListModel::find(const QString &id) const
 {
-  foreach(ListItem* item, m_list) {
+  for (ListItem* item : m_list) {
     if(item->id() == id) return item;
   }
   return 0;
@@ -160,7 +160,7 @@ QModelIndex ListModel::indexFromItem(const ListItem *item) const
  
 void ListModel::clear()
 {
-    foreach(ListItem* item, m_list) {
+    for (ListItem* item : m_list) {
         emit removed(item);
     }
     
@@ -218,7 +218,7 @@ bool ListModel::removeRows(int row, int count, const QModelIndex &parent)
   }
   endRemoveRows();
   
-  foreach(ListItem* item, toRemove) {
+  for (ListItem* item : toRemove) {
       emit removed(item);
   }
   

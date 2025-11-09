@@ -62,7 +62,7 @@ void TestFangParser::parseTest()
     QVERIFY2(feed != nullptr, "Feed was null");
     
     // Check all dates in the feed for validity, as this is a common issue.
-    foreach (RawNews* newsItem, feed->items) {
+    for (RawNews* newsItem : feed->items) {
         QVERIFY2(newsItem->timestamp.isValid(), "Invalid timestamp.");
     }
     

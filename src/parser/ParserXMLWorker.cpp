@@ -96,7 +96,7 @@ void ParserXMLWorker::elementStart()
         // Build a string of the tag's elements.
         QString elements = "";
         QXmlStreamAttributes attributes = xml.attributes();
-        foreach (QXmlStreamAttribute attribute, attributes) {
+        for (QXmlStreamAttribute attribute : attributes) {
             elements += " " + attribute.name().toString() + "=\""
                         + attribute.value().toString() + "\"";
         }

@@ -29,14 +29,16 @@ void ImageGrabber::fetchUrls(const QList<QUrl> &urls)
     urlsToCheck.clear();
     
     // Do it!
-    foreach(QUrl url, urls)
+    for (QUrl url : urls) {
         checkUrl(url);
+    }
 }
 
 void ImageGrabber::checkUrl(const QUrl &url)
 {
-    if (urlsToCheck.contains(url))
+    if (urlsToCheck.contains(url)) {
         return; // Already workin' on this one.
+    }
     
     urlsToCheck.append(url);
     
@@ -72,8 +74,9 @@ void ImageGrabber::onRequestFinished(QNetworkReply * reply)
 void ImageGrabber::checkCompletion()
 {
     // Only continue if we're done.
-    if (results.size() != urlsToCheck.size())
+    if (results.size() != urlsToCheck.size()) {
         return;
+    }
     
     // And we're done here!
     emit finished();

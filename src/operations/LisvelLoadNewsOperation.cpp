@@ -73,7 +73,7 @@ void LisvelLoadNewsOperation::execute()
         // As an optimization, we only want to present *one* list -- an append list.
         // So we rewind our prepend list on top of it, then delete the prepend list.
         if (!listPrepend.isEmpty()) {
-            foreach (NewsItem* newsItem, listPrepend) {
+            for (NewsItem* newsItem : listPrepend) {
                 // News item list.
                 listAppend.prepend(newsItem);
             }

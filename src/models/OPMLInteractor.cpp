@@ -131,7 +131,7 @@ void OPMLInteractor::onParserDone()
     ListModel* importList = FangApp::instance()->getImportList();
     
     // Convert and append our news items.
-    foreach (RawFeed* rawFeed, list) {
+    for (RawFeed* rawFeed : list) {
         FeedItem* feedItem = Utilities::feedItemFromRaw(rawFeed, 0, rawFeed->url.toString(), nullptr);
         feedToRaw.insert(feedItem, rawFeed);
         importList->appendRow(feedItem);
@@ -206,7 +206,7 @@ void OPMLInteractor::onImportListDataChanged(const QModelIndex& topLeft,
 
 void OPMLInteractor::clear()
 {
-    foreach(RawFeed* raw, feedToRaw) {
+    for (RawFeed* raw : feedToRaw) {
         raw->deleteLater();
     }
     

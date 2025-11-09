@@ -65,7 +65,7 @@ void RawFeedRewriter::rewrite(QList<RawNews *> *newsList)
     intID = 0;
 
     // Iterate over all the news we have.
-    foreach(RawNews* news, *newsList) {
+    for (RawNews* news : *newsList) {
         if (news->content.size()) {
             news->content = rewriteFirstPass(news->content, imageURLs);
         }
@@ -101,7 +101,7 @@ bool RawFeedRewriter::isHTMLEmpty(QString html)
 
 bool RawFeedRewriter::isShareURL(const QString &url)
 {
-    foreach (QString shareURL, shareButtonURLs) {
+    for (QString shareURL : shareButtonURLs) {
         if (url.contains(shareURL, Qt::CaseInsensitive)) {
             return true;
         }
@@ -315,7 +315,7 @@ QString RawFeedRewriter::rewriteFirstPass(const QString &document, QSet<QUrl> &i
 void RawFeedRewriter::rewriteAllSecondPass()
 {
     // Iterate over all the news... again!
-    foreach(RawNews* news, *newsList) {
+    for (RawNews* news : *newsList) {
         if (news->content.size()) {
             news->content = rewriteSecondPass(news->content);
         }
@@ -394,7 +394,7 @@ QString RawFeedRewriter::rewriteSecondPass(QString &docString)
                 } else {
                     // Write the tag and all attributes (except for ID)
                     writer.writeStartElement(tagName);
-                    foreach(QXmlStreamAttribute attribute, xml.attributes()) {
+                    for (QXmlStreamAttribute attribute : xml.attributes()) {
                         if (attribute.name().toString() != S_ID) {
                             writer.writeAttribute(attribute);
                         }
@@ -451,7 +451,7 @@ QString RawFeedRewriter::rewriteSecondPass(QString &docString)
 void RawFeedRewriter::postProcess()
 {
     // Iterate over all the news we have.
-    foreach(RawNews* news, *newsList) {
+    for (RawNews* news : *newsList) {
         if (news->content.size()) {
             postProcessDocString(news->content);
         }
@@ -510,7 +510,7 @@ QString RawFeedRewriter::rewriteTextOnlyNews(QString input)
     input.replace("\r", "\n");
 
     QStringList list = input.split('\n', Qt::SkipEmptyParts);
-    foreach(QString line, list) {
+    for (QString line : list) {
         // Trim lines, and skip empty ones.
         QString trimmed = line.trimmed();
         if (!trimmed.isEmpty()) {

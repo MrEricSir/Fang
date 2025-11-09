@@ -68,7 +68,7 @@ void LoadAllFeedsOperation::execute()
     // Set the initial unread counts.
     allNews->setUnreadCount(UnreadCountReader::forAllNews(db()));
     pinnedNews->setUnreadCount(UnreadCountReader::forPinned(db()));
-    foreach(ListItem* li, tempFeedItemList) {
+    for (ListItem* li : tempFeedItemList) {
         FeedItem* item = qobject_cast<FeedItem*>(li);
         if (item->isFolder()) {
             item->setUnreadCount(UnreadCountReader::forFolder(db(), item->getDbID()));

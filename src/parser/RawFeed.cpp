@@ -30,9 +30,8 @@ QString RawFeed::toString()
     output << "lastUpdated: " << lastUpdated.toString() << Qt::endl;
     output << "minutesToUpdate: " << minutesToUpdate << Qt::endl;
     output << Qt::endl;
-    
-    RawNews* item;
-    foreach (item, items) {
+
+    for (RawNews* item : items) {
         output << "title: " << item->title << Qt::endl;
         output << "author: " << item->author << Qt::endl;
         output << "description: " << item->description << Qt::endl;

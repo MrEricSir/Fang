@@ -270,7 +270,7 @@ void FangApp::refreshFeed(FeedItem *feed)
     }
     
     // Update 'em all!
-    foreach(FeedItem* item, feedsToUpdate) {
+    for (FeedItem* item : feedsToUpdate) {
         manager.add(new UpdateFeedOperation(&manager, item, nullptr, useCache));
         manager.add(new FaviconUpdateOperation(&manager, item));
     }

@@ -39,7 +39,7 @@ void FaviconGrabber::find(const QUrl &url)
     extensions << "ico" << "jpg" << "jpeg" << "png" << "gif";
     
     // Add each extension to our list.
-    foreach(QString ext, extensions) {
+    for (QString ext : extensions) {
         QUrl toCheck(host);
         toCheck.setPath("/favicon." + ext);
         urlsToCheck << toCheck;

@@ -186,7 +186,7 @@ void NewsWebSocketServer::onLoadNewsFinished(LoadNewsOperation *loader)
                 addNewsItem(item, &newsList);
             }
         } else {
-            foreach(NewsItem* item, loader->getPrependList()) {
+            for (NewsItem* item : loader->getPrependList()) {
                 addNewsItem(item, &newsList);
             }
         }
@@ -194,7 +194,7 @@ void NewsWebSocketServer::onLoadNewsFinished(LoadNewsOperation *loader)
 
     // Stuff the new items into our feed.
     if (!loader->getAppendList().isEmpty()) {
-        foreach(NewsItem* item, loader->getAppendList()) {
+        for (NewsItem* item : loader->getAppendList()) {
             addNewsItem(item, &newsList);
         }
     }

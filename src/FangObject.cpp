@@ -36,12 +36,12 @@ void FangObject::printRemainingObjects()
     QMap<QString, int> instanceCount;
     
     // Tally up the totals.
-    foreach(FangObject* object, allObjects) {
+    for (FangObject* object : allObjects) {
         instanceCount[object->metaObject()->className()]++;
     }
     
     // Print 'em out!
-    foreach(QString className, instanceCount.keys()) {
+    for (QString className : instanceCount.keys()) {
         qDebug() << QString("%1 : %2").
                     arg(instanceCount[className], 4).arg(className);
     }

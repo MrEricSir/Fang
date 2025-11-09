@@ -85,7 +85,7 @@ void UpdateOrdinalsOperation::execute()
     }
 
     // Second: parent folders (or lack thereof.)
-    foreach (FeedItem* item, removedFromFolder) {
+    for (FeedItem* item : removedFromFolder) {
         item->setParentFolder(-1);
     }
 

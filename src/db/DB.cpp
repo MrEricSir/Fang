@@ -155,8 +155,7 @@ bool DB::executeSqlFile(QFile& sqlFile)
     QStringList statements = entireFile.split(";");
     
     // Execute each statement.
-    QString s;
-    foreach(s, statements) {
+    for (QString s : statements) {
         s = s.trimmed();
         if (s.isEmpty())
             continue; // Ignore empty lines.

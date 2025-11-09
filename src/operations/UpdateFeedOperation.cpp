@@ -160,7 +160,7 @@ void UpdateFeedOperation::onRewriterFinished()
     
     // Add all new items to DB.
     db().transaction(); // Prevent getting out of sync on error.
-    foreach (RawNews* rawNews, newsList) {
+    for (RawNews* rawNews : newsList) {
         QSqlQuery query(db());
         query.prepare("INSERT INTO NewsItemTable (feed_id, guid, title, author, summary, content, "
                       "timestamp, url) VALUES (:feed_id, :guid, :title, :author, :summary, :content, "
