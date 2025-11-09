@@ -1,5 +1,5 @@
-#ifndef LOADNEWS_H
-#define LOADNEWS_H
+#ifndef LOADNEWSOPERATION_H
+#define LOADNEWSOPERATION_H
 
 #include <QObject>
 #include <QList>
@@ -11,7 +11,7 @@
 /**
  * @brief Loads a batch of NewsItems.
  */
-class LoadNews : public DBOperation
+class LoadNewsOperation : public DBOperation
 {
     Q_OBJECT
 public:
@@ -28,9 +28,9 @@ public:
      * @param mode      Type of load operation (see above)
      * @param loadLimit Max number of news items to load
      */
-    explicit LoadNews(OperationManager *parent, FeedItem* feedItem, LoadMode mode, int loadLimit = 15);
+    explicit LoadNewsOperation(OperationManager *parent, FeedItem* feedItem, LoadMode mode, int loadLimit = 15);
     
-    virtual ~LoadNews();
+    virtual ~LoadNewsOperation();
     
 public slots:
     virtual void execute();
@@ -48,17 +48,17 @@ public slots:
     /**
      * @return List of items that this load appended.
      */
-    inline QList<NewsItem*>* getAppendList() { return listAppend; }
+    inline QList<NewsItem*>* getAppendList() { return &listAppend; }
     
     /**
      * @return List of items that this load prepended.
      */
-    inline QList<NewsItem*>* getPrependList() { return listPrepend; }
+    inline QList<NewsItem*>* getPrependList() { return &listPrepend; }
     
     /**
      * @return Max number of items to load (specified as loadLimit in constructor.)
      */
-    inline int getLoadLimit() { return loadLimit; }
+    inline int getLoadLimit() const { return loadLimit; }
     
 protected slots:
     
@@ -106,10 +106,10 @@ protected:
     FeedItem* feedItem;
     
     // List of items we appended.
-    QList<NewsItem*>* listAppend;
+    QList<NewsItem*> listAppend;
     
     // List of items we prepended.
-    QList<NewsItem*>* listPrepend;
+    QList<NewsItem*> listPrepend;
     
     // True if we're appending.
     LoadMode mode;
@@ -119,4 +119,4 @@ protected:
     
 };
 
-#endif // LOADNEWS_H
+#endif // LOADNEWSOPERATION_H

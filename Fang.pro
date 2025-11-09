@@ -69,9 +69,11 @@ SOURCES += src/main.cpp \
     src/models/NewsFeedInteractor.cpp \
     src/models/NewsItem.cpp \
     src/models/FeedItem.cpp \
+    src/models/NewsList.cpp \
     src/operations/BookmarkOperation.cpp \
     src/operations/InsertFolderOperation.cpp \
     src/operations/LoadFolderOperation.cpp \
+    src/operations/LoadNewsOperation.cpp \
     src/operations/MarkAllReadOrUnreadOperation.cpp \
     src/operations/UpdateFeedURLOperation.cpp \
     src/parser/RawFeed.cpp \
@@ -96,7 +98,6 @@ SOURCES += src/main.cpp \
     src/operations/UpdateTitleOperation.cpp \
     src/parser/ParserInterface.cpp \
     src/models/FangSettings.cpp \
-    src/operations/LoadNews.cpp \
     src/utilities/RawFeedRewriter.cpp \
     src/operations/LoadAllNewsOperation.cpp \
     src/utilities/UnreadCountReader.cpp \
@@ -128,14 +129,17 @@ SOURCES += src/main.cpp \
     src/models/NewsWebSocketServer.cpp
 	
 HEADERS += \
+    src/models/DBObject.h \
     src/models/FolderFeedItem.h \
     src/models/ListModel.h \
     src/models/NewsFeedInteractor.h \
     src/models/NewsItem.h \
     src/models/FeedItem.h \
+    src/models/NewsList.h \
     src/operations/BookmarkOperation.h \
     src/operations/InsertFolderOperation.h \
     src/operations/LoadFolderOperation.h \
+    src/operations/LoadNewsOperation.h \
     src/operations/MarkAllReadOrUnreadOperation.h \
     src/operations/UpdateFeedURLOperation.h \
     src/parser/RawFeed.h \
@@ -160,7 +164,6 @@ HEADERS += \
     src/operations/UpdateTitleOperation.h \
     src/parser/ParserInterface.h \
     src/models/FangSettings.h \
-    src/operations/LoadNews.h \
     src/utilities/RawFeedRewriter.h \
     src/operations/LoadAllNewsOperation.h \
     src/utilities/UnreadCountReader.h \

@@ -56,7 +56,7 @@ void FaviconUpdateOperation::onGrabberFinished(const QUrl &faviconUrl)
         db().transaction();
         QSqlQuery query(db());
         query.prepare("UPDATE FeedItemTable SET lastIconUpdate = :lastIconUpdate WHERE id = :id");
-        query.bindValue(":id", feed->getDbId());
+        query.bindValue(":id", feed->getDbID());
         query.bindValue(":lastIconUpdate", now.toMSecsSinceEpoch());
         
         if (!query.exec()) {
@@ -80,7 +80,7 @@ void FaviconUpdateOperation::onGrabberFinished(const QUrl &faviconUrl)
     QSqlQuery query(db());
     query.prepare("UPDATE FeedItemTable SET imageURL = :imageURL, "
                   "lastIconUpdate = :lastIconUpdate WHERE id = :id");
-    query.bindValue(":id", feed->getDbId());
+    query.bindValue(":id", feed->getDbID());
     query.bindValue(":imageURL", faviconUrl.toString());
     query.bindValue(":lastIconUpdate", now.toMSecsSinceEpoch());
     

@@ -1,4 +1,5 @@
 #include "NewsItem.h"
+#include "FeedItem.h"
 #include <QDebug>
 
 NewsItem::NewsItem(QObject *parent) :

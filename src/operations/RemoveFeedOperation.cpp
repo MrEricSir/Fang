@@ -24,7 +24,7 @@ void RemoveFeedOperation::execute()
     }
 
     bool isFolder = feed->isFolder();
-    qint64 dbID = feed->getDbId();
+    qint64 dbID = feed->getDbID();
 
     // Delete the feed.
     db().transaction();

@@ -58,8 +58,9 @@ void OperationManager::runNow(Operation *operation)
 
 void OperationManager::runNextOperations()
 {
-    if (queue.isEmpty())
+    if (queue.isEmpty()) {
         return; // Nothing to do.
+    }
     
     // Don't do too much at once.  Schedule another call in the future if we're still busy.
     if (pending.size() >= 2) {
@@ -71,8 +72,9 @@ void OperationManager::runNextOperations()
     // Pop the next 2 ops off the queue and run 'em.
     int i = 0;
     while(!queue.isEmpty()) {
-        if (i >= 2)
+        if (i >= 2) {
             break;
+        }
         
         i++;
         Operation* operation = queue.dequeue();

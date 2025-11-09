@@ -7,11 +7,12 @@
 #include <QVariant>
 #include <QDebug>
 
-#include "FeedItem.h"
-
 #include "../FangObject.h"
+#include "DBObject.h"
 
-class NewsItem : public FangObject
+class FeedItem;
+
+class NewsItem : public FangObject, DBObject
 {
     Q_OBJECT
     
@@ -50,7 +51,7 @@ public:
     inline QString getContent() const { return content; }
     inline QDateTime getTimestamp() const { return timestamp; }
     inline QUrl getURL() const { return url; }
-    inline qint64 getDbID() const { return _id; }
+    virtual inline qint64 getDbID() const { return _id; }
     inline bool getPinned() const { return pinned; }
     inline void setPinned(bool p) { pinned = p; }
    

@@ -133,7 +133,7 @@ function loadNews(json)
 {
     // Might consider an evil eval() alternative if needed.
     let newsObject = JSON.parse( json );
-    //console.log("News: ", newsObject);
+    //console.log("loadNews: ", newsObject);
 
     setWindowHeight(newsObject.windowHeight);
 
@@ -206,7 +206,7 @@ function setMode(mode)
 function isAtBottom(distance) {
     let bottom = $(document).height() - windowHeight - distance;
     let ret = $(document).scrollTop() >= bottom;
-    //console.log("Is at bottom? ", ret)
+    //console.log("Is at bottom? bottom y: ", bottom, " scrollTop: ", $(document).scrollTop(), " ret: ", ret)
     return ret;
 }
 
@@ -470,8 +470,6 @@ function jumpToBookmark() {
 
     // Check if last element is the bookmark.
     let lastIsBookmark = getLastNewsContainer().hasClass("bookmarked");
-    //console.log("Last is bookmark: ", lastIsBookmark);
-    
     let scrollTo = element.offset().top - 10;
     
     //console.log("Scroll to: ", scrollTo, " window height: ", windowHeight, " document h: ", $(document).height());
@@ -708,17 +706,19 @@ $(document).ready(function() {
     
     // Adjust the bookmark if necessary.
     function checkBookmark() {
-        //console.log("check bookmark")
+        // console.log("check bookmark")
         bookmarkAll = false; // If true, bookmark every single item.
 
         if ($(newsContainerSelector).length === 0) {
-            console.log("NO NEWS CONTAINERS to deal with, no need to set bookmark")
+            console.log("checkBookmark: NO NEWS CONTAINERS to deal with, no need to set bookmark")
             
             return;
         }
 
+
         // If there's nothing more to load and we've scrolled alllll the way down, bookmark the last item.
-        if (atNewsEnd &&  (($(document).height()- windowHeight) - $(document).scrollTop()) < 25 ) {
+        if (atNewsEnd && isAtBottom(25)) {
+            //console.log("checkBookmark: At bottom, bookmark all");
             bookmarkAll = true;
         }
         
@@ -728,7 +728,7 @@ $(document).ready(function() {
         
         // Check if the current bookmark is valid.
         if (!bookmarkAll && bookmarkedItem.length && !isAboveScroll(bookmarkedItem)) {
-            //console.log("Currently bookmarked item is not above scroll.  Goodbye!", bookmarkedItem.attr('id'));
+            // console.log("checkBookmark Currently bookmarked item is not above scroll.  Goodbye!", bookmarkedItem.attr('id'));
             
             return;
         }
@@ -742,13 +742,13 @@ $(document).ready(function() {
         while (nextItem !== null && nextItem.length >= 1) {
             // Nothing more to do.
             if (!isAboveScroll(nextItem) && !bookmarkAll) {
-                //console.log("item not above scroll:", nextItem.attr('id'))
+                // console.log("checkBookmark: item not above scroll:", nextItem.attr('id'))
                 
                 break;
             }
             
             // Move the bookmark down one.
-            //console.log("set bookmark to ", nextItem.attr('id'))
+            // console.log("checkBookmark: set bookmark to ", nextItem.attr('id'))
             sendCommand( 'setBookmark', htmlIdToId(nextItem.attr('id')) );
             
             // Continue to next item.

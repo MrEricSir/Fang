@@ -68,7 +68,7 @@ void BookmarkOperation::unbookmarkAllInFolder(FolderFeedItem *folder)
 
     QSqlQuery update(db());
     update.prepare("UPDATE FeedItemTable SET bookmark_id = -1 WHERE parent_folder = :feed_id");
-    update.bindValue(":feed_id", folder->getDbId());
+    update.bindValue(":feed_id", folder->getDbID());
 
     if (!update.exec()) {
         reportSQLError(update, "Unable to unset bookmarks in folder (aka set folder unread)");
@@ -91,7 +91,7 @@ void BookmarkOperation::bookmarkAllInFolder(FolderFeedItem *folder)
     update.prepare("UPDATE FeedItemTable AS f SET bookmark_id = "
                    "(SELECT id FROM NewsItemTable n WHERE n.feed_id = f.id ORDER BY timestamp DESC, id DESC LIMIT 1) "
                    "WHERE f.parent_folder = :feed_id");
-    update.bindValue(":feed_id", folder->getDbId());
+    update.bindValue(":feed_id", folder->getDbID());
 
     if (!update.exec()) {
         reportSQLError(update, "Unable to set all bookmarks in folder (aka set folder read)");
@@ -112,7 +112,7 @@ void BookmarkOperation::unbookmarkAllInFeed(FeedItem *feed)
 
     QSqlQuery update(db());
     update.prepare("UPDATE FeedItemTable SET bookmark_id = -1 WHERE id = :feed_id");
-    update.bindValue(":feed_id", feed->getDbId());
+    update.bindValue(":feed_id", feed->getDbID());
 
     if (!update.exec()) {
         reportSQLError(update, "Unable to unset bookmark for feed (aka set feed unread)");
@@ -135,7 +135,7 @@ void BookmarkOperation::bookmarkAllInFeed(FeedItem *feed)
     update.prepare("UPDATE FeedItemTable SET bookmark_id = "
                    "(SELECT id FROM NewsItemTable WHERE feed_id = :feed_id ORDER BY timestamp DESC, id DESC LIMIT 1) "
                    "WHERE id = :feed_id");
-    update.bindValue(":feed_id", feed->getDbId());
+    update.bindValue(":feed_id", feed->getDbID());
 
     if (!update.exec()) {
         reportSQLError(update, "Unable to set bookmark for feed (aka set feed read)");

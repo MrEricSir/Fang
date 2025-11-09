@@ -32,10 +32,10 @@ void ExpireNewsOperation::execute()
                           "AND id < ( SELECT bookmark_id FROM FeedItemTable WHERE id = :feed_id2 LIMIT 1 ) "
                           "AND timestamp < :olderThan AND id NOT IN "
                           "( SELECT id FROM NewsItemTable WHERE feed_id = :feed_id3 ORDER BY timestamp DESC LIMIT :saveLast )");
-            query.bindValue(":feed_id", feed->getDbId());
-            query.bindValue(":feed_id2", feed->getDbId());
+            query.bindValue(":feed_id", feed->getDbID());
+            query.bindValue(":feed_id2", feed->getDbID());
             query.bindValue(":olderThan", olderThan.toMSecsSinceEpoch());
-            query.bindValue(":feed_id3", feed->getDbId());
+            query.bindValue(":feed_id3", feed->getDbID());
             query.bindValue(":saveLast", saveLast);
 
             if (!query.exec()) {

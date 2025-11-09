@@ -1,13 +1,13 @@
 #ifndef LISVELLOADNEWSOPERATION_H
 #define LISVELLOADNEWSOPERATION_H
 
-#include "LoadNews.h"
+#include "LoadNewsOperation.h"
 
 #include <QString>
 
 #include "../models/LisvelFeedItem.h"
 
-class LisvelLoadNewsOperation : public LoadNews
+class LisvelLoadNewsOperation : public LoadNewsOperation
 {
     Q_OBJECT
 public:

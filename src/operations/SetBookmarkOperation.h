@@ -14,7 +14,7 @@ class SetBookmarkOperation : public BookmarkOperation
     Q_OBJECT
 public:
     explicit SetBookmarkOperation(OperationManager *parent, FeedItem* feed,
-                                  qint64 bookmarkID);
+                                  NewsItem* bookmark);
     virtual ~SetBookmarkOperation();
 signals:
     
@@ -22,9 +22,9 @@ public slots:
     virtual void execute();
     
     inline FeedItem* getFeed() { return feed; }
-    
-    // Returns the bookmarked item ID.
-    inline qint64 getBookmarkID() { return bookmarkID; }
+
+    // Returns the bookmarked item.
+    inline NewsItem* getBookmark() const { return bookmark; }
     
 protected:
     
@@ -35,7 +35,7 @@ protected:
     void bookmarkAllNewsFeed(AllNewsFeedItem* allNews);
     
 private:
-    qint64 bookmarkID;
+    NewsItem* bookmark;
 };
 
 #endif // SETBOOKMARKOPERATION_H

@@ -103,7 +103,7 @@ void UpdateFeedOperation::onFeedFinished()
     QDateTime newestLocalNews = QDateTime::fromMSecsSinceEpoch(0); // default to epoch
     QSqlQuery query(db());
     query.prepare("SELECT timestamp FROM NewsItemTable WHERE feed_id = :feed_id ORDER BY timestamp DESC LIMIT 1");
-    query.bindValue(":feed_id", feed->getDbId());
+    query.bindValue(":feed_id", feed->getDbID());
     if (!query.exec()) {
         reportSQLError(query, "Error: Could not read news timestamp");
         
@@ -155,6 +155,8 @@ void UpdateFeedOperation::onFeedFinished()
 void UpdateFeedOperation::onRewriterFinished()
 {
     FANG_BACKGROUND_CHECK;
+
+    feed->setIsUpdating(false);
     
     // Add all new items to DB.
     db().transaction(); // Prevent getting out of sync on error.
@@ -163,7 +165,7 @@ void UpdateFeedOperation::onRewriterFinished()
         query.prepare("INSERT INTO NewsItemTable (feed_id, guid, title, author, summary, content, "
                       "timestamp, url) VALUES (:feed_id, :guid, :title, :author, :summary, :content, "
                       ":timestamp, :url)");
-        query.bindValue(":feed_id", feed->getDbId());
+        query.bindValue(":feed_id", feed->getDbID());
         query.bindValue(":guid", rawNews->guid);
         query.bindValue(":title", rawNews->title);
         query.bindValue(":author", rawNews->author);
@@ -186,7 +188,7 @@ void UpdateFeedOperation::onRewriterFinished()
     // Update feed update timestamp.
     QSqlQuery query(db());
     query.prepare("UPDATE FeedItemTable SET lastUpdated = :lastUpdated WHERE id = :feed_id");
-    query.bindValue(":feed_id", feed->getDbId());
+    query.bindValue(":feed_id", feed->getDbID());
     query.bindValue(":lastUpdated", timestamp.toMSecsSinceEpoch());
     
     if (!query.exec()) {

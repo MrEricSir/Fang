@@ -1,23 +1,23 @@
-#include "LoadNews.h"
+#include "LoadNewsOperation.h"
+#include "../models/NewsList.h"
 #include <QDebug>
 
-LoadNews::LoadNews(OperationManager *parent, FeedItem* feedItem, LoadMode mode, int loadLimit) :
+LoadNewsOperation::LoadNewsOperation(OperationManager *parent, FeedItem* feedItem, LoadMode mode, int loadLimit) :
     DBOperation(IMMEDIATE, parent),
     feedItem(feedItem),
-    listAppend(nullptr),
-    listPrepend(nullptr),
+    listAppend(),
+    listPrepend(),
     mode(mode),
     loadLimit(loadLimit)
 {
 }
 
-LoadNews::~LoadNews()
+LoadNewsOperation::~LoadNewsOperation()
 {
-    delete listAppend;
-    delete listPrepend;
+
 }
 
-void LoadNews::queryToNewsList(QSqlQuery& query, QList<NewsItem*>* list)
+void LoadNewsOperation::queryToNewsList(QSqlQuery& query, QList<NewsItem*>* list)
 {
     while (query.next()) {
         // Load from DB query result.
@@ -39,14 +39,14 @@ void LoadNews::queryToNewsList(QSqlQuery& query, QList<NewsItem*>* list)
     }
 }
 
-qint64 LoadNews::getBookmarkID()
+qint64 LoadNewsOperation::getBookmarkID()
 {
     QSqlQuery query(db());
     query.prepare("SELECT bookmark_id FROM FeedItemTable WHERE id = :id");
-    query.bindValue(":id", feedItem->getDbId());
+    query.bindValue(":id", feedItem->getDbID());
     
     if (!query.exec() || !query.next()) {
-       qDebug() << "Could not update bookmark for feed id: " << feedItem->getDbId();
+       qDebug() << "Could not update bookmark for feed id: " << feedItem->getDbID();
        qDebug() << query.lastError();
        
        return -1;
@@ -55,7 +55,7 @@ qint64 LoadNews::getBookmarkID()
     return query.value("bookmark_id").toULongLong();
 }
 
-qint64 LoadNews::getFirstNewsID()
+qint64 LoadNewsOperation::getFirstNewsID()
 {
     const QString queryString = "SELECT id FROM NewsItemTable WHERE feed_id = :feed_id "
             "ORDER BY timestamp ASC, id ASC LIMIT 1";
@@ -63,7 +63,7 @@ qint64 LoadNews::getFirstNewsID()
     QSqlQuery query(db());
     query.prepare(queryString);
     
-    query.bindValue(":feed_id", feedItem->getDbId());
+    query.bindValue(":feed_id", feedItem->getDbID());
     
     if (!query.exec() || !query.next()) {
         // No news yet!
@@ -73,36 +73,26 @@ qint64 LoadNews::getFirstNewsID()
     return query.value("id").toULongLong();
 }
 
-bool LoadNews::doAppend(qint64 startId)
+bool LoadNewsOperation::doAppend(qint64 startId)
 {
     // Extract the query into our news list.
-    listAppend = new QList<NewsItem*>();
-    bool ret = executeLoadQuery(startId, true);
-    
-    if (listAppend->size() == 0) {
-        delete listAppend;
-        listAppend = NULL;
-    }
-    
-    return ret;
+    return executeLoadQuery(startId, true);
 }
 
-bool LoadNews::doPrepend(qint64 startId)
+bool LoadNewsOperation::doPrepend(qint64 startId)
 {
     // Extract the query into our news list.
-    listPrepend = new QList<NewsItem*>();
-    bool ret = executeLoadQuery(startId, false);
-    
-    if (listPrepend->size() == 0) {
-        delete listPrepend;
-        listPrepend = NULL;
-    }
-    
-    return ret;
+    return executeLoadQuery(startId, false);
 }
 
-bool LoadNews::executeLoadQuery(qint64 startId, bool append)
+bool LoadNewsOperation::executeLoadQuery(qint64 startId, bool append)
 {
+    if (append) {
+        listAppend.clear();
+    } else {
+        listPrepend.clear();
+    }
+
     QString direction = append ? ">=" : "<";
     QString sortOrder = append ? "ASC" : "DESC";
     QString queryString = "SELECT * FROM NewsItemTable WHERE feed_id = :feed_id AND id " 
@@ -113,24 +103,24 @@ bool LoadNews::executeLoadQuery(qint64 startId, bool append)
     QSqlQuery query(db());
     query.prepare(queryString);
     
-    query.bindValue(":feed_id", feedItem->getDbId());
+    query.bindValue(":feed_id", feedItem->getDbID());
     query.bindValue(":start_id", startId);
     query.bindValue(":load_limit", loadLimit);
     
     if (!query.exec()) {
-       qDebug() << "Could not load news for feed id: " << feedItem->getDbId();
+       qDebug() << "Could not load news for feed id: " << feedItem->getDbID();
        qDebug() << query.lastError();
        
        return false;
     }
     
     // Extract the query into our news list.
-    queryToNewsList(query, append ? listAppend : listPrepend);
+    queryToNewsList(query, append ? &listAppend : &listPrepend);
     
     return true;
 }
 
-qint64 LoadNews::getStartIDForAppend()
+qint64 LoadNewsOperation::getStartIDForAppend()
 {
     qint64 startId = -1;
     if (feedItem->getNewsList() != nullptr && feedItem->getNewsList()->size() > 0) {
@@ -140,7 +130,7 @@ qint64 LoadNews::getStartIDForAppend()
     return startId;
 }
 
-qint64 LoadNews::getStartIDForPrepend()
+qint64 LoadNewsOperation::getStartIDForPrepend()
 {
     qint64 startId = -1;
     if (feedItem->getNewsList() != nullptr && feedItem->getNewsList()->size() > 0) {
@@ -150,7 +140,7 @@ qint64 LoadNews::getStartIDForPrepend()
     return startId;
 }
 
-void LoadNews::execute()
+void LoadNewsOperation::execute()
 {
     if (feedItem->isSpecialFeed()) {
         // This is a special feed, dumbass.  You called the wrong operation!
@@ -215,18 +205,22 @@ void LoadNews::execute()
     }
     
     // Append/prepend items from our lists.
-    if (listAppend != nullptr)
-        for (NewsItem* newsItem: *listAppend) {
+    if (!listAppend.isEmpty()) {
+        for (NewsItem* newsItem: listAppend) {
             feedItem->getNewsList()->append(newsItem);
         }
+    }
     
-    if (listPrepend != nullptr)
-        for (NewsItem* newsItem: *listPrepend) {
+    if (!listPrepend.isEmpty()) {
+        for (NewsItem* newsItem: listPrepend) {
             feedItem->getNewsList()->prepend(newsItem);
         }
+    }
     
     // Set our bookmark.
-    feedItem->setBookmarkID(bookmarkID);
+    if (bookmarkID >= 0) {
+        feedItem->setBookmark(feedItem->getNewsList()->newsItemForID(bookmarkID));
+    }
     
     // Set the first known ID.
     feedItem->setFirstNewsID(firstNewsID);

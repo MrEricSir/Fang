@@ -17,7 +17,7 @@ void UpdateFeedURLOperation::execute()
     // Update URL
     QSqlQuery query(db());
     query.prepare("UPDATE FeedItemTable SET url = :url WHERE id = :feed_id");
-    query.bindValue(":feed_id", feed->getDbId());
+    query.bindValue(":feed_id", feed->getDbID());
     query.bindValue(":url", newURL);
 
     if (!query.exec()) {

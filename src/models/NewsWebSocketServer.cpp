@@ -6,6 +6,7 @@
 
 #include "../FangApp.h"
 #include "../utilities/NetworkUtilities.h"
+#include "src/models/NewsList.h"
 
 NewsWebSocketServer::NewsWebSocketServer(QObject *parent) :
     QObject(parent),
@@ -106,19 +107,19 @@ void NewsWebSocketServer::execute(const QString &command, const QString &data)
 
         app->setPin(id, (bool) pin);
     } else if ("removeNewsTop" == command) {
-        app->removeNews(true, data.toInt());
+        app->removeAndDelete(true, data.toInt());
     } else if ("removeNewsBottom" == command) {
-        app->removeNews(false, data.toInt());
+        app->removeAndDelete(false, data.toInt());
     } else if ("loadComplete" == command) {
         loadInProgress = false;
         emit isLoadInProgressChanged();
     } else if ("loadNext" == command) {
         if (!loadInProgress) {
-            app->loadNews(LoadNews::Append);
+            app->loadNews(LoadNewsOperation::Append);
         }
     } else if ("loadPrevious" == command) {
         if (!loadInProgress) {
-            app->loadNews(LoadNews::Prepend);
+            app->loadNews(LoadNewsOperation::Prepend);
         }
     }
 }
@@ -136,20 +137,20 @@ void NewsWebSocketServer::sendCommand(const QString &command, const QString &dat
     pSocket->sendTextMessage(command + " " + data);
 }
 
-void NewsWebSocketServer::onLoadNewsFinished(LoadNews *loader)
+void NewsWebSocketServer::onLoadNewsFinished(LoadNewsOperation *loader)
 {
     //qDebug() << "Load complete for news feed: " << loader->getFeedItem()->getTitle();
 
-    if (loader->getMode() != LoadNews::Initial && !loader->getPrependList() &&
-            !loader->getAppendList()) {
+    if (loader->getMode() != LoadNewsOperation::Initial && loader->getPrependList()->isEmpty() &&
+            loader->getAppendList()->isEmpty()) {
         // Nothing to do!
         sendCommand("loadEmpty", "");
 
         return;
     }
 
-    QString operationName = loader->getMode() == LoadNews::Initial ? "initial" :
-                            loader->getMode() == LoadNews::Append ? "append" : "prepend";
+    QString operationName = loader->getMode() == LoadNewsOperation::Initial ? "initial" :
+                            loader->getMode() == LoadNewsOperation::Append ? "append" : "prepend";
 
     QVariantMap document;
     QVariantList newsList;
@@ -158,10 +159,10 @@ void NewsWebSocketServer::onLoadNewsFinished(LoadNews *loader)
     document.insert("mode", operationName);
 
     FeedItem* currentFeed = FangApp::instance()->getCurrentFeed();
-    if (loader->getMode() == LoadNews::Initial)  {
+    if (loader->getMode() == LoadNewsOperation::Initial)  {
         // Bookmark (if needed)
-        if (currentFeed->bookmarksEnabled()) {
-            qint64 idOfBookmark = currentFeed->getBookmarkID();
+        if (currentFeed->bookmarksEnabled() && currentFeed->getBookmark()) {
+            qint64 idOfBookmark = currentFeed->getBookmark()->getDbID();
             document.insert("bookmark", idOfBookmark);
         }
 
@@ -178,7 +179,7 @@ void NewsWebSocketServer::onLoadNewsFinished(LoadNews *loader)
 
     // Build our news list.
     if (loader->getPrependList() != nullptr) {
-        if (loader->getMode() == LoadNews::Initial) {
+        if (loader->getMode() == LoadNewsOperation::Initial) {
             // Reverse list.
             for (int i = loader->getPrependList()->size() - 1; i >= 0; i--) {
                 NewsItem* item = loader->getPrependList()->at(i);
@@ -290,16 +291,15 @@ void NewsWebSocketServer::updatePin(qint64 newsID, bool pinned)
 void NewsWebSocketServer::jumpToBookmark()
 {
     FeedItem* currentFeed = FangApp::instance()->getCurrentFeed();
-    if (!currentFeed->bookmarksEnabled()) {
+    if (!currentFeed->bookmarksEnabled() && currentFeed->getBookmark()) {
         // Nothing to do!
         return;
     }
 
     // Find the bookmark.
     bool bookmarkLoaded = false;
-    for(int i = 0; i < currentFeed->getNewsList()->count(); i++) {
-        if (currentFeed->getNewsList()->at(i)->getDbID() ==
-                currentFeed->getBookmarkID()) {
+    for(int i = 0; i < currentFeed->getNewsList()->size(); i++) {
+        if (currentFeed->getNewsList()->at(i) == currentFeed->getBookmark()) {
             bookmarkLoaded = true;
             break;
         }

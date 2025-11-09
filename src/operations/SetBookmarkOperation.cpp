@@ -3,10 +3,11 @@
 
 #include "../models/AllNewsFeedItem.h"
 #include "../FangApp.h"
+#include "src/models/NewsList.h"
 
-SetBookmarkOperation::SetBookmarkOperation(OperationManager *parent, FeedItem* feed, qint64 bookmarkID) :
+SetBookmarkOperation::SetBookmarkOperation(OperationManager *parent, FeedItem* feed, NewsItem* bookmark) :
     BookmarkOperation(parent, feed),
-    bookmarkID(bookmarkID)
+    bookmark(bookmark)
 {
 }
 
@@ -19,7 +20,7 @@ void SetBookmarkOperation::execute()
 {
     AllNewsFeedItem* allNews = qobject_cast<AllNewsFeedItem*>(feed);
     if (allNews) {
-        if (bookmarkID == -1) {
+        if (bookmark == nullptr) {
             unbookmarkAll();
         } else {
             bookmarkAllNewsFeed(allNews);
@@ -41,12 +42,12 @@ void SetBookmarkOperation::bookmarkSingleFeed(FeedItem* feed)
     QSqlQuery update(db());
     update.prepare("UPDATE FeedItemTable SET bookmark_id = :bookmark_id WHERE id = "
                    ":feed_id");
-    update.bindValue(":bookmark_id", bookmarkID);
-    update.bindValue(":feed_id", feed->getDbId());
+    update.bindValue(":bookmark_id", bookmark->getDbID());
+    update.bindValue(":feed_id", feed->getDbID());
 
     if (!update.exec()) {
-        reportSQLError(update, "Unable to set bookmark to " + QString::number(bookmarkID) +
-                                   " for feed id: " + QString::number(feed->getDbId()));
+        reportSQLError(update, "Unable to set bookmark to " + QString::number(bookmark->getDbID()) +
+                                   " for feed id: " + QString::number(feed->getDbID()));
         db().rollback();
 
         emit finished(this);
@@ -69,9 +70,9 @@ void SetBookmarkOperation::bookmarkFolderFeed(FolderFeedItem* feedFolder)
     //
     QSqlQuery query(db());
     query.prepare("SELECT feed_id FROM NewsItemTable WHERE id = :bookmark_id LIMIT 1");
-    query.bindValue(":bookmark_id", bookmarkID);
+    query.bindValue(":bookmark_id", bookmark->getDbID());
     if (!query.exec() || !query.next()) {
-        reportSQLError(query, "Unable to locate news item for bookmark " + QString::number(bookmarkID));
+        reportSQLError(query, "Unable to locate news item for bookmark " + QString::number(bookmark->getDbID()));
 
         emit finished(this);
         return;
@@ -87,8 +88,8 @@ void SetBookmarkOperation::bookmarkFolderFeed(FolderFeedItem* feedFolder)
 
 void SetBookmarkOperation::bookmarkAllNewsFeed(AllNewsFeedItem* allNews)
 {
-    int proposed = allNews->newsIDs()->indexOf(bookmarkID);
-    int current = allNews->newsIDs()->indexOf(allNews->getBookmarkID());
+    int proposed = allNews->getNewsList()->indexOf(bookmark);
+    int current = allNews->getNewsList()->indexOf(allNews->getBookmark());
     
     Q_ASSERT(proposed != current); // You have to double-check for this before starting this operation.
     
@@ -104,7 +105,7 @@ void SetBookmarkOperation::bookmarkAllNewsFeed(AllNewsFeedItem* allNews)
         }
         
         // Get the news ID.
-        qint64 newBookmark = allNews->newsIDs()->at(i);
+        qint64 newBookmark = allNews->getNewsList()->at(i)->getDbID();
         
         // Generate our query.
         //

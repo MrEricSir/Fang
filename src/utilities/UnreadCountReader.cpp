@@ -9,7 +9,7 @@ UnreadCountReader::UnreadCountReader()
 void UnreadCountReader::update(QSqlDatabase db, FeedItem *feed)
 {
     if (feed->isSpecialFeed()) {
-        switch (feed->getDbId()) {
+        switch (feed->getDbID()) {
         case FEED_ID_ALLNEWS:
             feed->setUnreadCount(forAllNews(db));
             break;
@@ -26,9 +26,9 @@ void UnreadCountReader::update(QSqlDatabase db, FeedItem *feed)
 
     // All other feed types.
     if (feed->isFolder()) {
-        feed->setUnreadCount(forFolder(db, feed->getDbId()));
+        feed->setUnreadCount(forFolder(db, feed->getDbID()));
     } else {
-        feed->setUnreadCount(forFeed(db, feed->getDbId()));
+        feed->setUnreadCount(forFeed(db, feed->getDbID()));
     }
 }
 

@@ -18,6 +18,7 @@
 #include "operations/InsertFolderOperation.h"
 #include "operations/MarkAllReadOrUnreadOperation.h"
 #include "operations/FaviconUpdateOperation.h"
+#include "src/models/NewsList.h"
 
 #if defined(Q_OS_MAC)
     #include "notifications/NotificationMac.h"
@@ -91,7 +92,7 @@ void FangApp::init()
     manager.add(loadAllOp);
 }
 
-FeedItem* FangApp::getFeed(int index)
+FeedItem* FangApp::getFeed(qsizetype index)
 {
     void* item = feedList->row(index);
     if (item == nullptr) {
@@ -119,7 +120,7 @@ void FangApp::onFeedAdded(ListItem *item)
         return;
     }
 
-    feedIdMap.insert(feed->getDbId(), feed);
+    feedIdMap.insert(feed->getDbID(), feed);
     
     // Hook up signals.
     connectFeed(feed);
@@ -136,7 +137,7 @@ void FangApp::onFeedRemoved(ListItem * listItem)
     FeedItem* item = qobject_cast<FeedItem *>(listItem);
     if (item != nullptr) {
         disconnectFeed(item);
-        feedIdMap.take(item->getDbId());
+        feedIdMap.take(item->getDbID());
 
         if (!item->isSpecialFeed()) {
             item->deleteLater(); // Well, bye.
@@ -191,10 +192,11 @@ void FangApp::onLoadAllFinished(Operation *op)
     // Find our special feeds.
     for (int i = 0; i < feedList->rowCount(); i++) {
         FeedItem* item = qobject_cast<FeedItem*>(feedList->row(i));
-        if (item->getDbId() >=0)
+        if (item->getDbID() >=0) {
             break; // We're done with special feeds.
+        }
 
-        switch (item->getDbId()) {
+        switch (item->getDbID()) {
         case FEED_ID_ALLNEWS:
             allNews = qobject_cast<AllNewsFeedItem*>(item);
             break;
@@ -252,7 +254,7 @@ void FangApp::refreshFeed(FeedItem *feed)
         updateTimer->start();
     } else if (feed->isFolder()) {
         // Update the feeds in this folder.
-        qint64 folderID = feed->getDbId();
+        qint64 folderID = feed->getDbID();
         for (int i = 0; i < feedList->rowCount(); i++)
         {
             FeedItem* item = qobject_cast<FeedItem*>(feedList->row(i));
@@ -308,11 +310,11 @@ FeedItem* FangApp::feedForId(const qint64 id)
     }
 
     // Plain ol' feeds.
-    for (int i = 0; i < feedList->rowCount(); i++) {
+    for (int i = 0; i < feedList->rowCount(); ++i) {
         FeedItem* feed = qobject_cast<FeedItem*>(feedList->row(i));
         Q_ASSERT(feed != nullptr);
         
-        if (feed->getDbId() == id) {
+        if (feed->getDbID() == id) {
             return feed;
         }
     }
@@ -323,6 +325,7 @@ FeedItem* FangApp::feedForId(const qint64 id)
 void FangApp::setBookmark(qint64 id, bool allowBackward)
 {
     if (isSettingBookmark || nullptr == currentFeed) {
+        // qDebug() << "Cannot set bookmark to (early exit): " << id;
         return;
     }
 
@@ -334,7 +337,8 @@ void FangApp::setBookmark(qint64 id, bool allowBackward)
     }
 
     // I bookmark you!
-    SetBookmarkOperation* bookmarkOp = new SetBookmarkOperation(&manager, currentFeed, id);
+    SetBookmarkOperation* bookmarkOp = new SetBookmarkOperation(
+        &manager, currentFeed, currentFeed->getNewsList()->newsItemForID(id));
     isSettingBookmark =  true;
     connect(bookmarkOp, &SetBookmarkOperation::finished, this, &FangApp::onSetBookmarkFinished);
     manager.add(bookmarkOp);
@@ -354,20 +358,13 @@ void FangApp::setPin(qint64 id, bool pin)
     manager.add(pinOp);
 }
 
-void FangApp::removeNews(bool fromTop, int numberToRemove)
+void FangApp::removeAndDelete(bool fromStart, qsizetype numberToRemove)
 {
     if (!currentFeed) {
         return;
     }
 
-    // Remove from list, free memory.
-    for (int i = 0; i < numberToRemove; i++) {
-        if (fromTop) {
-            currentFeed->getNewsList()->takeFirst()->deleteLater();
-        } else {
-            currentFeed->getNewsList()->takeLast()->deleteLater();
-        }
-    }
+    currentFeed->getNewsList()->removeAndDelete(fromStart, numberToRemove);
 }
 
 void FangApp::onObjectCreated(QObject* object, const QUrl& url)
@@ -464,17 +461,17 @@ void FangApp::setCurrentFeed(FeedItem *feed, bool reloadIfSameFeed)
 
     // Load up our new batch o' news!
     // TODO: On startup, somehow load All News before we even get here.
-    loadNews(LoadNews::Initial);
+    loadNews(LoadNewsOperation::Initial);
 }
 
-void FangApp::loadNews(LoadNews::LoadMode mode)
+void FangApp::loadNews(LoadNewsOperation::LoadMode mode)
 {
     if (currentFeed == nullptr || loadNewsInProgress) {
         return;
     }
 
-    LoadNews* loader = nullptr;
-    switch (currentFeed->getDbId()) {
+    LoadNewsOperation* loader = nullptr;
+    switch (currentFeed->getDbID()) {
     case FEED_ID_ALLNEWS:
         loader = new LoadAllNewsOperation(&manager, qobject_cast<AllNewsFeedItem*>(currentFeed), mode);
         break;
@@ -488,12 +485,12 @@ void FangApp::loadNews(LoadNews::LoadMode mode)
         if (currentFeed->isFolder()) {
             loader = new LoadFolderOperation(&manager, qobject_cast<FolderFeedItem *>(currentFeed), mode);
         } else {
-            loader = new LoadNews(&manager, currentFeed, mode);
+            loader = new LoadNewsOperation(&manager, currentFeed, mode);
         }
     }
 
     loadNewsInProgress =  true;
-    connect(loader, &LoadNews::finished, this, &FangApp::onLoadNewsFinished);
+    connect(loader, &LoadNewsOperation::finished, this, &FangApp::onLoadNewsFinished);
     manager.add(loader);
 }
 
@@ -586,8 +583,8 @@ void FangApp::onSetBookmarkFinished(Operation *operation)
         return;
     }
 
-    currentFeed->setBookmarkID(bookmarkOp->getBookmarkID());
-    newsServer.drawBookmark(currentFeed->getBookmarkID());
+    currentFeed->setBookmark(bookmarkOp->getBookmark());
+    newsServer.drawBookmark(currentFeed->getBookmark()->getDbID());
 }
 
 void FangApp::onSetPinFinished(Operation *operation)
@@ -609,7 +606,7 @@ void FangApp::onLoadNewsFinished(Operation *operation)
         return;
     }
 
-    LoadNews* loader = qobject_cast<LoadNews*>(operation);
+    LoadNewsOperation* loader = qobject_cast<LoadNewsOperation*>(operation);
     Q_ASSERT(loader != nullptr); // If this ever happens, we're fucked.
 
     if (currentFeed != loader->getFeedItem()) {
@@ -695,7 +692,7 @@ void FangApp::removeFeed(FeedItem *feed)
     manager.add(updateOp);
 }
 
-int FangApp::insertFolder(int newIndex)
+qint64 FangApp::insertFolder(qsizetype newIndex)
 {
     // Slap in a new folder, reparent the following two items.
     manager.add(new InsertFolderOperation(&manager, newIndex, "New folder", feedList));
@@ -704,7 +701,7 @@ int FangApp::insertFolder(int newIndex)
         return -1;
     }
 
-    return item->getDbId();
+    return item->getDbID();
 }
 
 void FangApp::markAllAsRead(FeedItem* feed)

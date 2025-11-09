@@ -31,7 +31,7 @@ void InsertFolderOperation::execute()
     for (int i = newIndex; i < newIndex + 2; i++) {
         FeedItem* next = qobject_cast<FeedItem*>(feedList->row(i));
         Q_ASSERT(next);
-        nextIDs.append(next->getDbId());
+        nextIDs.append(next->getDbID());
         nextItems.append(next);
     }
 

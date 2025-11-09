@@ -3,7 +3,7 @@
 
 #include <QObject>
 #include <QtWebSockets>
-#include "../operations/LoadNews.h"
+#include "../operations/LoadNewsOperation.h"
 #include "FangSettings.h"
 
 /**
@@ -85,7 +85,7 @@ private slots:
     void sendCommand(const QString& command, const QString& data);
 
     // Some news got loaded, probably! Yay!
-    void onLoadNewsFinished(LoadNews* loader);
+    void onLoadNewsFinished(LoadNewsOperation* loader);
 
     // Adds a news item to a variant list (to be turned into JSON)
     void addNewsItem(NewsItem *item, QVariantList* newsList);

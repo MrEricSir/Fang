@@ -7,9 +7,11 @@
 #include <QVariant>
 #include <QTextStream>
 
+#include "DBObject.h"
 #include "ListModel.h"
 
 class NewsItem;
+class NewsList;
 
 // IDs of special feeds.  (Normal feed IDs start at 0.)
 
@@ -18,7 +20,7 @@ enum SpecialFeedID {
     FEED_ID_PINNED = -1
 };
 
-class FeedItem : public ListItem
+class FeedItem : public ListItem, DBObject
 {
     Q_OBJECT
     
@@ -103,7 +105,7 @@ public slots:
     inline quint32 getUnreadCount() const { return unreadCount; }
     inline QString getDropTarget() const { return dropTarget; }
     inline FeedItem* getSelf() const { return const_cast<FeedItem*>(this); }
-    inline qint64 getDbId() const { return _id; }
+    virtual inline qint64 getDbID() const { return _id; }
     inline bool isSpecialFeed() const { return _id < 0; }
     
     void setImageURL(const QUrl& url);
@@ -129,14 +131,17 @@ public slots:
     
     /**
      * @brief Provides direct access to the news list.
+     *
+     * Note: This represents news items that are loaded and can be viewed. As such it will
+     * slowly grow as more news items are added to the feed.
      */
-    inline QList<NewsItem*>* getNewsList() { return newsList; }
+    inline NewsList* getNewsList() { return newsList; }
     
     /**
      * @brief Used to set the bookmark internally.  External classes shouldn't need to call this.
-     * @param bookmark
+     * @param bookmark Item to bookmark or nullptr to clear.
      */
-    virtual void setBookmarkID(qint64 bookmark);
+    virtual void setBookmark(NewsItem* bookmark);
     
     /**
      * @param item
@@ -146,10 +151,10 @@ public slots:
     virtual bool canBookmark(qint64 bookmarkID, bool allowBackward);
     
     /**
-     * @brief Returns the current bookmark's ID.
+     * @brief Returns the current bookmark or nullptr.
      * @return 
      */
-    inline qint64 getBookmarkID() { return _bookmark; }
+    inline NewsItem* getBookmark() { return _bookmark; }
     
     /**
      * @brief Detaches the feed ID when this feed is being disconnected.
@@ -244,10 +249,10 @@ private:
     QUrl siteURL;
     QString userURL;
     QUrl imageURL;
-    QList<NewsItem*>* newsList;
+    class NewsList* newsList;
     int isUpdating;
     qint32 unreadCount;
-    qint64 _bookmark;
+    NewsItem* _bookmark;
     QString dropTarget;
     bool _errorFlag;
     bool isSelected;

@@ -1,5 +1,6 @@
-#include "FeedItem.h"
 #include "NewsItem.h"
+#include "NewsList.h"
+#include "FeedItem.h"
 
 #include <QDebug>
 
@@ -17,7 +18,7 @@ FeedItem::FeedItem(QObject *parent) :
     newsList(nullptr),
     isUpdating(false),
     unreadCount(0),
-    _bookmark(-1),
+    _bookmark(nullptr),
     dropTarget("none"),
     _errorFlag(false),
     isSelected(false),
@@ -27,7 +28,7 @@ FeedItem::FeedItem(QObject *parent) :
     _folderOpen(true)
     
 {
-    newsList = new QList<NewsItem*>();
+    newsList = new class NewsList();
 }
 
 FeedItem::FeedItem(qint64 id, const qint32 ordinal, const QString &title, const QString &subtitle,
@@ -48,7 +49,7 @@ FeedItem::FeedItem(qint64 id, const qint32 ordinal, const QString &title, const 
     newsList(nullptr),
     isUpdating(false),
     unreadCount(0),
-    _bookmark(-1),
+    _bookmark(nullptr),
     dropTarget("none"),
     _errorFlag(false),
     isSelected(false),
@@ -57,7 +58,7 @@ FeedItem::FeedItem(qint64 id, const qint32 ordinal, const QString &title, const 
     _parentFolder(parentFolder),
     _folderOpen(folderOpen)
 {
-    newsList = new QList<NewsItem*>();
+    newsList = new class NewsList();
 }
 
 FeedItem::~FeedItem()
@@ -130,7 +131,7 @@ QVariant FeedItem::data(int role) const
         case BookmarksEnabledRole:
             return bookmarksEnabled();
         case UIDRole:
-            return getDbId();
+            return getDbID();
         default:
             return QVariant();
     }
@@ -230,10 +231,7 @@ void FeedItem::setFolderOpen(bool folderOpen)
 
 void FeedItem::clearNews()
 {
-    // Delete each and every news item.
-    while(newsList->size() > 0) {
-        newsList->takeFirst()->deleteLater();
-    }
+    newsList->clear();
 }
 
 bool FeedItem::canBookmark(qint64 bookmarkID, bool allowBackward)
@@ -244,12 +242,12 @@ bool FeedItem::canBookmark(qint64 bookmarkID, bool allowBackward)
     }
     
     // Given no current bookmark, anything will do.
-    if (_bookmark == -1) {
+    if (_bookmark == nullptr) {
         return true;
     }
     
     // That's a no-op for you, young man.
-    if (_bookmark == bookmarkID) {
+    if (_bookmark->getDbID() == bookmarkID) {
         return false;
     }
     
@@ -257,13 +255,14 @@ bool FeedItem::canBookmark(qint64 bookmarkID, bool allowBackward)
     if (allowBackward) {
         return true;
     }
-    
+
     // We asked SQLite to always increase our IDs, remember.
-    return bookmarkID > _bookmark;
+    return bookmarkID > _bookmark->getDbID();
 }
 
-void FeedItem::setBookmarkID(qint64 bookmark)
+void FeedItem::setBookmark(NewsItem* bookmark)
 {
+    qDebug() << "FeedItem::setBookmark to " << bookmark->getDbID();
     if (bookmark == _bookmark) {
         return; // Nothing to do.
     }

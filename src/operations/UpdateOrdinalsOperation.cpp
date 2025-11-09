@@ -28,16 +28,16 @@ void UpdateOrdinalsOperation::execute()
         }
 
         if (feedItem->isFolder()) {
-            folderIDs << feedItem->getDbId();
+            folderIDs << feedItem->getDbID();
         }
         
         update.prepare("UPDATE FeedItemTable SET ordinal = :ordinal WHERE id = "
                        ":feed_id");
         update.bindValue(":ordinal", i);
-        update.bindValue(":feed_id", feedItem->getDbId());
+        update.bindValue(":feed_id", feedItem->getDbID());
         
         if (!update.exec()) {
-            reportSQLError(update, "Unable to update ordinal for feed id " + QString::number(feedItem->getDbId()));
+            reportSQLError(update, "Unable to update ordinal for feed id " + QString::number(feedItem->getDbID()));
             db().rollback();
             
             return;
@@ -61,10 +61,10 @@ void UpdateOrdinalsOperation::execute()
         update.prepare("UPDATE FeedItemTable SET parent_folder = :parent_folder WHERE id = "
                        ":feed_id");
         update.bindValue(":parent_folder", feedItem->getParentFolderID());
-        update.bindValue(":feed_id", feedItem->getDbId());
+        update.bindValue(":feed_id", feedItem->getDbID());
 
         if (!update.exec()) {
-            reportSQLError(update, "Unable to update parent for feed id " + QString::number(feedItem->getDbId()));
+            reportSQLError(update, "Unable to update parent for feed id " + QString::number(feedItem->getDbID()));
             db().rollback();
 
             return;

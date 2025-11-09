@@ -37,7 +37,7 @@ public:
      * @param index   0..n-1 position in feed list
      * @return        The associated FeedItem object, or null if invalid
      */
-    FeedItem *getFeed(int index);
+    FeedItem *getFeed(qsizetype index);
     
     /**
      * @return A list of our feedz.
@@ -68,7 +68,7 @@ signals:
     void specialFeedCountChanged();
 
     // Some news got loaded! If you care, listen for this signal.
-    void loadNewsFinished(LoadNews* loader);
+    void loadNewsFinished(LoadNewsOperation* loader);
     
 public slots:
     inline int feedCount() { return feedList->rowCount(); }
@@ -103,7 +103,7 @@ public slots:
      * @param newIndex
      * @return UUID of folder item
      */
-    int insertFolder(int newIndex);
+    qint64 insertFolder(qsizetype newIndex);
 
     /**
      * @brief Marks all items in a feed as read.
@@ -158,10 +158,10 @@ public slots:
     void setPin(qint64 id, bool pin);
 
     /**
-     * @brief Removes news from the list from either the top or bottom.
+     * @brief Removes news from the list from either the start or end.
      * This is used to prevent too many items from clogging up the news view.
      */
-    void removeNews(bool fromTop, int numberToRemove);
+    void removeAndDelete(bool fromStart, qsizetype numberToRemove);
 
     /**
      * @brief Used to change the current feed.
@@ -184,7 +184,7 @@ public slots:
      * @brief loadNews Loads another batch of news into memory.  See also the loadNewsFinished signal.
      * @param mode
      */
-    void loadNews(LoadNews::LoadMode mode);
+    void loadNews(LoadNewsOperation::LoadMode mode);
 
     /**
      * @return The settings object, or null if the app hasn't initialized yet.
