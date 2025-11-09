@@ -262,7 +262,7 @@ bool FeedItem::canBookmark(qint64 bookmarkID, bool allowBackward)
 
 void FeedItem::setBookmark(NewsItem* bookmark)
 {
-    qDebug() << "FeedItem::setBookmark to " << bookmark->getDbID();
+    qDebug() << "FeedItem::setBookmark to " << (bookmark ? bookmark->getDbID() : -1);
     if (bookmark == _bookmark) {
         return; // Nothing to do.
     }
