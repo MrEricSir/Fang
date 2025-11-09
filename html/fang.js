@@ -715,9 +715,8 @@ $(document).ready(function() {
             return;
         }
 
-
         // If there's nothing more to load and we've scrolled alllll the way down, bookmark the last item.
-        if (atNewsEnd && isAtBottom(25)) {
+        if (atNewsEnd && isAtBottom($(".bookmark").height())) {
             //console.log("checkBookmark: At bottom, bookmark all");
             bookmarkAll = true;
         }
