@@ -567,6 +567,13 @@ void FangApp::pinnedNewsWatcher()
     }
 }
 
+void FangApp::markAllAsReadOrUnread(FeedItem *feed, bool read)
+{
+    MarkAllReadOrUnreadOperation * markReadOp = new MarkAllReadOrUnreadOperation(&manager, feed, read);
+    connect(markReadOp, &MarkAllReadOrUnreadOperation::finished, this, &FangApp::onMarkReadOrUnreadFinished);
+    manager.add(markReadOp);
+}
+
 void FangApp::onSetBookmarkFinished(Operation *operation)
 {
     if (!currentFeed) {
@@ -584,6 +591,25 @@ void FangApp::onSetBookmarkFinished(Operation *operation)
     }
 
     currentFeed->setBookmark(bookmarkOp->getBookmark());
+    newsServer.drawBookmark(currentFeed->getBookmark()->getDbID());
+}
+
+void FangApp::onMarkReadOrUnreadFinished(Operation *operation)
+{
+    if (!currentFeed) {
+        return;
+    }
+
+    MarkAllReadOrUnreadOperation* markReadOp = qobject_cast<MarkAllReadOrUnreadOperation*>(operation);
+    Q_ASSERT(markReadOp != nullptr);
+
+    if (markReadOp->getFeed() != currentFeed) {
+        return;
+    }
+
+    // Update UI to bookmark last item in list.
+    // NOTE: May lead to bugs if the last news item is not loaded into newsList
+    currentFeed->setBookmark(currentFeed->getNewsList()->last());
     newsServer.drawBookmark(currentFeed->getBookmark()->getDbID());
 }
 
@@ -706,11 +732,11 @@ qint64 FangApp::insertFolder(qsizetype newIndex)
 
 void FangApp::markAllAsRead(FeedItem* feed)
 {
-    manager.add(new MarkAllReadOrUnreadOperation(&manager, feed, true));
+    markAllAsReadOrUnread(feed, true);
+
 }
 
 void FangApp::markAllAsUnread(FeedItem* feed)
 {
-    manager.add(new MarkAllReadOrUnreadOperation(&manager, feed, false));
+    markAllAsReadOrUnread(feed, false);
 }
-

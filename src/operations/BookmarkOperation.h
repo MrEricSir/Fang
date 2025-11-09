@@ -14,6 +14,9 @@ class BookmarkOperation : public DBOperation
 public:
     explicit BookmarkOperation(OperationManager *parent, FeedItem* feed);
     virtual ~BookmarkOperation();
+
+public slots:
+    inline FeedItem* getFeed() { return feed; }
     
 protected slots:
     

@@ -20,8 +20,6 @@ signals:
     
 public slots:
     virtual void execute();
-    
-    inline FeedItem* getFeed() { return feed; }
 
     // Returns the bookmarked item.
     inline NewsItem* getBookmark() const { return bookmark; }
