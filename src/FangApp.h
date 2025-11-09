@@ -280,8 +280,13 @@ private slots:
      */
     void pinnedNewsWatcher();
 
+    void markAllAsReadOrUnread(FeedItem* feed, bool read);
+
     // Called when a bookmark has been set.
     void onSetBookmarkFinished(Operation* operation);
+
+    // Called when a feed has been marked as read or unread.
+    void onMarkReadOrUnreadFinished(Operation* operation);
 
     // Called when a pin has ben set or unset.
     void onSetPinFinished(Operation* operation);
