@@ -141,8 +141,8 @@ void NewsWebSocketServer::onLoadNewsFinished(LoadNewsOperation *loader)
 {
     //qDebug() << "Load complete for news feed: " << loader->getFeedItem()->getTitle();
 
-    if (loader->getMode() != LoadNewsOperation::Initial && loader->getPrependList()->isEmpty() &&
-            loader->getAppendList()->isEmpty()) {
+    if (loader->getMode() != LoadNewsOperation::Initial && loader->getPrependList().isEmpty() &&
+            loader->getAppendList().isEmpty()) {
         // Nothing to do!
         sendCommand("loadEmpty", "");
 
@@ -178,23 +178,23 @@ void NewsWebSocketServer::onLoadNewsFinished(LoadNewsOperation *loader)
     document.insert("firstNewsID", currentFeed->getFirstNewsID());
 
     // Build our news list.
-    if (loader->getPrependList() != nullptr) {
+    if (!loader->getPrependList().isEmpty()) {
         if (loader->getMode() == LoadNewsOperation::Initial) {
             // Reverse list.
-            for (int i = loader->getPrependList()->size() - 1; i >= 0; i--) {
-                NewsItem* item = loader->getPrependList()->at(i);
+            for (int i = loader->getPrependList().size() - 1; i >= 0; i--) {
+                NewsItem* item = loader->getPrependList().at(i);
                 addNewsItem(item, &newsList);
             }
         } else {
-            foreach(NewsItem* item, *loader->getPrependList()) {
+            foreach(NewsItem* item, loader->getPrependList()) {
                 addNewsItem(item, &newsList);
             }
         }
     }
 
     // Stuff the new items into our feed.
-    if (loader->getAppendList() != nullptr) {
-        foreach(NewsItem* item, *loader->getAppendList()) {
+    if (!loader->getAppendList().isEmpty()) {
+        foreach(NewsItem* item, loader->getAppendList()) {
             addNewsItem(item, &newsList);
         }
     }

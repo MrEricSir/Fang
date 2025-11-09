@@ -48,12 +48,12 @@ public slots:
     /**
      * @return List of items that this load appended.
      */
-    inline QList<NewsItem*>* getAppendList() { return &listAppend; }
+    inline QList<NewsItem*>& getAppendList() { return listAppend; }
     
     /**
      * @return List of items that this load prepended.
      */
-    inline QList<NewsItem*>* getPrependList() { return &listPrepend; }
+    inline QList<NewsItem*>& getPrependList() { return listPrepend; }
     
     /**
      * @return Max number of items to load (specified as loadLimit in constructor.)
