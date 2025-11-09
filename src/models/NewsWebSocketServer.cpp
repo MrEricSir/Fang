@@ -298,8 +298,8 @@ void NewsWebSocketServer::jumpToBookmark()
 
     // Find the bookmark.
     bool bookmarkLoaded = false;
-    for(int i = 0; i < currentFeed->getNewsList()->size(); i++) {
-        if (currentFeed->getNewsList()->at(i) == currentFeed->getBookmark()) {
+    for (NewsItem* item : *currentFeed->getNewsList()) {
+        if (currentFeed->getBookmark() == item) {
             bookmarkLoaded = true;
             break;
         }
