@@ -2,11 +2,14 @@
 #include "NewsList.h"
 
 
-//class NewsItem;
-
 NewsList::NewsList(QObject *parent)
     : FangObject{parent}
 {}
+
+NewsList::~NewsList()
+{
+    clear();
+}
 
 void NewsList::clear()
 {

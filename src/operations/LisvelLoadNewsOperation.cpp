@@ -11,7 +11,7 @@ LisvelLoadNewsOperation::LisvelLoadNewsOperation(OperationManager *parent, Lisve
 
 void LisvelLoadNewsOperation::execute()
 {
-    qDebug() << "LisvelLoadNewsOperation::execute load for feed: " << lisvelNews->getSiteURL();
+    qDebug() << "LisvelLoadNewsOperation::execute load for feed: " << lisvelNews->getDbID();
     // For an initial load, make sure the feed isn't populated yet.
     if (getMode() == LoadNewsOperation::Initial) {
         Q_ASSERT(feedItem->getNewsList() != nullptr || feedItem->getNewsList()->isEmpty());

@@ -30,6 +30,8 @@ class FangApp : public FangObject
 public:
     explicit FangApp(QApplication *parent, QQmlApplicationEngine* engine, SingleInstanceCheck* single);
     
+    virtual ~FangApp();
+
     void init();
     
     /**
@@ -42,7 +44,7 @@ public:
     /**
      * @return A list of our feedz.
      */
-    ListModel* getFeedList() const { return feedList; }
+    ListModel* getFeedList() { return &feedList; }
 
     /**
      * @return Our operation manager instance.
@@ -71,7 +73,7 @@ signals:
     void loadNewsFinished(LoadNewsOperation* loader);
     
 public slots:
-    inline int feedCount() { return feedList->rowCount(); }
+    inline int feedCount() { return feedList.rowCount(); }
 
     /**
      * @return The number of visible special feeds (all news, pinned, etc.)
@@ -303,7 +305,7 @@ private:
     SingleInstanceCheck* single;
     OperationManager manager;
     int windowHeight;
-    ListModel *feedList;
+    ListModel feedList;
     ListModel *importList;
     FeedItem* currentFeed;
     bool loadAllFinished;

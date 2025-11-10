@@ -17,6 +17,7 @@ class NewsList : public FangObject
 {
 public:
     explicit NewsList(QObject *parent = nullptr);
+    virtual ~NewsList();
 
     /**
      * @brief Delete everything in the list and clear it.

@@ -34,7 +34,7 @@ FangApp::FangApp(QApplication *parent, QQmlApplicationEngine* engine, SingleInst
     single(single),
     manager(this),
     windowHeight(0),
-    feedList(new ListModel(new FeedItem, this)),
+    feedList(new FeedItem, this),
     importList(new ListModel(new FeedItem, this)),
     currentFeed(nullptr),
     loadAllFinished(false),
@@ -57,12 +57,20 @@ FangApp::FangApp(QApplication *parent, QQmlApplicationEngine* engine, SingleInst
 
     connect(engine, &QQmlApplicationEngine::objectCreated, this, &FangApp::onObjectCreated);
     
-    connect(feedList, &ListModel::added, this, &FangApp::onFeedAdded);
-    connect(feedList, &ListModel::removed, this, &FangApp::onFeedRemoved);
-    connect(feedList, &ListModel::selectedChanged, this, &FangApp::onFeedSelected);
+    connect(&feedList, &ListModel::added, this, &FangApp::onFeedAdded);
+    connect(&feedList, &ListModel::removed, this, &FangApp::onFeedRemoved);
+    connect(&feedList, &ListModel::selectedChanged, this, &FangApp::onFeedSelected);
 
     connect(&newsServer, &NewsWebSocketServer::isLoadInProgressChanged, this,
             &FangApp::onLoadPageChanged);
+}
+
+FangApp::~FangApp()
+{
+    // Prevent signals on shutdown.
+    disconnect(&feedList, &ListModel::added, this, &FangApp::onFeedAdded);
+    disconnect(&feedList, &ListModel::removed, this, &FangApp::onFeedRemoved);
+    disconnect(&feedList, &ListModel::selectedChanged, this, &FangApp::onFeedSelected);
 }
 
 void FangApp::init()
@@ -73,7 +81,7 @@ void FangApp::init()
     qDebug() << "Image formats: " << QImageReader::supportedImageFormats();
 
     // Setup our QML.
-    engine->rootContext()->setContextProperty("feedListModel", feedList); // list of feeds
+    engine->rootContext()->setContextProperty("feedListModel", &feedList); // list of feeds
     engine->rootContext()->setContextProperty("importListModel", importList); // list of feeds to be batch imported
     engine->rootContext()->setContextProperty("platform", getPlatform()); // platform string ID
     engine->rootContext()->setContextProperty("fangVersion", APP_VERSION);
@@ -87,21 +95,21 @@ void FangApp::init()
     //qDebug() << "Is debug build: " << isDebugBuild;
     
     // Load feed list.
-    LoadAllFeedsOperation* loadAllOp = new LoadAllFeedsOperation(&manager, feedList);
+    LoadAllFeedsOperation* loadAllOp = new LoadAllFeedsOperation(&manager, &feedList);
     connect(loadAllOp, &LoadAllFeedsOperation::finished, this, &FangApp::onLoadAllFinished);
     manager.add(loadAllOp);
 }
 
 FeedItem* FangApp::getFeed(qsizetype index)
 {
-    void* item = feedList->row(index);
+    FeedItem* item = qobject_cast<FeedItem*>(feedList.row(index));
     if (item == nullptr) {
         qDebug() << "Feed #" << index << " was NULL";
         
         return nullptr;
     }
     
-    return (FeedItem*) item;
+    return item;
 }
 
 void FangApp::focusApp()
@@ -171,7 +179,7 @@ void FangApp::onNewFeedAddedSelect(Operation* addFeedOperation)
     
     // Tell me about it.
     //qDebug() << "You should select: " << op->getFeedItem()->getTitle();
-    feedList->setSelected(op->getFeedItem());
+    feedList.setSelected(op->getFeedItem());
 }
 
 void FangApp::connectFeed(FeedItem *feed)
@@ -190,8 +198,8 @@ void FangApp::onLoadAllFinished(Operation *op)
     loadAllFinished = true;
 
     // Find our special feeds.
-    for (int i = 0; i < feedList->rowCount(); i++) {
-        FeedItem* item = qobject_cast<FeedItem*>(feedList->row(i));
+    for (int i = 0; i < feedList.rowCount(); i++) {
+        FeedItem* item = qobject_cast<FeedItem*>(feedList.row(i));
         if (item->getDbID() >=0) {
             break; // We're done with special feeds.
         }
@@ -222,7 +230,7 @@ void FangApp::onLoadAllFinished(Operation *op)
 
 void FangApp::updateAllFeeds()
 {
-    if (feedList == nullptr || feedList->rowCount() == 0) {
+    if (feedList.rowCount() == 0) {
         return; // Somehow this was called too early.
     }
     
@@ -239,9 +247,9 @@ void FangApp::refreshFeed(FeedItem *feed)
     // Special handling for all news.
     if (feed->isSpecialFeed()) {
         // Update ALL the feeds.
-        for (int i = 0; i < feedList->rowCount(); i++)
+        for (int i = 0; i < feedList.rowCount(); i++)
         {
-            FeedItem* item = qobject_cast<FeedItem*>(feedList->row(i));
+            FeedItem* item = qobject_cast<FeedItem*>(feedList.row(i));
             Q_ASSERT(item != nullptr);
             if (item->isSpecialFeed() || item->isFolder()) {
                 continue; // Skip special feeds and folders.
@@ -255,9 +263,9 @@ void FangApp::refreshFeed(FeedItem *feed)
     } else if (feed->isFolder()) {
         // Update the feeds in this folder.
         qint64 folderID = feed->getDbID();
-        for (int i = 0; i < feedList->rowCount(); i++)
+        for (int i = 0; i < feedList.rowCount(); i++)
         {
-            FeedItem* item = qobject_cast<FeedItem*>(feedList->row(i));
+            FeedItem* item = qobject_cast<FeedItem*>(feedList.row(i));
             Q_ASSERT(item != nullptr);
             if (item->getParentFolderID() == folderID) {
                 feedsToUpdate.append(item);
@@ -310,8 +318,8 @@ FeedItem* FangApp::feedForId(const qint64 id)
     }
 
     // Plain ol' feeds.
-    for (int i = 0; i < feedList->rowCount(); ++i) {
-        FeedItem* feed = qobject_cast<FeedItem*>(feedList->row(i));
+    for (int i = 0; i < feedList.rowCount(); ++i) {
+        FeedItem* feed = qobject_cast<FeedItem*>(feedList.row(i));
         Q_ASSERT(feed != nullptr);
         
         if (feed->getDbID() == id) {
@@ -392,14 +400,14 @@ void FangApp::onObjectCreated(QObject* object, const QUrl& url)
     newsServer.init(fangSettings);
     
     // Grab the All News item.
-    AllNewsFeedItem* allNews = qobject_cast<AllNewsFeedItem*>(feedList->row(0));
+    AllNewsFeedItem* allNews = qobject_cast<AllNewsFeedItem*>(feedList.row(0));
     
     // Notifications, activate!
 #if defined(Q_OS_MAC)
-    notifications = new NotificationMac(fangSettings, feedList,
+    notifications = new NotificationMac(fangSettings, &feedList,
                                         allNews, window, this);
 #elif defined(Q_OS_WIN)
-    notifications = new NotificationWindows(fangSettings, feedList,
+    notifications = new NotificationWindows(fangSettings, &feedList,
                                             allNews, window, this);
 #endif
     
@@ -420,7 +428,7 @@ void FangApp::onQuit()
     qint32 saveLast = 25;
 
     // Clean up DB before we exit.
-    manager.add(new ExpireNewsOperation(&manager, feedList, olderThan, saveLast));
+    manager.add(new ExpireNewsOperation(&manager, &feedList, olderThan, saveLast));
 }
 
 void FangApp::setCurrentFeed(FeedItem *feed, bool reloadIfSameFeed)
@@ -555,13 +563,13 @@ void FangApp::pinnedNewsWatcher()
     if (isPinnedNewsVisible && pinnedNews->getUnreadCount() == 0 && currentFeed != pinnedNews) {
         // Remove pinned news from the feed list -- but ONLY if it's not the selected one!
         isPinnedNewsVisible = false;
-        feedList->removeItem(pinnedNews);
+        feedList.removeItem(pinnedNews);
 
         emit specialFeedCountChanged();
     } else if (!isPinnedNewsVisible && pinnedNews->getUnreadCount() > 0) {
         // Add pinned news to the feed list.
         isPinnedNewsVisible = true;
-        feedList->insertRow(1, pinnedNews);
+        feedList.insertRow(1, pinnedNews);
 
         emit specialFeedCountChanged();
     }
@@ -698,7 +706,7 @@ void FangApp::addFeed(const QString userURL, const RawFeed* rawFeed, bool switch
 {
     qDebug() << "Add feed: " << userURL;
     AddFeedOperation* addOp = new AddFeedOperation(
-                                  &manager, feedList, userURL, rawFeed);
+                                  &manager, &feedList, userURL, rawFeed);
     
     if (switchTo) {
         connect(addOp, &AddFeedOperation::finished, this, &FangApp::onNewFeedAddedSelect);
@@ -711,18 +719,18 @@ void FangApp::removeFeed(FeedItem *feed)
 {
     // Say goodbye to these (feeds), Michael.
     //qDebug() << "remove feed";
-    manager.add(new RemoveFeedOperation(&manager, feed, feedList));
+    manager.add(new RemoveFeedOperation(&manager, feed, &feedList));
 
     // Update orinals based on the new list order.
-    UpdateOrdinalsOperation* updateOp = new UpdateOrdinalsOperation(&manager, feedList);
+    UpdateOrdinalsOperation* updateOp = new UpdateOrdinalsOperation(&manager, &feedList);
     manager.add(updateOp);
 }
 
 qint64 FangApp::insertFolder(qsizetype newIndex)
 {
     // Slap in a new folder, reparent the following two items.
-    manager.add(new InsertFolderOperation(&manager, newIndex, "New folder", feedList));
-    FeedItem* item = qobject_cast<FeedItem *>(feedList->row(newIndex));
+    manager.add(new InsertFolderOperation(&manager, newIndex, "New folder", &feedList));
+    FeedItem* item = qobject_cast<FeedItem *>(feedList.row(newIndex));
     if (item == nullptr || !item->isFolder()) {
         return -1;
     }
