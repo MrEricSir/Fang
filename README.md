@@ -24,6 +24,13 @@ It is recommended to build, run, and debug from Qt Creator.
 
 In Qt Creator run `qmake` on `Fang.pro`. Assuming the output has no errors, it should be possible to build and run.
 
+## Debugging
+
+To debug the Javascript and HTML, you'll need to set a debugging port and set it as an environment variable. For example, we'll use `9999` as our port.
+
+* Set the `QTWEBENGINE_REMOTE_DEBUGGING` variable to `9999`. In Qt Creator this can be found in Projects, Build & Run, Run, Environment. Click Add and enter `QTWEBENGINE_REMOTE_DEBUGGING=9999`
+* Open up Chrome (or any Chromium-based browser) to localhost at your port, for example `http://127.0.0.1` and click the link under "Inspectable Pages."
+
 ### Troubleshooting
 
 * If a kit isn't found it's likely one needs to be installed, for example Xcode or Visual C++. Once installed, you may need to add it manually by clicking "Projects" in the sidebar and then "Manage Kits."
