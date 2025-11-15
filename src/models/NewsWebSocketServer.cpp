@@ -181,7 +181,7 @@ void NewsWebSocketServer::onLoadNewsFinished(LoadNewsOperation *loader)
     if (!loader->getPrependList().isEmpty()) {
         if (loader->getMode() == LoadNewsOperation::Initial) {
             // Reverse list.
-            for (int i = loader->getPrependList().size() - 1; i >= 0; i--) {
+            for (qsizetype i = loader->getPrependList().size() - 1; i >= 0; i--) {
                 NewsItem* item = loader->getPrependList().at(i);
                 addNewsItem(item, &newsList);
             }
