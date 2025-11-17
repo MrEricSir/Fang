@@ -17,14 +17,34 @@ QString FangSettings::getStringSetting(const QString& name, const QString& defau
 {
     QString ret = defaultValue;
     settings.beginGroup("FangSettings");
-    if (settings.contains(name))
+    if (settings.contains(name)) {
         ret = settings.value(name).toString();
+    }
     
     settings.endGroup();
     return ret;
 }
 
 void FangSettings::setStringSetting(const QString& name, const QString& newValue)
+{
+    settings.beginGroup("FangSettings");
+    settings.setValue(name, newValue);
+    settings.endGroup();
+}
+
+bool FangSettings::getBoolSetting(const QString& name, bool defaultValue)
+{
+    bool ret = defaultValue;
+    settings.beginGroup("FangSettings");
+    if (settings.contains(name)) {
+        ret = settings.value(name).toBool();
+    }
+
+    settings.endGroup();
+    return ret;
+}
+
+void FangSettings::setBoolSetting(const QString& name, bool newValue)
 {
     settings.beginGroup("FangSettings");
     settings.setValue(name, newValue);
@@ -50,8 +70,9 @@ QString FangSettings::getStyle()
 
 void FangSettings::setStyle(QString s)
 {
-    if (s == getStyle())
+    if (s == getStyle()) {
         return; // Nothing to do!
+    }
     
     setStringSetting("style", s);
     emit styleChanged(s);
@@ -64,8 +85,9 @@ QString FangSettings::getFontSize()
 
 void FangSettings::setFontSize(QString s)
 {
-    if (s == getFontSize())
+    if (s == getFontSize()) {
         return; // Nothing to do!
+    }
     
     setStringSetting("fontSize", s);
     emit fontSizeChanged(s);
@@ -88,9 +110,29 @@ QString FangSettings::getRefresh()
 
 void FangSettings::setRefresh(QString s)
 {
-    if (s == getRefresh())
+    if (s == getRefresh()) {
         return; // Nothing to do!
+    }
 
     setStringSetting("refresh", s);
     emit refreshChanged(s);
+}
+
+bool FangSettings::getShowTrayIcon()
+{
+    bool defaultValue = false;
+#if defined(Q_OS_WIN)
+    defaultValue = true;
+#endif
+    return getBoolSetting("showTrayIcon", defaultValue);
+}
+
+void FangSettings::setShowTrayIcon(bool b)
+{
+    if (b == getShowTrayIcon()) {
+        return; // Nothing to do!
+    }
+
+    setBoolSetting("showTrayIcon", b);
+    emit showTrayIconChanged(b);
 }

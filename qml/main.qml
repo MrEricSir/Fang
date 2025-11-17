@@ -3,6 +3,7 @@ import QtQuick.Window
 import Fang 1.0
 import QtQuick.Controls
 import QtQuick.Layouts
+import Qt.labs.platform
 import QtCore
 
 // Can't use ApplicationWindow because it leaves spaces for an action bar (menu) on Android.
@@ -51,7 +52,7 @@ Window {
     Component.onDestruction: {
         windowSettings.save();
     }
-    
+
     // Read-only.
     property bool wasMaximized: false;
     onVisibilityChanged: {
@@ -161,6 +162,39 @@ Window {
 
     // Seen in transitions.
     color: style.color.blockerBackground;
+
+    // Prevent closing when system tray icon is active.
+    onClosing: (event) => {
+        if (fangSettings.showTrayIcon && platform === "WIN") {
+            event.accepted = false;
+            hide();
+        }
+    }
+
+    SystemTrayIcon {
+        visible: fangSettings.showTrayIcon; // Defaults to true for non-Windows platforms.
+        icon.source: "qrc:/qml/images/full_icon.png";
+
+        onActivated: (reason) => {
+            if (reason === SystemTrayIcon.Context) {
+                // Show context menu.
+                contextMenu.open();
+            } else {
+                main.show();
+                main.raise();
+                main.requestActivate();
+            }
+        }
+
+        menu: Menu {
+            id: contextMenu;
+
+            MenuItem {
+                text: qsTr("Quit");
+                onTriggered: Qt.quit();
+            }
+        }
+    }
 
     /**
      * Operator: mainFrame turn on.

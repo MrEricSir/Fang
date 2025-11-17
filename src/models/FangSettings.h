@@ -23,6 +23,9 @@ class FangSettings : public QQuickItem
 
     // Refresh timer.  Values are "1MIN", "10MIN", "30MIN", and "1HOUR" (default: 10MIN)
     Q_PROPERTY(QString refresh READ getRefresh WRITE setRefresh NOTIFY refreshChanged)
+
+    // (Windows only) Display tray icon.
+    Q_PROPERTY(bool showTrayIcon READ getShowTrayIcon WRITE setShowTrayIcon NOTIFY showTrayIconChanged)
     
 public:
     explicit FangSettings(QQuickItem *parent = nullptr);
@@ -44,12 +47,16 @@ public:
 
     QString getRefresh();
     void setRefresh(QString s);
+
+    bool getShowTrayIcon();
+    void setShowTrayIcon(bool b);
     
 signals:
     void styleChanged(QString);
     void fontSizeChanged(QString);
     void cacheLengthChanged(QString);
     void refreshChanged(QString);
+    void showTrayIconChanged(bool);
     
 private slots:
     /**
@@ -66,6 +73,21 @@ private slots:
      * @param newValue
      */
     void setStringSetting(const QString& name, const QString& newValue);
+
+    /**
+     * @brief Gets a bool value or its default if not present
+     * @param name
+     * @param defaultValue
+     * @return
+     */
+    bool getBoolSetting(const QString& name, bool defaultValue);
+
+    /**
+     * @brief Sets a bool value
+     * @param name
+     * @param newValue
+     */
+    void setBoolSetting(const QString& name, bool newValue);
 
     /**
      * @brief Called when a DB setting has changed.

@@ -47,5 +47,6 @@
         <file>flag_dark.svg</file>
         <file>flag.svg</file>
         <file>opener.png</file>
+        <file>full_icon.png</file>
     </qresource>
 </RCC>
