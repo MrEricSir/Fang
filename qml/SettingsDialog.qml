@@ -3,38 +3,39 @@ import Fang 1.0
 
 // Settings dialog
 Dialog {
-    id: settingsDialog
+    id: settingsDialog;
     
-    title: "Settings"
+    title: "Settings";
     
     DialogText {
-        text: "Theme"
+        text: "Theme";
     }
     
     RadioButtonGroup {
-        id: themeRadioGroup
+        id: themeRadioGroup;
         
-        selected: fangSettings.style === "DARK" ? darkTheme : lightTheme
+        selected: fangSettings.style === "DARK" ? darkTheme : lightTheme;
         
         onSelectedChanged: {
-            if (selected === darkTheme)
+            if (selected === darkTheme) {
                 fangSettings.style = "DARK";
-            else
+            } else {
                 fangSettings.style = "LIGHT";
+            }
         }
     }
     
     DialogButtonGroup {
-        width: parent.width
+        width: parent.width;
         
         DialogRadioButton {
-            id: lightTheme
-            radioGroup: themeRadioGroup
+            id: lightTheme;
+            radioGroup: themeRadioGroup;
             
-            text: "Light"
-            enabled: true
+            text: "Light";
+            enabled: true;
             
-            width: parent.buttonWidth
+            width: parent.buttonWidth;
             
             onClicked: {
                 transitions[0].animations[0].stop();
@@ -42,13 +43,13 @@ Dialog {
         }
         
         DialogRadioButton {
-            id: darkTheme
-            radioGroup: themeRadioGroup
+            id: darkTheme;
+            radioGroup: themeRadioGroup;
             
-            text: "Dark"
-            enabled: true
+            text: "Dark";
+            enabled: true;
             
-            width: parent.buttonWidth
+            width: parent.buttonWidth;
             
             onClicked: {
                 transitions[0].animations[0].stop();
@@ -57,61 +58,102 @@ Dialog {
     }
     
     DialogText {
-        text: "Text size"
+        text: "Tray icon";
+        visible: platform === "WIN";
     }
     
     RadioButtonGroup {
-        id: fontSizeRadioGroup
+        id: trayRadioGroup;
         
-        selected: fangSettings.fontSize === "SMALL" ? smallFontSize : fangSettings.fontSize === "LARGE" 
-                                                                  ? largeFontSize : mediumFontSize
+        selected: fangSettings.showTrayIcon ? trayIconEnabled : trayIconDisabled;
         
         onSelectedChanged: {
-            if (selected === smallFontSize)
-                fangSettings.fontSize = "SMALL";
-            else if (selected === mediumFontSize)
-                fangSettings.fontSize = "MEDIUM";
-            else
-                fangSettings.fontSize = "LARGE";
+            fangSettings.showTrayIcon = (selected === trayIconEnabled);
         }
     }
     
     DialogButtonGroup {
-        width: parent.width
-        
+        width: parent.width;
+        visible: platform === "WIN";
+
         DialogRadioButton {
-            id: smallFontSize
-            radioGroup: fontSizeRadioGroup
-            
-            text: "Small"
-            enabled: true
-            
-            width: parent.buttonWidth
+            id: trayIconEnabled;
+            radioGroup: trayRadioGroup;
+
+            text: "Enabled";
+            enabled: true;
+
+            width: parent.buttonWidth;
         }
-        
+
         DialogRadioButton {
-            id: mediumFontSize
-            radioGroup: fontSizeRadioGroup
-            
-            text: "Medium"
-            enabled: true
-            
-            width: parent.buttonWidth
-        }
-        
-        DialogRadioButton {
-            id: largeFontSize
-            radioGroup: fontSizeRadioGroup
-            
-            text: "Large"
-            enabled: true
-            
-            width: parent.buttonWidth
+            id: trayIconDisabled;
+            radioGroup: trayRadioGroup;
+
+            text: "Disabled";
+            enabled: true;
+
+            width: parent.buttonWidth;
         }
     }
 
     DialogText {
-        text: "Refresh news every"
+        text: "Text size";
+    }
+
+    RadioButtonGroup {
+        id: fontSizeRadioGroup;
+
+        selected: fangSettings.fontSize === "SMALL" ? smallFontSize : fangSettings.fontSize === "LARGE"
+                                                                  ? largeFontSize : mediumFontSize;
+
+        onSelectedChanged: {
+            if (selected === smallFontSize) {
+                fangSettings.fontSize = "SMALL";
+            } else if (selected === mediumFontSize) {
+                fangSettings.fontSize = "MEDIUM";
+            } else {
+                fangSettings.fontSize = "LARGE";
+            }
+        }
+    }
+
+    DialogButtonGroup {
+        width: parent.width;
+        
+        DialogRadioButton {
+            id: smallFontSize;
+            radioGroup: fontSizeRadioGroup;
+            
+            text: "Small";
+            enabled: true;
+            
+            width: parent.buttonWidth;
+        }
+        
+        DialogRadioButton {
+            id: mediumFontSize;
+            radioGroup: fontSizeRadioGroup;
+            
+            text: "Medium";
+            enabled: true;
+            
+            width: parent.buttonWidth;
+        }
+        
+        DialogRadioButton {
+            id: largeFontSize;
+            radioGroup: fontSizeRadioGroup;
+            
+            text: "Large";
+            enabled: true;
+            
+            width: parent.buttonWidth;
+        }
+    }
+
+    DialogText {
+        text: "Refresh news every";
     }
 
     RadioButtonGroup {
@@ -133,14 +175,15 @@ Dialog {
         }
 
         onSelectedChanged: {
-            if (selected === oneMinuteRefresh)
+            if (selected === oneMinuteRefresh) {
                 fangSettings.refresh = "1MIN";
-            else if (selected === tenMinuteRefresh)
+            } else if (selected === tenMinuteRefresh) {
                 fangSettings.refresh = "10MIN";
-            else if (selected === thirtyMinuteRefresh)
+            } else if (selected === thirtyMinuteRefresh) {
                 fangSettings.refresh = "30MIN";
-            else
+            } else {
                 fangSettings.refresh = "1HOUR";
+            }
         }
     }
 
@@ -189,7 +232,7 @@ Dialog {
     }
 
     DialogText {
-        text: "Remove read news after"
+        text: "Remove read news after";
     }
 
     RadioButtonGroup {
@@ -201,14 +244,15 @@ Dialog {
             fangSettings.cacheLength === "6MONTH" ? sixMonthCache : oneYearCache;
 
         onSelectedChanged: {
-            if (selected === twoWeekCache)
+            if (selected === twoWeekCache) {
                 fangSettings.cacheLength = "2WEEK";
-            else if (selected === threeMonthCache)
+            } else if (selected === threeMonthCache) {
                 fangSettings.cacheLength = "3MONTH";
-            else if (selected === threeMonthCache)
+            } else if (selected === threeMonthCache) {
                 fangSettings.cacheLength = "6MONTH";
-            else
+            } else {
                 fangSettings.cacheLength = "1YEAR";
+            }
         }
     }
 
@@ -257,7 +301,7 @@ Dialog {
     }
     
     DialogText {
-        text: "OPML feed list"
+        text: "OPML feed list";
     }
     
     onDialogClosed: {
@@ -267,7 +311,7 @@ Dialog {
     }
     
     OPMLInteractor {
-        id: opml
+        id: opml;
         
         onImportReady: {
             var importDialog = main.openDialog("OPMLImportDialog.qml");
@@ -276,41 +320,41 @@ Dialog {
         }
         
         onImportInProgressChanged: {
-            console.log("Import in progress? ", importInProgress)
+            console.log("Import in progress? ", importInProgress);
         }
     }
     
     DialogButtonGroup {
-        width: parent.width
+        width: parent.width;
         
         DialogButton {
-            id: importOPML
+            id: importOPML;
             
-            text: "Import"
-            enabled: true
+            text: "Import";
+            enabled: true;
             
-            onClicked: opml.importFile()
+            onClicked: opml.importFile();
             
-            width: parent.buttonWidth
+            width: parent.buttonWidth;
         }
         
         DialogButton {
-            id: exportOPML
+            id: exportOPML;
             
-            text: "Export"
-            enabled: true
+            text: "Export";
+            enabled: true;
             
-            onClicked: opml.exportFile()
+            onClicked: opml.exportFile();
             
-            width: parent.buttonWidth
+            width: parent.buttonWidth;
         }
     }
     
     DialogSpacer {}
     
     DialogButton {
-        id: aboutBox
-        text: "About"
+        id: aboutBox;
+        text: "About";
         onClicked: {
             var aboutDialog = main.openDialog("AboutDialog.qml");
             aboutDialog.onDialogClosed.connect(settingsDialog.forceFocus);
@@ -320,10 +364,10 @@ Dialog {
     DialogSpacer {}
     
     DialogButton {
-        id: closeButton
+        id: closeButton;
         
-        text: "Close"
-        onClicked: close()
-        enabled: !isClosing
+        text: "Close";
+        onClicked: close();
+        enabled: !isClosing;
     }
 }
