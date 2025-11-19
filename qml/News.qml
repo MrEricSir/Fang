@@ -33,6 +33,10 @@ Item {
         newsFeedInteractor.refreshFeed(feed);
     }
 
+    function refreshAllFeeds() {
+        newsFeedInteractor.refreshAllFeeds();
+    }
+
     function markAllAsRead(feed) {
         newsFeedInteractor.markAllAsRead(feed);
     }

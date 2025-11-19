@@ -70,6 +70,9 @@ public slots:
     // Refreshes any feed.
     void refreshFeed(FeedItem* feed);
 
+    // Refreshes all feeds.
+    void refreshAllFeeds();
+
     // Marks all news items in a feed as read or unread.
     void markAllAsRead(FeedItem* feed);
     void markAllAsUnread(FeedItem* feed);

@@ -83,6 +83,11 @@ void NewsFeedInteractor::refreshFeed(FeedItem* feed)
     FangApp::instance()->refreshFeed(feed);
 }
 
+void NewsFeedInteractor::refreshAllFeeds()
+{
+    FangApp::instance()->refreshAllFeeds();
+}
+
 void NewsFeedInteractor::markAllAsRead(FeedItem *feed)
 {
     FangApp::instance()->markAllAsRead(feed);

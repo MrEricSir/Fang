@@ -190,6 +190,13 @@ Window {
             id: contextMenu;
 
             MenuItem {
+                text: qsTr("Refresh news");
+                onTriggered: news.refreshAllFeeds();
+            }
+
+            MenuSeparator {}
+
+            MenuItem {
                 text: qsTr("Quit");
                 onTriggered: Qt.quit();
             }
