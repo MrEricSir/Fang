@@ -1,32 +1,17 @@
 import QtQuick
 
-DialogToggleButton {
+DialogButton {
     id: dialogRadioButton;
-    
-    property RadioButtonGroup radioGroup;
+
+    // Fired only when the button is toggled, but not un-toggled.
+    signal isToggled;
+
+    // Read-only.
+    isToggleable: true;
     
     onToggledChanged: {
-        enabled = !toggled; // disable to prevent un-clicking of toggled item
         if (toggled) {
-            radioGroup.selected = dialogRadioButton;
+            isToggled();
         }
     }
-    
-    function setToggled() {
-        if (radioGroup.selected != dialogRadioButton) {
-            toggled = false;
-        } else {
-            toggled = true;
-        }
-    }
-    
-    Connections {
-        target: radioGroup;
-        function onSelectedChanged() {
-            setToggled();
-        }
-    }
-    
-    Component.onCompleted: setToggled();
-    onRadioGroupChanged: setToggled();
 }

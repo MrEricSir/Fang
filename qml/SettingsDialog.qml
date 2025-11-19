@@ -13,47 +13,27 @@ Dialog {
     
     RadioButtonGroup {
         id: themeRadioGroup;
-        
         selected: fangSettings.style === "DARK" ? darkTheme : lightTheme;
-        
-        onSelectedChanged: {
-            if (selected === darkTheme) {
-                fangSettings.style = "DARK";
-            } else {
-                fangSettings.style = "LIGHT";
-            }
-        }
     }
     
     DialogButtonGroup {
+        radioGroup: themeRadioGroup;
         width: parent.width;
         
         DialogRadioButton {
             id: lightTheme;
-            radioGroup: themeRadioGroup;
             
             text: "Light";
-            enabled: true;
-            
             width: parent.buttonWidth;
-            
-            onClicked: {
-                transitions[0].animations[0].stop();
-            }
+            onIsToggled: fangSettings.style = "LIGHT";
         }
         
         DialogRadioButton {
             id: darkTheme;
-            radioGroup: themeRadioGroup;
             
             text: "Dark";
-            enabled: true;
-            
             width: parent.buttonWidth;
-            
-            onClicked: {
-                transitions[0].animations[0].stop();
-            }
+            onIsToggled: fangSettings.style = "DARK";
         }
     }
     
@@ -64,36 +44,28 @@ Dialog {
     
     RadioButtonGroup {
         id: trayRadioGroup;
-        
         selected: fangSettings.showTrayIcon ? trayIconEnabled : trayIconDisabled;
-        
-        onSelectedChanged: {
-            fangSettings.showTrayIcon = (selected === trayIconEnabled);
-        }
     }
     
     DialogButtonGroup {
+        radioGroup: trayRadioGroup;
         width: parent.width;
         visible: platform === "WIN";
 
         DialogRadioButton {
             id: trayIconEnabled;
-            radioGroup: trayRadioGroup;
 
             text: "Enabled";
-            enabled: true;
-
             width: parent.buttonWidth;
+            onIsToggled: fangSettings.showTrayIcon = true;
         }
 
         DialogRadioButton {
             id: trayIconDisabled;
-            radioGroup: trayRadioGroup;
 
             text: "Disabled";
-            enabled: true;
-
             width: parent.buttonWidth;
+            onIsToggled: fangSettings.showTrayIcon = false;
         }
     }
 
@@ -103,52 +75,36 @@ Dialog {
 
     RadioButtonGroup {
         id: fontSizeRadioGroup;
-
         selected: fangSettings.fontSize === "SMALL" ? smallFontSize : fangSettings.fontSize === "LARGE"
                                                                   ? largeFontSize : mediumFontSize;
-
-        onSelectedChanged: {
-            if (selected === smallFontSize) {
-                fangSettings.fontSize = "SMALL";
-            } else if (selected === mediumFontSize) {
-                fangSettings.fontSize = "MEDIUM";
-            } else {
-                fangSettings.fontSize = "LARGE";
-            }
-        }
     }
 
     DialogButtonGroup {
+        radioGroup: fontSizeRadioGroup;
         width: parent.width;
         
         DialogRadioButton {
             id: smallFontSize;
-            radioGroup: fontSizeRadioGroup;
             
             text: "Small";
-            enabled: true;
-            
             width: parent.buttonWidth;
+            onIsToggled: fangSettings.fontSize = "SMALL";
         }
         
         DialogRadioButton {
             id: mediumFontSize;
-            radioGroup: fontSizeRadioGroup;
             
             text: "Medium";
-            enabled: true;
-            
             width: parent.buttonWidth;
+            onIsToggled: fangSettings.fontSize = "MEDIUM";
         }
         
         DialogRadioButton {
             id: largeFontSize;
-            radioGroup: fontSizeRadioGroup;
-            
+
             text: "Large";
-            enabled: true;
-            
             width: parent.buttonWidth;
+            onIsToggled: fangSettings.fontSize = "LARGE";
         }
     }
 
@@ -158,7 +114,6 @@ Dialog {
 
     RadioButtonGroup {
         id: refreshRadioGroup;
-
         selected: {
             switch (fangSettings.refresh) {
                 case "1MIN":
@@ -170,64 +125,44 @@ Dialog {
                 case "1HOUR":
                     return hourRefresh;
             }
-
             return "10MIN"; // Default (shouldn't get here)
-        }
-
-        onSelectedChanged: {
-            if (selected === oneMinuteRefresh) {
-                fangSettings.refresh = "1MIN";
-            } else if (selected === tenMinuteRefresh) {
-                fangSettings.refresh = "10MIN";
-            } else if (selected === thirtyMinuteRefresh) {
-                fangSettings.refresh = "30MIN";
-            } else {
-                fangSettings.refresh = "1HOUR";
-            }
         }
     }
 
     DialogButtonGroup {
+        radioGroup: refreshRadioGroup;
         width: parent.width;
 
         DialogRadioButton {
             id: oneMinuteRefresh;
-            radioGroup: refreshRadioGroup;
 
             text: "1 min";
-            enabled: true;
-
             width: parent.buttonWidth;
+            onIsToggled: fangSettings.refresh = "1MIN";
         }
 
         DialogRadioButton {
             id: tenMinuteRefresh;
-            radioGroup: refreshRadioGroup;
 
             text: "10 min";
-            enabled: true;
-
             width: parent.buttonWidth;
+            onIsToggled: fangSettings.refresh = "10MIN";
         }
 
         DialogRadioButton {
             id: thirtyMinuteRefresh;
-            radioGroup: refreshRadioGroup;
 
             text: "30 min";
-            enabled: true;
-
             width: parent.buttonWidth;
+            onIsToggled: fangSettings.refresh = "30MIN";
         }
 
         DialogRadioButton {
             id: hourRefresh;
-            radioGroup: refreshRadioGroup;
 
             text: "1 hour";
-            enabled: true;
-
             width: parent.buttonWidth;
+            onIsToggled: fangSettings.refresh = "1HOUR";
         }
     }
 
@@ -237,66 +172,46 @@ Dialog {
 
     RadioButtonGroup {
         id: cacheLengthRadioGroup;
-
         selected:
             fangSettings.cacheLength === "2WEEK" ? twoWeekCache :
             fangSettings.cacheLength === "3MONTH" ? threeMonthCache :
             fangSettings.cacheLength === "6MONTH" ? sixMonthCache : oneYearCache;
-
-        onSelectedChanged: {
-            if (selected === twoWeekCache) {
-                fangSettings.cacheLength = "2WEEK";
-            } else if (selected === threeMonthCache) {
-                fangSettings.cacheLength = "3MONTH";
-            } else if (selected === threeMonthCache) {
-                fangSettings.cacheLength = "6MONTH";
-            } else {
-                fangSettings.cacheLength = "1YEAR";
-            }
-        }
     }
 
     DialogButtonGroup {
+        radioGroup: cacheLengthRadioGroup;
         width: parent.width;
 
         DialogRadioButton {
             id: twoWeekCache;
-            radioGroup: cacheLengthRadioGroup;
 
             text: "2 weeks";
-            enabled: true;
-
             width: parent.buttonWidth;
+            onIsToggled: fangSettings.cacheLength = "2WEEK";
         }
 
         DialogRadioButton {
             id: threeMonthCache;
-            radioGroup: cacheLengthRadioGroup;
 
             text: "3 months";
-            enabled: true;
-
             width: parent.buttonWidth;
+            onIsToggled: fangSettings.cacheLength = "3MONTH";
         }
 
         DialogRadioButton {
             id: sixMonthCache;
-            radioGroup: cacheLengthRadioGroup;
 
             text: "6 months";
-            enabled: true;
-
             width: parent.buttonWidth;
+            onIsToggled: fangSettings.cacheLength = "6MONTH";
         }
 
         DialogRadioButton {
             id: oneYearCache;
-            radioGroup: cacheLengthRadioGroup;
 
             text: "1 year";
-            enabled: true;
-
             width: parent.buttonWidth;
+            onIsToggled: fangSettings.cacheLength = "1YEAR";
         }
     }
     
@@ -307,7 +222,6 @@ Dialog {
     onDialogClosed: {
         // Manual memory management.
         opml.destroy();
-
     }
     
     OPMLInteractor {
@@ -324,29 +238,23 @@ Dialog {
         }
     }
     
-    DialogButtonGroup {
+    DialogGroup {
         width: parent.width;
         
         DialogButton {
             id: importOPML;
             
             text: "Import";
-            enabled: true;
-            
-            onClicked: opml.importFile();
-            
             width: parent.buttonWidth;
+            onClicked: opml.importFile();
         }
         
         DialogButton {
             id: exportOPML;
             
             text: "Export";
-            enabled: true;
-            
-            onClicked: opml.exportFile();
-            
             width: parent.buttonWidth;
+            onClicked: opml.exportFile();
         }
     }
     

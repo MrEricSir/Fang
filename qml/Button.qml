@@ -7,39 +7,55 @@ import QtQuick
   * Implementers can set the size, image, raduis, text, etc. any way they like.
   */
 Rectangle {
-    id: baseButton
+    id: baseButton;
     
-    property bool enabled: true
+    property bool enabled: true;
+
+    // Used for toggle buttons.
+    property bool isToggleable: false;
+    property bool toggled: false;
     
     // Implementers: define these based on Style object.
-    property color buttonColor
-    property color hoverColor
-    property color pressedColor
-    property color disabledColor
-    property color borderColor
+    property color buttonColor;
+    property color hoverColor;
+    property color pressedColor;
+    property color disabledColor;
+    property color toggledColor;
+    property color borderColor;
     
     // Signaled on a click.
-    signal clicked()
+    signal clicked();
     
     // Fakes a click event.
     function click() {
-        if (enabled)
+        if (enabled) {
+            if (isToggleable) {
+                toggled = !toggled;
+            }
+
             clicked();
+        }
     }
     
-    border.color: borderColor
-    border.width: 1
+    border.color: borderColor;
+    border.width: 1;
     
     onEnabledChanged: {
         if (!enabled) {
             state = "disabled";
-        } else if (enabled && state == "disabled") {
-            state = "default";
+        } else {
+            state = toggled ? "toggled" : "default";
+        }
+    }
+
+    onToggledChanged: {
+        if (toggled) {
+            state = "toggled";
         }
     }
     
     Style {
-        id: style
+        id: style;
     }
     
     state: "default";
@@ -47,7 +63,8 @@ Rectangle {
         State { name: "default" },
         State { name: "hover" },
         State { name: "pressed" },
-        State { name: "disabled" }
+        State { name: "disabled" },
+        State { name: "toggled" }
     ]
     
     function getColorForState() {
@@ -60,6 +77,8 @@ Rectangle {
             return pressedColor;
         case "disabled":
             return disabledColor;
+        case "toggled":
+            return toggledColor;
         }
     }
     
@@ -69,25 +88,25 @@ Rectangle {
     }
     
     Connections {
-        target: fangSettings
+        target: fangSettings;
         
         // Reset color when style changes.
         function onStyleChanged() {
             color = getColorForState();
         }
     }
-    
+
     transitions: [
         Transition {
-            from: "*"
-            to: "disabled"
+            from: "*";
+            to: "disabled";
             
             ColorAnimation {
-                target: baseButton
-                properties: "color"
-                to: getColorForState()
-                duration: 100
-                easing.type: Easing.InOutQuad
+                target: baseButton;
+                properties: "color";
+                to: getColorForState();
+                duration: 100;
+                easing.type: Easing.InOutQuad;
             }
             
             // Hack to ensure correct button color in color selector.
@@ -99,58 +118,65 @@ Rectangle {
             }
         },
         Transition {
-            from: "*"
-            to: "hover"
+            from: "*";
+            to: "hover";
             
             ColorAnimation {
-                target: baseButton
-                properties: "color"
-                to: getColorForState()
-                duration: 300
-                easing.type: Easing.InOutQuad
+                target: baseButton;
+                properties: "color";
+                to: getColorForState();
+                duration: 300;
+                easing.type: Easing.InOutQuad;
             }
         },
         Transition {
-            from: "*"
-            to: "default"
+            from: "*";
+            to: "default";
             
             ColorAnimation {
-                target: baseButton
-                properties: "color"
-                to: getColorForState()
-                duration: 300
-                easing.type: Easing.InOutQuad
+                target: baseButton;
+                properties: "color";
+                to: getColorForState();
+                duration: 300;
+                easing.type: Easing.InOutQuad;
             }
         },
         Transition {
-            from: "*"
-            to: "pressed"
+            from: "*";
+            to: "pressed";
             
             ColorAnimation {
-                target: baseButton
-                properties: "color"
-                to: getColorForState()
-                duration: 300
-                easing.type: Easing.InOutQuad
+                target: baseButton;
+                properties: "color";
+                to: getColorForState();
+                duration: 300;
+                easing.type: Easing.InOutQuad;
             }
         }
     ]
     
     MouseArea {
-        id: buttonMouseArea
+        id: buttonMouseArea;
         
-        anchors.fill: parent
+        anchors.fill: parent;
         
-        onClicked: baseButton.clicked()
+        onClicked: {
+            if (baseButton.isToggleable) {
+                baseButton.toggled = !baseButton.toggled;
+            }
+
+            baseButton.clicked();
+        }
         hoverEnabled: platform !== "ANDROID"; // No hover on touch screens
-        enabled: baseButton.enabled
+        enabled: baseButton.enabled;
         
-        onEntered: baseButton.state = "hover"
-        onExited:  baseButton.state = "default"
-        onPressed: baseButton.state = "pressed"
+        onEntered: baseButton.state = "hover";
+        onExited: baseButton.state = baseButton.toggled ? "toggled" : "default";
+        onPressed: baseButton.state = "pressed";
         onEnabledChanged: {
-            if (!enabled)
-                baseButton.state = "disabled";
+            if (!baseButton.enabled) {
+                baseButton.state = baseButton.toggled ? "toggled" : "disabled";
+            }
         }
         
         // Prevent double click from issuing two presses
