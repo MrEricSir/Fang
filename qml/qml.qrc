@@ -15,7 +15,6 @@
         <file>EditDialog.qml</file>
         <file>Style.qml</file>
         <file>SettingsDialog.qml</file>
-        <file>DialogToggleButton.qml</file>
         <file>DialogRadioButton.qml</file>
         <file>RadioButtonGroup.qml</file>
         <file>DialogButtonGroup.qml</file>
@@ -34,5 +33,6 @@
         <file>FangSplitView.qml</file>
         <file>+mobile/FangSplitView.qml</file>
         <file>RearrangeableDelegate.qml</file>
+        <file>DialogGroup.qml</file>
     </qresource>
 </RCC>

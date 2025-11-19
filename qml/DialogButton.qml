@@ -12,6 +12,7 @@ Button {
     hoverColor: style.color.dialogButtonHover;
     pressedColor: style.color.dialogButtonPressed;
     disabledColor: style.color.dialogButtonDisabled;
+    toggledColor: style.color.dialogButtonDisabled;
     borderColor: style.color.dialogButtonBorder;
     
     Style {

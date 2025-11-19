@@ -1,7 +1,8 @@
 import QtQuick
 
+// Manages the selection for a DialogButtonGroup.
 Item {
-    id: radioButtonGroup
+    id: radioButtonGroup;
     
-    property Item selected : null
+    property Item selected : null;
 }
