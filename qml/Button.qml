@@ -22,6 +22,9 @@ Rectangle {
     property color disabledColor;
     property color toggledColor;
     property color borderColor;
+
+    // Disables transition animation for default color.
+    property bool animateToDefault: true;
     
     // Signaled on a click.
     signal clicked();
@@ -114,7 +117,6 @@ Rectangle {
                 if (!running) {
                     color = getColorForState();
                 }
-                
             }
         },
         Transition {
@@ -132,6 +134,7 @@ Rectangle {
         Transition {
             from: "*";
             to: "default";
+            enabled: animateToDefault;
             
             ColorAnimation {
                 target: baseButton;

@@ -5,10 +5,13 @@ import Fang 1.0
   Style object, ala http://qt-project.org/wiki/QmlStyling
   */
 Item {
-    property variant font: getPlatformFont()
-    property variant color: fangSettings.style === "LIGHT" ? colorSchemeLight : colorSchemeDark;
+    property var font: getPlatformFont();
+    property var color: fangSettings.style === "LIGHT" ? colorSchemeLight : colorSchemeDark;
     property double scale: (platform === "ANDROID") ? 1.5 : 1.0;
     property var textRendering: (platform === "ANDROID") ? Text.QtRendering : Text.NativeRendering;
+    readonly property alias colorSchemeLight: colorSchemeLight;
+    readonly property alias colorSchemeDark: colorSchemeDark;
+
 
     function getPlatformFont() {
         switch(platform) {
