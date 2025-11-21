@@ -24,6 +24,7 @@ Dialog {
             id: lightTheme;
             
             text: "Light";
+            animateToDefault: false;
             width: parent.buttonWidth;
             onIsToggled: fangSettings.style = "LIGHT";
         }
@@ -32,6 +33,7 @@ Dialog {
             id: darkTheme;
             
             text: "Dark";
+            animateToDefault: false;
             width: parent.buttonWidth;
             onIsToggled: fangSettings.style = "DARK";
         }
