@@ -35,7 +35,7 @@ Button {
             
             visible: checkBox.checked
             
-            source: fangSettings.style === "LIGHT" ? "images/symbol_ok.svg" : "images/symbol_dark_ok.svg";
+            source: fangSettings.currentStyle === "LIGHT" ? "images/symbol_ok.svg" : "images/symbol_dark_ok.svg";
         }
         
         MouseArea {
