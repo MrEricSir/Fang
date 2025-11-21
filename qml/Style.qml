@@ -6,7 +6,7 @@ import Fang 1.0
   */
 Item {
     property var font: getPlatformFont();
-    property var color: fangSettings.style === "LIGHT" ? colorSchemeLight : colorSchemeDark;
+    property var color: fangSettings.currentStyle === "LIGHT" ? colorSchemeLight : colorSchemeDark;
     property double scale: (platform === "ANDROID") ? 1.5 : 1.0;
     property var textRendering: (platform === "ANDROID") ? Text.QtRendering : Text.NativeRendering;
     readonly property alias colorSchemeLight: colorSchemeLight;

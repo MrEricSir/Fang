@@ -13,7 +13,16 @@ Dialog {
     
     RadioButtonGroup {
         id: themeRadioGroup;
-        selected: fangSettings.style === "DARK" ? darkTheme : lightTheme;
+        selected: {
+            switch (fangSettings.style) {
+            case "LIGHT":
+                return lightTheme;
+            case "DARK":
+                return darkTheme;
+            default:
+                return defaultTheme;
+            }
+        }
     }
     
     DialogButtonGroup {
@@ -36,6 +45,15 @@ Dialog {
             animateToDefault: false;
             width: parent.buttonWidth;
             onIsToggled: fangSettings.style = "DARK";
+        }
+
+        DialogRadioButton {
+            id: defaultTheme;
+
+            text: "System";
+            animateToDefault: false;
+            width: parent.buttonWidth;
+            onIsToggled: fangSettings.style = "DEFAULT";
         }
     }
     

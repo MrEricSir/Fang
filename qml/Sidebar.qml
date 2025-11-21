@@ -83,11 +83,11 @@ Item {
                 width: buttonSize;
                 height: buttonSize;
                 
-                imageURL: fangSettings.style === "LIGHT" ? "images/symbol_help.svg" :
+                imageURL: fangSettings.currentStyle === "LIGHT" ? "images/symbol_help.svg" :
                                                            "images/symbol_dark_help.svg";
-                imageHoverURL: fangSettings.style === "LIGHT" ? "images/symbol_dark_help.svg" :
+                imageHoverURL: fangSettings.currentStyle === "LIGHT" ? "images/symbol_dark_help.svg" :
                                                                 "images/symbol_help.svg";
-                imagePressedURL: fangSettings.style === "LIGHT" ? "images/symbol_help.svg" :
+                imagePressedURL: fangSettings.currentStyle === "LIGHT" ? "images/symbol_help.svg" :
                                                                   "images/symbol_dark_help.svg";
                 
                 onClicked: {
@@ -104,11 +104,11 @@ Item {
                 width: buttonSize
                 height: buttonSize
                 
-                imageURL: fangSettings.style === "LIGHT" ? "images/symbol_gear.svg" :
+                imageURL: fangSettings.currentStyle === "LIGHT" ? "images/symbol_gear.svg" :
                                                            "images/symbol_dark_gear.svg";
-                imageHoverURL: fangSettings.style === "LIGHT" ? "images/symbol_dark_gear.svg" :
+                imageHoverURL: fangSettings.currentStyle === "LIGHT" ? "images/symbol_dark_gear.svg" :
                                                                 "images/symbol_gear.svg";
-                imagePressedURL: fangSettings.style === "LIGHT" ? "images/symbol_gear.svg" :
+                imagePressedURL: fangSettings.currentStyle === "LIGHT" ? "images/symbol_gear.svg" :
                                                                   "images/symbol_dark_gear.svg";
                 
                 onClicked: settingsClicked()
@@ -258,9 +258,9 @@ Item {
                 width: buttonSize
                 height: buttonSize
                 
-                imageURL: fangSettings.style === "LIGHT" ? "images/plus_dark.png" : "images/plus.png"
-                imageHoverURL: fangSettings.style === "LIGHT" ? "images/plus.png" : "images/plus_dark.png"
-                imagePressedURL: fangSettings.style === "LIGHT" ? "images/plus.png" : "images/plus_dark.png"
+                imageURL: fangSettings.currentStyle === "LIGHT" ? "images/plus_dark.png" : "images/plus.png"
+                imageHoverURL: fangSettings.currentStyle === "LIGHT" ? "images/plus.png" : "images/plus_dark.png"
+                imagePressedURL: fangSettings.currentStyle === "LIGHT" ? "images/plus.png" : "images/plus_dark.png"
                 
                 onClicked: addClicked()
             }
@@ -275,11 +275,11 @@ Item {
                 height: buttonSize
                 visible: !feedListView.model.selected.isSpecialFeed();
                 
-                imageURL: fangSettings.style === "LIGHT" ? "images/symbol_pencil.svg"
+                imageURL: fangSettings.currentStyle === "LIGHT" ? "images/symbol_pencil.svg"
                                                          : "images/symbol_dark_pencil.svg"
-                imageHoverURL: fangSettings.style === "LIGHT" ? "images/symbol_dark_pencil.svg"
+                imageHoverURL: fangSettings.currentStyle === "LIGHT" ? "images/symbol_dark_pencil.svg"
                                                               : "images/symbol_pencil.svg"
-                imagePressedURL: fangSettings.style === "LIGHT" ? "images/symbol_dark_pencil.svg"
+                imagePressedURL: fangSettings.currentStyle === "LIGHT" ? "images/symbol_dark_pencil.svg"
                                                                 : "images/symbol_pencil.svg"
                 
                 onClicked: editClicked()
@@ -296,11 +296,11 @@ Item {
                 
                 visible: !feedListView.model.selected.isSpecialFeed();
                 
-                imageURL: fangSettings.style === "LIGHT" ? "images/minus_dark.png"
+                imageURL: fangSettings.currentStyle === "LIGHT" ? "images/minus_dark.png"
                                                          : "images/minus.png"
-                imageHoverURL: fangSettings.style === "LIGHT" ? "images/minus.png"
+                imageHoverURL: fangSettings.currentStyle === "LIGHT" ? "images/minus.png"
                                                               : "images/minus_dark.png"
-                imagePressedURL: fangSettings.style === "LIGHT" ? "images/minus.png"
+                imagePressedURL: fangSettings.currentStyle === "LIGHT" ? "images/minus.png"
                                                                 : "images/minus_dark.png"
                 
                 onClicked: removeClicked();
@@ -316,11 +316,11 @@ Item {
 
                 visible: feedsExist;
 
-                imageURL: fangSettings.style === "LIGHT" ? "images/symbol_reload.svg"
+                imageURL: fangSettings.currentStyle === "LIGHT" ? "images/symbol_reload.svg"
                                                          : "images/symbol_dark_reload.svg"
-                imageHoverURL: fangSettings.style === "LIGHT" ? "images/symbol_dark_reload.svg"
+                imageHoverURL: fangSettings.currentStyle === "LIGHT" ? "images/symbol_dark_reload.svg"
                                                               : "images/symbol_reload.svg"
-                imagePressedURL: fangSettings.style === "LIGHT" ? "images/symbol_dark_reload.svg"
+                imagePressedURL: fangSettings.currentStyle === "LIGHT" ? "images/symbol_dark_reload.svg"
                                                                 : "images/symbol_reload.svg"
 
                 onClicked: refreshCurrentFeedClicked();
@@ -341,11 +341,11 @@ Item {
                 width: buttonSize
                 height: buttonSize
                 
-                imageURL: fangSettings.style === "LIGHT" ? "images/arrows_left_dark.png"
+                imageURL: fangSettings.currentStyle === "LIGHT" ? "images/arrows_left_dark.png"
                                                          : "images/arrows_left.png"
-                imageHoverURL: fangSettings.style === "LIGHT" ? "images/arrows_left.png"
+                imageHoverURL: fangSettings.currentStyle === "LIGHT" ? "images/arrows_left.png"
                                                               : "images/arrows_left_dark.png"
-                imagePressedURL: fangSettings.style === "LIGHT" ? "images/arrows_left.png"
+                imagePressedURL: fangSettings.currentStyle === "LIGHT" ? "images/arrows_left.png"
                                                                 : "images/arrows_left_dark.png"
                 
                 onClicked: closeClicked()

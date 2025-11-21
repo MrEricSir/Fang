@@ -101,7 +101,7 @@ RearrangeableDelegate {
 
                             visible: !feedIcon.visible;
 
-                            source: (fangSettings.style === "LIGHT" ? "images/symbol_rss.svg"
+                            source: (fangSettings.currentStyle === "LIGHT" ? "images/symbol_rss.svg"
                                                             : "images/symbol_dark_rss.svg");
 
                             anchors.fill: parent;

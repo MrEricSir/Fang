@@ -31,7 +31,7 @@ void NewsWebSocketServer::init(FangSettings *fangSettings)
 {
     this->fangSettings = fangSettings;
     connect(fangSettings, &FangSettings::fontSizeChanged, this, &NewsWebSocketServer::onFontSizeChanged);
-    connect(fangSettings, &FangSettings::styleChanged, this, &NewsWebSocketServer::onStyleChanged);
+    connect(fangSettings, &FangSettings::currentStyleChanged, this, &NewsWebSocketServer::onStyleChanged);
 
     connect(FangApp::instance(), &FangApp::windowHeightChanged,
             this, &NewsWebSocketServer::onWindowHeightChanged);
@@ -241,7 +241,7 @@ QVariantList NewsWebSocketServer::getCSS()
 
     classes << app->getPlatform();
     classes << "FONT_" + app->getSettings()->getFontSize();
-    classes << app->getSettings()->getStyle();
+    classes << app->getSettings()->getCurrentStyle();
 
     if (!app->getCurrentFeed()->bookmarksEnabled()) {
         classes << "bookmarksDisabled";

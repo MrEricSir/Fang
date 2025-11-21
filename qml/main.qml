@@ -349,11 +349,11 @@ Window {
                     SidebarButton {
                         id: openSidebarButton
 
-                        imageURL: fangSettings.style === "LIGHT" ? "images/arrows_right_dark.png"
+                        imageURL: fangSettings.currentStyle === "LIGHT" ? "images/arrows_right_dark.png"
                                                                  : "images/arrows_right.png";
-                        imageHoverURL: fangSettings.style === "LIGHT" ? "images/arrows_right.png"
+                        imageHoverURL: fangSettings.currentStyle === "LIGHT" ? "images/arrows_right.png"
                                                                       : "images/arrows_right_dark.png";
-                        imagePressedURL: fangSettings.style === "LIGHT" ? "images/arrows_right.png"
+                        imagePressedURL: fangSettings.currentStyle === "LIGHT" ? "images/arrows_right.png"
                                                                         : "images/arrows_right_dark.png";
 
                         width: sidebar.buttonSize;

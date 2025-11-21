@@ -3,14 +3,20 @@
 
 FangSettings::FangSettings(QQuickItem *parent) :
     QQuickItem(parent),
-    dbSettings(nullptr)
+    dbSettings(nullptr),
+    styleHints(nullptr)
 {
 }
 
 void FangSettings::init(DBSettings *dbSettings)
 {
+    // Database
     this->dbSettings = dbSettings;
     connect(this->dbSettings, &DBSettings::settingChanged, this, &FangSettings::onDBSettingChanged);
+
+    // System default color scheme.
+    styleHints = QGuiApplication::styleHints();
+    connect(styleHints, &QStyleHints::colorSchemeChanged, this, &FangSettings::onSystemColorSchemeChanged);
 }
 
 QString FangSettings::getStringSetting(const QString& name, const QString& defaultValue)
@@ -63,9 +69,25 @@ void FangSettings::onDBSettingChanged(DBSettingsKey key, QString value)
     }
 }
 
+void FangSettings::onSystemColorSchemeChanged(Qt::ColorScheme colorScheme)
+{
+    if (getStyle() == "DEFAULT") {
+        emit currentStyleChanged(colorSchemeToString(colorScheme));
+    }
+}
+
+QString FangSettings::colorSchemeToString(Qt::ColorScheme colorScheme)
+{
+    if (colorScheme == Qt::ColorScheme::Dark) {
+        return "DARK";
+    } else {
+        return "LIGHT";
+    }
+}
+
 QString FangSettings::getStyle()
 {
-    return getStringSetting("style", "LIGHT");
+    return getStringSetting("style", "DEFAULT");
 }
 
 void FangSettings::setStyle(QString s)
@@ -76,6 +98,18 @@ void FangSettings::setStyle(QString s)
     
     setStringSetting("style", s);
     emit styleChanged(s);
+    emit currentStyleChanged(getCurrentStyle());
+}
+
+QString FangSettings::getCurrentStyle()
+{
+    QString ret = getStyle();
+    if (ret == "DEFAULT") {
+        // Attempt to get system color scheme.
+        ret = colorSchemeToString(QGuiApplication::styleHints()->colorScheme());
+    }
+
+    return ret;
 }
 
 QString FangSettings::getFontSize()

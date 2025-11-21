@@ -22,16 +22,16 @@ Image {
     source: {
         switch (fangIcon.state) {
         case "ok":
-            return fangSettings.style === "LIGHT" ?
+            return fangSettings.currentStyle === "LIGHT" ?
                         "images/symbol_ok.svg" : "images/symbol_dark_ok.svg";
         case "help":
-            return fangSettings.style === "LIGHT" ?
+            return fangSettings.currentStyle === "LIGHT" ?
                         "images/symbol_question.svg" : "images/symbol_dark_question.svg";
         case "error":
-            return fangSettings.style === "LIGHT" ?
+            return fangSettings.currentStyle === "LIGHT" ?
                         "images/symbol_error.svg" : "images/symbol_dark_error.svg";
         case "spinner":
-            return fangSettings.style === "LIGHT" ?
+            return fangSettings.currentStyle === "LIGHT" ?
                         "images/symbol_reload.svg" : "images/symbol_dark_reload.svg";
         default:
             console.log("Unknown state of FangIcon: ", fangIcon.state);

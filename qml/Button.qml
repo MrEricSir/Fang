@@ -94,7 +94,7 @@ Rectangle {
         target: fangSettings;
         
         // Reset color when style changes.
-        function onStyleChanged() {
+        function onCurrentStyleChanged() {
             color = getColorForState();
         }
     }
