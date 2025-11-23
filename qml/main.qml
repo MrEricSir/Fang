@@ -320,12 +320,6 @@ Window {
                 onRemoveClicked: openDialog("RemoveDialog.qml", listView.model.selected);
                 onEditClicked: openDialog("EditDialog.qml", listView.model.selected);
 
-                onDragWindow: (delta) => {
-                    if (isDesktop) {
-                        main.x += delta.x;
-                        main.y += delta.y;
-                    }
-                }
                 onMaximizeToggle: {
                     if (isDesktop) {
                         if (visibility === Window.Maximized) {

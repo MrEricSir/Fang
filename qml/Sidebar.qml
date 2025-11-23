@@ -20,7 +20,6 @@ Item {
     signal feedDoubleClicked();
     signal helpClicked();
     signal orderChanged();
-    signal dragWindow(var delta);
     signal maximizeToggle();
 
     // Set this to the number of special feeds at the top so I can treat them with
@@ -61,20 +60,13 @@ Item {
             // Allow top of sidebar to drag window and maximize/restore size.
             MouseArea {
                 anchors.fill: parent;
-                property var clickPos;
 
                 onPressed: (mouse) => {
-                    clickPos  = Qt.point(mouse.x, mouse.y);
+                    startSystemMove();
                 }
 
                 onDoubleClicked: {
                     maximizeToggle();
-                }
-
-                onPositionChanged: (mouse) => {
-                    if (containsPress) {
-                        dragWindow(Qt.point(mouse.x - clickPos.x, mouse.y - clickPos.y));
-                    }
                 }
             }
             
