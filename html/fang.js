@@ -283,9 +283,6 @@ function appendNews(append, firstNewsID, newsList) {
         
         // Copy the model.
         let item = $( 'body>#newsView>.newsContainer#model' ).clone();
-        
-        // I'm a model, you know what I mean...
-        // (but not anymore!! HAHA!)
         item.attr( 'id', '' );
         
         // Assign data.
@@ -322,6 +319,7 @@ function appendNews(append, firstNewsID, newsList) {
             // Calculate the size and add it to our prepend scroll tally.
             //let verticalMargins = parseInt( item.css("marginBottom") ) + parseInt( item.css("marginTop") );
             addToScroll += item.height(); /* + verticalMargins; */
+            console.log("adding to scroll:", item.height());
         }
     }
     
@@ -336,7 +334,7 @@ function appendNews(append, firstNewsID, newsList) {
         // always occur during a manual append or prepend.
         if (append) {
             let itemsOnTop = $('body>#newsView>.newsContainer:lt(' + extraItems + '):not(#model)');
-            console.log("# Items to remove on the top:", itemsOnTop.length)
+            console.log("# Items to remove on the top:", itemsOnTop.length);
             
             // We have to iterate over all the items to get an accurate height.
             let myItem = itemsOnTop;
@@ -349,7 +347,7 @@ function appendNews(append, firstNewsID, newsList) {
             sendCommand( 'removeNewsTop', itemsOnTop.length );
         } else {
             let itemsOnBottom = $('body>#newsView>.newsContainer:gt(-' + (extraItems + 1) + '):not(#model)');
-            //console.log("# Items to remove on the bottom:", itemsOnBottom.length)
+            console.log("# Items to remove on the bottom:", itemsOnBottom.length);
             removeMatchingItems(itemsOnBottom);
             sendCommand( 'removeNewsBottom', itemsOnBottom.length );
         }
@@ -377,7 +375,6 @@ function appendNews(append, firstNewsID, newsList) {
             addToScroll += myTopBookmark.height();
         } else if (topBookmarkIsEnabled && (firstNewsID !== firstIDInView)) {
             console.log("We can DISABLE the top bookmark now!");
-            console.log("at my restaurant, I no give SHIT about top bookmark!!!!")
             addToScroll -= myTopBookmark.height();
             myTopBookmark.css('display', 'none');
         }

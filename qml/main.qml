@@ -41,7 +41,7 @@ Window {
         id: style;
     }
     
-    visible: true
+    visible: true;
     
     FangSettings {
         id: fangSettings;

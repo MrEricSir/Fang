@@ -1,7 +1,6 @@
 <RCC>
     <qresource prefix="/qml/images">
         <file>fang_logo_color.svg</file>
-        <file>spinner.gif</file>
         <file>symbol_rss.svg</file>
         <file>arrows_left.png</file>
         <file>arrows_right.png</file>
@@ -24,7 +23,6 @@
         <file>symbol_dark_error.svg</file>
         <file>symbol_dark_rss.svg</file>
         <file>symbol_dark_reload.svg</file>
-        <file>spinner_dark.gif</file>
         <file>fang_logo.svg</file>
         <file>symbol_dark_help.svg</file>
         <file>symbol_help.svg</file>
@@ -44,9 +42,8 @@
         <file>pin_dim_dark.svg</file>
         <file>pin_selected.svg</file>
         <file>pin_selected_dark.svg</file>
-        <file>flag_dark.svg</file>
-        <file>flag.svg</file>
         <file>opener.png</file>
         <file>full_icon.png</file>
+        <file>opener_dark.png</file>
     </qresource>
 </RCC>
