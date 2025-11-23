@@ -7,6 +7,8 @@ Button {
     
     width: parent.width;
     height: buttonText.paintedHeight + 18;
+
+    radius: style.defaultRadius;
     
     buttonColor: style.color.dialogButton;
     hoverColor: style.color.dialogButtonHover;

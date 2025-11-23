@@ -5,12 +5,13 @@ import Fang 1.0
   Style object, ala http://qt-project.org/wiki/QmlStyling
   */
 Item {
-    property var font: getPlatformFont();
-    property var color: fangSettings.currentStyle === "LIGHT" ? colorSchemeLight : colorSchemeDark;
-    property double scale: (platform === "ANDROID") ? 1.5 : 1.0;
-    property var textRendering: (platform === "ANDROID") ? Text.QtRendering : Text.NativeRendering;
+    readonly property var font: getPlatformFont();
+    readonly property var color: fangSettings.currentStyle === "LIGHT" ? colorSchemeLight : colorSchemeDark;
+    readonly property double scale: (platform === "ANDROID") ? 1.5 : 1.0;
+    readonly property var textRendering: (platform === "ANDROID") ? Text.QtRendering : Text.NativeRendering;
     readonly property alias colorSchemeLight: colorSchemeLight;
     readonly property alias colorSchemeDark: colorSchemeDark;
+    readonly property double defaultRadius: 4 * scale;
 
 
     function getPlatformFont() {
@@ -25,124 +26,124 @@ Item {
     }
     
     QtObject {
-        id: macFontStyle
+        id: macFontStyle;
         
         // Default UI font.
-        property int defaultSize: 13
-        property int titleSize: 20
+        property int defaultSize: 13;
+        property int titleSize: 20;
         property int unreadCountSize: 8;
-        property string defaultFamily: "Lucida Grande"
+        property string defaultFamily: "Lucida Grande";
     }
     
     QtObject {
-        id: winFontStyle
+        id: winFontStyle;
         
         // Default UI font.
-        property int defaultSize: 11
-        property int titleSize: 20
+        property int defaultSize: 11;
+        property int titleSize: 20;
         property int unreadCountSize: 8;
-        property string defaultFamily: "Segoe UI"
+        property string defaultFamily: "Segoe UI";
     }
 
     QtObject {
-        id: linuxFontStyle
+        id: linuxFontStyle;
 
         // Default UI font.
-        property int defaultSize: 11
-        property int titleSize: 20
+        property int defaultSize: 11;
+        property int titleSize: 20;
         property int unreadCountSize: 8;
-        property string defaultFamily: "Geneva"
+        property string defaultFamily: "Geneva";
     }
 
     QtObject {
-        id: androidFontStyle
+        id: androidFontStyle;
 
         // Default UI font.
-        property int defaultSize: 16
-        property int titleSize: 30
+        property int defaultSize: 16;
+        property int titleSize: 30;
         property int unreadCountSize: 13;
-        property string defaultFamily: "Roboto"
+        property string defaultFamily: "Roboto";
     }
 
     QtObject {
-        id: colorSchemeLight
+        id: colorSchemeLight;
         
-        property color scrollbar: "#999"
+        property color scrollbar: "#999";
         
-        property color background: "white"
-        property color blockerBackground: "black"
+        property color background: "white";
+        property color blockerBackground: "black";
         
-        property color dialogBackground: "white"
-        property color dialogText: "black"
+        property color dialogBackground: "white";
+        property color dialogText: "black";
         
-        property color fadedText: "#999"
+        property color fadedText: "#999";
         
-        property color dialogButton: "#eee"
-        property color dialogButtonHover: "#d7d7d7"
-        property color dialogButtonText: "black"
-        property color dialogButtonTextDisabled: "#999"
-        property color dialogButtonPressed: Qt.darker(colorSchemeLight.dialogButtonHover, 1.5)
-        property color dialogButtonDisabled: "#ffffff" // Update in SettingsDialog manually!
-        property color dialogButtonBorder: "transparent"
+        property color dialogButton: "#eee";
+        property color dialogButtonHover: "#d7d7d7";
+        property color dialogButtonText: "black";
+        property color dialogButtonTextDisabled: "#999";
+        property color dialogButtonPressed: Qt.darker(colorSchemeLight.dialogButtonHover, 1.5);
+        property color dialogButtonDisabled: "#ffffff"; // Update in SettingsDialog manually!
+        property color dialogButtonBorder: "transparent";
         
-        property color textEntryBackground: "white"
-        property color textEntryText: "black"
-        property color textEntryBorder: dialogButton
-        property color textEntryHint: sidebarRightLine
+        property color textEntryBackground: "white";
+        property color textEntryText: "black";
+        property color textEntryBorder: dialogButton;
+        property color textEntryHint: sidebarRightLine;
         
-        property color sidebar: "#efefef"
-        property color sidebarToolbar: "#535353"
-        property color sidebarRightLine: "#ccc"
-        property color sidebarSelected: "white"
-        property color sidebarSelectedText: "black"
+        property color sidebar: "#efefef";
+        property color sidebarToolbar: "#535353";
+        property color sidebarRightLine: "#ccc";
+        property color sidebarSelected: "white";
+        property color sidebarSelectedText: "black";
         
-        property color sidebarButton: "white"
-        property color sidebarButtonBorder: "black"
-        property color sidebarButtonHover: "black"
-        property color sidebarButtonPressed: "#999"
+        property color sidebarButton: "#777";
+        property color sidebarButtonBorder: sidebarButton;
+        property color sidebarButtonHover: "#aaa";
+        property color sidebarButtonPressed: "white"
         
-        property color badge: "#999"
-        property color badgeText: "white"
+        property color badge: sidebarButton;
+        property color badgeText: "white";
     }
     
     QtObject {
-        id: colorSchemeDark
+        id: colorSchemeDark;
         
-        property color scrollbar: "#ddd"
+        property color scrollbar: "#ddd";
         
-        property color background: "black"
-        property color blockerBackground: "#999"
+        property color background: "black";
+        property color blockerBackground: "#999";
         
-        property color dialogBackground: "black"
-        property color dialogText: "white"
+        property color dialogBackground: "black";
+        property color dialogText: "white";
         
-        property color fadedText: "#999"
+        property color fadedText: "#999";
         
-        property color dialogButton: "#555"
-        property color dialogButtonHover: "#454545"
-        property color dialogButtonText: "white"
-        property color dialogButtonTextDisabled: "#666"
-        property color dialogButtonPressed: Qt.lighter(colorSchemeDark.dialogButtonHover, 1.5)
-        property color dialogButtonDisabled: Qt.darker(colorSchemeDark.dialogButton, 1.5)
+        property color dialogButton: "#555";
+        property color dialogButtonHover: "#454545";
+        property color dialogButtonText: "white";
+        property color dialogButtonTextDisabled: "#666";
+        property color dialogButtonPressed: Qt.lighter(colorSchemeDark.dialogButtonHover, 1.5);
+        property color dialogButtonDisabled: Qt.darker(colorSchemeDark.dialogButton, 1.5);
         property color dialogButtonBorder: "transparent"
         
-        property color textEntryBackground: "black"
-        property color textEntryText: "white"
-        property color textEntryBorder: dialogButton
-        property color textEntryHint: sidebarRightLine
+        property color textEntryBackground: "black";
+        property color textEntryText: "white";
+        property color textEntryBorder: dialogButton;
+        property color textEntryHint: sidebarRightLine;
+
+        property color sidebar: "black";
+        property color sidebarToolbar: "#333";
+        property color sidebarRightLine: "#666";
+        property color sidebarSelected: "#444";
+        property color sidebarSelectedText: "white";
         
-        property color sidebar: "#444"
-        property color sidebarToolbar: "#888"
-        property color sidebarRightLine: "#666"
-        property color sidebarSelected: "black"
-        property color sidebarSelectedText: "white"
+        property color sidebarButton: "#777";
+        property color sidebarButtonBorder: sidebarButton;
+        property color sidebarButtonHover: "#555";
+        property color sidebarButtonPressed: "#333";
         
-        property color sidebarButton: "black"
-        property color sidebarButtonBorder: "white"
-        property color sidebarButtonHover: "white"
-        property color sidebarButtonPressed: "#777"
-        
-        property color badge: "#aaa"
-        property color badgeText: "black"
+        property color badge: sidebarButton;
+        property color badgeText: "black";
     }
 }

@@ -272,7 +272,7 @@ RearrangeableDelegate {
                         width: unreadCountText.paintedWidth + 6;
                         height: unreadCountText.paintedHeight + 4;
                         anchors.verticalCenter: parent.verticalCenter;
-                        radius: 4;
+                        radius: style.defaultRadius;
                         
                         Text {
                             id: unreadCountText;

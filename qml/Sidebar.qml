@@ -20,13 +20,15 @@ Item {
     signal feedDoubleClicked();
     signal helpClicked();
     signal orderChanged();
+    signal dragWindow(var delta);
+    signal maximizeToggle();
 
     // Set this to the number of special feeds at the top so I can treat them with
     // the care and respect that they deserve.
     property int specialFeedCount: 0;
     
     // Read-only properties.
-    readonly property int buttonSize: 30 * style.scale;
+    readonly property int buttonSize: 25 * style.scale;
     readonly property var listView: feedListView;
     readonly property bool feedsExist: feedListModel.count > 1; // (There's always 1 item -- all news.)
 
@@ -42,35 +44,55 @@ Item {
     }
     
     Rectangle {
-        id: sidebarTopControls
-        height: 40 * style.scale
+        id: sidebarTopControls;
+        height: 40 * style.scale;
         
-        anchors.top: parent.top
-        anchors.left: parent.left
-        anchors.right: parent.right
-        color: style.color.sidebarToolbar
-        z: 10 // higher than list
+        anchors.top: parent.top;
+        anchors.left: parent.left;
+        anchors.right: parent.right;
+        color: style.color.sidebarToolbar;
+        z: 10; // higher than list
         
         Item {
-            id: toolbarTop
-            anchors.fill: parent
-            anchors.margins: 5 * style.scale
+            id: toolbarTop;
+            anchors.fill: parent;
+            anchors.margins: 5 * style.scale;
+
+            // Allow top of sidebar to drag window and maximize/restore size.
+            MouseArea {
+                anchors.fill: parent;
+                property var clickPos;
+
+                onPressed: (mouse) => {
+                    clickPos  = Qt.point(mouse.x, mouse.y);
+                }
+
+                onDoubleClicked: {
+                    maximizeToggle();
+                }
+
+                onPositionChanged: (mouse) => {
+                    if (containsPress) {
+                        dragWindow(Qt.point(mouse.x - clickPos.x, mouse.y - clickPos.y));
+                    }
+                }
+            }
             
             Image {
-                id: fangLogo
+                id: fangLogo;
                 
-                source: "images/fang_logo.svg"
+                source: "images/fang_logo.svg";
                 
-                anchors.top: parent.top
-                anchors.topMargin: 5 * style.scale
-                anchors.left: parent.left
-                anchors.leftMargin: 5 * style.scale
-                height: 25 * style.scale
-                asynchronous: true
+                anchors.top: parent.top;
+                anchors.topMargin: 5 * style.scale;
+                anchors.left: parent.left;
+                anchors.leftMargin: 5 * style.scale;
+                height: 25 * style.scale;
+                asynchronous: true;
                 
                 // Hack to make SVGs render with anti-aliasing
-                sourceSize.width: width
-                sourceSize.height: height
+                sourceSize.width: width;
+                sourceSize.height: height;
             }
             
             // HALP
@@ -78,17 +100,14 @@ Item {
                 id: helpButton;
                 
                 anchors.right: settingsButton.left;
-                anchors.rightMargin: 10  * style.scale;
+                anchors.rightMargin: 15 * style.scale;
+                anchors.verticalCenter: parent.verticalCenter;
                 
                 width: buttonSize;
                 height: buttonSize;
                 
-                imageURL: fangSettings.currentStyle === "LIGHT" ? "images/symbol_help.svg" :
-                                                           "images/symbol_dark_help.svg";
-                imageHoverURL: fangSettings.currentStyle === "LIGHT" ? "images/symbol_dark_help.svg" :
-                                                                "images/symbol_help.svg";
-                imagePressedURL: fangSettings.currentStyle === "LIGHT" ? "images/symbol_help.svg" :
-                                                                  "images/symbol_dark_help.svg";
+                lightImageURL: "images/symbol_help.svg";
+                darkImageURL: "images/symbol_dark_help.svg";
                 
                 onClicked: {
                     helpClicked();
@@ -97,21 +116,19 @@ Item {
             
             // Fang settings.
             SidebarButton {
-                id: settingsButton
+                id: settingsButton;
                 
-                anchors.right: parent.right
+                anchors.right: parent.right;
+                anchors.rightMargin: 5 * style.scale;
+                anchors.verticalCenter: parent.verticalCenter;
                 
-                width: buttonSize
-                height: buttonSize
+                width: buttonSize;
+                height: buttonSize;
                 
-                imageURL: fangSettings.currentStyle === "LIGHT" ? "images/symbol_gear.svg" :
-                                                           "images/symbol_dark_gear.svg";
-                imageHoverURL: fangSettings.currentStyle === "LIGHT" ? "images/symbol_dark_gear.svg" :
-                                                                "images/symbol_gear.svg";
-                imagePressedURL: fangSettings.currentStyle === "LIGHT" ? "images/symbol_gear.svg" :
-                                                                  "images/symbol_dark_gear.svg";
+                lightImageURL: "images/symbol_gear.svg";
+                darkImageURL: "images/symbol_dark_gear.svg";
                 
-                onClicked: settingsClicked()
+                onClicked: settingsClicked();
             }
         }
     }
@@ -236,72 +253,68 @@ Item {
     
     // Mini-toolbar under the sidebar.
     Rectangle {
-        id: sidebarControls
-        height: 40 * style.scale
+        id: sidebarControls;
+        height: 40 * style.scale;
         
-        anchors.bottom: parent.bottom
-        anchors.left: parent.left
-        anchors.right: parent.right
-        color: style.color.sidebarToolbar
+        anchors.bottom: parent.bottom;
+        anchors.left: parent.left;
+        anchors.right: parent.right;
+        color: style.color.sidebarToolbar;
         
         Item {
-            id: toolbar
-            anchors.fill: parent
-            anchors.margins: 5 * style.scale
+            id: toolbar;
+            anchors.fill: parent;
             
             // Adds a feed.
             SidebarButton {
-                id: addButton
+                id: addButton;
                 
-                x: 0
+                anchors.left: parent.left;
+                anchors.verticalCenter: parent.verticalCenter;
+                anchors.leftMargin: 10 * style.scale;
                 
-                width: buttonSize
-                height: buttonSize
+                width: buttonSize;
+                height: buttonSize;
                 
-                imageURL: fangSettings.currentStyle === "LIGHT" ? "images/plus_dark.png" : "images/plus.png"
-                imageHoverURL: fangSettings.currentStyle === "LIGHT" ? "images/plus.png" : "images/plus_dark.png"
-                imagePressedURL: fangSettings.currentStyle === "LIGHT" ? "images/plus.png" : "images/plus_dark.png"
+                lightImageURL: "images/plus_dark.png";
+                darkImageURL: "images/plus.png";
                 
-                onClicked: addClicked()
+                onClicked: addClicked();
             }
             
             // Edits a feed.
             SidebarButton {
-                id: editButton
+                id: editButton;
                 
-                x: buttonSize + (10 * style.scale)
+                anchors.right: removeButton.left;
+                anchors.verticalCenter: parent.verticalCenter;
+                anchors.rightMargin: 15 * style.scale;
                 
-                width: buttonSize
-                height: buttonSize
+                width: buttonSize;
+                height: buttonSize;
                 visible: !feedListView.model.selected.isSpecialFeed();
                 
-                imageURL: fangSettings.currentStyle === "LIGHT" ? "images/symbol_pencil.svg"
-                                                         : "images/symbol_dark_pencil.svg"
-                imageHoverURL: fangSettings.currentStyle === "LIGHT" ? "images/symbol_dark_pencil.svg"
-                                                              : "images/symbol_pencil.svg"
-                imagePressedURL: fangSettings.currentStyle === "LIGHT" ? "images/symbol_dark_pencil.svg"
-                                                                : "images/symbol_pencil.svg"
+                lightImageURL: "images/symbol_pencil.svg";
+                darkImageURL: "images/symbol_dark_pencil.svg";
                 
-                onClicked: editClicked()
+                onClicked: editClicked();
             }
             
             // Removes a feed.
             SidebarButton {
-                id: removeButton
+                id: removeButton;
                 
-                x: buttonSize * 2 + (20 * style.scale)
+                anchors.right: refreshButton.left;
+                anchors.verticalCenter: parent.verticalCenter;
+                anchors.rightMargin: 15 * style.scale;
                 
-                width: buttonSize
-                height: buttonSize
+                width: buttonSize;
+                height: buttonSize;
                 
                 visible: !feedListView.model.selected.isSpecialFeed();
                 
-                imageURL: fangSettings.currentStyle === "LIGHT" ? "images/minus_dark.png"
-                                                         : "images/minus.png"
-                imageHoverURL: fangSettings.currentStyle === "LIGHT" ? "images/minus.png"
-                                                              : "images/minus_dark.png"
-                imagePressedURL: fangSettings.currentStyle === "LIGHT" ? "images/minus.png"
-                                                                : "images/minus_dark.png"
+                lightImageURL: "images/minus_dark.png";
+                darkImageURL: "images/minus.png";
                 
                 onClicked: removeClicked();
             }
@@ -309,19 +322,17 @@ Item {
             SidebarButton {
                 id: refreshButton;
 
-                x: toolbar.width - buttonSize;
+                anchors.right: parent.right;
+                anchors.verticalCenter: parent.verticalCenter;
+                anchors.rightMargin: 10 * style.scale;
 
                 width: buttonSize;
                 height: buttonSize;
 
                 visible: feedsExist;
 
-                imageURL: fangSettings.currentStyle === "LIGHT" ? "images/symbol_reload.svg"
-                                                         : "images/symbol_dark_reload.svg"
-                imageHoverURL: fangSettings.currentStyle === "LIGHT" ? "images/symbol_dark_reload.svg"
-                                                              : "images/symbol_reload.svg"
-                imagePressedURL: fangSettings.currentStyle === "LIGHT" ? "images/symbol_dark_reload.svg"
-                                                                : "images/symbol_reload.svg"
+                lightImageURL: "images/symbol_reload.svg";
+                darkImageURL: "images/symbol_dark_reload.svg";
 
                 onClicked: refreshCurrentFeedClicked();
             }
@@ -334,21 +345,19 @@ Item {
 
             /*
             SidebarButton {
-                id: closeButton
+                id: closeButton;
                 
-                x: toolbar.width - buttonSize
+                anchors.right: parent.right;
+                anchors.verticalCenter: parent.verticalCenter;
+                anchors.rightMargin: 10 * style.scale;
                 
                 width: buttonSize
                 height: buttonSize
                 
-                imageURL: fangSettings.currentStyle === "LIGHT" ? "images/arrows_left_dark.png"
-                                                         : "images/arrows_left.png"
-                imageHoverURL: fangSettings.currentStyle === "LIGHT" ? "images/arrows_left.png"
-                                                              : "images/arrows_left_dark.png"
-                imagePressedURL: fangSettings.currentStyle === "LIGHT" ? "images/arrows_left.png"
-                                                                : "images/arrows_left_dark.png"
+                lightImageURL: "images/".svg";
+                darkImageURL: "images/arrows_left_dark.svg";
                 
-                onClicked: closeClicked()
+                onClicked: closeClicked();
             }
             */
         }
