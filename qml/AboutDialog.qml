@@ -50,16 +50,20 @@ Dialog {
     DialogSpacer {}
     
     DialogText {
-        text: "Copyright 2013-2025 Eric Gregory.  All rights reserved.  " +
-              "Made in San Francisco";
+        text: "Copyright 2013-2025 Eric Gregory.  All rights reserved.\n\n" +
+              "Made in San Francisco, California.";
     }
     
     DialogSpacer {}
     
-    DialogButton {
-        id: dismissButton;
-        
-        text: "Dismiss";
-        onClicked: close();
+    DialogGroup {
+        width: parent.width;
+
+        DialogButton {
+            id: dismissButton;
+
+            text: "Dismiss";
+            onClicked: close();
+        }
     }
 }

@@ -17,7 +17,6 @@
         <file>SettingsDialog.qml</file>
         <file>DialogRadioButton.qml</file>
         <file>RadioButtonGroup.qml</file>
-        <file>DialogButtonGroup.qml</file>
         <file>Button.qml</file>
         <file>ListViewDragDelegate.qml</file>
         <file>AboutDialog.qml</file>
