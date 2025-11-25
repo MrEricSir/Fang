@@ -41,7 +41,7 @@ Window {
         id: style;
     }
     
-    visible: true
+    visible: true;
     
     FangSettings {
         id: fangSettings;
@@ -319,6 +319,16 @@ Window {
                 onAddClicked: openDialog("AddDialog.qml");
                 onRemoveClicked: openDialog("RemoveDialog.qml", listView.model.selected);
                 onEditClicked: openDialog("EditDialog.qml", listView.model.selected);
+
+                onMaximizeToggle: {
+                    if (isDesktop) {
+                        if (visibility === Window.Maximized) {
+                            showNormal();
+                        } else {
+                            showMaximized();
+                        }
+                    }
+                }
             }
 
             News {

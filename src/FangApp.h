@@ -199,6 +199,11 @@ public slots:
     QString getPlatform();
 
     /**
+     * @return True on desktop platforms, else false. Default: true if unknown.
+     */
+    bool isDesktop();
+
+    /**
      * @return Fang's news WebSocket server.
      */
     NewsWebSocketServer* getNewsServer() { return &newsServer; }

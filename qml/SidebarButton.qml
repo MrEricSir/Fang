@@ -1,33 +1,34 @@
 import QtQuick
 
 Button {
-    id: sidebarButton
-    property url imageURL: ""
-    property url imageHoverURL: ""
-    property url imagePressedURL: ""
+    id: sidebarButton;
+
+    // Define images here.
+    property url lightImageURL: "";
+    property url darkImageURL: "";
+
+    property url imageURL: fangSettings.currentStyle === "LIGHT" ? darkImageURL : lightImageURL;
+    property url imageHoverURL: fangSettings.currentStyle === "LIGHT" ? darkImageURL : lightImageURL;
+    property url imagePressedURL:  fangSettings.currentStyle === "DARK" ? darkImageURL : lightImageURL;
     
-    property int imageMargin: 7 * style.scale
+    property int imageMargin: 5 * style.scale;
     
-    radius: width * 0.5
+    radius: style.defaultRadius;
     
     buttonColor: style.color.sidebarButton;
     hoverColor: style.color.sidebarButtonHover;
-    pressedColor: style.color.sidebarButtonPressed
-    borderColor: style.color.sidebarButtonBorder
+    pressedColor: style.color.sidebarButtonPressed;
+    borderColor: style.color.sidebarButtonBorder;
     // We don't set a disabledColor because that hasn't been required (yet!)
     
     Image {
         source: sidebarButton.state === "hover" ? sidebarButton.imageHoverURL :
                                     sidebarButton.state === "pressed" ?
-                                        sidebarButton.imagePressedURL : sidebarButton.imageURL
+                                        sidebarButton.imagePressedURL : sidebarButton.imageURL;
         
-        anchors.fill: parent
-        anchors.margins: imageMargin
-        fillMode: Image.PreserveAspectCrop
-        asynchronous: true
-        
-        // Make SVGs render real good like.
-        sourceSize.width: width
-        sourceSize.height: height
+        anchors.fill: parent;
+        anchors.margins: imageMargin;
+        fillMode: Image.PreserveAspectCrop;
+        asynchronous: true;
     }
 }

@@ -1,12 +1,15 @@
 import QtQuick
+import QtQuick.Layouts
 
 Button {
     id: dialogButton;
     
     property string text: "";
-    
-    width: parent.width;
+
+    Layout.fillWidth: true;
     height: buttonText.paintedHeight + 18;
+
+    radius: style.defaultRadius;
     
     buttonColor: style.color.dialogButton;
     hoverColor: style.color.dialogButtonHover;

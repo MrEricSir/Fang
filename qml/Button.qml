@@ -170,7 +170,7 @@ Rectangle {
 
             baseButton.clicked();
         }
-        hoverEnabled: platform !== "ANDROID"; // No hover on touch screens
+        hoverEnabled: isDesktop; // No hover on touch screens
         enabled: baseButton.enabled;
         
         onEntered: baseButton.state = "hover";

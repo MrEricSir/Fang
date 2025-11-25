@@ -84,6 +84,7 @@ void FangApp::init()
     engine->rootContext()->setContextProperty("feedListModel", &feedList); // list of feeds
     engine->rootContext()->setContextProperty("importListModel", importList); // list of feeds to be batch imported
     engine->rootContext()->setContextProperty("platform", getPlatform()); // platform string ID
+    engine->rootContext()->setContextProperty("isDesktop", isDesktop()); // whether we're on desktop (vs mobile etc.)
     engine->rootContext()->setContextProperty("fangVersion", APP_VERSION);
 
 #ifdef QT_DEBUG
@@ -530,6 +531,26 @@ QString FangApp::getPlatform()
 #else                     // Must be last!
     Q_ASSERT(false);
     return "UNKNOWN";
+#endif
+}
+
+bool FangApp::isDesktop()
+{
+#if defined(Q_OS_MAC)
+    return true;
+#elif defined(Q_OS_WIN)
+    return true;
+#elif defined(Q_OS_IOS)
+    return false;
+#elif defined(Q_OS_ANDROID)
+    return false;
+#elif defined(Q_OS_LINUX) // Should be near last
+    return true;
+#elif defined(Q_OS_UNIX)  // Should be next-to last
+    return true;
+#else                     // Must be last!
+    Q_ASSERT(false);
+    return true;
 #endif
 }
 

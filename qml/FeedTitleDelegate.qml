@@ -25,7 +25,7 @@ RearrangeableDelegate {
 
     qmlListModel: false;
 
-    openerImage: "images/opener.png";
+    openerImage: fangSettings.currentStyle === "LIGHT" ? "images/opener.png" : "images/opener_dark.png";
     openerOffsetX: 10;
     openerOffsetY: 10;
 
@@ -90,9 +90,6 @@ RearrangeableDelegate {
                             visible: status === Image.Ready;
 
                             anchors.fill: parent;
-
-                            sourceSize.width: width;
-                            sourceSize.height: height;
                             asynchronous: true;
                         }
 
@@ -105,9 +102,6 @@ RearrangeableDelegate {
                                                             : "images/symbol_dark_rss.svg");
 
                             anchors.fill: parent;
-
-                            sourceSize.width: width;
-                            sourceSize.height: height;
                             asynchronous: true;
                         }
 
@@ -272,7 +266,7 @@ RearrangeableDelegate {
                         width: unreadCountText.paintedWidth + 6;
                         height: unreadCountText.paintedHeight + 4;
                         anchors.verticalCenter: parent.verticalCenter;
-                        radius: 4;
+                        radius: style.defaultRadius;
                         
                         Text {
                             id: unreadCountText;

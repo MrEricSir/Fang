@@ -1,6 +1,6 @@
 import QtQuick
 
-// Manages the selection for a DialogButtonGroup.
+// Manages the selection for a DialogGroup.
 Item {
     id: radioButtonGroup;
     
