@@ -22,6 +22,7 @@
 #include "notifications/NotificationBase.h"
 #include "utilities/SingleInstanceCheck.h"
 #include "db/DBSettings.h"
+#include "webserver/WebServer.h"
 
 
 class FangApp : public FangObject
@@ -321,6 +322,7 @@ private:
     QQuickWindow* window;
     NotificationBase* notifications;
     NewsWebSocketServer newsServer;
+    WebServer webServer;
 
     // Special feeds.
     AllNewsFeedItem* allNews;

@@ -1,6 +1,6 @@
 TEMPLATE = app
 
-QT += core qml quick quickcontrols2 widgets network sql svg websockets
+QT += core qml quick quickcontrols2 widgets network sql svg websockets httpserver
 
 QT -= sensors
 
@@ -126,7 +126,8 @@ SOURCES += src/main.cpp \
     src/operations/GetAllDBSettingsOperation.cpp \
     src/parser/NewsParser.cpp \
     src/utilities/SimpleHTTPDownloader.cpp \
-    src/models/NewsWebSocketServer.cpp
+    src/models/NewsWebSocketServer.cpp \
+    src/webserver/WebServer.cpp
 	
 HEADERS += \
     src/models/DBObject.h \
@@ -193,7 +194,8 @@ HEADERS += \
     src/db/DBSettingsKey.h \
     src/parser/NewsParser.h \
     src/utilities/SimpleHTTPDownloader.h \
-    src/models/NewsWebSocketServer.h
+    src/models/NewsWebSocketServer.h \
+    src/webserver/WebServer.h
 
 mac {
     HEADERS += src/notifications/NotificationMac.h

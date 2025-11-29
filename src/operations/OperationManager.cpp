@@ -1,5 +1,7 @@
 #include "OperationManager.h"
 
+#include "../utilities/Utilities.h"
+
 OperationManager::OperationManager(QObject *parent) :
     FangObject(parent),
     queue(),
@@ -51,6 +53,9 @@ void OperationManager::executeOperations()
 
 void OperationManager::runNow(Operation *operation)
 {
+    // Double check that we're in the right thread.
+    Q_ASSERT(Utilities::isInMainThread());
+
     pending.insert(operation);
     QObject::connect(operation, &Operation::finished, this, &OperationManager::onOperationFinished);
     operation->execute();

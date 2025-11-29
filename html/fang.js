@@ -128,6 +128,26 @@ function processMessage(message)
     }
 }
 
+function apiRequest(method, params)
+{
+    let url = 'http://localhost:2844/api/' + method;
+    if (params) {
+        url += '/' + params;
+    }
+
+    return fetch(url);
+}
+
+function apiPost(method, object)
+{
+    let url = 'http://localhost:2844/api/' + method;
+
+    return fetch(url, {
+                     method: "POST",
+                     body: JSON.stringify(object)
+                 });
+}
+
 
 function loadNews(json)
 {
@@ -242,7 +262,10 @@ function htmlIdToId(htmlID) {
 
 // Intercept clix.
 function delegateLink() {
-    sendCommand( 'openLink', $(this).attr('href')) ;
+    const url = $(this).attr('href');
+    apiPost('open_link', {
+                'url': url
+            });
     return false; // Don't propogate link.
 };
 
@@ -250,17 +273,22 @@ function delegateLink() {
 function installMouseHandlers(parentElement) {
     // Setup manual bookmarks.
     $(parentElement).find( '.stripe' ).on( "click", function() { 
-        let elementID = $(this).parent().parent().attr( 'id' );
+        const elementID = htmlIdToId( $(this).parent().parent().attr( 'id' ) );
 
-        sendCommand( 'forceBookmark', htmlIdToId(elementID) );
+        apiRequest('force_bookmark', elementID);
     } );
 
     // Setup the pin... pinner?  Pinteresting.
     $(parentElement).find( '.pin' ).on( "click", function() {
-        let element = $(this).parent().parent();
-        let isPinned = element.find( '.pin' ).hasClass( 'pinned' );
+        const element = $(this).parent().parent();
+        const isPinned = element.find( '.pin' ).hasClass( 'pinned' );
+        const elementID = htmlIdToId(element.attr( 'id' ));
 
-        sendCommand('setPin', htmlIdToId( element.attr( 'id' ) ) + ' ' + (+!isPinned)); // Unary + operator converts to number :)
+        if (isPinned) {
+            apiRequest('unpin', elementID);
+        } else {
+            apiRequest('pin', elementID);
+        }
     } );
 }
 
@@ -743,9 +771,9 @@ $(document).ready(function() {
                 break;
             }
             
-            // Move the bookmark down one.
-            // console.log("checkBookmark: set bookmark to ", nextItem.attr('id'))
-            sendCommand( 'setBookmark', htmlIdToId(nextItem.attr('id')) );
+            // Move the bookmark.
+            // console.log("checkBookmark: set bookmark to ", nextItem.attr('id'));
+            apiRequest('set_bookmark', htmlIdToId(nextItem.attr('id')));
             
             // Continue to next item.
             nextItem = nextNewsContainer(nextItem);

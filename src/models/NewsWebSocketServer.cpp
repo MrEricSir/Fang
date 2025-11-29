@@ -91,21 +91,6 @@ void NewsWebSocketServer::execute(const QString &command, const QString &data)
         loadInProgress = true;
         emit isLoadInProgressChanged();
         app->setCurrentFeed(app->getLastFeedSelected());
-    } else if ("setBookmark" == command) {
-        app->setBookmark(data.toLongLong());
-    } else if ("forceBookmark" == command) {
-        app->setBookmark(data.toLongLong(), true);
-    } else if ("openLink" == command) {
-        QString fixed = NetworkUtilities::urlFixup(data);
-        QDesktopServices::openUrl(QUrl(fixed));
-    } else if ("setPin" == command) {
-        QString dataCopy(data);
-        QTextStream stream(&dataCopy);
-        qint64 id;
-        int pin;
-        stream >> id >> pin;
-
-        app->setPin(id, (bool) pin);
     } else if ("removeNewsTop" == command) {
         app->removeAndDelete(true, data.toInt());
     } else if ("removeNewsBottom" == command) {
