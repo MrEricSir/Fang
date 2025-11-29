@@ -13,6 +13,7 @@ Item {
     // This allows children to be positioned within the element.
     default property alias contents: placeholder.children;
 
+    // Height is calculated automatically; you only need to set the width.
     height: placeholder.height + text.height + placeholder.anchors.topMargin * 2;
 
     Connections {

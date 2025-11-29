@@ -67,43 +67,51 @@ Dialog {
         width: parent.width;
     }
     
-    DialogButton {
-        id: continueButton;
-        
-        text: "Continue";
-        onClicked: {
-            validator.check();
-            addDialog.state = "validating";
-            validationStatus.state = "spinner";
-            validationStatus.text = "Checking feed...";
-            validationStatus.visible = true;
+    DialogGroup {
+        width: parent.width;
+
+        DialogButton {
+            id: continueButton;
+
+            text: "Continue";
+            onClicked: {
+                validator.check();
+                addDialog.state = "validating";
+                validationStatus.state = "spinner";
+                validationStatus.text = "Checking feed...";
+                validationStatus.visible = true;
+            }
+            visible: addDialog.state !== "add";
+            enabled: textURL.text && addDialog.state !== "validating";
         }
-        visible: addDialog.state !== "add";
-        enabled: textURL.text && addDialog.state !== "validating";
+
+        DialogButton {
+            id: addButton;
+
+            text: "Add Feed";
+            onClicked: {
+                // Set the title.
+                validator.siteTitle = textSiteTitle.text;
+                textSiteTitle.readOnly = true;
+
+                // Add the feed and dismiss.
+                validator.addFeed();
+                addDialog.dismiss();
+            }
+            visible: addDialog.state === "add";
+            enabled: textSiteTitle.text;
+        }
     }
     
-    DialogButton {
-        id: addButton;
-        
-        text: "Add Feed";
-        onClicked: {
-            // Set the title.
-            validator.siteTitle = textSiteTitle.text;
-            textSiteTitle.readOnly = true;
-            
-            // Add the feed and dismiss.
-            validator.addFeed();
-            addDialog.dismiss();
+    DialogGroup {
+        width: parent.width;
+
+        DialogButton {
+            id: cancelButton;
+
+            text: "Cancel";
+            onClicked: close();
         }
-        visible: addDialog.state === "add";
-        enabled: textSiteTitle.text; 
-    }
-    
-    DialogButton {
-        id: cancelButton;
-        
-        text: "Cancel";
-        onClicked: close();
     }
     
     onDialogClosed: {

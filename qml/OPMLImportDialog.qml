@@ -18,15 +18,17 @@ Dialog {
     
     onDialogOpened: {
         iAmOpen = true;
-        if (interactor === null)
+        if (interactor === null) {
             return;
+        }
 
         doStart();
     }
     
     onDialogClosed: {
-        if (interactor && addOnClose)
+        if (interactor && addOnClose) {
             interactor.addSelected();
+        }
     }
 
     onInteractorChanged: {
@@ -50,11 +52,12 @@ Dialog {
 
     // Importing and parsing the OPML file is complete.
     function onImportFinished() {
-        if (interactor.importInProgress)
+        if (interactor.importInProgress) {
             return;
+        }
 
         console.log("On import finished!");
-        var importString = interactor.importError;
+        let importString = interactor.importError;
 
         if (importString === "") {
             validationStatus.text = "Checking " + importRepeater.count + " feeds...";
@@ -66,20 +69,23 @@ Dialog {
     
     // Batch feed validation is complete.
     function onValidationFinished() {
-        if (interactor.validationInProgress || interactor.importInProgress)
+        if (interactor.validationInProgress || interactor.importInProgress) {
             return;
+        }
         
         validationStatus.text = "Complete";
         validationStatus.state = "ok";
         
-        if (interactor.isAnyFeedSelected)
+        if (interactor.isAnyFeedSelected) {
             addButton.visible = true;
+        }
     }
     
     // Only show add button when we have feeds selected.
     function onAnyFeedSelectedChanged() {
-        if (interactor.validationInProgress || interactor.importInProgress)
+        if (interactor.validationInProgress || interactor.importInProgress) {
             return;
+        }
         
         addButton.visible = interactor.isAnyFeedSelected;
     }
@@ -209,26 +215,34 @@ Dialog {
     DialogSpacer {
     }
 
-    DialogButton {
-        id: addButton
+    DialogGroup {
+        width: parent.width;
 
-        text: "Add Selected"
-        onClicked: {
-            parentClose();
-            addOnClose = true; // <-- this auto-adds the new feeds on close
-            close();
+        DialogButton {
+            id: addButton;
+
+            text: "Add Selected"
+            onClicked: {
+                parentClose();
+                addOnClose = true; // <-- this auto-adds the new feeds on close
+                close();
+            }
+
+            enabled: true;
+
+            visible: false; // at first
         }
-
-        enabled: true
-        
-        visible: false // at first
     }
     
-    DialogButton {
-        id: cancelButton
+    DialogGroup {
+        width: parent.width;
 
-        text: "Cancel"
-        onClicked: close()
-        enabled: true
+        DialogButton {
+            id: cancelButton;
+
+            text: "Cancel";
+            onClicked: close();
+            enabled: true;
+        }
     }
 }

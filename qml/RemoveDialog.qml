@@ -16,31 +16,39 @@ Dialog {
         text: "Are you sure you want to remove this feed?";
     }
     
-    DialogButton {
-        id: removeButton;
-        
-        text: "Remove Feed";
-        onClicked: {
-            // Remove a specific feed.
-            //console.log("Feed to remove: ", feed)
-            newsFeedInteractor.removeFeed(feed);
-            
-            // Dismiss the dialog.
-            dismiss();
-        }
-        enabled: !isClosing;
-        
-        // The "interactor" is what talks to the C++ layer.
-        NewsFeedInteractor {
-            id: newsFeedInteractor;
+    DialogGroup {
+        width: parent.width;
+
+        DialogButton {
+            id: removeButton;
+
+            text: "Remove Feed";
+            onClicked: {
+                // Remove a specific feed.
+                //console.log("Feed to remove: ", feed)
+                newsFeedInteractor.removeFeed(feed);
+
+                // Dismiss the dialog.
+                dismiss();
+            }
+            enabled: !isClosing;
+
+            // The "interactor" is what talks to the C++ layer.
+            NewsFeedInteractor {
+                id: newsFeedInteractor;
+            }
         }
     }
     
-    DialogButton {
-        id: cancelButton;
-        
-        text: "Cancel";
-        onClicked: close();
-        enabled: !isClosing;
+    DialogGroup {
+        width: parent.width;
+
+        DialogButton {
+            id: cancelButton;
+
+            text: "Cancel";
+            onClicked: close();
+            enabled: !isClosing;
+        }
     }
 }

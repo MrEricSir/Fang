@@ -36,25 +36,33 @@ Dialog {
         width: parent.width;
     }
     
-    DialogButton {
-        id: saveEditButton;
-        
-        text: "Save";
-        onClicked: {
-            // Save the new title.
-            feed.setTitle(feedTitle.text);
-            
-            // Dismiss the dialog.
-            dismiss();
+    DialogGroup {
+        width: parent.width;
+
+        DialogButton {
+            id: saveEditButton;
+
+            text: "Save";
+            onClicked: {
+                // Save the new title.
+                feed.setTitle(feedTitle.text);
+
+                // Dismiss the dialog.
+                dismiss();
+            }
+            enabled: !isClosing && feedTitle.text.trim() !== "";
         }
-        enabled: !isClosing && feedTitle.text.trim() !== "";
     }
     
-    DialogButton {
-        id: cancelButton;
-        
-        text: "Cancel";
-        onClicked: close();
-        enabled: !isClosing;
+    DialogGroup {
+        width: parent.width;
+
+        DialogButton {
+            id: cancelButton;
+
+            text: "Cancel";
+            onClicked: close();
+            enabled: !isClosing;
+        }
     }
 }
