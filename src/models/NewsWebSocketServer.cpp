@@ -263,16 +263,6 @@ void NewsWebSocketServer::drawBookmark(qint64 bookmarkID)
     sendCommand("drawBookmark", QString::number(bookmarkID));
 }
 
-void NewsWebSocketServer::updatePin(qint64 newsID, bool pinned)
-{
-    QVariantMap document;
-    document.insert("id", newsID);
-    document.insert("pinned", pinned);
-
-    QString json = QString::fromUtf8(QJsonDocument::fromVariant(document).toJson());
-    sendCommand("updatePin", json);
-}
-
 void NewsWebSocketServer::jumpToBookmark()
 {
     FeedItem* currentFeed = FangApp::instance()->getCurrentFeed();

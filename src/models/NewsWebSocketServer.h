@@ -37,13 +37,6 @@ public slots:
     void drawBookmark(qint64 bookmarkID);
 
     /**
-     * @brief Updates the pinned status of a given news item.
-     * @param newsID
-     * @param pinned If true, the item is pinned. If not, then it's not pinned.
-     */
-    void updatePin(qint64 newsID, bool pinned);
-
-    /**
      * @return True if a load is in progress, else false.
      */
     bool isLoadInProgress() { return loadInProgress; }
