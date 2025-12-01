@@ -69,8 +69,8 @@ void NewsFeedInteractor::orderChanged()
 //    }
     
     // Update orinals based on the new list order.
-    UpdateOrdinalsOperation* updateOp = new UpdateOrdinalsOperation(manager, feedList);
-    manager->add(updateOp);
+    UpdateOrdinalsOperation updateOp(manager, feedList);
+    manager->runSynchronously(&updateOp);
 }
 
 void NewsFeedInteractor::refreshCurrentFeed()

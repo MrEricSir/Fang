@@ -15,11 +15,11 @@ class SetBookmarkOperation : public BookmarkOperation
 public:
     explicit SetBookmarkOperation(OperationManager *parent, FeedItem* feed,
                                   NewsItem* bookmark);
-    virtual ~SetBookmarkOperation();
+    virtual ~SetBookmarkOperation() = default;
 signals:
     
 public slots:
-    virtual void execute();
+    virtual void executeSynchronous();
 
     // Returns the bookmarked item.
     inline NewsItem* getBookmark() const { return bookmark; }

@@ -37,12 +37,18 @@ void OperationManager::add(Operation *operation)
     }
 }
 
+void OperationManager::runSynchronously(DBOperationSynchronous *operation)
+{
+    // Runs the operation.
+    operation->execute();
+}
+
 void OperationManager::onOperationFinished(Operation* operation)
 {
-    pending.remove(operation);
-    emit(operationFinished(operation));
-
-    operation->deleteLater(); // Trigger safe deletion.
+    if (operation->getPriority() != Operation::SYNCHRONOUS) {
+        pending.remove(operation);
+        operation->deleteLater(); // Trigger safe deletion.
+    }
 }
 
 void OperationManager::executeOperations()

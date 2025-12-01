@@ -11,12 +11,7 @@ SetBookmarkOperation::SetBookmarkOperation(OperationManager *parent, FeedItem* f
 {
 }
 
-SetBookmarkOperation::~SetBookmarkOperation()
-{
-}
-
-
-void SetBookmarkOperation::execute()
+void SetBookmarkOperation::executeSynchronous()
 {
     AllNewsFeedItem* allNews = qobject_cast<AllNewsFeedItem*>(feed);
     if (allNews) {
@@ -50,15 +45,11 @@ void SetBookmarkOperation::bookmarkSingleFeed(FeedItem* feed)
                                    " for feed id: " + QString::number(feed->getDbID()));
         db().rollback();
 
-        emit finished(this);
         return;
     }
 
     updateUnreadCounts();
-
     db().commit();
-
-    emit finished(this);
 }
 
 void SetBookmarkOperation::bookmarkFolderFeed(FolderFeedItem* feedFolder)
@@ -74,7 +65,6 @@ void SetBookmarkOperation::bookmarkFolderFeed(FolderFeedItem* feedFolder)
     if (!query.exec() || !query.next()) {
         reportSQLError(query, "Unable to locate news item for bookmark " + QString::number(bookmark->getDbID()));
 
-        emit finished(this);
         return;
     }
 
@@ -127,8 +117,7 @@ void SetBookmarkOperation::bookmarkAllNewsFeed(AllNewsFeedItem* allNews)
         if (!update.exec()) {
             reportSQLError(update, "Unable to set bookmark to " + QString::number(newBookmark));
             db().rollback();
-            
-            emit finished(this);
+
             return;
         }
         
@@ -139,8 +128,5 @@ void SetBookmarkOperation::bookmarkAllNewsFeed(AllNewsFeedItem* allNews)
     }
     
     updateUnreadCounts();
-    
     db().commit();
-    
-    emit finished(this);
 }

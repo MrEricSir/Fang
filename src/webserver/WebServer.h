@@ -12,6 +12,8 @@ public:
     WebServer(QObject *parent = nullptr);
 
 private:
+    QString updatePinObject(qint64 newsID, bool pinned);
+
     QHttpServer server;
     QTcpServer* tcpServer;
 };

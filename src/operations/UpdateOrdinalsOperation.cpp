@@ -7,12 +7,12 @@
 #include <QDebug>
 
 UpdateOrdinalsOperation::UpdateOrdinalsOperation(OperationManager *parent, ListModel *feedList) :
-    DBOperation(IMMEDIATE, parent),
+    DBOperationSynchronous(parent),
     feedList(feedList)
 {
 }
 
-void UpdateOrdinalsOperation::execute()
+void UpdateOrdinalsOperation::executeSynchronous()
 {
     QSet<int> folderIDs;
     QList<FeedItem*> removedFromFolder;
@@ -88,6 +88,4 @@ void UpdateOrdinalsOperation::execute()
     for (FeedItem* item : removedFromFolder) {
         item->setParentFolder(-1);
     }
-
-    emit finished(this);
 }

@@ -54,14 +54,22 @@ WebServer::WebServer(QObject *parent) :
         return "";
     });
 
-    server.route("/api/pin/<arg>", this, [] (qlonglong newsID) {
+    server.route("/api/pin/<arg>", this, [this] (qlonglong newsID) {
         FangApp::instance()->setPin(newsID, true);
-        return "";
+        return updatePinObject(newsID, true);
     });
 
-    server.route("/api/unpin/<arg>", this, [] (qlonglong newsID) {
+    server.route("/api/unpin/<arg>", this, [this] (qlonglong newsID) {
         FangApp::instance()->setPin(newsID, false);
-        return "";
+        return updatePinObject(newsID, false);
     });
+}
 
+QString WebServer::updatePinObject(qint64 newsID, bool pinned)
+{
+    QVariantMap document;
+    document.insert("newsID", newsID);
+    document.insert("pinned", pinned);
+
+    return QString::fromUtf8(QJsonDocument::fromVariant(document).toJson());
 }

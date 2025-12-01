@@ -11,9 +11,10 @@ class MarkAllReadOrUnreadOperation : public BookmarkOperation
     Q_OBJECT
 public:
     explicit MarkAllReadOrUnreadOperation(OperationManager *parent, FeedItem* feed, bool markAsRead = true);
+    virtual ~MarkAllReadOrUnreadOperation() = default;
 
 public slots:
-    virtual void execute();
+    virtual void executeSynchronous();
 
 private:
     bool markAsRead;

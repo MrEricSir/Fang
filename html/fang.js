@@ -104,8 +104,6 @@ function processMessage(message)
         atNewsEnd = true;
     } else if ('drawBookmark' === command) {
         drawBookmark(data);
-    } else if ('updatePin' === command) {
-        setUpdatePin(data);
     } else if ('windowHeight' === command) {
         setWindowHeight(data);
     } else if ('updateCSS' === command) {
@@ -176,13 +174,6 @@ function loadNews(json)
     }
 
     sendCommand('loadComplete');
-}
-
-
-function setUpdatePin(json)
-{
-    let pinObject = JSON.parse( json );
-    updatePin(pinObject.id, pinObject.pinned);
 }
 
 function updateCSS(bodyClassList)
@@ -284,11 +275,17 @@ function installMouseHandlers(parentElement) {
         const isPinned = element.find( '.pin' ).hasClass( 'pinned' );
         const elementID = htmlIdToId(element.attr( 'id' ));
 
+        let apiResponse = null;
         if (isPinned) {
-            apiRequest('unpin', elementID);
+            apiResponse = apiRequest('unpin', elementID);
         } else {
-            apiRequest('pin', elementID);
+            apiResponse = apiRequest('pin', elementID);
         }
+
+        apiResponse.then((response) => response.json()).then((data) => {
+            console.log("update pin data:", data);
+            updatePin(data.newsID, data.pinned);
+        });
     } );
 }
 
@@ -516,15 +513,15 @@ function jumpToBookmark() {
 }
 
 // Updates the pin status on newsID
-function updatePin(newsID, pin) {
-    //console.log("Update pin: ", newsID, " set to: ", pin);
+function updatePin(newsID, pinned) {
+    //console.log("Update pin: ", newsID, " set to: ", pinned);
 
     let element = $('#' + idToHtmlId( newsID ));
     if (!element.length) {
         return; // Not found.
     }
 
-    if (pin) {
+    if (pinned) {
         element.find( '.pin' ).addClass('pinned');
     } else {
         element.find( '.pin' ).removeClass('pinned');

@@ -1,14 +1,14 @@
 #ifndef UPDATETITLEOPERATION_H
 #define UPDATETITLEOPERATION_H
 
-#include "DBOperation.h"
+#include "DBOperationSynchronous.h"
 
 #include <QObject>
 #include <QString>
 
 #include "../models/FeedItem.h"
 
-class UpdateTitleOperation : public DBOperation
+class UpdateTitleOperation : public DBOperationSynchronous
 {
     Q_OBJECT
 public:
@@ -17,7 +17,7 @@ public:
 signals:
     
 public slots:
-    virtual void execute();
+    virtual void executeSynchronous();
     
 private:
     FeedItem* feed;

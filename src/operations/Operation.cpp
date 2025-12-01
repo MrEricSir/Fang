@@ -11,11 +11,6 @@ Operation::Operation(PriorityLevel priority, OperationManager* parent) :
     
 }
 
-Operation::~Operation()
-{
-    //qDebug() << "Operation deleted.";
-}
-
 void Operation::reportError(const QString& errorString)
 {
     qDebug() << "Error: [ " << metaObject()->className() << " ] " << errorString;

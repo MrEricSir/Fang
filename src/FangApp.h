@@ -290,15 +290,6 @@ private slots:
 
     void markAllAsReadOrUnread(FeedItem* feed, bool read);
 
-    // Called when a bookmark has been set.
-    void onSetBookmarkFinished(Operation* operation);
-
-    // Called when a feed has been marked as read or unread.
-    void onMarkReadOrUnreadFinished(Operation* operation);
-
-    // Called when a pin has ben set or unset.
-    void onSetPinFinished(Operation* operation);
-
     // Called when a load has completed.
     void onLoadNewsFinished(Operation* operation);
 
@@ -331,7 +322,6 @@ private:
     bool isPinnedNewsVisible;
 
     // Reentrancy guards
-    bool isSettingBookmark;
     bool loadNewsInProgress;
 
     FeedItem* lastFeedSelected;

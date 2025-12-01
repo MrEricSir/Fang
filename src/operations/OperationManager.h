@@ -9,6 +9,7 @@
 #include <QSet>
 
 #include "Operation.h"
+#include "DBOperationSynchronous.h"
 #include "../FangObject.h"
 
 class OperationManager : public FangObject
@@ -18,17 +19,21 @@ public:
     explicit OperationManager(QObject *parent = nullptr);
     virtual ~OperationManager();
     
-signals:
-    
-    void operationFinished(Operation* operation);
-    
 public slots:
     
     /**
      * @brief Adds an operation.  Depending on the priority level, it may or may not start immediately.
+     *        Note: The operation WILL be deleted when finished.
      * @param operation
      */
     void add(Operation* operation);
+
+    /**
+     * @brief Runs an operation without adding it to the queue. It will always be run immediately.
+     *        Note: The operation will NOT be deleted.
+     * @param operation
+     */
+    void runSynchronously(DBOperationSynchronous* operation);
     
 private slots:
     

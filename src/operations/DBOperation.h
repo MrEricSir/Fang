@@ -12,7 +12,7 @@ class DBOperation : public Operation
     Q_OBJECT
 public:
     explicit DBOperation(PriorityLevel priority, OperationManager* parent);
-    virtual ~DBOperation() {}
+    virtual ~DBOperation() = default;
 signals:
     
 public slots:

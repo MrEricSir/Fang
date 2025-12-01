@@ -7,7 +7,7 @@
 #include "../FangApp.h"
 
 RemoveFeedOperation::RemoveFeedOperation(OperationManager *parent, FeedItem* feed, ListModel *feedList) :
-    DBOperation(IMMEDIATE, parent),
+    DBOperationSynchronous(parent),
     feed(feed),
     feedList(feedList)
 {
@@ -15,7 +15,7 @@ RemoveFeedOperation::RemoveFeedOperation(OperationManager *parent, FeedItem* fee
     Q_ASSERT(feedList != nullptr);
 }
 
-void RemoveFeedOperation::execute()
+void RemoveFeedOperation::executeSynchronous()
 {
     Q_ASSERT(feed);
 
@@ -73,6 +73,4 @@ void RemoveFeedOperation::execute()
     // Update the unread count of our special feeds.
     UnreadCountReader::update(db(), FangApp::instance()->feedForId(FEED_ID_ALLNEWS));
     UnreadCountReader::update(db(), FangApp::instance()->feedForId(FEED_ID_PINNED));
-    
-    emit finished(this);
 }

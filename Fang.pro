@@ -71,6 +71,7 @@ SOURCES += src/main.cpp \
     src/models/FeedItem.cpp \
     src/models/NewsList.cpp \
     src/operations/BookmarkOperation.cpp \
+    src/operations/DBOperationSynchronous.cpp \
     src/operations/InsertFolderOperation.cpp \
     src/operations/LoadFolderOperation.cpp \
     src/operations/LoadNewsOperation.cpp \
@@ -138,6 +139,7 @@ HEADERS += \
     src/models/FeedItem.h \
     src/models/NewsList.h \
     src/operations/BookmarkOperation.h \
+    src/operations/DBOperationSynchronous.h \
     src/operations/InsertFolderOperation.h \
     src/operations/LoadFolderOperation.h \
     src/operations/LoadNewsOperation.h \
