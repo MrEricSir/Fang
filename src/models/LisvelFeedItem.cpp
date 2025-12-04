@@ -32,7 +32,8 @@ bool LisvelFeedItem::canBookmark(qint64 bookmarkID, bool allowBackward)
         return true;
     }
 
-    // YOLO
+    // We can bookmark anything in this situation.
+    // ASSUMPTION: The bookmark ID is valid.
     if (allowBackward) {
         // qDebug() << "canBookmark: allow backward is always true";
         return true;
@@ -41,7 +42,13 @@ bool LisvelFeedItem::canBookmark(qint64 bookmarkID, bool allowBackward)
     // Compare index of proposed bookmark to index of current bookmark.
     qsizetype proposedIndex = bookmarkID == -1 ? 0 : getNewsList()->indexForItemID(bookmarkID);
     qsizetype currentIndex = getNewsList()->indexOf(getBookmark());
-    Q_ASSERT(proposedIndex >= 0); // It HAS TO be in the news ids list at this point, or you're screwed.
 
+    // If the bookmark ID wasn't find
+    if (proposedIndex < 0) {
+        qDebug() << "Bookmark ID not found in memory: " << bookmarkID;
+        return false;
+    }
+
+    // Otherwise, compare the index position of the proposed bookmark to the current one.
     return proposedIndex > currentIndex;
 }
