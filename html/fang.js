@@ -1,18 +1,15 @@
 /**
-  This is Fang's Javascript logic.  But I mean, you knew that.  DUH!
+  * Fang: Feed on news.
+  *
+  * This script is used to update the browser view with news feed data provided by a web server
+  * and a websocket that live in the C++ layer.
   */
 
 // Selects all news containers
 let newsContainerSelector = 'body>#newsView>.newsContainer:not(#model)';
 
-// This will be reset later.
-let windowHeight = 50000;
-
 // Current mode
 let currentMode = "newsView";
-
-// Set to true when there's no more news to load.
-let atNewsEnd = false;
 
 // Websocket
 let wsUri = "ws://localhost:2842";
@@ -20,7 +17,9 @@ let websocket = null;
 let websocketRestartTimerID = null;
 const websocketRestartTimeoutMs = 250;
 
-// Call this to connect to Fang's WebSocket.
+/**
+  * Establishes a websocket connection to the backend.
+  */
 function initWebSocket()
 {
     try {
@@ -35,15 +34,11 @@ function initWebSocket()
         websocket = new WebSocket( wsUri );
         websocket.onopen = function (evt) {
             console.log("WebSocket: CONNECTED");
-
-            // Let Fang know we're good n' ready!
-            sendCommand("pageLoaded", "");
         };
         websocket.onclose = function (evt) {
             console.log("WebSocket: DISCONNECTED");
 
             // TODO: Add timer with backoff so we don't always try to reconnect ASAP.
-
             if (!websocketRestartTimerID) {
                 websocketRestartTimerID = setTimeout(() => {
                     console.log("Reconnecting WebSocket...");
@@ -55,7 +50,6 @@ function initWebSocket()
             }
         };
         websocket.onmessage = function (evt) {
-            //console.log( "WebSocket message received :", evt.data );
             processMessage(evt.data);
         };
         websocket.onerror = function (evt) {
@@ -66,7 +60,9 @@ function initWebSocket()
     }
 }
 
-// Ends the WebSocket session.
+/**
+ * Ends the WebSocket session.
+ */
 function stopWebSocket() {
     if (websocket) {
         websocket.close();
@@ -74,13 +70,17 @@ function stopWebSocket() {
     }
 }
 
-// Send a command to the server.
+/**
+  * Send a command to the websocket server.
+  */
 function sendCommand(command, data)
 {
     websocket.send( command + ' ' + data );
 }
 
-// Fang sent us a message, horray!
+/**
+  * Processes a message from the websocket server.
+  */
 function processMessage(message)
 {
     let spaceIndex = message.indexOf( ' ' );
@@ -96,37 +96,32 @@ function processMessage(message)
     //console.log("Command:", '[' + command + ']')
     //console.log("Data:", '[' + data + ']')
 
-
-    if ('load' === command) {
-        loadNews(data);
-        atNewsEnd = false;
-    } else if ('loadEmpty' === command) {
-        atNewsEnd = true;
+    if ('feedChanged' === command) {
+        requestNews('initial');
     } else if ('drawBookmark' === command) {
         drawBookmark(data);
-    } else if ('windowHeight' === command) {
-        setWindowHeight(data);
-    } else if ('updateCSS' === command) {
-        updateCSS(JSON.parse(data));
     } else if ('jumpToBookmark' === command) {
         jumpToBookmark();
     } else if ('jumpNext' === command) {
         jumpNextPrev(true);
     } else if ('jumpPrevious' === command) {
         jumpNextPrev(false);
+    } else if ('styleChanged' === command) {
+        updateCSS();
     } else if ('showNews' === command) {
        setMode('newsView');
     } else if ('showWelcome' === command) {
        setMode('welcome');
-    } else if ('forceBottomCheck' === command) {
-        // Forces a bottom check.  (Used when new news is added.)
-        if (isAtBottom(distance)) {
-            loadNext();
-        }
     }
 }
 
-function apiRequest(method, params)
+/**
+  * Performs a GET request to the backend.
+  * URL will be of the path /api/{method}/{params}
+  *
+  * Returns a Promise that will resolve to a Response.
+  */
+function apiGetRequest(method, params)
 {
     let url = 'http://localhost:2844/api/' + method;
     if (params) {
@@ -136,7 +131,14 @@ function apiRequest(method, params)
     return fetch(url);
 }
 
-function apiPost(method, object)
+/**
+  * Performs a POST request to the backend.
+  * URL will be of the path /api/{method}
+  * Post body will be the object
+  *
+  * Returns a Promise that will resolve to a Response.
+  */
+function apiPostRequest(method, object)
 {
     let url = 'http://localhost:2844/api/' + method;
 
@@ -146,54 +148,70 @@ function apiPost(method, object)
                  });
 }
 
-
-function loadNews(json)
+/**
+  * Loads news items from the backend and displays them.
+  * Mode can be "initial", "prepend", or "append"
+  */
+function requestNews(mode)
 {
-    // Might consider an evil eval() alternative if needed.
-    let newsObject = JSON.parse( json );
-    //console.log("loadNews: ", newsObject);
+    console.log("requestNews:", mode);
 
-    setWindowHeight(newsObject.windowHeight);
+    apiGetRequest('load', mode)
+    .then((response) => response.json())
+    .then((data) => {
+              console.log("load news data:", data);
 
-    if ('initial' === newsObject.mode) {
-        // Redo the view.
-        setMode('newsView');
-        clearNews();
-        updateCSS(newsObject.css);
-    }
+              if ('initial' === data.mode) {
+                  // Redo the view.
+                  setMode('newsView');
+                  clearNews();
+              }
 
-    // Append or prepend?
-    let toAppend = 'prepend' !== newsObject.mode;
+              // Append or prepend?
+              let toAppend = 'prepend' !== data.mode;
 
-    // Add all our news!
-    appendNews(toAppend, newsObject.firstNewsID, newsObject.news);
+              // Add all our news!
+              appendNews(toAppend, data.firstNewsID, data.news);
 
-    // If we have a new bookmark, draw it and jump there.
-    if (newsObject.bookmark) {
-        drawBookmarkAndJumpTo(newsObject.bookmark);
-    }
-
-    sendCommand('loadComplete');
+              // If we have a new bookmark, draw it and jump there.
+              if (data.bookmark) {
+                  drawBookmark(data.bookmark);
+                  jumpToBookmark();
+              }
+          });
 }
 
-function updateCSS(bodyClassList)
+/**
+  * Requests updated CSS from the backend and applies it.
+  * Note: This is required to sync the light/dark modes and font sizes.
+  */
+function updateCSS()
 {
-    // Clear the current styles.
-    clearBodyClasses();
+    apiGetRequest('css')
+    .then((response) => response.json())
+    .then((data) => {
+              console.log("Update css:", data);
+              // Clear the current styles.
+              clearBodyClasses();
 
-    // Add 'em!
-    for (let i = 0; i < bodyClassList.length; i++) {
-        addBodyClass(bodyClassList[i]);
-    }
+              // Add 'em!
+              for (let i = 0; i < data.length; i++) {
+                  addBodyClass(data[i]);
+              }
+          });
 }
 
+/**
+  * Switches between the news and welcome modes.
+  * Valid modes: 'newsView', 'welcome'
+  */
 function setMode(mode)
 {
     if (mode === currentMode) {
         return;
     }
 
-    console.log("Switching mode to: ", mode);
+    console.log("setMode: ", mode);
     currentMode = mode;
 
     // Switch out the HTML
@@ -205,37 +223,28 @@ function setMode(mode)
         $('#newsView').hide();
         $('#welcome').show();
         $(document).scrollTop(0); // Scroll back up
-
-        sendCommand('loadComplete'); // Send a load complete
     }
 }
 
 
-// Returns true if we're at the bottom of the document.
-// "distance" is the fudge factor: bottom will be triggered if it's y position is
-// within distance from bottm
-function isAtBottom(distance) {
-    let bottom = $(document).height() - windowHeight - distance;
+/**
+  * Returns true if we're at the bottom of the document.
+  * "distance" is the fudge factor: bottom will be triggered if it's y position is
+  * within distance from bottm
+  */
+function isAtBottom(distance)
+{
+    let bottom = $(document).height() - window.innerHeight - distance;
     let ret = $(document).scrollTop() >= bottom;
     //console.log("Is at bottom? bottom y: ", bottom, " scrollTop: ", $(document).scrollTop(), " ret: ", ret)
     return ret;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-// When the window is resized, jump to bookmark after a short delay.
-$(window).resize(function() {
-    if(this.resizeTO) clearTimeout(this.resizeTO);
-        this.resizeTO = window.setTimeout(function() {
-            //console.log("RESIZE");
-            jumpToBookmark();
-    }, 50);
-    
-});
-
-// Converts one of Fang's internal IDs to an HTML news item id.
-function idToHtmlId(id) {
+/**
+  * Converts one of Fang's database IDs to an HTML news item id string.
+  */
+function idToHtmlId(id)
+{
     if (id === -1) {
         return 'topBookmark';
     } else {
@@ -243,7 +252,11 @@ function idToHtmlId(id) {
     }
 }
 
-function htmlIdToId(htmlID) {
+/**
+  * Converts an HTML id string for a news item to a database ID.
+  */
+function htmlIdToId(htmlID)
+{
     if (htmlID === 'topBookmark') {
         return -1;
     } else {
@@ -251,22 +264,29 @@ function htmlIdToId(htmlID) {
     }
 }
 
-// Intercept clix.
-function delegateLink() {
+/**
+  * Click handler for URLs.
+  * Sends the link URL to the backend to decide what to do (open default browser, etc.)
+  */
+function delegateLink()
+{
     const url = $(this).attr('href');
-    apiPost('open_link', {
+    apiPostRequest('open_link', {
                 'url': url
             });
     return false; // Don't propogate link.
 };
 
-// Given a parent element, setup the bookmark forcer and pin handler.
-function installMouseHandlers(parentElement) {
+/**
+  * Given a parent element, setup the bookmark forcer and pin handler.
+  */
+function installMouseHandlers(parentElement)
+{
     // Setup manual bookmarks.
     $(parentElement).find( '.stripe' ).on( "click", function() { 
         const elementID = htmlIdToId( $(this).parent().parent().attr( 'id' ) );
 
-        apiRequest('force_bookmark', elementID);
+        apiGetRequest('force_bookmark', elementID);
     } );
 
     // Setup the pin... pinner?  Pinteresting.
@@ -277,9 +297,9 @@ function installMouseHandlers(parentElement) {
 
         let apiResponse = null;
         if (isPinned) {
-            apiResponse = apiRequest('unpin', elementID);
+            apiResponse = apiGetRequest('unpin', elementID);
         } else {
-            apiResponse = apiRequest('pin', elementID);
+            apiResponse = apiGetRequest('pin', elementID);
         }
 
         apiResponse.then((response) => response.json()).then((data) => {
@@ -289,8 +309,11 @@ function installMouseHandlers(parentElement) {
     } );
 }
 
-// Appends (or prepends) a news item.
-function appendNews(append, firstNewsID, newsList) {
+/**
+  * Appends (or prepends) news item(s) to the DOM.
+  */
+function appendNews(append, firstNewsID, newsList)
+{
     // Unescape newlines.  (This allows pre tags to work.)
     //jsonNews = jsonNews.replace(/[\u0018]/g, "\n");
     
@@ -333,7 +356,7 @@ function appendNews(append, firstNewsID, newsList) {
         // Setup mouse handlers (bookmark forcer, pinner, etc.)
         installMouseHandlers(item);
         
-        // Stick 'er in!
+        // Add the item to the DOM.
         if (append) {
             console.log("Append!")
             item.insertAfter('body>#newsView>.newsContainer:last');
@@ -419,7 +442,12 @@ function appendNews(append, firstNewsID, newsList) {
     }
 }
 
-function removeMatchingItems(item) {
+/**
+  * Removes provided items.
+  * item: selector of items to remove
+  */
+function removeMatchingItems(item)
+{
     // Iterate over all items that match.
     for ( let i = 0; i < item.length; i++ ) {
         let current = item[i];
@@ -429,20 +457,29 @@ function removeMatchingItems(item) {
     }
 }
 
-// Clears out all the news from the view.
-function clearNews() {
+/**
+  * Clears out all the news from the view.
+  */
+function clearNews()
+{
     removeMatchingItems( $(newsContainerSelector) );
 
     $(document).scrollTop( 0 );
 }
 
-// Returns the last news container.
-function getLastNewsContainer() {
+/**
+  * Returns the last news container in the DOM.
+  */
+function getLastNewsContainer()
+{
     return $(newsContainerSelector).last();
 }
 
-// Scrolls to the element with the given ID.
-function jumpTo(id) {
+/**
+  * Scrolls to the news item in the DOM with the given database ID.
+  */
+function jumpTo(id)
+{
     //console.log("Jump to: ", id)
     
     let elementId = '#' + idToHtmlId( id );
@@ -453,8 +490,11 @@ function jumpTo(id) {
     $(document).scrollTop( scrollTo );
 }
 
-// Draws a bookmark on the given news container ID.
-function drawBookmark(id) {
+/**
+  * Updates the DOM with a bookmark on the given news database ID.
+  */
+function drawBookmark(id)
+{
     //console.log("draw bookmark: ", id)
     
     // Remove any existing bookmark(s).
@@ -466,20 +506,11 @@ function drawBookmark(id) {
     $( elementId ).addClass('bookmarked');
 }
 
-
-// Both draw the bookmark AND jump to it!  In ONE SHOT!!  WOW!
-let bookmarkIdWeAreJumpingTo = -100;
-function drawBookmarkAndJumpTo(id) {
-    console.log("drawBookmarkAndJumpTo", id)
-//    bookmarkIdWeAreJumpingTo = id;
-//    drawBookmarkAndJumpToJumpingToId();
-
-    drawBookmark(id);
-    jumpToBookmark();
-}
-
-
-function jumpToBookmark() {
+/**
+  * Scrolss to the currently bookmarked item (if any.)
+  */
+function jumpToBookmark()
+{
     console.log("Jump to bookmark");
     
     // If there's a bookmark, this will jump to it.
@@ -494,11 +525,11 @@ function jumpToBookmark() {
     let lastIsBookmark = getLastNewsContainer().hasClass("bookmarked");
     let scrollTo = element.offset().top - 10;
     
-    //console.log("Scroll to: ", scrollTo, " window height: ", windowHeight, " document h: ", $(document).height());
+    //console.log("Scroll to: ", scrollTo, " window height: ", window.innerHeight, " document h: ", $(document).height());
     
     // Set max jump.
-    if (scrollTo > $(document).height() - windowHeight) {
-        scrollTo = $(document).height() - windowHeight;
+    if (scrollTo > $(document).height() - window.innerHeight) {
+        scrollTo = $(document).height() - window.innerHeight;
 
         // Rewind slightly if the last item isn't bookmarked (so the user can scroll to it.)
         if (!lastIsBookmark) {
@@ -512,8 +543,11 @@ function jumpToBookmark() {
     $(document).scrollTop( scrollTo );
 }
 
-// Updates the pin status on newsID
-function updatePin(newsID, pinned) {
+/**
+  * Updates the DOM's pin status on news ID.
+  */
+function updatePin(newsID, pinned)
+{
     //console.log("Update pin: ", newsID, " set to: ", pinned);
 
     let element = $('#' + idToHtmlId( newsID ));
@@ -528,16 +562,20 @@ function updatePin(newsID, pinned) {
     }
 }
 
-// UTILITY: Returns true if the element is a real news item,
-//          rather than a model or chrome component.
+/**
+  * Returns true if the element is a real news item, rather than a model, chrome component, etc.
+  */
 function isNewsContainer(element) {
     let ret = element.hasClass('newsContainer') && element.attr('id') !== 'model';
     //console.log("Is news container: ", element, " :: ", ret)
     return ret;
 }
 
-// Returns the next news item in our little list.
-function nextNewsContainer(element) {
+/**
+  * Returns the next news item the DOM.
+  */
+function nextNewsContainer(element)
+{
     //console.log("nextNewsContainer for: ", element)
 
     // Loop until we find another valid news container.
@@ -554,8 +592,11 @@ function nextNewsContainer(element) {
     return null; // :(
 }
 
-// Or how about the previous one, why not?
-function prevNewsContainer(element) {
+/**
+  * Returns the previous news item the DOM.
+  */
+function prevNewsContainer(element)
+{
     //console.log("prevNewsContainer for: ", element)
     
     // Loop backwards until we find another valid news container.
@@ -572,8 +613,11 @@ function prevNewsContainer(element) {
     return null; // :(
 }
 
-// UTILITY: Returns true if the element is above the scroll position, else false.
-function isAboveScroll(element) {
+/**
+  * Returns true if the element is entirely above the scroll position, else false.
+  */
+function isAboveScroll(element)
+{
     //console.log("Is above scroll: ", element)
 
     // We don't want to include the bookmark space this calculation.
@@ -592,22 +636,29 @@ function isAboveScroll(element) {
     return ret;
 }
 
-// UTILITY: Just like isAboveScroll(), but this only checks the top of the element.
-function isTopAboveScroll(element) {
+/**
+  * Just like isAboveScroll(), but this only checks the top of the specified element.
+  */
+function isTopAboveScroll(element)
+{
     //console.log("Is top above scroll: ", element)
     //console.log("isTopAboveScroll: Scroll top: ", $(window).scrollTop(), " elem offset and height: ", element.offset().top + element.height())
     
     return $(window).scrollTop() >= element.offset().top + 10;
 }
 
-// UTILITY: Returns the first visible news item.
-function getFirstVisible() {
+/**
+  * Returns the first visible news item.
+  */
+function getFirstVisible()
+{
     // Go through all the next items.
     let item = $(newsContainerSelector);
 
     while (item !== null && item.length) {
-        if (!isAboveScroll(item))
+        if (!isAboveScroll(item)) {
             return item;
+        }
         
         item = nextNewsContainer(item);
     }
@@ -616,8 +667,12 @@ function getFirstVisible() {
     return getLastNewsContainer();
 }
 
-// Jumps to the next or previous item on the screen.
-function jumpNextPrev(jumpNext) {
+/**
+  * Jumps our scroll position to the next or previous item.
+  * If jumpNext is true, jump to next item, otherwise jump to the previous one.
+  */
+function jumpNextPrev(jumpNext)
+{
     let current = getFirstVisible();
     
     //console.log("JNP: first visible: ", current)
@@ -658,16 +713,29 @@ function jumpNextPrev(jumpNext) {
     $(document).scrollTop( jumpTo.offset().top );
 }
 
-// Called by QML to tell us the height of the window.
-function setWindowHeight(height) {
-    console.log("height is now: ", height)
-    windowHeight = height;
-}
+/**
+  * Window resize handler.
+  * When the window is resized, jumps to bookmark after a short delay.
+  */
+$(window).resize(function()
+{
+    if(this.resizeTO) clearTimeout(this.resizeTO);
+        this.resizeTO = window.setTimeout(function() {
+            // console.log("RESIZE");
+            jumpToBookmark();
+    }, 50);
+});
 
-// Main method
+/**
+  * Main method.
+  */
 $(document).ready(function() {
     // Start our WebSocket client
     initWebSocket();
+
+    // console.log("--PAGE LOADED --");
+    updateCSS();
+    requestNews("initial");
 
     ////////////////////////////////////////////////////////////////////////////////////////////
     /**
@@ -729,17 +797,17 @@ $(document).ready(function() {
     // Adjust the bookmark if necessary.
     function checkBookmark() {
         // console.log("check bookmark")
-        bookmarkAll = false; // If true, bookmark every single item.
+        let bookmarkAll = false; // If true, bookmark every single item.
 
         if ($(newsContainerSelector).length === 0) {
-            console.log("checkBookmark: NO NEWS CONTAINERS to deal with, no need to set bookmark")
+            // console.log("checkBookmark: NO NEWS CONTAINERS to deal with, no need to set bookmark")
             
             return;
         }
 
         // If there's nothing more to load and we've scrolled alllll the way down, bookmark the last item.
-        if (atNewsEnd && isAtBottom($(".bookmark").height())) {
-            //console.log("checkBookmark: At bottom, bookmark all");
+        if (isAtBottom($(".bookmark").height())) {
+            // console.log("checkBookmark: At bottom, bookmark all");
             bookmarkAll = true;
         }
         
@@ -770,7 +838,7 @@ $(document).ready(function() {
             
             // Move the bookmark.
             // console.log("checkBookmark: set bookmark to ", nextItem.attr('id'));
-            apiRequest('set_bookmark', htmlIdToId(nextItem.attr('id')));
+            apiGetRequest('set_bookmark', htmlIdToId(nextItem.attr('id')));
             
             // Continue to next item.
             nextItem = nextNewsContainer(nextItem);
@@ -778,13 +846,13 @@ $(document).ready(function() {
     }
     
     function loadNext() {
-        //console.log("loadNext")
-        sendCommand( 'loadNext', '' );
+        // console.log("loadNext");
+        requestNews("append");
     }
     
     function loadPrevious() {
-        //console.log("loadPrevious")
-        sendCommand( 'loadPrevious', '' );
+        // console.log("loadPrevious");
+        requestNews("prepend");
     }
     
     

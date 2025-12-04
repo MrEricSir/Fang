@@ -127,8 +127,8 @@ SOURCES += src/main.cpp \
     src/operations/GetAllDBSettingsOperation.cpp \
     src/parser/NewsParser.cpp \
     src/utilities/SimpleHTTPDownloader.cpp \
-    src/models/NewsWebSocketServer.cpp \
-    src/webserver/WebServer.cpp
+    src/server/WebSocketServer.cpp \
+    src/server/WebServer.cpp
 	
 HEADERS += \
     src/models/DBObject.h \
@@ -196,8 +196,8 @@ HEADERS += \
     src/db/DBSettingsKey.h \
     src/parser/NewsParser.h \
     src/utilities/SimpleHTTPDownloader.h \
-    src/models/NewsWebSocketServer.h \
-    src/webserver/WebServer.h
+    src/server/WebSocketServer.h \
+    src/server/WebServer.h
 
 mac {
     HEADERS += src/notifications/NotificationMac.h

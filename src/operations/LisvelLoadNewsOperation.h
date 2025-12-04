@@ -15,7 +15,7 @@ public:
                                      LoadMode mode, int loadLimit = 15, bool prependOnInit = true);
 
 public slots:
-    virtual void execute();
+    virtual void executeSynchronous();
 
 private slots:
 

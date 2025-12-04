@@ -13,6 +13,9 @@ Window {
     width: windowSettings.width;
     height: windowSettings.height;
 
+    // True once the page load has hit 100%
+    property alias isWebPageLoaded: news.isWebPageLoaded;
+
     visibility: {
         if (platform == "ANDROID") {
             return Window.Maximized;
@@ -28,9 +31,6 @@ Window {
     
     minimumWidth: Math.max(640, sidebar.width + minimumNewsWidth);
     minimumHeight: 450;
-
-    // Read-only: Tells you if the news view is busy.
-    readonly property alias isInProgress: news.isInProgress;
 
     // Treat as const
     property int minimumSidebarWidth: (platform === "ANDROID") ? 260 : 230;
@@ -204,15 +204,7 @@ Window {
     }
 
     /**
-     * Operator: mainFrame turn on.
-     *
-     * Captain: It's you!!
-     * CATS: How are you gentlemen!!
-     * CATS: All your base are belong to us.
-     * CATS: You are on the way to destruction.
-     * Captain: What you say!!
-     * CATS: You have no chance to survive make your time.
-     * CATS: Ha ha ha ha ....
+     * Main component.
      */
     FangScreen {
         id: mainFrame;

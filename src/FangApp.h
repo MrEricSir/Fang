@@ -16,13 +16,13 @@
 #include "models/PinnedFeedItem.h"
 #include "models/ListModel.h"
 #include "models/FangSettings.h"
-#include "models/NewsWebSocketServer.h"
 #include "parser/RawFeed.h"
 #include "FangObject.h"
 #include "notifications/NotificationBase.h"
 #include "utilities/SingleInstanceCheck.h"
 #include "db/DBSettings.h"
-#include "webserver/WebServer.h"
+#include "server/WebServer.h"
+#include "server/WebSocketServer.h"
 
 
 class FangApp : public FangObject
@@ -64,14 +64,11 @@ public:
     
 signals:
 
-    // The window height changed!
-    void windowHeightChanged();
+    // Current feed changed from the previously selected feed.
+    void currentFeedChanged();
 
     // The number of special feeds has changed, huzzah!
     void specialFeedCountChanged();
-
-    // Some news got loaded! If you care, listen for this signal.
-    void loadNewsFinished(LoadNewsOperation* loader);
     
 public slots:
     inline int feedCount() { return feedList.rowCount(); }
@@ -80,12 +77,6 @@ public slots:
      * @return The number of visible special feeds (all news, pinned, etc.)
      */
     qint32 specialFeedCount();
-
-    // Returns the window height.
-    int getWindowHeight() { return windowHeight; }
-
-    // Sets the window height.
-    void setWindowHeight(int windowHeight);
     
     /**
      * @brief Adds a known, pre-processed feed.
@@ -187,7 +178,7 @@ public slots:
      * @brief loadNews Loads another batch of news into memory.  See also the loadNewsFinished signal.
      * @param mode
      */
-    void loadNews(LoadNewsOperation::LoadMode mode);
+    LoadNewsOperation* loadNews(LoadNewsOperation::LoadMode mode);
 
     /**
      * @return The settings object, or null if the app hasn't initialized yet.
@@ -207,7 +198,7 @@ public slots:
     /**
      * @return Fang's news WebSocket server.
      */
-    NewsWebSocketServer* getNewsServer() { return &newsServer; }
+    WebSocketServer* getWebSocketServer() { return &webSocketServer; }
 
     /**
      * @brief Jumps the view to the bookmark (if any)
@@ -290,9 +281,6 @@ private slots:
 
     void markAllAsReadOrUnread(FeedItem* feed, bool read);
 
-    // Called when a load has completed.
-    void onLoadNewsFinished(Operation* operation);
-
     // Updates the feed refresh timer.
     void setRefreshTimer();
     
@@ -312,7 +300,7 @@ private:
     QMap<qint64, FeedItem*> feedIdMap;
     QQuickWindow* window;
     NotificationBase* notifications;
-    NewsWebSocketServer newsServer;
+    WebSocketServer webSocketServer;
     WebServer webServer;
 
     // Special feeds.
@@ -320,9 +308,6 @@ private:
     PinnedFeedItem* pinnedNews;
 
     bool isPinnedNewsVisible;
-
-    // Reentrancy guards
-    bool loadNewsInProgress;
 
     FeedItem* lastFeedSelected;
 };

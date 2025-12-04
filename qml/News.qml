@@ -10,11 +10,10 @@ Item {
     // Read-only: Whether bookmarks are enabled for this feed.
     property bool bookmarksEnabled: true;
 
-    // Read-only: Whether the news view is loading stuff.
-    property alias isInProgress: newsFeedInteractor.loadInProgress;
-
     // Set this if you want the news to be visible (native WebView only)
     property alias isVisible: newsView.isVisible;
+
+    property bool isWebPageLoaded: newsView.loadProgress === 100;
     
     // Used by main for double clicking on feed titles.
     function jumpToBookmark() {
@@ -69,8 +68,6 @@ Item {
         
         anchors.fill: parent;
         
-        onHeightChanged: newsFeedInteractor.windowHeight = height;
-        
         // The "interactor" is what talks to the C++ layer.
         NewsFeedInteractor {
             id: newsFeedInteractor;
@@ -83,7 +80,7 @@ Item {
             anchors.fill: parent;
 
             // Stops scrolling while we're loading or a dialog is displayed.
-            enabled: !newsFeedInteractor.loadInProgress && newsFocus;
+            enabled: newsFocus && news.isWebPageLoaded;
         }
 
         Keys.onPressed: (event)=> {

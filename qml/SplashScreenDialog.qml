@@ -43,38 +43,24 @@ Dialog {
             easing.type: Easing.InOutQuad;
         }
 
+        // Closes the spash screen after a timeout.
         Timer {
             id: splashCompleteTimer;
-            interval: 350;
+            interval: 150;
             running: false;
             repeat: false;
 
-            onTriggered: {
-                console.log("SplashScreen complete timer triggered, in progress:", main.isInProgress)
-                // It will either be closed here if the load's already complete,
-                // or in the Connections handler.
-                if (!main.isInProgress) {  // don't leave this one in!
-                    console.log("Wasn't in progress")
-                    close();
-                }
-            }
+            onTriggered: close();
         }
 
+        // Dismiss this dialog after the page loads.
         Connections {
             target: main;
-            function onIsInProgressChanged(isInProgress) {
-                // If we didn't close in the above timer, we're closing here.
-                if (!splashScreenDialog.isClosed && !main.isInProgress && !splashCompleteTimer.running) {
-                    close();
+            function onIsWebPageLoadedChanged() {
+                if (!splashScreenDialog.isClosed && main.isWebPageLoaded) {
+                    splashCompleteTimer.restart();
                 }
             }
-        }
-
-        Component.onCompleted: {
-            console.log("Splash screen logo component.oncompleted")
-            // Start here:
-            splashFadeIn.start();
-            splashCompleteTimer.restart();
         }
     }
 }

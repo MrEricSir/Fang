@@ -9,7 +9,7 @@ LisvelLoadNewsOperation::LisvelLoadNewsOperation(OperationManager *parent, Lisve
 {
 }
 
-void LisvelLoadNewsOperation::execute()
+void LisvelLoadNewsOperation::executeSynchronous()
 {
     qDebug() << "LisvelLoadNewsOperation::execute load for feed: " << lisvelNews->getDbID();
     // For an initial load, make sure the feed isn't populated yet.
@@ -109,9 +109,6 @@ void LisvelLoadNewsOperation::execute()
 
     // Set the first possible ID for that top bookmark display action.
     lisvelNews->setFirstNewsID(getFirstNewsID());
-
-    // we r dun lol
-    emit finished(this);
 }
 
 bool LisvelLoadNewsOperation::doPrepend()
