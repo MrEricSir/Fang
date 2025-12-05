@@ -4,7 +4,6 @@
 #include <QJsonDocument>
 
 #include "../FangApp.h"
-#include "NewsWebSocketServer.h"
 #include "../operations/UpdateOrdinalsOperation.h"
 
 NewsFeedInteractor::NewsFeedInteractor(QQuickItem *parent) :
@@ -15,30 +14,11 @@ NewsFeedInteractor::NewsFeedInteractor(QQuickItem *parent) :
 
     connect(FangApp::instance(), &FangApp::specialFeedCountChanged,
             this, &NewsFeedInteractor::specialFeedCountChanged);
-    connect(FangApp::instance()->getNewsServer(), &NewsWebSocketServer::isLoadInProgressChanged,
-            this, &NewsFeedInteractor::onIsLoadInProgressChanged);
-    connect(FangApp::instance(), &FangApp::windowHeightChanged,
-            this, &NewsFeedInteractor::windowHeightChanged);
 }
 
 qint32 NewsFeedInteractor::specialFeedCount()
 {
     return FangApp::instance()->specialFeedCount();
-}
-
-bool NewsFeedInteractor::loadInProgress()
-{
-    return FangApp::instance()->getNewsServer()->isLoadInProgress();
-}
-
-int NewsFeedInteractor::getWindowHeight()
-{
-    return FangApp::instance()->getWindowHeight();
-}
-
-void NewsFeedInteractor::setWindowHeight(int windowHeight)
-{
-    FangApp::instance()->setWindowHeight(windowHeight);
 }
 
 void NewsFeedInteractor::removeFeed(FeedItem *feed)
@@ -54,23 +34,9 @@ int NewsFeedInteractor::insertFolder(int newIndex)
 
 void NewsFeedInteractor::orderChanged()
 {
-    // TODO: Is this code still required?
-//    for (int i = 0; i < feedList->rowCount(); i++)
-//    {
-//        FeedItem* feed = qobject_cast<FeedItem*>(feedList->row(i));
-//        Q_ASSERT(feed != nullptr);
-        
-//        if (feed->isSpecialFeed())
-//            continue; // Skip special feeds.
-        
-//        // Set the new ordinal.
-//        feed->setOrdinal(i);
-//        //qDebug() << "Feed " << feed->getTitle() << " #" << feed->getOrdinal();
-//    }
-    
     // Update orinals based on the new list order.
-    UpdateOrdinalsOperation* updateOp = new UpdateOrdinalsOperation(manager, feedList);
-    manager->add(updateOp);
+    UpdateOrdinalsOperation updateOp(manager, feedList);
+    manager->runSynchronously(&updateOp);
 }
 
 void NewsFeedInteractor::refreshCurrentFeed()

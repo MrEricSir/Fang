@@ -1,6 +1,6 @@
 TEMPLATE = app
 
-QT += core qml quick quickcontrols2 widgets network sql svg websockets
+QT += core qml quick quickcontrols2 widgets network sql svg websockets httpserver
 
 QT -= sensors
 
@@ -71,6 +71,7 @@ SOURCES += src/main.cpp \
     src/models/FeedItem.cpp \
     src/models/NewsList.cpp \
     src/operations/BookmarkOperation.cpp \
+    src/operations/DBOperationSynchronous.cpp \
     src/operations/InsertFolderOperation.cpp \
     src/operations/LoadFolderOperation.cpp \
     src/operations/LoadNewsOperation.cpp \
@@ -126,7 +127,8 @@ SOURCES += src/main.cpp \
     src/operations/GetAllDBSettingsOperation.cpp \
     src/parser/NewsParser.cpp \
     src/utilities/SimpleHTTPDownloader.cpp \
-    src/models/NewsWebSocketServer.cpp
+    src/server/WebSocketServer.cpp \
+    src/server/WebServer.cpp
 	
 HEADERS += \
     src/models/DBObject.h \
@@ -137,6 +139,7 @@ HEADERS += \
     src/models/FeedItem.h \
     src/models/NewsList.h \
     src/operations/BookmarkOperation.h \
+    src/operations/DBOperationSynchronous.h \
     src/operations/InsertFolderOperation.h \
     src/operations/LoadFolderOperation.h \
     src/operations/LoadNewsOperation.h \
@@ -193,7 +196,8 @@ HEADERS += \
     src/db/DBSettingsKey.h \
     src/parser/NewsParser.h \
     src/utilities/SimpleHTTPDownloader.h \
-    src/models/NewsWebSocketServer.h
+    src/server/WebSocketServer.h \
+    src/server/WebServer.h
 
 mac {
     HEADERS += src/notifications/NotificationMac.h

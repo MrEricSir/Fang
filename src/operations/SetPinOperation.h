@@ -1,14 +1,13 @@
 #ifndef SETPINOPERATION_H
 #define SETPINOPERATION_H
 
-#include "DBOperation.h"
-#include "../models/FeedItem.h"
+#include "DBOperationSynchronous.h"
 #include "../models/PinnedFeedItem.h"
 
 /**
  * @brief Sets or unsets a pin on a news item.
  */
-class SetPinOperation : public DBOperation
+class SetPinOperation : public DBOperationSynchronous
 {
     Q_OBJECT
 public:
@@ -25,7 +24,7 @@ signals:
 
 public slots:
 
-    virtual void execute();
+    virtual void executeSynchronous();
 
     // Returns the item ID.
     inline qint64 getNewsID() { return newsID; }

@@ -1,19 +1,19 @@
 #ifndef BOOKMARKOPERATION_H
 #define BOOKMARKOPERATION_H
 
-#include "DBOperation.h"
+#include "DBOperationSynchronous.h"
 #include "../models/FeedItem.h"
 #include "../models/FolderFeedItem.h"
 
 /**
  * @brief Subclass that adds some bookmarking capabilities.
  */
-class BookmarkOperation : public DBOperation
+class BookmarkOperation : public DBOperationSynchronous
 {
     Q_OBJECT
 public:
     explicit BookmarkOperation(OperationManager *parent, FeedItem* feed);
-    virtual ~BookmarkOperation();
+    virtual ~BookmarkOperation() = default;
 
 public slots:
     inline FeedItem* getFeed() { return feed; }

@@ -10,19 +10,17 @@ MarkAllReadOrUnreadOperation::MarkAllReadOrUnreadOperation(OperationManager *par
 
 }
 
-void MarkAllReadOrUnreadOperation::execute()
+void MarkAllReadOrUnreadOperation::executeSynchronous()
 {
     if (!feed) {
         qWarning() << "Unable to update bookmark; feed is null";
 
-        emit finished(this);
         return;
     }
 
     if (!feed->bookmarksEnabled()) {
         qDebug() << "Requested to update bookmark but feed does not support bookmarks.";
 
-        emit finished(this);
         return;
     }
 

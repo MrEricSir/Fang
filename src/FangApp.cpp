@@ -1,6 +1,7 @@
 #include "FangApp.h"
 
 #include <QDebug>
+#include <QElapsedTimer>
 #include <QImageReader>
 
 #include "operations/UpdateFeedOperation.h"
@@ -45,8 +46,6 @@ FangApp::FangApp(QApplication *parent, QQmlApplicationEngine* engine, SingleInst
     allNews(nullptr),
     pinnedNews(nullptr),
     isPinnedNewsVisible(true),
-    isSettingBookmark(false),
-    loadNewsInProgress(false),
     lastFeedSelected(nullptr)
 {
     Q_ASSERT(_instance == nullptr);
@@ -61,7 +60,7 @@ FangApp::FangApp(QApplication *parent, QQmlApplicationEngine* engine, SingleInst
     connect(&feedList, &ListModel::removed, this, &FangApp::onFeedRemoved);
     connect(&feedList, &ListModel::selectedChanged, this, &FangApp::onFeedSelected);
 
-    connect(&newsServer, &NewsWebSocketServer::isLoadInProgressChanged, this,
+    connect(&webSocketServer, &WebSocketServer::isLoadInProgressChanged, this,
             &FangApp::onLoadPageChanged);
 }
 
@@ -165,7 +164,7 @@ void FangApp::onFeedSelected(ListItem* _item)
 void FangApp::onLoadPageChanged()
 {
     static bool first = false;
-    if (!first && !newsServer.isLoadInProgress()) {
+    if (!first) {
         first = true;
 
         // Perform first feed update!
@@ -333,24 +332,23 @@ FeedItem* FangApp::feedForId(const qint64 id)
 
 void FangApp::setBookmark(qint64 id, bool allowBackward)
 {
-    if (isSettingBookmark || nullptr == currentFeed) {
-        // qDebug() << "Cannot set bookmark to (early exit): " << id;
+    if (nullptr == currentFeed) {
+        // qDebug() << "setBookmark: Current feed is null, cannot set bookmark to: " << id;
         return;
     }
 
     if (!currentFeed->canBookmark(id, allowBackward)) {
-        isSettingBookmark = false;
         // qDebug() << "Cannot set bookmark to: " << id;
-
         return;
     }
 
     // I bookmark you!
-    SetBookmarkOperation* bookmarkOp = new SetBookmarkOperation(
-        &manager, currentFeed, currentFeed->getNewsList()->newsItemForID(id));
-    isSettingBookmark =  true;
-    connect(bookmarkOp, &SetBookmarkOperation::finished, this, &FangApp::onSetBookmarkFinished);
-    manager.add(bookmarkOp);
+    SetBookmarkOperation bookmarkOp(&manager, currentFeed,
+                                    currentFeed->getNewsList()->newsItemForID(id));
+    manager.runSynchronously(&bookmarkOp);
+
+    currentFeed->setBookmark(bookmarkOp.getBookmark());
+    webSocketServer.drawBookmark(currentFeed->getBookmark()->getDbID());
 }
 
 void FangApp::setPin(qint64 id, bool pin)
@@ -362,9 +360,8 @@ void FangApp::setPin(qint64 id, bool pin)
 
     PinnedFeedItem* pinnedNews = qobject_cast<PinnedFeedItem*>(feedForId(FEED_ID_PINNED));
 
-    SetPinOperation* pinOp = new SetPinOperation(&manager, pinnedNews, id, pin);
-    connect(pinOp, &SetPinOperation::finished, this, &FangApp::onSetPinFinished);
-    manager.add(pinOp);
+    SetPinOperation pinOp(&manager, pinnedNews, id, pin);
+    manager.runSynchronously(&pinOp);
 }
 
 void FangApp::removeAndDelete(bool fromStart, qsizetype numberToRemove)
@@ -398,7 +395,7 @@ void FangApp::onObjectCreated(QObject* object, const QUrl& url)
     fangSettings->init(&dbSettings);
 
     // Init WebSocket server.
-    newsServer.init(fangSettings);
+    webSocketServer.init(fangSettings);
     
     // Grab the All News item.
     AllNewsFeedItem* allNews = qobject_cast<AllNewsFeedItem*>(feedList.row(0));
@@ -434,10 +431,6 @@ void FangApp::onQuit()
 
 void FangApp::setCurrentFeed(FeedItem *feed, bool reloadIfSameFeed)
 {
-    if (!newsServer.isServerReady()) {
-        return; // We were called too early.
-    }
-
     if (feed == nullptr) {
         return;
     }
@@ -463,21 +456,25 @@ void FangApp::setCurrentFeed(FeedItem *feed, bool reloadIfSameFeed)
 
     // Show welcome screen if there's no feeds.
     if (feedCount() <= 1) {
-        newsServer.showWelcome();
+        webSocketServer.showWelcome();
 
         return;
     }
 
-    // Load up our new batch o' news!
-    // TODO: On startup, somehow load All News before we even get here.
-    loadNews(LoadNewsOperation::Initial);
+    // Signal that we've changed feeds.
+    emit currentFeedChanged();
 }
 
-void FangApp::loadNews(LoadNewsOperation::LoadMode mode)
+LoadNewsOperation* FangApp::loadNews(LoadNewsOperation::LoadMode mode)
 {
-    if (currentFeed == nullptr || loadNewsInProgress) {
-        return;
+    if (currentFeed == nullptr) {
+        qDebug() << "loadNews: Current feed is null";
+        qDebug() << "Loaded feeds: " << feedList.count();
+        return nullptr;
     }
+
+    QElapsedTimer timer;
+    timer.start();
 
     LoadNewsOperation* loader = nullptr;
     switch (currentFeed->getDbID()) {
@@ -498,9 +495,11 @@ void FangApp::loadNews(LoadNewsOperation::LoadMode mode)
         }
     }
 
-    loadNewsInProgress =  true;
-    connect(loader, &LoadNewsOperation::finished, this, &FangApp::onLoadNewsFinished);
-    manager.add(loader);
+    manager.runSynchronously(loader);
+    loader->deleteLater();
+
+    qDebug() << "Load news operation took [ " << timer.elapsed() << " ] milliseconds";
+    return loader;
 }
 
 void FangApp::onFeedTitleChanged()
@@ -511,7 +510,8 @@ void FangApp::onFeedTitleChanged()
         return;
     }
     
-    manager.add(new UpdateTitleOperation(&manager, feed));
+    UpdateTitleOperation updateTitle(&manager, feed);
+    manager.runSynchronously(&updateTitle);
 }
 
 QString FangApp::getPlatform()
@@ -556,27 +556,27 @@ bool FangApp::isDesktop()
 
 void FangApp::jumpToBookmark()
 {
-    newsServer.jumpToBookmark();
+    webSocketServer.jumpToBookmark();
 }
 
 void FangApp::jumpNext()
 {
-    newsServer.jumpNext();
+    webSocketServer.jumpNext();
 }
 
 void FangApp::jumpPrevious()
 {
-    newsServer.jumpPrevious();
+    webSocketServer.jumpPrevious();
 }
 
 void FangApp::showNews()
 {
-    newsServer.showNews();
+    webSocketServer.showNews();
 }
 
 void FangApp::showWelcome()
 {
-    newsServer.showWelcome();
+    webSocketServer.showWelcome();
 }
 
 void FangApp::pinnedNewsWatcher()
@@ -598,81 +598,13 @@ void FangApp::pinnedNewsWatcher()
 
 void FangApp::markAllAsReadOrUnread(FeedItem *feed, bool read)
 {
-    MarkAllReadOrUnreadOperation * markReadOp = new MarkAllReadOrUnreadOperation(&manager, feed, read);
-    connect(markReadOp, &MarkAllReadOrUnreadOperation::finished, this, &FangApp::onMarkReadOrUnreadFinished);
-    manager.add(markReadOp);
-}
-
-void FangApp::onSetBookmarkFinished(Operation *operation)
-{
-    if (!currentFeed) {
-        return;
-    }
-
-    SetBookmarkOperation* bookmarkOp = qobject_cast<SetBookmarkOperation*>(operation);
-    Q_ASSERT(bookmarkOp != nullptr);
-
-    isSettingBookmark = false;
-
-    if (bookmarkOp->getFeed() != currentFeed) {
-        // Too slow, no go, bro.
-        return;
-    }
-
-    currentFeed->setBookmark(bookmarkOp->getBookmark());
-    newsServer.drawBookmark(currentFeed->getBookmark()->getDbID());
-}
-
-void FangApp::onMarkReadOrUnreadFinished(Operation *operation)
-{
-    if (!currentFeed) {
-        return;
-    }
-
-    MarkAllReadOrUnreadOperation* markReadOp = qobject_cast<MarkAllReadOrUnreadOperation*>(operation);
-    Q_ASSERT(markReadOp != nullptr);
-
-    if (markReadOp->getFeed() != currentFeed) {
-        return;
-    }
+    MarkAllReadOrUnreadOperation markReadOp(&manager, feed, read);
+    manager.runSynchronously(&markReadOp);
 
     // Update UI to bookmark last item in list.
     // NOTE: May lead to bugs if the last news item is not loaded into newsList
     currentFeed->setBookmark(currentFeed->getNewsList()->last());
-    newsServer.drawBookmark(currentFeed->getBookmark()->getDbID());
-}
-
-void FangApp::onSetPinFinished(Operation *operation)
-{
-    if (nullptr == currentFeed) {
-        return;
-    }
-
-    SetPinOperation* pinOp = qobject_cast<SetPinOperation*>(operation);
-    Q_ASSERT(pinOp != nullptr);
-
-    // Update the view
-    newsServer.updatePin(pinOp->getNewsID(), pinOp->getPin());
-}
-
-void FangApp::onLoadNewsFinished(Operation *operation)
-{
-    if (nullptr == currentFeed) {
-        return;
-    }
-
-    LoadNewsOperation* loader = qobject_cast<LoadNewsOperation*>(operation);
-    Q_ASSERT(loader != nullptr); // If this ever happens, we're fucked.
-
-    if (currentFeed != loader->getFeedItem()) {
-        loadNewsInProgress = false;
-
-        return; // Throw this away, it's from a previous load attempt.
-    }
-
-    // Signal and reset our flag!
-    emit loadNewsFinished(loader);
-    loadNewsInProgress = false;
+    webSocketServer.drawBookmark(currentFeed->getBookmark()->getDbID());
 }
 
 void FangApp::setRefreshTimer()
@@ -713,16 +645,6 @@ qint32 FangApp::specialFeedCount()
     return 1;
 }
 
-void FangApp::setWindowHeight(int windowHeight)
-{
-    if (windowHeight == this->windowHeight) {
-        return;
-    }
-
-    this->windowHeight = windowHeight;
-    emit windowHeightChanged();
-}
-
 void FangApp::addFeed(const QString userURL, const RawFeed* rawFeed, bool switchTo)
 {
     qDebug() << "Add feed: " << userURL;
@@ -738,13 +660,13 @@ void FangApp::addFeed(const QString userURL, const RawFeed* rawFeed, bool switch
 
 void FangApp::removeFeed(FeedItem *feed)
 {
-    // Say goodbye to these (feeds), Michael.
-    //qDebug() << "remove feed";
-    manager.add(new RemoveFeedOperation(&manager, feed, &feedList));
+    // Remove feed from the DB and our feed list.
+    RemoveFeedOperation removeFeedOp(&manager, feed, &feedList);
+    manager.runSynchronously(&removeFeedOp);
 
     // Update orinals based on the new list order.
-    UpdateOrdinalsOperation* updateOp = new UpdateOrdinalsOperation(&manager, &feedList);
-    manager.add(updateOp);
+    UpdateOrdinalsOperation updateOp(&manager, &feedList);
+    manager.runSynchronously(&updateOp);
 }
 
 qint64 FangApp::insertFolder(qsizetype newIndex)

@@ -17,9 +17,6 @@ class NewsFeedInteractor : public QQuickItem
     Q_DISABLE_COPY(NewsFeedInteractor)
     
     Q_PROPERTY(qint32 specialFeedCount READ specialFeedCount NOTIFY specialFeedCountChanged)
-    Q_PROPERTY(bool loadInProgress READ loadInProgress NOTIFY onIsLoadInProgressChanged)
-    Q_PROPERTY(int windowHeight READ getWindowHeight WRITE setWindowHeight NOTIFY windowHeightChanged)
-
 
 public:
     explicit NewsFeedInteractor(QQuickItem *parent = nullptr);
@@ -28,30 +25,12 @@ public:
     // Returns the number of special feeds.
     qint32 specialFeedCount();
 
-    // Returns true if a news load is in progress.
-    bool loadInProgress();
-
-    // Returns the window height.
-    int getWindowHeight();
-
-    // Sets the window height.
-    void setWindowHeight(int windowHeight);
-
-
 signals:
 
     /**
      * @brief The number of special feeds in the feed list has changed.
      */
     void specialFeedCountChanged();
-
-    /**
-     * @brief News is being loaded, or the load just ended. YAY!
-     */
-    void onIsLoadInProgressChanged();
-
-    // The window height changed!
-    void windowHeightChanged();
 
 public slots:
 

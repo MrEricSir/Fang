@@ -5,12 +5,8 @@
 #include "../FangApp.h"
 
 BookmarkOperation::BookmarkOperation(OperationManager *parent, FeedItem* feed) :
-    DBOperation(IMMEDIATE, parent),
+    DBOperationSynchronous(parent),
     feed(feed)
-{
-}
-
-BookmarkOperation::~BookmarkOperation()
 {
 }
 
@@ -31,14 +27,12 @@ void BookmarkOperation::unbookmarkAll()
     if (!update.exec()) {
         reportSQLError(update, "Unable to unset all bookmarks (aka all unread)");
         db().rollback();
-        
-        emit finished(this);
+
         return;
     }
     
     updateUnreadCounts();
     db().commit();
-    emit finished(this);
 }
 
 void BookmarkOperation::bookmarkAll()
@@ -53,13 +47,11 @@ void BookmarkOperation::bookmarkAll()
         reportSQLError(update, "Unable to set all bookmarks (aka all read)");
         db().rollback();
 
-        emit finished(this);
         return;
     }
 
     updateUnreadCounts();
     db().commit();
-    emit finished(this);
 }
 
 void BookmarkOperation::unbookmarkAllInFolder(FolderFeedItem *folder)
@@ -74,13 +66,11 @@ void BookmarkOperation::unbookmarkAllInFolder(FolderFeedItem *folder)
         reportSQLError(update, "Unable to unset bookmarks in folder (aka set folder unread)");
         db().rollback();
 
-        emit finished(this);
         return;
     }
 
     updateUnreadCounts();
     db().commit();
-    emit finished(this);
 }
 
 void BookmarkOperation::bookmarkAllInFolder(FolderFeedItem *folder)
@@ -97,13 +87,11 @@ void BookmarkOperation::bookmarkAllInFolder(FolderFeedItem *folder)
         reportSQLError(update, "Unable to set all bookmarks in folder (aka set folder read)");
         db().rollback();
 
-        emit finished(this);
         return;
     }
 
     updateUnreadCounts();
     db().commit();
-    emit finished(this);
 }
 
 void BookmarkOperation::unbookmarkAllInFeed(FeedItem *feed)
@@ -118,13 +106,11 @@ void BookmarkOperation::unbookmarkAllInFeed(FeedItem *feed)
         reportSQLError(update, "Unable to unset bookmark for feed (aka set feed unread)");
         db().rollback();
 
-        emit finished(this);
         return;
     }
 
     updateUnreadCounts();
     db().commit();
-    emit finished(this);
 }
 
 void BookmarkOperation::bookmarkAllInFeed(FeedItem *feed)
@@ -141,11 +127,9 @@ void BookmarkOperation::bookmarkAllInFeed(FeedItem *feed)
         reportSQLError(update, "Unable to set bookmark for feed (aka set feed read)");
         db().rollback();
 
-        emit finished(this);
         return;
     }
 
     updateUnreadCounts();
     db().commit();
-    emit finished(this);
 }

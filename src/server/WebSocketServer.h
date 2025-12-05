@@ -1,19 +1,18 @@
-#ifndef NEWSWEBSOCKETSERVER_H
-#define NEWSWEBSOCKETSERVER_H
+#ifndef WEBSOCKETSERVER_H
+#define WEBSOCKETSERVER_H
 
 #include <QObject>
 #include <QtWebSockets>
-#include "../operations/LoadNewsOperation.h"
-#include "FangSettings.h"
+#include "../models/FangSettings.h"
 
 /**
  * @brief This is the WebSocket server that manages the news page.
  */
-class NewsWebSocketServer : public QObject
+class WebSocketServer : public QObject
 {
     Q_OBJECT
 public:
-    explicit NewsWebSocketServer(QObject *parent = nullptr);
+    explicit WebSocketServer(QObject *parent = nullptr);
 
     // Users MUST call this before using any method.
     void init(FangSettings *fangSettings);
@@ -35,18 +34,6 @@ public slots:
      * @param bookmarkID
      */
     void drawBookmark(qint64 bookmarkID);
-
-    /**
-     * @brief Updates the pinned status of a given news item.
-     * @param newsID
-     * @param pinned If true, the item is pinned. If not, then it's not pinned.
-     */
-    void updatePin(qint64 newsID, bool pinned);
-
-    /**
-     * @return True if a load is in progress, else false.
-     */
-    bool isLoadInProgress() { return loadInProgress; }
 
     /**
      * @brief Jumps the view to the bookmark (if any)
@@ -84,33 +71,20 @@ private slots:
     // Sends a command to the WebSocket.
     void sendCommand(const QString& command, const QString& data);
 
-    // Some news got loaded, probably! Yay!
-    void onLoadNewsFinished(LoadNewsOperation* loader);
-
-    // Adds a news item to a variant list (to be turned into JSON)
-    void addNewsItem(NewsItem *item, QVariantList* newsList);
-
-    // Returns a list of CSS body classes.
-    QVariantList getCSS();
-
-    // Sends a command to update the CSS.
-    void updateCSS();
-
-    // Alert us to style changes.
+    // Alert socket listener to style changes.
     void onStyleChanged(QString style);
 
-    // Alert us to font size changes.
+    // Alert socket listener to font size change.
     void onFontSizeChanged(QString font);
 
-    // The window height changed!
-    void onWindowHeightChanged();
+    // Alert socket listener to feed change.
+    void onCurrentFeedChanged();
 
 private:
     QWebSocketServer server;
     QWebSocket *pSocket;
     bool isReady;
-    bool loadInProgress;
     FangSettings *fangSettings;
 };
 
-#endif // NEWSWEBSOCKETSERVER_H
+#endif // WEBSOCKETSERVER_H

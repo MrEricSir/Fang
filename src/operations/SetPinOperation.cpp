@@ -4,11 +4,11 @@
 #include "../utilities/UnreadCountReader.h"
 
 SetPinOperation::SetPinOperation(OperationManager *parent, PinnedFeedItem *pinnedNews, qint64 newsID, bool pin) :
-    DBOperation(IMMEDIATE, parent), pinnedNews(pinnedNews), newsID(newsID), pin(pin)
+    DBOperationSynchronous(parent), pinnedNews(pinnedNews), newsID(newsID), pin(pin)
 {
 }
 
-void SetPinOperation::execute()
+void SetPinOperation::executeSynchronous()
 {
     db().transaction();
 
@@ -29,6 +29,4 @@ void SetPinOperation::execute()
 
     // Update the unread count of the special pinned feed.
     pinnedNews->setUnreadCount(UnreadCountReader::forPinned(db()));
-
-    emit finished(this);
 }

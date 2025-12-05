@@ -30,6 +30,11 @@ public:
      * @return
      */
     static QString commaSeparatedStringList(const QVector<qint64> input);
+
+    /**
+     * @return True if and only if we're running in the main application thread.
+     */
+    static bool isInMainThread();
 };
 
 #endif // UTILITIES_H

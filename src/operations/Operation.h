@@ -18,8 +18,9 @@ class Operation : public FangObject
     
  public:
     enum PriorityLevel {
-        BACKGROUND,  // Will get queued up in the background
-        IMMEDIATE    // It's gotta happen now; or else!
+         BACKGROUND,  // Will get queued up in the background
+         IMMEDIATE,   // Schedule for the immediate future
+         SYNCHRONOUS  // Do not schedule; run immediately.
     };
     
     // OperationManager is parent.
@@ -28,7 +29,7 @@ class Operation : public FangObject
     /**
      * @brief All operations must clean up their memory.
      */
-    virtual ~Operation();
+    virtual ~Operation() = default;
     
 protected slots:
     
@@ -64,7 +65,7 @@ public slots:
     /**
      * @brief Runs the operation.  When complete, finished() must be emitted.
      */
-    virtual void execute() {}
+    virtual void execute() = 0;
     
     /**
      * @return Priority level of this operation type.

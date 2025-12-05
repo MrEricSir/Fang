@@ -1,6 +1,8 @@
 #include "Utilities.h"
 
+#include <QCoreApplication>
 #include <QDebug>
+#include <QThread>
 
 Utilities::Utilities()
 {
@@ -38,4 +40,9 @@ QString Utilities::commaSeparatedStringList(const QVector<qint64> input)
     }
 
     return output;
+}
+
+bool Utilities::isInMainThread()
+{
+    return QCoreApplication::instance()->thread() == QThread::currentThread();
 }

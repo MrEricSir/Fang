@@ -1,5 +1,7 @@
 #include "OperationManager.h"
 
+#include "../utilities/Utilities.h"
+
 OperationManager::OperationManager(QObject *parent) :
     FangObject(parent),
     queue(),
@@ -35,12 +37,18 @@ void OperationManager::add(Operation *operation)
     }
 }
 
+void OperationManager::runSynchronously(DBOperationSynchronous *operation)
+{
+    // Runs the operation.
+    operation->execute();
+}
+
 void OperationManager::onOperationFinished(Operation* operation)
 {
-    pending.remove(operation);
-    emit(operationFinished(operation));
-
-    operation->deleteLater(); // Trigger safe deletion.
+    if (operation->getPriority() != Operation::SYNCHRONOUS) {
+        pending.remove(operation);
+        operation->deleteLater(); // Trigger safe deletion.
+    }
 }
 
 void OperationManager::executeOperations()
@@ -51,6 +59,9 @@ void OperationManager::executeOperations()
 
 void OperationManager::runNow(Operation *operation)
 {
+    // Double check that we're in the right thread.
+    Q_ASSERT(Utilities::isInMainThread());
+
     pending.insert(operation);
     QObject::connect(operation, &Operation::finished, this, &OperationManager::onOperationFinished);
     operation->execute();

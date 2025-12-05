@@ -3,16 +3,15 @@
 #include <QDebug>
 
 UpdateTitleOperation::UpdateTitleOperation(OperationManager *parent, FeedItem* feed) :
-    DBOperation(IMMEDIATE, parent),
+    DBOperationSynchronous(parent),
     feed(feed)
 {
 }
 
-void UpdateTitleOperation::execute()
+void UpdateTitleOperation::executeSynchronous()
 {
     if (feed->metaObject() == &AllNewsFeedItem::staticMetaObject) {
         // Nope.
-        emit finished(this);
         
         return;
     }
@@ -27,6 +26,4 @@ void UpdateTitleOperation::execute()
         
         return;
     }
-    
-    emit finished(this);
 }

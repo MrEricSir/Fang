@@ -3,7 +3,7 @@
 #include <QDebug>
 
 LoadNewsOperation::LoadNewsOperation(OperationManager *parent, FeedItem* feedItem, LoadMode mode, int loadLimit) :
-    DBOperation(IMMEDIATE, parent),
+    DBOperationSynchronous(parent),
     feedItem(feedItem),
     listAppend(),
     listPrepend(),
@@ -15,6 +15,35 @@ LoadNewsOperation::LoadNewsOperation(OperationManager *parent, FeedItem* feedIte
 LoadNewsOperation::~LoadNewsOperation()
 {
 
+}
+
+QString LoadNewsOperation::modeToString(LoadMode mode)
+{
+    switch(mode) {
+    case Initial:
+        return "initial";
+    case Prepend:
+        return "prepend";
+    case Append:
+        return "append";
+    default:
+        qWarning() << "Invalid enum load mode: " << mode;
+        Q_ASSERT(false);
+    }
+}
+
+LoadNewsOperation::LoadMode LoadNewsOperation::stringToMode(QString modeString)
+{
+    if (modeString == "initial") {
+        return LoadMode::Initial;
+    } else if (modeString == "prepend") {
+        return LoadMode::Prepend;
+    } else if (modeString == "append") {
+        return LoadMode::Append;
+    } else {
+        qWarning() << "Invalid string load mode: " << modeString;
+        Q_ASSERT(false);
+    }
 }
 
 void LoadNewsOperation::queryToNewsList(QSqlQuery& query, QList<NewsItem*>* list)
@@ -75,12 +104,14 @@ qint64 LoadNewsOperation::getFirstNewsID()
 
 bool LoadNewsOperation::doAppend(qint64 startId)
 {
+    qDebug() << "LoadNewsOperation::doAppend " << startId;
     // Extract the query into our news list.
     return executeLoadQuery(startId, true);
 }
 
 bool LoadNewsOperation::doPrepend(qint64 startId)
 {
+    qDebug() << "LoadNewsOperation::doPrepend " << startId;
     // Extract the query into our news list.
     return executeLoadQuery(startId, false);
 }
@@ -140,12 +171,11 @@ qint64 LoadNewsOperation::getStartIDForPrepend()
     return startId;
 }
 
-void LoadNewsOperation::execute()
+void LoadNewsOperation::executeSynchronous()
 {
     if (feedItem->isSpecialFeed()) {
-        // This is a special feed, dumbass.  You called the wrong operation!
+        // Wrong type of load operation for special feed.
         Q_ASSERT(false);
-        emit finished(this);
         
         return;
     }
@@ -224,7 +254,4 @@ void LoadNewsOperation::execute()
     
     // Set the first known ID.
     feedItem->setFirstNewsID(firstNewsID);
-    
-    // we r dun lol
-    emit finished(this);
 }
