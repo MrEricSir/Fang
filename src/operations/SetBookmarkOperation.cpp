@@ -79,7 +79,7 @@ void SetBookmarkOperation::bookmarkFolderFeed(FolderFeedItem* feedFolder)
 void SetBookmarkOperation::bookmarkAllNewsFeed(AllNewsFeedItem* allNews)
 {
     int proposed = allNews->getNewsList()->indexOf(bookmark);
-    int current = allNews->getNewsList()->indexOf(allNews->getBookmark());
+    int current = allNews->getNewsList()->indexForItemID(allNews->getBookmarkID());
     
     Q_ASSERT(proposed != current); // You have to double-check for this before starting this operation.
     

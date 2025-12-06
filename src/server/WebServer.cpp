@@ -96,8 +96,8 @@ QString WebServer::loadNews(LoadNewsOperation::LoadMode mode)
     FeedItem* currentFeed = FangApp::instance()->getCurrentFeed();
     if (mode == LoadNewsOperation::Initial)  {
         // Bookmark (if needed)
-        if (currentFeed->bookmarksEnabled() && currentFeed->getBookmark()) {
-            qint64 idOfBookmark = currentFeed->getBookmark()->getDbID();
+        if (currentFeed->bookmarksEnabled() && currentFeed->getBookmarkID() >= 0) {
+            qint64 idOfBookmark = currentFeed->getBookmarkID();
             document.insert("bookmark", idOfBookmark);
         }
     }

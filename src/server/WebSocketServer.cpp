@@ -124,7 +124,7 @@ void WebSocketServer::drawBookmark(qint64 bookmarkID)
 void WebSocketServer::jumpToBookmark()
 {
     FeedItem* currentFeed = FangApp::instance()->getCurrentFeed();
-    if (!currentFeed->bookmarksEnabled() && currentFeed->getBookmark()) {
+    if (!currentFeed->bookmarksEnabled() && currentFeed->getBookmarkID() >= 0) {
         // Nothing to do!
         return;
     }
@@ -132,7 +132,7 @@ void WebSocketServer::jumpToBookmark()
     // Find the bookmark.
     bool bookmarkLoaded = false;
     for (NewsItem* item : *currentFeed->getNewsList()) {
-        if (currentFeed->getBookmark() == item) {
+        if (currentFeed->getBookmarkID() == item->getDbID()) {
             bookmarkLoaded = true;
             break;
         }

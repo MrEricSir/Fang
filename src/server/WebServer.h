@@ -14,6 +14,7 @@ public:
     WebServer(QObject *parent = nullptr);
 
 private:
+
     // Updates a pin in the DB.
     QString updatePinObject(qint64 newsID, bool pinned);
 

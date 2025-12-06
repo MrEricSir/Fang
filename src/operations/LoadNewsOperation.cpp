@@ -249,7 +249,7 @@ void LoadNewsOperation::executeSynchronous()
     
     // Set our bookmark.
     if (bookmarkID >= 0) {
-        feedItem->setBookmark(feedItem->getNewsList()->newsItemForID(bookmarkID));
+        feedItem->setBookmark(bookmarkID);
     }
     
     // Set the first known ID.

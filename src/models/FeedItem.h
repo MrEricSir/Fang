@@ -140,22 +140,22 @@ public slots:
     
     /**
      * @brief Used to set the bookmark internally.  External classes shouldn't need to call this.
-     * @param bookmark Item to bookmark or nullptr to clear.
+     * @param bookmark Item ID or -1 to clear.t
      */
-    virtual void setBookmark(NewsItem* bookmark);
+    virtual void setBookmark(qint64 toBookmarkID);
     
     /**
      * @param item
      * @param allowBackward
      * @return True if this item can be bookmarked.
      */
-    virtual bool canBookmark(qint64 bookmarkID, bool allowBackward);
+    virtual bool canBookmark(qint64 proposedBookmarkID, bool allowBackward);
     
     /**
-     * @brief Returns the current bookmark or nullptr.
+     * @brief Returns the current bookmark ID or -1 if none.
      * @return 
      */
-    inline NewsItem* getBookmark() { return _bookmark; }
+    inline qint64 getBookmarkID() const { return _bookmarkID; }
     
     /**
      * @brief Detaches the feed ID when this feed is being disconnected.
@@ -253,7 +253,7 @@ private:
     NewsList newsList;
     int isUpdating;
     qint32 unreadCount;
-    NewsItem* _bookmark;
+    qint64 _bookmarkID;
     QString dropTarget;
     bool _errorFlag;
     bool isSelected;

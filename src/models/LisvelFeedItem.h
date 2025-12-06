@@ -24,11 +24,11 @@ public:
     explicit LisvelFeedItem(const qint64 id, const qint32 ordinal, const QString &title, QObject *parent = nullptr);
 
     /**
-     * @param item
+     * @param proposedBookmarkID
      * @param allowBackward
      * @return True if this item can be bookmarked.
      */
-    virtual bool canBookmark(qint64 bookmarkID, bool allowBackward);
+    virtual bool canBookmark(qint64 proposedBookmarkID, bool allowBackward);
 };
 
 #endif // LISVELFEEDITEM_H
