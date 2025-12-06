@@ -7,29 +7,22 @@ LisvelFeedItem::LisvelFeedItem(const qint64 id, const qint32 ordinal, const QStr
 {
 }
 
-bool LisvelFeedItem::canBookmark(qint64 bookmarkID, bool allowBackward)
+bool LisvelFeedItem::canBookmark(qint64 proposedBookmarkID, bool allowBackward)
 {
     // You FAIL!
-    if (bookmarkID < -1) {
+    if (proposedBookmarkID < -1) {
         return false;
     }
 
     // Given no current bookmark, anything will do.
-    if (getBookmark() == nullptr) {
+    if (getBookmarkID() < 0) {
         // qDebug() << "canBookmark: yes because no current bookmark";
         return true;
     }
 
     // No change.
-    if (getBookmark()->getDbID() == bookmarkID) {
+    if (getBookmarkID() == proposedBookmarkID) {
         return false;
-    }
-
-    // ASSUMPTION: Since we always start from the bookmark, if the bookmark ID isn't -1 it
-    // must therefore be in the _newsIDs list, my dear Watson.
-    if (getBookmark()->getDbID() < 0) {
-        // qDebug() << "canBookmark: yes because current bookmark has invalid id";
-        return true;
     }
 
     // We can bookmark anything in this situation.
@@ -40,12 +33,12 @@ bool LisvelFeedItem::canBookmark(qint64 bookmarkID, bool allowBackward)
     }
 
     // Compare index of proposed bookmark to index of current bookmark.
-    qsizetype proposedIndex = bookmarkID == -1 ? 0 : getNewsList()->indexForItemID(bookmarkID);
-    qsizetype currentIndex = getNewsList()->indexOf(getBookmark());
+    qsizetype proposedIndex = proposedBookmarkID == -1 ? 0 : getNewsList()->indexForItemID(proposedBookmarkID);
+    qsizetype currentIndex = getNewsList()->indexForItemID(getBookmarkID());
 
     // If the bookmark ID wasn't find
     if (proposedIndex < 0) {
-        qDebug() << "Bookmark ID not found in memory: " << bookmarkID;
+        qDebug() << "Bookmark ID not found in memory: " << proposedBookmarkID;
         return false;
     }
 

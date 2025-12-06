@@ -68,7 +68,7 @@ void LisvelLoadNewsOperation::executeSynchronous()
         }
 
         // Set the bookmark (can be null if there isn't one.)
-        feedItem->setBookmark(bookmark);
+        feedItem->setBookmark(bookmark->getDbID());
 
         // As an optimization, we only want to present *one* list -- an append list.
         // So we rewind our prepend list on top of it, then delete the prepend list.

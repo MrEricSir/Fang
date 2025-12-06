@@ -18,7 +18,7 @@ FeedItem::FeedItem(QObject *parent) :
     newsList(),
     isUpdating(false),
     unreadCount(0),
-    _bookmark(nullptr),
+    _bookmarkID(-1),
     dropTarget("none"),
     _errorFlag(false),
     isSelected(false),
@@ -48,7 +48,7 @@ FeedItem::FeedItem(qint64 id, const qint32 ordinal, const QString &title, const 
     newsList(),
     isUpdating(false),
     unreadCount(0),
-    _bookmark(nullptr),
+    _bookmarkID(-1),
     dropTarget("none"),
     _errorFlag(false),
     isSelected(false),
@@ -232,20 +232,20 @@ void FeedItem::clearNews()
     newsList.clear();
 }
 
-bool FeedItem::canBookmark(qint64 bookmarkID, bool allowBackward)
+bool FeedItem::canBookmark(qint64 proposedBookmarkID, bool allowBackward)
 {
     // What is this? I don't even.
-    if (bookmarkID < -1) {
+    if (proposedBookmarkID < -1) {
         return false;
     }
     
     // Given no current bookmark, anything will do.
-    if (_bookmark == nullptr) {
+    if (_bookmarkID < 0) {
         return true;
     }
     
     // That's a no-op for you, young man.
-    if (_bookmark->getDbID() == bookmarkID) {
+    if (_bookmarkID == proposedBookmarkID) {
         return false;
     }
     
@@ -255,17 +255,17 @@ bool FeedItem::canBookmark(qint64 bookmarkID, bool allowBackward)
     }
 
     // We asked SQLite to always increase our IDs, remember.
-    return bookmarkID > _bookmark->getDbID();
+    return proposedBookmarkID > _bookmarkID;
 }
 
-void FeedItem::setBookmark(NewsItem* bookmark)
+void FeedItem::setBookmark(qint64 toBookmarkID)
 {
-    qDebug() << "FeedItem::setBookmark to " << (bookmark ? bookmark->getDbID() : -1);
-    if (bookmark == _bookmark) {
+    qDebug() << "FeedItem::setBookmark to " << toBookmarkID;
+    if (toBookmarkID == _bookmarkID) {
         return; // Nothing to do.
     }
     
-    _bookmark = bookmark;
+    _bookmarkID = toBookmarkID;
     emit dataChanged();
 }
 

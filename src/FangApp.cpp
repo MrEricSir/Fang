@@ -347,8 +347,8 @@ void FangApp::setBookmark(qint64 id, bool allowBackward)
                                     currentFeed->getNewsList()->newsItemForID(id));
     manager.runSynchronously(&bookmarkOp);
 
-    currentFeed->setBookmark(bookmarkOp.getBookmark());
-    webSocketServer.drawBookmark(currentFeed->getBookmark()->getDbID());
+    currentFeed->setBookmark(bookmarkOp.getBookmark()->getDbID());
+    webSocketServer.drawBookmark(currentFeed->getBookmarkID());
 }
 
 void FangApp::setPin(qint64 id, bool pin)
@@ -603,8 +603,8 @@ void FangApp::markAllAsReadOrUnread(FeedItem *feed, bool read)
 
     // Update UI to bookmark last item in list.
     // NOTE: May lead to bugs if the last news item is not loaded into newsList
-    currentFeed->setBookmark(currentFeed->getNewsList()->last());
-    webSocketServer.drawBookmark(currentFeed->getBookmark()->getDbID());
+    currentFeed->setBookmark(currentFeed->getNewsList()->last()->getDbID());
+    webSocketServer.drawBookmark(currentFeed->getBookmarkID());
 }
 
 void FangApp::setRefreshTimer()
