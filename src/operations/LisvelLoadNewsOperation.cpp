@@ -59,21 +59,17 @@ void LisvelLoadNewsOperation::executeSynchronous()
 
 
     if (getMode() == Initial) {
-        // For the initial load, set the bookmark if we have one.
-        NewsItem* bookmark = nullptr;
-
-        // Bookmark is prepended item.
+        // For the initial load, set the bookmark to the first prepended item.
+         // It's okay for the FeedItem not to have a bookmark.
         if (!listPrepend.isEmpty()) {
-            bookmark = listPrepend.first();
-        }
+            feedItem->setBookmark(listPrepend.first()->getDbID());
 
-        // Set the bookmark (can be null if there isn't one.)
-        feedItem->setBookmark(bookmark->getDbID());
+        }
 
         // As an optimization, we only want to present *one* list -- an append list.
         // So we rewind our prepend list on top of it, then delete the prepend list.
         if (!listPrepend.isEmpty()) {
-            for (NewsItem* newsItem : listPrepend) {
+            for (NewsItem* newsItem: std::as_const(listPrepend)) {
                 // News item list.
                 listAppend.prepend(newsItem);
             }
@@ -84,7 +80,7 @@ void LisvelLoadNewsOperation::executeSynchronous()
 
     // Append/prepend items from our lists.
     if (!listAppend.isEmpty()) {
-        for (NewsItem* newsItem: listAppend) {
+        for (NewsItem* newsItem: std::as_const(listAppend)) {
             // News item list.
             feedItem->getNewsList()->append(newsItem);
 
@@ -96,7 +92,7 @@ void LisvelLoadNewsOperation::executeSynchronous()
     }
 
     if (!listPrepend.isEmpty()) {
-        for (NewsItem* newsItem: listPrepend) {
+        for (NewsItem* newsItem: std::as_const(listPrepend)) {
             // News item list.
             feedItem->getNewsList()->prepend(newsItem);
 
