@@ -14,6 +14,8 @@ public:
     WebServer(QObject *parent = nullptr);
 
 private:
+    // Loads a file from the specified QRC folder.
+    QByteArray loadResourceFile(QString folder, QString filename) const;
 
     // Updates a pin in the DB.
     QString updatePinObject(qint64 newsID, bool pinned);

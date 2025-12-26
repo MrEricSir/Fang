@@ -1,13 +1,13 @@
 TEMPLATE = app
 
-QT += core qml quick quickcontrols2 widgets network sql svg websockets httpserver
+QT += core qml quick quickcontrols2 webview widgets network sql svg websockets httpserver
 
 QT -= sensors
 
-qtHaveModule(webenginequick) {
-    QT += webenginequick
-    DEFINES += QT_WEBVIEW_WEBENGINE_BACKEND
-}
+# qtHaveModule(webenginequick) {
+#     QT += webenginequick
+#     DEFINES += QT_WEBVIEW_WEBENGINE_BACKEND
+# }
 
 
 # Resource files

@@ -4,6 +4,7 @@
 #include <QDateTime>
 #include <QStringList>
 #include <QQmlFileSelector>
+#include <QtWebView>
 
 #include "FangApp.h"
 
@@ -28,6 +29,9 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     qmlRegisterType<NewsFeedInteractor>("Fang", 1, 0, "NewsFeedInteractor");
     qmlRegisterType<ListItem>("Fang", 1, 0, "ListItem");
     qmlRegisterType<OPMLInteractor>("Fang", 1, 0, "OPMLInteractor");
+
+    // Must init webview prior to our application.
+    QtWebView::initialize();
     
     QApplication app(argc, argv);
     app.setOrganizationName("EricGregory");
@@ -49,14 +53,14 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     // Set QML file selectors.
     QStringList selectors;
 
-#ifndef QT_WEBVIEW_WEBENGINE_BACKEND
+// #ifndef QT_WEBVIEW_WEBENGINE_BACKEND
     // Add a selector indicating we need Qt's native WebView
     selectors << "webview";
-#endif // QT_WEBVIEW_WEBENGINE_BACKEND
+// #endif // QT_WEBVIEW_WEBENGINE_BACKEND
 
-#if defined(Q_OS_ANDROID) || defined(Q_OS_IOS)
-    selectors << "mobile";
-#endif
+// #if defined(Q_OS_ANDROID) || defined(Q_OS_IOS)
+//     selectors << "mobile";
+// #endif
 
     if (selectors.count()) {
         selector.setExtraSelectors(selectors);

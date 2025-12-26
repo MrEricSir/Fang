@@ -1,7 +1,9 @@
 import QtQuick
-import QtWebEngine
+// import QtWebEngine
+import QtWebView
 
-WebEngineView {
+// WebEngineView {
+WebView {
     id: newsView;
 
     ///// START API /////

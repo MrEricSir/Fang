@@ -1,6 +1,7 @@
 #include "WebServer.h"
 
 #include <QDesktopServices>
+#include <QFile>
 #include <QJsonDocument>
 #include <QUrl>
 
@@ -71,6 +72,28 @@ WebServer::WebServer(QObject *parent) :
     server.route("/api/css", this, [this] {
         return QString::fromUtf8(QJsonDocument::fromVariant(getCSS()).toJson());
     });
+
+    // Load from HTML QRC file.
+    server.route("/html/<arg>", this, [this] (QString filename) {
+        return loadResourceFile("html", filename);
+    });
+
+    // Load from QML QRC file's images folder.
+    server.route("/qml/images/<arg>", this, [this] (QString filename) {
+        return loadResourceFile("qml/images", filename);
+    });
+}
+
+QByteArray WebServer::loadResourceFile(QString folder, QString filename) const
+{
+    QFile file(":/" + folder + "/" + filename);
+    if (!file.open(QIODevice::ReadOnly)) {
+        qDebug() << "ERROR: couldn't open file: " << file.fileName();
+    } else {
+        qDebug() << "Opened file: " << file.fileName();
+    }
+
+    return file.readAll();
 }
 
 QString WebServer::updatePinObject(qint64 newsID, bool pinned)
