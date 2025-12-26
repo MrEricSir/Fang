@@ -22,12 +22,12 @@ find_package(Qt6 REQUIRED COMPONENTS
     Sql
     Svg
     WebSockets
-    HttpServer
     Test
     Gui
+    HttpServer
 )
 
-# Optional WebEngineQuick module
+# Optional modules
 find_package(Qt6 COMPONENTS WebEngineQuick)
 
 # Version management
@@ -45,7 +45,7 @@ add_subdirectory(tidylib)
 
 # Main application target
 qt_add_executable(Fang
-    # Sources from Fang.pro
+    # Sources
     src/main.cpp
     src/models/FolderFeedItem.cpp
     src/models/ListModel.cpp
@@ -113,7 +113,7 @@ qt_add_executable(Fang
     src/server/WebSocketServer.cpp
     src/server/WebServer.cpp
 
-    # Headers from Fang.pro
+    # Headers
     src/models/DBObject.h
     src/models/FolderFeedItem.h
     src/models/ListModel.h
@@ -182,7 +182,7 @@ qt_add_executable(Fang
     src/server/WebSocketServer.h
     src/server/WebServer.h
 
-    # Resource files (AUTORCC handles these)
+    # Resource files
     Resources.qrc
     qml/qml.qrc
     qml/images/images.qrc
@@ -221,7 +221,7 @@ if(TARGET Qt6::WebEngineQuick)
     target_compile_definitions(Fang PRIVATE QT_WEBVIEW_WEBENGINE_BACKEND)
 endif()
 
-# Platform-specific code - macOS
+# Platform: macOS
 if(APPLE)
     target_sources(Fang PRIVATE
         src/notifications/NotificationMac.h
@@ -249,7 +249,7 @@ if(APPLE)
     )
 endif()
 
-# Platform-specific code - Windows
+# Platform: Windows
 if(WIN32)
     target_sources(Fang PRIVATE
         src/notifications/NotificationWindows.h
@@ -258,7 +258,7 @@ if(WIN32)
     )
 endif()
 
-# Platform-specific code - Android
+# Platform: Android
 if(ANDROID)
     set_target_properties(Fang PROPERTIES
         QT_ANDROID_PACKAGE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/android

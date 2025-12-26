@@ -1,4 +1,4 @@
-# Test suite - add all test subdirectories
+# Test suite
 add_subdirectory(TestFangParser)
 add_subdirectory(TestFangFaviconGrabber)
 add_subdirectory(TestFangFeedDiscovery)

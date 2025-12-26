@@ -1,7 +1,6 @@
 Fang.desktop
 Fang_harmattan.desktop
-*.pro.user
-*.pro.user.*
+CMakeLists.txt.user
 test/build-*
 *.DS_Store
 APP_VERSION
