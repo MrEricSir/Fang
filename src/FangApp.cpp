@@ -59,9 +59,6 @@ FangApp::FangApp(QApplication *parent, QQmlApplicationEngine* engine, SingleInst
     connect(&feedList, &ListModel::added, this, &FangApp::onFeedAdded);
     connect(&feedList, &ListModel::removed, this, &FangApp::onFeedRemoved);
     connect(&feedList, &ListModel::selectedChanged, this, &FangApp::onFeedSelected);
-
-    connect(&webSocketServer, &WebSocketServer::isLoadInProgressChanged, this,
-            &FangApp::onLoadPageChanged);
 }
 
 FangApp::~FangApp()
@@ -161,17 +158,6 @@ void FangApp::onFeedSelected(ListItem* _item)
     lastFeedSelected = item;
 }
 
-void FangApp::onLoadPageChanged()
-{
-    static bool first = false;
-    if (!first) {
-        first = true;
-
-        // Perform first feed update!
-        updateAllFeeds();
-    }
-}
-
 void FangApp::onNewFeedAddedSelect(Operation* addFeedOperation)
 {
     AddFeedOperation* op = qobject_cast<AddFeedOperation*>(addFeedOperation);
@@ -224,16 +210,10 @@ void FangApp::onLoadAllFinished(Operation *op)
     // This has to be manually invoked the first time.
     pinnedNewsWatcher();
     
-    // Load teh cue em el.
+    // Load our QML.
     engine->load(QUrl("qrc:///qml/main.qml"));
-}
 
-void FangApp::updateAllFeeds()
-{
-    if (feedList.rowCount() == 0) {
-        return; // Somehow this was called too early.
-    }
-    
+    // Refresh all our feeds to check for the latest and greatest news.
     refreshAllFeeds();
 }
 
@@ -411,7 +391,7 @@ void FangApp::onObjectCreated(QObject* object, const QUrl& url)
     
     // Setup the feed refresh timer.
     setRefreshTimer();
-    connect(updateTimer, &QTimer::timeout, this, &FangApp::updateAllFeeds);
+    connect(updateTimer, &QTimer::timeout, this, &FangApp::refreshAllFeeds);
     updateTimer->start();
 
     // Maybe the user wants to change how often we refresh the feeds?  Let 'em.
