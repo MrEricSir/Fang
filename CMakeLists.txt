@@ -226,6 +226,7 @@ if(APPLE)
     target_sources(Fang PRIVATE
         src/notifications/NotificationMac.h
         src/notifications/NotificationMac.mm
+        icons/mac.icns
     )
 
     target_link_options(Fang PRIVATE -Wl,-dead_strip)

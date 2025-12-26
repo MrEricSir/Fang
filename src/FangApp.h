@@ -112,11 +112,6 @@ public slots:
     void markAllAsUnread(FeedItem* feed);
     
     /**
-     * @brief Updates every single damn feed.
-     */
-    void updateAllFeeds();
-    
-    /**
      * @return Our special list for batch imports.
      */
     ListModel* getImportList() { return importList; }
@@ -243,9 +238,6 @@ private slots:
     void onFeedRemoved(ListItem*);
     
     void onFeedSelected(ListItem *item);
-
-    // Load page changed!
-    void onLoadPageChanged();
     
     // When a new feed is added, and we want to immediately select it.
     void onNewFeedAddedSelect(Operation* addFeedOperation);
