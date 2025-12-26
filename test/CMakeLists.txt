@@ -1,0 +1,8 @@
+# Test suite - add all test subdirectories
+add_subdirectory(TestFangParser)
+add_subdirectory(TestFangFaviconGrabber)
+add_subdirectory(TestFangFeedDiscovery)
+add_subdirectory(TestFangSimpleStateMachine)
+add_subdirectory(TestRawFeedRewriter)
+add_subdirectory(TestURLFixup)
+add_subdirectory(TestWebPageGrabber)
