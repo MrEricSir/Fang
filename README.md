@@ -28,35 +28,35 @@ It is recommended to build, run, and debug from Qt Creator for development purpo
 1. File -> Open File or Project
 1. Select `CMakeLists.txt` in the main project folder
 1. First time setup
-  1. Pick the project kit you want to build (must be Qt 6) and click "Configure Project"
-  1. Build -> Run CMake
+    1. Pick the project kit you want to build (must be Qt 6) and click "Configure Project"
+    1. Build -> Run CMake
 1. Run or debug
-  - To run without debugging, select Build -> Run or click the Run button in the Application output pane
-  - To run with debugging, select Debug -> Start Debugging -> Start Debugging of Startup Project or click the Start Debugging of Startup Project button in the Debugger pane
+    - To run without debugging, select Build -> Run or click the Run button in the Application output pane
+    - To run with debugging, select Debug -> Start Debugging -> Start Debugging of Startup Project or click the Start Debugging of Startup Project button in the Debugger pane
 
 The steps for running/debugging the unit tests are essentially the same as above but use the `CMakeLists.txt` in the `test` subfolder.
 
 ### Command Line
 
 1. First time setup: Configure...
-  - ...with the version of Qt on your PATH:
-    `cmake -B build`
-  - ...OR with a specific version of Qt 6:
-    `cmake -B build -DCMAKE_PREFIX_PATH=/path/to/Qt6`
+    - ...with the version of Qt on your PATH:
+      `cmake -B build`
+    - ...OR with a specific version of Qt 6:
+      `cmake -B build -DCMAKE_PREFIX_PATH=/path/to/Qt6`
 1. Build in the build subfolder:
   `cmake --build build`
 1. Run unit tests
   `ctest --test-dir build --output-on-failure`
 1. Run Fang...
-  - ...on macOS:
-   `./build/Fang.app/Contents/MacOS/Fang`
-  - ...on Windows:
-   `TODO`
+    - ...on macOS:
+     `./build/Fang.app/Contents/MacOS/Fang`
+    - ...on Windows:
+     `TODO`
 1. Optionally, install locally...
-  - ...on macOS (TODO: verify)
-    `cmake --install build --prefix /desired/install/path`
-  - on Windows:
-   `TODO`
+    - ...on macOS (TODO: verify)
+      `cmake --install build --prefix /desired/install/path`
+    - on Windows:
+     `TODO`
 
 ## Debugging Tips
 
