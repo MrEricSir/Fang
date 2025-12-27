@@ -70,24 +70,34 @@ jobs:
           "Fang.dmg" \
           "build/Fang.app"
 
-    # Linux: Create Flatpak
-    - name: Create Linux Flatpak
+    # Linux: Create AppImage
+    - name: Create Linux AppImage
       if: runner.os == 'Linux'
       run: |
-        # Install flatpak and flatpak-builder
-        sudo apt-get install -y flatpak flatpak-builder
+        # Install dependencies
+        sudo apt-get install -y libfuse2 file
 
-        # Add Flathub repository (requires sudo for system-wide installation)
-        sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+        # Download linuxdeploy and Qt plugin
+        wget https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
+        wget https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage
+        chmod +x linuxdeploy*.AppImage
 
-        # Install KDE runtime and SDK (requires sudo for system-wide installation)
-        sudo flatpak install -y flathub org.kde.Platform//6.8 org.kde.Sdk//6.8
+        # Create AppDir structure
+        mkdir -p AppDir/usr/bin
+        cp build/Fang AppDir/usr/bin/
 
-        # Build flatpak
-        flatpak-builder --repo=repo --force-clean build-flatpak com.mrericsir.Fang.yml
+        # Copy icon and desktop file
+        mkdir -p AppDir/usr/share/applications
+        mkdir -p AppDir/usr/share/icons/hicolor/256x256/apps
+        cp com.mrericsir.Fang.desktop AppDir/usr/share/applications/
+        cp qml/images/full_icon.png AppDir/usr/share/icons/hicolor/256x256/apps/com.mrericsir.Fang.png
 
-        # Create bundle
-        flatpak build-bundle repo Fang.flatpak com.mrericsir.Fang
+        # Build AppImage
+        export QML_SOURCES_PATHS=qml
+        ./linuxdeploy-x86_64.AppImage --appdir AppDir --plugin qt --output appimage --desktop-file=AppDir/usr/share/applications/com.mrericsir.Fang.desktop --icon-file=AppDir/usr/share/icons/hicolor/256x256/apps/com.mrericsir.Fang.png
+
+        # Rename to simpler name
+        mv Fang*.AppImage Fang.AppImage
 
     # Windows: Create MSI
     - name: Create Windows MSI
@@ -99,19 +109,14 @@ jobs:
         # Install WiX Toolset
         dotnet tool install --global wix
 
-        # Add WiX extensions
+        # Add WiX Heat extension for file harvesting
         wix extension add WixToolset.Heat.Extension
-        wix extension add WixToolset.UI.wixext
-
-        # Set APP_VERSION environment variable
-        $env:APP_VERSION = "0.2.0"
 
         # Generate file list with heat (-scom suppresses COM/SelfReg warnings for Qt plugins)
-        wix extension list
         heat dir build/Release -cg FangFilesGroup -gg -sfrag -srd -scom -dr FangPath -out build/files.wxs
 
         # Build MSI
-        wix build fang.wxs build/files.wxs -out build/Fang.msi -ext WixToolset.UI.wixext
+        wix build fang.wxs build/files.wxs -out build/Fang.msi
 
     - name: Upload DMG Installer (macOS)
       if: runner.os == 'macOS'
@@ -120,12 +125,12 @@ jobs:
         name: Fang-macOS-DMG
         path: Fang.dmg
 
-    - name: Upload Flatpak Bundle (Linux)
+    - name: Upload AppImage (Linux)
       if: runner.os == 'Linux'
       uses: actions/upload-artifact@v4
       with:
-        name: Fang-Linux-Flatpak
-        path: Fang.flatpak
+        name: Fang-Linux-AppImage
+        path: Fang.AppImage
 
     - name: Upload MSI Installer (Windows)
       if: runner.os == 'Windows'

@@ -1,48 +1,53 @@
-<?xml version="1.0"?>
-<?define ProductVersion = "$(env.APP_VERSION)"?>
-<?define ProductUpgradeCode = "7D9C9D7E-A404-42DA-9D60-6F5C5E31D8B9"?>
-<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-   <Product Id="*" UpgradeCode="$(var.ProductUpgradeCode)" 
-            Name="Fang" Version="$(var.ProductVersion)" Manufacturer="Eric Gregory" Language="1033">
-      <Package InstallerVersion="200" Compressed="yes" Comments="Windows Installer Package"/>
-      <Media Id="1" Cabinet="product.cab" EmbedCab="yes"/>
-      <Icon Id="ProductIcon" SourceFile="icons/win32.ico"/>
-      <Property Id="ARPPRODUCTICON" Value="ProductIcon"/>
-      <Property Id="ARPHELPLINK" Value="http://www.getfang.com"/>
-      <Property Id="ARPURLINFOABOUT" Value="http://www.getfang.com"/>
-      <Property Id="ARPNOREPAIR" Value="1"/>
-      <Property Id="ARPNOMODIFY" Value="1"/>
-      <Upgrade Id="$(var.ProductUpgradeCode)">
-         <UpgradeVersion Minimum="$(var.ProductVersion)" OnlyDetect="yes" Property="NEWERVERSIONDETECTED"/>
-         <UpgradeVersion Minimum="0.0.0" Maximum="$(var.ProductVersion)" IncludeMinimum="yes" IncludeMaximum="no" 
-                         Property="OLDERVERSIONBEINGUPGRADED"/>	  
-      </Upgrade>
-      <Condition Message="Fang is already installed.">NOT NEWERVERSIONDETECTED</Condition>
- 
-      <Directory Id="TARGETDIR" Name="SourceDir">
-		<Directory Id="ProgramFilesFolder">
-            <Directory Id="INSTALLDIR"/>
-			<Directory Id="FangPath" Name="Fang"/>
-         </Directory>
- 
-         <Directory Id="ProgramMenuFolder">
-		   <Component Id="ApplicationShortcuts" Guid="23DEE789-2730-40D9-92B2-81357F8B10D1">
-			  <Shortcut Id="ApplicationShortcut1" Name="Fang" Description="Fang" 
-						Target="[FangPath]Fang.exe" WorkingDirectory="FangPath"/>
-			  <RegistryValue Root="HKCU" Key="Software\Fang" 
-						Name="installed" Type="integer" Value="1" KeyPath="yes"/>
-			  <RemoveFolder Id="ProgramMenuSubfolder" On="uninstall"/>
-		   </Component>
-         </Directory>
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+  <Package
+    Name="Fang"
+    Manufacturer="Eric Gregory"
+    Version="!(bind.FileVersion.FangExe)"
+    UpgradeCode="7D9C9D7E-A404-42DA-9D60-6F5C5E31D8B9">
+
+    <MajorUpgrade DowngradeErrorMessage="A newer version of Fang is already installed." />
+
+    <Media Id="1" Cabinet="product.cab" EmbedCab="yes" />
+
+    <Icon Id="ProductIcon" SourceFile="icons/win32.ico" />
+    <Property Id="ARPPRODUCTICON" Value="ProductIcon" />
+    <Property Id="ARPHELPLINK" Value="http://www.getfang.com" />
+    <Property Id="ARPURLINFOABOUT" Value="http://www.getfang.com" />
+    <Property Id="ARPNOREPAIR" Value="1" />
+    <Property Id="ARPNOMODIFY" Value="1" />
+
+    <StandardDirectory Id="ProgramFilesFolder">
+      <Directory Id="FangPath" Name="Fang">
+        <Component Id="FangExeComponent" Guid="A1B2C3D4-E5F6-4A5B-8C9D-0E1F2A3B4C5D">
+          <File Id="FangExe" Source="build/Release/Fang.exe" KeyPath="yes" />
+        </Component>
       </Directory>
- 
-      <InstallExecuteSequence>
-         <RemoveExistingProducts After="InstallValidate"/>
-      </InstallExecuteSequence>
- 
-      <Feature Id="DefaultFeature" Level="1">
-         <ComponentGroupRef Id="FangFilesGroup"/>
-         <ComponentRef Id="ApplicationShortcuts"/>		 
-      </Feature>
-   </Product>
+    </StandardDirectory>
+
+    <StandardDirectory Id="ProgramMenuFolder">
+      <Component Id="ApplicationShortcuts" Guid="23DEE789-2730-40D9-92B2-81357F8B10D1">
+        <Shortcut
+          Id="ApplicationShortcut1"
+          Name="Fang"
+          Description="Fang RSS Reader"
+          Target="[FangPath]Fang.exe"
+          WorkingDirectory="FangPath" />
+        <RegistryValue
+          Root="HKCU"
+          Key="Software\Fang"
+          Name="installed"
+          Type="integer"
+          Value="1"
+          KeyPath="yes" />
+        <RemoveFolder Id="ProgramMenuSubfolder" On="uninstall" />
+      </Component>
+    </StandardDirectory>
+
+    <Feature Id="DefaultFeature" Level="1">
+      <ComponentGroupRef Id="FangFilesGroup" />
+      <ComponentRef Id="FangExeComponent" />
+      <ComponentRef Id="ApplicationShortcuts" />
+    </Feature>
+  </Package>
 </Wix>
