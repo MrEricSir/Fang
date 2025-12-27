@@ -55,6 +55,34 @@ jobs:
         # Deploy Qt dependencies into the app bundle
         macdeployqt build/Fang.app -qmldir=qml
 
+    - name: Sign macOS app bundle
+      if: runner.os == 'macOS' && vars.MACOS_SIGN_ENABLED == 'true'
+      run: |
+        # Import signing certificate
+        echo "${{ secrets.MACOS_CERT_BASE64 }}" | base64 --decode > certificate.p12
+        security create-keychain -p "${{ secrets.MACOS_KEYCHAIN_PASSWORD }}" build.keychain
+        security default-keychain -s build.keychain
+        security unlock-keychain -p "${{ secrets.MACOS_KEYCHAIN_PASSWORD }}" build.keychain
+        security import certificate.p12 -k build.keychain -P "${{ secrets.MACOS_CERT_PASSWORD }}" -T /usr/bin/codesign
+        security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "${{ secrets.MACOS_KEYCHAIN_PASSWORD }}" build.keychain
+
+        # Sign the app bundle and all executables inside
+        echo "Signing Fang.app bundle..."
+        /usr/bin/codesign --force --deep --sign "${{ secrets.MACOS_SIGNING_IDENTITY }}" \
+          --options runtime \
+          --entitlements entitlements.plist \
+          --timestamp \
+          build/Fang.app
+
+        # Verify signature
+        codesign --verify --verbose build/Fang.app
+
+        # Clean up
+        rm certificate.p12
+
+    - name: Package macOS DMG
+      if: runner.os == 'macOS'
+      run: |
         # Install create-dmg
         brew install create-dmg
 
@@ -69,6 +97,29 @@ jobs:
           --app-drop-link 600 185 \
           "Fang.dmg" \
           "build/Fang.app"
+
+    - name: Sign and notarize macOS DMG
+      if: runner.os == 'macOS' && vars.MACOS_SIGN_ENABLED == 'true'
+      run: |
+        # Sign the DMG
+        echo "Signing Fang.dmg..."
+        /usr/bin/codesign --force --sign "${{ secrets.MACOS_SIGNING_IDENTITY }}" \
+          --timestamp \
+          Fang.dmg
+
+        # Notarize the DMG
+        echo "Submitting DMG for notarization..."
+        xcrun notarytool submit Fang.dmg \
+          --apple-id "${{ secrets.APPLE_ID }}" \
+          --password "${{ secrets.APPLE_APP_PASSWORD }}" \
+          --team-id "${{ secrets.APPLE_TEAM_ID }}" \
+          --wait
+
+        # Staple the notarization ticket
+        echo "Stapling notarization ticket..."
+        xcrun stapler staple Fang.dmg
+
+        echo "macOS DMG signed and notarized successfully"
 
     # Linux: Create AppImage
     - name: Create Linux AppImage
@@ -201,6 +252,39 @@ jobs:
         # Show MSI size
         $msiSize = (Get-Item build/Fang.msi).Length / 1MB
         Write-Host "`nMSI created: $([math]::Round($msiSize, 2)) MB"
+
+    - name: Sign Windows executable and MSI
+      if: runner.os == 'Windows' && vars.WINDOWS_SIGN_ENABLED == 'true'
+      run: |
+        # Decode certificate from base64 secret and save to file
+        $certBytes = [Convert]::FromBase64String("${{ secrets.WINDOWS_CERT_BASE64 }}")
+        $certPath = "signing-cert.pfx"
+        [IO.File]::WriteAllBytes($certPath, $certBytes)
+
+        # Sign the executable
+        Write-Host "Signing Fang.exe..."
+        & "C:\Program Files (x86)\Windows Kits\10\bin\10.0.22621.0\x64\signtool.exe" sign `
+          /f $certPath `
+          /p "${{ secrets.WINDOWS_CERT_PASSWORD }}" `
+          /tr http://timestamp.digicert.com `
+          /td sha256 `
+          /fd sha256 `
+          build/Release/Fang.exe
+
+        # Sign the MSI
+        Write-Host "Signing Fang.msi..."
+        & "C:\Program Files (x86)\Windows Kits\10\bin\10.0.22621.0\x64\signtool.exe" sign `
+          /f $certPath `
+          /p "${{ secrets.WINDOWS_CERT_PASSWORD }}" `
+          /tr http://timestamp.digicert.com `
+          /td sha256 `
+          /fd sha256 `
+          build/Fang.msi
+
+        # Clean up certificate file
+        Remove-Item $certPath
+
+        Write-Host "`nSigning completed successfully"
 
     - name: Upload DMG Installer (macOS)
       if: runner.os == 'macOS'

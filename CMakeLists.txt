@@ -44,7 +44,7 @@ file(WRITE "${CMAKE_CURRENT_SOURCE_DIR}/APP_VERSION" "${APP_VERSION}")
 add_subdirectory(tidylib)
 
 # Main application target
-qt_add_executable(Fang
+qt_add_executable(Fang WIN32
     # Sources
     src/main.cpp
     src/models/FolderFeedItem.cpp
