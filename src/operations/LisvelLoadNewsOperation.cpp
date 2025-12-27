@@ -245,7 +245,6 @@ bool LisvelLoadNewsOperation::doAppend()
     // Do we still have items to load?  If so, load 'em now.
     if (remainingLoadLimit > 0) {
         QSqlQuery query(db());
-        // qDebug() << " ===== doAppend new query: " << appendNewQueryString();
         query.prepare(appendNewQueryString());
         query.bindValue(":load_limit", remainingLoadLimit);
 

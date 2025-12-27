@@ -299,14 +299,10 @@ void ParserXMLWorker::resetParserVars()
 
 void ParserXMLWorker::saveSummary()
 {
-    //qDebug() << "ParserXMLWorker::saveSummary()";
-
     // Global space.
     feed->title = title;
     feed->subtitle = subtitle;
     feed->siteURL = urlData.isEmpty() ? QUrl(urlHref) : QUrl(urlData);
-
-    //qDebug() << "Title " << title;
 
     // Clear all local strings.
     title = "";
@@ -416,7 +412,6 @@ QDateTime ParserXMLWorker::dateFromFeedString(const QString& _timestamp)
         int signPos = lastPlus > 3 ? lastPlus : lastMinus;
         QString sAdjustment = timestamp.right(timestamp.length() - signPos);
         sAdjustment = sAdjustment.trimmed();
-        //qDebug() << "Adj: " << sAdjustment;
         
         // Check for an hour/minute adjustment, in the format of -hhmm or +hhmm
         // OR in the format of -hh:mm or +hh:mm

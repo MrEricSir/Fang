@@ -1,3 +1,11 @@
+What this license covers: Fang name, "Feed on news" slogan, readmes and
+other documentation, source code, and original artwork including the
+Fang logo and icons.
+
+This license does NOT cover: Dependencies such as Qt, TidyLib, and CEF.
+It also does NOT cover test data gathered from external websites.
+
+
                     GNU GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007
 

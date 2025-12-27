@@ -26,10 +26,10 @@ FangObject::~FangObject()
 void FangObject::printRemainingObjects()
 {
 #ifdef FANG_OBJECT_LEAK_CHECK
-    qDebug();
-    qDebug() << "========== FangObject leak check ==========";
-    qDebug() << "Remaining objects: " << allObjects.size();
-    qDebug();
+    qInfo();
+    qInfo() << "========== FangObject leak check ==========";
+    qInfo() << "Remaining objects: " << allObjects.size();
+    qInfo();
     
     // Key:   Class name
     // Value: Number of instances
@@ -46,7 +46,7 @@ void FangObject::printRemainingObjects()
                     arg(instanceCount[className], 4).arg(className);
     }
     
-    qDebug() << "===========================================";
-    qDebug();
+    qInfo() << "===========================================";
+    qInfo();
 #endif
 }

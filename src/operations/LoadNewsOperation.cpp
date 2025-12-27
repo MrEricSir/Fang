@@ -130,7 +130,7 @@ bool LoadNewsOperation::executeLoadQuery(qint64 startId, bool append)
             + direction + " :start_id ORDER BY timestamp " + sortOrder + ", id " + sortOrder
             + " LIMIT :load_limit";
     
-    //qDebug() << "Query: " << queryString;
+    qDebug() << "executeLoadQuery: Query string: " << queryString;
     QSqlQuery query(db());
     query.prepare(queryString);
     
@@ -197,8 +197,6 @@ void LoadNewsOperation::executeSynchronous()
             dbResult &= doPrepend(startId);
             
             qDebug() << "Start id: " << startId;
-            //if (newsList->size() > 0)
-            //qDebug() << "prepender: from " << newsList->first()->getDbID() << " to " << newsList->last()->getDbID();
         }
         
         // Load next items, if available.
@@ -210,7 +208,6 @@ void LoadNewsOperation::executeSynchronous()
     case Append:
     {
         dbResult &= doAppend(getStartIDForAppend());
-        //qDebug() << "Adding: " << (listAppend != nullptrNULL ? listAppend->size() : 0);
         
         break;
     }

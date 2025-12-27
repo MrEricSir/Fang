@@ -59,9 +59,6 @@ FangApp::FangApp(QApplication *parent, QQmlApplicationEngine* engine, SingleInst
     connect(&feedList, &ListModel::added, this, &FangApp::onFeedAdded);
     connect(&feedList, &ListModel::removed, this, &FangApp::onFeedRemoved);
     connect(&feedList, &ListModel::selectedChanged, this, &FangApp::onFeedSelected);
-
-    connect(&webSocketServer, &WebSocketServer::isLoadInProgressChanged, this,
-            &FangApp::onLoadPageChanged);
 }
 
 FangApp::~FangApp()
@@ -74,10 +71,10 @@ FangApp::~FangApp()
 
 void FangApp::init()
 {
-    qDebug() << "FangApp init version: " << APP_VERSION;
-    qDebug() << "";
+    qInfo() << "FangApp init version: " << APP_VERSION;
+    qInfo() << "";
 
-    qDebug() << "Image formats: " << QImageReader::supportedImageFormats();
+    qInfo() << "Image formats: " << QImageReader::supportedImageFormats();
 
     // Setup our QML.
     engine->rootContext()->setContextProperty("feedListModel", &feedList); // list of feeds
@@ -92,7 +89,7 @@ void FangApp::init()
     bool isDebugBuild = false;
 #endif // QT_DEBUG
     engine->rootContext()->setContextProperty("isDebugBuild", isDebugBuild); // let QML know if we're a debug build or not
-    //qDebug() << "Is debug build: " << isDebugBuild;
+    qInfo() << "Is debug build: " << isDebugBuild;
     
     // Load feed list.
     LoadAllFeedsOperation* loadAllOp = new LoadAllFeedsOperation(&manager, &feedList);
@@ -155,21 +152,9 @@ void FangApp::onFeedRemoved(ListItem * listItem)
 
 void FangApp::onFeedSelected(ListItem* _item)
 {
-    //qDebug() << "New feed selected";
     FeedItem* item = qobject_cast<FeedItem *>(_item);
     setCurrentFeed(item);
     lastFeedSelected = item;
-}
-
-void FangApp::onLoadPageChanged()
-{
-    static bool first = false;
-    if (!first) {
-        first = true;
-
-        // Perform first feed update!
-        updateAllFeeds();
-    }
 }
 
 void FangApp::onNewFeedAddedSelect(Operation* addFeedOperation)
@@ -178,7 +163,6 @@ void FangApp::onNewFeedAddedSelect(Operation* addFeedOperation)
     Q_ASSERT(op != nullptr);
     
     // Tell me about it.
-    //qDebug() << "You should select: " << op->getFeedItem()->getTitle();
     feedList.setSelected(op->getFeedItem());
 }
 
@@ -224,16 +208,10 @@ void FangApp::onLoadAllFinished(Operation *op)
     // This has to be manually invoked the first time.
     pinnedNewsWatcher();
     
-    // Load teh cue em el.
+    // Load our QML.
     engine->load(QUrl("qrc:///qml/main.qml"));
-}
 
-void FangApp::updateAllFeeds()
-{
-    if (feedList.rowCount() == 0) {
-        return; // Somehow this was called too early.
-    }
-    
+    // Refresh all our feeds to check for the latest and greatest news.
     refreshAllFeeds();
 }
 
@@ -333,12 +311,12 @@ FeedItem* FangApp::feedForId(const qint64 id)
 void FangApp::setBookmark(qint64 id, bool allowBackward)
 {
     if (nullptr == currentFeed) {
-        // qDebug() << "setBookmark: Current feed is null, cannot set bookmark to: " << id;
+        qDebug() << "setBookmark: Current feed is null, cannot set bookmark to: " << id;
         return;
     }
 
     if (!currentFeed->canBookmark(id, allowBackward)) {
-        // qDebug() << "Cannot set bookmark to: " << id;
+        qDebug() << "Cannot set bookmark to: " << id;
         return;
     }
 
@@ -376,7 +354,6 @@ void FangApp::removeAndDelete(bool fromStart, qsizetype numberToRemove)
 void FangApp::onObjectCreated(QObject* object, const QUrl& url)
 {
     Q_UNUSED(url);
-    //qDebug() << "Object created: " << object << " with url: " << url;
     
     // Save our window.
     window = qobject_cast<QQuickWindow*>(object);
@@ -411,7 +388,7 @@ void FangApp::onObjectCreated(QObject* object, const QUrl& url)
     
     // Setup the feed refresh timer.
     setRefreshTimer();
-    connect(updateTimer, &QTimer::timeout, this, &FangApp::updateAllFeeds);
+    connect(updateTimer, &QTimer::timeout, this, &FangApp::refreshAllFeeds);
     updateTimer->start();
 
     // Maybe the user wants to change how often we refresh the feeds?  Let 'em.

@@ -27,7 +27,7 @@ class SimpleHTTPDownloader : public FangObject
 {
     Q_OBJECT
 public:
-    explicit SimpleHTTPDownloader(int timeoutMS = 5000, QObject *parent = nullptr);
+    explicit SimpleHTTPDownloader(int timeoutMS = 5000, QObject *parent = nullptr, QNetworkAccessManager* networkManager = nullptr);
     ~SimpleHTTPDownloader();
 
 signals:
@@ -57,7 +57,8 @@ private slots:
     void onTimeout();
 
 private:
-    FangNetworkAccessManager manager;
+    QNetworkAccessManager* manager;
+    bool ownsManager;
     int timeoutMS;
     QNetworkReply* currentReply;
     QTimer timeout;

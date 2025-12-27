@@ -38,7 +38,7 @@ WebServer::WebServer(QObject *parent) :
     server.route("/api/open_link", QHttpServerRequest::Method::Post, this, [] (const QHttpServerRequest &request) {
         QJsonObject json = QJsonDocument::fromJson(request.body()).object();
         QString url = json.value("url").toString();
-        //qDebug() << "Open URL:" << url;
+        qDebug() << "Open URL:" << url;
 
         QString urlFixed = NetworkUtilities::urlFixup(url);
         QDesktopServices::openUrl(QUrl(urlFixed));
@@ -154,7 +154,6 @@ QString WebServer::loadNews(LoadNewsOperation::LoadMode mode)
     document.insert("news", newsList);
     QString json = QString::fromUtf8(QJsonDocument::fromVariant(document).toJson());
 
-    // qDebug() << "JSON:" << json;
     return json;
 }
 
