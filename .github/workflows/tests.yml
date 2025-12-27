@@ -77,11 +77,11 @@ jobs:
         # Install flatpak and flatpak-builder
         sudo apt-get install -y flatpak flatpak-builder
 
-        # Add Flathub repository
-        flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+        # Add Flathub repository (requires sudo for system-wide installation)
+        sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 
-        # Install KDE runtime and SDK
-        flatpak install -y flathub org.kde.Platform//6.8 org.kde.Sdk//6.8
+        # Install KDE runtime and SDK (requires sudo for system-wide installation)
+        sudo flatpak install -y flathub org.kde.Platform//6.8 org.kde.Sdk//6.8
 
         # Build flatpak
         flatpak-builder --repo=repo --force-clean build-flatpak com.mrericsir.Fang.yml
@@ -99,14 +99,18 @@ jobs:
         # Install WiX Toolset
         dotnet tool install --global wix
 
+        # Add WiX extensions
+        wix extension add WixToolset.Heat.Extension
+        wix extension add WixToolset.UI.wixext
+
         # Set APP_VERSION environment variable
         $env:APP_VERSION = "0.2.0"
 
-        # Generate file list with heat
-        wix extension add WixToolset.Heat.Extension
-        heat dir build/Release -cg FangFilesGroup -gg -sfrag -srd -dr FangPath -out build/files.wxs
+        # Generate file list with heat (-scom suppresses COM/SelfReg warnings for Qt plugins)
+        wix extension list
+        heat dir build/Release -cg FangFilesGroup -gg -sfrag -srd -scom -dr FangPath -out build/files.wxs
 
-        # Build MSI with candle and light
+        # Build MSI
         wix build fang.wxs build/files.wxs -out build/Fang.msi -ext WixToolset.UI.wixext
 
     - name: Upload DMG Installer (macOS)
