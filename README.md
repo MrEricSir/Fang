@@ -4,7 +4,7 @@
 
 # Fang
 
-[![Unit Tests](https://github.com/MrEricSir/Fang/workflows/Unit%20Tests/badge.svg)](https://github.com/MrEricSir/Fang/actions)
+[![Build and Test](https://github.com/MrEricSir/Fang/workflows/Build%20and%20Test/badge.svg)](https://github.com/MrEricSir/Fang/actions)
 
 Feed on news
 

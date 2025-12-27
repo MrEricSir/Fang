@@ -1,4 +1,4 @@
-name: Unit Tests
+name: Build and Test
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: [ master, main ]
 
 jobs:
-  test:
+  build-and-test:
     name: ${{ matrix.os }} - Qt ${{ matrix.qt-version }}
     runs-on: ${{ matrix.os }}
 
@@ -45,15 +45,29 @@ jobs:
     - name: Configure CMake
       run: cmake -B build -DCMAKE_BUILD_TYPE=Release
 
-    - name: Build Tests Only
-      run: |
-        cmake --build build --config Release --target tst_fangparser
-        cmake --build build --config Release --target tst_testfangfavicongrabbertest
-        cmake --build build --config Release --target tst_testfangfeeddiscovery
-        cmake --build build --config Release --target tst_testfangsimplestatemachine
-        cmake --build build --config Release --target tst_testrawfeedrewritertest
-        cmake --build build --config Release --target tst_urlfixup
-        cmake --build build --config Release --target tst_testwebpagegrabber
+    - name: Build Application and Tests
+      run: cmake --build build --config Release
+
+    - name: Upload Application Artifact (macOS)
+      if: runner.os == 'macOS'
+      uses: actions/upload-artifact@v4
+      with:
+        name: Fang-macOS
+        path: build/Fang.app
+
+    - name: Upload Application Artifact (Linux)
+      if: runner.os == 'Linux'
+      uses: actions/upload-artifact@v4
+      with:
+        name: Fang-Linux
+        path: build/Fang
+
+    - name: Upload Application Artifact (Windows)
+      if: runner.os == 'Windows'
+      uses: actions/upload-artifact@v4
+      with:
+        name: Fang-Windows
+        path: build/Release/Fang.exe
 
     - name: Run tests
       run: ctest --test-dir build --output-on-failure --build-config Release
