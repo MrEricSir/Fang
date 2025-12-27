@@ -53,14 +53,6 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     // Set QML file selectors.
     QStringList selectors;
 
-// #ifndef QT_WEBVIEW_WEBENGINE_BACKEND
-    // Add a selector indicating we need Qt's native WebView
-    selectors << "webview";
-// #endif // QT_WEBVIEW_WEBENGINE_BACKEND
-
-// #if defined(Q_OS_ANDROID) || defined(Q_OS_IOS)
-//     selectors << "mobile";
-// #endif
 
     if (selectors.count()) {
         selector.setExtraSelectors(selectors);

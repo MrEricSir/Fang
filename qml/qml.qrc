@@ -28,7 +28,6 @@
         <file>FangIcon.qml</file>
         <file>SplashScreenDialog.qml</file>
         <file>FangWebView.qml</file>
-        <file>+webview/FangWebView.qml</file>
         <file>FangSplitView.qml</file>
         <file>+mobile/FangSplitView.qml</file>
         <file>RearrangeableDelegate.qml</file>

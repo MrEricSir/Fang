@@ -1,22 +1,31 @@
 import QtQuick
-// import QtWebEngine
 import QtWebView
 
-// WebEngineView {
 WebView {
     id: newsView;
 
-    ///// START API /////
-
-    // Unused for WebEngine
-    property bool isVisible: false;
+    ///// API /////
 
     function close() {
         state = "closing";
     }
 
+    property bool isVisible: false;
+
     ///// END API /////
 
+    // Visibility hack for native WebView
+    x: parent.x;
+    y: parent.y;
+    width: isVisible ? parent.width : 0;
+    height: isVisible ? parent.height : 0;
+
+    // Settings (should not be changed at runtime)
+    settings.javaScriptEnabled: true;
+    settings.allowFileAccess: true;
+    settings.localContentCanAccessFileUrls: true;
+
+    // State
     state: "news";
     states: [
         // The typical news/help mode.
@@ -27,21 +36,21 @@ WebView {
     ]
 
     onStateChanged: {
-        console.log("webengine state changed:", state)
+        console.log("newsView state changed:", state);
         switch (state) {
         case "news":
-            newsView.url = "qrc:///html/index.html";
+            newsView.url = "http://localhost:2844/html/index.html";
 
             break;
 
         case "closing":
-            newsView.url = "qrc:///html/blank.html";
+            newsView.url = "http://localhost:2844/html/blank.html";
 
             break;
 
         default:
              // Shouldn't get here.
-            console.error("You didn't handle state: ", state)
+            console.error("newsView: Unhandled state:", state);
         }
     }
 }
