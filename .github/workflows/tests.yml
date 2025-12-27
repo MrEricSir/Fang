@@ -48,26 +48,87 @@ jobs:
     - name: Build Application and Tests
       run: cmake --build build --config Release
 
-    - name: Upload Application Artifact (macOS)
+    # macOS: Create DMG
+    - name: Create macOS DMG
+      if: runner.os == 'macOS'
+      run: |
+        # Deploy Qt dependencies into the app bundle
+        macdeployqt build/Fang.app -qmldir=qml
+
+        # Install create-dmg
+        brew install create-dmg
+
+        # Create DMG
+        create-dmg \
+          --volname "Fang" \
+          --window-pos 200 120 \
+          --window-size 800 400 \
+          --icon-size 100 \
+          --icon "Fang.app" 200 190 \
+          --hide-extension "Fang.app" \
+          --app-drop-link 600 185 \
+          "Fang.dmg" \
+          "build/Fang.app"
+
+    # Linux: Create Flatpak
+    - name: Create Linux Flatpak
+      if: runner.os == 'Linux'
+      run: |
+        # Install flatpak and flatpak-builder
+        sudo apt-get install -y flatpak flatpak-builder
+
+        # Add Flathub repository
+        flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+
+        # Install KDE runtime and SDK
+        flatpak install -y flathub org.kde.Platform//6.8 org.kde.Sdk//6.8
+
+        # Build flatpak
+        flatpak-builder --repo=repo --force-clean build-flatpak com.mrericsir.Fang.yml
+
+        # Create bundle
+        flatpak build-bundle repo Fang.flatpak com.mrericsir.Fang
+
+    # Windows: Create MSI
+    - name: Create Windows MSI
+      if: runner.os == 'Windows'
+      run: |
+        # Deploy Qt dependencies
+        windeployqt build/Release/Fang.exe --qmldir qml
+
+        # Install WiX Toolset
+        dotnet tool install --global wix
+
+        # Set APP_VERSION environment variable
+        $env:APP_VERSION = "0.2.0"
+
+        # Generate file list with heat
+        wix extension add WixToolset.Heat.Extension
+        heat dir build/Release -cg FangFilesGroup -gg -sfrag -srd -dr FangPath -out build/files.wxs
+
+        # Build MSI with candle and light
+        wix build fang.wxs build/files.wxs -out build/Fang.msi -ext WixToolset.UI.wixext
+
+    - name: Upload DMG Installer (macOS)
       if: runner.os == 'macOS'
       uses: actions/upload-artifact@v4
       with:
-        name: Fang-macOS
-        path: build/Fang.app
+        name: Fang-macOS-DMG
+        path: Fang.dmg
 
-    - name: Upload Application Artifact (Linux)
+    - name: Upload Flatpak Bundle (Linux)
       if: runner.os == 'Linux'
       uses: actions/upload-artifact@v4
       with:
-        name: Fang-Linux
-        path: build/Fang
+        name: Fang-Linux-Flatpak
+        path: Fang.flatpak
 
-    - name: Upload Application Artifact (Windows)
+    - name: Upload MSI Installer (Windows)
       if: runner.os == 'Windows'
       uses: actions/upload-artifact@v4
       with:
-        name: Fang-Windows
-        path: build/Release/Fang.exe
+        name: Fang-Windows-MSI
+        path: build/Fang.msi
 
     - name: Run tests
       run: ctest --test-dir build --output-on-failure --build-config Release

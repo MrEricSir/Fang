@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Fang
+Comment=Feed on news - RSS/Atom newsreader
+Exec=Fang
+Icon=com.mrericsir.Fang
+Categories=Network;News;
+Terminal=false
