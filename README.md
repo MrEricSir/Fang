@@ -64,8 +64,9 @@ To run the tests, go to View -> Output Panes -> Test Results and click Run All T
 
 To debug the Javascript and HTML, you'll need to set a debugging port and set it as an environment variable. For example, we'll use `9999` as our port.
 
-* Set the `QTWEBENGINE_REMOTE_DEBUGGING` variable to `9999`. In Qt Creator this can be found in Projects, Build & Run, Run, Environment. Click Add and enter `QTWEBENGINE_REMOTE_DEBUGGING=9999`
-* Open up Chrome (or any Chromium-based browser) to localhost at your port, for example `http://127.0.0.1` and click the link under "Inspectable Pages."
+* Set the `QTWEBENGINE_REMOTE_DEBUGGING` variable to `9999`. In Qt Creator this can be found in Projects, Build & Run, Run, Environment. Click Add and enter:
+   -  `QTWEBENGINE_REMOTE_DEBUGGING=9999`
+* Open up Chrome (or any Chromium-based browser) to localhost at your chosen port, for example http://localhost:9999/ and click the link under "Inspectable Pages." Every time you restart Fang you will have to open that URL again to debug the page.
 
 ### Troubleshooting
 
