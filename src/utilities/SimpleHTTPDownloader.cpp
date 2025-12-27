@@ -1,12 +1,17 @@
 #include "SimpleHTTPDownloader.h"
 
-SimpleHTTPDownloader::SimpleHTTPDownloader(int timeoutMS, QObject *parent) :
-    FangObject(parent), timeoutMS(timeoutMS), currentReply(nullptr), redirectAttempts(0)
+SimpleHTTPDownloader::SimpleHTTPDownloader(int timeoutMS, QObject *parent, QNetworkAccessManager* networkManager) :
+    FangObject(parent),
+    manager(networkManager ? networkManager : new FangNetworkAccessManager(this)),
+    ownsManager(networkManager == nullptr),
+    timeoutMS(timeoutMS),
+    currentReply(nullptr),
+    redirectAttempts(0)
 {
     timeout.setSingleShot(true);
 
     // Signals!
-    connect(&manager, &FangNetworkAccessManager::finished, this, &SimpleHTTPDownloader::onRequestFinished);
+    connect(manager, &QNetworkAccessManager::finished, this, &SimpleHTTPDownloader::onRequestFinished);
     connect(&timeout, &QTimer::timeout, this, &SimpleHTTPDownloader::onTimeout);
 }
 
@@ -38,7 +43,7 @@ void SimpleHTTPDownloader::loadInternal(const QUrl &url)
         emit error("Relative URLs are not allowed");
     } else {
         QNetworkRequest request(url);
-        currentReply = manager.get(request);
+        currentReply = manager->get(request);
         connect(currentReply, &QNetworkReply::downloadProgress, this,
                 &SimpleHTTPDownloader::onDownloadProgress);
 
@@ -49,6 +54,11 @@ void SimpleHTTPDownloader::loadInternal(const QUrl &url)
 
 void SimpleHTTPDownloader::onRequestFinished(QNetworkReply *reply)
 {
+    // Only process replies that belong to us
+    if (reply != currentReply) {
+        return;
+    }
+
     // Check for errors.
     if (reply->error() != QNetworkReply::NoError) {
         QString netError = "SimpleHTTPDownloader error: " + reply->errorString();

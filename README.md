@@ -4,6 +4,8 @@
 
 # Fang
 
+[![Unit Tests](https://github.com/MrEricSir/Fang/workflows/Unit%20Tests/badge.svg)](https://github.com/MrEricSir/Fang/actions)
+
 Feed on news
 
 Fang is a newsreader for any website that supports RSS or Atom feeds. Except when otherwise noted and not includig test data, Fang is available under a [GPL 3 license.](https://github.com/MrEricSir/Fang/blob/master/LICENSE)

@@ -7,6 +7,7 @@
 #include <QList>
 #include <QPair>
 #include <QImage>
+#include <QSet>
 
 #include "WebPageGrabber.h"
 #include "SimpleStateMachine.h"
@@ -28,7 +29,7 @@ private:
     };
     
 public:
-    explicit FaviconGrabber(QObject *parent = nullptr);
+    explicit FaviconGrabber(QObject *parent = nullptr, QNetworkAccessManager* networkManager = nullptr);
     
 signals:
     /**
@@ -78,9 +79,11 @@ private:
     QList<QUrl> urlsToCheck;
     int repliesWaiting;
     QList<QPair<QUrl, QImage> > imagesToCheck;
-    FangNetworkAccessManager manager;
+    QNetworkAccessManager* manager;
+    bool ownsManager;
     WebPageGrabber webGrabber;
     QUrl location;
+    QSet<QNetworkReply*> faviconReplies;  // Track replies we created
 };
 
 #endif // FAVICONGRABBER_H

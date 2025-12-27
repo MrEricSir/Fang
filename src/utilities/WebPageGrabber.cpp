@@ -8,9 +8,9 @@
 #include <tidy.h>
 #include <buffio.h>
 
-WebPageGrabber::WebPageGrabber(bool handleMetaRefresh, int timeoutMS, QObject *parent) :
+WebPageGrabber::WebPageGrabber(bool handleMetaRefresh, int timeoutMS, QObject *parent, QNetworkAccessManager* networkManager) :
     FangObject(parent),
-    downloader(timeoutMS),
+    downloader(timeoutMS, this, networkManager),
     handleMetaRefresh(handleMetaRefresh),
     redirectAttempts(0),
     error(true)
@@ -84,7 +84,8 @@ QString *WebPageGrabber::loadInternal(const QString& htmlString, bool handleRefr
       rc = tidySaveBuffer( tdoc, &output );          // Pretty Print
 
     QString result = "";
-    if (rc > 0 && output.bp) {
+    qDebug() << "TidyLib rc:" << rc << "output.bp:" << (output.bp != nullptr);
+    if (rc >= 0 && output.bp) {
         result = QString::fromUtf8((char*)output.bp);
     } else {
         qDebug() << "WebPageGrabber error!";

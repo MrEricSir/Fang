@@ -1,6 +1,9 @@
 # TestFangFaviconGrabber test executable (uses TidyLib)
 qt_add_executable(tst_testfangfavicongrabbertest
     tst_testfangfavicongrabbertest.cpp
+    # Mock network manager for offline testing
+    ${CMAKE_SOURCE_DIR}/test/MockNetworkAccessManager.h
+    ${CMAKE_SOURCE_DIR}/test/MockNetworkAccessManager.cpp
     # Shared sources from main project
     ${CMAKE_SOURCE_DIR}/src/utilities/FaviconGrabber.cpp
     ${CMAKE_SOURCE_DIR}/src/utilities/WebPageGrabber.cpp
