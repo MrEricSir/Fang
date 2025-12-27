@@ -95,19 +95,23 @@ jobs:
         # Build AppImage
         # Remove problematic SQL drivers that have missing dependencies (Fang only uses SQLite)
         # This prevents linuxdeploy from trying to deploy them
-        rm -f $Qt6_DIR/../gcc_64/plugins/sqldrivers/libqsqloci.so
-        rm -f $Qt6_DIR/../gcc_64/plugins/sqldrivers/libqsqlpsql.so
-        rm -f $Qt6_DIR/../gcc_64/plugins/sqldrivers/libqsqlmimer.so
-        rm -f $Qt6_DIR/../gcc_64/plugins/sqldrivers/libqsqlibase.so
-        rm -f $Qt6_DIR/../gcc_64/plugins/sqldrivers/libqsqlodbc.so
+        echo "Qt installation path: $QT_ROOT_DIR"
+        ls -la $QT_ROOT_DIR/plugins/sqldrivers/ || echo "sqldrivers directory not found"
+        rm -f $QT_ROOT_DIR/plugins/sqldrivers/libqsqloci.so
+        rm -f $QT_ROOT_DIR/plugins/sqldrivers/libqsqlpsql.so
+        rm -f $QT_ROOT_DIR/plugins/sqldrivers/libqsqlmimer.so
+        rm -f $QT_ROOT_DIR/plugins/sqldrivers/libqsqlibase.so
+        rm -f $QT_ROOT_DIR/plugins/sqldrivers/libqsqlodbc.so
+        echo "After removal:"
+        ls -la $QT_ROOT_DIR/plugins/sqldrivers/
 
         # Set QML sources path for linuxdeploy-plugin-qt
         export QML_SOURCES_PATHS=qml
 
         # Manually copy QtWebEngineProcess (linuxdeploy-plugin-qt should handle this, but let's be explicit)
-        if [ -f "$Qt6_DIR/libexec/QtWebEngineProcess" ]; then
+        if [ -f "$QT_ROOT_DIR/libexec/QtWebEngineProcess" ]; then
           mkdir -p AppDir/usr/libexec
-          cp "$Qt6_DIR/libexec/QtWebEngineProcess" AppDir/usr/libexec/
+          cp "$QT_ROOT_DIR/libexec/QtWebEngineProcess" AppDir/usr/libexec/
         fi
 
         ./linuxdeploy-x86_64.AppImage --appdir AppDir --plugin qt --output appimage --desktop-file=AppDir/usr/share/applications/com.mrericsir.Fang.desktop --icon-file=AppDir/usr/share/icons/hicolor/256x256/apps/com.mrericsir.Fang.png
