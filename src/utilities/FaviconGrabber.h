@@ -7,6 +7,7 @@
 #include <QList>
 #include <QPair>
 #include <QImage>
+#include <QSet>
 
 #include "WebPageGrabber.h"
 #include "SimpleStateMachine.h"
@@ -82,6 +83,7 @@ private:
     bool ownsManager;
     WebPageGrabber webGrabber;
     QUrl location;
+    QSet<QNetworkReply*> faviconReplies;  // Track replies we created
 };
 
 #endif // FAVICONGRABBER_H

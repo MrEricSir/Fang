@@ -45,6 +45,30 @@ void TestFangFaviconGrabberTest::testCase1()
     QString testDataPath = QString(SRCDIR) + "../testdata/" + mockDataFile;
     mockManager.addResponseFromFile(siteURL, testDataPath);
 
+    // FaviconGrabber also tries to load the host URL (without path) to search for favicons
+    QUrl hostUrl = siteURL;
+    hostUrl.setPath("");
+    mockManager.addResponseFromFile(hostUrl, testDataPath);
+
+    // Mock empty responses for standard favicon URLs that FaviconGrabber checks
+    // (FaviconGrabber tries /favicon.ico, /favicon.png, etc. first)
+    QStringList extensions = {"ico", "jpg", "jpeg", "png", "gif"};
+    for (const QString& ext : extensions) {
+        QUrl faviconUrl = hostUrl;
+        faviconUrl.setPath("/favicon." + ext);
+        mockManager.addResponse(faviconUrl, QByteArray()); // Empty response
+    }
+
+    // Mock the actual favicon image URL that will be discovered from the HTML
+    // FaviconGrabber needs to successfully download this to verify it exists
+    // Create a minimal valid 1x1 PNG (69 bytes)
+    QByteArray pngData = QByteArray::fromHex(
+        "89504e470d0a1a0a0000000d4948445200000001000000010802000000907753"
+        "de0000000c49444154789c63606060000000040001f61738550000000049454e"
+        "44ae426082"
+    );
+    mockManager.addResponse(faviconURL, pngData);
+
     // Create FaviconGrabber with mock manager
     FaviconGrabber fg(nullptr, &mockManager);
     QSignalSpy spy(&fg, &FaviconGrabber::finished);

@@ -84,7 +84,8 @@ QString *WebPageGrabber::loadInternal(const QString& htmlString, bool handleRefr
       rc = tidySaveBuffer( tdoc, &output );          // Pretty Print
 
     QString result = "";
-    if (rc > 0 && output.bp) {
+    qDebug() << "TidyLib rc:" << rc << "output.bp:" << (output.bp != nullptr);
+    if (rc >= 0 && output.bp) {
         result = QString::fromUtf8((char*)output.bp);
     } else {
         qDebug() << "WebPageGrabber error!";

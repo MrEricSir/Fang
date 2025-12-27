@@ -31,21 +31,22 @@ FaviconGrabber::FaviconGrabber(QObject *parent, QNetworkAccessManager* networkMa
 void FaviconGrabber::find(const QUrl &url)
 {
     urlsToCheck.clear();
+    faviconReplies.clear();
     location = url;
     machine.start(START);
-    
+
     // Make a list of "root" favicons.
     QUrl host = NetworkUtilities::getHost(location);
     QStringList extensions;
     extensions << "ico" << "jpg" << "jpeg" << "png" << "gif";
-    
+
     // Add each extension to our list.
     for (QString ext : extensions) {
         QUrl toCheck(host);
         toCheck.setPath("/favicon." + ext);
         urlsToCheck << toCheck;
     }
-    
+
     machine.setState(WEB_GRABBER);
 }
 
@@ -63,26 +64,27 @@ void FaviconGrabber::onCheckIcons()
     //qDebug() << "onCheckIcons";
     if (urlsToCheck.size() == 0) {
         machine.setState(GRAB_ERROR);
-        
+
         return;
     }
-    
+
     // Pop each URL off the list and check it, g.
     repliesWaiting = 0;
     while (urlsToCheck.size()) {
         repliesWaiting++;
-        
+
         QUrl url = urlsToCheck.takeFirst();
-        
+
         // If it's not a fully formed URL, fill it out.
         if (url.isValid() && url.isRelative()) {
             QUrl newUrl = location;
             newUrl.setPath(url.path());
             url = newUrl;
         }
-        
+
         QNetworkRequest request(url);
-        manager->get(request);
+        QNetworkReply* reply = manager->get(request);
+        faviconReplies.insert(reply);  // Track this reply
     }
 }
 
@@ -129,20 +131,34 @@ void FaviconGrabber::onError()
 
 void FaviconGrabber::onRequestFinished(QNetworkReply * reply)
 {
+    // Only process replies that belong to us (ignore WebPageGrabber's replies)
+    if (!faviconReplies.contains(reply)) {
+        return;
+    }
+
+    // Remove from our tracking set
+    faviconReplies.remove(reply);
+
     //qDebug() << "Checked for a favicon at " << reply->url().toString() << " error: " << reply->errorString();
-    
+
     if (!reply->error()) {
         QImage img;
-        
+
         // Try to determine format from filename.
-        
+
         // Read in the image, if possible.
-        if (img.loadFromData(reply->readAll())) {
+        QByteArray data = reply->readAll();
+        qDebug() << "Trying to load image from" << reply->url() << "size:" << data.size();
+        if (img.loadFromData(data)) {
+            qDebug() << "Successfully loaded image:" << img.width() << "x" << img.height();
             imagesToCheck << QPair<QUrl, QImage>(reply->url(), img);
+        } else {
+            qDebug() << "Failed to load image from data";
         }
     }
-    
+
     repliesWaiting--;
+    qDebug() << "repliesWaiting:" << repliesWaiting << "imagesToCheck.size():" << imagesToCheck.size();
     if (!repliesWaiting) {
         machine.setState(PICK_BEST);
     }
@@ -150,15 +166,21 @@ void FaviconGrabber::onRequestFinished(QNetworkReply * reply)
 
 void FaviconGrabber::onWebGrabberReady(QString *document)
 {
+    // Ignore responses that arrive after we've already moved past WEB_GRABBER state
+    // (e.g., multiple async responses from favicon URLs being parsed as HTML)
+    if (machine.getState() != WEB_GRABBER) {
+        return;
+    }
+
     // Could indicate no internet.
     if (document == nullptr || document->isEmpty()) {
         machine.setState(CHECK_ICONS);
-        
+
         return;
     }
 
     findIcons(*document);
-    
+
     machine.setState(CHECK_ICONS);
 }
 

@@ -54,6 +54,11 @@ void SimpleHTTPDownloader::loadInternal(const QUrl &url)
 
 void SimpleHTTPDownloader::onRequestFinished(QNetworkReply *reply)
 {
+    // Only process replies that belong to us
+    if (reply != currentReply) {
+        return;
+    }
+
     // Check for errors.
     if (reply->error() != QNetworkReply::NoError) {
         QString netError = "SimpleHTTPDownloader error: " + reply->errorString();

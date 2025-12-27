@@ -2,9 +2,8 @@
 #include <QFile>
 #include <QDebug>
 
-// MockNetworkReply implementation
-MockNetworkReply::MockNetworkReply(const QByteArray& data, const QUrl& url, QObject* parent)
-    : QNetworkReply(parent)
+MockNetworkReply::MockNetworkReply(const QByteArray& data, const QUrl& url, QObject* parent, bool isError)
+    : QNetworkReply(parent), originalData(data)
 {
     setUrl(url);
     setOperation(QNetworkAccessManager::GetOperation);
@@ -12,10 +11,16 @@ MockNetworkReply::MockNetworkReply(const QByteArray& data, const QUrl& url, QObj
     buffer.setData(data);
     buffer.open(QIODevice::ReadOnly);
 
-    setError(NoError, QString());
-    setAttribute(QNetworkRequest::HttpStatusCodeAttribute, 200);
+    if (isError) {
+        setError(QNetworkReply::ContentNotFoundError, "Mock URL not found");
+        setAttribute(QNetworkRequest::HttpStatusCodeAttribute, 404);
+    } else {
+        setError(NoError, QString());
+        setAttribute(QNetworkRequest::HttpStatusCodeAttribute, 200);
+        setHeader(QNetworkRequest::ContentLengthHeader, QVariant(data.size()));
+    }
 
-    open(ReadOnly | Unbuffered);
+    setOpenMode(QIODevice::ReadOnly);
 
     // Emit finished signal asynchronously to simulate network behavior
     QTimer::singleShot(0, this, &MockNetworkReply::finished);
@@ -28,10 +33,11 @@ qint64 MockNetworkReply::bytesAvailable() const
 
 qint64 MockNetworkReply::readData(char* data, qint64 maxSize)
 {
-    return buffer.read(data, maxSize);
+    qint64 bytesRead = buffer.read(data, maxSize);
+    qDebug() << "MockNetworkReply::readData() called for" << url() << "requested:" << maxSize << "read:" << bytesRead << "buffer.bytesAvailable():" << buffer.bytesAvailable();
+    return bytesRead;
 }
 
-// MockNetworkAccessManager implementation
 MockNetworkAccessManager::MockNetworkAccessManager(QObject* parent)
     : QNetworkAccessManager(parent)
 {
@@ -53,6 +59,7 @@ void MockNetworkAccessManager::addResponseFromFile(const QUrl& url, const QStrin
     }
 
     QByteArray data = file.readAll();
+    qDebug() << "MockNetworkAccessManager: Read" << data.size() << "bytes from" << filePath;
     addResponse(url, data);
 }
 
@@ -80,6 +87,6 @@ QNetworkReply* MockNetworkAccessManager::createRequest(Operation op, const QNetw
     }
 
     qWarning() << "MockNetworkAccessManager: No mock response for" << key;
-    // Return an empty response instead of making a real request
-    return new MockNetworkReply(QByteArray(), url, this);
+    // Return an error response for unmocked URLs
+    return new MockNetworkReply(QByteArray(), url, this, true); // true = isError
 }

@@ -1,6 +1,9 @@
 # TestWebPageGrabber test executable (uses TidyLib)
 qt_add_executable(tst_testwebpagegrabber
     tst_testwebpagegrabber.cpp
+    # Mock network manager for offline testing
+    ${CMAKE_SOURCE_DIR}/test/MockNetworkAccessManager.h
+    ${CMAKE_SOURCE_DIR}/test/MockNetworkAccessManager.cpp
     # Shared sources from main project
     ${CMAKE_SOURCE_DIR}/src/utilities/WebPageGrabber.cpp
     ${CMAKE_SOURCE_DIR}/src/FangObject.cpp

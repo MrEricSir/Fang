@@ -18,7 +18,7 @@ class MockNetworkReply : public QNetworkReply
     Q_OBJECT
 
 public:
-    MockNetworkReply(const QByteArray& data, const QUrl& url, QObject* parent = nullptr);
+    MockNetworkReply(const QByteArray& data, const QUrl& url, QObject* parent = nullptr, bool isError = false);
 
     void abort() override {}
     qint64 bytesAvailable() const override;
@@ -29,6 +29,7 @@ protected:
 
 private:
     QBuffer buffer;
+    QByteArray originalData;  // Store original data to allow multiple reads
 };
 
 /**
