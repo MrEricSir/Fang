@@ -42,11 +42,20 @@ jobs:
           libxcb-xinerama0 \
           libxcb-cursor0
 
+    # Configure full project but only build test targets
+    # (Main app requires Qt 6.10+, tests work with Qt 6.7+)
     - name: Configure CMake
       run: cmake -B build -DCMAKE_BUILD_TYPE=Release
 
-    - name: Build
-      run: cmake --build build --config Release
+    - name: Build Tests Only
+      run: |
+        cmake --build build --config Release --target tst_fangparser
+        cmake --build build --config Release --target tst_testfangfavicongrabbertest
+        cmake --build build --config Release --target tst_testfangfeeddiscovery
+        cmake --build build --config Release --target tst_testfangsimplestatemachine
+        cmake --build build --config Release --target tst_testrawfeedrewritertest
+        cmake --build build --config Release --target tst_urlfixup
+        cmake --build build --config Release --target tst_testwebpagegrabber
 
     - name: Run tests
       run: ctest --test-dir build --output-on-failure --build-config Release
