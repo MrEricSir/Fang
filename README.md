@@ -34,7 +34,7 @@ It is recommended to build, run, and debug from Qt Creator for development purpo
     - To run without debugging, select Build -> Run or click the Run button in the Application output pane
     - To run with debugging, select Debug -> Start Debugging -> Start Debugging of Startup Project or click the Start Debugging of Startup Project button in the Debugger pane
 
-The steps for running/debugging the unit tests are essentially the same as above but use the `CMakeLists.txt` in the `test` subfolder.
+To run the tests, go to View -> Output Panes -> Test Results and click Run All Tests.
 
 ### Command Line
 
@@ -55,7 +55,7 @@ The steps for running/debugging the unit tests are essentially the same as above
 1. Optionally, install locally...
     - ...on macOS (TODO: verify)
       `cmake --install build --prefix /desired/install/path`
-    - on Windows:
+    - ...on Windows:
      `TODO`
 
 ## Debugging Tips
