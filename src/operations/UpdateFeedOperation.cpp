@@ -44,8 +44,6 @@ void UpdateFeedOperation::execute()
         return;
     }
     
-    //qDebug() << "Updating feed: " << feed->getTitle();
-    
     // Setup.
     feed->setIsUpdating(true);
     timestamp = QDateTime::currentDateTime();
@@ -82,8 +80,6 @@ void UpdateFeedOperation::onFeedFinished()
         // This is often the result of the feed not having been updated, and thus
         // it was already cached.  We return null in that case to save time.
         
-        //qDebug() << "Raw feed was null!";
-        
         emit finished(this);
         
         return;
@@ -118,8 +114,6 @@ void UpdateFeedOperation::onFeedFinished()
     QDateTime newestNewNews = rawFeed->items.last()->timestamp;
     if (newestNewNews <= newestLocalNews) {
         emit finished(this);
-        //qDebug() << "Feed already up to date!";
-        //qDebug() << "Newest new: " << newestNewNews.toString() << " Newest local: " << newestLocalNews.toString();
         
         return;
     }

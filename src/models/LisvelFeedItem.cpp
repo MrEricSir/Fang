@@ -16,7 +16,6 @@ bool LisvelFeedItem::canBookmark(qint64 proposedBookmarkID, bool allowBackward)
 
     // Given no current bookmark, anything will do.
     if (getBookmarkID() < 0) {
-        // qDebug() << "canBookmark: yes because no current bookmark";
         return true;
     }
 
@@ -28,7 +27,6 @@ bool LisvelFeedItem::canBookmark(qint64 proposedBookmarkID, bool allowBackward)
     // We can bookmark anything in this situation.
     // ASSUMPTION: The bookmark ID is valid.
     if (allowBackward) {
-        // qDebug() << "canBookmark: allow backward is always true";
         return true;
     }
 

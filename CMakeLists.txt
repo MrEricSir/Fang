@@ -74,6 +74,7 @@ qt_add_executable(Fang
     src/operations/AddFeedOperation.cpp
     src/operations/RemoveFeedOperation.cpp
     src/utilities/FaviconGrabber.cpp
+    src/utilities/FangLogging.cpp
     src/operations/SetBookmarkOperation.cpp
     src/utilities/WebPageGrabber.cpp
     src/operations/FaviconUpdateOperation.cpp
@@ -142,6 +143,7 @@ qt_add_executable(Fang
     src/operations/AddFeedOperation.h
     src/operations/RemoveFeedOperation.h
     src/utilities/FaviconGrabber.h
+    src/utilities/FangLogging.h
     src/operations/SetBookmarkOperation.h
     src/utilities/WebPageGrabber.h
     src/operations/FaviconUpdateOperation.h

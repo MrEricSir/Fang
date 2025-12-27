@@ -1,12 +1,24 @@
 #include "WebPageGrabber.h"
 #include <QXmlStreamReader>
-
-#include <QDebug>
-//#include <iostream>
+#include <memory>
 
 // TidyLib
 #include <tidy.h>
 #include <buffio.h>
+
+#include "FangLogging.h"
+
+namespace {
+    // RAII wrapper for TidyDoc to ensure cleanup
+    struct TidyDocDeleter {
+        void operator()(TidyDoc doc) const {
+            if (doc) {
+                tidyRelease(doc);
+            }
+        }
+    };
+    using TidyDocPtr = std::unique_ptr<std::remove_pointer<TidyDoc>::type, TidyDocDeleter>;
+}
 
 WebPageGrabber::WebPageGrabber(bool handleMetaRefresh, int timeoutMS, QObject *parent, QNetworkAccessManager* networkManager) :
     FangObject(parent),
@@ -20,10 +32,6 @@ WebPageGrabber::WebPageGrabber(bool handleMetaRefresh, int timeoutMS, QObject *p
     connect(&downloader, &SimpleHTTPDownloader::finished, this, &WebPageGrabber::onDownloadFinished);
 }
 
-WebPageGrabber::~WebPageGrabber()
-{
-
-}
 
 void WebPageGrabber::load(const QUrl& url)
 {
@@ -50,75 +58,89 @@ void WebPageGrabber::loadInternal(const QUrl& url)
 
 QString *WebPageGrabber::loadInternal(const QString& htmlString, bool handleRefresh)
 {
-    document = "";
+    document.clear();
 
     // Tidy up the string!
-    TidyBuffer output = {0,0,0,0};
-    TidyBuffer errbuf = {0,0,0,0};
+    TidyBuffer output;
+    TidyBuffer errbuf;
+    tidyBufInit(&output);
+    tidyBufInit(&errbuf);
 
-    int rc = -1;
-    Bool ok;
-
-    TidyDoc tdoc = tidyCreate();                     // Initialize "document"
-
-    // QString can convert to/from utf8
-    tidySetInCharEncoding(tdoc, "utf8");
-    tidySetOutCharEncoding(tdoc, "utf8");
-
-    //printf( "Tidying:\t%s\n", input );
-
-    ok = tidyOptSetBool( tdoc, TidyXhtmlOut, yes );  // Convert to XHTML
-    if ( ok )
-        ok = tidyOptSetInt( tdoc, TidyIndentContent, TidyNoState );  // Don't pretty print
-    if ( ok )
-      rc = tidySetErrorBuffer( tdoc, &errbuf );      // Capture diagnostics
-    if ( rc >= 0 )
-      rc = tidyParseString( tdoc, htmlString.toUtf8().constData());           // Parse the input
-    if ( rc >= 0 )
-      rc = tidyCleanAndRepair( tdoc );               // Tidy it up!
-    if ( rc >= 0 )
-      rc = tidyRunDiagnostics( tdoc );               // Kvetch
-    if ( rc > 1 )                                    // If error, force output.
-      rc = ( tidyOptSetBool(tdoc, TidyForceOutput, yes) ? rc : -1 );
-    if ( rc >= 0 )
-      rc = tidySaveBuffer( tdoc, &output );          // Pretty Print
-
-    QString result = "";
-    qDebug() << "TidyLib rc:" << rc << "output.bp:" << (output.bp != nullptr);
-    if (rc >= 0 && output.bp) {
-        result = QString::fromUtf8((char*)output.bp);
-    } else {
-        qDebug() << "WebPageGrabber error!";
+    TidyDocPtr tdoc(tidyCreate());
+    if (!tdoc) {
         emit ready(nullptr);
         return nullptr;
     }
 
-    // Free memory.
-    tidyBufFree( &output );
-    tidyBufFree( &errbuf );
-    tidyRelease( tdoc );
+    // QString can convert to/from utf8
+    tidySetInCharEncoding(tdoc.get(), "utf8");
+    tidySetOutCharEncoding(tdoc.get(), "utf8");
 
+    // Configure and process the HTML
+    if (!tidyOptSetBool(tdoc.get(), TidyXhtmlOut, yes)) {
+        tidyBufFree(&output);
+        tidyBufFree(&errbuf);
+        emit ready(nullptr);
+        return nullptr;
+    }
 
-    //std::cout << "Tidy: " << result.toStdString();
+    if (!tidyOptSetInt(tdoc.get(), TidyIndentContent, TidyNoState)) {
+        tidyBufFree(&output);
+        tidyBufFree(&errbuf);
+        emit ready(nullptr);
+        return nullptr;
+    }
 
-    // Remember </spock>
+    int rc = tidySetErrorBuffer(tdoc.get(), &errbuf);
+    if (rc >= 0) {
+        rc = tidyParseString(tdoc.get(), htmlString.toUtf8().constData());
+    }
+    if (rc >= 0) {
+        rc = tidyCleanAndRepair(tdoc.get());
+    }
+    if (rc >= 0) {
+        rc = tidyRunDiagnostics(tdoc.get());
+    }
+    if (rc > 1) {
+        // If error, force output
+        rc = tidyOptSetBool(tdoc.get(), TidyForceOutput, yes) ? rc : -1;
+    }
+    if (rc >= 0) {
+        rc = tidySaveBuffer(tdoc.get(), &output);
+    }
+
+    QString result;
+    qCDebug(logWebPage) << "TidyLib rc:" << rc << "output.bp:" << (output.bp != nullptr);
+
+    if (rc >= 0 && output.bp) {
+        result = QString::fromUtf8(reinterpret_cast<const char*>(output.bp));
+    } else {
+        qCDebug(logWebPage) << "WebPageGrabber error!";
+        tidyBufFree(&output);
+        tidyBufFree(&errbuf);
+        emit ready(nullptr);
+        return nullptr;
+    }
+
+    // Free memory (tdoc is automatically freed by unique_ptr)
+    tidyBufFree(&output);
+    tidyBufFree(&errbuf);
+
     document = result;
 
     // Check for an HTML meta refresh if requested.
     if (handleRefresh) {
         QString redirectURL = searchForRedirect(document);
         if (redirectAttempts > MAX_REDIRECTS) {
-            qDebug() << "Error: Maximum HTML redirects";
+            qCDebug(logWebPage) << "Error: Maximum HTML redirects";
             emit ready(nullptr);
-
             return nullptr;
-        } else if (redirectURL.size()) {
+        } else if (!redirectURL.isEmpty()) {
             QUrl url(redirectURL);
             if (url.isValid()) {
                 // Bump counter and call our internal load method that doesn't reset it.
                 redirectAttempts++;
                 loadInternal(url);
-
                 return nullptr;
             }
         }
@@ -148,46 +170,40 @@ QString WebPageGrabber::searchForRedirect(const QString& document)
     //     <meta http-equiv="refresh" content="0; url=http://example.com/">
     //     <meta http-equiv="refresh" content="0;URL='http://thetudors.example.com/'" />
     //     <meta http-equiv="refresh" content="0;URL=http://www.mrericsir.com/blog/" />
-    const QString S_HTTP_EQUIV = "http-equiv";
-    const QString S_CONTENT = "content";
-    const QString URL_TOKEN = "url=";
 
     QXmlStreamReader xml;
     xml.addData(document);
 
     while (!xml.atEnd()) {
-        // Grab the next thingie.
         xml.readNext();
 
         if (xml.isStartElement()) {
             QString tagName = xml.name().toString().toLower();
             if (tagName == "body") {
-                // We're done with the header, so bail.
-                return "";
+                return QString();
             }
 
             if (tagName == "meta") {
-                // Possible redirect! Let's examine further, shall we?
                 QXmlStreamAttributes attributes = xml.attributes();
 
-                if (attributes.hasAttribute(S_HTTP_EQUIV) && attributes.hasAttribute(S_CONTENT) &&
-                        attributes.value("", S_HTTP_EQUIV).toString().toLower() == "refresh") {
+                if (attributes.hasAttribute("http-equiv") && attributes.hasAttribute("content") &&
+                        attributes.value("", "http-equiv").toString().toLower() == "refresh") {
 
                     // For this method we're assuming that URL is always the last parameter in
                     // the content attribute.
                     QString content = attributes.value("", "content").toString();
-                    int index = content.indexOf(URL_TOKEN, 0, Qt::CaseInsensitive);
+                    int index = content.indexOf("url=", 0, Qt::CaseInsensitive);
                     if (index >= 0) {
                         // URLs are allowed to be in quotes, so we have to check for that.
-                        QString url = content.mid(index + URL_TOKEN.size()).trimmed();
-                        QChar firstChar = url.at(0);
-                        if (firstChar == '\"' || firstChar == '\"') {
-                            url = url.mid(1);
-                            if (url.endsWith('\'') || url.endsWith('\"')) {
-                                url = url.left(1);
+                        QString url = content.mid(index + 4).trimmed();  // "url=" is 4 chars
+                        if (!url.isEmpty()) {
+                            QChar firstChar = url.at(0);
+                            if (firstChar == '\'' || firstChar == '\"') {
+                                url = url.mid(1);
+                                if (url.endsWith('\'') || url.endsWith('\"')) {
+                                    url.chop(1);
+                                }
                             }
-                            return url;
-                        } else {
                             return url;
                         }
                     }
@@ -196,8 +212,7 @@ QString WebPageGrabber::searchForRedirect(const QString& document)
         }
     }
 
-    // We didn't find a redirect (and we never encountered a body tag either. Weird!)
-    return "";
+    return QString();
 }
 
 

@@ -68,8 +68,7 @@ void FaviconUpdateOperation::onGrabberFinished(const QUrl &faviconUrl)
             db().commit();
             feed->setLastIconUpdate(now);
         }
-        
-        //qDebug() << "FaviconUpdateOperation: URL has not changed.";
+
         emit finished(this);
         
         return;

@@ -29,7 +29,6 @@ protected:
 
 private:
     QBuffer buffer;
-    QByteArray originalData;  // Store original data to allow multiple reads
 };
 
 /**

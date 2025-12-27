@@ -328,8 +328,6 @@ void RawFeedRewriter::rewriteAllSecondPass()
 
 QString RawFeedRewriter::rewriteSecondPass(QString &docString)
 {
-    //qDebug() << "Second pass: " << docString;
-
     // If it was a text-only document, we've prepended it with an ASCII beep.  All we have to do
     // here is remove the beep and return it.
     if (docString.startsWith('\07')) {

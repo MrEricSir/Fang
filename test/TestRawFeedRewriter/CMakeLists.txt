@@ -10,6 +10,7 @@ qt_add_executable(tst_testrawfeedrewritertest
     ${CMAKE_SOURCE_DIR}/src/utilities/WebPageGrabber.cpp
     ${CMAKE_SOURCE_DIR}/src/utilities/SimpleHTTPDownloader.cpp
     ${CMAKE_SOURCE_DIR}/src/utilities/NetworkUtilities.cpp
+    ${CMAKE_SOURCE_DIR}/src/utilities/FangLogging.cpp
     # Include corresponding headers for AUTOMOC
     ${CMAKE_SOURCE_DIR}/src/utilities/RawFeedRewriter.h
     ${CMAKE_SOURCE_DIR}/src/utilities/ImageGrabber.h
@@ -19,6 +20,12 @@ qt_add_executable(tst_testrawfeedrewritertest
     ${CMAKE_SOURCE_DIR}/src/utilities/WebPageGrabber.h
     ${CMAKE_SOURCE_DIR}/src/utilities/SimpleHTTPDownloader.h
     ${CMAKE_SOURCE_DIR}/src/utilities/NetworkUtilities.h
+    ${CMAKE_SOURCE_DIR}/src/utilities/FangLogging.h
+)
+
+# Include directories for FangLogging.h
+target_include_directories(tst_testrawfeedrewritertest PRIVATE
+    ${CMAKE_SOURCE_DIR}/src/utilities
 )
 
 # Compile definitions for test data paths

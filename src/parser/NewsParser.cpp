@@ -62,9 +62,6 @@ void NewsParser::parseFile(const QString &filename)
     
     QFile file(filename);
     
-    //QFileInfo fileInfo(filename);
-    //qDebug() << "Filename: " << fileInfo.absoluteFilePath();
-    
     Q_ASSERT(file.exists());
     
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
@@ -80,7 +77,6 @@ void NewsParser::parseFile(const QString &filename)
 void NewsParser::error(QNetworkReply::NetworkError ne)
 {
     Q_UNUSED(ne);
-    //qDebug() << "Error!!!!! " << ne << " " << currentReply->errorString();
     currentReply->disconnect(this);
     currentReply->deleteLater();
     currentReply = 0;
@@ -170,7 +166,6 @@ void NewsParser::workerDone(RawFeed* rawFeed)
             feed->url = finalFeedURL;
             
             result = NewsParser::OK;
-            //qDebug() << "Here, done is emitted.";
             emit done();
             
             return; // Early exit on SUCCESS!! (yay)

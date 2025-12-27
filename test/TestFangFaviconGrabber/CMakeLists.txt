@@ -12,6 +12,7 @@ qt_add_executable(tst_testfangfavicongrabbertest
     ${CMAKE_SOURCE_DIR}/src/network/FangNetworkAccessManager.cpp
     ${CMAKE_SOURCE_DIR}/src/utilities/NetworkUtilities.cpp
     ${CMAKE_SOURCE_DIR}/src/utilities/SimpleHTTPDownloader.cpp
+    ${CMAKE_SOURCE_DIR}/src/utilities/FangLogging.cpp
     # Include corresponding headers for AUTOMOC
     ${CMAKE_SOURCE_DIR}/src/utilities/FaviconGrabber.h
     ${CMAKE_SOURCE_DIR}/src/utilities/WebPageGrabber.h
@@ -20,6 +21,12 @@ qt_add_executable(tst_testfangfavicongrabbertest
     ${CMAKE_SOURCE_DIR}/src/network/FangNetworkAccessManager.h
     ${CMAKE_SOURCE_DIR}/src/utilities/NetworkUtilities.h
     ${CMAKE_SOURCE_DIR}/src/utilities/SimpleHTTPDownloader.h
+    ${CMAKE_SOURCE_DIR}/src/utilities/FangLogging.h
+)
+
+# Include directories for FangLogging.h
+target_include_directories(tst_testfangfavicongrabbertest PRIVATE
+    ${CMAKE_SOURCE_DIR}/src/utilities
 )
 
 # Compile definitions for test data paths

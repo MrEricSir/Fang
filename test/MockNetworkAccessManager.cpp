@@ -1,9 +1,9 @@
 #include "MockNetworkAccessManager.h"
 #include <QFile>
-#include <QDebug>
+#include "FangLogging.h"
 
 MockNetworkReply::MockNetworkReply(const QByteArray& data, const QUrl& url, QObject* parent, bool isError)
-    : QNetworkReply(parent), originalData(data)
+    : QNetworkReply(parent)
 {
     setUrl(url);
     setOperation(QNetworkAccessManager::GetOperation);
@@ -34,7 +34,7 @@ qint64 MockNetworkReply::bytesAvailable() const
 qint64 MockNetworkReply::readData(char* data, qint64 maxSize)
 {
     qint64 bytesRead = buffer.read(data, maxSize);
-    qDebug() << "MockNetworkReply::readData() called for" << url() << "requested:" << maxSize << "read:" << bytesRead << "buffer.bytesAvailable():" << buffer.bytesAvailable();
+    qCDebug(logMock) << "MockNetworkReply::readData() called for" << url() << "requested:" << maxSize << "read:" << bytesRead << "buffer.bytesAvailable():" << buffer.bytesAvailable();
     return bytesRead;
 }
 
@@ -47,7 +47,7 @@ void MockNetworkAccessManager::addResponse(const QUrl& url, const QByteArray& re
 {
     QString key = url.toString();
     responses[key] = response;
-    qDebug() << "MockNetworkAccessManager: Added response for" << key;
+    qCDebug(logMock) << "MockNetworkAccessManager: Added response for" << key;
 }
 
 void MockNetworkAccessManager::addResponseFromFile(const QUrl& url, const QString& filePath)
@@ -59,7 +59,7 @@ void MockNetworkAccessManager::addResponseFromFile(const QUrl& url, const QStrin
     }
 
     QByteArray data = file.readAll();
-    qDebug() << "MockNetworkAccessManager: Read" << data.size() << "bytes from" << filePath;
+    qCDebug(logMock) << "MockNetworkAccessManager: Read" << data.size() << "bytes from" << filePath;
     addResponse(url, data);
 }
 
@@ -82,7 +82,7 @@ QNetworkReply* MockNetworkAccessManager::createRequest(Operation op, const QNetw
     QString key = url.toString();
 
     if (responses.contains(key)) {
-        qDebug() << "MockNetworkAccessManager: Returning mock response for" << key;
+        qCDebug(logMock) << "MockNetworkAccessManager: Returning mock response for" << key;
         return new MockNetworkReply(responses[key], url, this);
     }
 

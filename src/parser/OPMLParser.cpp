@@ -46,11 +46,6 @@ void OPMLParser::parseFile(QString filename)
                 if (xml.attributes().hasAttribute("xmlUrl") &&
                         (xml.attributes().hasAttribute("title") || xml.attributes().hasAttribute("text") ))
                 {
-//                    qDebug() << "title: " << xml.attributes().value("title").toString();
-//                    qDebug() << "text: " << xml.attributes().value("text").toString();
-//                    qDebug() << "xmlUrl: " << xml.attributes().value("xmlUrl").toString();
-//                    qDebug();
-                    
                     QString xmlUrl = xml.attributes().value("xmlUrl").toString();
                     QString htmlUrl = xml.attributes().value("htmlUrl").toString();
                     QString title;

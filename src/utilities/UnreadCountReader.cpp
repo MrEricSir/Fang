@@ -46,7 +46,6 @@ qint32 UnreadCountReader::forAllNews(QSqlDatabase db)
     }
     
     int ret = query.value(0).toInt();
-    //qDebug() << "UC: " << ret;
     return ret;
 }
 
@@ -102,6 +101,5 @@ qint32 UnreadCountReader::forFeed(QSqlDatabase db, quint64 id)
     }
     
     int ret = query.value(0).toInt();
-    //qDebug() << id << "UC: " << ret;
     return ret;
 }

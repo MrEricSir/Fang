@@ -1,11 +1,11 @@
 #include "FaviconGrabber.h"
-#include <QDebug>
 #include <QString>
 #include <QStringList>
 #include <QImage>
 #include <QXmlStreamReader>
 
 #include "NetworkUtilities.h"
+#include "FangLogging.h"
 
 FaviconGrabber::FaviconGrabber(QObject *parent, QNetworkAccessManager* networkManager) :
     FangObject(parent),
@@ -37,11 +37,10 @@ void FaviconGrabber::find(const QUrl &url)
 
     // Make a list of "root" favicons.
     QUrl host = NetworkUtilities::getHost(location);
-    QStringList extensions;
-    extensions << "ico" << "jpg" << "jpeg" << "png" << "gif";
+    const QStringList extensions{"ico", "jpg", "jpeg", "png", "gif"};
 
     // Add each extension to our list.
-    for (QString ext : extensions) {
+    for (const QString& ext : extensions) {
         QUrl toCheck(host);
         toCheck.setPath("/favicon." + ext);
         urlsToCheck << toCheck;
@@ -52,8 +51,6 @@ void FaviconGrabber::find(const QUrl &url)
 
 void FaviconGrabber::onWebGrabber()
 {
-    //qDebug() << "onWebGrabber";
-    
     // Check for favicons embedded in the HTML.
     // We look at the main page rather than the feed.
     webGrabber.load(NetworkUtilities::getHost(location));
@@ -61,16 +58,14 @@ void FaviconGrabber::onWebGrabber()
 
 void FaviconGrabber::onCheckIcons()
 {
-    //qDebug() << "onCheckIcons";
-    if (urlsToCheck.size() == 0) {
+    if (urlsToCheck.isEmpty()) {
         machine.setState(GRAB_ERROR);
-
         return;
     }
 
-    // Pop each URL off the list and check it, g.
+    // Pop each URL off the list and check it
     repliesWaiting = 0;
-    while (urlsToCheck.size()) {
+    while (!urlsToCheck.isEmpty()) {
         repliesWaiting++;
 
         QUrl url = urlsToCheck.takeFirst();
@@ -90,42 +85,34 @@ void FaviconGrabber::onCheckIcons()
 
 void FaviconGrabber::onPickBest()
 {
-    //qDebug() << "onPickBest";
-    if (imagesToCheck.size() == 0) {
+    if (imagesToCheck.isEmpty()) {
         machine.setState(GRAB_ERROR);
-        
         return;
     }
-    
+
     int topTotalPixels = 0;
-    QImage topImage;
     QUrl topURL;
-    
-    // Go over all the images.  Find the one with the max total pixels.
-    for (int i = 0; i < imagesToCheck.size(); i++) {
-        QPair<QUrl, QImage> pair = imagesToCheck.at(i);
-        QImage img = pair.second;
+
+    // Go over all the images. Find the one with the max total pixels.
+    for (const auto& pair : imagesToCheck) {
+        const QImage& img = pair.second;
         int totalPixels = img.width() * img.height();
         if (totalPixels > topTotalPixels) {
             topTotalPixels = totalPixels;
-            topImage = img;
             topURL = pair.first;
         }
     }
-    
-    if (topTotalPixels) {
-        // We got one!
+
+    if (topTotalPixels > 0) {
         emit finished(topURL);
-        
         return;
     }
-    
+
     machine.setState(GRAB_ERROR);
 }
 
 void FaviconGrabber::onError()
 {
-    //qDebug() << "onError";
     emit finished(QUrl()); // invalid URL
 }
 
@@ -139,26 +126,21 @@ void FaviconGrabber::onRequestFinished(QNetworkReply * reply)
     // Remove from our tracking set
     faviconReplies.remove(reply);
 
-    //qDebug() << "Checked for a favicon at " << reply->url().toString() << " error: " << reply->errorString();
-
     if (!reply->error()) {
         QImage img;
-
-        // Try to determine format from filename.
-
-        // Read in the image, if possible.
         QByteArray data = reply->readAll();
-        qDebug() << "Trying to load image from" << reply->url() << "size:" << data.size();
+        qCDebug(logFavicon) << "Trying to load image from" << reply->url() << "size:" << data.size();
+
         if (img.loadFromData(data)) {
-            qDebug() << "Successfully loaded image:" << img.width() << "x" << img.height();
+            qCDebug(logFavicon) << "Successfully loaded image:" << img.width() << "x" << img.height();
             imagesToCheck << QPair<QUrl, QImage>(reply->url(), img);
         } else {
-            qDebug() << "Failed to load image from data";
+            qCDebug(logFavicon) << "Failed to load image from data";
         }
     }
 
     repliesWaiting--;
-    qDebug() << "repliesWaiting:" << repliesWaiting << "imagesToCheck.size():" << imagesToCheck.size();
+    qCDebug(logFavicon) << "repliesWaiting:" << repliesWaiting << "imagesToCheck.size():" << imagesToCheck.size();
     if (!repliesWaiting) {
         machine.setState(PICK_BEST);
     }
@@ -190,14 +172,11 @@ void FaviconGrabber::findIcons(const QString& document)
     //     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     //     <link rel="icon" href="/favicon.ico" type="image/x-icon" />
     //     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
-    const QString S_REL = "rel";
-    const QString S_HREF = "href";
 
     QXmlStreamReader xml;
     xml.addData(document);
 
     while (!xml.atEnd()) {
-        // Grab the next thingie.
         xml.readNext();
 
         if (xml.isStartElement()) {
@@ -208,13 +187,11 @@ void FaviconGrabber::findIcons(const QString& document)
             }
 
             if (tagName == "link") {
-                // This could be a feed...
                 QXmlStreamAttributes attributes = xml.attributes();
-                if (attributes.hasAttribute(S_REL) && attributes.hasAttribute(S_HREF)) {
-                    QString rel = attributes.value("", S_REL).toString().toLower();
+                if (attributes.hasAttribute("rel") && attributes.hasAttribute("href")) {
+                    QString rel = attributes.value("", "rel").toString().toLower();
                     if (rel == "apple-touch-icon" || rel == "icon" || rel == "shortcut icon") {
-                        // We got one!
-                        urlsToCheck << QUrl(attributes.value("", S_HREF).toString());
+                        urlsToCheck << QUrl(attributes.value("", "href").toString());
                     }
                 }
             }
