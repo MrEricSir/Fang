@@ -124,12 +124,48 @@ jobs:
       if: runner.os == 'Windows'
       run: |
         # Deploy Qt dependencies (windeployqt automatically includes WebEngine files)
-        Write-Host "Running windeployqt..."
-        windeployqt build/Release/Fang.exe --qmldir qml --verbose 2
+        # Change to Release directory - windeployqt works better when run from the exe directory
+        Push-Location build/Release
+        Write-Host "Running windeployqt from: $(Get-Location)"
+        Write-Host "Qt root: $env:QT_ROOT_DIR"
+
+        # Verify Qt is in PATH
+        Write-Host "`nQt bin directory:"
+        where.exe windeployqt
+
+        # Check if Fang.exe exists and is valid
+        if (Test-Path "Fang.exe") {
+            Write-Host "`nFang.exe found:"
+            Get-Item Fang.exe | Select-Object Name, Length, LastWriteTime
+        } else {
+            Write-Error "Fang.exe not found in $(Get-Location)"
+            exit 1
+        }
+
+        # Get the absolute path to qml directory
+        $qmlPath = Resolve-Path "../../qml"
+        Write-Host "`nQML directory: $qmlPath"
+
+        # Run windeployqt with explicit release flag
+        Write-Host "`nRunning windeployqt..."
+        windeployqt Fang.exe --release --qmldir "$qmlPath" --verbose
+
+        if ($LASTEXITCODE -ne 0) {
+            Write-Error "windeployqt failed with exit code $LASTEXITCODE"
+            exit 1
+        }
+
+        Pop-Location
 
         # Verify deployment worked
         Write-Host "`nChecking for Qt DLLs in Release folder:"
-        Get-ChildItem build/Release/*.dll | Select-Object Name, Length
+        $dlls = Get-ChildItem build/Release/*.dll -ErrorAction SilentlyContinue
+        if ($dlls) {
+            $dlls | Select-Object Name, @{Name="Size(MB)";Expression={[math]::Round($_.Length/1MB, 2)}}
+            Write-Host "`nTotal DLLs: $($dlls.Count)"
+        } else {
+            Write-Warning "No DLLs found in Release folder!"
+        }
 
         Write-Host "`nTotal files in Release folder:"
         (Get-ChildItem build/Release -Recurse -File).Count
