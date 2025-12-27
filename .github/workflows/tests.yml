@@ -148,7 +148,7 @@ jobs:
 
         # Run windeployqt with explicit release flag
         Write-Host "`nRunning windeployqt..."
-        windeployqt Fang.exe --release --qmldir "$qmlPath" --verbose
+        windeployqt Fang.exe --release --qmldir "$qmlPath" --verbose 2
 
         if ($LASTEXITCODE -ne 0) {
             Write-Error "windeployqt failed with exit code $LASTEXITCODE"
