@@ -9,6 +9,8 @@
 #define PLATFORM_TIDY "\"HTML Tidy for Windows (vers 13 April 2006), see www.w3.org\""
 #elif __APPLE__
 #define PLATFORM_TIDY "\"HTML Tidy for Mac OS X (vers 13 April 2006), see www.w3.org\""
+#else
+#define PLATFORM_TIDY "\"HTML Tidy for Linux (vers 13 April 2006), see www.w3.org\""
 #endif
 
 
