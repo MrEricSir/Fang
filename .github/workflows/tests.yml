@@ -93,10 +93,16 @@ jobs:
         cp qml/images/full_icon.png AppDir/usr/share/icons/hicolor/256x256/apps/com.mrericsir.Fang.png
 
         # Build AppImage
-        # Exclude unnecessary SQL drivers (only SQLite is needed)
+        # Remove problematic SQL drivers that have missing dependencies (Fang only uses SQLite)
+        # This prevents linuxdeploy from trying to deploy them
+        rm -f $Qt6_DIR/../gcc_64/plugins/sqldrivers/libqsqloci.so
+        rm -f $Qt6_DIR/../gcc_64/plugins/sqldrivers/libqsqlpsql.so
+        rm -f $Qt6_DIR/../gcc_64/plugins/sqldrivers/libqsqlmimer.so
+        rm -f $Qt6_DIR/../gcc_64/plugins/sqldrivers/libqsqlibase.so
+        rm -f $Qt6_DIR/../gcc_64/plugins/sqldrivers/libqsqlodbc.so
+
+        # Set QML sources path for linuxdeploy-plugin-qt
         export QML_SOURCES_PATHS=qml
-        export EXTRA_QT_PLUGINS="sqldrivers/libqsqlite.so"
-        export DEPLOY_QT_IGNORE_PLUGINS="sqldrivers/libqsqloci.so;sqldrivers/libqsqlpsql.so;sqldrivers/libqsqlmimer.so;sqldrivers/libqsqlibase.so;sqldrivers/libqsqlodbc.so"
 
         # Manually copy QtWebEngineProcess (linuxdeploy-plugin-qt should handle this, but let's be explicit)
         if [ -f "$Qt6_DIR/libexec/QtWebEngineProcess" ]; then
@@ -113,8 +119,13 @@ jobs:
     - name: Create Windows MSI
       if: runner.os == 'Windows'
       run: |
-        # Deploy Qt dependencies (including WebEngine process and ICU data)
-        windeployqt build/Release/Fang.exe --qmldir qml --webengine-icu
+        # Deploy Qt dependencies (windeployqt automatically includes WebEngine files)
+        windeployqt build/Release/Fang.exe --qmldir qml
+
+        # Remove build artifacts that shouldn't be in the installer
+        Remove-Item -ErrorAction SilentlyContinue build/Release/Fang.exp
+        Remove-Item -ErrorAction SilentlyContinue build/Release/Fang.lib
+        Remove-Item -ErrorAction SilentlyContinue build/Release/Fang.pdb
 
         # Install WiX Toolset
         dotnet tool install --global wix
@@ -122,14 +133,16 @@ jobs:
         # Add WiX Heat extension for file harvesting
         wix extension add WixToolset.Heat.Extension
 
-        # Generate file list with heat (-scom suppresses COM/SelfReg warnings for Qt plugins)
-        heat dir build/Release -cg FangFilesGroup -gg -sfrag -srd -scom -dr FangPath -out build/files.wxs
+        # Generate file list with heat
+        # Use absolute path and -scom to suppress COM/SelfReg warnings
+        $buildPath = Resolve-Path "build/Release"
+        heat dir "$buildPath" -cg FangFilesGroup -gg -sfrag -srd -scom -dr FangPath -var var.SourceDir -out build/files.wxs
 
         # Update namespace in generated files.wxs from WiX 3.x to WiX 5
         (Get-Content build/files.wxs) -replace 'http://schemas.microsoft.com/wix/2006/wi', 'http://wixtoolset.org/schemas/v4/wxs' | Set-Content build/files.wxs
 
-        # Build MSI
-        wix build fang.wxs build/files.wxs -out build/Fang.msi
+        # Build MSI with SourceDir variable pointing to Release folder
+        wix build fang.wxs build/files.wxs -out build/Fang.msi -d SourceDir=build/Release
 
     - name: Upload DMG Installer (macOS)
       if: runner.os == 'macOS'
