@@ -17,11 +17,6 @@ public:
     // Users MUST call this before using any method.
     void init(FangSettings *fangSettings);
 
-signals:
-
-    // Signals when a load is starting or ending.
-    void isLoadInProgressChanged();
-
 public slots:
 
     /**
