@@ -7,23 +7,24 @@
 
 #include "NetworkUtilities.h"
 
-FaviconGrabber::FaviconGrabber(QObject *parent) :
+FaviconGrabber::FaviconGrabber(QObject *parent, QNetworkAccessManager* networkManager) :
     FangObject(parent),
     repliesWaiting(0),
-    manager(),
-    webGrabber()
+    manager(networkManager ? networkManager : new FangNetworkAccessManager(this)),
+    ownsManager(networkManager == nullptr),
+    webGrabber(true, 5000, this, networkManager)
 {
     // Set up our state machine.
     machine.setReceiver(this);
-    
+
     machine.addStateChange(START, WEB_GRABBER, SLOT(onWebGrabber()));
     machine.addStateChange(WEB_GRABBER, CHECK_ICONS, SLOT(onCheckIcons()));
     machine.addStateChange(CHECK_ICONS, PICK_BEST, SLOT(onPickBest()));
-    
+
     machine.addStateChange(-1, GRAB_ERROR, SLOT(onError())); // Many errors, one slot.
-    
+
     // Signals!
-    connect(&manager, &FangNetworkAccessManager::finished, this, &FaviconGrabber::onRequestFinished);
+    connect(manager, &QNetworkAccessManager::finished, this, &FaviconGrabber::onRequestFinished);
     connect(&webGrabber, &WebPageGrabber::ready, this, &FaviconGrabber::onWebGrabberReady);
 }
 
@@ -81,7 +82,7 @@ void FaviconGrabber::onCheckIcons()
         }
         
         QNetworkRequest request(url);
-        manager.get(request);
+        manager->get(request);
     }
 }
 

@@ -1,12 +1,17 @@
 #include "SimpleHTTPDownloader.h"
 
-SimpleHTTPDownloader::SimpleHTTPDownloader(int timeoutMS, QObject *parent) :
-    FangObject(parent), timeoutMS(timeoutMS), currentReply(nullptr), redirectAttempts(0)
+SimpleHTTPDownloader::SimpleHTTPDownloader(int timeoutMS, QObject *parent, QNetworkAccessManager* networkManager) :
+    FangObject(parent),
+    manager(networkManager ? networkManager : new FangNetworkAccessManager(this)),
+    ownsManager(networkManager == nullptr),
+    timeoutMS(timeoutMS),
+    currentReply(nullptr),
+    redirectAttempts(0)
 {
     timeout.setSingleShot(true);
 
     // Signals!
-    connect(&manager, &FangNetworkAccessManager::finished, this, &SimpleHTTPDownloader::onRequestFinished);
+    connect(manager, &QNetworkAccessManager::finished, this, &SimpleHTTPDownloader::onRequestFinished);
     connect(&timeout, &QTimer::timeout, this, &SimpleHTTPDownloader::onTimeout);
 }
 
@@ -38,7 +43,7 @@ void SimpleHTTPDownloader::loadInternal(const QUrl &url)
         emit error("Relative URLs are not allowed");
     } else {
         QNetworkRequest request(url);
-        currentReply = manager.get(request);
+        currentReply = manager->get(request);
         connect(currentReply, &QNetworkReply::downloadProgress, this,
                 &SimpleHTTPDownloader::onDownloadProgress);
 

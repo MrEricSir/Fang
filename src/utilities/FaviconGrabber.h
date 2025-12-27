@@ -28,7 +28,7 @@ private:
     };
     
 public:
-    explicit FaviconGrabber(QObject *parent = nullptr);
+    explicit FaviconGrabber(QObject *parent = nullptr, QNetworkAccessManager* networkManager = nullptr);
     
 signals:
     /**
@@ -78,7 +78,8 @@ private:
     QList<QUrl> urlsToCheck;
     int repliesWaiting;
     QList<QPair<QUrl, QImage> > imagesToCheck;
-    FangNetworkAccessManager manager;
+    QNetworkAccessManager* manager;
+    bool ownsManager;
     WebPageGrabber webGrabber;
     QUrl location;
 };

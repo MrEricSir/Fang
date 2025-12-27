@@ -8,9 +8,9 @@
 #include <tidy.h>
 #include <buffio.h>
 
-WebPageGrabber::WebPageGrabber(bool handleMetaRefresh, int timeoutMS, QObject *parent) :
+WebPageGrabber::WebPageGrabber(bool handleMetaRefresh, int timeoutMS, QObject *parent, QNetworkAccessManager* networkManager) :
     FangObject(parent),
-    downloader(timeoutMS),
+    downloader(timeoutMS, this, networkManager),
     handleMetaRefresh(handleMetaRefresh),
     redirectAttempts(0),
     error(true)

@@ -23,8 +23,9 @@ public:
      *                          just HTTP communication.
      * @param timeoutMS         Timeout after last download activity in milliseconds
      * @param parent
+     * @param networkManager    Optional network manager for dependency injection (for testing)
      */
-    explicit WebPageGrabber(bool handleMetaRefresh = true, int timeoutMS = 5000, QObject *parent = nullptr);
+    explicit WebPageGrabber(bool handleMetaRefresh = true, int timeoutMS = 5000, QObject *parent = nullptr, QNetworkAccessManager* networkManager = nullptr);
     virtual ~WebPageGrabber();
     
 signals:

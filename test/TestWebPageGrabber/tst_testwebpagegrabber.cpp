@@ -3,6 +3,7 @@
 #include <QSignalSpy>
 
 #include "../../src/utilities/WebPageGrabber.h"
+#include "../MockNetworkAccessManager.h"
 
 #ifdef _WIN32
 #define PLATFORM_TIDY "\"HTML Tidy for Windows (vers 13 April 2006), see www.w3.org\""
@@ -93,8 +94,18 @@ void TestWebPageGrabber::testCase2()
 {
     QFETCH(QUrl, url);
     QFETCH(bool, reallyExists);
+    QFETCH(QString, mockDataFile);
 
-    WebPageGrabber grabber(true, 2000);
+    // Create mock network manager
+    MockNetworkAccessManager mockManager;
+
+    // Load mock HTML response if expected to exist
+    if (reallyExists && !mockDataFile.isEmpty()) {
+        QString testDataPath = QString(SRCDIR) + "../testdata/" + mockDataFile;
+        mockManager.addResponseFromFile(url, testDataPath);
+    }
+
+    WebPageGrabber grabber(true, 2000, nullptr, &mockManager);
     QSignalSpy spy(&grabber, &WebPageGrabber::ready); // Ignore meta-type warnings here, please.
     grabber.load(url);
 
@@ -120,15 +131,19 @@ void TestWebPageGrabber::testCase2_data()
 {
     QTest::addColumn<QUrl>("url");
     QTest::addColumn<bool>("reallyExists");
+    QTest::addColumn<QString>("mockDataFile");
 
     QTest::newRow("Bad URL") << QUrl("e")
-                           << false;
+                           << false
+                           << "";
 
     QTest::newRow("Nope.") << QUrl("http://safjdsafalskdfjasdlf")
-                           << false;
+                           << false
+                           << "";
 
     QTest::newRow("Google") << QUrl("https://www.google.com/")
-                            << true;
+                            << true
+                            << "google.com.html";
 }
 
 
