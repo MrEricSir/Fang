@@ -25,7 +25,7 @@ jobs:
       uses: jurplel/install-qt-action@v4
       with:
         version: ${{ matrix.qt-version }}
-        modules: 'qtwebsockets qthttpserver'
+        modules: 'qtwebsockets qthttpserver qtwebengine'
         cache: true
 
     - name: Install Linux dependencies
@@ -93,7 +93,17 @@ jobs:
         cp qml/images/full_icon.png AppDir/usr/share/icons/hicolor/256x256/apps/com.mrericsir.Fang.png
 
         # Build AppImage
+        # Exclude unnecessary SQL drivers (only SQLite is needed)
         export QML_SOURCES_PATHS=qml
+        export EXTRA_QT_PLUGINS="sqldrivers/libqsqlite.so"
+        export DEPLOY_QT_IGNORE_PLUGINS="sqldrivers/libqsqloci.so;sqldrivers/libqsqlpsql.so;sqldrivers/libqsqlmimer.so;sqldrivers/libqsqlibase.so;sqldrivers/libqsqlodbc.so"
+
+        # Manually copy QtWebEngineProcess (linuxdeploy-plugin-qt should handle this, but let's be explicit)
+        if [ -f "$Qt6_DIR/libexec/QtWebEngineProcess" ]; then
+          mkdir -p AppDir/usr/libexec
+          cp "$Qt6_DIR/libexec/QtWebEngineProcess" AppDir/usr/libexec/
+        fi
+
         ./linuxdeploy-x86_64.AppImage --appdir AppDir --plugin qt --output appimage --desktop-file=AppDir/usr/share/applications/com.mrericsir.Fang.desktop --icon-file=AppDir/usr/share/icons/hicolor/256x256/apps/com.mrericsir.Fang.png
 
         # Rename to simpler name
@@ -103,8 +113,8 @@ jobs:
     - name: Create Windows MSI
       if: runner.os == 'Windows'
       run: |
-        # Deploy Qt dependencies
-        windeployqt build/Release/Fang.exe --qmldir qml
+        # Deploy Qt dependencies (including WebEngine process and ICU data)
+        windeployqt build/Release/Fang.exe --qmldir qml --webengine-icu
 
         # Install WiX Toolset
         dotnet tool install --global wix
@@ -114,6 +124,9 @@ jobs:
 
         # Generate file list with heat (-scom suppresses COM/SelfReg warnings for Qt plugins)
         heat dir build/Release -cg FangFilesGroup -gg -sfrag -srd -scom -dr FangPath -out build/files.wxs
+
+        # Update namespace in generated files.wxs from WiX 3.x to WiX 5
+        (Get-Content build/files.wxs) -replace 'http://schemas.microsoft.com/wix/2006/wi', 'http://wixtoolset.org/schemas/v4/wxs' | Set-Content build/files.wxs
 
         # Build MSI
         wix build fang.wxs build/files.wxs -out build/Fang.msi
