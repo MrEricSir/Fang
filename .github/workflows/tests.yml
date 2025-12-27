@@ -25,7 +25,7 @@ jobs:
       uses: jurplel/install-qt-action@v4
       with:
         version: ${{ matrix.qt-version }}
-        modules: 'qtwebsockets qthttpserver qtwebengine'
+        modules: 'qtwebsockets qthttpserver qtwebengine qtwebchannel qtpositioning'
         cache: true
 
     - name: Install Linux dependencies
