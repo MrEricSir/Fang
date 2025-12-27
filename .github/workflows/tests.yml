@@ -124,7 +124,15 @@ jobs:
       if: runner.os == 'Windows'
       run: |
         # Deploy Qt dependencies (windeployqt automatically includes WebEngine files)
-        windeployqt build/Release/Fang.exe --qmldir qml
+        Write-Host "Running windeployqt..."
+        windeployqt build/Release/Fang.exe --qmldir qml --verbose 2
+
+        # Verify deployment worked
+        Write-Host "`nChecking for Qt DLLs in Release folder:"
+        Get-ChildItem build/Release/*.dll | Select-Object Name, Length
+
+        Write-Host "`nTotal files in Release folder:"
+        (Get-ChildItem build/Release -Recurse -File).Count
 
         # Remove build artifacts that shouldn't be in the installer
         Remove-Item -ErrorAction SilentlyContinue build/Release/Fang.exp
@@ -140,13 +148,23 @@ jobs:
         # Generate file list with heat
         # Use absolute path and -scom to suppress COM/SelfReg warnings
         $buildPath = Resolve-Path "build/Release"
+        Write-Host "`nRunning heat to harvest files from: $buildPath"
         heat dir "$buildPath" -cg FangFilesGroup -gg -sfrag -srd -scom -dr FangPath -var var.SourceDir -out build/files.wxs
+
+        # Show how many files were harvested
+        $fileCount = (Select-String -Path build/files.wxs -Pattern '<File ').Count
+        Write-Host "Heat harvested $fileCount files"
 
         # Update namespace in generated files.wxs from WiX 3.x to WiX 5
         (Get-Content build/files.wxs) -replace 'http://schemas.microsoft.com/wix/2006/wi', 'http://wixtoolset.org/schemas/v4/wxs' | Set-Content build/files.wxs
 
         # Build MSI with SourceDir variable pointing to Release folder
+        Write-Host "`nBuilding MSI..."
         wix build fang.wxs build/files.wxs -out build/Fang.msi -d SourceDir=build/Release
+
+        # Show MSI size
+        $msiSize = (Get-Item build/Fang.msi).Length / 1MB
+        Write-Host "`nMSI created: $([math]::Round($msiSize, 2)) MB"
 
     - name: Upload DMG Installer (macOS)
       if: runner.os == 'macOS'
