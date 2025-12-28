@@ -14,15 +14,46 @@ For community documentation see [the wiki on GitHub.](https://github.com/MrEricS
 
 Bugs and small feature requests can be filed [on the Github issues page.](https://github.com/MrEricSir/Fang/issues)
 
-## Prerequisites
+## Quick Install Guide
 
-* Supported platform. Currently the primary targets are Windows and MacOS, but Linux, Android, and iOS builds have been built in the past.
-* Qt 6.10
-* WebEngine (or WebView, depending on platform)
+Because Fang is a free, open source application the binaries are not signed. If you don't trust the binaries provided, you are welcome to build from source.
+
+The binaries are provided as a convenience only but require extra steps to run on Mac and Windows. Follow this guide to install Fang.
+
+### macOS
+
+1. Download `Fang-macOS-DMG` from the [Releases page](https://github.com/MrEricSir/Fang/releases)
+2. Double-click the DMG file
+3. Drag Fang.app to the Applications folder
+4. In the Applications folder, control-click Fang.app. Select Open from the menu, then Open from the warning dialog.
+
+### Windows
+
+1. Download `Fang-Windows-MSI` from the [Releases page](https://github.com/MrEricSir/Fang/releases)
+2. Double-click the MSI file to run the installer
+3. A dialog will open with the message "Windows protected your PC." Click "More Info," then "Run Anyway" and continue with the installation.
+
+### Linux
+
+1. Download `Fang-Linux-AppImage` from the [Releases page](https://github.com/MrEricSir/Fang/releases)
+2. Mark it as executable:
+   ```bash
+   chmod +x Fang.AppImage
+   ```
+3. Run it:
+   ```bash
+   ./Fang.AppImage
+   ```
 
 ## Build, Run, and Debug
 
 It is recommended to build, run, and debug from Qt Creator for development purposes. It can also be automated via the command line.
+
+### Prerequisites
+
+* Supported platform. Currently the primary targets are Windows and MacOS, but Linux, Android, and iOS builds have been built in the past.
+* Qt 6.10
+* WebEngine (or WebView, depending on platform)
 
 ### Qt Creator
 
@@ -72,6 +103,3 @@ To debug the Javascript and HTML, you'll need to set a debugging port and set it
 
 * If a kit isn't found it's likely one needs to be installed, for example Xcode or Visual C++. Once installed, you may need to add it manually by clicking "Projects" in the sidebar and then "Manage Kits."
 * If `cmake` can't find a package, it's possible it needs to be installed via Qt's maintenence tool. Note that all required Qt packages are open source.
-
-
-    make check
