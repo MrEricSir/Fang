@@ -4,6 +4,7 @@
 #include <QDateTime>
 #include <QStringList>
 #include <QQmlFileSelector>
+#include <QIcon>
 
 #include "FangApp.h"
 
@@ -34,6 +35,15 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     app.setOrganizationDomain("GetFang.com");
     app.setApplicationName("Fang");
     app.setApplicationVersion(APP_VERSION);
+
+    // Set window icon - will be used by dock/taskbar
+    // Try loading from icon theme first (for Linux AppImage/installed versions)
+    QIcon appIcon = QIcon::fromTheme("com.mrericsir.Fang");
+    if (appIcon.isNull()) {
+        // Fallback to embedded resource (for portable/development builds)
+        appIcon = QIcon(":/qml/images/full_icon.png");
+    }
+    app.setWindowIcon(appIcon);
 
     // Only run one Fang at a time, fellas.
     SingleInstanceCheck single("FangNewsReader", "FangSettings");
