@@ -159,10 +159,29 @@ jobs:
         # Set QML sources path for linuxdeploy-plugin-qt
         export QML_SOURCES_PATHS=qml
 
-        # Manually copy QtWebEngineProcess (linuxdeploy-plugin-qt should handle this, but let's be explicit)
+        # Manually copy QtWebEngine files (linuxdeploy-plugin-qt doesn't always handle these correctly)
+        echo "Copying QtWebEngine resources..."
+
+        # Copy QtWebEngineProcess executable
         if [ -f "$QT_ROOT_DIR/libexec/QtWebEngineProcess" ]; then
           mkdir -p AppDir/usr/libexec
           cp "$QT_ROOT_DIR/libexec/QtWebEngineProcess" AppDir/usr/libexec/
+          echo "Copied QtWebEngineProcess"
+        fi
+
+        # Copy WebEngine resources directory (pak files, etc.)
+        if [ -d "$QT_ROOT_DIR/resources" ]; then
+          mkdir -p AppDir/usr/resources
+          cp -r "$QT_ROOT_DIR/resources/"* AppDir/usr/resources/
+          echo "Copied WebEngine resources:"
+          ls -la AppDir/usr/resources/
+        fi
+
+        # Copy WebEngine translations
+        if [ -d "$QT_ROOT_DIR/translations/qtwebengine_locales" ]; then
+          mkdir -p AppDir/usr/translations
+          cp -r "$QT_ROOT_DIR/translations/qtwebengine_locales" AppDir/usr/translations/
+          echo "Copied WebEngine translations"
         fi
 
         ./linuxdeploy-x86_64.AppImage --appdir AppDir --plugin qt --output appimage --desktop-file=AppDir/usr/share/applications/com.mrericsir.Fang.desktop --icon-file=AppDir/usr/share/icons/hicolor/256x256/apps/com.mrericsir.Fang.png
