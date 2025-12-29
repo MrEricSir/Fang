@@ -149,6 +149,9 @@ jobs:
         # Also copy to AppDir root for the AppImage file icon
         cp icons/full_icon.png AppDir/com.mrericsir.Fang.png
 
+        # Create .DirIcon for AppImage file thumbnail (file managers look for this)
+        cp icons/full_icon.png AppDir/.DirIcon
+
         # Smaller sizes for various display contexts
         mkdir -p AppDir/usr/share/icons/hicolor/72x72/apps
         cp icons/android_dpi_hi.png AppDir/usr/share/icons/hicolor/72x72/apps/com.mrericsir.Fang.png
