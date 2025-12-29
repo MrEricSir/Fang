@@ -137,11 +137,24 @@ jobs:
         mkdir -p AppDir/usr/bin
         cp build/Fang AppDir/usr/bin/
 
-        # Copy icon and desktop file
+        # Copy desktop file
         mkdir -p AppDir/usr/share/applications
-        mkdir -p AppDir/usr/share/icons/hicolor/256x256/apps
         cp com.mrericsir.Fang.desktop AppDir/usr/share/applications/
-        cp qml/images/full_icon.png AppDir/usr/share/icons/hicolor/256x256/apps/com.mrericsir.Fang.png
+
+        # Install icons in multiple sizes for proper scaling
+        # 512x512 - main icon
+        mkdir -p AppDir/usr/share/icons/hicolor/512x512/apps
+        cp icons/full_icon.png AppDir/usr/share/icons/hicolor/512x512/apps/com.mrericsir.Fang.png
+
+        # Also copy to AppDir root for the AppImage file icon
+        cp icons/full_icon.png AppDir/com.mrericsir.Fang.png
+
+        # Smaller sizes for various display contexts
+        mkdir -p AppDir/usr/share/icons/hicolor/72x72/apps
+        cp icons/android_dpi_hi.png AppDir/usr/share/icons/hicolor/72x72/apps/com.mrericsir.Fang.png
+
+        mkdir -p AppDir/usr/share/icons/hicolor/48x48/apps
+        cp icons/android_dpi_med.png AppDir/usr/share/icons/hicolor/48x48/apps/com.mrericsir.Fang.png
 
         # Build AppImage
         # Remove problematic SQL drivers that have missing dependencies (Fang only uses SQLite)
@@ -184,7 +197,7 @@ jobs:
           echo "Copied WebEngine translations"
         fi
 
-        ./linuxdeploy-x86_64.AppImage --appdir AppDir --plugin qt --output appimage --desktop-file=AppDir/usr/share/applications/com.mrericsir.Fang.desktop --icon-file=AppDir/usr/share/icons/hicolor/256x256/apps/com.mrericsir.Fang.png
+        ./linuxdeploy-x86_64.AppImage --appdir AppDir --plugin qt --output appimage --desktop-file=AppDir/usr/share/applications/com.mrericsir.Fang.desktop --icon-file=AppDir/com.mrericsir.Fang.png
 
         # Rename to simpler name
         mv Fang*.AppImage Fang.AppImage
