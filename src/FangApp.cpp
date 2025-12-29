@@ -3,7 +3,6 @@
 #include <QDebug>
 #include <QElapsedTimer>
 #include <QImageReader>
-#include <QQuickWindow>
 
 #include "operations/UpdateFeedOperation.h"
 #include "operations/LoadAllFeedsOperation.h"
@@ -211,24 +210,6 @@ void FangApp::onLoadAllFinished(Operation *op)
     
     // Load our QML.
     engine->load(QUrl("qrc:///qml/main.qml"));
-
-    // Set window icon on the QML window. Seems redundant but may be required for QML-based windows.
-    if (!engine->rootObjects().isEmpty()) {
-        QObject *rootObject = engine->rootObjects().first();
-        QQuickWindow *window = qobject_cast<QQuickWindow*>(rootObject);
-        if (window) {
-            // Get the application icon that was already set in main.cpp
-            QIcon appIcon = qApp->windowIcon();
-            if (!appIcon.isNull()) {
-                window->setIcon(appIcon);
-                qDebug() << "Icon loading: Set icon on QML window";
-            } else {
-                qDebug() << "Icon loading: WARNING - QApplication icon is null when trying to set on window";
-            }
-        } else {
-            qDebug() << "Icon loading: WARNING - Root object is not a QQuickWindow";
-        }
-    }
 
     // Refresh all our feeds to check for the latest and greatest news.
     refreshAllFeeds();
