@@ -42,7 +42,10 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     QIcon appIcon;
 
 #ifdef Q_OS_LINUX
-    // On Linux, check if running from AppImage and add icon paths
+    // Set the name used by the desktop file.
+    app.setDesktopFileName("com.mrericsir.Fang");
+
+    // Check if running from AppImage and add icon paths
     QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
     QString appDir = env.value("APPDIR");
 
