@@ -5,6 +5,8 @@
 #include <QStringList>
 #include <QQmlFileSelector>
 #include <QIcon>
+#include <QProcessEnvironment>
+#include <QDebug>
 
 #include "FangApp.h"
 
@@ -37,12 +39,43 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     app.setApplicationVersion(APP_VERSION);
 
     // Set window icon - will be used by dock/taskbar
-    // Try loading from icon theme first (for Linux AppImage/installed versions)
-    QIcon appIcon = QIcon::fromTheme("com.mrericsir.Fang");
-    if (appIcon.isNull()) {
-        // Fallback to embedded resource (for portable/development builds)
-        appIcon = QIcon(":/qml/images/full_icon.png");
+    QIcon appIcon;
+
+#ifdef Q_OS_LINUX
+    // On Linux, check if running from AppImage and add icon paths
+    QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+    QString appDir = env.value("APPDIR");
+
+    qDebug() << "Icon loading: APPDIR =" << (appDir.isEmpty() ? "(not set)" : appDir);
+    qDebug() << "Icon loading: Default theme search paths:" << QIcon::themeSearchPaths();
+
+    if (!appDir.isEmpty()) {
+        // Running from AppImage - add icon search paths
+        QStringList iconPaths = QIcon::themeSearchPaths();
+        QString appImageIconPath = appDir + "/usr/share/icons";
+        if (!iconPaths.contains(appImageIconPath)) {
+            iconPaths.prepend(appImageIconPath);
+            QIcon::setThemeSearchPaths(iconPaths);
+            qDebug() << "Icon loading: Added AppImage icon path:" << appImageIconPath;
+            qDebug() << "Icon loading: Updated theme search paths:" << QIcon::themeSearchPaths();
+        }
+
+        // Try loading from icon theme
+        appIcon = QIcon::fromTheme("com.mrericsir.Fang");
+        qDebug() << "Icon loading: fromTheme result:" << (appIcon.isNull() ? "NULL" : "OK");
     }
+#endif
+
+    // If icon still not found, use embedded resource
+    if (appIcon.isNull()) {
+        appIcon = QIcon(":/qml/images/full_icon.png");
+        qDebug() << "Icon loading: Using embedded resource, result:" << (appIcon.isNull() ? "NULL (FAILED!)" : "OK");
+    }
+
+    if (!appIcon.isNull()) {
+        qDebug() << "Icon loading: Available sizes:" << appIcon.availableSizes();
+    }
+
     app.setWindowIcon(appIcon);
 
     // Only run one Fang at a time, fellas.
