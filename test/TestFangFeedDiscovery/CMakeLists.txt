@@ -13,6 +13,9 @@ qt_add_executable(tst_testfangfeeddiscovery
     ${CMAKE_SOURCE_DIR}/src/FangObject.cpp
     ${CMAKE_SOURCE_DIR}/src/parser/ParserXMLWorker.cpp
     ${CMAKE_SOURCE_DIR}/src/network/FangNetworkAccessManager.cpp
+    ${CMAKE_SOURCE_DIR}/src/network/NetworkRetryPolicy.cpp
+    ${CMAKE_SOURCE_DIR}/src/network/NetworkStateMonitor.cpp
+    ${CMAKE_SOURCE_DIR}/src/network/ResilientNetworkReply.cpp
     ${CMAKE_SOURCE_DIR}/src/utilities/SimpleHTTPDownloader.cpp
     ${CMAKE_SOURCE_DIR}/src/utilities/NetworkUtilities.cpp
     ${CMAKE_SOURCE_DIR}/src/utilities/FangLogging.cpp
@@ -28,6 +31,9 @@ qt_add_executable(tst_testfangfeeddiscovery
     ${CMAKE_SOURCE_DIR}/src/FangObject.h
     ${CMAKE_SOURCE_DIR}/src/parser/ParserXMLWorker.h
     ${CMAKE_SOURCE_DIR}/src/network/FangNetworkAccessManager.h
+    ${CMAKE_SOURCE_DIR}/src/network/NetworkRetryPolicy.h
+    ${CMAKE_SOURCE_DIR}/src/network/NetworkStateMonitor.h
+    ${CMAKE_SOURCE_DIR}/src/network/ResilientNetworkReply.h
     ${CMAKE_SOURCE_DIR}/src/utilities/SimpleHTTPDownloader.h
     ${CMAKE_SOURCE_DIR}/src/utilities/NetworkUtilities.h
     ${CMAKE_SOURCE_DIR}/src/utilities/FangLogging.h

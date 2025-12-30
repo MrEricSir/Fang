@@ -98,6 +98,9 @@ qt_add_executable(Fang WIN32
     src/parser/ParserXMLWorker.cpp
     src/network/FangNetworkAccessManager.cpp
     src/network/FangQQmlNetworkAccessManagerFactory.cpp
+    src/network/NetworkRetryPolicy.cpp
+    src/network/NetworkStateMonitor.cpp
+    src/network/ResilientNetworkReply.cpp
     src/notifications/NotificationBase.cpp
     src/utilities/SingleInstanceCheck.cpp
     src/operations/SetPinOperation.cpp
@@ -167,6 +170,9 @@ qt_add_executable(Fang WIN32
     src/parser/ParserXMLWorker.h
     src/network/FangNetworkAccessManager.h
     src/network/FangQQmlNetworkAccessManagerFactory.h
+    src/network/NetworkRetryPolicy.h
+    src/network/NetworkStateMonitor.h
+    src/network/ResilientNetworkReply.h
     src/notifications/NotificationBase.h
     src/utilities/SingleInstanceCheck.h
     src/operations/SetPinOperation.h
