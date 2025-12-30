@@ -320,9 +320,14 @@ void FangApp::setBookmark(qint64 id, bool allowBackward)
         return;
     }
 
+    NewsItem* bookmark = currentFeed->getNewsList()->newsItemForID(id);
+    if (nullptr == bookmark) {
+        qDebug() << "Invalid bookmark ID for news item: " << id;
+        return;
+    }
+
     // I bookmark you!
-    SetBookmarkOperation bookmarkOp(&manager, currentFeed,
-                                    currentFeed->getNewsList()->newsItemForID(id));
+    SetBookmarkOperation bookmarkOp(&manager, currentFeed, bookmark);
     manager.runSynchronously(&bookmarkOp);
 
     currentFeed->setBookmark(bookmarkOp.getBookmark()->getDbID());
