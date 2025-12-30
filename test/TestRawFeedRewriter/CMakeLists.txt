@@ -7,6 +7,9 @@ qt_add_executable(tst_testrawfeedrewritertest
     ${CMAKE_SOURCE_DIR}/src/FangObject.cpp
     ${CMAKE_SOURCE_DIR}/src/parser/RawNews.cpp
     ${CMAKE_SOURCE_DIR}/src/network/FangNetworkAccessManager.cpp
+    ${CMAKE_SOURCE_DIR}/src/network/NetworkRetryPolicy.cpp
+    ${CMAKE_SOURCE_DIR}/src/network/NetworkStateMonitor.cpp
+    ${CMAKE_SOURCE_DIR}/src/network/ResilientNetworkReply.cpp
     ${CMAKE_SOURCE_DIR}/src/utilities/WebPageGrabber.cpp
     ${CMAKE_SOURCE_DIR}/src/utilities/SimpleHTTPDownloader.cpp
     ${CMAKE_SOURCE_DIR}/src/utilities/NetworkUtilities.cpp
@@ -17,6 +20,9 @@ qt_add_executable(tst_testrawfeedrewritertest
     ${CMAKE_SOURCE_DIR}/src/FangObject.h
     ${CMAKE_SOURCE_DIR}/src/parser/RawNews.h
     ${CMAKE_SOURCE_DIR}/src/network/FangNetworkAccessManager.h
+    ${CMAKE_SOURCE_DIR}/src/network/NetworkRetryPolicy.h
+    ${CMAKE_SOURCE_DIR}/src/network/NetworkStateMonitor.h
+    ${CMAKE_SOURCE_DIR}/src/network/ResilientNetworkReply.h
     ${CMAKE_SOURCE_DIR}/src/utilities/WebPageGrabber.h
     ${CMAKE_SOURCE_DIR}/src/utilities/SimpleHTTPDownloader.h
     ${CMAKE_SOURCE_DIR}/src/utilities/NetworkUtilities.h

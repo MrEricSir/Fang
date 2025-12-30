@@ -1,4 +1,7 @@
 #include "FangNetworkAccessManager.h"
+#include "ResilientNetworkReply.h"
+#include "NetworkStateMonitor.h"
+#include "../utilities/FangLogging.h"
 
 #include <QNetworkDiskCache>
 #include <QStandardPaths>
@@ -11,6 +14,15 @@ FangNetworkAccessManager::FangNetworkAccessManager(QObject *parent) :
     diskCache->setCacheDirectory(cacheDir);
     if (!cacheDir.isEmpty())
         setCache(diskCache);
+
+    // Set up our circuit breaker.
+    NetworkStateMonitor& monitor = NetworkStateMonitor::instance();
+    connect(&monitor, &NetworkStateMonitor::circuitOpened,
+            this, &FangNetworkAccessManager::onCircuitOpened);
+    connect(&monitor, &NetworkStateMonitor::circuitClosed,
+            this, &FangNetworkAccessManager::onCircuitClosed);
+
+    qCDebug(logNetwork) << "FangNetworkAccessManager initialized with resilience features";
 }
 
 QNetworkReply* FangNetworkAccessManager::createRequest(QNetworkAccessManager::Operation op, const QNetworkRequest& request, QIODevice* outgoingData)
@@ -40,6 +52,79 @@ QNetworkReply* FangNetworkAccessManager::createRequest(QNetworkAccessManager::Op
     // Required for blogs.gnome.org.
     req.setRawHeader("Accept",
                          "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
-    
+
     return QNetworkAccessManager::createRequest(op, req, outgoingData);
+}
+
+ResilientNetworkReply* FangNetworkAccessManager::createResilientGet(
+    const QNetworkRequest& request,
+    const NetworkRetryPolicy& policy)
+{
+    auto* resilientReply = new ResilientNetworkReply(
+        this,
+        request,
+        QNetworkAccessManager::GetOperation,
+        policy,
+        this
+    );
+
+    // Monitor network state metrics.
+    connect(resilientReply, &ResilientNetworkReply::finished, this, [=]() {
+        NetworkStateMonitor::instance().recordSuccess();
+        qCDebug(logNetwork) << "Resilient request succeeded: " << request.url();
+    });
+
+    connect(resilientReply, &ResilientNetworkReply::failed, this, [=](QNetworkReply::NetworkError error) {
+        NetworkStateMonitor::instance().recordFailure();
+        qCWarning(logNetwork) << "Resilient request failed: " << request.url()
+                              << "Error: " << error;
+    });
+
+    return resilientReply;
+}
+
+ResilientNetworkReply* FangNetworkAccessManager::createResilientHead(
+    const QNetworkRequest& request,
+    const NetworkRetryPolicy& policy)
+{
+    auto* resilientReply = new ResilientNetworkReply(
+        this,
+        request,
+        QNetworkAccessManager::HeadOperation,
+        policy,
+        this
+    );
+
+    // Monitor network state metrics.
+    connect(resilientReply, &ResilientNetworkReply::finished, this, [=]() {
+        NetworkStateMonitor::instance().recordSuccess();
+    });
+
+    connect(resilientReply, &ResilientNetworkReply::failed, this, [=](QNetworkReply::NetworkError) {
+        NetworkStateMonitor::instance().recordFailure();
+    });
+
+    return resilientReply;
+}
+
+bool FangNetworkAccessManager::isCircuitOpen() const
+{
+    return NetworkStateMonitor::instance().circuitState() == NetworkStateMonitor::Open;
+}
+
+float FangNetworkAccessManager::networkFailureRate() const
+{
+    return NetworkStateMonitor::instance().failureRate();
+}
+
+void FangNetworkAccessManager::onCircuitOpened()
+{
+    qCWarning(logNetwork) << "Circuit breaker OPENED - blocking new network requests";
+    emit circuitBreakerOpened();
+}
+
+void FangNetworkAccessManager::onCircuitClosed()
+{
+    qCInfo(logNetwork) << "Circuit breaker CLOSED - resuming network requests";
+    emit circuitBreakerClosed();
 }

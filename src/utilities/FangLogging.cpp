@@ -8,8 +8,10 @@
 Q_LOGGING_CATEGORY(logFavicon, "fang.favicon", QtDebugMsg)
 Q_LOGGING_CATEGORY(logWebPage, "fang.webpage", QtDebugMsg)
 Q_LOGGING_CATEGORY(logMock, "fang.mock", QtDebugMsg)
+Q_LOGGING_CATEGORY(logNetwork, "fang.network", QtDebugMsg)
 #else
 Q_LOGGING_CATEGORY(logFavicon, "fang.favicon", QtInfoMsg)
 Q_LOGGING_CATEGORY(logWebPage, "fang.webpage", QtInfoMsg)
 Q_LOGGING_CATEGORY(logMock, "fang.mock", QtInfoMsg)
+Q_LOGGING_CATEGORY(logNetwork, "fang.network", QtWarningMsg)  // Keep warnings in release builds
 #endif
