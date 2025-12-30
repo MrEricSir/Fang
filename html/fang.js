@@ -160,7 +160,7 @@ function requestNews(mode)
     .then((response) => response.json())
     .then((data) => {
               console.log("load news data:", data);
-              if (data.showWelcome) {
+              if (data.showWelcome === true) {
                   setMode('welcome');
               } else {
                   setMode('newsView');
