@@ -160,23 +160,28 @@ function requestNews(mode)
     .then((response) => response.json())
     .then((data) => {
               console.log("load news data:", data);
-
-              if ('initial' === data.mode) {
-                  // Redo the view.
+              if (data.showWelcome) {
+                  setMode('welcome');
+              } else {
                   setMode('newsView');
-                  clearNews();
-              }
 
-              // Append or prepend?
-              let toAppend = 'prepend' !== data.mode;
+                  if ('initial' === data.mode) {
+                      // Redo the view.
 
-              // Add all our news!
-              appendNews(toAppend, data.firstNewsID, data.news);
+                      clearNews();
+                  }
 
-              // If we have a new bookmark, draw it and jump there.
-              if (data.bookmark) {
-                  drawBookmark(data.bookmark);
-                  jumpToBookmark();
+                  // Append or prepend?
+                  let toAppend = 'prepend' !== data.mode;
+
+                  // Add all our news!
+                  appendNews(toAppend, data.firstNewsID, data.news);
+
+                  // If we have a new bookmark, draw it and jump there.
+                  if (data.bookmark) {
+                      drawBookmark(data.bookmark);
+                      jumpToBookmark();
+                  }
               }
           });
 }

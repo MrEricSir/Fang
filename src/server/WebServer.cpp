@@ -65,7 +65,12 @@ WebServer::WebServer(QObject *parent) :
     });
 
     server.route("/api/load/<arg>", this, [this] (QString mode) {
-        return loadNews(LoadNewsOperation::stringToMode(mode));
+        // Show news, or welcome screen if there's no feeds.
+        if (FangApp::instance()->feedCount() <= 1) {
+            return loadWelcome();
+        } else {
+            return loadNews(LoadNewsOperation::stringToMode(mode));
+        }
     });
 
     server.route("/api/css", this, [this] {
@@ -128,10 +133,7 @@ QString WebServer::loadNews(LoadNewsOperation::LoadMode mode)
     }
 
     // Add our news list and convert to a JSON string.
-    document.insert("news", newsList);
-    QString json = QString::fromUtf8(QJsonDocument::fromVariant(document).toJson());
-
-    return json;
+    return buildDocument(newsList, false);
 }
 
 void WebServer::addNewsItem(NewsItem *item, QVariantList *newsList)
@@ -151,6 +153,20 @@ void WebServer::addNewsItem(NewsItem *item, QVariantList *newsList)
 
     // Add to the list.
     *newsList << itemMap;
+}
+
+QString WebServer::loadWelcome()
+{
+    QVariantList newsList;
+    return buildDocument(newsList, true);
+}
+
+QString WebServer::buildDocument(const QVariantList &newsList, bool showWelcome)
+{
+    QVariantMap document;
+    document.insert("showWelcome", showWelcome);
+    document.insert("news", newsList);
+    return QString::fromUtf8(QJsonDocument::fromVariant(document).toJson());
 }
 
 QVariantList WebServer::getCSS()

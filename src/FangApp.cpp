@@ -431,13 +431,6 @@ void FangApp::setCurrentFeed(FeedItem *feed, bool reloadIfSameFeed)
         pinnedNewsWatcher(); // If we were on pinned items, it can be removed now.
     }
 
-    // Show welcome screen if there's no feeds.
-    if (feedCount() <= 1) {
-        webSocketServer.showWelcome();
-
-        return;
-    }
-
     // Signal that we've changed feeds.
     emit currentFeedChanged();
 }
