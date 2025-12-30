@@ -6,3 +6,8 @@ add_subdirectory(TestFangSimpleStateMachine)
 add_subdirectory(TestRawFeedRewriter)
 add_subdirectory(TestURLFixup)
 add_subdirectory(TestWebPageGrabber)
+
+# Network resilience tests
+add_subdirectory(TestNetworkRetryPolicy)
+add_subdirectory(TestNetworkStateMonitor)
+add_subdirectory(TestResilientNetworkReply)

@@ -18,7 +18,7 @@ class MockNetworkReply : public QNetworkReply
     Q_OBJECT
 
 public:
-    MockNetworkReply(const QByteArray& data, const QUrl& url, QObject* parent = nullptr, bool isError = false);
+    MockNetworkReply(const QByteArray& data, const QUrl& url, QObject* parent = nullptr, bool isError = false, QNetworkReply::NetworkError errorCode = QNetworkReply::ContentNotFoundError);
 
     void abort() override {}
     qint64 bytesAvailable() const override;
@@ -67,12 +67,28 @@ public:
      */
     void clear();
 
+    /**
+     * @brief Set the *next* request to fail with specified error.
+     * @param errorCode The error that will be returned
+     */
+    void setNextError(QNetworkReply::NetworkError errorCode);
+
+    /**
+     * @brief Set the number of *consecutive* that will fail.
+     * @param count Number of failed requests
+     * @param errorCode The error code to return
+     */
+    void setFailureCount(int count, QNetworkReply::NetworkError errorCode = QNetworkReply::TimeoutError);
+
 protected:
     QNetworkReply* createRequest(Operation op, const QNetworkRequest& request,
                                  QIODevice* outgoingData = nullptr) override;
 
 private:
     QMap<QString, QByteArray> responses;
+    QNetworkReply::NetworkError nextError;
+    int failuresRemaining;
+    bool shouldFail;
 };
 
 #endif // MOCKNETWORKACCESSMANAGER_H

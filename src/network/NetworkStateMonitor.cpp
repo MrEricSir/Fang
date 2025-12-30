@@ -160,9 +160,9 @@ void NetworkStateMonitor::resetCircuit()
 
 void NetworkStateMonitor::configure(int failureThreshold, int openDuration, int windowSize)
 {
-    failureThreshold = failureThreshold;
-    openDuration = openDuration;
-    windowSize = windowSize;
+    this->failureThreshold = failureThreshold;
+    this->openDuration = openDuration;
+    this->windowSize = windowSize;
 
     // Restart timer with new config.
     windowTimer.setInterval(windowSize);

@@ -2,7 +2,7 @@
 #include <QFile>
 #include "FangLogging.h"
 
-MockNetworkReply::MockNetworkReply(const QByteArray& data, const QUrl& url, QObject* parent, bool isError)
+MockNetworkReply::MockNetworkReply(const QByteArray& data, const QUrl& url, QObject* parent, bool isError, QNetworkReply::NetworkError errorCode)
     : QNetworkReply(parent)
 {
     setUrl(url);
@@ -12,8 +12,12 @@ MockNetworkReply::MockNetworkReply(const QByteArray& data, const QUrl& url, QObj
     buffer.open(QIODevice::ReadOnly);
 
     if (isError) {
-        setError(QNetworkReply::ContentNotFoundError, "Mock URL not found");
-        setAttribute(QNetworkRequest::HttpStatusCodeAttribute, 404);
+        setError(errorCode, "Mock error");
+        if (errorCode == QNetworkReply::ContentNotFoundError) {
+            setAttribute(QNetworkRequest::HttpStatusCodeAttribute, 404);
+        } else if (errorCode == QNetworkReply::InternalServerError) {
+            setAttribute(QNetworkRequest::HttpStatusCodeAttribute, 500);
+        }
     } else {
         setError(NoError, QString());
         setAttribute(QNetworkRequest::HttpStatusCodeAttribute, 200);
@@ -40,6 +44,9 @@ qint64 MockNetworkReply::readData(char* data, qint64 maxSize)
 
 MockNetworkAccessManager::MockNetworkAccessManager(QObject* parent)
     : QNetworkAccessManager(parent)
+    , nextError(QNetworkReply::NoError)
+    , failuresRemaining(0)
+    , shouldFail(false)
 {
 }
 
@@ -66,6 +73,22 @@ void MockNetworkAccessManager::addResponseFromFile(const QUrl& url, const QStrin
 void MockNetworkAccessManager::clear()
 {
     responses.clear();
+    shouldFail = false;
+    failuresRemaining = 0;
+}
+
+void MockNetworkAccessManager::setNextError(QNetworkReply::NetworkError errorCode)
+{
+    nextError = errorCode;
+    shouldFail = true;
+    failuresRemaining = 1;
+}
+
+void MockNetworkAccessManager::setFailureCount(int count, QNetworkReply::NetworkError errorCode)
+{
+    nextError = errorCode;
+    shouldFail = true;
+    failuresRemaining = count;
 }
 
 QNetworkReply* MockNetworkAccessManager::createRequest(Operation op, const QNetworkRequest& request,
@@ -81,6 +104,16 @@ QNetworkReply* MockNetworkAccessManager::createRequest(Operation op, const QNetw
     QUrl url = request.url();
     QString key = url.toString();
 
+    // Check if we should force a failure
+    if (shouldFail && failuresRemaining > 0) {
+        qCDebug(logMock) << "MockNetworkAccessManager: Forcing error" << nextError << "for" << key;
+        failuresRemaining--;
+        if (failuresRemaining == 0) {
+            shouldFail = false;
+        }
+        return new MockNetworkReply(QByteArray(), url, this, true, nextError);
+    }
+
     if (responses.contains(key)) {
         qCDebug(logMock) << "MockNetworkAccessManager: Returning mock response for" << key;
         return new MockNetworkReply(responses[key], url, this);
@@ -88,5 +121,5 @@ QNetworkReply* MockNetworkAccessManager::createRequest(Operation op, const QNetw
 
     qWarning() << "MockNetworkAccessManager: No mock response for" << key;
     // Return an error response for unmocked URLs
-    return new MockNetworkReply(QByteArray(), url, this, true); // true = isError
+    return new MockNetworkReply(QByteArray(), url, this, true);
 }
