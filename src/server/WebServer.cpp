@@ -89,26 +89,26 @@ QString WebServer::updatePinObject(qint64 newsID, bool pinned)
 
 QString WebServer::loadNews(LoadNewsOperation::LoadMode mode)
 {
-    QVariantMap document;
+    QVariantMap extras;
     QVariantList newsList;
 
     // Perform load.
     LoadNewsOperation* loader = FangApp::instance()->loadNews(mode);
 
     // Load mode.
-    document.insert("mode", LoadNewsOperation::modeToString(mode));
+    extras.insert("mode", LoadNewsOperation::modeToString(mode));
 
     FeedItem* currentFeed = FangApp::instance()->getCurrentFeed();
     if (mode == LoadNewsOperation::Initial)  {
         // Bookmark (if needed)
         if (currentFeed->bookmarksEnabled() && currentFeed->getBookmarkID() >= 0) {
             qint64 idOfBookmark = currentFeed->getBookmarkID();
-            document.insert("bookmark", idOfBookmark);
+            extras.insert("bookmark", idOfBookmark);
         }
     }
 
     // // First news ID.
-    document.insert("firstNewsID", currentFeed->getFirstNewsID());
+    extras.insert("firstNewsID", currentFeed->getFirstNewsID());
 
     // Build our news list.
     if (!loader->getPrependList().isEmpty()) {
@@ -133,7 +133,7 @@ QString WebServer::loadNews(LoadNewsOperation::LoadMode mode)
     }
 
     // Add our news list and convert to a JSON string.
-    return buildDocument(newsList, false);
+    return buildDocument(newsList, false, extras);
 }
 
 void WebServer::addNewsItem(NewsItem *item, QVariantList *newsList)
@@ -161,11 +161,12 @@ QString WebServer::loadWelcome()
     return buildDocument(newsList, true);
 }
 
-QString WebServer::buildDocument(const QVariantList &newsList, bool showWelcome)
+QString WebServer::buildDocument(const QVariantList &newsList, bool showWelcome, QVariantMap extras)
 {
     QVariantMap document;
     document.insert("showWelcome", showWelcome);
     document.insert("news", newsList);
+    document.insert(extras);
     return QString::fromUtf8(QJsonDocument::fromVariant(document).toJson());
 }
 

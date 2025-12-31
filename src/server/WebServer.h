@@ -27,7 +27,8 @@ private:
     QString loadWelcome();
 
     // Puts together the return object for loadNews() and loadWelcome().
-    QString buildDocument(const QVariantList& newsList, bool showWelcome);
+    QString buildDocument(const QVariantList& newsList, bool showWelcome,
+                          QVariantMap extras = QVariantMap());
 
     QVariantList getCSS();
 
