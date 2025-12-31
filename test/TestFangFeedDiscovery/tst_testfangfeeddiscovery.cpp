@@ -120,6 +120,8 @@ void TestFangFeedDiscovery::testCase1_data()
                                   << "https://www.theguardian.com/us/rss" << "";
     QTest::newRow("City Nerd on Bluesky") << "nerd4cities.bsky.social" << true
                                   << "https://bsky.app/profile/did:plc:wkflkbryiylhva4wg5jitzrv/rss" << "";
+    QTest::newRow("DNA Lounge Blog") << "dnalounge.com" << true
+                                          << "https://cdn.dnalounge.com/backstage/log/feed/" << "";
 
     //
     // Unusual situations /////////////////////////////////////////////////////////////////////////
