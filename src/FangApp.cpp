@@ -451,6 +451,12 @@ LoadNewsOperation* FangApp::loadNews(LoadNewsOperation::LoadMode mode)
     QElapsedTimer timer;
     timer.start();
 
+    if (mode == LoadNewsOperation::LoadMode::Initial) {
+        // Make sure the news list is clear before an initial load. Sometimes this can cause
+        // issues on slower machines when quickly switching between feeds.
+        currentFeed->clearNews();
+    }
+
     LoadNewsOperation* loader = nullptr;
     switch (currentFeed->getDbID()) {
     case FEED_ID_ALLNEWS:
