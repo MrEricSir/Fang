@@ -2,12 +2,17 @@
 add_subdirectory(TestFangParser)
 add_subdirectory(TestFangFaviconGrabber)
 add_subdirectory(TestFangFeedDiscovery)
+add_subdirectory(TestFangOPMLParser)
 add_subdirectory(TestFangSimpleStateMachine)
 add_subdirectory(TestRawFeedRewriter)
 add_subdirectory(TestURLFixup)
 add_subdirectory(TestWebPageGrabber)
 
+# Database tests
+add_subdirectory(TestDatabaseOperations)
+
 # Network resilience tests
 add_subdirectory(TestNetworkRetryPolicy)
 add_subdirectory(TestNetworkStateMonitor)
 add_subdirectory(TestResilientNetworkReply)
+add_subdirectory(TestFangNetworkIntegration)
