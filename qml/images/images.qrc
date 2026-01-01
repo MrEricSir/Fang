@@ -45,5 +45,7 @@
         <file>opener.png</file>
         <file>full_icon.png</file>
         <file>opener_dark.png</file>
+        <file>system_tray_icon_badge.png</file>
+        <file>system_tray_icon.png</file>
     </qresource>
 </RCC>

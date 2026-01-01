@@ -41,6 +41,11 @@ public:
      * @return        The associated FeedItem object, or null if invalid
      */
     FeedItem *getFeed(qsizetype index);
+
+    /**
+     * @brief Returns the all news feed.
+     */
+    FeedItem *getAllNewsFeed();
     
     /**
      * @return A list of our feedz.

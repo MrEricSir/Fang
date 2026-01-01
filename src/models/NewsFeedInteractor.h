@@ -17,6 +17,7 @@ class NewsFeedInteractor : public QQuickItem
     Q_DISABLE_COPY(NewsFeedInteractor)
     
     Q_PROPERTY(qint32 specialFeedCount READ specialFeedCount NOTIFY specialFeedCountChanged)
+    Q_PROPERTY(qint32 allUnreadCount READ allUnreadCount NOTIFY allUnreadCountChanged)
 
 public:
     explicit NewsFeedInteractor(QQuickItem *parent = nullptr);
@@ -25,12 +26,20 @@ public:
     // Returns the number of special feeds.
     qint32 specialFeedCount();
 
+    // Returns the number of unread news items in all feeds.
+    qint32 allUnreadCount();
+
 signals:
 
     /**
      * @brief The number of special feeds in the feed list has changed.
      */
     void specialFeedCountChanged();
+
+    /**
+     * @brief Number of unread news items in all feeds has changed.
+     */
+    void allUnreadCountChanged();
 
 public slots:
 

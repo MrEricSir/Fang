@@ -42,6 +42,11 @@ Window {
     }
     
     visible: true;
+
+    // The "interactor" is what talks to the C++ layer.
+    NewsFeedInteractor {
+        id: newsFeedInteractor;
+    }
     
     FangSettings {
         id: fangSettings;
@@ -164,6 +169,7 @@ Window {
     color: style.color.blockerBackground;
 
     // Prevent closing when system tray icon is active.
+    // Note: This is a valid property according to the docs; ignore the Qt Creator error message.
     onClosing: (event) => {
         if (fangSettings.showTrayIcon && platform === "WIN") {
             event.accepted = false;
@@ -172,8 +178,11 @@ Window {
     }
 
     SystemTrayIcon {
-        visible: fangSettings.showTrayIcon; // Defaults to true for non-Windows platforms.
-        icon.source: "qrc:/qml/images/full_icon.png";
+        property bool showBadge: newsFeedInteractor.allUnreadCount > 0;
+
+        visible: fangSettings.showTrayIcon; // Defaults to true for Windows.
+        icon.source: showBadge ? "qrc:/qml/images/system_tray_icon_badge.png" :
+                                 "qrc:/qml/images/system_tray_icon.png";
 
         onActivated: (reason) => {
             if (reason === SystemTrayIcon.Context) {

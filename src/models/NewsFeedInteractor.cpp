@@ -14,11 +14,18 @@ NewsFeedInteractor::NewsFeedInteractor(QQuickItem *parent) :
 
     connect(FangApp::instance(), &FangApp::specialFeedCountChanged,
             this, &NewsFeedInteractor::specialFeedCountChanged);
+    connect(FangApp::instance()->getAllNewsFeed(), &FeedItem::unreadCountChanged,
+            this, &NewsFeedInteractor::allUnreadCountChanged);
 }
 
 qint32 NewsFeedInteractor::specialFeedCount()
 {
     return FangApp::instance()->specialFeedCount();
+}
+
+qint32 NewsFeedInteractor::allUnreadCount()
+{
+    return FangApp::instance()->getAllNewsFeed()->getUnreadCount();
 }
 
 void NewsFeedInteractor::removeFeed(FeedItem *feed)

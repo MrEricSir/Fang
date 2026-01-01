@@ -194,7 +194,7 @@ void UpdateFeedOperation::onRewriterFinished()
     
     // Update unread count, All News's unread count, and folder (if applicable);
     UnreadCountReader::update(db(), feed);
-    UnreadCountReader::update(db(), FangApp::instance()->getFeed(0));
+    UnreadCountReader::update(db(), FangApp::instance()->getAllNewsFeed());
     if (feed->getParentFolderID() > 0) {
         UnreadCountReader::update(db(), FangApp::instance()->feedForId(feed->getParentFolderID()));
     }

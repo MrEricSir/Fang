@@ -37,11 +37,6 @@ Item {
         return newsFeedInteractor.insertFolder(firstItemIndex);
     }
 
-    // The "interactor" is what talks to the C++ layer.
-    NewsFeedInteractor {
-        id: newsFeedInteractor;
-    }
-    
     Rectangle {
         id: sidebarTopControls;
         height: 40 * style.scale;

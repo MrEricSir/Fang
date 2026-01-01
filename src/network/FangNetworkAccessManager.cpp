@@ -22,7 +22,7 @@ FangNetworkAccessManager::FangNetworkAccessManager(QObject *parent) :
     connect(&monitor, &NetworkStateMonitor::circuitClosed,
             this, &FangNetworkAccessManager::onCircuitClosed);
 
-    qCDebug(logNetwork) << "FangNetworkAccessManager initialized with resilience features";
+    //qCDebug(logNetwork) << "FangNetworkAccessManager initialized with resilience features";
 }
 
 QNetworkReply* FangNetworkAccessManager::createRequest(QNetworkAccessManager::Operation op, const QNetworkRequest& request, QIODevice* outgoingData)

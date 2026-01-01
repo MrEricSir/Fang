@@ -109,6 +109,11 @@ FeedItem* FangApp::getFeed(qsizetype index)
     return item;
 }
 
+FeedItem *FangApp::getAllNewsFeed()
+{
+    return getFeed(0);
+}
+
 void FangApp::focusApp()
 {
     if (window) {
