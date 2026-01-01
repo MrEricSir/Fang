@@ -32,8 +32,6 @@ public:
     bool contains(NewsItem* value) const;
     qsizetype indexOf(const NewsItem* value, qsizetype from = 0) const;
 
-    void append(const QList<NewsItem*>* value);
-    void prepend(const QList<NewsItem*>* value);
     void append(NewsItem* value);
     void prepend(NewsItem* value);
 

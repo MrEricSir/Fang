@@ -12,6 +12,11 @@ add_subdirectory(TestWebPageGrabber)
 # Database tests
 add_subdirectory(TestDatabaseOperations)
 
+# Model tests
+add_subdirectory(TestFeedItem)
+add_subdirectory(TestNewsItem)
+add_subdirectory(TestNewsList)
+
 # Network resilience tests
 add_subdirectory(TestNetworkRetryPolicy)
 add_subdirectory(TestNetworkStateMonitor)

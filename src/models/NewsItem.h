@@ -38,7 +38,6 @@ public:
     // For sorting
     bool operator<(const NewsItem& rhs);
     static bool LessThan(const NewsItem* left, const NewsItem* right);
-    static bool GreaterThan(const NewsItem* left, const NewsItem* right);
     
     inline FeedItem* getFeed() const { return feed; }
     
