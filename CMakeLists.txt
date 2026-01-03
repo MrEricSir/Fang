@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(Fang VERSION 0.2.0 LANGUAGES CXX C)
+project(Fang VERSION 0.2.9-beta1 LANGUAGES CXX C)
 
 # C++ Standard
 set(CMAKE_CXX_STANDARD 17)
