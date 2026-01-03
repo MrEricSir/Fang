@@ -315,16 +315,16 @@ if(ENABLE_COVERAGE)
                 COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure
 
                 # Capture coverage data
-                COMMAND ${LCOV_PATH} --directory . --capture --output-file coverage.info --ignore-errors inconsistent,format,gcov,unsupported,category,unused
+                COMMAND ${LCOV_PATH} --directory . --capture --output-file coverage.info --ignore-errors inconsistent,format,gcov,unsupported,unused
 
                 # Remove system and test files from coverage
-                COMMAND ${LCOV_PATH} --remove coverage.info '/usr/*' '*/Qt/*' '*/test/*' '*_autogen/*' '*/tidylib/*' --output-file coverage.info.cleaned --ignore-errors inconsistent,format,gcov,unsupported,category,unused
+                COMMAND ${LCOV_PATH} --remove coverage.info '/usr/*' '*/Qt/*' '*/test/*' '*_autogen/*' '*/tidylib/*' --output-file coverage.info.cleaned --ignore-errors inconsistent,format,gcov,unsupported,unused
 
                 # Generate HTML report
-                COMMAND ${GENHTML_PATH} coverage.info.cleaned --output-directory coverage_html --ignore-errors inconsistent,format,gcov,unsupported,category,unused
+                COMMAND ${GENHTML_PATH} coverage.info.cleaned --output-directory coverage_html --ignore-errors inconsistent,format,unused
 
                 # Print summary
-                COMMAND ${LCOV_PATH} --list coverage.info.cleaned --ignore-errors inconsistent,format,gcov,unsupported,category,unused
+                COMMAND ${LCOV_PATH} --list coverage.info.cleaned --ignore-errors inconsistent,format,gcov,unsupported,unused
 
                 WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
                 COMMENT "Generating coverage report"
@@ -334,16 +334,16 @@ if(ENABLE_COVERAGE)
             add_custom_target(coverage-html
                 # Capture coverage data
                 COMMAND ${LCOV_PATH} --directory . --capture --output-file coverage.info
-                    --ignore-errors inconsistent,format,gcov,unsupported,category,unused
+                    --ignore-errors inconsistent,format,gcov,unsupported,unused
 
                 # Remove system and test files
                 COMMAND ${LCOV_PATH} --remove coverage.info '/usr/*' '*/Qt/*' '*/test/*' '*_autogen/*' '*/tidylib/*'
                     --output-file coverage.info.cleaned
-                    --ignore-errors inconsistent,format,gcov,unsupported,category,unused
+                    --ignore-errors inconsistent,format,gcov,unsupported,unused
 
                 # Generate HTML report
                 COMMAND ${GENHTML_PATH} coverage.info.cleaned --output-directory coverage_html
-                    --ignore-errors inconsistent,format,gcov,unsupported,category,unused
+                    --ignore-errors inconsistent,format,unused
 
                 # Print location and try to open in browser
                 COMMAND ${CMAKE_COMMAND} -E echo ""
