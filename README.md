@@ -164,7 +164,9 @@ make coverage-html
 To build version `1.2.3`, follow these steps:
 
 Edit `CMakeLists.txt` to reflect the new version and commit the change.
-```project(Fang VERSION 1.2.3 LANGUAGES CXX C)```
+```
+project(Fang VERSION 1.2.3 LANGUAGES CXX C)
+```
 
 Push that change and create and push a tag with the same name:
 
