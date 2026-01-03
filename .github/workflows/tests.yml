@@ -404,7 +404,7 @@ jobs:
     - name: Generate HTML coverage report
       run: |
         cd build
-        genhtml coverage.info.cleaned --output-directory coverage_html --ignore-errors inconsistent,format,gcov,unsupported,unused
+        genhtml coverage.info.cleaned --output-directory coverage_html --ignore-errors inconsistent,format,unused
 
     - name: Deploy coverage to GitHub Pages
       if: github.ref == 'refs/heads/master'

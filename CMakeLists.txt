@@ -321,7 +321,7 @@ if(ENABLE_COVERAGE)
                 COMMAND ${LCOV_PATH} --remove coverage.info '/usr/*' '*/Qt/*' '*/test/*' '*_autogen/*' '*/tidylib/*' --output-file coverage.info.cleaned --ignore-errors inconsistent,format,gcov,unsupported,unused
 
                 # Generate HTML report
-                COMMAND ${GENHTML_PATH} coverage.info.cleaned --output-directory coverage_html --ignore-errors inconsistent,format,gcov,unsupported,unused
+                COMMAND ${GENHTML_PATH} coverage.info.cleaned --output-directory coverage_html --ignore-errors inconsistent,format,unused
 
                 # Print summary
                 COMMAND ${LCOV_PATH} --list coverage.info.cleaned --ignore-errors inconsistent,format,gcov,unsupported,unused
@@ -343,7 +343,7 @@ if(ENABLE_COVERAGE)
 
                 # Generate HTML report
                 COMMAND ${GENHTML_PATH} coverage.info.cleaned --output-directory coverage_html
-                    --ignore-errors inconsistent,format,gcov,unsupported,unused
+                    --ignore-errors inconsistent,format,unused
 
                 # Print location and try to open in browser
                 COMMAND ${CMAKE_COMMAND} -E echo ""
