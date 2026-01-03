@@ -158,3 +158,19 @@ make coverage-html
 
 * If a kit isn't found it's likely one needs to be installed, for example Xcode or Visual C++. Once installed, you may need to add it manually by clicking "Projects" in the sidebar and then "Manage Kits."
 * If `cmake` can't find a package, it's possible it needs to be installed via Qt's maintenence tool. Note that all required Qt packages are open source.
+
+## Building a Release
+
+To build version `1.2.3`, follow these steps:
+
+Edit `CMakeLists.txt` to reflect the new version and commit the change.
+```project(Fang VERSION 1.2.3 LANGUAGES CXX C)```
+
+Push that change and create and push a tag with the same name:
+
+```bash
+git tag -a v1.2.3 -m "Version 1.2.3"
+git push origin v1.2.3
+```
+
+GitHub Actions should create and publish the build automatically.
