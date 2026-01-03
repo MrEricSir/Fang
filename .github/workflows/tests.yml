@@ -353,3 +353,58 @@ jobs:
       with:
         name: test-results-${{ matrix.os }}
         path: build/Testing/Temporary/
+
+  coverage:
+    name: Code Coverage
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v4
+      with:
+        version: '6.10.1'
+        modules: 'qtwebsockets qthttpserver qtwebengine qtwebchannel qtpositioning'
+        cache: true
+
+    - name: Install coverage dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          lcov \
+          libgl1-mesa-dev \
+          libxkbcommon-x11-0 \
+          libxcb-icccm4 \
+          libxcb-image0 \
+          libxcb-keysyms1 \
+          libxcb-render-util0 \
+          libxcb-xinerama0 \
+          libxcb-cursor0
+
+    - name: Configure CMake with coverage
+      run: cmake -B build -DCMAKE_BUILD_TYPE=Debug -DENABLE_COVERAGE=ON
+
+    - name: Build with coverage
+      run: cmake --build build
+
+    - name: Run tests
+      run: ctest --test-dir build --output-on-failure
+      env:
+        QT_QPA_PLATFORM: offscreen
+
+    - name: Generate coverage report
+      run: |
+        cd build
+        lcov --directory . --capture --output-file coverage.info --ignore-errors inconsistent,format,gcov,unsupported,category,unused
+        lcov --remove coverage.info '/usr/*' '*/Qt/*' '*/test/*' '*_autogen/*' '*/tidylib/*' --output-file coverage.info.cleaned --ignore-errors inconsistent,format,gcov,unsupported,category,unused
+        lcov --list coverage.info.cleaned --ignore-errors inconsistent,format,gcov,unsupported,category,unused
+
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v4
+      with:
+        files: build/coverage.info.cleaned
+        fail_ci_if_error: false
+        verbose: true
+        token: ${{ secrets.CODECOV_TOKEN }}

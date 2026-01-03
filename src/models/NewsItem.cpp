@@ -42,12 +42,7 @@ bool NewsItem::LessThan(const NewsItem* left, const NewsItem* right) {
     // Use id if dates are equal.
     if (left->timestamp == right->timestamp)
         return left->_id < right->_id;
-    
+
     // Sort on timestamp.
     return left->timestamp < right->timestamp;
-}
-
-bool NewsItem::GreaterThan(const NewsItem *left, const NewsItem *right)
-{
-    return !LessThan(left, right);
 }

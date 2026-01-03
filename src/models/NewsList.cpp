@@ -56,34 +56,6 @@ qsizetype NewsList::indexOf(const NewsItem *value, qsizetype from) const
     return list.indexOf(value, from);
 }
 
-void NewsList::append(const QList<NewsItem *> * value)
-{
-    NewsItem* n;
-    for (qsizetype i = 0; i < value->size(); ++i) {
-        n = value->at(i);
-        if (!set.contains(n)) {
-            set.insert(n);
-            list.append(n);
-        } else {
-            Q_ASSERT(false);
-        }
-    }
-}
-
-void NewsList::prepend(const QList<NewsItem *> * value)
-{
-    NewsItem* n;
-    for (qsizetype i = 0; i < value->size(); ++i) {
-        n = value->at(i);
-        if (!set.contains(n)) {
-            set.insert(n);
-            list.prepend(n);
-        } else {
-            Q_ASSERT(false);
-        }
-    }
-}
-
 void NewsList::append(NewsItem *value)
 {
     if (set.contains(value)) {

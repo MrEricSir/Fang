@@ -12,8 +12,8 @@ OPMLExport::OPMLExport()
 bool OPMLExport::save(const QString &sFile, ListModel* feedList)
 {
     QFile file(sFile);
-    
-    if (file.open(QIODevice::WriteOnly)) {
+
+    if (!file.open(QIODevice::WriteOnly)) {
         qWarning() << "Could not open file: " << sFile << " error code: " << file.errorString();
         return false;
     }

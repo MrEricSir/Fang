@@ -40,15 +40,13 @@ void TestFangOPMLParser::testCase1()
     QFETCH(QString, lastURL);
     
     OPMLParser parser(this);
-    
+
     QSignalSpy spy(&parser, SIGNAL(done()));
-    
-    // Parse the file.
-    parser.parseFile("../TestFangOPMLParser/opml/" + filename);
-    
-    // Wait...
-    
-    // Verify the signal is only emitted once.
+
+    // Parse the file (as a synchronous operation)
+    parser.parseFile(QString(SRCDIR) + "opml/" + filename);
+
+    // Verify the signal was emitted once
     QCOMPARE(spy.count(), 1);
     
     QList<RawFeed*> feedList = parser.getFeedList();
@@ -79,9 +77,9 @@ void TestFangOPMLParser::testCase1_data()
     QTest::newRow("FeedDeemon") << "feeddeemon.opml" << 3 << "Mission Mission" << "http://feeds.feedburner.com/MissionMission";
     QTest::newRow("RSSOwl") << "rssowl.opml" << 3 << "Mission Mission" << "http://missionmission.org";
     QTest::newRow("Feedly") << "feedly.opml" << 3 << "Mission Mission" << "http://missionmission.wordpress.com/feed/";
-    QTest::newRow("Fang") << "Fang.opml" << 3 << "Mission Mission" << "http://feeds.feedburner.com/MissionMission";
+    QTest::newRow("Fang") << "fang.opml" << 3 << "Mission Mission" << "http://feeds.feedburner.com/MissionMission";
 }
 
-QTEST_APPLESS_MAIN(TestFangOPMLParser)
+QTEST_MAIN(TestFangOPMLParser)
 
 #include "tst_testfangopmlparser.moc"
