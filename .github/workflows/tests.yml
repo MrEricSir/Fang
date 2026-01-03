@@ -397,9 +397,9 @@ jobs:
     - name: Generate coverage report
       run: |
         cd build
-        lcov --directory . --capture --output-file coverage.info --ignore-errors inconsistent,format,gcov,unsupported,category,unused
-        lcov --remove coverage.info '/usr/*' '*/Qt/*' '*/test/*' '*_autogen/*' '*/tidylib/*' --output-file coverage.info.cleaned --ignore-errors inconsistent,format,gcov,unsupported,category,unused
-        lcov --list coverage.info.cleaned --ignore-errors inconsistent,format,gcov,unsupported,category,unused
+        lcov --directory . --capture --output-file coverage.info --ignore-errors inconsistent,format,gcov,unsupported,unused
+        lcov --remove coverage.info '/usr/*' '*/Qt/*' '*/test/*' '*_autogen/*' '*/tidylib/*' --output-file coverage.info.cleaned --ignore-errors inconsistent,format,gcov,unsupported,unused
+        lcov --list coverage.info.cleaned --ignore-errors inconsistent,format,gcov,unsupported,unused
 
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v4
