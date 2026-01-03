@@ -7,6 +7,7 @@
 
 #include "SimpleStateMachine.h"
 #include "../parser/NewsParser.h"
+#include "../parser/ParserInterface.h"
 #include "../parser/RawFeed.h"
 #include "../utilities/WebPageGrabber.h"
 #include "../FangObject.h"
@@ -51,7 +52,11 @@ private:
     };
     
 public:
-    explicit FeedDiscovery(QObject *parent = nullptr);
+    explicit FeedDiscovery(QObject *parent = nullptr,
+                          ParserInterface* firstParser = nullptr,
+                          ParserInterface* secondParser = nullptr,
+                          WebPageGrabber* grabber = nullptr);
+    virtual ~FeedDiscovery();
     
     /**
      * @return After done(), this returns true if there was an error.
@@ -92,12 +97,12 @@ signals:
     void done(FeedDiscovery* feedDiscovery);
     
 public slots:
-    
+
     /**
      * @brief Call this with a feed URL to check to get started!  Wait for done()
      * @param sURL
      */
-    void checkFeed(QString sURL);
+    virtual void checkFeed(QString sURL);
 
     /**
      * @brief Try to find RSS and Atom feed, if available.
@@ -121,25 +126,30 @@ private slots:
     
     // WebPageGrabber slots.
     void onPageGrabberReady(QString* document);
-    
+
+protected:
+    QString rssURL;
+    QString atomURL;
+
+    ParserInterface* parserFirstTry;
+    ParserInterface* parserSecondTry;
+    WebPageGrabber* pageGrabber;
+
 private:
     // Sets the error flag, error string, and triggers the ERROR state.
     void reportError(QString errorString);
-    
+
     SimpleStateMachine machine;
-    
+
     QUrl _feedURL;
     bool _error;
     QString _errorString;
 
-    QString rssURL;
-    QString atomURL;
-    
-    NewsParser parserFirstTry;
-    NewsParser parserSecondTry;
-    
-    WebPageGrabber pageGrabber;
-    
+    // Ownership flags - true if we created the objects and need to delete them
+    bool ownsFirstParser;
+    bool ownsSecondParser;
+    bool ownsPageGrabber;
+
     RawFeed* _feedResult;
 };
 

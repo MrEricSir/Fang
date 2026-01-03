@@ -22,8 +22,7 @@ Testing/
 
 # Coverage artifacts
 coverage_html/
-coverage.info
-coverage.info.cleaned
+*.info
 *.gcda
 *.gcno
 *.gcov
