@@ -411,6 +411,8 @@ void FangApp::onSecondInstanceStarted()
     if (window) {
         if (window->visibility() == QWindow::Visibility::Minimized) {
             window->showNormal();
+        } else if (window->visibility() == QWindow::Visibility::Hidden) {
+            window->show();
         }
         window->requestActivate();
         window->raise();
