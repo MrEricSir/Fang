@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-01-03 08:40:31</td>
+            <td class="headerValue">2026-01-03 21:34:00</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -82,17 +82,17 @@
 <span id="L20"><span class="lineNum">      20</span>              :     using TidyDocPtr = std::unique_ptr&lt;std::remove_pointer&lt;TidyDoc&gt;::type, TidyDocDeleter&gt;;</span>
 <span id="L21"><span class="lineNum">      21</span>              : }</span>
 <span id="L22"><span class="lineNum">      22</span>              : </span>
-<span id="L23"><span class="lineNum">      23</span> <span class="tlaGNC">          79 : WebPageGrabber::WebPageGrabber(bool handleMetaRefresh, int timeoutMS, QObject *parent, QNetworkAccessManager* networkManager) :</span></span>
+<span id="L23"><span class="lineNum">      23</span> <span class="tlaGNC">         101 : WebPageGrabber::WebPageGrabber(bool handleMetaRefresh, int timeoutMS, QObject *parent, QNetworkAccessManager* networkManager) :</span></span>
 <span id="L24"><span class="lineNum">      24</span>              :     FangObject(parent),</span>
-<span id="L25"><span class="lineNum">      25</span> <span class="tlaGNC">          79 :     downloader(timeoutMS, this, networkManager),</span></span>
-<span id="L26"><span class="lineNum">      26</span> <span class="tlaGNC">          79 :     handleMetaRefresh(handleMetaRefresh),</span></span>
-<span id="L27"><span class="lineNum">      27</span> <span class="tlaGNC">          79 :     redirectAttempts(0),</span></span>
-<span id="L28"><span class="lineNum">      28</span> <span class="tlaGNC">          79 :     error(true)</span></span>
+<span id="L25"><span class="lineNum">      25</span> <span class="tlaGNC">         101 :     downloader(timeoutMS, this, networkManager),</span></span>
+<span id="L26"><span class="lineNum">      26</span> <span class="tlaGNC">         101 :     handleMetaRefresh(handleMetaRefresh),</span></span>
+<span id="L27"><span class="lineNum">      27</span> <span class="tlaGNC">         101 :     redirectAttempts(0),</span></span>
+<span id="L28"><span class="lineNum">      28</span> <span class="tlaGNC">         101 :     error(true)</span></span>
 <span id="L29"><span class="lineNum">      29</span>              : </span>
 <span id="L30"><span class="lineNum">      30</span>              : {</span>
-<span id="L31"><span class="lineNum">      31</span> <span class="tlaGNC">          79 :     connect(&amp;downloader, &amp;SimpleHTTPDownloader::error, this, &amp;WebPageGrabber::onDownloadError);</span></span>
-<span id="L32"><span class="lineNum">      32</span> <span class="tlaGNC">          79 :     connect(&amp;downloader, &amp;SimpleHTTPDownloader::finished, this, &amp;WebPageGrabber::onDownloadFinished);</span></span>
-<span id="L33"><span class="lineNum">      33</span> <span class="tlaGNC">          79 : }</span></span>
+<span id="L31"><span class="lineNum">      31</span> <span class="tlaGNC">         101 :     connect(&amp;downloader, &amp;SimpleHTTPDownloader::error, this, &amp;WebPageGrabber::onDownloadError);</span></span>
+<span id="L32"><span class="lineNum">      32</span> <span class="tlaGNC">         101 :     connect(&amp;downloader, &amp;SimpleHTTPDownloader::finished, this, &amp;WebPageGrabber::onDownloadFinished);</span></span>
+<span id="L33"><span class="lineNum">      33</span> <span class="tlaGNC">         101 : }</span></span>
 <span id="L34"><span class="lineNum">      34</span>              : </span>
 <span id="L35"><span class="lineNum">      35</span>              : </span>
 <span id="L36"><span class="lineNum">      36</span> <span class="tlaGNC">           7 : void WebPageGrabber::load(const QUrl&amp; url)</span></span>

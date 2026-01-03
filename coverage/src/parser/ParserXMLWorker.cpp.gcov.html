@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-01-03 08:40:31</td>
+            <td class="headerValue">2026-01-03 21:34:00</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -63,25 +63,25 @@
 <span id="L1"><span class="lineNum">       1</span>              : #include &quot;ParserXMLWorker.h&quot;</span>
 <span id="L2"><span class="lineNum">       2</span>              : #include &lt;QtCore/qtimezone.h&gt;</span>
 <span id="L3"><span class="lineNum">       3</span>              : </span>
-<span id="L4"><span class="lineNum">       4</span> <span class="tlaGNC tlaBgGNC">         101 : ParserXMLWorker::ParserXMLWorker(QObject *parent) :</span></span>
-<span id="L5"><span class="lineNum">       5</span> <span class="tlaGNC">         101 :     FangObject(parent), feed(nullptr), currentItem(nullptr), isValid(false), inAtomXHTML(false)</span></span>
+<span id="L4"><span class="lineNum">       4</span> <span class="tlaGNC tlaBgGNC">         111 : ParserXMLWorker::ParserXMLWorker(QObject *parent) :</span></span>
+<span id="L5"><span class="lineNum">       5</span> <span class="tlaGNC">         111 :     FangObject(parent), feed(nullptr), currentItem(nullptr), isValid(false), inAtomXHTML(false)</span></span>
 <span id="L6"><span class="lineNum">       6</span>              : {</span>
-<span id="L7"><span class="lineNum">       7</span> <span class="tlaGNC">         101 : }</span></span>
+<span id="L7"><span class="lineNum">       7</span> <span class="tlaGNC">         111 : }</span></span>
 <span id="L8"><span class="lineNum">       8</span>              : </span>
-<span id="L9"><span class="lineNum">       9</span> <span class="tlaGNC">         202 : ParserXMLWorker::~ParserXMLWorker()</span></span>
+<span id="L9"><span class="lineNum">       9</span> <span class="tlaGNC">         222 : ParserXMLWorker::~ParserXMLWorker()</span></span>
 <span id="L10"><span class="lineNum">      10</span>              : {</span>
-<span id="L11"><span class="lineNum">      11</span> <span class="tlaGNC">         101 :     delete feed;</span></span>
-<span id="L12"><span class="lineNum">      12</span> <span class="tlaGNC">         202 : }</span></span>
+<span id="L11"><span class="lineNum">      11</span> <span class="tlaGNC">         111 :     delete feed;</span></span>
+<span id="L12"><span class="lineNum">      12</span> <span class="tlaGNC">         222 : }</span></span>
 <span id="L13"><span class="lineNum">      13</span>              : </span>
-<span id="L14"><span class="lineNum">      14</span> <span class="tlaGNC">          59 : void ParserXMLWorker::documentStart()</span></span>
+<span id="L14"><span class="lineNum">      14</span> <span class="tlaGNC">          60 : void ParserXMLWorker::documentStart()</span></span>
 <span id="L15"><span class="lineNum">      15</span>              : {</span>
 <span id="L16"><span class="lineNum">      16</span>              :     // Make a new feed!  Yay!</span>
-<span id="L17"><span class="lineNum">      17</span> <span class="tlaGNC">          59 :     delete feed;</span></span>
-<span id="L18"><span class="lineNum">      18</span> <span class="tlaGNC">          59 :     feed = new RawFeed();</span></span>
-<span id="L19"><span class="lineNum">      19</span> <span class="tlaGNC">          59 :     isValid = true;</span></span>
+<span id="L17"><span class="lineNum">      17</span> <span class="tlaGNC">          60 :     delete feed;</span></span>
+<span id="L18"><span class="lineNum">      18</span> <span class="tlaGNC">          60 :     feed = new RawFeed();</span></span>
+<span id="L19"><span class="lineNum">      19</span> <span class="tlaGNC">          60 :     isValid = true;</span></span>
 <span id="L20"><span class="lineNum">      20</span>              :     </span>
-<span id="L21"><span class="lineNum">      21</span> <span class="tlaGNC">          59 :     resetParserVars();</span></span>
-<span id="L22"><span class="lineNum">      22</span> <span class="tlaGNC">          59 : }</span></span>
+<span id="L21"><span class="lineNum">      21</span> <span class="tlaGNC">          60 :     resetParserVars();</span></span>
+<span id="L22"><span class="lineNum">      22</span> <span class="tlaGNC">          60 : }</span></span>
 <span id="L23"><span class="lineNum">      23</span>              : </span>
 <span id="L24"><span class="lineNum">      24</span> <span class="tlaGNC">          59 : void ParserXMLWorker::documentEnd()</span></span>
 <span id="L25"><span class="lineNum">      25</span>              : {</span>
@@ -335,29 +335,29 @@
 <span id="L273"><span class="lineNum">     273</span>              :     }</span>
 <span id="L274"><span class="lineNum">     274</span> <span class="tlaGNC">       15951 : }</span></span>
 <span id="L275"><span class="lineNum">     275</span>              : </span>
-<span id="L276"><span class="lineNum">     276</span> <span class="tlaGNC">          59 : void ParserXMLWorker::resetParserVars()</span></span>
+<span id="L276"><span class="lineNum">     276</span> <span class="tlaGNC">          60 : void ParserXMLWorker::resetParserVars()</span></span>
 <span id="L277"><span class="lineNum">     277</span>              : {</span>
-<span id="L278"><span class="lineNum">     278</span> <span class="tlaGNC">          59 :     xml.clear();</span></span>
+<span id="L278"><span class="lineNum">     278</span> <span class="tlaGNC">          60 :     xml.clear();</span></span>
 <span id="L279"><span class="lineNum">     279</span>              : </span>
-<span id="L280"><span class="lineNum">     280</span> <span class="tlaGNC">          59 :     numItems = 0;</span></span>
-<span id="L281"><span class="lineNum">     281</span> <span class="tlaGNC">          59 :     currentTag = &quot;&quot;;</span></span>
-<span id="L282"><span class="lineNum">     282</span> <span class="tlaGNC">          59 :     currentPrefix = &quot;&quot;;</span></span>
-<span id="L283"><span class="lineNum">     283</span> <span class="tlaGNC">          59 :     urlHref = &quot;&quot;;</span></span>
-<span id="L284"><span class="lineNum">     284</span> <span class="tlaGNC">          59 :     title = &quot;&quot;;</span></span>
-<span id="L285"><span class="lineNum">     285</span> <span class="tlaGNC">          59 :     subtitle = &quot;&quot;;</span></span>
-<span id="L286"><span class="lineNum">     286</span> <span class="tlaGNC">          59 :     content = &quot;&quot;;</span></span>
-<span id="L287"><span class="lineNum">     287</span> <span class="tlaGNC">          59 :     pubdate = &quot;&quot;;</span></span>
-<span id="L288"><span class="lineNum">     288</span> <span class="tlaGNC">          59 :     lastbuilddate = &quot;&quot;;</span></span>
-<span id="L289"><span class="lineNum">     289</span> <span class="tlaGNC">          59 :     created = &quot;&quot;;</span></span>
-<span id="L290"><span class="lineNum">     290</span> <span class="tlaGNC">          59 :     updated = &quot;&quot;;</span></span>
-<span id="L291"><span class="lineNum">     291</span> <span class="tlaGNC">          59 :     date = &quot;&quot;;</span></span>
-<span id="L292"><span class="lineNum">     292</span> <span class="tlaGNC">          59 :     author = &quot;&quot;;</span></span>
-<span id="L293"><span class="lineNum">     293</span> <span class="tlaGNC">          59 :     guid = &quot;&quot;;</span></span>
-<span id="L294"><span class="lineNum">     294</span> <span class="tlaGNC">          59 :     id = &quot;&quot;;</span></span>
-<span id="L295"><span class="lineNum">     295</span> <span class="tlaGNC">          59 :     hasType = false;</span></span>
-<span id="L296"><span class="lineNum">     296</span> <span class="tlaGNC">          59 :     inAtomXHTML = false;</span></span>
-<span id="L297"><span class="lineNum">     297</span> <span class="tlaGNC">          59 :     tagStack.clear();</span></span>
-<span id="L298"><span class="lineNum">     298</span> <span class="tlaGNC">          59 : }</span></span>
+<span id="L280"><span class="lineNum">     280</span> <span class="tlaGNC">          60 :     numItems = 0;</span></span>
+<span id="L281"><span class="lineNum">     281</span> <span class="tlaGNC">          60 :     currentTag = &quot;&quot;;</span></span>
+<span id="L282"><span class="lineNum">     282</span> <span class="tlaGNC">          60 :     currentPrefix = &quot;&quot;;</span></span>
+<span id="L283"><span class="lineNum">     283</span> <span class="tlaGNC">          60 :     urlHref = &quot;&quot;;</span></span>
+<span id="L284"><span class="lineNum">     284</span> <span class="tlaGNC">          60 :     title = &quot;&quot;;</span></span>
+<span id="L285"><span class="lineNum">     285</span> <span class="tlaGNC">          60 :     subtitle = &quot;&quot;;</span></span>
+<span id="L286"><span class="lineNum">     286</span> <span class="tlaGNC">          60 :     content = &quot;&quot;;</span></span>
+<span id="L287"><span class="lineNum">     287</span> <span class="tlaGNC">          60 :     pubdate = &quot;&quot;;</span></span>
+<span id="L288"><span class="lineNum">     288</span> <span class="tlaGNC">          60 :     lastbuilddate = &quot;&quot;;</span></span>
+<span id="L289"><span class="lineNum">     289</span> <span class="tlaGNC">          60 :     created = &quot;&quot;;</span></span>
+<span id="L290"><span class="lineNum">     290</span> <span class="tlaGNC">          60 :     updated = &quot;&quot;;</span></span>
+<span id="L291"><span class="lineNum">     291</span> <span class="tlaGNC">          60 :     date = &quot;&quot;;</span></span>
+<span id="L292"><span class="lineNum">     292</span> <span class="tlaGNC">          60 :     author = &quot;&quot;;</span></span>
+<span id="L293"><span class="lineNum">     293</span> <span class="tlaGNC">          60 :     guid = &quot;&quot;;</span></span>
+<span id="L294"><span class="lineNum">     294</span> <span class="tlaGNC">          60 :     id = &quot;&quot;;</span></span>
+<span id="L295"><span class="lineNum">     295</span> <span class="tlaGNC">          60 :     hasType = false;</span></span>
+<span id="L296"><span class="lineNum">     296</span> <span class="tlaGNC">          60 :     inAtomXHTML = false;</span></span>
+<span id="L297"><span class="lineNum">     297</span> <span class="tlaGNC">          60 :     tagStack.clear();</span></span>
+<span id="L298"><span class="lineNum">     298</span> <span class="tlaGNC">          60 : }</span></span>
 <span id="L299"><span class="lineNum">     299</span>              : </span>
 <span id="L300"><span class="lineNum">     300</span> <span class="tlaGNC">          59 : void ParserXMLWorker::saveSummary()</span></span>
 <span id="L301"><span class="lineNum">     301</span>              : {</span>

@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-01-03 08:40:31</td>
+            <td class="headerValue">2026-01-03 21:34:00</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryLo">66.7&nbsp;%</td>
@@ -68,28 +68,28 @@
 <span id="L6"><span class="lineNum">       6</span>              : #include &lt;QNetworkDiskCache&gt;</span>
 <span id="L7"><span class="lineNum">       7</span>              : #include &lt;QStandardPaths&gt;</span>
 <span id="L8"><span class="lineNum">       8</span>              : </span>
-<span id="L9"><span class="lineNum">       9</span> <span class="tlaGNC tlaBgGNC">         202 : FangNetworkAccessManager::FangNetworkAccessManager(QObject *parent) :</span></span>
-<span id="L10"><span class="lineNum">      10</span> <span class="tlaGNC">         202 :     QNetworkAccessManager(parent)</span></span>
+<span id="L9"><span class="lineNum">       9</span> <span class="tlaGNC tlaBgGNC">         234 : FangNetworkAccessManager::FangNetworkAccessManager(QObject *parent) :</span></span>
+<span id="L10"><span class="lineNum">      10</span> <span class="tlaGNC">         234 :     QNetworkAccessManager(parent)</span></span>
 <span id="L11"><span class="lineNum">      11</span>              : {</span>
-<span id="L12"><span class="lineNum">      12</span> <span class="tlaGNC">         202 :     QNetworkDiskCache* diskCache = new QNetworkDiskCache(this);</span></span>
-<span id="L13"><span class="lineNum">      13</span> <span class="tlaGNC">         202 :     QString cacheDir = QStandardPaths::writableLocation(QStandardPaths::CacheLocation);</span></span>
-<span id="L14"><span class="lineNum">      14</span> <span class="tlaGNC">         202 :     diskCache-&gt;setCacheDirectory(cacheDir);</span></span>
-<span id="L15"><span class="lineNum">      15</span> <span class="tlaGNC">         202 :     if (!cacheDir.isEmpty())</span></span>
-<span id="L16"><span class="lineNum">      16</span> <span class="tlaGNC">         202 :         setCache(diskCache);</span></span>
+<span id="L12"><span class="lineNum">      12</span> <span class="tlaGNC">         234 :     QNetworkDiskCache* diskCache = new QNetworkDiskCache(this);</span></span>
+<span id="L13"><span class="lineNum">      13</span> <span class="tlaGNC">         234 :     QString cacheDir = QStandardPaths::writableLocation(QStandardPaths::CacheLocation);</span></span>
+<span id="L14"><span class="lineNum">      14</span> <span class="tlaGNC">         234 :     diskCache-&gt;setCacheDirectory(cacheDir);</span></span>
+<span id="L15"><span class="lineNum">      15</span> <span class="tlaGNC">         234 :     if (!cacheDir.isEmpty())</span></span>
+<span id="L16"><span class="lineNum">      16</span> <span class="tlaGNC">         234 :         setCache(diskCache);</span></span>
 <span id="L17"><span class="lineNum">      17</span>              : </span>
 <span id="L18"><span class="lineNum">      18</span>              :     // Set up our circuit breaker.</span>
-<span id="L19"><span class="lineNum">      19</span> <span class="tlaGNC">         202 :     NetworkStateMonitor&amp; monitor = NetworkStateMonitor::instance();</span></span>
-<span id="L20"><span class="lineNum">      20</span> <span class="tlaGNC">         202 :     connect(&amp;monitor, &amp;NetworkStateMonitor::circuitOpened,</span></span>
-<span id="L21"><span class="lineNum">      21</span> <span class="tlaGNC">         202 :             this, &amp;FangNetworkAccessManager::onCircuitOpened);</span></span>
-<span id="L22"><span class="lineNum">      22</span> <span class="tlaGNC">         202 :     connect(&amp;monitor, &amp;NetworkStateMonitor::circuitClosed,</span></span>
-<span id="L23"><span class="lineNum">      23</span> <span class="tlaGNC">         202 :             this, &amp;FangNetworkAccessManager::onCircuitClosed);</span></span>
+<span id="L19"><span class="lineNum">      19</span> <span class="tlaGNC">         234 :     NetworkStateMonitor&amp; monitor = NetworkStateMonitor::instance();</span></span>
+<span id="L20"><span class="lineNum">      20</span> <span class="tlaGNC">         234 :     connect(&amp;monitor, &amp;NetworkStateMonitor::circuitOpened,</span></span>
+<span id="L21"><span class="lineNum">      21</span> <span class="tlaGNC">         234 :             this, &amp;FangNetworkAccessManager::onCircuitOpened);</span></span>
+<span id="L22"><span class="lineNum">      22</span> <span class="tlaGNC">         234 :     connect(&amp;monitor, &amp;NetworkStateMonitor::circuitClosed,</span></span>
+<span id="L23"><span class="lineNum">      23</span> <span class="tlaGNC">         234 :             this, &amp;FangNetworkAccessManager::onCircuitClosed);</span></span>
 <span id="L24"><span class="lineNum">      24</span>              : </span>
 <span id="L25"><span class="lineNum">      25</span>              :     //qCDebug(logNetwork) &lt;&lt; &quot;FangNetworkAccessManager initialized with resilience features&quot;;</span>
-<span id="L26"><span class="lineNum">      26</span> <span class="tlaGNC">         202 : }</span></span>
+<span id="L26"><span class="lineNum">      26</span> <span class="tlaGNC">         234 : }</span></span>
 <span id="L27"><span class="lineNum">      27</span>              : </span>
-<span id="L28"><span class="lineNum">      28</span> <span class="tlaGNC">          29 : QNetworkReply* FangNetworkAccessManager::createRequest(QNetworkAccessManager::Operation op, const QNetworkRequest&amp; request, QIODevice* outgoingData)</span></span>
+<span id="L28"><span class="lineNum">      28</span> <span class="tlaGNC">          30 : QNetworkReply* FangNetworkAccessManager::createRequest(QNetworkAccessManager::Operation op, const QNetworkRequest&amp; request, QIODevice* outgoingData)</span></span>
 <span id="L29"><span class="lineNum">      29</span>              : {</span>
-<span id="L30"><span class="lineNum">      30</span> <span class="tlaGNC">          29 :     QNetworkRequest&amp; req = const_cast&lt;QNetworkRequest&amp;&gt;(request);</span></span>
+<span id="L30"><span class="lineNum">      30</span> <span class="tlaGNC">          30 :     QNetworkRequest&amp; req = const_cast&lt;QNetworkRequest&amp;&gt;(request);</span></span>
 <span id="L31"><span class="lineNum">      31</span>              :     </span>
 <span id="L32"><span class="lineNum">      32</span>              : #ifdef QT_DEBUG</span>
 <span id="L33"><span class="lineNum">      33</span>              :     // In debug mode, WebKit doesn't like Vine's headers.</span>
@@ -98,24 +98,24 @@
 <span id="L36"><span class="lineNum">      36</span>              :     //</span>
 <span id="L37"><span class="lineNum">      37</span>              :     // https://github.com/MrEricSir/Fang/issues/77</span>
 <span id="L38"><span class="lineNum">      38</span>              :     // https://bugs.webkit.org/show_bug.cgi?id=129081</span>
-<span id="L39"><span class="lineNum">      39</span> <span class="tlaGNC">          29 :     if (req.url().host() == &quot;vine.co&quot;) {</span></span>
+<span id="L39"><span class="lineNum">      39</span> <span class="tlaGNC">          30 :     if (req.url().host() == &quot;vine.co&quot;) {</span></span>
 <span id="L40"><span class="lineNum">      40</span> <span class="tlaUNC tlaBgUNC">           0 :         req.setUrl(QUrl(&quot;http://0.0.0.0&quot;));</span></span>
 <span id="L41"><span class="lineNum">      41</span>              :     }</span>
 <span id="L42"><span class="lineNum">      42</span>              : #endif // QT_DEBUG</span>
 <span id="L43"><span class="lineNum">      43</span>              :     </span>
 <span id="L44"><span class="lineNum">      44</span>              :     // This SHOULD be the default, but just in case.</span>
-<span id="L45"><span class="lineNum">      45</span> <span class="tlaGNC tlaBgGNC">          29 :     req.setAttribute(QNetworkRequest::CacheLoadControlAttribute,</span></span>
+<span id="L45"><span class="lineNum">      45</span> <span class="tlaGNC tlaBgGNC">          30 :     req.setAttribute(QNetworkRequest::CacheLoadControlAttribute,</span></span>
 <span id="L46"><span class="lineNum">      46</span>              :                           QNetworkRequest::PreferNetwork);</span>
 <span id="L47"><span class="lineNum">      47</span>              :     </span>
 <span id="L48"><span class="lineNum">      48</span>              :     // We have to pretend to be Firefox in order for some stupid servers to speak with us.</span>
-<span id="L49"><span class="lineNum">      49</span> <span class="tlaGNC">          29 :     req.setHeader(QNetworkRequest::UserAgentHeader,</span></span>
+<span id="L49"><span class="lineNum">      49</span> <span class="tlaGNC">          30 :     req.setHeader(QNetworkRequest::UserAgentHeader,</span></span>
 <span id="L50"><span class="lineNum">      50</span>              :                       &quot;Mozilla/5.0 (Windows NT 6.1; WOW64; rv:27.0) Gecko/20100101 Firefox/27.0&quot;);</span>
 <span id="L51"><span class="lineNum">      51</span>              :     </span>
 <span id="L52"><span class="lineNum">      52</span>              :     // Required for blogs.gnome.org.</span>
-<span id="L53"><span class="lineNum">      53</span> <span class="tlaGNC">          29 :     req.setRawHeader(&quot;Accept&quot;,</span></span>
+<span id="L53"><span class="lineNum">      53</span> <span class="tlaGNC">          30 :     req.setRawHeader(&quot;Accept&quot;,</span></span>
 <span id="L54"><span class="lineNum">      54</span>              :                          &quot;text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8&quot;);</span>
 <span id="L55"><span class="lineNum">      55</span>              : </span>
-<span id="L56"><span class="lineNum">      56</span> <span class="tlaGNC">          29 :     return QNetworkAccessManager::createRequest(op, req, outgoingData);</span></span>
+<span id="L56"><span class="lineNum">      56</span> <span class="tlaGNC">          30 :     return QNetworkAccessManager::createRequest(op, req, outgoingData);</span></span>
 <span id="L57"><span class="lineNum">      57</span>              : }</span>
 <span id="L58"><span class="lineNum">      58</span>              : </span>
 <span id="L59"><span class="lineNum">      59</span> <span class="tlaGNC">          22 : ResilientNetworkReply* FangNetworkAccessManager::createResilientGet(</span></span>

@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-01-03 08:40:31</td>
+            <td class="headerValue">2026-01-03 21:34:00</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -93,11 +93,11 @@
 <span id="L31"><span class="lineNum">      31</span>              :     // If you requested a URL, ready() will be emitted when it's ready!</span>
 <span id="L32"><span class="lineNum">      32</span>              :     // If document is null, an error happened. :(</span>
 <span id="L33"><span class="lineNum">      33</span>              :     void ready(QString* document);</span>
-<span id="L34"><span class="lineNum">      34</span>              :     </span>
+<span id="L34"><span class="lineNum">      34</span>              : </span>
 <span id="L35"><span class="lineNum">      35</span>              : public slots:</span>
 <span id="L36"><span class="lineNum">      36</span>              :     // Fetches the webpage and emits ready() with the XHTML document.</span>
 <span id="L37"><span class="lineNum">      37</span>              :     // Signals with null on an error.</span>
-<span id="L38"><span class="lineNum">      38</span>              :     void load(const QUrl &amp;url);</span>
+<span id="L38"><span class="lineNum">      38</span>              :     virtual void load(const QUrl &amp;url);</span>
 <span id="L39"><span class="lineNum">      39</span>              : </span>
 <span id="L40"><span class="lineNum">      40</span>              :     // Load the HTML string into a Tidy'd XHTML document and returns it (no signal is emmitted.)</span>
 <span id="L41"><span class="lineNum">      41</span>              :     // Returns null on an error.</span>

@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-01-03 08:40:31</td>
+            <td class="headerValue">2026-01-03 21:34:00</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -64,24 +64,24 @@
 <span id="L2"><span class="lineNum">       2</span>              : #include &quot;NewsList.h&quot;</span>
 <span id="L3"><span class="lineNum">       3</span>              : </span>
 <span id="L4"><span class="lineNum">       4</span>              : </span>
-<span id="L5"><span class="lineNum">       5</span> <span class="tlaGNC tlaBgGNC">         103 : NewsList::NewsList(QObject *parent)</span></span>
-<span id="L6"><span class="lineNum">       6</span> <span class="tlaGNC">         103 :     : FangObject{parent}</span></span>
-<span id="L7"><span class="lineNum">       7</span> <span class="tlaGNC">         103 : {}</span></span>
+<span id="L5"><span class="lineNum">       5</span> <span class="tlaGNC tlaBgGNC">         130 : NewsList::NewsList(QObject *parent)</span></span>
+<span id="L6"><span class="lineNum">       6</span> <span class="tlaGNC">         130 :     : FangObject{parent}</span></span>
+<span id="L7"><span class="lineNum">       7</span> <span class="tlaGNC">         130 : {}</span></span>
 <span id="L8"><span class="lineNum">       8</span>              : </span>
-<span id="L9"><span class="lineNum">       9</span> <span class="tlaGNC">         125 : NewsList::~NewsList()</span></span>
+<span id="L9"><span class="lineNum">       9</span> <span class="tlaGNC">         133 : NewsList::~NewsList()</span></span>
 <span id="L10"><span class="lineNum">      10</span>              : {</span>
-<span id="L11"><span class="lineNum">      11</span> <span class="tlaGNC">         103 :     clear();</span></span>
-<span id="L12"><span class="lineNum">      12</span> <span class="tlaGNC">         125 : }</span></span>
+<span id="L11"><span class="lineNum">      11</span> <span class="tlaGNC">         111 :     clear();</span></span>
+<span id="L12"><span class="lineNum">      12</span> <span class="tlaGNC">         133 : }</span></span>
 <span id="L13"><span class="lineNum">      13</span>              : </span>
-<span id="L14"><span class="lineNum">      14</span> <span class="tlaGNC">         105 : void NewsList::clear()</span></span>
+<span id="L14"><span class="lineNum">      14</span> <span class="tlaGNC">         113 : void NewsList::clear()</span></span>
 <span id="L15"><span class="lineNum">      15</span>              : {</span>
 <span id="L16"><span class="lineNum">      16</span>              :     // Delete each and every news item.</span>
-<span id="L17"><span class="lineNum">      17</span> <span class="tlaGNC">         162 :     while(list.size() &gt; 0) {</span></span>
+<span id="L17"><span class="lineNum">      17</span> <span class="tlaGNC">         170 :     while(list.size() &gt; 0) {</span></span>
 <span id="L18"><span class="lineNum">      18</span> <span class="tlaGNC">          57 :         list.takeFirst()-&gt;deleteLater();</span></span>
 <span id="L19"><span class="lineNum">      19</span>              :     }</span>
 <span id="L20"><span class="lineNum">      20</span>              : </span>
-<span id="L21"><span class="lineNum">      21</span> <span class="tlaGNC">         105 :     set.clear();</span></span>
-<span id="L22"><span class="lineNum">      22</span> <span class="tlaGNC">         105 : }</span></span>
+<span id="L21"><span class="lineNum">      21</span> <span class="tlaGNC">         113 :     set.clear();</span></span>
+<span id="L22"><span class="lineNum">      22</span> <span class="tlaGNC">         113 : }</span></span>
 <span id="L23"><span class="lineNum">      23</span>              : </span>
 <span id="L24"><span class="lineNum">      24</span> <span class="tlaGNC">          18 : qsizetype NewsList::size() const</span></span>
 <span id="L25"><span class="lineNum">      25</span>              : {</span>

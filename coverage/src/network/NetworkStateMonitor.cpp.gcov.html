@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-01-03 08:40:31</td>
+            <td class="headerValue">2026-01-03 21:34:00</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryMed">87.5&nbsp;%</td>
@@ -70,56 +70,56 @@
 <span id="L8"><span class="lineNum">       8</span>              : static const int DEFAULT_WINDOW_SIZE = 60000;</span>
 <span id="L9"><span class="lineNum">       9</span>              : static const int DEFAULT_HALF_OPEN_REQUESTS = 3; // # of successful requests to close breaker</span>
 <span id="L10"><span class="lineNum">      10</span>              : </span>
-<span id="L11"><span class="lineNum">      11</span> <span class="tlaGNC tlaBgGNC">         266 : NetworkStateMonitor&amp; NetworkStateMonitor::instance()</span></span>
+<span id="L11"><span class="lineNum">      11</span> <span class="tlaGNC tlaBgGNC">         298 : NetworkStateMonitor&amp; NetworkStateMonitor::instance()</span></span>
 <span id="L12"><span class="lineNum">      12</span>              : {</span>
-<span id="L13"><span class="lineNum">      13</span> <span class="tlaGNC">         266 :     static NetworkStateMonitor instance;</span></span>
-<span id="L14"><span class="lineNum">      14</span> <span class="tlaGNC">         266 :     return instance;</span></span>
+<span id="L13"><span class="lineNum">      13</span> <span class="tlaGNC">         298 :     static NetworkStateMonitor instance;</span></span>
+<span id="L14"><span class="lineNum">      14</span> <span class="tlaGNC">         298 :     return instance;</span></span>
 <span id="L15"><span class="lineNum">      15</span>              : }</span>
 <span id="L16"><span class="lineNum">      16</span>              : </span>
-<span id="L17"><span class="lineNum">      17</span> <span class="tlaGNC">           7 : NetworkStateMonitor::NetworkStateMonitor()</span></span>
+<span id="L17"><span class="lineNum">      17</span> <span class="tlaGNC">           8 : NetworkStateMonitor::NetworkStateMonitor()</span></span>
 <span id="L18"><span class="lineNum">      18</span>              :     : QObject(nullptr)</span>
-<span id="L19"><span class="lineNum">      19</span> <span class="tlaGNC">           7 :     , isCurrentlyOnline(true)</span></span>
-<span id="L20"><span class="lineNum">      20</span> <span class="tlaGNC">           7 :     , currentCircuitState(Closed)</span></span>
-<span id="L21"><span class="lineNum">      21</span> <span class="tlaGNC">           7 :     , successCountMetric(0)</span></span>
-<span id="L22"><span class="lineNum">      22</span> <span class="tlaGNC">           7 :     , failureCountMetric(0)</span></span>
-<span id="L23"><span class="lineNum">      23</span> <span class="tlaGNC">           7 :     , halfOpenSuccessesMetric(0)</span></span>
-<span id="L24"><span class="lineNum">      24</span> <span class="tlaGNC">           7 :     , failureThreshold(DEFAULT_FAILURE_THRESHOLD)</span></span>
-<span id="L25"><span class="lineNum">      25</span> <span class="tlaGNC">           7 :     , openDuration(DEFAULT_OPEN_DURATION)</span></span>
-<span id="L26"><span class="lineNum">      26</span> <span class="tlaGNC">           7 :     , windowSize(DEFAULT_WINDOW_SIZE)</span></span>
-<span id="L27"><span class="lineNum">      27</span> <span class="tlaGNC">           7 :     , halfOpenRequests(DEFAULT_HALF_OPEN_REQUESTS)</span></span>
+<span id="L19"><span class="lineNum">      19</span> <span class="tlaGNC">           8 :     , isCurrentlyOnline(true)</span></span>
+<span id="L20"><span class="lineNum">      20</span> <span class="tlaGNC">           8 :     , currentCircuitState(Closed)</span></span>
+<span id="L21"><span class="lineNum">      21</span> <span class="tlaGNC">           8 :     , successCountMetric(0)</span></span>
+<span id="L22"><span class="lineNum">      22</span> <span class="tlaGNC">           8 :     , failureCountMetric(0)</span></span>
+<span id="L23"><span class="lineNum">      23</span> <span class="tlaGNC">           8 :     , halfOpenSuccessesMetric(0)</span></span>
+<span id="L24"><span class="lineNum">      24</span> <span class="tlaGNC">           8 :     , failureThreshold(DEFAULT_FAILURE_THRESHOLD)</span></span>
+<span id="L25"><span class="lineNum">      25</span> <span class="tlaGNC">           8 :     , openDuration(DEFAULT_OPEN_DURATION)</span></span>
+<span id="L26"><span class="lineNum">      26</span> <span class="tlaGNC">           8 :     , windowSize(DEFAULT_WINDOW_SIZE)</span></span>
+<span id="L27"><span class="lineNum">      27</span> <span class="tlaGNC">           8 :     , halfOpenRequests(DEFAULT_HALF_OPEN_REQUESTS)</span></span>
 <span id="L28"><span class="lineNum">      28</span>              : {</span>
 <span id="L29"><span class="lineNum">      29</span>              :     // Monitor system network state using Qt 6 QNetworkInformation</span>
 <span id="L30"><span class="lineNum">      30</span>              :     // Load the default backend (platform-specific)</span>
-<span id="L31"><span class="lineNum">      31</span> <span class="tlaGNC">           7 :     if (!QNetworkInformation::loadDefaultBackend()) {</span></span>
+<span id="L31"><span class="lineNum">      31</span> <span class="tlaGNC">           8 :     if (!QNetworkInformation::loadDefaultBackend()) {</span></span>
 <span id="L32"><span class="lineNum">      32</span> <span class="tlaUNC tlaBgUNC">           0 :         qCWarning(logNetwork) &lt;&lt; &quot;Failed to load network information backend, assuming online&quot;;</span></span>
 <span id="L33"><span class="lineNum">      33</span> <span class="tlaUNC">           0 :         isCurrentlyOnline = true;</span></span>
 <span id="L34"><span class="lineNum">      34</span>              :     } else {</span>
-<span id="L35"><span class="lineNum">      35</span> <span class="tlaGNC tlaBgGNC">           7 :         QNetworkInformation* netInfo = QNetworkInformation::instance();</span></span>
-<span id="L36"><span class="lineNum">      36</span> <span class="tlaGNC">           7 :         QNetworkInformation::Reachability reachability = netInfo-&gt;reachability();</span></span>
-<span id="L37"><span class="lineNum">      37</span> <span class="tlaGNC">           7 :         isCurrentlyOnline = (reachability == QNetworkInformation::Reachability::Online);</span></span>
+<span id="L35"><span class="lineNum">      35</span> <span class="tlaGNC tlaBgGNC">           8 :         QNetworkInformation* netInfo = QNetworkInformation::instance();</span></span>
+<span id="L36"><span class="lineNum">      36</span> <span class="tlaGNC">           8 :         QNetworkInformation::Reachability reachability = netInfo-&gt;reachability();</span></span>
+<span id="L37"><span class="lineNum">      37</span> <span class="tlaGNC">           8 :         isCurrentlyOnline = (reachability == QNetworkInformation::Reachability::Online);</span></span>
 <span id="L38"><span class="lineNum">      38</span>              : </span>
-<span id="L39"><span class="lineNum">      39</span> <span class="tlaGNC">           7 :         connect(netInfo, &amp;QNetworkInformation::reachabilityChanged,</span></span>
-<span id="L40"><span class="lineNum">      40</span> <span class="tlaGNC">          14 :                 this, &amp;NetworkStateMonitor::onReachabilityChanged);</span></span>
+<span id="L39"><span class="lineNum">      39</span> <span class="tlaGNC">           8 :         connect(netInfo, &amp;QNetworkInformation::reachabilityChanged,</span></span>
+<span id="L40"><span class="lineNum">      40</span> <span class="tlaGNC">          16 :                 this, &amp;NetworkStateMonitor::onReachabilityChanged);</span></span>
 <span id="L41"><span class="lineNum">      41</span>              :     }</span>
 <span id="L42"><span class="lineNum">      42</span>              : </span>
 <span id="L43"><span class="lineNum">      43</span>              :     // Circuit breaker timer.</span>
-<span id="L44"><span class="lineNum">      44</span> <span class="tlaGNC">           7 :     circuitTimer.setSingleShot(true);</span></span>
-<span id="L45"><span class="lineNum">      45</span> <span class="tlaGNC">           7 :     connect(&amp;circuitTimer, &amp;QTimer::timeout,</span></span>
-<span id="L46"><span class="lineNum">      46</span> <span class="tlaGNC">           7 :             this, &amp;NetworkStateMonitor::onCircuitTimerTimeout);</span></span>
+<span id="L44"><span class="lineNum">      44</span> <span class="tlaGNC">           8 :     circuitTimer.setSingleShot(true);</span></span>
+<span id="L45"><span class="lineNum">      45</span> <span class="tlaGNC">           8 :     connect(&amp;circuitTimer, &amp;QTimer::timeout,</span></span>
+<span id="L46"><span class="lineNum">      46</span> <span class="tlaGNC">           8 :             this, &amp;NetworkStateMonitor::onCircuitTimerTimeout);</span></span>
 <span id="L47"><span class="lineNum">      47</span>              : </span>
 <span id="L48"><span class="lineNum">      48</span>              :     // Metrics window timer</span>
-<span id="L49"><span class="lineNum">      49</span> <span class="tlaGNC">           7 :     windowTimer.setInterval(windowSize);</span></span>
-<span id="L50"><span class="lineNum">      50</span> <span class="tlaGNC">           7 :     connect(&amp;windowTimer, &amp;QTimer::timeout,</span></span>
-<span id="L51"><span class="lineNum">      51</span> <span class="tlaGNC">           7 :             this, &amp;NetworkStateMonitor::onWindowTimerTimeout);</span></span>
-<span id="L52"><span class="lineNum">      52</span> <span class="tlaGNC">           7 :     windowTimer.start();</span></span>
-<span id="L53"><span class="lineNum">      53</span> <span class="tlaGNC">           7 :     windowElapsed.start();</span></span>
+<span id="L49"><span class="lineNum">      49</span> <span class="tlaGNC">           8 :     windowTimer.setInterval(windowSize);</span></span>
+<span id="L50"><span class="lineNum">      50</span> <span class="tlaGNC">           8 :     connect(&amp;windowTimer, &amp;QTimer::timeout,</span></span>
+<span id="L51"><span class="lineNum">      51</span> <span class="tlaGNC">           8 :             this, &amp;NetworkStateMonitor::onWindowTimerTimeout);</span></span>
+<span id="L52"><span class="lineNum">      52</span> <span class="tlaGNC">           8 :     windowTimer.start();</span></span>
+<span id="L53"><span class="lineNum">      53</span> <span class="tlaGNC">           8 :     windowElapsed.start();</span></span>
 <span id="L54"><span class="lineNum">      54</span>              : </span>
-<span id="L55"><span class="lineNum">      55</span> <span class="tlaGNC">          14 :     qCInfo(logNetwork) &lt;&lt; &quot;Network state monitor init, online: &quot; &lt;&lt; isCurrentlyOnline;</span></span>
-<span id="L56"><span class="lineNum">      56</span> <span class="tlaGNC">           7 : }</span></span>
+<span id="L55"><span class="lineNum">      55</span> <span class="tlaGNC">          16 :     qCInfo(logNetwork) &lt;&lt; &quot;Network state monitor init, online: &quot; &lt;&lt; isCurrentlyOnline;</span></span>
+<span id="L56"><span class="lineNum">      56</span> <span class="tlaGNC">           8 : }</span></span>
 <span id="L57"><span class="lineNum">      57</span>              : </span>
-<span id="L58"><span class="lineNum">      58</span> <span class="tlaGNC">           7 : NetworkStateMonitor::~NetworkStateMonitor()</span></span>
+<span id="L58"><span class="lineNum">      58</span> <span class="tlaGNC">           8 : NetworkStateMonitor::~NetworkStateMonitor()</span></span>
 <span id="L59"><span class="lineNum">      59</span>              : {</span>
-<span id="L60"><span class="lineNum">      60</span> <span class="tlaGNC">           7 : }</span></span>
+<span id="L60"><span class="lineNum">      60</span> <span class="tlaGNC">           8 : }</span></span>
 <span id="L61"><span class="lineNum">      61</span>              : </span>
 <span id="L62"><span class="lineNum">      62</span> <span class="tlaGNC">           3 : bool NetworkStateMonitor::shouldAllowRequest() const</span></span>
 <span id="L63"><span class="lineNum">      63</span>              : {</span>
