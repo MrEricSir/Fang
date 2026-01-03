@@ -5,6 +5,7 @@
 # Fang
 
 [![Build and Test](https://github.com/MrEricSir/Fang/workflows/Build%20and%20Test/badge.svg)](https://github.com/MrEricSir/Fang/actions)
+[![Coverage Report](https://img.shields.io/badge/coverage-report-blue.svg)](https://mrericsir.github.io/Fang/coverage/)
 
 Feed on news
 

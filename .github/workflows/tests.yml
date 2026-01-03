@@ -401,10 +401,15 @@ jobs:
         lcov --remove coverage.info '/usr/*' '*/Qt/*' '*/test/*' '*_autogen/*' '*/tidylib/*' --output-file coverage.info.cleaned --ignore-errors inconsistent,format,gcov,unsupported,unused
         lcov --list coverage.info.cleaned --ignore-errors inconsistent,format,gcov,unsupported,unused
 
-    - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v4
+    - name: Generate HTML coverage report
+      run: |
+        cd build
+        genhtml coverage.info.cleaned --output-directory coverage_html --ignore-errors inconsistent,format,gcov,unsupported,unused
+
+    - name: Deploy coverage to GitHub Pages
+      if: github.ref == 'refs/heads/master'
+      uses: peaceiris/actions-gh-pages@v4
       with:
-        files: build/coverage.info.cleaned
-        fail_ci_if_error: false
-        verbose: true
-        token: ${{ secrets.CODECOV_TOKEN }}
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./build/coverage_html
+        destination_dir: coverage
