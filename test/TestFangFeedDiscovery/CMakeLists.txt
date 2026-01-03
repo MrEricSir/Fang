@@ -1,6 +1,10 @@
 # TestFangFeedDiscovery test executable (uses TidyLib)
 qt_add_executable(tst_testfangfeeddiscovery
     tst_testfangfeeddiscovery.cpp
+    # Mock objects for testing
+    ${CMAKE_SOURCE_DIR}/test/MockNewsParser.cpp
+    ${CMAKE_SOURCE_DIR}/test/MockNewsParser.h
+    ${CMAKE_SOURCE_DIR}/test/MockWebPageGrabber.h
     # Shared sources from main project
     ${CMAKE_SOURCE_DIR}/src/utilities/FeedDiscovery.cpp
     ${CMAKE_SOURCE_DIR}/src/utilities/SimpleStateMachine.cpp

@@ -9,20 +9,25 @@ BatchFeedDiscovery::BatchFeedDiscovery(QObject *parent) :
 void BatchFeedDiscovery::checkFeedList(ListModel* feedList, int maxConcurrent)
 {
     this->feedList = feedList;
-    
+
     for(int i = 0; i < feedList->count(); i++) {
         FeedItem* item = qobject_cast<FeedItem*>(feedList->row(i));
         if (i < maxConcurrent) {
             // Run the first few concurrently.
-            FeedDiscovery* discovery = new FeedDiscovery();
+            FeedDiscovery* discovery = createFeedDiscovery();
             connect(discovery, &FeedDiscovery::done, this, &BatchFeedDiscovery::onFeedDiscoveryFinished);
-            
+
             runDiscovery(discovery, item);
         } else {
             // Queue up the reset.
             queue.enqueue(item);
         }
     }
+}
+
+FeedDiscovery* BatchFeedDiscovery::createFeedDiscovery()
+{
+    return new FeedDiscovery(this);
 }
 
 void BatchFeedDiscovery::onFeedDiscoveryFinished(FeedDiscovery* discovery)

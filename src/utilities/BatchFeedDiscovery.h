@@ -9,6 +9,7 @@
 #include <QObject>
 #include <QMap>
 #include <QQueue>
+#include <functional>
 
 /**
  * @brief Calls FeedDiscovery on a bunch of feeds at once in a list.
@@ -51,13 +52,18 @@ public slots:
      */
     ListModel* getFeedList() { return feedList; }
     
-private slots:
-    
+protected slots:
+
     void onFeedDiscoveryFinished(FeedDiscovery* discovery);
-    
+
     void runDiscovery(FeedDiscovery* discovery, FeedItem* item);
-    
-private:
+
+protected:
+    /**
+     * @brief Creates a FeedDiscovery instance. Virtual to allow mocking in tests.
+     */
+    virtual FeedDiscovery* createFeedDiscovery();
+
     ListModel* feedList;
     QQueue<FeedItem*> queue;
     QMap<FeedDiscovery*, FeedItem*> lookup;

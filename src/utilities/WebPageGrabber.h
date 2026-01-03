@@ -31,11 +31,11 @@ signals:
     // If you requested a URL, ready() will be emitted when it's ready!
     // If document is null, an error happened. :(
     void ready(QString* document);
-    
+
 public slots:
     // Fetches the webpage and emits ready() with the XHTML document.
     // Signals with null on an error.
-    void load(const QUrl &url);
+    virtual void load(const QUrl &url);
 
     // Load the HTML string into a Tidy'd XHTML document and returns it (no signal is emmitted.)
     // Returns null on an error.

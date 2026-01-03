@@ -2,31 +2,72 @@
 #include <QXmlStreamReader>
 #include "NetworkUtilities.h"
 
-FeedDiscovery::FeedDiscovery(QObject *parent) :
+FeedDiscovery::FeedDiscovery(QObject *parent,
+                           ParserInterface* firstParser,
+                           ParserInterface* secondParser,
+                           WebPageGrabber* grabber) :
     FangObject(parent),
     machine(),
     _error(false),
     _errorString(""),
-    pageGrabber(true),
     _feedResult(nullptr)
 {
+    // Create default implementations if not provided
+    if (firstParser == nullptr) {
+        parserFirstTry = new NewsParser(this);
+        ownsFirstParser = true;
+    } else {
+        parserFirstTry = firstParser;
+        ownsFirstParser = false;
+    }
+
+    if (secondParser == nullptr) {
+        parserSecondTry = new NewsParser(this);
+        ownsSecondParser = true;
+    } else {
+        parserSecondTry = secondParser;
+        ownsSecondParser = false;
+    }
+
+    if (grabber == nullptr) {
+        pageGrabber = new WebPageGrabber(true, 5000, this);
+        ownsPageGrabber = true;
+    } else {
+        pageGrabber = grabber;
+        ownsPageGrabber = false;
+    }
+
     // Set up our state machine.
     machine.setReceiver(this);
-    
+
     machine.addStateChange(CHECK_FEED, TRY_FEED, SLOT(onTryFeed()));
     machine.addStateChange(TRY_FEED, FEED_FOUND, SLOT(onFeedFound()));
     machine.addStateChange(TRY_FEED, WEB_GRABBER, SLOT(onWebGrabber()));
     machine.addStateChange(WEB_GRABBER, TRY_FEED_AGAIN, SLOT(onTryFeedAgain()));
     machine.addStateChange(TRY_FEED_AGAIN, FEED_FOUND, SLOT(onFeedFound()));
-    
+
     machine.addStateChange(-1, FEED_ERROR, SLOT(onError())); // All errors.
-    
+
     // Parser signals.
-    connect(&parserFirstTry, &NewsParser::done, this, &FeedDiscovery::onFirstParseDone);
-    connect(&parserSecondTry, &NewsParser::done, this, &FeedDiscovery::onSecondParseDone);
-    
+    connect(parserFirstTry, &ParserInterface::done, this, &FeedDiscovery::onFirstParseDone);
+    connect(parserSecondTry, &ParserInterface::done, this, &FeedDiscovery::onSecondParseDone);
+
     // Web page grabber signals.
-    connect(&pageGrabber, &WebPageGrabber::ready, this, &FeedDiscovery::onPageGrabberReady);
+    connect(pageGrabber, &WebPageGrabber::ready, this, &FeedDiscovery::onPageGrabberReady);
+}
+
+FeedDiscovery::~FeedDiscovery()
+{
+    // Clean up owned objects
+    if (ownsFirstParser && parserFirstTry) {
+        delete parserFirstTry;
+    }
+    if (ownsSecondParser && parserSecondTry) {
+        delete parserSecondTry;
+    }
+    if (ownsPageGrabber && pageGrabber) {
+        delete pageGrabber;
+    }
 }
 
 void FeedDiscovery::checkFeed(QString sURL)
@@ -62,7 +103,7 @@ void FeedDiscovery::checkFeed(QString sURL)
 
 void FeedDiscovery::onTryFeed()
 {
-    parserFirstTry.parse(_feedURL);
+    parserFirstTry->parse(_feedURL);
 }
 
 void FeedDiscovery::onFeedFound()
@@ -75,12 +116,12 @@ void FeedDiscovery::onFeedFound()
 
 void FeedDiscovery::onWebGrabber()
 {
-    pageGrabber.load(_feedURL);
+    pageGrabber->load(_feedURL);
 }
 
 void FeedDiscovery::onTryFeedAgain()
 {
-    parserSecondTry.parse(_feedURL);
+    parserSecondTry->parse(_feedURL);
 }
 
 void FeedDiscovery::onError()
@@ -93,14 +134,14 @@ void FeedDiscovery::onError()
 
 void FeedDiscovery::onFirstParseDone()
 {
-    int res = parserFirstTry.getResult();
+    int res = parserFirstTry->getResult();
     switch (res) {
     case ParserInterface::OK:
         // We got it on the first try!
-        _feedURL = parserFirstTry.getURL();
-        _feedResult = parserFirstTry.getFeed();
+        _feedURL = parserFirstTry->getURL();
+        _feedResult = parserFirstTry->getFeed();
         machine.setState(FEED_FOUND);
-        
+
         break;
     case ParserInterface::NETWORK_ERROR:
     case ParserInterface::FILE_ERROR:
@@ -108,9 +149,9 @@ void FeedDiscovery::onFirstParseDone()
     case ParserInterface::PARSE_ERROR:
         // Continue to the web grabber stage.
         machine.setState(WEB_GRABBER);
-        
+
         break;
-        
+
     case ParserInterface::IN_PROGRESS:
     default:
         Q_ASSERT(false); // Either we didn't add a new case, or the parser yarfed on us.
@@ -119,27 +160,27 @@ void FeedDiscovery::onFirstParseDone()
 
 void FeedDiscovery::onSecondParseDone()
 {
-    int res = parserSecondTry.getResult();
+    int res = parserSecondTry->getResult();
     switch (res) {
     case ParserInterface::OK:
         // We got it!
-        _feedURL = parserSecondTry.getURL();
-        _feedResult = parserSecondTry.getFeed();
+        _feedURL = parserSecondTry->getURL();
+        _feedResult = parserSecondTry->getFeed();
         machine.setState(FEED_FOUND);
-        
+
         break;
     case ParserInterface::NETWORK_ERROR:
         reportError("Could not reach URL");
-        
+
         break;
     case ParserInterface::FILE_ERROR:
         reportError("Could not load file");
-        
+
         break;
     case ParserInterface::EMPTY_DOCUMENT:
     case ParserInterface::PARSE_ERROR:
         reportError("Error parsing feed");
-        
+
         break;
     case ParserInterface::IN_PROGRESS:
     default:

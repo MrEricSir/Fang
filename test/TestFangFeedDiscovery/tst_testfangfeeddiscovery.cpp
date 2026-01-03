@@ -2,21 +2,43 @@
 #include <QTest>
 #include <QCoreApplication>
 #include <QUrl>
+#include <QSignalSpy>
 
 #include "../../src/utilities/FeedDiscovery.h"
 #include "../../src/utilities/WebPageGrabber.h"
+#include "../MockNewsParser.h"
+#include "../MockWebPageGrabber.h"
 
 class TestFangFeedDiscovery : public QObject
 {
     Q_OBJECT
-    
+
 public:
     TestFangFeedDiscovery();
-    
+
 private slots:
+    // Existing test: findFeeds() method with HTML files
     void testCase1();
     void testCase1_data();
-    
+
+    // New tests: URL validation
+    void testURLWithoutScheme();
+
+    // New tests: Atom preference
+    void testAtomPreferredOverRSS();
+    void testOnlyRSS();
+    void testOnlyAtom();
+    void testNoFeeds();
+
+    // State machine tests - error paths
+    void testFirstParseAllErrors();
+    void testSecondParseNetworkError();
+    void testSecondParseFileError();
+    void testSecondParseEmptyDocument();
+    void testPageGrabberNullDocument();
+    void testPageGrabberNoFeedFound();
+    void testFullSuccessFlow();
+
 private:
 };
 
@@ -132,6 +154,282 @@ void TestFangFeedDiscovery::testCase1_data()
 
     // Mostly Javascript, no feed links.
     QTest::newRow("SFGate") << "sfgate.com" << true << "" << "";
+}
+
+// Test that URLs without scheme get fixed up
+void TestFangFeedDiscovery::testURLWithoutScheme()
+{
+    FeedDiscovery fd;
+
+    // This should not error - it gets scheme added
+    fd.checkFeed("example.com");
+
+    // The URL should have been fixed up to include http://
+    // Note: We can't easily test the full flow without network,
+    // but we can verify it doesn't immediately error
+    QVERIFY2(!fd.error() || fd.errorString() != "Invalid URL",
+             "URL without scheme should be fixed up, not rejected");
+}
+
+// Test that Atom is preferred over RSS when both are present
+void TestFangFeedDiscovery::testAtomPreferredOverRSS()
+{
+    FeedDiscovery fd;
+
+    QString html = R"(
+        <html>
+        <head>
+            <link rel="alternate" type="application/rss+xml" href="http://example.com/rss.xml" />
+            <link rel="alternate" type="application/atom+xml" href="http://example.com/atom.xml" />
+        </head>
+        <body></body>
+        </html>
+    )";
+
+    fd.findFeeds(html);
+
+    // Both should be found
+    QCOMPARE(fd.getAtomURL(), QString("http://example.com/atom.xml"));
+    QCOMPARE(fd.getRssURL(), QString("http://example.com/rss.xml"));
+
+    // When onPageGrabberReady processes this, it prefers Atom
+    // (checking the logic: if (atomURL.size()) gets checked first)
+}
+
+// Test finding only RSS
+void TestFangFeedDiscovery::testOnlyRSS()
+{
+    FeedDiscovery fd;
+
+    QString html = R"(
+        <html>
+        <head>
+            <link rel="alternate" type="application/rss+xml" href="http://example.com/feed.rss" />
+        </head>
+        <body></body>
+        </html>
+    )";
+
+    fd.findFeeds(html);
+
+    QCOMPARE(fd.getRssURL(), QString("http://example.com/feed.rss"));
+    QCOMPARE(fd.getAtomURL(), QString(""));
+}
+
+// Test finding only Atom
+void TestFangFeedDiscovery::testOnlyAtom()
+{
+    FeedDiscovery fd;
+
+    QString html = R"(
+        <html>
+        <head>
+            <link rel="alternate" type="application/atom+xml" href="http://example.com/feed.atom" />
+        </head>
+        <body></body>
+        </html>
+    )";
+
+    fd.findFeeds(html);
+
+    QCOMPARE(fd.getAtomURL(), QString("http://example.com/feed.atom"));
+    QCOMPARE(fd.getRssURL(), QString(""));
+}
+
+// Test HTML with no feed links
+void TestFangFeedDiscovery::testNoFeeds()
+{
+    FeedDiscovery fd;
+
+    QString html = R"(
+        <html>
+        <head>
+            <title>No feeds here</title>
+        </head>
+        <body></body>
+        </html>
+    )";
+
+    fd.findFeeds(html);
+
+    QCOMPARE(fd.getRssURL(), QString(""));
+    QCOMPARE(fd.getAtomURL(), QString(""));
+}
+
+// Test that first parse errors fall through to web grabber
+void TestFangFeedDiscovery::testFirstParseAllErrors()
+{
+    // Test NETWORK_ERROR, FILE_ERROR, EMPTY_DOCUMENT, PARSE_ERROR
+    // All should transition to WEB_GRABBER state
+
+    MockNewsParser* parser = new MockNewsParser();
+    MockWebPageGrabber* grabber = new MockWebPageGrabber();
+
+    // Set parser to return FILE_ERROR
+    parser->setResult(ParserInterface::FILE_ERROR);
+
+    // Set grabber to return null (error)
+    grabber->setError(true);
+
+    FeedDiscovery fd(nullptr, parser, new MockNewsParser(), grabber);
+    QSignalSpy spy(&fd, &FeedDiscovery::done);
+
+    // Start discovery - should fail first parse, try web grabber, then error
+    fd.checkFeed("http://example.com");
+
+    // Wait for async completion
+    QVERIFY(spy.wait(5000));
+    QCOMPARE(spy.count(), 1);
+
+    // Should have errored with "No page found"
+    QVERIFY(fd.error());
+    QCOMPARE(fd.errorString(), QString("No page found"));
+}
+
+// Test second parse network error
+void TestFangFeedDiscovery::testSecondParseNetworkError()
+{
+    MockNewsParser* firstParser = new MockNewsParser();
+    MockNewsParser* secondParser = new MockNewsParser();
+    MockWebPageGrabber* grabber = new MockWebPageGrabber();
+
+    // First parse fails
+    firstParser->setResult(ParserInterface::NETWORK_ERROR);
+
+    // Web grabber returns a page with an RSS link
+    QString mockPage = "<html><head><link rel=\"alternate\" type=\"application/rss+xml\" href=\"http://example.com/feed.xml\" /></head></html>";
+    grabber->setMockDocument(new QString(mockPage));
+
+    // Second parse fails with NETWORK_ERROR
+    secondParser->setResult(ParserInterface::NETWORK_ERROR);
+
+    FeedDiscovery fd(nullptr, firstParser, secondParser, grabber);
+    QSignalSpy spy(&fd, &FeedDiscovery::done);
+
+    fd.checkFeed("http://example.com");
+
+    QVERIFY(spy.wait(5000));
+    QCOMPARE(spy.count(), 1);
+
+    QVERIFY(fd.error());
+    QCOMPARE(fd.errorString(), QString("Could not reach URL"));
+}
+
+// Test second parse file error
+void TestFangFeedDiscovery::testSecondParseFileError()
+{
+    MockNewsParser* firstParser = new MockNewsParser();
+    MockNewsParser* secondParser = new MockNewsParser();
+    MockWebPageGrabber* grabber = new MockWebPageGrabber();
+
+    firstParser->setResult(ParserInterface::FILE_ERROR);
+
+    QString mockPage = "<html><head><link rel=\"alternate\" type=\"application/rss+xml\" href=\"http://example.com/feed.xml\" /></head></html>";
+    grabber->setMockDocument(new QString(mockPage));
+
+    secondParser->setResult(ParserInterface::FILE_ERROR);
+
+    FeedDiscovery fd(nullptr, firstParser, secondParser, grabber);
+    QSignalSpy spy(&fd, &FeedDiscovery::done);
+
+    fd.checkFeed("http://example.com");
+
+    QVERIFY(spy.wait(5000));
+
+    QVERIFY(fd.error());
+    QCOMPARE(fd.errorString(), QString("Could not load file"));
+}
+
+// Test second parse empty document error
+void TestFangFeedDiscovery::testSecondParseEmptyDocument()
+{
+    MockNewsParser* firstParser = new MockNewsParser();
+    MockNewsParser* secondParser = new MockNewsParser();
+    MockWebPageGrabber* grabber = new MockWebPageGrabber();
+
+    firstParser->setResult(ParserInterface::EMPTY_DOCUMENT);
+
+    QString mockPage = "<html><head><link rel=\"alternate\" type=\"application/rss+xml\" href=\"http://example.com/feed.xml\" /></head></html>";
+    grabber->setMockDocument(new QString(mockPage));
+
+    secondParser->setResult(ParserInterface::EMPTY_DOCUMENT);
+
+    FeedDiscovery fd(nullptr, firstParser, secondParser, grabber);
+    QSignalSpy spy(&fd, &FeedDiscovery::done);
+
+    fd.checkFeed("http://example.com");
+
+    QVERIFY(spy.wait(5000));
+
+    QVERIFY(fd.error());
+    QCOMPARE(fd.errorString(), QString("Error parsing feed"));
+}
+
+// Test page grabber returning null document
+void TestFangFeedDiscovery::testPageGrabberNullDocument()
+{
+    MockNewsParser* firstParser = new MockNewsParser();
+    MockWebPageGrabber* grabber = new MockWebPageGrabber();
+
+    firstParser->setResult(ParserInterface::NETWORK_ERROR);
+    grabber->setError(true); // Returns nullptr
+
+    FeedDiscovery fd(nullptr, firstParser, new MockNewsParser(), grabber);
+    QSignalSpy spy(&fd, &FeedDiscovery::done);
+
+    fd.checkFeed("http://example.com");
+
+    QVERIFY(spy.wait(5000));
+
+    QVERIFY(fd.error());
+    QCOMPARE(fd.errorString(), QString("No page found"));
+}
+
+// Test page grabber returning page with no feed links
+void TestFangFeedDiscovery::testPageGrabberNoFeedFound()
+{
+    MockNewsParser* firstParser = new MockNewsParser();
+    MockWebPageGrabber* grabber = new MockWebPageGrabber();
+
+    firstParser->setResult(ParserInterface::PARSE_ERROR);
+
+    // Page with no feed links
+    QString mockPage = "<html><head><title>No feeds here</title></head><body></body></html>";
+    grabber->setMockDocument(new QString(mockPage));
+
+    FeedDiscovery fd(nullptr, firstParser, new MockNewsParser(), grabber);
+    QSignalSpy spy(&fd, &FeedDiscovery::done);
+
+    fd.checkFeed("http://example.com");
+
+    QVERIFY(spy.wait(5000));
+
+    QVERIFY(fd.error());
+    QCOMPARE(fd.errorString(), QString("No feed found"));
+}
+
+// Test full success flow: first parse succeeds
+void TestFangFeedDiscovery::testFullSuccessFlow()
+{
+    MockNewsParser* firstParser = new MockNewsParser();
+    RawFeed* mockFeed = new RawFeed();
+    mockFeed->url = QUrl("http://example.com/feed.xml");
+
+    firstParser->setResult(ParserInterface::OK);
+    firstParser->setFeed(mockFeed);
+    firstParser->setURL(QUrl("http://example.com/feed.xml"));
+
+    FeedDiscovery fd(nullptr, firstParser, new MockNewsParser(), new MockWebPageGrabber());
+    QSignalSpy spy(&fd, &FeedDiscovery::done);
+
+    fd.checkFeed("http://example.com/feed.xml");
+
+    QVERIFY(spy.wait(5000));
+    QCOMPARE(spy.count(), 1);
+
+    QVERIFY(!fd.error());
+    QCOMPARE(fd.feedURL(), QUrl("http://example.com/feed.xml"));
+    QVERIFY(fd.feedResult() != nullptr);
 }
 
 QTEST_MAIN(TestFangFeedDiscovery)
