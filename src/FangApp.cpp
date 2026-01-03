@@ -34,7 +34,6 @@ FangApp::FangApp(QApplication *parent, QQmlApplicationEngine* engine, SingleInst
     engine(engine),
     single(single),
     manager(this),
-    windowHeight(0),
     feedList(new FeedItem, this),
     importList(new ListModel(new FeedItem, this)),
     currentFeed(nullptr),
@@ -55,6 +54,8 @@ FangApp::FangApp(QApplication *parent, QQmlApplicationEngine* engine, SingleInst
     connect(parent, &QApplication::aboutToQuit, this, &FangApp::onQuit);
 
     connect(engine, &QQmlApplicationEngine::objectCreated, this, &FangApp::onObjectCreated);
+
+    connect(single, &SingleInstanceCheck::notified, this, &FangApp::onSecondInstanceStarted);
     
     connect(&feedList, &ListModel::added, this, &FangApp::onFeedAdded);
     connect(&feedList, &ListModel::removed, this, &FangApp::onFeedRemoved);
@@ -367,13 +368,13 @@ void FangApp::onObjectCreated(QObject* object, const QUrl& url)
     
     // Save our window.
     window = qobject_cast<QQuickWindow*>(object);
-    
-    single->setWindow(window);
+
+    // Locate settings.
     fangSettings = object->findChild<FangSettings*>("fangSettings");
     
     // Do a sanity check.
     if (fangSettings == nullptr) {
-        qDebug() << "Could not find QML objects!!!11";
+        qDebug() << "Could not find QML objects!";
         
         return;
     }
@@ -403,6 +404,21 @@ void FangApp::onObjectCreated(QObject* object, const QUrl& url)
 
     // Maybe the user wants to change how often we refresh the feeds?  Let 'em.
     connect(fangSettings, &FangSettings::refreshChanged, this, &FangApp::setRefreshTimer);
+}
+
+void FangApp::onSecondInstanceStarted()
+{
+    if (window) {
+        if (window->visibility() == QWindow::Visibility::Minimized) {
+            window->showNormal();
+        } else if (window->visibility() == QWindow::Visibility::Hidden) {
+            window->show();
+        }
+        window->requestActivate();
+        window->raise();
+    } else {
+        qWarning() << "Could not locate window";
+    }
 }
 
 void FangApp::onQuit()

@@ -233,6 +233,8 @@ private slots:
      */
     void onObjectCreated(QObject *object, const QUrl &url);
 
+    void onSecondInstanceStarted();
+
     /**
      * @brief Called at closing time, one last call for alcohol so finish your whiskey or beer.
      */
@@ -286,7 +288,6 @@ private:
     QQmlApplicationEngine* engine;
     SingleInstanceCheck* single;
     OperationManager manager;
-    int windowHeight;
     ListModel feedList;
     ListModel *importList;
     FeedItem* currentFeed;
