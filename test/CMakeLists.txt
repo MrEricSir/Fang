@@ -1,3 +1,9 @@
+# Coverage flags for all test executables
+if(ENABLE_COVERAGE AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    add_compile_options(--coverage -O0 -g)
+    add_link_options(--coverage)
+endif()
+
 # Test suite
 add_subdirectory(TestFangParser)
 add_subdirectory(TestFangFaviconGrabber)

@@ -67,29 +67,41 @@ It is recommended to build, run, and debug from Qt Creator for development purpo
     - To run without debugging, select Build -> Run or click the Run button in the Application output pane
     - To run with debugging, select Debug -> Start Debugging -> Start Debugging of Startup Project or click the Start Debugging of Startup Project button in the Debugger pane
 
-To run the tests, go to View -> Output Panes -> Test Results and click Run All Tests.
-
 ### Command Line
+
+**Note:** All commands below should be run from the Fang project root directory.
 
 1. First time setup: Configure...
     - ...with the version of Qt on your PATH:
-      `cmake -B build`
+      ```bash
+      cmake -B build
+      ```
     - ...OR with a specific version of Qt 6:
-      `cmake -B build -DCMAKE_PREFIX_PATH=/path/to/Qt6`
+      ```bash
+      cmake -B build -DCMAKE_PREFIX_PATH=/path/to/Qt6
+      ```
 1. Build in the build subfolder:
-  `cmake --build build`
-1. Run unit tests
-  `ctest --test-dir build --output-on-failure`
+   ```bash
+   cmake --build build
+   ```
 1. Run Fang...
     - ...on macOS:
-     `./build/Fang.app/Contents/MacOS/Fang`
+      ```bash
+      ./build/Fang.app/Contents/MacOS/Fang
+      ```
     - ...on Windows:
-     `TODO`
+      ```
+      TODO
+      ```
 1. Optionally, install locally...
     - ...on macOS (TODO: verify)
-      `cmake --install build --prefix /desired/install/path`
+      ```bash
+      cmake --install build --prefix /desired/install/path
+      ```
     - ...on Windows:
-     `TODO`
+      ```
+      TODO
+      ```
 
 ## Debugging Tips
 
@@ -99,7 +111,49 @@ To debug the Javascript and HTML, you'll need to set a debugging port and set it
    -  `QTWEBENGINE_REMOTE_DEBUGGING=9999`
 * Open up Chrome (or any Chromium-based browser) to localhost at your chosen port, for example http://localhost:9999/ and click the link under "Inspectable Pages." Every time you restart Fang you will have to open that URL again to debug the page.
 
-### Troubleshooting
+## Unit Tests and Code Coverage
+
+Install `lcov` and build Fang in Debug mode. Coverage will be automatically enabled!
+
+Installing `lcov`:
+- macOS: `brew install lcov`
+- Ubuntu: `sudo apt-get install lcov`
+
+### Qt Creator
+
+1. Make sure you have a Debug build selected in the Projects pane (coverage is automatically enabled)
+1. Run the tests: View → Output Panes → Test Results → Click "Run All Tests"
+1. Generate coverage report using the Terminal pane:
+   - View → Output Panes → Terminal
+   - Run: `./coverage.sh`
+1. The coverage report will **open automatically in your browser**!
+
+### Command Line
+
+**Note:** Coverage requires a Debug build. Configure with:
+```bash
+cmake -B build -DCMAKE_BUILD_TYPE=Debug
+cmake --build build
+```
+
+1. Run all tests:
+   ```bash
+   ctest --test-dir build
+   ```
+
+1. Generate coverage report:
+   ```bash
+   ./coverage.sh
+   ```
+   The coverage report will **open automatically in your browser**!
+
+**Alternative:** Generate coverage from the build directory:
+```bash
+cd build
+make coverage-html
+```
+
+## Troubleshooting
 
 * If a kit isn't found it's likely one needs to be installed, for example Xcode or Visual C++. Once installed, you may need to add it manually by clicking "Projects" in the sidebar and then "Manage Kits."
 * If `cmake` can't find a package, it's possible it needs to be installed via Qt's maintenence tool. Note that all required Qt packages are open source.

@@ -4,3 +4,40 @@ CMakeLists.txt.user
 test/build-*
 *.DS_Store
 APP_VERSION
+
+# Build directories
+build/
+build_*/
+build-*/
+
+# CMake build artifacts
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+*.cmake
+!CMakeLists.txt
+CTestTestfile.cmake
+Testing/
+
+# Coverage artifacts
+coverage_html/
+coverage.info
+coverage.info.cleaned
+*.gcda
+*.gcno
+*.gcov
+
+# Build outputs
+*.app
+*.exe
+*.o
+*.a
+*.so
+*.dylib
+*.dll
+
+# IDE artifacts
+.qt/
+.vscode/
+.idea/
