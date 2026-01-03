@@ -409,7 +409,11 @@ void FangApp::onObjectCreated(QObject* object, const QUrl& url)
 void FangApp::onSecondInstanceStarted()
 {
     if (window) {
+        if (window->visibility() == QWindow::Visibility::Minimized) {
+            window->showNormal();
+        }
         window->requestActivate();
+        window->raise();
     } else {
         qWarning() << "Could not locate window";
     }
