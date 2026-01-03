@@ -161,11 +161,12 @@ make coverage-html
 
 ## Building a Release
 
-To build version `1.2.3`, follow these steps:
+To build the release version of `1.2.3`, follow these steps:
 
 Edit `CMakeLists.txt` to reflect the new version and commit the change.
 ```
 project(Fang VERSION 1.2.3 LANGUAGES CXX C)
+set(VERSION_SUFFIX "")
 ```
 
 Push that change and create and push a tag with the same name:
@@ -175,4 +176,24 @@ git tag -a v1.2.3 -m "Version 1.2.3"
 git push origin v1.2.3
 ```
 
-GitHub Actions should create and publish the build automatically.
+### Beta and Release Candidates
+
+Pre-releases follow these conventions:
+
+- Beta: 1.2.3-beta.1
+- Release Candidate: 1.2.3-rc.1
+
+In `CMakeLists.txt` we use the suffix to designate these, for example:
+```
+project(Fang VERSION 1.2.3 LANGUAGES CXX C)
+set(VERSION_SUFFIX "1.2.3-beta.1")
+```
+
+The git tags should use the entire version string:
+
+```bash
+git tag -a v1.2.3-beta.1 -m "Version 1.2.3-beta.1"
+git push origin v1.2.3-beta.1
+```
+
+GitHub Actions should create and publish the builds automatically.

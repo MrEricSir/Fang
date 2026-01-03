@@ -1,6 +1,12 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(Fang VERSION 0.2.9-beta.1 LANGUAGES CXX C)
+# Version
+project(Fang VERSION 0.2.9 LANGUAGES CXX C)
+# Set suffix to:
+# "-beta.1"  Beta
+# "-rc.1"    Release candidate
+# ""         Release
+set(VERSION_SUFFIX "-beta.1")
 
 # C++ Standard
 set(CMAKE_CXX_STANDARD 17)
@@ -43,14 +49,14 @@ find_package(Qt6 REQUIRED COMPONENTS
 # Optional modules
 find_package(Qt6 COMPONENTS WebEngineQuick)
 
-# Version management
+
 if(DEFINED ENV{BUILD_NUMBER})
     set(BUILD_NUMBER $ENV{BUILD_NUMBER})
+    set(APP_VERSION "${PROJECT_VERSION}.${BUILD_NUMBER}${VERSION_SUFFIX}")
 else()
-    set(BUILD_NUMBER "-1")
+    set(APP_VERSION "${PROJECT_VERSION}${VERSION_SUFFIX}")
 endif()
 
-set(APP_VERSION "0.2.${BUILD_NUMBER}")
 file(WRITE "${CMAKE_CURRENT_SOURCE_DIR}/APP_VERSION" "${APP_VERSION}")
 
 # Add TidyLib subdirectory
