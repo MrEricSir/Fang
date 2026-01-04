@@ -198,6 +198,6 @@ git push origin v1.2.3-beta.1
 
 GitHub Actions should create and publish the builds automatically.
 
-### Update The Website
+### Update the Website
 
 Edit the [fang-website](https://github.com/MrEricSir/fang-website) to add the new installers and changelog. Once the GitHub Actioin has completed, verify that the changes are published.
