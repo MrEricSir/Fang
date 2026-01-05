@@ -11,6 +11,8 @@ Feed on news
 
 Fang is a newsreader for any website that supports RSS or Atom feeds. Except when otherwise noted and not includig test data, Fang is available under a [GPL 3 license.](https://github.com/MrEricSir/Fang/blob/master/LICENSE)
 
+Visit [GetFang.com](https://getfang.com)
+
 For community documentation see [the wiki on GitHub.](https://github.com/MrEricSir/Fang/wiki)
 
 Bugs and small feature requests can be filed [on the Github issues page.](https://github.com/MrEricSir/Fang/issues)
