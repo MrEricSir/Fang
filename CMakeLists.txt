@@ -121,7 +121,6 @@ qt_add_executable(Fang WIN32
     src/network/NetworkStateMonitor.cpp
     src/network/ResilientNetworkReply.cpp
     src/notifications/NotificationBase.cpp
-    src/utilities/SingleInstanceCheck.cpp
     src/operations/SetPinOperation.cpp
     src/models/PinnedFeedItem.cpp
     src/operations/LoadPinnedNewsOperation.cpp
@@ -193,7 +192,7 @@ qt_add_executable(Fang WIN32
     src/network/NetworkStateMonitor.h
     src/network/ResilientNetworkReply.h
     src/notifications/NotificationBase.h
-    src/utilities/SingleInstanceCheck.h
+    src/utilities/QSingleInstanceCheck.h
     src/operations/SetPinOperation.h
     src/models/PinnedFeedItem.h
     src/operations/LoadPinnedNewsOperation.h

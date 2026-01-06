@@ -3,7 +3,7 @@
 #include <QSignalSpy>
 #include <QUuid>
 
-#include "../../src/utilities/SingleInstanceCheck.h"
+#include "../../src/utilities/QSingleInstanceCheck.h"
 
 class TestSingleInstanceCheck : public QObject
 {
@@ -46,7 +46,7 @@ QString TestSingleInstanceCheck::generateUniqueID()
 void TestSingleInstanceCheck::testFirstInstance()
 {
     QString id = generateUniqueID();
-    SingleInstanceCheck* check = new SingleInstanceCheck(id);
+    QSingleInstanceCheck* check = new QSingleInstanceCheck(id);
 
     // First instance should not be "already running"
     QVERIFY(!check->isAlreadyRunning());
@@ -58,12 +58,12 @@ void TestSingleInstanceCheck::testFirstInstance()
 void TestSingleInstanceCheck::testSecondInstance()
 {
     QString id = generateUniqueID();
-    SingleInstanceCheck* first = new SingleInstanceCheck(id);
+    QSingleInstanceCheck* first = new QSingleInstanceCheck(id);
 
     QVERIFY(!first->isAlreadyRunning());
 
     // Create second instance with same ID
-    SingleInstanceCheck* second = new SingleInstanceCheck(id);
+    QSingleInstanceCheck* second = new QSingleInstanceCheck(id);
 
     // Second instance should detect the first
     QVERIFY(second->isAlreadyRunning());
@@ -76,13 +76,13 @@ void TestSingleInstanceCheck::testSecondInstance()
 void TestSingleInstanceCheck::testNotifyFromSecondInstance()
 {
     QString id = generateUniqueID();
-    SingleInstanceCheck* first = new SingleInstanceCheck(id);
-    QSignalSpy spy(first, &SingleInstanceCheck::notified);
+    QSingleInstanceCheck* first = new QSingleInstanceCheck(id);
+    QSignalSpy spy(first, &QSingleInstanceCheck::notified);
 
     QVERIFY(!first->isAlreadyRunning());
 
     // Create second instance
-    SingleInstanceCheck* second = new SingleInstanceCheck(id);
+    QSingleInstanceCheck* second = new QSingleInstanceCheck(id);
     QVERIFY(second->isAlreadyRunning());
 
     // Notify from second instance
@@ -102,8 +102,8 @@ void TestSingleInstanceCheck::testUniqueIDsIndependent()
     QString id1 = generateUniqueID();
     QString id2 = generateUniqueID();
 
-    SingleInstanceCheck* check1 = new SingleInstanceCheck(id1);
-    SingleInstanceCheck* check2 = new SingleInstanceCheck(id2);
+    QSingleInstanceCheck* check1 = new QSingleInstanceCheck(id1);
+    QSingleInstanceCheck* check2 = new QSingleInstanceCheck(id2);
 
     // Both should be first instances since they have different IDs
     QVERIFY(!check1->isAlreadyRunning());
@@ -117,10 +117,10 @@ void TestSingleInstanceCheck::testUniqueIDsIndependent()
 void TestSingleInstanceCheck::testMultipleNotifications()
 {
     QString id = generateUniqueID();
-    SingleInstanceCheck* first = new SingleInstanceCheck(id);
-    QSignalSpy spy(first, &SingleInstanceCheck::notified);
+    QSingleInstanceCheck* first = new QSingleInstanceCheck(id);
+    QSignalSpy spy(first, &QSingleInstanceCheck::notified);
 
-    SingleInstanceCheck* second = new SingleInstanceCheck(id);
+    QSingleInstanceCheck* second = new QSingleInstanceCheck(id);
     QVERIFY(second->isAlreadyRunning());
 
     // Send multiple notifications
@@ -140,4 +140,4 @@ void TestSingleInstanceCheck::testMultipleNotifications()
 
 QTEST_MAIN(TestSingleInstanceCheck)
 
-#include "tst_testsingleinstancecheck.moc"
+#include "tst_testqsingleinstancecheck.moc"

@@ -1,22 +1,19 @@
-# TestSingleInstanceCheck test executable
-qt_add_executable(tst_testsingleinstancecheck
-    tst_testsingleinstancecheck.cpp
+# TestQSingleInstanceCheck test executable
+qt_add_executable(tst_testqsingleinstancecheck
+    tst_testqsingleinstancecheck.cpp
     # Source files under test
-    ${CMAKE_SOURCE_DIR}/src/utilities/SingleInstanceCheck.cpp
-    ${CMAKE_SOURCE_DIR}/src/utilities/SingleInstanceCheck.h
-    ${CMAKE_SOURCE_DIR}/src/FangObject.cpp
-    ${CMAKE_SOURCE_DIR}/src/FangObject.h
+    ${CMAKE_SOURCE_DIR}/src/utilities/QSingleInstanceCheck.h
 )
 
 # Include directories
-target_include_directories(tst_testsingleinstancecheck PRIVATE
+target_include_directories(tst_testqsingleinstancecheck PRIVATE
     ${CMAKE_SOURCE_DIR}
     ${CMAKE_SOURCE_DIR}/src
     ${CMAKE_SOURCE_DIR}/src/utilities
 )
 
 # Link libraries
-target_link_libraries(tst_testsingleinstancecheck PRIVATE
+target_link_libraries(tst_testqsingleinstancecheck PRIVATE
     Qt6::Test
     Qt6::Core
     Qt6::Network
@@ -24,4 +21,4 @@ target_link_libraries(tst_testsingleinstancecheck PRIVATE
 )
 
 # Add to CTest
-add_test(NAME SingleInstanceCheck COMMAND tst_testsingleinstancecheck)
+add_test(NAME QSingleInstanceCheck COMMAND tst_testqsingleinstancecheck)

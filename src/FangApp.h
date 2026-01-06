@@ -19,7 +19,7 @@
 #include "parser/RawFeed.h"
 #include "FangObject.h"
 #include "notifications/NotificationBase.h"
-#include "utilities/SingleInstanceCheck.h"
+#include "utilities/QSingleInstanceCheck.h"
 #include "db/DBSettings.h"
 #include "server/WebServer.h"
 #include "server/WebSocketServer.h"
@@ -29,7 +29,7 @@ class FangApp : public FangObject
 {
     Q_OBJECT
 public:
-    explicit FangApp(QApplication *parent, QQmlApplicationEngine* engine, SingleInstanceCheck* single);
+    explicit FangApp(QApplication *parent, QQmlApplicationEngine* engine, QSingleInstanceCheck* single);
     
     virtual ~FangApp();
 
@@ -286,7 +286,7 @@ private slots:
 private:
     static FangApp* _instance;
     QQmlApplicationEngine* engine;
-    SingleInstanceCheck* single;
+    QSingleInstanceCheck* single;
     OperationManager manager;
     ListModel feedList;
     ListModel *importList;
