@@ -20,7 +20,7 @@
 
 #include "db/DB.h"
 
-#include "utilities/QSingleInstanceCheck.h"
+#include <QSingleInstanceCheck/QSingleInstanceCheck.h>
 
 #include "FangObject.h"
 

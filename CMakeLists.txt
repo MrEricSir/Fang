@@ -60,7 +60,10 @@ endif()
 file(WRITE "${CMAKE_CURRENT_SOURCE_DIR}/APP_VERSION" "${APP_VERSION}")
 
 # Add TidyLib subdirectory
-add_subdirectory(tidylib)
+add_subdirectory(external/tidylib)
+
+# Add QSingleInstanceCheck directory
+add_subdirectory(external/QSingleInstanceCheck)
 
 # Main application target
 qt_add_executable(Fang WIN32
@@ -192,7 +195,7 @@ qt_add_executable(Fang WIN32
     src/network/NetworkStateMonitor.h
     src/network/ResilientNetworkReply.h
     src/notifications/NotificationBase.h
-    src/utilities/QSingleInstanceCheck.h
+
     src/operations/SetPinOperation.h
     src/models/PinnedFeedItem.h
     src/operations/LoadPinnedNewsOperation.h
@@ -229,6 +232,7 @@ target_compile_definitions(Fang PRIVATE
 # Link libraries
 target_link_libraries(Fang PRIVATE
     TidyLib
+    QSingleInstanceCheck
     Qt6::Core
     Qt6::Qml
     Qt6::Quick

@@ -9,8 +9,9 @@
 #include <QTimer>
 #include <QMap>
 
-#include "operations/OperationManager.h"
+#include <QSingleInstanceCheck/QSingleInstanceCheck.h>
 
+#include "operations/OperationManager.h"
 #include "models/FeedItem.h"
 #include "models/AllNewsFeedItem.h"
 #include "models/PinnedFeedItem.h"
@@ -19,7 +20,6 @@
 #include "parser/RawFeed.h"
 #include "FangObject.h"
 #include "notifications/NotificationBase.h"
-#include "utilities/QSingleInstanceCheck.h"
 #include "db/DBSettings.h"
 #include "server/WebServer.h"
 #include "server/WebSocketServer.h"
