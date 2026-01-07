@@ -22,6 +22,8 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
+      with:
+        submodules: recursive
 
     - name: Install Qt
       uses: jurplel/install-qt-action@v4
@@ -363,6 +365,8 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
+      with:
+        submodules: recursive
 
     - name: Install Qt
       uses: jurplel/install-qt-action@v4
@@ -427,6 +431,8 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
+      with:
+        submodules: recursive
 
     - name: Download macOS DMG
       uses: actions/download-artifact@v4
