@@ -1,0 +1,3 @@
+[submodule "external/QSingleInstanceCheck"]
+	path = external/QSingleInstanceCheck
+	url = git@github.com:MrEricSir/QSingleInstanceCheck.git

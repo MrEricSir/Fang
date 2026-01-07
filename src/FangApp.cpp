@@ -29,7 +29,7 @@
 
 FangApp* FangApp::_instance = nullptr;
 
-FangApp::FangApp(QApplication *parent, QQmlApplicationEngine* engine, SingleInstanceCheck* single) :
+FangApp::FangApp(QApplication *parent, QQmlApplicationEngine* engine, QSingleInstanceCheck* single) :
     FangObject(parent),
     engine(engine),
     single(single),
@@ -55,7 +55,7 @@ FangApp::FangApp(QApplication *parent, QQmlApplicationEngine* engine, SingleInst
 
     connect(engine, &QQmlApplicationEngine::objectCreated, this, &FangApp::onObjectCreated);
 
-    connect(single, &SingleInstanceCheck::notified, this, &FangApp::onSecondInstanceStarted);
+    connect(single, &QSingleInstanceCheck::notified, this, &FangApp::onSecondInstanceStarted);
     
     connect(&feedList, &ListModel::added, this, &FangApp::onFeedAdded);
     connect(&feedList, &ListModel::removed, this, &FangApp::onFeedRemoved);

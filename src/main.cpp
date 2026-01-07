@@ -20,7 +20,7 @@
 
 #include "db/DB.h"
 
-#include "utilities/SingleInstanceCheck.h"
+#include <QSingleInstanceCheck/QSingleInstanceCheck.h>
 
 #include "FangObject.h"
 
@@ -40,7 +40,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     app.setWindowIcon(QIcon(":/qml/images/full_icon.png"));
 
     // Only run one Fang at a time, fellas.
-    SingleInstanceCheck single("FangNewsReader");
+    QSingleInstanceCheck single("FangNewsReader");
     if (single.isAlreadyRunning()) {
         single.notify();
         return -1;
