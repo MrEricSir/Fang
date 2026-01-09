@@ -138,9 +138,18 @@ QString WebServer::loadNews(LoadNewsOperation::LoadMode mode)
 
 void WebServer::addNewsItem(NewsItem *item, QVariantList *newsList)
 {
-    QString feedTitle = (!item->getFeed()->isSpecialFeed() && !item->getFeed()->isFolder()) ?
-                            item->getFeed()->getTitle() :
-                            FangApp::instance()->feedForId(item->getFeedId())->getTitle();
+    QString feedTitle;
+    if (item->getFeed()->isSpecialFeed() || item->getFeed()->isFolder()) {
+        // For a special feeds and folder views, show the name of the feed for this news item.
+        feedTitle = FangApp::instance()->feedForId(item->getFeedId())->getTitle();
+    } else if (item->getFeed()->getParentFolderID() >= 0) {
+        // For feeds inside folders, show both the parent folder name and the feed name.
+        feedTitle = FangApp::instance()->feedForId(item->getFeed()->getParentFolderID())->getTitle() +
+                    " → " + item->getFeed()->getTitle();
+    } else {
+        // For all other feeds simply show the feed title.
+        feedTitle = item->getFeed()->getTitle();
+    }
 
     QVariantMap itemMap;
     itemMap["id"] = item->getDbID();
