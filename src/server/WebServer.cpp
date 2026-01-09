@@ -160,6 +160,11 @@ void WebServer::addNewsItem(NewsItem *item, QVariantList *newsList)
     itemMap["content"] = item->getContent() != "" ? item->getContent() : item->getSummary();
     itemMap["pinned"] = item->getPinned();
 
+    // Replace empty titles with "no subject"
+    if (itemMap["title"].toString().trimmed().isEmpty()) {
+        itemMap["title"] = "<i>[ No Subject ]</i>";
+    }
+
     // Add to the list.
     *newsList << itemMap;
 }
