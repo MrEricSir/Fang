@@ -316,7 +316,7 @@ if(ENABLE_COVERAGE)
         find_program(GENHTML_PATH genhtml)
 
         if(LCOV_PATH AND GENHTML_PATH)
-            add_custom_target(coverage
+            add_custom_target(fang-coverage
                 # Reset coverage counters
                 COMMAND ${LCOV_PATH} --directory . --zerocounters
 
@@ -340,7 +340,7 @@ if(ENABLE_COVERAGE)
             )
 
             # Add a lightweight target to generate HTML from existing coverage data
-            add_custom_target(coverage-html
+            add_custom_target(fang-coverage-html
                 # Capture coverage data
                 COMMAND ${LCOV_PATH} --directory . --capture --output-file coverage.info
                     --ignore-errors inconsistent,format,gcov,unsupported,unused
