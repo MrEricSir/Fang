@@ -1,12 +1,12 @@
 #ifndef FEEDDISCOVERY_H
 #define FEEDDISCOVERY_H
 
+#include <QList>
 #include <QObject>
 #include <QString>
 #include <QUrl>
 
 #include "SimpleStateMachine.h"
-#include "../parser/NewsParser.h"
 #include "../parser/ParserInterface.h"
 #include "../parser/RawFeed.h"
 #include "../utilities/WebPageGrabber.h"
@@ -128,8 +128,11 @@ private slots:
     void onPageGrabberReady(QString* document);
 
 protected:
+    // TODO: Move away from legacy feed mechanism.
     QString rssURL;
     QString atomURL;
+
+    QList<QString> feedURLs;
 
     ParserInterface* parserFirstTry;
     ParserInterface* parserSecondTry;

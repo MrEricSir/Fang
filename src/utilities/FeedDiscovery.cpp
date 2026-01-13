@@ -1,6 +1,7 @@
 #include "FeedDiscovery.h"
 #include <QXmlStreamReader>
 #include "NetworkUtilities.h"
+#include "../parser/NewsParser.h"
 
 FeedDiscovery::FeedDiscovery(QObject *parent,
                            ParserInterface* firstParser,
@@ -198,6 +199,13 @@ void FeedDiscovery::onPageGrabberReady(QString *document)
 
     // Scan the XML looking for an RSS and/or Atom feed.
     findFeeds(*document);
+
+    // TODO: Go over our list of feeds
+    for (const QString& __newUrl : std::as_const(feedURLs)) {
+        qDebug() << "Feed URL found:" << __newUrl;
+    }
+
+    //////
     
     // Check if the page contains a URL.
     QString newUrl = "";
@@ -237,6 +245,8 @@ void FeedDiscovery::findFeeds(const QString& document)
     const QString S_REL = "rel";
     const QString S_HREF = "href";
     const QString S_TYPE = "type";
+    const QString S_TITLE = "title";
+    const QString S_WORDPRESS_COMMENTS_URL_SUFFIX = "/comments/feed/";
 
     QXmlStreamReader xml;
     xml.addData(document);
@@ -253,18 +263,35 @@ void FeedDiscovery::findFeeds(const QString& document)
             }
 
             if (tagName == "link") {
-                // This could be a feed...
                 QXmlStreamAttributes attributes = xml.attributes();
 
+                // TODO: Remove -- this is the legacy version that only finds one of each
                 if (attributes.hasAttribute(S_REL) && attributes.hasAttribute(S_HREF) &&
-                        attributes.value("", S_REL).toString().toLower() == "alternate" &&
-                        attributes.hasAttribute(S_TYPE)) {
+                    attributes.value("", S_REL).toString().toLower() == "alternate" &&
+                    attributes.hasAttribute(S_TYPE)) {
                     QString type = attributes.value("", S_TYPE).toString().toLower();
                     if (type == "application/atom+xml" && !atomURL.size()) {
                         atomURL = attributes.value("", S_HREF).toString();
                     } else if (type == "application/rss+xml" && !rssURL.size()) {
                         rssURL = attributes.value("", S_HREF).toString();
                     }
+                }
+
+                // Is this a feed?
+                if (attributes.hasAttribute(S_REL) && attributes.hasAttribute(S_HREF) &&
+                    attributes.value("", S_REL).toString().toLower() == "alternate" &&
+                    (attributes.hasAttribute(S_TYPE) && attributes.value("", S_TYPE).toString().toLower() == "application/rss+xml") ||
+                    (attributes.hasAttribute(S_TYPE) && attributes.value("", S_TYPE).toString().toLower() == "application/atom+xml")) {
+
+                    // Run some checks and then add our feed if it seems reasonable to do so.
+                    QString url = attributes.value("", S_HREF).toString();
+
+                    // Avoid comments feeds as they tend to get added by accident.
+                    if (url.endsWith(S_WORDPRESS_COMMENTS_URL_SUFFIX)) {
+                        continue;
+                    }
+
+                    feedURLs << url;
                 }
             }
         }
