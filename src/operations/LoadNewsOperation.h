@@ -17,6 +17,7 @@ class LoadNewsOperation : public DBOperationSynchronous
 public:
     
     enum LoadMode {
+        Error = -1,   // Runtime error
         Initial = 0,  // Loads loadLimit items from the bookmark, plus loadlimit items above bookmark
         Append,       // Appends loadLimit items (load next)
         Prepend       // Prepends loadLimit items (load previous)
@@ -46,7 +47,7 @@ public slots:
     /**
      * @return Returns the operational mode.
      */
-    inline LoadMode getMode() { return mode; }
+    inline LoadNewsOperation::LoadMode getMode() { return mode; }
     
     /**
      * @return List of items that this load appended.

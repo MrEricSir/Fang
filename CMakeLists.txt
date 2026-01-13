@@ -229,6 +229,9 @@ target_compile_definitions(Fang PRIVATE
     APP_VERSION="${APP_VERSION}"
 )
 
+# Enable warnings as errors
+set_property(TARGET Fang PROPERTY COMPILE_WARNING_AS_ERROR ON)
+
 # Link libraries
 target_link_libraries(Fang PRIVATE
     TidyLib
