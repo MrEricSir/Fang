@@ -100,7 +100,8 @@ void FangApp::init()
 
 FeedItem* FangApp::getFeed(qsizetype index)
 {
-    FeedItem* item = qobject_cast<FeedItem*>(feedList.row(index));
+    ListItem* listItem = feedList.row(index);
+    FeedItem* item = qobject_cast<FeedItem*>(listItem);
     if (item == nullptr) {
         qDebug() << "Feed #" << index << " was NULL";
         

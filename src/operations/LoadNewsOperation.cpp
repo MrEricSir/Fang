@@ -29,6 +29,7 @@ QString LoadNewsOperation::modeToString(LoadMode mode)
     default:
         qWarning() << "Invalid enum load mode: " << mode;
         Q_ASSERT(false);
+        return "[ERROR]";
     }
 }
 
@@ -43,6 +44,7 @@ LoadNewsOperation::LoadMode LoadNewsOperation::stringToMode(QString modeString)
     } else {
         qWarning() << "Invalid string load mode: " << modeString;
         Q_ASSERT(false);
+        return LoadMode::Error;
     }
 }
 

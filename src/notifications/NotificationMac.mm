@@ -1,5 +1,6 @@
 #include "NotificationMac.h"
 #import <AppKit/NSApplication.h>
+#import <AppKit/AppKit.h>
 #include <QDebug>
 
 NotificationMac::NotificationMac(FangSettings *fangSettings,
