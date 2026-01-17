@@ -6,11 +6,12 @@
 #include "NetworkUtilities.h"
 #include "../parser/NewsParser.h"
 #include "../parser/BatchNewsParser.h"
+#include "WebPageGrabber.h"
 
 FeedDiscovery::FeedDiscovery(QObject *parent,
                            ParserInterface* firstParser,
                            ParserInterface* secondParser,
-                           BatchWebPageGrabber* pageGrabber,
+                           WebPageGrabber* pageGrabber,
                            BatchNewsParser* feedParser) :
     FangObject(parent),
     machine(),
@@ -27,7 +28,7 @@ FeedDiscovery::FeedDiscovery(QObject *parent,
 
     // Create default implementations if not provided (with this as parent for auto-cleanup)
     parserFirstTry = firstParser ? firstParser : new NewsParser(this);
-    this->pageGrabber = pageGrabber ? pageGrabber : new BatchWebPageGrabber(this);
+    this->pageGrabber = pageGrabber ? pageGrabber : new WebPageGrabber(this);
     this->feedParser = feedParser ? feedParser : new BatchNewsParser(this);
 
     // Take ownership of injected dependencies by setting parent
@@ -56,7 +57,7 @@ FeedDiscovery::FeedDiscovery(QObject *parent,
     connect(parserFirstTry, &ParserInterface::done, this, &FeedDiscovery::onFirstParseDone);
 
     // Web page grabber signals.
-    connect(this->pageGrabber, &BatchWebPageGrabber::ready, this, &FeedDiscovery::onPageGrabberReady);
+    connect(this->pageGrabber, &WebPageGrabber::ready, this, &FeedDiscovery::onPageGrabberReady);
     connect(this->feedParser, &BatchNewsParser::ready, this, &FeedDiscovery::onFeedParserReady);
 }
 
@@ -113,7 +114,7 @@ void FeedDiscovery::onFeedFound()
 
 void FeedDiscovery::onWebGrabber()
 {
-    pageGrabber->load(QList<QUrl>{_feedURL});
+    pageGrabber->load(_feedURL);
 }
 
 void FeedDiscovery::onError()
@@ -161,34 +162,30 @@ void FeedDiscovery::onFirstParseDone()
     }
 }
 
-void FeedDiscovery::onPageGrabberReady()
+void FeedDiscovery::onPageGrabberReady(WebPageGrabber* grabber, QString* document)
 {
-    // If we didn't find any web pages, bail here.
-    if (pageGrabber->getResults().isEmpty()) {
+    Q_UNUSED(grabber);
+
+    // If we didn't get a document, bail here.
+    if (!document || document->isEmpty()) {
         reportError("No page found");
         return;
     }
 
-    // Collect all feed URLs from all HTML pages, using QSet to eliminate duplicates
-    QSet<QString> uniqueFeedURLs;
-    for (const QString& document : pageGrabber->getResults().values()) {
-        QList<QString> feedURLs = parseFeedsFromXHTML(document);
-        qDebug() << "Parsed" << feedURLs.count() << "feed URLs from HTML";
-        for (const QString& feedURL : feedURLs) {
-            uniqueFeedURLs.insert(feedURL);
-        }
-    }
+    // Parse feed URLs from the HTML document
+    QList<QString> feedURLs = parseFeedsFromXHTML(*document);
+    qDebug() << "Parsed" << feedURLs.count() << "feed URLs from HTML";
 
-    if (uniqueFeedURLs.isEmpty()) {
+    if (feedURLs.isEmpty()) {
         qDebug() << "No feeds found in HTML!";
         reportError("No feed found");
         return;
     }
 
-    qDebug() << "Total unique feed URLs found:" << uniqueFeedURLs.count();
+    qDebug() << "Total feed URLs found:" << feedURLs.count();
 
-    // Convert to list and sort by path length (longer paths first = more specific)
-    QList<QString> feedURLStrings = uniqueFeedURLs.values();
+    // Sort by path length (longer paths first = more specific)
+    QList<QString> feedURLStrings = feedURLs;
     std::sort(feedURLStrings.begin(), feedURLStrings.end(),
         [](const QString& a, const QString& b) {
             QUrl urlA(a);

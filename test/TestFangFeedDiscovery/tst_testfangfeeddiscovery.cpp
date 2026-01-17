@@ -7,7 +7,7 @@
 #include "../../src/utilities/FeedDiscovery.h"
 #include "../../src/utilities/WebPageGrabber.h"
 #include "../MockNewsParser.h"
-#include "../MockBatchWebPageGrabber.h"
+#include "../MockWebPageGrabber.h"
 #include "../MockBatchNewsParser.h"
 
 class TestFangFeedDiscovery : public QObject
@@ -271,15 +271,15 @@ void TestFangFeedDiscovery::testFirstParseAllErrors()
     // All should transition to WEB_GRABBER state
 
     MockNewsParser* parser = new MockNewsParser();
-    MockBatchWebPageGrabber* grabber = new MockBatchWebPageGrabber();
+    MockWebPageGrabber* grabber = new MockWebPageGrabber();
 
     // Set parser to return FILE_ERROR
     parser->setResult(ParserInterface::FILE_ERROR);
 
-    // Set grabber to return error (no results)
+    // Set grabber to return error (nullptr document)
     grabber->setError(true);
 
-    FeedDiscovery fd(nullptr, parser, new MockNewsParser(), grabber);
+    FeedDiscovery fd(nullptr, parser, new MockNewsParser(), grabber, new MockBatchNewsParser());
     QSignalSpy spy(&fd, &FeedDiscovery::done);
 
     // Start discovery - should fail first parse, try web grabber, then error
@@ -298,12 +298,12 @@ void TestFangFeedDiscovery::testFirstParseAllErrors()
 void TestFangFeedDiscovery::testPageGrabberNullDocument()
 {
     MockNewsParser* firstParser = new MockNewsParser();
-    MockBatchWebPageGrabber* grabber = new MockBatchWebPageGrabber();
+    MockWebPageGrabber* grabber = new MockWebPageGrabber();
 
     firstParser->setResult(ParserInterface::NETWORK_ERROR);
-    grabber->setError(true); // Returns empty results
+    grabber->setError(true); // Returns nullptr document
 
-    FeedDiscovery fd(nullptr, firstParser, new MockNewsParser(), grabber);
+    FeedDiscovery fd(nullptr, firstParser, new MockNewsParser(), grabber, new MockBatchNewsParser());
     QSignalSpy spy(&fd, &FeedDiscovery::done);
 
     fd.checkFeed("http://example.com");
@@ -318,16 +318,15 @@ void TestFangFeedDiscovery::testPageGrabberNullDocument()
 void TestFangFeedDiscovery::testPageGrabberNoFeedFound()
 {
     MockNewsParser* firstParser = new MockNewsParser();
-    MockBatchWebPageGrabber* grabber = new MockBatchWebPageGrabber();
+    MockWebPageGrabber* grabber = new MockWebPageGrabber();
 
     firstParser->setResult(ParserInterface::PARSE_ERROR);
 
-    // Page with no feed links - add responses for both with and without trailing slash
-    QString mockPage = "<html><head><title>No feeds here</title></head><body></body></html>";
-    grabber->addResponse(QUrl("http://example.com"), mockPage);
-    grabber->addResponse(QUrl("http://example.com/"), mockPage);
+    // Page with no feed links
+    static QString mockPage = "<html><head><title>No feeds here</title></head><body></body></html>";
+    grabber->setMockDocument(&mockPage);
 
-    FeedDiscovery fd(nullptr, firstParser, new MockNewsParser(), grabber);
+    FeedDiscovery fd(nullptr, firstParser, new MockNewsParser(), grabber, new MockBatchNewsParser());
     QSignalSpy spy(&fd, &FeedDiscovery::done);
 
     fd.checkFeed("http://example.com");
@@ -350,7 +349,7 @@ void TestFangFeedDiscovery::testFullSuccessFlow()
     firstParser->setFeed(mockFeed);
     firstParser->setURL(QUrl("http://example.com/feed.xml"));
 
-    FeedDiscovery fd(nullptr, firstParser, new MockNewsParser(), new MockBatchWebPageGrabber(), new MockBatchNewsParser());
+    FeedDiscovery fd(nullptr, firstParser, new MockNewsParser(), new MockWebPageGrabber(), new MockBatchNewsParser());
     QSignalSpy spy(&fd, &FeedDiscovery::done);
 
     fd.checkFeed("http://example.com/feed.xml");
@@ -392,7 +391,7 @@ void TestFangFeedDiscovery::testMercuryNewsFullFlow()
 
     // Set up mocks
     MockNewsParser* firstParser = new MockNewsParser();
-    MockBatchWebPageGrabber* pageGrabber = new MockBatchWebPageGrabber();
+    MockWebPageGrabber* pageGrabber = new MockWebPageGrabber();
     MockBatchNewsParser* feedParser = new MockBatchNewsParser();
 
     // First parse should fail (it's HTML, not a feed)
@@ -402,7 +401,9 @@ void TestFangFeedDiscovery::testMercuryNewsFullFlow()
     qDebug() << "Setting up page grabber with processed HTML content, length:" << htmlContent.length();
     qDebug() << "First 1000 chars:" << htmlContent.left(1000);
 
-    pageGrabber->addResponse(QUrl("https://www.mercurynews.com/business/"), htmlContent);
+    // Store the HTML content in a persistent QString for the mock
+    static QString persistentHtmlContent = htmlContent;
+    pageGrabber->setMockDocument(&persistentHtmlContent);
 
     // Feed parser should successfully parse the discovered feed URLs
     RawFeed* feed1 = new RawFeed();

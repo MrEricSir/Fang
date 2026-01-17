@@ -10,7 +10,7 @@
 #include "../parser/ParserInterface.h"
 #include "../parser/RawFeed.h"
 #include "../parser/BatchNewsParser.h"
-#include "../utilities/BatchWebPageGrabber.h"
+#include "../utilities/WebPageGrabber.h"
 #include "../FangObject.h"
 
 /**
@@ -69,7 +69,7 @@ public:
     explicit FeedDiscovery(QObject *parent = nullptr,
                           ParserInterface* firstParser = nullptr,
                           ParserInterface* secondParser = nullptr,
-                          BatchWebPageGrabber* pageGrabber = nullptr,
+                          WebPageGrabber* pageGrabber = nullptr,
                           BatchNewsParser* feedParser = nullptr);
     virtual ~FeedDiscovery();
 
@@ -140,13 +140,13 @@ private slots:
     // Parser slots:
     void onFirstParseDone();
 
-    // BatchWebPageGrabber slots
-    void onPageGrabberReady();
+    // WebPageGrabber slots
+    void onPageGrabberReady(WebPageGrabber* grabber, QString* document);
     void onFeedParserReady();  // Called when bulk feed parsing is complete
 
 protected:
     ParserInterface* parserFirstTry;
-    BatchWebPageGrabber* pageGrabber;       // For fetching HTML pages
+    WebPageGrabber* pageGrabber;            // For fetching HTML pages
     BatchNewsParser* feedParser;            // For bulk feed parsing
 
 private:

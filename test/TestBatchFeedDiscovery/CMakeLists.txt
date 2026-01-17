@@ -4,13 +4,11 @@ qt_add_executable(tst_testbatchfeeddiscovery
     # Mock objects for testing
     ${CMAKE_SOURCE_DIR}/test/MockNewsParser.cpp
     ${CMAKE_SOURCE_DIR}/test/MockNewsParser.h
-    ${CMAKE_SOURCE_DIR}/test/MockBatchWebPageGrabber.h
+    ${CMAKE_SOURCE_DIR}/test/MockWebPageGrabber.h
     ${CMAKE_SOURCE_DIR}/test/MockBatchNewsParser.h
     # Shared sources from main project
     ${CMAKE_SOURCE_DIR}/src/utilities/BatchFeedDiscovery.cpp
     ${CMAKE_SOURCE_DIR}/src/utilities/BatchFeedDiscovery.h
-    ${CMAKE_SOURCE_DIR}/src/utilities/BatchWebPageGrabber.cpp
-    ${CMAKE_SOURCE_DIR}/src/utilities/BatchWebPageGrabber.h
     ${CMAKE_SOURCE_DIR}/src/utilities/FeedDiscovery.cpp
     ${CMAKE_SOURCE_DIR}/src/utilities/FeedDiscovery.h
     ${CMAKE_SOURCE_DIR}/src/utilities/SimpleStateMachine.cpp

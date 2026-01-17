@@ -7,7 +7,7 @@
 #include "../../src/models/ListModel.h"
 #include "../../src/models/FeedItem.h"
 #include "../MockNewsParser.h"
-#include "../MockBatchWebPageGrabber.h"
+#include "../MockWebPageGrabber.h"
 #include "../MockBatchNewsParser.h"
 
 /**
@@ -22,7 +22,7 @@ public:
         : FeedDiscovery(parent,
                        new MockNewsParser(),
                        new MockNewsParser(),
-                       new MockBatchWebPageGrabber(),
+                       new MockWebPageGrabber(),
                        new MockBatchNewsParser()),
           results(results),
           parser(qobject_cast<MockNewsParser*>(parserFirstTry))

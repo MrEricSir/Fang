@@ -99,7 +99,6 @@ qt_add_executable(Fang WIN32
     src/utilities/FangLogging.cpp
     src/operations/SetBookmarkOperation.cpp
     src/utilities/WebPageGrabber.cpp
-    src/utilities/BatchWebPageGrabber.cpp
     src/operations/FaviconUpdateOperation.cpp
     src/models/AllNewsFeedItem.cpp
     src/utilities/ImageGrabber.cpp
@@ -173,7 +172,6 @@ qt_add_executable(Fang WIN32
     src/utilities/FangLogging.h
     src/operations/SetBookmarkOperation.h
     src/utilities/WebPageGrabber.h
-    src/utilities/BatchWebPageGrabber.h
     src/operations/FaviconUpdateOperation.h
     src/models/AllNewsFeedItem.h
     src/utilities/ImageGrabber.h
