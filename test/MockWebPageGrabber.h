@@ -63,9 +63,9 @@ public slots:
         // Use QTimer to ensure the signal is emitted in the next event loop iteration
         QTimer::singleShot(10, this, [this]() {
             if (shouldError) {
-                emit ready(nullptr);
+                emit ready(this, nullptr);
             } else {
-                emit ready(mockDocument);
+                emit ready(this, mockDocument);
             }
         });
     }

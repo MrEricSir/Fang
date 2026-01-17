@@ -5,7 +5,6 @@
 #include <QUrl>
 
 #include "RawFeed.h"
-#include "RawNews.h"
 
 #include "../FangObject.h"
 

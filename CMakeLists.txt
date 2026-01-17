@@ -99,6 +99,7 @@ qt_add_executable(Fang WIN32
     src/utilities/FangLogging.cpp
     src/operations/SetBookmarkOperation.cpp
     src/utilities/WebPageGrabber.cpp
+    src/utilities/BatchWebPageGrabber.cpp
     src/operations/FaviconUpdateOperation.cpp
     src/models/AllNewsFeedItem.cpp
     src/utilities/ImageGrabber.cpp
@@ -133,6 +134,8 @@ qt_add_executable(Fang WIN32
     src/operations/SetDBSettingOperation.cpp
     src/db/DBSettings.cpp
     src/operations/GetAllDBSettingsOperation.cpp
+    src/parser/BatchNewsParser.h
+    src/parser/BatchNewsParser.cpp
     src/parser/NewsParser.cpp
     src/utilities/SimpleHTTPDownloader.cpp
     src/server/WebSocketServer.cpp
@@ -170,6 +173,7 @@ qt_add_executable(Fang WIN32
     src/utilities/FangLogging.h
     src/operations/SetBookmarkOperation.h
     src/utilities/WebPageGrabber.h
+    src/utilities/BatchWebPageGrabber.h
     src/operations/FaviconUpdateOperation.h
     src/models/AllNewsFeedItem.h
     src/utilities/ImageGrabber.h
@@ -206,6 +210,7 @@ qt_add_executable(Fang WIN32
     src/db/DBSettings.h
     src/operations/GetAllDBSettingsOperation.h
     src/db/DBSettingsKey.h
+    src/parser/BatchNewsParser.h
     src/parser/NewsParser.h
     src/utilities/SimpleHTTPDownloader.h
     src/server/WebSocketServer.h

@@ -25,11 +25,22 @@ WebPageGrabber::WebPageGrabber(bool handleMetaRefresh, int timeoutMS, QObject *p
     downloader(timeoutMS, this, networkManager),
     handleMetaRefresh(handleMetaRefresh),
     redirectAttempts(0),
-    error(true)
+    error(true),
+    done(false)
 
 {
-    connect(&downloader, &SimpleHTTPDownloader::error, this, &WebPageGrabber::onDownloadError);
-    connect(&downloader, &SimpleHTTPDownloader::finished, this, &WebPageGrabber::onDownloadFinished);
+    init();
+}
+
+WebPageGrabber::WebPageGrabber(QObject *parent) :
+    FangObject(parent),
+    downloader(DEFAULT_HANDLE_META_REFRESH, this, nullptr),
+    handleMetaRefresh(DEFAULT_TIMEOUT_MS),
+    redirectAttempts(0),
+    error(true),
+    done(false)
+{
+    init();
 }
 
 
@@ -53,6 +64,7 @@ QString *WebPageGrabber::load(const QString& htmlString)
 
 void WebPageGrabber::loadInternal(const QUrl& url)
 {
+    originalUrl = url;
     downloader.load(url);
 }
 
@@ -68,7 +80,7 @@ QString *WebPageGrabber::loadInternal(const QString& htmlString, bool handleRefr
 
     TidyDocPtr tdoc(tidyCreate());
     if (!tdoc) {
-        emit ready(nullptr);
+        emitReadySignal(nullptr);
         return nullptr;
     }
 
@@ -80,14 +92,14 @@ QString *WebPageGrabber::loadInternal(const QString& htmlString, bool handleRefr
     if (!tidyOptSetBool(tdoc.get(), TidyXhtmlOut, yes)) {
         tidyBufFree(&output);
         tidyBufFree(&errbuf);
-        emit ready(nullptr);
+        emitReadySignal(nullptr);
         return nullptr;
     }
 
     if (!tidyOptSetInt(tdoc.get(), TidyIndentContent, TidyNoState)) {
         tidyBufFree(&output);
         tidyBufFree(&errbuf);
-        emit ready(nullptr);
+        emitReadySignal(nullptr);
         return nullptr;
     }
 
@@ -118,7 +130,7 @@ QString *WebPageGrabber::loadInternal(const QString& htmlString, bool handleRefr
         qCDebug(logWebPage) << "WebPageGrabber error!";
         tidyBufFree(&output);
         tidyBufFree(&errbuf);
-        emit ready(nullptr);
+        emitReadySignal(nullptr);
         return nullptr;
     }
 
@@ -133,7 +145,7 @@ QString *WebPageGrabber::loadInternal(const QString& htmlString, bool handleRefr
         QString redirectURL = searchForRedirect(document);
         if (redirectAttempts > MAX_REDIRECTS) {
             qCDebug(logWebPage) << "Error: Maximum HTML redirects";
-            emit ready(nullptr);
+            emitReadySignal(nullptr);
             return nullptr;
         } else if (!redirectURL.isEmpty()) {
             QUrl url(redirectURL);
@@ -146,8 +158,9 @@ QString *WebPageGrabber::loadInternal(const QString& htmlString, bool handleRefr
         }
     }
 
+    // Woo-hoo! We have a document!
     error = false;
-    emit ready(&document);
+    emitReadySignal(&document);
     return &document;
 }
 
@@ -156,7 +169,7 @@ void WebPageGrabber::onDownloadError(QString err)
     Q_UNUSED(err);
 
     // Crap. :(
-    emit ready(nullptr);
+    emitReadySignal(nullptr);
 }
 
 void WebPageGrabber::onDownloadFinished(QByteArray array)
@@ -213,6 +226,21 @@ QString WebPageGrabber::searchForRedirect(const QString& document)
     }
 
     return QString();
+}
+
+void WebPageGrabber::emitReadySignal(QString* document)
+{
+    // Remember that we're done.
+    done = true;
+
+    // Now emit the signal.
+    emit ready(this, document);
+}
+
+void WebPageGrabber::init()
+{
+    connect(&downloader, &SimpleHTTPDownloader::error, this, &WebPageGrabber::onDownloadError);
+    connect(&downloader, &SimpleHTTPDownloader::finished, this, &WebPageGrabber::onDownloadFinished);
 }
 
 

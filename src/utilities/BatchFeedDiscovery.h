@@ -9,7 +9,6 @@
 #include <QObject>
 #include <QMap>
 #include <QQueue>
-#include <functional>
 
 /**
  * @brief Calls FeedDiscovery on a bunch of feeds at once in a list.
@@ -50,7 +49,7 @@ public slots:
     /**
      * @return The list of feeds you asked me to check?  Here they are.
      */
-    ListModel* getFeedList() { return feedList; }
+    inline ListModel* getFeedList() { return feedList; }
     
 protected slots:
 

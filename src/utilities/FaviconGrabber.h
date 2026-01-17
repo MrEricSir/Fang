@@ -69,7 +69,7 @@ private slots:
     /**
      * @brief Completion for WEB_GRABBER
      */
-    void onWebGrabberReady(QString* document);
+    void onWebGrabberReady(WebPageGrabber* grabber, QString* document);
 
     // Searches for icons in our XHTML doc.
     void findIcons(const QString& document);
