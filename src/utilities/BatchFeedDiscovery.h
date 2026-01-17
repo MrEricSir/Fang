@@ -19,12 +19,6 @@
  * 
  * If both are false at the time done() is emitted, you're hella
  * ready to rock and roll!
- * 
- * 
- * TODO: Need a way to safely cancel this operation since it
- *       can take a while.
- * 
- *       UNIT TEST!!
  */
 class BatchFeedDiscovery : public FangObject
 {

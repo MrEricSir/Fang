@@ -8,14 +8,15 @@ BatchNewsParser::BatchNewsParser(QObject *parent)
 
 void BatchNewsParser::parse(const QList<QUrl> &urls)
 {
-    // Clear any existing parsers and results, in case this object is being reused.
+    // Clear any existing parsers and results, in case this object is being reused. This will
+    // also remove the feed data owned by these objects.
+    for (ParserInterface* parser : parsers.values()) {
+        delete parser;
+    }
     parsers.clear();
     results.clear();
 
-    // Clean up old feeds
-    for (RawFeed* feed : feeds.values()) {
-        delete feed;
-    }
+    // Clear feed map as the pointers are no longer valid (they were deleted above.)
     feeds.clear();
 
     // Set up parsers.
@@ -25,11 +26,16 @@ void BatchNewsParser::parse(const QList<QUrl> &urls)
             continue;
         }
 
-        ParserInterface *parser = new NewsParser(this);
+        ParserInterface *parser = createParser();
         connect(parser, &ParserInterface::done, this, &BatchNewsParser::onParserDone);
         parser->parse(url);
         parsers[url] = parser;
     }
+}
+
+ParserInterface* BatchNewsParser::createParser()
+{
+    return new NewsParser(this);
 }
 
 void BatchNewsParser::onParserDone()
@@ -46,15 +52,14 @@ void BatchNewsParser::onParserDone()
         return;
     }
 
-    // Store result
+    // Store result in our map.
     results[url] = parser->getResult();
 
-    // Store feed if parsing succeeded
+    // Store feed if parser succeeded.
     if (parser->getResult() == ParserInterface::OK) {
         RawFeed* feed = parser->getFeed();
         if (feed) {
-            // Create a copy of the feed for storage
-            // The parser owns the original, we need our own copy
+            // Store reference to the feed (owned by the parser)
             feeds[url] = feed;
         }
     }

@@ -26,11 +26,13 @@ public:
 signals:
     void ready();
 
-private slots:
+protected:
+    // Virtual method for creating parsers; can be overridden for unit tests.
+    virtual ParserInterface* createParser();
+
     // Called whenever a parser is done.
     void onParserDone();
 
-private:
     // Parsers that are in flight.
     QMap<QUrl, ParserInterface*> parsers;
 

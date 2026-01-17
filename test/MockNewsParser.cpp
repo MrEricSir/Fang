@@ -3,7 +3,7 @@
 
 MockNewsParser::MockNewsParser(QObject *parent)
     : ParserInterface(parent),
-      result(OK),
+      result(IN_PROGRESS),
       feed(nullptr),
       url(),
       romCache(false)

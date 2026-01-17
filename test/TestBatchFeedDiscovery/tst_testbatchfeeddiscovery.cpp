@@ -11,7 +11,7 @@
 #include "../MockBatchNewsParser.h"
 
 /**
- * @brief Mock FeedDiscovery that uses pre-configured results based on call order
+ * @brief Mocks FeedDiscovery that uses pre-configured results based on call order
  */
 class MockFeedDiscovery : public FeedDiscovery
 {
