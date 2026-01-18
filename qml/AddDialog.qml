@@ -124,7 +124,7 @@ Dialog {
 
             text: validator.feedCount > 1 ? "Add Selected Feeds" : "Add Feed";
             onClicked: {
-                validator.addFeed();
+                validator.addFeeds();
                 addDialog.dismiss();
             }
             visible: addDialog.state === "add";

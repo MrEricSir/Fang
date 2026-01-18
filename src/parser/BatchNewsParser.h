@@ -8,6 +8,9 @@
 #include "ParserInterface.h"
 #include "RawFeed.h"
 
+/*!
+ * \brief The BatchNewsParser is a wrapper for NewsParser that handles multiple feeds.
+ */
 class BatchNewsParser : public FangObject
 {
     Q_OBJECT

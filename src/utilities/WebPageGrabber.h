@@ -12,11 +12,9 @@
 #define DEFAULT_TIMEOUT_MS 5000
 
 /*!
- * @brief Loads a web page or any XML document at a given URL. Signals with the document when done.
- * If the page is HTML, it will be converted to XHTML for compliance with Qt parsers.
+ * @brief Loads a web page at a given URL and signals with the XHTML document when done.
  *
- * Note that this class is not rentrant. Use BulkWebPageGrabber if you want to grab a bunch of
- * pages at a time.
+ * Note that this class is not rentrant.
  */
 class WebPageGrabber : public FangObject
 {

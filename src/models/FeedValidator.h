@@ -46,7 +46,7 @@ public slots:
     void setFeedTitle(int index, QString title);
 
     // If check was OK, call this to add the selected feed(s)!
-    void addFeed();
+    void addFeeds();
     
 signals:
     void urlChanged(QString url);

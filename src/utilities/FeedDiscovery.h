@@ -137,12 +137,12 @@ private slots:
     void onValidateFeeds();  // Bulk feed validation
     void onError();
 
-    // Parser slots:
+    // Parser/BulkParser slots:
     void onFirstParseDone();
+    void onFeedParserReady();
 
-    // WebPageGrabber slots
+    // WebPageGrabber slots:
     void onPageGrabberReady(WebPageGrabber* grabber, QString* document);
-    void onFeedParserReady();  // Called when bulk feed parsing is complete
 
 protected:
     ParserInterface* parserFirstTry;

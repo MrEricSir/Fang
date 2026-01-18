@@ -72,7 +72,7 @@ void FeedValidator::setFeedTitle(int index, QString title)
     }
 }
 
-void FeedValidator::addFeed()
+void FeedValidator::addFeeds()
 {
     // Add all selected feeds
     QList<FeedDiscovery::DiscoveredFeed> discovered = feedDiscovery.discoveredFeeds();
@@ -112,23 +112,21 @@ void FeedValidator::onFeedDiscoveryDone(FeedDiscovery* discovery)
     _feeds.clear();
 
     if (!feedDiscovery.error()) {
-        // Get all discovered feeds (could be 1 or many)
+        // Add all discovered feeds to our list.
         QList<FeedDiscovery::DiscoveredFeed> discovered = feedDiscovery.discoveredFeeds();
-
-        // Populate list for all discovered feeds
         for (int i = 0; i < discovered.count(); i++) {
             const FeedDiscovery::DiscoveredFeed& df = discovered[i];
             if (df.validated && df.feed) {
                 FeedInfo info;
                 info.url = df.url.toString();
                 info.title = df.feed->title.isEmpty() ? df.url.toString() : df.feed->title;
-                info.selected = (i == 0);  // Only first one selected by default
+                info.selected = (i == 0);  // Only the first one is selected by default.
                 info.discoveryIndex = i;
                 _feeds.append(info);
             }
         }
 
-        // Always emit signals so QML updates
+        // Emit signals to refresh QML.
         emit discoveredFeedsChanged();
         emit feedCountChanged();
         emit feedsToAddCountChanged();
