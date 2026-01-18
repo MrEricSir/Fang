@@ -34,8 +34,8 @@ WebPageGrabber::WebPageGrabber(bool handleMetaRefresh, int timeoutMS, QObject *p
 
 WebPageGrabber::WebPageGrabber(QObject *parent) :
     FangObject(parent),
-    downloader(DEFAULT_HANDLE_META_REFRESH, this, nullptr),
-    handleMetaRefresh(DEFAULT_TIMEOUT_MS),
+    downloader(DEFAULT_TIMEOUT_MS, this, nullptr),
+    handleMetaRefresh(DEFAULT_HANDLE_META_REFRESH),
     redirectAttempts(0),
     error(true),
     done(false)
