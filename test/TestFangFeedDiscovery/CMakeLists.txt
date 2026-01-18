@@ -5,10 +5,12 @@ qt_add_executable(tst_testfangfeeddiscovery
     ${CMAKE_SOURCE_DIR}/test/MockNewsParser.cpp
     ${CMAKE_SOURCE_DIR}/test/MockNewsParser.h
     ${CMAKE_SOURCE_DIR}/test/MockWebPageGrabber.h
+    ${CMAKE_SOURCE_DIR}/test/MockBatchNewsParser.h
     # Shared sources from main project
     ${CMAKE_SOURCE_DIR}/src/utilities/FeedDiscovery.cpp
     ${CMAKE_SOURCE_DIR}/src/utilities/SimpleStateMachine.cpp
     ${CMAKE_SOURCE_DIR}/src/utilities/WebPageGrabber.cpp
+    ${CMAKE_SOURCE_DIR}/src/parser/BatchNewsParser.cpp
     ${CMAKE_SOURCE_DIR}/src/parser/OPMLParser.cpp
     ${CMAKE_SOURCE_DIR}/src/parser/NewsParser.cpp
     ${CMAKE_SOURCE_DIR}/src/parser/ParserInterface.cpp
@@ -27,6 +29,7 @@ qt_add_executable(tst_testfangfeeddiscovery
     ${CMAKE_SOURCE_DIR}/src/utilities/FeedDiscovery.h
     ${CMAKE_SOURCE_DIR}/src/utilities/SimpleStateMachine.h
     ${CMAKE_SOURCE_DIR}/src/utilities/WebPageGrabber.h
+    ${CMAKE_SOURCE_DIR}/src/parser/BatchNewsParser.h
     ${CMAKE_SOURCE_DIR}/src/parser/OPMLParser.h
     ${CMAKE_SOURCE_DIR}/src/parser/NewsParser.h
     ${CMAKE_SOURCE_DIR}/src/parser/ParserInterface.h

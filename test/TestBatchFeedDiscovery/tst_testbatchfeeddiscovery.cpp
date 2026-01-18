@@ -8,9 +8,10 @@
 #include "../../src/models/FeedItem.h"
 #include "../MockNewsParser.h"
 #include "../MockWebPageGrabber.h"
+#include "../MockBatchNewsParser.h"
 
 /**
- * @brief Mock FeedDiscovery that uses pre-configured results based on call order
+ * @brief Mocks FeedDiscovery that uses pre-configured results based on call order
  */
 class MockFeedDiscovery : public FeedDiscovery
 {
@@ -18,10 +19,15 @@ class MockFeedDiscovery : public FeedDiscovery
 
 public:
     explicit MockFeedDiscovery(QQueue<bool>* results, QObject* parent = nullptr)
-        : FeedDiscovery(parent, new MockNewsParser(parent), new MockNewsParser(parent), new MockWebPageGrabber(parent)),
+        : FeedDiscovery(parent,
+                       new MockNewsParser(),
+                       new MockNewsParser(),
+                       new MockWebPageGrabber(),
+                       new MockBatchNewsParser()),
           results(results),
           parser(qobject_cast<MockNewsParser*>(parserFirstTry))
     {
+        // FeedDiscovery constructor now handles ownership automatically
     }
 
     void checkFeed(QString sURL) override

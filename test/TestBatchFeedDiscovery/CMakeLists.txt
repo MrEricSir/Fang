@@ -5,6 +5,7 @@ qt_add_executable(tst_testbatchfeeddiscovery
     ${CMAKE_SOURCE_DIR}/test/MockNewsParser.cpp
     ${CMAKE_SOURCE_DIR}/test/MockNewsParser.h
     ${CMAKE_SOURCE_DIR}/test/MockWebPageGrabber.h
+    ${CMAKE_SOURCE_DIR}/test/MockBatchNewsParser.h
     # Shared sources from main project
     ${CMAKE_SOURCE_DIR}/src/utilities/BatchFeedDiscovery.cpp
     ${CMAKE_SOURCE_DIR}/src/utilities/BatchFeedDiscovery.h
@@ -29,12 +30,16 @@ qt_add_executable(tst_testbatchfeeddiscovery
     ${CMAKE_SOURCE_DIR}/src/models/NewsItem.cpp
     ${CMAKE_SOURCE_DIR}/src/models/NewsItem.h
     ${CMAKE_SOURCE_DIR}/src/models/DBObject.h
+    ${CMAKE_SOURCE_DIR}/src/parser/BatchNewsParser.cpp
+    ${CMAKE_SOURCE_DIR}/src/parser/BatchNewsParser.h
     ${CMAKE_SOURCE_DIR}/src/parser/NewsParser.cpp
     ${CMAKE_SOURCE_DIR}/src/parser/NewsParser.h
     ${CMAKE_SOURCE_DIR}/src/parser/ParserInterface.cpp
     ${CMAKE_SOURCE_DIR}/src/parser/ParserInterface.h
     ${CMAKE_SOURCE_DIR}/src/parser/ParserXMLWorker.cpp
     ${CMAKE_SOURCE_DIR}/src/parser/ParserXMLWorker.h
+    ${CMAKE_SOURCE_DIR}/src/parser/OPMLParser.cpp
+    ${CMAKE_SOURCE_DIR}/src/parser/OPMLParser.h
     ${CMAKE_SOURCE_DIR}/src/parser/RawFeed.cpp
     ${CMAKE_SOURCE_DIR}/src/parser/RawFeed.h
     ${CMAKE_SOURCE_DIR}/src/parser/RawNews.cpp

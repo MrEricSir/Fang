@@ -1,40 +1,45 @@
 #include "FeedDiscovery.h"
 #include <QXmlStreamReader>
+#include <QSet>
+#include <algorithm>
+#include <QDebug>
 #include "NetworkUtilities.h"
+#include "../parser/NewsParser.h"
+#include "../parser/BatchNewsParser.h"
+#include "WebPageGrabber.h"
 
 FeedDiscovery::FeedDiscovery(QObject *parent,
                            ParserInterface* firstParser,
                            ParserInterface* secondParser,
-                           WebPageGrabber* grabber) :
+                           WebPageGrabber* pageGrabber,
+                           BatchNewsParser* feedParser) :
     FangObject(parent),
     machine(),
     _error(false),
     _errorString(""),
     _feedResult(nullptr)
 {
-    // Create default implementations if not provided
-    if (firstParser == nullptr) {
-        parserFirstTry = new NewsParser(this);
-        ownsFirstParser = true;
-    } else {
-        parserFirstTry = firstParser;
-        ownsFirstParser = false;
+    // Handle secondParser: no longer used, but we need to clean it up if provided
+    if (secondParser) {
+        if (!secondParser->parent()) {
+            secondParser->setParent(this);  // Take ownership so it gets cleaned up
+        }
     }
 
-    if (secondParser == nullptr) {
-        parserSecondTry = new NewsParser(this);
-        ownsSecondParser = true;
-    } else {
-        parserSecondTry = secondParser;
-        ownsSecondParser = false;
-    }
+    // Create default implementations if not provided (with this as parent for auto-cleanup)
+    parserFirstTry = firstParser ? firstParser : new NewsParser(this);
+    this->pageGrabber = pageGrabber ? pageGrabber : new WebPageGrabber(this);
+    this->feedParser = feedParser ? feedParser : new BatchNewsParser(this);
 
-    if (grabber == nullptr) {
-        pageGrabber = new WebPageGrabber(true, 5000, this);
-        ownsPageGrabber = true;
-    } else {
-        pageGrabber = grabber;
-        ownsPageGrabber = false;
+    // Take ownership of injected dependencies by setting parent
+    if (parserFirstTry && !parserFirstTry->parent()) {
+        parserFirstTry->setParent(this);
+    }
+    if (this->pageGrabber && !this->pageGrabber->parent()) {
+        this->pageGrabber->setParent(this);
+    }
+    if (this->feedParser && !this->feedParser->parent()) {
+        this->feedParser->setParent(this);
     }
 
     // Set up our state machine.
@@ -43,38 +48,31 @@ FeedDiscovery::FeedDiscovery(QObject *parent,
     machine.addStateChange(CHECK_FEED, TRY_FEED, SLOT(onTryFeed()));
     machine.addStateChange(TRY_FEED, FEED_FOUND, SLOT(onFeedFound()));
     machine.addStateChange(TRY_FEED, WEB_GRABBER, SLOT(onWebGrabber()));
-    machine.addStateChange(WEB_GRABBER, TRY_FEED_AGAIN, SLOT(onTryFeedAgain()));
-    machine.addStateChange(TRY_FEED_AGAIN, FEED_FOUND, SLOT(onFeedFound()));
+    machine.addStateChange(WEB_GRABBER, VALIDATE_FEEDS, SLOT(onValidateFeeds()));
+    machine.addStateChange(VALIDATE_FEEDS, FEED_FOUND, SLOT(onFeedFound()));
 
     machine.addStateChange(-1, FEED_ERROR, SLOT(onError())); // All errors.
 
     // Parser signals.
     connect(parserFirstTry, &ParserInterface::done, this, &FeedDiscovery::onFirstParseDone);
-    connect(parserSecondTry, &ParserInterface::done, this, &FeedDiscovery::onSecondParseDone);
 
     // Web page grabber signals.
-    connect(pageGrabber, &WebPageGrabber::ready, this, &FeedDiscovery::onPageGrabberReady);
+    connect(this->pageGrabber, &WebPageGrabber::ready, this, &FeedDiscovery::onPageGrabberReady);
+    connect(this->feedParser, &BatchNewsParser::ready, this, &FeedDiscovery::onFeedParserReady);
 }
 
 FeedDiscovery::~FeedDiscovery()
 {
-    // Clean up owned objects
-    if (ownsFirstParser && parserFirstTry) {
-        delete parserFirstTry;
-    }
-    if (ownsSecondParser && parserSecondTry) {
-        delete parserSecondTry;
-    }
-    if (ownsPageGrabber && pageGrabber) {
-        delete pageGrabber;
-    }
+    // Qt parent/child hierarchy handles cleanup automatically
 }
 
 void FeedDiscovery::checkFeed(QString sURL)
 {
-    // Reset.
+    // Reset state
     _error = false;
     _errorString = "";
+    _discoveredFeeds.clear();
+    _sortedFeedURLs.clear();
     machine.start(CHECK_FEED);
 
     QUrl url = NetworkUtilities::urlFixup(sURL);
@@ -119,11 +117,6 @@ void FeedDiscovery::onWebGrabber()
     pageGrabber->load(_feedURL);
 }
 
-void FeedDiscovery::onTryFeedAgain()
-{
-    parserSecondTry->parse(_feedURL);
-}
-
 void FeedDiscovery::onError()
 {
     Q_ASSERT(_error);
@@ -137,19 +130,30 @@ void FeedDiscovery::onFirstParseDone()
     int res = parserFirstTry->getResult();
     switch (res) {
     case ParserInterface::OK:
-        // We got it on the first try!
+    {
+        // User directly entered a feed URL! Add it to discovered feeds
         _feedURL = parserFirstTry->getURL();
         _feedResult = parserFirstTry->getFeed();
-        machine.setState(FEED_FOUND);
 
+        // Add to discovered feeds list
+        DiscoveredFeed discovered;
+        discovered.url = _feedURL;
+        discovered.feed = _feedResult;
+        discovered.title = _feedResult ? _feedResult->title : _feedURL.toString();
+        discovered.validated = true;
+        _discoveredFeeds.clear();
+        _discoveredFeeds.append(discovered);
+
+        machine.setState(FEED_FOUND);
         break;
+    }
+
     case ParserInterface::NETWORK_ERROR:
     case ParserInterface::FILE_ERROR:
     case ParserInterface::EMPTY_DOCUMENT:
     case ParserInterface::PARSE_ERROR:
-        // Continue to the web grabber stage.
+        // Not a feed, probably HTML. Continue to the web grabber stage.
         machine.setState(WEB_GRABBER);
-
         break;
 
     case ParserInterface::IN_PROGRESS:
@@ -158,77 +162,50 @@ void FeedDiscovery::onFirstParseDone()
     }
 }
 
-void FeedDiscovery::onSecondParseDone()
+void FeedDiscovery::onPageGrabberReady(WebPageGrabber* grabber, QString* document)
 {
-    int res = parserSecondTry->getResult();
-    switch (res) {
-    case ParserInterface::OK:
-        // We got it!
-        _feedURL = parserSecondTry->getURL();
-        _feedResult = parserSecondTry->getFeed();
-        machine.setState(FEED_FOUND);
+    Q_UNUSED(grabber);
 
-        break;
-    case ParserInterface::NETWORK_ERROR:
-        reportError("Could not reach URL");
-
-        break;
-    case ParserInterface::FILE_ERROR:
-        reportError("Could not load file");
-
-        break;
-    case ParserInterface::EMPTY_DOCUMENT:
-    case ParserInterface::PARSE_ERROR:
-        reportError("Error parsing feed");
-
-        break;
-    case ParserInterface::IN_PROGRESS:
-    default:
-        Q_ASSERT(false); // Either we didn't add a new case, or the parser yarfed on us.
-    }
-}
-
-void FeedDiscovery::onPageGrabberReady(QString *document)
-{
-    if (nullptr == document || document->isEmpty()) {
+    // If we didn't get a document, bail here.
+    if (!document || document->isEmpty()) {
         reportError("No page found");
-        
         return;
     }
 
-    // Scan the XML looking for an RSS and/or Atom feed.
-    findFeeds(*document);
-    
-    // Check if the page contains a URL.
-    QString newUrl = "";
-    if (atomURL.size()) {
-        newUrl = NetworkUtilities::urlFixup(atomURL, _feedURL);
-    } else if (rssURL.size()) {
-        newUrl = NetworkUtilities::urlFixup(rssURL, _feedURL);
-    }
-    
-    // If we got one, set it and try again!
-    if (newUrl != "") {
-        QUrl url(newUrl);
-        if (url.isRelative()) {
-            // Relative path case.
-            _feedURL.setPath(url.path());
-        } else {
-            // Absolute path case.
-            _feedURL = url;
-        }
-        
-        machine.setState(TRY_FEED_AGAIN);
+    // Parse feed URLs from the HTML document
+    QList<QString> feedURLs = parseFeedsFromXHTML(*document);
+    qDebug() << "Parsed" << feedURLs.count() << "feed URLs from HTML";
+
+    if (feedURLs.isEmpty()) {
+        qDebug() << "No feeds found in HTML!";
+        reportError("No feed found");
         return;
     }
-    
-    reportError("No feed found");
+
+    qDebug() << "Total feed URLs found:" << feedURLs.count();
+
+    // Sort by path length (longer paths first = more specific)
+    QList<QString> feedURLStrings = feedURLs;
+    std::sort(feedURLStrings.begin(), feedURLStrings.end(),
+        [](const QString& a, const QString& b) {
+            QUrl urlA(a);
+            QUrl urlB(b);
+            return urlA.path().length() > urlB.path().length();
+        });
+
+    // Convert to QUrl list and store for validation
+    _sortedFeedURLs.clear();
+    for (const QString& urlString : feedURLStrings) {
+        _sortedFeedURLs.append(QUrl(urlString));
+    }
+
+    // Trigger bulk feed validation
+    machine.setState(VALIDATE_FEEDS);
 }
 
-void FeedDiscovery::findFeeds(const QString& document)
+QList<QString> FeedDiscovery::parseFeedsFromXHTML(const QString& document)
 {
-    atomURL = "";
-    rssURL = "";
+    QList<QString> feedsFound;
 
     // Examples of what we're looking for:
     // <link rel="alternate" href="http://www.fark.com/fark.rss" type="application/rss+xml" title="FARK.com Fark RSS Feed">
@@ -237,6 +214,8 @@ void FeedDiscovery::findFeeds(const QString& document)
     const QString S_REL = "rel";
     const QString S_HREF = "href";
     const QString S_TYPE = "type";
+    const QString S_TITLE = "title";
+    const QString S_WORDPRESS_COMMENTS_URL_SUFFIX = "/comments/feed/";
 
     QXmlStreamReader xml;
     xml.addData(document);
@@ -249,33 +228,90 @@ void FeedDiscovery::findFeeds(const QString& document)
             QString tagName = xml.name().toString().toLower();
             if (tagName == "body") {
                 // We're done with the header, so bail.
-                return;
+                return feedsFound;
             }
 
             if (tagName == "link") {
-                // This could be a feed...
                 QXmlStreamAttributes attributes = xml.attributes();
 
+                // Is this a feed?
                 if (attributes.hasAttribute(S_REL) && attributes.hasAttribute(S_HREF) &&
-                        attributes.value("", S_REL).toString().toLower() == "alternate" &&
-                        attributes.hasAttribute(S_TYPE)) {
-                    QString type = attributes.value("", S_TYPE).toString().toLower();
-                    if (type == "application/atom+xml" && !atomURL.size()) {
-                        atomURL = attributes.value("", S_HREF).toString();
-                    } else if (type == "application/rss+xml" && !rssURL.size()) {
-                        rssURL = attributes.value("", S_HREF).toString();
+                    attributes.value("", S_REL).toString().toLower() == "alternate" &&
+                    attributes.hasAttribute(S_TYPE) &&
+                    (attributes.value("", S_TYPE).toString().toLower() == "application/rss+xml" ||
+                     attributes.value("", S_TYPE).toString().toLower() == "application/atom+xml")) {
+                    // Run some checks and then add our feed if it seems reasonable to do so.
+                    QString url = attributes.value("", S_HREF).toString();
+
+                    // Avoid comments feeds as they tend to get added by accident.
+                    if (url.endsWith(S_WORDPRESS_COMMENTS_URL_SUFFIX)) {
+                        continue;
                     }
+
+                    feedsFound << url;
                 }
             }
         }
     }
 
+    return feedsFound;
+}
+
+void FeedDiscovery::onValidateFeeds()
+{
+    // Use the sorted feed URLs from onPageGrabberReady
+    if (_sortedFeedURLs.isEmpty()) {
+        reportError("No feeds to validate");
+        return;
+    }
+
+    // Bulk parse all feed URLs
+    feedParser->parse(_sortedFeedURLs);
+}
+
+void FeedDiscovery::onFeedParserReady()
+{
+    // Process all parsed feeds
+    _discoveredFeeds.clear();
+
+    QMap<QUrl, ParserInterface::ParseResult> results = feedParser->getResults();
+    for (auto it = results.constBegin(); it != results.constEnd(); ++it) {
+        QUrl feedURL = it.key();
+        ParserInterface::ParseResult result = it.value();
+
+        // Only include successfully parsed feeds
+        if (result == ParserInterface::OK) {
+            RawFeed* feed = feedParser->getFeed(feedURL);
+            if (feed) {
+                DiscoveredFeed discovered;
+                discovered.url = feedURL;
+                discovered.feed = feed;  // Feed is owned by feedParser
+                discovered.title = feed->title.isEmpty() ? feedURL.toString() : feed->title;
+                discovered.content = "";  // Not storing raw content anymore
+                discovered.validated = true;
+                _discoveredFeeds.append(discovered);
+            }
+        }
+    }
+
+    // Check if we found any valid feeds
+    if (_discoveredFeeds.isEmpty()) {
+        reportError("No valid feeds found");
+        return;
+    }
+
+    // Set the first valid feed as the primary one (for backward compatibility)
+    _feedURL = _discoveredFeeds.first().url;
+    _feedResult = _discoveredFeeds.first().feed;
+
+    // Emit done signal
+    machine.setState(FEED_FOUND);
 }
 
 void FeedDiscovery::reportError(QString errorString)
 {
     _error = true;
     _errorString = errorString;
-    
+
     machine.setState(FEED_ERROR);
 }

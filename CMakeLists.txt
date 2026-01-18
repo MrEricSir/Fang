@@ -133,6 +133,8 @@ qt_add_executable(Fang WIN32
     src/operations/SetDBSettingOperation.cpp
     src/db/DBSettings.cpp
     src/operations/GetAllDBSettingsOperation.cpp
+    src/parser/BatchNewsParser.h
+    src/parser/BatchNewsParser.cpp
     src/parser/NewsParser.cpp
     src/utilities/SimpleHTTPDownloader.cpp
     src/server/WebSocketServer.cpp
@@ -206,6 +208,7 @@ qt_add_executable(Fang WIN32
     src/db/DBSettings.h
     src/operations/GetAllDBSettingsOperation.h
     src/db/DBSettingsKey.h
+    src/parser/BatchNewsParser.h
     src/parser/NewsParser.h
     src/utilities/SimpleHTTPDownloader.h
     src/server/WebSocketServer.h

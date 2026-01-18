@@ -5,7 +5,6 @@
 #include <QUrl>
 
 #include "RawFeed.h"
-#include "RawNews.h"
 
 #include "../FangObject.h"
 
@@ -37,7 +36,7 @@ public slots:
      */
     virtual void parse(const QUrl& url, bool noParseIfCached = false) =0;
     
-    virtual ParseResult getResult() =0;
+    virtual ParserInterface::ParseResult getResult() =0;
     virtual RawFeed* getFeed() =0;
     virtual QUrl getURL() =0;
     

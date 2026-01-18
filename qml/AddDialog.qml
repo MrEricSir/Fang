@@ -45,16 +45,50 @@ Dialog {
         readOnly: addDialog.state === "validating" || addDialog.state === "add";
     }
     
-    TextEntry {
-        id: textSiteTitle;
-        
-        placeholderText: "Feed name";
-        
-        onAccepted: addButton.click();
-        
+    // Feed(s) discovered.
+    Column {
+        id: multipleFeedsColumn;
+
         visible: addDialog.state === "add";
-        
         width: parent.width;
+        spacing: 8;
+
+        Repeater {
+            model: validator.discoveredFeeds;
+
+            Item {
+                width: parent.width;
+                height: 32;
+
+                Row {
+                    anchors.fill: parent;
+                    spacing: 8;
+                    // Required due to weird Repeater delegate scoping.
+                    property var _validator: validator;
+
+                    CheckBox {
+                        width: height;
+                        height: 32;
+                        checked: modelData.selected;
+                        visible: parent._validator.feedCount > 1;
+
+                        onUserChecked: (checked) => {
+                            parent._validator.setFeedSelected(modelData.index, checked);
+                        }
+                    }
+
+                    TextEntry {
+                        width: parent.width - parent.children[0].width - parent.spacing;
+                        height: 32;
+                        text: modelData.title;
+
+                        onTextChanged: () => {
+                            parent._validator.setFeedTitle(modelData.index, text);
+                        }
+                    }
+                }
+            }
+        }
     }
     
     DialogStatus {
@@ -88,18 +122,13 @@ Dialog {
         DialogButton {
             id: addButton;
 
-            text: "Add Feed";
+            text: validator.feedCount > 1 ? "Add Selected Feeds" : "Add Feed";
             onClicked: {
-                // Set the title.
-                validator.siteTitle = textSiteTitle.text;
-                textSiteTitle.readOnly = true;
-
-                // Add the feed and dismiss.
-                validator.addFeed();
+                validator.addFeeds();
                 addDialog.dismiss();
             }
             visible: addDialog.state === "add";
-            enabled: textSiteTitle.text;
+            enabled: validator.feedsToAddCount > 0;
         }
     }
     
@@ -113,7 +142,7 @@ Dialog {
             onClicked: close();
         }
     }
-    
+
     onDialogClosed: {
         validator.destroy();
     }
@@ -139,8 +168,6 @@ Dialog {
                 validationStatus.state = "ok";
                 validationStatus.text = "Success!";
                 validationStatus.visible = true;
-                
-                textSiteTitle.text = validator.siteTitle;
                 
                 // Signal completion.
                 validationComplete = true;

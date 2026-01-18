@@ -9,6 +9,7 @@ add_subdirectory(TestFangParser)
 add_subdirectory(TestFangFaviconGrabber)
 add_subdirectory(TestFangFeedDiscovery)
 add_subdirectory(TestBatchFeedDiscovery)
+add_subdirectory(TestBatchNewsParser)
 add_subdirectory(TestFangOPMLParser)
 add_subdirectory(TestOPMLExport)
 add_subdirectory(TestFangSimpleStateMachine)
@@ -21,6 +22,7 @@ add_subdirectory(TestDatabaseOperations)
 
 # Model tests
 add_subdirectory(TestFeedItem)
+add_subdirectory(TestFeedValidator)
 add_subdirectory(TestNewsItem)
 add_subdirectory(TestNewsList)
 

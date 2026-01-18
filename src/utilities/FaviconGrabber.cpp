@@ -94,7 +94,7 @@ void FaviconGrabber::onPickBest()
     QUrl topURL;
 
     // Go over all the images. Find the one with the max total pixels.
-    for (const auto& pair : imagesToCheck) {
+    for (const auto& pair : std::as_const(imagesToCheck)) {
         const QImage& img = pair.second;
         int totalPixels = img.width() * img.height();
         if (totalPixels > topTotalPixels) {
@@ -146,8 +146,10 @@ void FaviconGrabber::onRequestFinished(QNetworkReply * reply)
     }
 }
 
-void FaviconGrabber::onWebGrabberReady(QString *document)
+void FaviconGrabber::onWebGrabberReady(WebPageGrabber* grabber, QString *document)
 {
+    Q_UNUSED(grabber);
+
     // Ignore responses that arrive after we've already moved past WEB_GRABBER state
     // (e.g., multiple async responses from favicon URLs being parsed as HTML)
     if (machine.getState() != WEB_GRABBER) {

@@ -9,7 +9,6 @@
 #include <QObject>
 #include <QMap>
 #include <QQueue>
-#include <functional>
 
 /**
  * @brief Calls FeedDiscovery on a bunch of feeds at once in a list.
@@ -20,12 +19,6 @@
  * 
  * If both are false at the time done() is emitted, you're hella
  * ready to rock and roll!
- * 
- * 
- * TODO: Need a way to safely cancel this operation since it
- *       can take a while.
- * 
- *       UNIT TEST!!
  */
 class BatchFeedDiscovery : public FangObject
 {
@@ -50,7 +43,7 @@ public slots:
     /**
      * @return The list of feeds you asked me to check?  Here they are.
      */
-    ListModel* getFeedList() { return feedList; }
+    inline ListModel* getFeedList() { return feedList; }
     
 protected slots:
 

@@ -1,14 +1,15 @@
 #ifndef FEEDDISCOVERY_H
 #define FEEDDISCOVERY_H
 
+#include <QList>
 #include <QObject>
 #include <QString>
 #include <QUrl>
 
 #include "SimpleStateMachine.h"
-#include "../parser/NewsParser.h"
 #include "../parser/ParserInterface.h"
 #include "../parser/RawFeed.h"
+#include "../parser/BatchNewsParser.h"
 #include "../utilities/WebPageGrabber.h"
 #include "../FangObject.h"
 
@@ -41,52 +42,68 @@ class FeedDiscovery : public FangObject
     Q_OBJECT
     
 private:
-    
+
     enum FeedDiscoveryState {
         CHECK_FEED,
         TRY_FEED,
         WEB_GRABBER,
-        TRY_FEED_AGAIN,
+        VALIDATE_FEEDS,  // Bulk feed validation
         FEED_FOUND,
         FEED_ERROR
     };
     
 public:
+    /**
+     * @brief Structure to hold a discovered feed with metadata
+     */
+    struct DiscoveredFeed {
+        QUrl url;              // Feed URL
+        QString title;         // Feed title (from parsed feed or URL)
+        QString content;       // Downloaded feed content (for lazy parsing)
+        RawFeed* feed;         // Parsed feed (nullptr if not yet parsed)
+        bool validated;        // Has this feed been successfully parsed?
+
+        DiscoveredFeed() : feed(nullptr), validated(false) {}
+    };
+
     explicit FeedDiscovery(QObject *parent = nullptr,
                           ParserInterface* firstParser = nullptr,
                           ParserInterface* secondParser = nullptr,
-                          WebPageGrabber* grabber = nullptr);
+                          WebPageGrabber* pageGrabber = nullptr,
+                          BatchNewsParser* feedParser = nullptr);
     virtual ~FeedDiscovery();
-    
+
     /**
      * @return After done(), this returns true if there was an error.
      */
     bool error() { return _error; }
-    
+
     /**
      * @return After done(), this returns the error string, if there was an error.
      */
     QString errorString() { return _errorString; }
-    
+
     /**
      * @return The feed URL, or an empty URL if there was an error.
+     *         For backward compatibility: returns first validated feed.
      */
     QUrl feedURL() { return _error ? QUrl("") : _feedURL; }
-    
+
     /**
      * @return The raw feed or nullptr if there was an error.
+     *         For backward compatibility: returns first validated feed.
      */
     RawFeed* feedResult() { return _error ? nullptr : _feedResult; }
 
     /**
-     * @return String representation of RSS URL, if found.
+     * @return List of all discovered feeds (may be empty if error or single-feed mode)
      */
-    QString getRssURL() { return rssURL; }
+    QList<DiscoveredFeed> discoveredFeeds() const { return _discoveredFeeds; }
 
     /**
-     * @return String representation of Atom URL, if found.
+     * @return Number of feeds discovered (0 = error or single-feed mode, 1+ = multi-feed)
      */
-    QString getAtomURL() { return atomURL; }
+    int feedCount() const { return _discoveredFeeds.count(); }
     
 signals:
     
@@ -105,35 +122,32 @@ public slots:
     virtual void checkFeed(QString sURL);
 
     /**
-     * @brief Try to find RSS and Atom feed, if available.
+     * @brief Try to find RSS and Atom feed(s), if available.
      *        External use: Intended for use in unit tests.
      * @param document
      */
-    void findFeeds(const QString& document);
+    QList<QString> parseFeedsFromXHTML(const QString& document);
     
 private slots:
-    
+
     // State change slots:
     void onTryFeed();
     void onFeedFound();
     void onWebGrabber();
-    void onTryFeedAgain();
+    void onValidateFeeds();  // Bulk feed validation
     void onError();
-    
-    // Parser slots:
+
+    // Parser/BulkParser slots:
     void onFirstParseDone();
-    void onSecondParseDone();
-    
-    // WebPageGrabber slots.
-    void onPageGrabberReady(QString* document);
+    void onFeedParserReady();
+
+    // WebPageGrabber slots:
+    void onPageGrabberReady(WebPageGrabber* grabber, QString* document);
 
 protected:
-    QString rssURL;
-    QString atomURL;
-
     ParserInterface* parserFirstTry;
-    ParserInterface* parserSecondTry;
-    WebPageGrabber* pageGrabber;
+    WebPageGrabber* pageGrabber;            // For fetching HTML pages
+    BatchNewsParser* feedParser;            // For bulk feed parsing
 
 private:
     // Sets the error flag, error string, and triggers the ERROR state.
@@ -145,12 +159,11 @@ private:
     bool _error;
     QString _errorString;
 
-    // Ownership flags - true if we created the objects and need to delete them
-    bool ownsFirstParser;
-    bool ownsSecondParser;
-    bool ownsPageGrabber;
-
     RawFeed* _feedResult;
+
+    // Multi-feed discovery state
+    QList<DiscoveredFeed> _discoveredFeeds;  // All discovered feeds
+    QList<QUrl> _sortedFeedURLs;             // Feed URLs to validate (sorted by path length)
 };
 
 #endif // FEEDDISCOVERY_H
