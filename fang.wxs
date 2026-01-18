@@ -4,7 +4,9 @@
     Name="Fang"
     Manufacturer="Eric Gregory"
     Version="!(bind.FileVersion.FangExe)"
-    UpgradeCode="7D9C9D7E-A404-42DA-9D60-6F5C5E31D8B9">
+    UpgradeCode="7D9C9D7E-A404-42DA-9D60-6F5C5E31D8B9"
+    InstallerVersion="500"
+    Platforms="x64">
 
     <MajorUpgrade DowngradeErrorMessage="A newer version of Fang is already installed." />
 
@@ -17,7 +19,7 @@
     <Property Id="ARPNOREPAIR" Value="1" />
     <Property Id="ARPNOMODIFY" Value="1" />
 
-    <StandardDirectory Id="ProgramFilesFolder">
+    <StandardDirectory Id="ProgramFiles64Folder">
       <Directory Id="FangPath" Name="Fang">
         <Component Id="FangExeComponent" Guid="A1B2C3D4-E5F6-4A5B-8C9D-0E1F2A3B4C5D">
           <File Id="FangExe" Source="build/Release/Fang.exe" KeyPath="yes" />
