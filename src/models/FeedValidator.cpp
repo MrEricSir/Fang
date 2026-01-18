@@ -43,14 +43,13 @@ int FeedValidator::feedCount()
 
 int FeedValidator::feedsToAddCount()
 {
+    int count = 0;
     for (const FeedInfo& feedInfo : _feeds) {
-        if (feedInfo.selected && feedInfo.title != "") {
-            // Only return true if there's at least one feed selected and it has a title.
-            return true;
+        if (feedInfo.selected && !feedInfo.title.isEmpty()) {
+            count++;
         }
     }
-
-    return false;
+    return count;
 }
 
 void FeedValidator::setFeedSelected(int index, bool selected)
@@ -132,6 +131,7 @@ void FeedValidator::onFeedDiscoveryDone(FeedDiscovery* discovery)
         // Always emit signals so QML updates
         emit discoveredFeedsChanged();
         emit feedCountChanged();
+        emit feedsToAddCountChanged();
     }
 
     // Completion!

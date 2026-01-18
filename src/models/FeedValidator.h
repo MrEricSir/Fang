@@ -60,7 +60,7 @@ private slots:
     // Feed discovered!  Yay!
     void onFeedDiscoveryDone(FeedDiscovery *discovery);
 
-private:
+protected:
     struct FeedInfo {
         QString url;
         QString title;

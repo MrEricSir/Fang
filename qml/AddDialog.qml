@@ -63,13 +63,14 @@ Dialog {
                 Row {
                     anchors.fill: parent;
                     spacing: 8;
-                    property var _validator: validator; // Unclear why this is needed.
+                    // Required due to weird Repeater delegate scoping.
+                    property var _validator: validator;
 
                     CheckBox {
                         width: height;
                         height: 32;
                         checked: modelData.selected;
-                        visible: parent._validator.feedCount > 1; // todo: get nynber if riws
+                        visible: parent._validator.feedCount > 1;
 
                         onUserChecked: (checked) => {
                             parent._validator.setFeedSelected(modelData.index, checked);

@@ -22,6 +22,7 @@ add_subdirectory(TestDatabaseOperations)
 
 # Model tests
 add_subdirectory(TestFeedItem)
+add_subdirectory(TestFeedValidator)
 add_subdirectory(TestNewsItem)
 add_subdirectory(TestNewsList)
 
