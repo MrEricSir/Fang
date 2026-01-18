@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-01-13 18:49:51</td>
+            <td class="headerValue">2026-01-18 18:51:08</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryLo">25.0&nbsp;%</td>
@@ -67,48 +67,47 @@
 <span id="L5"><span class="lineNum">       5</span>              : #include &lt;QUrl&gt;</span>
 <span id="L6"><span class="lineNum">       6</span>              : </span>
 <span id="L7"><span class="lineNum">       7</span>              : #include &quot;RawFeed.h&quot;</span>
-<span id="L8"><span class="lineNum">       8</span>              : #include &quot;RawNews.h&quot;</span>
-<span id="L9"><span class="lineNum">       9</span>              : </span>
-<span id="L10"><span class="lineNum">      10</span>              : #include &quot;../FangObject.h&quot;</span>
-<span id="L11"><span class="lineNum">      11</span>              : </span>
-<span id="L12"><span class="lineNum">      12</span>              : /**</span>
-<span id="L13"><span class="lineNum">      13</span>              :  * @brief Interface for RSS/Atom parser.</span>
-<span id="L14"><span class="lineNum">      14</span>              :  */</span>
-<span id="L15"><span class="lineNum">      15</span>              : class ParserInterface : public FangObject</span>
-<span id="L16"><span class="lineNum">      16</span>              : {</span>
-<span id="L17"><span class="lineNum">      17</span>              :     Q_OBJECT</span>
-<span id="L18"><span class="lineNum">      18</span>              :     </span>
-<span id="L19"><span class="lineNum">      19</span>              : public:</span>
-<span id="L20"><span class="lineNum">      20</span>              :     enum ParseResult { OK, NETWORK_ERROR, FILE_ERROR, PARSE_ERROR, EMPTY_DOCUMENT, IN_PROGRESS };</span>
-<span id="L21"><span class="lineNum">      21</span> <span class="tlaUNC tlaBgUNC">           0 :     Q_ENUM(ParseResult)</span></span>
-<span id="L22"><span class="lineNum">      22</span>              :     </span>
-<span id="L23"><span class="lineNum">      23</span>              :     explicit ParserInterface(QObject *parent = nullptr);</span>
-<span id="L24"><span class="lineNum">      24</span> <span class="tlaGNC tlaBgGNC">         131 :     virtual ~ParserInterface() {}</span></span>
-<span id="L25"><span class="lineNum">      25</span>              :     </span>
-<span id="L26"><span class="lineNum">      26</span>              : signals:</span>
-<span id="L27"><span class="lineNum">      27</span>              :     // Call getResult() and getFeed() now, yo!</span>
-<span id="L28"><span class="lineNum">      28</span>              :     void done();</span>
-<span id="L29"><span class="lineNum">      29</span>              :     </span>
-<span id="L30"><span class="lineNum">      30</span>              : public slots:</span>
-<span id="L31"><span class="lineNum">      31</span>              :     </span>
-<span id="L32"><span class="lineNum">      32</span>              :     /**</span>
-<span id="L33"><span class="lineNum">      33</span>              :      * @brief Contacts URL and parses the RSS/Atom feed, if it exists.</span>
-<span id="L34"><span class="lineNum">      34</span>              :      * @param url               The URL</span>
-<span id="L35"><span class="lineNum">      35</span>              :      * @param noParseIfCached   If true, this won't bother with the </span>
-<span id="L36"><span class="lineNum">      36</span>              :      *                          parse if the content was cached.</span>
-<span id="L37"><span class="lineNum">      37</span>              :      */</span>
-<span id="L38"><span class="lineNum">      38</span>              :     virtual void parse(const QUrl&amp; url, bool noParseIfCached = false) =0;</span>
-<span id="L39"><span class="lineNum">      39</span>              :     </span>
-<span id="L40"><span class="lineNum">      40</span>              :     virtual ParseResult getResult() =0;</span>
-<span id="L41"><span class="lineNum">      41</span>              :     virtual RawFeed* getFeed() =0;</span>
-<span id="L42"><span class="lineNum">      42</span>              :     virtual QUrl getURL() =0;</span>
-<span id="L43"><span class="lineNum">      43</span>              :     </span>
-<span id="L44"><span class="lineNum">      44</span>              :     // Whether or not the response was cached.</span>
-<span id="L45"><span class="lineNum">      45</span>              :     virtual bool isFromCache() =0;</span>
-<span id="L46"><span class="lineNum">      46</span>              :     </span>
-<span id="L47"><span class="lineNum">      47</span>              : };</span>
-<span id="L48"><span class="lineNum">      48</span>              : </span>
-<span id="L49"><span class="lineNum">      49</span>              : #endif // PARSERINTERFACE_H</span>
+<span id="L8"><span class="lineNum">       8</span>              : </span>
+<span id="L9"><span class="lineNum">       9</span>              : #include &quot;../FangObject.h&quot;</span>
+<span id="L10"><span class="lineNum">      10</span>              : </span>
+<span id="L11"><span class="lineNum">      11</span>              : /**</span>
+<span id="L12"><span class="lineNum">      12</span>              :  * @brief Interface for RSS/Atom parser.</span>
+<span id="L13"><span class="lineNum">      13</span>              :  */</span>
+<span id="L14"><span class="lineNum">      14</span>              : class ParserInterface : public FangObject</span>
+<span id="L15"><span class="lineNum">      15</span>              : {</span>
+<span id="L16"><span class="lineNum">      16</span>              :     Q_OBJECT</span>
+<span id="L17"><span class="lineNum">      17</span>              :     </span>
+<span id="L18"><span class="lineNum">      18</span>              : public:</span>
+<span id="L19"><span class="lineNum">      19</span>              :     enum ParseResult { OK, NETWORK_ERROR, FILE_ERROR, PARSE_ERROR, EMPTY_DOCUMENT, IN_PROGRESS };</span>
+<span id="L20"><span class="lineNum">      20</span> <span class="tlaUNC tlaBgUNC">           0 :     Q_ENUM(ParseResult)</span></span>
+<span id="L21"><span class="lineNum">      21</span>              :     </span>
+<span id="L22"><span class="lineNum">      22</span>              :     explicit ParserInterface(QObject *parent = nullptr);</span>
+<span id="L23"><span class="lineNum">      23</span> <span class="tlaGNC tlaBgGNC">         134 :     virtual ~ParserInterface() {}</span></span>
+<span id="L24"><span class="lineNum">      24</span>              :     </span>
+<span id="L25"><span class="lineNum">      25</span>              : signals:</span>
+<span id="L26"><span class="lineNum">      26</span>              :     // Call getResult() and getFeed() now, yo!</span>
+<span id="L27"><span class="lineNum">      27</span>              :     void done();</span>
+<span id="L28"><span class="lineNum">      28</span>              :     </span>
+<span id="L29"><span class="lineNum">      29</span>              : public slots:</span>
+<span id="L30"><span class="lineNum">      30</span>              :     </span>
+<span id="L31"><span class="lineNum">      31</span>              :     /**</span>
+<span id="L32"><span class="lineNum">      32</span>              :      * @brief Contacts URL and parses the RSS/Atom feed, if it exists.</span>
+<span id="L33"><span class="lineNum">      33</span>              :      * @param url               The URL</span>
+<span id="L34"><span class="lineNum">      34</span>              :      * @param noParseIfCached   If true, this won't bother with the </span>
+<span id="L35"><span class="lineNum">      35</span>              :      *                          parse if the content was cached.</span>
+<span id="L36"><span class="lineNum">      36</span>              :      */</span>
+<span id="L37"><span class="lineNum">      37</span>              :     virtual void parse(const QUrl&amp; url, bool noParseIfCached = false) =0;</span>
+<span id="L38"><span class="lineNum">      38</span>              :     </span>
+<span id="L39"><span class="lineNum">      39</span>              :     virtual ParserInterface::ParseResult getResult() =0;</span>
+<span id="L40"><span class="lineNum">      40</span>              :     virtual RawFeed* getFeed() =0;</span>
+<span id="L41"><span class="lineNum">      41</span>              :     virtual QUrl getURL() =0;</span>
+<span id="L42"><span class="lineNum">      42</span>              :     </span>
+<span id="L43"><span class="lineNum">      43</span>              :     // Whether or not the response was cached.</span>
+<span id="L44"><span class="lineNum">      44</span>              :     virtual bool isFromCache() =0;</span>
+<span id="L45"><span class="lineNum">      45</span>              :     </span>
+<span id="L46"><span class="lineNum">      46</span>              : };</span>
+<span id="L47"><span class="lineNum">      47</span>              : </span>
+<span id="L48"><span class="lineNum">      48</span>              : #endif // PARSERINTERFACE_H</span>
         </pre>
               </td>
             </tr>

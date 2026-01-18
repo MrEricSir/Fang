@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-01-13 18:49:51</td>
+            <td class="headerValue">2026-01-18 18:51:08</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryMed">75.0&nbsp;%</td>
@@ -65,22 +65,22 @@
 <span id="L3"><span class="lineNum">       3</span>              : #include &lt;QTextStream&gt;</span>
 <span id="L4"><span class="lineNum">       4</span>              : #include &lt;QDebug&gt;</span>
 <span id="L5"><span class="lineNum">       5</span>              : </span>
-<span id="L6"><span class="lineNum">       6</span> <span class="tlaGNC tlaBgGNC">          89 : RawFeed::RawFeed(QObject *parent) :</span></span>
+<span id="L6"><span class="lineNum">       6</span> <span class="tlaGNC tlaBgGNC">         103 : RawFeed::RawFeed(QObject *parent) :</span></span>
 <span id="L7"><span class="lineNum">       7</span>              :     FangObject(parent),</span>
-<span id="L8"><span class="lineNum">       8</span> <span class="tlaGNC">          89 :     title(&quot;&quot;),</span></span>
-<span id="L9"><span class="lineNum">       9</span> <span class="tlaGNC">          89 :     subtitle(&quot;&quot;),</span></span>
-<span id="L10"><span class="lineNum">      10</span> <span class="tlaGNC">          89 :     url(),</span></span>
-<span id="L11"><span class="lineNum">      11</span> <span class="tlaGNC">          89 :     lastUpdated(),</span></span>
-<span id="L12"><span class="lineNum">      12</span> <span class="tlaGNC">          89 :     minutesToUpdate(0),</span></span>
-<span id="L13"><span class="lineNum">      13</span> <span class="tlaGNC">          89 :     siteURL(),</span></span>
-<span id="L14"><span class="lineNum">      14</span> <span class="tlaGNC">          89 :     imageURL(),</span></span>
-<span id="L15"><span class="lineNum">      15</span> <span class="tlaGNC">         178 :     items()</span></span>
+<span id="L8"><span class="lineNum">       8</span> <span class="tlaGNC">         103 :     title(&quot;&quot;),</span></span>
+<span id="L9"><span class="lineNum">       9</span> <span class="tlaGNC">         103 :     subtitle(&quot;&quot;),</span></span>
+<span id="L10"><span class="lineNum">      10</span> <span class="tlaGNC">         103 :     url(),</span></span>
+<span id="L11"><span class="lineNum">      11</span> <span class="tlaGNC">         103 :     lastUpdated(),</span></span>
+<span id="L12"><span class="lineNum">      12</span> <span class="tlaGNC">         103 :     minutesToUpdate(0),</span></span>
+<span id="L13"><span class="lineNum">      13</span> <span class="tlaGNC">         103 :     siteURL(),</span></span>
+<span id="L14"><span class="lineNum">      14</span> <span class="tlaGNC">         103 :     imageURL(),</span></span>
+<span id="L15"><span class="lineNum">      15</span> <span class="tlaGNC">         206 :     items()</span></span>
 <span id="L16"><span class="lineNum">      16</span>              : {</span>
-<span id="L17"><span class="lineNum">      17</span> <span class="tlaGNC">          89 : }</span></span>
+<span id="L17"><span class="lineNum">      17</span> <span class="tlaGNC">         103 : }</span></span>
 <span id="L18"><span class="lineNum">      18</span>              : </span>
-<span id="L19"><span class="lineNum">      19</span> <span class="tlaGNC">         152 : RawFeed::~RawFeed()</span></span>
+<span id="L19"><span class="lineNum">      19</span> <span class="tlaGNC">         178 : RawFeed::~RawFeed()</span></span>
 <span id="L20"><span class="lineNum">      20</span>              : {</span>
-<span id="L21"><span class="lineNum">      21</span> <span class="tlaGNC">         152 : }</span></span>
+<span id="L21"><span class="lineNum">      21</span> <span class="tlaGNC">         178 : }</span></span>
 <span id="L22"><span class="lineNum">      22</span>              : </span>
 <span id="L23"><span class="lineNum">      23</span> <span class="tlaUNC tlaBgUNC">           0 : QString RawFeed::toString()</span></span>
 <span id="L24"><span class="lineNum">      24</span>              : {</span>
