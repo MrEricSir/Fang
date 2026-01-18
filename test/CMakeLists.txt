@@ -4,6 +4,9 @@ if(ENABLE_COVERAGE AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     add_link_options(--coverage)
 endif()
 
+# Shared test library (compiled once, used by all tests)
+add_subdirectory(FangTestLib)
+
 # Test suite
 add_subdirectory(TestFangParser)
 add_subdirectory(TestFangFaviconGrabber)
