@@ -25,6 +25,17 @@ else()
     option(ENABLE_COVERAGE "Enable code coverage" OFF)
 endif()
 
+# Parallel compilation settings
+# Automatically use all available CPU cores for faster builds
+if(NOT DEFINED CMAKE_BUILD_PARALLEL_LEVEL)
+    include(ProcessorCount)
+    ProcessorCount(CPU_CORES)
+    if(CPU_CORES GREATER 0)
+        set(CMAKE_BUILD_PARALLEL_LEVEL ${CPU_CORES})
+        message(STATUS "Parallel build enabled with ${CPU_CORES} cores")
+    endif()
+endif()
+
 # Qt-specific settings
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
@@ -257,12 +268,36 @@ if(TARGET Qt6::WebEngineQuick)
     target_compile_definitions(Fang PRIVATE QT_WEBVIEW_WEBENGINE_BACKEND)
 endif()
 
+# Precompiled headers for faster compilation
+# These are the most frequently included Qt headers across the project
+target_precompile_headers(Fang PRIVATE
+    <QObject>
+    <QString>
+    <QList>
+    <QMap>
+    <QUrl>
+    <QByteArray>
+    <QVariant>
+    <QNetworkAccessManager>
+    <QNetworkRequest>
+    <QNetworkReply>
+    <QTimer>
+    <QDebug>
+    <QQmlApplicationEngine>
+    <QQuickItem>
+)
+
 # Platform: macOS
 if(APPLE)
     target_sources(Fang PRIVATE
         src/notifications/NotificationMac.h
         src/notifications/NotificationMac.mm
         icons/mac.icns
+    )
+
+    # Exclude Objective-C++ files from PCH (incompatible)
+    set_source_files_properties(src/notifications/NotificationMac.mm
+        PROPERTIES SKIP_PRECOMPILE_HEADERS ON
     )
 
     target_link_options(Fang PRIVATE -Wl,-dead_strip)
