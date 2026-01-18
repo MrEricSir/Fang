@@ -4,6 +4,7 @@
 #include <QQuickItem>
 #include <QObject>
 #include <QUrl>
+#include <QVariantList>
 
 #include "../utilities/FeedDiscovery.h"
 
@@ -11,15 +12,16 @@
  * @brief Initially this class was for validating feed URLs, but has now outgrown that to handle
  *        adding and removing feeds and folders.
  */
-class FeedValidator : public QQuickItem 
+class FeedValidator : public QQuickItem
 {
     Q_OBJECT
     Q_DISABLE_COPY(FeedValidator)
-    
+
     Q_PROPERTY(bool validating READ validating NOTIFY validatingChanged)
     Q_PROPERTY(QString url READ url WRITE setUrl NOTIFY urlChanged)
-    Q_PROPERTY(QString siteTitle READ siteTitle WRITE setSiteTitle NOTIFY siteTitleChanged)
-    Q_PROPERTY(QString siteImageURL READ siteImageURL WRITE setSiteImageURL NOTIFY siteImageURLChanged)
+    Q_PROPERTY(QVariantList discoveredFeeds READ discoveredFeeds NOTIFY discoveredFeedsChanged)
+    Q_PROPERTY(int feedCount READ feedCount NOTIFY feedCountChanged)
+    Q_PROPERTY(int feedsToAddCount READ feedsToAddCount NOTIFY feedsToAddCountChanged)
     
 public:
     explicit FeedValidator(QQuickItem *parent = nullptr);
@@ -27,37 +29,49 @@ public:
     
     inline bool validating() { return _validating; }
     inline QString url() { return _url; }
-    inline QString siteTitle() { return _siteTitle; }
-    inline QString siteImageURL() { return _siteImageURL; }
+    QVariantList discoveredFeeds();
+    int feedCount();
+    int feedsToAddCount();
     void setUrl(QString url);
-    void setSiteTitle(QString title);
-    void setSiteImageURL(QString url);
 
 public slots:
     // Performs the URL check.
     // Set the URL, then call this and wait for validationComplete().
     void check();
 
-    // If check was OK, call this to add the feed!
+    // Set whether a specific feed (by index) is selected for adding
+    void setFeedSelected(int index, bool selected);
+
+    // Set the title for a specific feed (by index)
+    void setFeedTitle(int index, QString title);
+
+    // If check was OK, call this to add the selected feed(s)!
     void addFeed();
     
 signals:
     void urlChanged(QString url);
     void validatingChanged(bool validating);
-    void siteTitleChanged(QString title);
-    void siteImageURLChanged(QString url);
+    void discoveredFeedsChanged();
+    void feedCountChanged();
+    void feedsToAddCountChanged();
     void validationComplete(bool result, QString errorString);
-    
+
 private slots:
     // Feed discovered!  Yay!
     void onFeedDiscoveryDone(FeedDiscovery *discovery);
-    
+
 private:
+    struct FeedInfo {
+        QString url;
+        QString title;
+        bool selected;
+        int discoveryIndex;  // Index in FeedDiscovery's list
+    };
+
     bool _validating;
     QString _url;
-    QString _siteTitle;
-    QString _siteImageURL;
-    
+    QList<FeedInfo> _feeds;
+
     FeedDiscovery feedDiscovery;
 };
 

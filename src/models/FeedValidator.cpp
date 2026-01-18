@@ -1,13 +1,10 @@
 #include "FeedValidator.h"
 #include "../FangApp.h"
-#include "../utilities/Utilities.h"
 
 FeedValidator::FeedValidator(QQuickItem *parent) :
     QQuickItem(parent),
     _validating(false),
-    _url(""),
-    _siteTitle(""),
-    _siteImageURL("")
+    _url("")
 {
     connect(&feedDiscovery, &FeedDiscovery::done, this, &FeedValidator::onFeedDiscoveryDone);
 }
@@ -22,11 +19,76 @@ void FeedValidator::check()
     feedDiscovery.checkFeed(_url);
 }
 
+QVariantList FeedValidator::discoveredFeeds()
+{
+    // Build a list of all feeds found. We're using an index-based loop here as we
+    // need the index to refer to the feed later.
+    QVariantList result;
+    for (int i = 0; i < _feeds.count(); i++) {
+        const FeedInfo& info = _feeds[i];
+        QVariantMap feedMap;
+        feedMap["url"] = info.url;
+        feedMap["title"] = info.title;
+        feedMap["selected"] = info.selected;
+        feedMap["index"] = i;
+        result.append(feedMap);
+    }
+    return result;
+}
+
+int FeedValidator::feedCount()
+{
+    return _feeds.count();
+}
+
+int FeedValidator::feedsToAddCount()
+{
+    for (const FeedInfo& feedInfo : _feeds) {
+        if (feedInfo.selected && feedInfo.title != "") {
+            // Only return true if there's at least one feed selected and it has a title.
+            return true;
+        }
+    }
+
+    return false;
+}
+
+void FeedValidator::setFeedSelected(int index, bool selected)
+{
+    if (index >= 0 && index < _feeds.count()) {
+        _feeds[index].selected = selected;
+        emit feedsToAddCountChanged();
+    } else {
+        qWarning() << "setFeedSelected: No feed found for index: " << index;
+    }
+}
+
+void FeedValidator::setFeedTitle(int index, QString title)
+{
+    if (index >= 0 && index < _feeds.count()) {
+        _feeds[index].title = title;
+        emit feedsToAddCountChanged();
+    } else {
+        qWarning() << "setFeedTitle: No feed found for index: " << index;
+    }
+}
+
 void FeedValidator::addFeed()
 {
-    RawFeed* feed = feedDiscovery.feedResult();
-    feed->title = siteTitle();
-    FangApp::instance()->addFeed(_url, feed, true);
+    // Add all selected feeds
+    QList<FeedDiscovery::DiscoveredFeed> discovered = feedDiscovery.discoveredFeeds();
+
+    for (const FeedInfo& feedInfo : _feeds) {
+        if (feedInfo.selected) {
+            if (feedInfo.discoveryIndex >= 0 && feedInfo.discoveryIndex < discovered.count()) {
+                RawFeed* feed = discovered[feedInfo.discoveryIndex].feed;
+                if (feed) {
+                    feed->title = feedInfo.title;
+                    FangApp::instance()->addFeed(feedInfo.url, feed, true);
+                }
+            }
+        }
+    }
 }
 
 void FeedValidator::setUrl(QString url)
@@ -39,38 +101,39 @@ void FeedValidator::setUrl(QString url)
     emit urlChanged(_url);
 }
 
-void FeedValidator::setSiteTitle(QString title)
-{
-    if (title == _siteTitle) {
-        return;
-    }
-    
-    _siteTitle = title;
-    emit siteTitleChanged(_siteTitle);
-}
-
-void FeedValidator::setSiteImageURL(QString url)
-{
-    if (url == _siteImageURL)
-        return;
-    
-    _siteImageURL = url;
-    emit siteImageURLChanged(_siteImageURL);
-}
-
 void FeedValidator::onFeedDiscoveryDone(FeedDiscovery* discovery)
 {
     Q_UNUSED(discovery);
-    
+
     // Validation is done.
     _validating = false;
     emit validatingChanged(_validating);
-    
-    // Set the TITLE.
-    if (feedDiscovery.feedResult()) {
-        setSiteTitle(feedDiscovery.feedResult()->title);
+
+    // Clear previous feeds.
+    _feeds.clear();
+
+    if (!feedDiscovery.error()) {
+        // Get all discovered feeds (could be 1 or many)
+        QList<FeedDiscovery::DiscoveredFeed> discovered = feedDiscovery.discoveredFeeds();
+
+        // Populate list for all discovered feeds
+        for (int i = 0; i < discovered.count(); i++) {
+            const FeedDiscovery::DiscoveredFeed& df = discovered[i];
+            if (df.validated && df.feed) {
+                FeedInfo info;
+                info.url = df.url.toString();
+                info.title = df.feed->title.isEmpty() ? df.url.toString() : df.feed->title;
+                info.selected = (i == 0);  // Only first one selected by default
+                info.discoveryIndex = i;
+                _feeds.append(info);
+            }
+        }
+
+        // Always emit signals so QML updates
+        emit discoveredFeedsChanged();
+        emit feedCountChanged();
     }
-    
+
     // Completion!
     emit validationComplete(!feedDiscovery.error(), feedDiscovery.errorString());
 }
