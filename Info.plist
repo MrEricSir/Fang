@@ -19,8 +19,8 @@
     <key>NSHighResolutionCapable</key>
     <true/>
     <key>CFBundleVersion</key>
-    <string>0.2.9-beta.1</string>
+    <string>@FULL_VERSION@</string>
     <key>CFBundleShortVersionString</key>
-    <string>0.2.9-beta.1</string>
+    <string>@FULL_VERSION@</string>
 </dict>
 </plist>
