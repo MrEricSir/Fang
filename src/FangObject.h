@@ -22,7 +22,12 @@ public:
     virtual ~FangObject();
     
     static void printRemainingObjects();
-    
+
+    #ifdef FANG_OBJECT_LEAK_CHECK
+    // For testing purposes - returns count of tracked objects
+    static int getRemainingObjectCount();
+    #endif
+
 signals:
     
 public slots:
