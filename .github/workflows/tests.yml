@@ -286,7 +286,7 @@ jobs:
 
         # Build MSI with SourceDir variable pointing to Release folder
         Write-Host "`nBuilding MSI..."
-        wix build fang.wxs build/files.wxs -out build/Fang.msi -d SourceDir=build/Release
+        wix build fang.wxs build/files.wxs -arch x64 -out build/Fang.msi -d SourceDir=build/Release
 
         # Show MSI size
         $msiSize = (Get-Item build/Fang.msi).Length / 1MB
