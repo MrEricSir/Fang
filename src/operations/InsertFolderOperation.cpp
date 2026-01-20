@@ -1,5 +1,6 @@
 #include "InsertFolderOperation.h"
 #include "../utilities/Utilities.h"
+#include "../utilities/ErrorHandling.h"
 #include "../models/FolderFeedItem.h"
 
 InsertFolderOperation::InsertFolderOperation(OperationManager *parent, int newIndex, QString name, ListModel *feedList)
@@ -9,7 +10,7 @@ InsertFolderOperation::InsertFolderOperation(OperationManager *parent, int newIn
       feedList(feedList),
       newItem(nullptr)
 {
-    Q_ASSERT(feedList != nullptr);
+    requireObject(feedList);
 }
 
 InsertFolderOperation::~InsertFolderOperation()
@@ -22,15 +23,23 @@ void InsertFolderOperation::execute()
     qint64 insertID = -1;
 
     // Make sure we have a realistic newIndex before we get started.
-    Q_ASSERT(newIndex < feedList->count());
-    Q_ASSERT(newIndex >= 0);
+    if (newIndex < 0 || newIndex >= feedList->count()) {
+        qCritical() << "InsertFolderOperation: Invalid newIndex" << newIndex
+                    << "for feedList with count" << feedList->count();
+        emit finished(this);
+        return;
+    }
 
     // Grab next two ids in the list.
     QVector<qint64> nextIDs;
     QVector<FeedItem *> nextItems;
     for (int i = newIndex; i < newIndex + 2; i++) {
         FeedItem* next = qobject_cast<FeedItem*>(feedList->row(i));
-        Q_ASSERT(next);
+        if (!next) {
+            qCritical() << "InsertFolderOperation: Feed item at index" << i << "is null";
+            emit finished(this);
+            return;
+        }
         nextIDs.append(next->getDbID());
         nextItems.append(next);
     }
@@ -58,7 +67,12 @@ void InsertFolderOperation::execute()
         insertID = query.lastInsertId().toLongLong();
     }
 
-    Q_ASSERT(insertID > -1);
+    if (insertID <= -1) {
+        qCritical() << "InsertFolderOperation: Invalid insert ID" << insertID;
+        db().rollback();
+        emit finished(this);
+        return;
+    }
 
     {
         QString ids = Utilities::commaSeparatedStringList(nextIDs);

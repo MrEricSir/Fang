@@ -3,6 +3,7 @@
 
 #include <QString>
 #include <QDateTime>
+#include "../utilities/ErrorHandling.h"
 
 const QString TWO_WEEKS = "2WEEK";
 const QString THREE_MONTH = "3MONTH";
@@ -19,7 +20,7 @@ inline QString DBSettingsKeyDefaultValue(DBSettingsKey key) {
     case CACHE_LENGTH:
         return TWO_WEEKS;
     default:
-        Q_ASSERT(false); // You forgot to handle your new key here, bozo.
+        FANG_UNREACHABLE("Unknown DBSettingsKey");
         return "";
     }
 }
@@ -30,16 +31,16 @@ inline QString DBSettingsKeyDefaultValue(DBSettingsKey key) {
  * @param value
  */
 inline void DBSettingsKeyAssert(DBSettingsKey key, const QString& value) {
-    Q_UNUSED(value); // TODO: Will this param ever be used?
-
     switch (key) {
     case CACHE_LENGTH:
-         Q_ASSERT(value == TWO_WEEKS || value == THREE_MONTH ||
-                  value == SIX_MONTH || value == ONE_YEAR);
+        FANG_CHECK(value == TWO_WEEKS || value == THREE_MONTH ||
+                   value == SIX_MONTH || value == ONE_YEAR,
+                   "DBSettingsKeyAssert: Invalid CACHE_LENGTH value");
         break;
 
     default:
-        Q_ASSERT(false); // You forgot to handle your new key here, moran.
+        FANG_UNREACHABLE("Unknown DBSettingsKey");
+        break;
     }
 }
 
@@ -53,7 +54,7 @@ inline QDateTime DBSettingsCacheLengthToDateTime(const QString& value) {
     } else if (ONE_YEAR == value) {
         return QDateTime::currentDateTime().addYears(-1);
     } else {
-        Q_ASSERT(false); // You forgot to handle your new key here, stupidz.
+        FANG_UNREACHABLE("Unknown cache length value");
         return QDateTime::fromMSecsSinceEpoch(0); // Hella old so we don't delete anything.
     }
 }

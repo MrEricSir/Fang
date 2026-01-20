@@ -3,6 +3,7 @@
 #include <QXmlStreamWriter>
 #include <QDateTime>
 #include <QFile>
+#include "ErrorHandling.h"
 #include "../models/FeedItem.h"
 
 OPMLExport::OPMLExport()
@@ -53,8 +54,11 @@ bool OPMLExport::save(const QString &sFile, ListModel* feedList)
     // <outline text="MrEricSir.com" title="MrEricSir.com" type="rss" xmlUrl="http://www.mrericsir.com/blog/feed/" htmlUrl="http://www.mrericsir.com/blog"/>
     for (int i = 1; i < feedList->count(); i++) {
         FeedItem* feedItem = qobject_cast<FeedItem*>(feedList->row(i));
-        Q_ASSERT(feedItem != nullptr);
-        
+        if (!feedItem) {
+            qCritical() << "OPMLExport: Feed item null at index" << i;
+            continue;
+        }
+
         xmlWriter.writeStartElement("outline");
         
         xmlWriter.writeAttribute("text", feedItem->getTitle());

@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <QDebug>
 #include "NetworkUtilities.h"
+#include "ErrorHandling.h"
 #include "../parser/NewsParser.h"
 #include "../parser/BatchNewsParser.h"
 #include "WebPageGrabber.h"
@@ -106,8 +107,8 @@ void FeedDiscovery::onTryFeed()
 
 void FeedDiscovery::onFeedFound()
 {
-    Q_ASSERT(!_error);
-    Q_ASSERT(!_feedURL.isEmpty());
+    FANG_CHECK(!_error, "FeedDiscovery::onFeedFound called with _error set");
+    FANG_CHECK(!_feedURL.isEmpty(), "FeedDiscovery::onFeedFound called with empty _feedURL");
 
     emit done(this);
 }
@@ -119,8 +120,8 @@ void FeedDiscovery::onWebGrabber()
 
 void FeedDiscovery::onError()
 {
-    Q_ASSERT(_error);
-    Q_ASSERT(!_errorString.isEmpty());
+    FANG_CHECK(_error, "FeedDiscovery::onError called without _error set");
+    FANG_CHECK(!_errorString.isEmpty(), "FeedDiscovery::onError called with empty _errorString");
 
     emit done(this);
 }
@@ -158,7 +159,10 @@ void FeedDiscovery::onFirstParseDone()
 
     case ParserInterface::IN_PROGRESS:
     default:
-        Q_ASSERT(false); // Either we didn't add a new case, or the parser yarfed on us.
+        FANG_UNREACHABLE("Unexpected parser result in onFirstParseDone");
+        // Treat as error and continue to web grabber
+        machine.setState(WEB_GRABBER);
+        break;
     }
 }
 

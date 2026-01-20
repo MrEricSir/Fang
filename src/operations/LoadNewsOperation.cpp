@@ -1,5 +1,6 @@
 #include "LoadNewsOperation.h"
 #include "../models/NewsList.h"
+#include "../utilities/ErrorHandling.h"
 #include <QDebug>
 
 LoadNewsOperation::LoadNewsOperation(OperationManager *parent, FeedItem* feedItem, LoadMode mode, int loadLimit) :
@@ -27,8 +28,7 @@ QString LoadNewsOperation::modeToString(LoadMode mode)
     case Append:
         return "append";
     default:
-        qWarning() << "Invalid enum load mode: " << mode;
-        Q_ASSERT(false);
+        FANG_UNREACHABLE("Invalid LoadMode enum value");
         return "[ERROR]";
     }
 }
@@ -43,7 +43,7 @@ LoadNewsOperation::LoadMode LoadNewsOperation::stringToMode(QString modeString)
         return LoadMode::Append;
     } else {
         qWarning() << "Invalid string load mode: " << modeString;
-        Q_ASSERT(false);
+        FANG_UNREACHABLE("Invalid LoadMode string");
         return LoadMode::Error;
     }
 }
@@ -177,8 +177,7 @@ void LoadNewsOperation::executeSynchronous()
 {
     if (feedItem->isSpecialFeed()) {
         // Wrong type of load operation for special feed.
-        Q_ASSERT(false);
-        
+        qCritical() << "LoadNewsOperation: Cannot use base LoadNewsOperation for special feeds";
         return;
     }
     
@@ -190,8 +189,9 @@ void LoadNewsOperation::executeSynchronous()
     case Initial:
     {
         // For an initial load, make sure the feed isn't populated yet.
-        Q_ASSERT(feedItem->getNewsList() == nullptr || feedItem->getNewsList()->isEmpty());
-            
+        FANG_CHECK(feedItem->getNewsList() == nullptr || feedItem->getNewsList()->isEmpty(),
+                   "LoadNewsOperation: Initial load on already-populated feed");
+
         qint64 startId = bookmarkID;
         if (startId > 0) {
             // We has a bookmark, yo!
@@ -217,13 +217,13 @@ void LoadNewsOperation::executeSynchronous()
     case Prepend:
     {
         dbResult &= doPrepend(getStartIDForPrepend());
-        
+
         break;
     }
-        
+
     default:
-        // This means you added a new mode, but didn't add it to this switch.  Jerk.
-        Q_ASSERT(false);
+        FANG_UNREACHABLE("LoadNewsOperation::executeSynchronous: Invalid LoadMode");
+        break;
     }
     
     // Check if we done goofed.

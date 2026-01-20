@@ -1,5 +1,6 @@
 #include "NewsItem.h"
 #include "NewsList.h"
+#include "../utilities/ErrorHandling.h"
 
 
 NewsList::NewsList(QObject *parent)
@@ -59,7 +60,7 @@ qsizetype NewsList::indexOf(const NewsItem *value, qsizetype from) const
 void NewsList::append(NewsItem *value)
 {
     if (set.contains(value)) {
-        Q_ASSERT(false);
+        qCritical() << "NewsList::append: Attempting to add duplicate item with ID" << value->getDbID();
         return;
     }
 
@@ -70,7 +71,7 @@ void NewsList::append(NewsItem *value)
 void NewsList::prepend(NewsItem *value)
 {
     if (set.contains(value)) {
-        Q_ASSERT(false);
+        qCritical() << "NewsList::prepend: Attempting to add duplicate item with ID" << value->getDbID();
         return;
     }
 
@@ -98,8 +99,7 @@ NewsItem *NewsList::newsItemForID(const qint64 id) const
 {
     if (id < 0) {
         // Invalid ID.
-        qDebug() << "Invalid news ID.";
-        Q_ASSERT(false);
+        qCritical() << "NewsList::newsItemForID: Invalid news ID" << id;
         return nullptr;
     }
 

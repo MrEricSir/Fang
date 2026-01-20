@@ -393,9 +393,9 @@ void FangApp::onObjectCreated(QObject* object, const QUrl& url)
 
     // Locate settings.
     fangSettings = object->findChild<FangSettings*>("fangSettings");
-    
+
     // Do a sanity check.
-    FANG_REQUIRE_VOID(fangSettings == nullptr);
+    FANG_REQUIRE_VOID(fangSettings != nullptr);
 
     // Init settings.
     fangSettings->init(&dbSettings);

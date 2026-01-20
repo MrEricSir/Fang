@@ -4,6 +4,7 @@
 #include <QString>
 #include <QStringList>
 #include <QNetworkReply>
+#include "ErrorHandling.h"
 
 ImageGrabber::ImageGrabber(QObject *parent) :
     FangObject(parent),
@@ -49,7 +50,7 @@ void ImageGrabber::checkUrl(const QUrl &url)
 void ImageGrabber::onRequestFinished(QNetworkReply * reply)
 {
     QUrl requestedUrl = reply->request().url();
-    Q_ASSERT(urlsToCheck.contains(requestedUrl));
+    FANG_CHECK(urlsToCheck.contains(requestedUrl), "ImageGrabber: Unexpected URL received");
 
     //
     // TODO: Handle HTTP redirects correctly.

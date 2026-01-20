@@ -1,5 +1,6 @@
 #include "LisvelLoadNewsOperation.h"
 #include "src/models/NewsList.h"
+#include "../utilities/ErrorHandling.h"
 
 
 LisvelLoadNewsOperation::LisvelLoadNewsOperation(OperationManager *parent, LisvelFeedItem *feedItem, LoadMode mode, int loadLimit, bool prependOnInit) :
@@ -14,7 +15,8 @@ void LisvelLoadNewsOperation::executeSynchronous()
     qDebug() << "LisvelLoadNewsOperation::execute load for feed: " << lisvelNews->getDbID();
     // For an initial load, make sure the feed isn't populated yet.
     if (getMode() == LoadNewsOperation::Initial) {
-        Q_ASSERT(feedItem->getNewsList() != nullptr || feedItem->getNewsList()->isEmpty());
+        FANG_CHECK(feedItem->getNewsList() != nullptr || feedItem->getNewsList()->isEmpty(),
+                   "LisvelLoadNewsOperation: Initial load on populated feed");
     }
 
     // DB query/ies.
@@ -46,8 +48,8 @@ void LisvelLoadNewsOperation::executeSynchronous()
     }
 
     default:
-        // This means you added a new mode, but didn't add it to this switch.  Jerk.
-        Q_ASSERT(false);
+        FANG_UNREACHABLE("Invalid LoadMode in LisvelLoadNewsOperation");
+        break;
     }
 
     // Check if we done goofed.
