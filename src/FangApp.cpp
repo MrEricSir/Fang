@@ -344,7 +344,7 @@ void FangApp::setBookmark(qint64 id, bool allowBackward)
     }
 
     if (!currentFeed->canBookmark(id, allowBackward)) {
-        qDebug() << "Cannot set bookmark to: " << id;
+        // qDebug() << "Cannot set bookmark to: " << id;
         return;
     }
 
