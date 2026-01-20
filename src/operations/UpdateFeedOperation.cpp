@@ -5,6 +5,7 @@
 #include "UpdateFeedURLOperation.h"
 #include "../models/AllNewsFeedItem.h"
 #include "../utilities/UnreadCountReader.h"
+#include "../utilities/ErrorHandling.h"
 #include "../FangApp.h"
 
 UpdateFeedOperation::UpdateFeedOperation(OperationManager *parent, FeedItem *feed, RawFeed* rawFeed, bool useCache) :
@@ -30,8 +31,13 @@ UpdateFeedOperation::~UpdateFeedOperation()
 void UpdateFeedOperation::execute()
 {
     FANG_BACKGROUND_CHECK;
-    Q_ASSERT(feed);
-    
+
+    if (!feed) {
+        qCritical() << "UpdateFeedOperation::execute: feed is null, cannot execute";
+        emit finished(this);
+        return;
+    }
+
     if (feed->isSpecialFeed()) {
         qDebug() <<  "Cannot update special feed";
         emit finished(this);

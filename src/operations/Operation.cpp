@@ -1,4 +1,5 @@
 #include "Operation.h"
+#include "../utilities/ErrorHandling.h"
 #include <QDebug>
 
 Operation::Operation(PriorityLevel priority, OperationManager* parent) :
@@ -20,7 +21,7 @@ void Operation::reportError(const QString& errorString)
 
 void Operation::requireObject(QObject *object)
 {
-    Q_ASSERT(object != nullptr);
+    FANG_REQUIRE_VOID(object != nullptr);
     connect(object, &QObject::destroyed, this, &Operation::onRequiredQObjectDestroyed);
 }
 
