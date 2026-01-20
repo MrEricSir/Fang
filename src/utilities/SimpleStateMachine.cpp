@@ -1,4 +1,5 @@
 #include "SimpleStateMachine.h"
+#include "ErrorHandling.h"
 #include <QMetaMethod>
 #include <QMetaObject>
 #include <QDebug>
@@ -27,24 +28,30 @@ void SimpleStateMachine::setState(int state)
         // Default to -1 (all) state.
         pair = QPair<int, int>(-1, currentState);
         if (!stateMap.contains(pair)) {
-            qDebug() << "State transition from " << oldState << " to " << currentState << " not avaliable!";
-            Q_ASSERT(false);
+            qCritical() << "SimpleStateMachine: State transition from" << oldState
+                        << "to" << currentState << "not defined";
+            return;
         }
     }
-    
+
     const char* method = stateMap[pair];
     ++method; // Skip first character.
-    
+
     int methodNumber = receiver->metaObject()->indexOfSlot(QMetaObject::normalizedSignature(method));
-    //qDebug() << "Method #: " << methodNumber;
-    Q_ASSERT(methodNumber > 0 || methodNumber == -1);
-    
+    if (methodNumber < 0 && methodNumber != -1) {
+        qCritical() << "SimpleStateMachine: Invalid method number" << methodNumber;
+        return;
+    }
+
     // Emit the signal.
     emit stateChanged(oldState, currentState);
-    
+
     // Run the method.
     QMetaMethod metaMethod = receiver->metaObject()->method(methodNumber);
-    Q_ASSERT(metaMethod.isValid()); // Ensures the method exists.
+    if (!metaMethod.isValid()) {
+        qCritical() << "SimpleStateMachine: Invalid meta method for" << method;
+        return;
+    }
     metaMethod.invoke(receiver);
 }
 

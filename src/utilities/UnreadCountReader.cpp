@@ -1,4 +1,5 @@
 #include "UnreadCountReader.h"
+#include "ErrorHandling.h"
 
 #include <QDebug>
 
@@ -19,7 +20,8 @@ void UnreadCountReader::update(QSqlDatabase db, FeedItem *feed)
             break;
 
         default:
-            Q_ASSERT(false); // You forgot to handle a new special feed type here.
+            FANG_UNREACHABLE("UnreadCountReader: Invalid special feed type");
+            break;
         }
         return;
     }

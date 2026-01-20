@@ -10,6 +10,7 @@
 #include "DBObject.h"
 #include "ListModel.h"
 #include "src/models/NewsList.h"
+#include "../utilities/ErrorHandling.h"
 
 class NewsItem;
 class NewsList;
@@ -119,7 +120,10 @@ public slots:
 
     // Override for folders.
     virtual bool isFolder() const { return false; }
-    virtual void setIsFolder(bool isFolder) { Q_UNUSED(isFolder); Q_ASSERT(false); } // Implement this if desired.
+    virtual void setIsFolder(bool isFolder) {
+        Q_UNUSED(isFolder);
+        qCritical() << "FeedItem::setIsFolder: Unsupported on base type";
+    }
 
     void setParentFolder(qint64 parentFolder);
     void setFolderOpen(bool folderOpen);

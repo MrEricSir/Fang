@@ -1,5 +1,6 @@
 #include "ParserXMLWorker.h"
 #include <QtCore/qtimezone.h>
+#include "../utilities/ErrorHandling.h"
 
 ParserXMLWorker::ParserXMLWorker(QObject *parent) :
     FangObject(parent), feed(nullptr), currentItem(nullptr), isValid(false), inAtomXHTML(false)
@@ -163,10 +164,20 @@ void ParserXMLWorker::elementEnd()
         } else {
             myGuid = urlHref.trimmed();
         }
-        
-        // Yes, we need a guid!
-        Q_ASSERT(!myGuid.isEmpty());
-        
+
+        // Skip items without a GUID - malformed feed
+        if (myGuid.isEmpty()) {
+            qWarning() << "ParserXMLWorker: RSS/Atom item missing GUID/URL, skipping item";
+            qWarning() << "  Title:" << title;
+            delete currentItem;
+            currentItem = nullptr;
+
+            // Clear all strings for next item
+            author = title = subtitle = content = QString();
+            urlData = urlHref = guid = id = date = updated = timestamp = QString();
+            return;
+        }
+
         // Item space.
         currentItem->author = author;
         currentItem->title = title;

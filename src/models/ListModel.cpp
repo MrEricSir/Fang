@@ -6,6 +6,7 @@
  */
  
 #include "ListModel.h"
+#include "../utilities/ErrorHandling.h"
 
 #include <QDebug>
  
@@ -43,7 +44,10 @@ QVariant ListModel::dataByField(int row, const QString &field_name) const
     }
 
     int roleIndex = roleNameToRole(field_name);
-    Q_ASSERT(roleIndex >= 0);
+    if (roleIndex < 0) {
+        qCritical() << "ListModel::dataByField: Invalid field name" << field_name;
+        return QVariant();
+    }
 
     return m_list.at(row)->data(roleIndex);
 }
@@ -67,13 +71,16 @@ void ListModel::setData(int row, const QString &field_name, QVariant new_value)
     for (int roleIndex : roleNames.keys()) {
         if (field_name == roleNames[roleIndex]) {
              m_list.at(row)->setData(new_value, roleIndex);
-            
+
             return;
         }
     }
 
     int roleIndex = roleNameToRole(field_name);
-    Q_ASSERT(roleIndex >= 0);
+    if (roleIndex < 0) {
+        qCritical() << "ListModel::setData: Invalid field name" << field_name;
+        return;
+    }
     m_list.at(row)->setData(new_value, roleIndex);
 }
 
@@ -154,7 +161,10 @@ ListItem * ListModel::find(const QString &id) const
  
 QModelIndex ListModel::indexFromItem(const ListItem *item) const
 {
-  Q_ASSERT(item);
+  if (!item) {
+      qCritical() << "ListModel::indexFromItem: item is null";
+      return QModelIndex();
+  }
   for(int row=0; row<m_list.size(); ++row) {
       if(m_list.at(row) == item) return index(row);
   }

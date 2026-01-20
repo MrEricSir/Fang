@@ -4,6 +4,7 @@
 #include <QThread>
 
 #include "../utilities/UnreadCountReader.h"
+#include "../utilities/ErrorHandling.h"
 #include "../FangApp.h"
 
 RemoveFeedOperation::RemoveFeedOperation(OperationManager *parent, FeedItem* feed, ListModel *feedList) :
@@ -11,13 +12,16 @@ RemoveFeedOperation::RemoveFeedOperation(OperationManager *parent, FeedItem* fee
     feed(feed),
     feedList(feedList)
 {
-    Q_ASSERT(feed != nullptr);
-    Q_ASSERT(feedList != nullptr);
+    requireObject(feed);
+    requireObject(feedList);
 }
 
 void RemoveFeedOperation::executeSynchronous()
 {
-    Q_ASSERT(feed);
+    if (!feed) {
+        qCritical() << "RemoveFeedOperation::executeSynchronous: feed is null";
+        return;
+    }
 
     if (feed->isSpecialFeed()) {
         qDebug() << "Cannot remove special feed";
@@ -63,7 +67,10 @@ void RemoveFeedOperation::executeSynchronous()
         ListModel * feedList = FangApp::instance()->getFeedList();
         for (int i = 0; i < feedList->rowCount(); i++) {
             FeedItem* feed = qobject_cast<FeedItem*>(feedList->row(i));
-            Q_ASSERT(feed);
+            if (!feed) {
+                qCritical() << "RemoveFeedOperation: Feed item at index" << i << "is null";
+                continue;
+            }
             if (feed->getParentFolderID() == dbID) {
                 feed->setParentFolder(-1);
             }

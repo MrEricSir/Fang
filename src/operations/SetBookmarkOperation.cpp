@@ -2,6 +2,7 @@
 #include <QDebug>
 
 #include "../models/AllNewsFeedItem.h"
+#include "../utilities/ErrorHandling.h"
 #include "../FangApp.h"
 #include "src/models/NewsList.h"
 
@@ -80,9 +81,9 @@ void SetBookmarkOperation::bookmarkAllNewsFeed(AllNewsFeedItem* allNews)
 {
     int proposed = allNews->getNewsList()->indexOf(bookmark);
     int current = allNews->getNewsList()->indexForItemID(allNews->getBookmarkID());
-    
-    Q_ASSERT(proposed != current); // You have to double-check for this before starting this operation.
-    
+
+    FANG_CHECK(proposed != current, "SetBookmarkOperation: Bookmark already at proposed position");
+
     db().transaction();
     
     // Start i at the current position.

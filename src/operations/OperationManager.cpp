@@ -1,6 +1,7 @@
 #include "OperationManager.h"
 
 #include "../utilities/Utilities.h"
+#include "../utilities/ErrorHandling.h"
 
 OperationManager::OperationManager(QObject *parent) :
     FangObject(parent),
@@ -29,11 +30,15 @@ void OperationManager::add(Operation *operation)
     case Operation::IMMEDIATE:
         // Let's do it!
         runNow(operation);
-        
+
         break;
-        
+
     default:
-        Q_ASSERT(false); // Not a valid priority level. :(
+        FANG_UNREACHABLE("Invalid operation priority");
+        // Treat as background operation to avoid crashes
+        queue.enqueue(operation);
+        executeOperations();
+        break;
     }
 }
 
@@ -60,7 +65,7 @@ void OperationManager::executeOperations()
 void OperationManager::runNow(Operation *operation)
 {
     // Double check that we're in the right thread.
-    Q_ASSERT(Utilities::isInMainThread());
+    FANG_CHECK(Utilities::isInMainThread(), "OperationManager::runNow called from non-main thread");
 
     pending.insert(operation);
     QObject::connect(operation, &Operation::finished, this, &OperationManager::onOperationFinished);

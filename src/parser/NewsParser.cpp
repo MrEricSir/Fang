@@ -4,6 +4,7 @@
 #include <QFile>
 #include <QFileInfo>
 
+#include "../utilities/ErrorHandling.h"
 #include "ParserXMLWorker.h"
 
 NewsParser::NewsParser(QObject *parent) :
@@ -59,16 +60,19 @@ void NewsParser::parse(const QUrl& url, bool noParseIfCached)
 void NewsParser::parseFile(const QString &filename)
 {
     initParse();
-    
+
     QFile file(filename);
-    
-    Q_ASSERT(file.exists());
-    
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        Q_ASSERT(false);
+
+    if (!file.exists()) {
+        qCritical() << "NewsParser::parseFile: File does not exist:" << filename;
         return;
     }
-    
+
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        qCritical() << "NewsParser::parseFile: Cannot open file:" << filename;
+        return;
+    }
+
     QByteArray data = file.readAll();
     emit triggerAddXML(data);
     emit triggerDocEnd();

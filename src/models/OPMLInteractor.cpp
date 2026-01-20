@@ -6,6 +6,7 @@
 #include "../FangApp.h"
 #include "../utilities/Utilities.h"
 #include "../utilities/OPMLExport.h"
+#include "../utilities/ErrorHandling.h"
 
 OPMLInteractor::OPMLInteractor(QQuickItem *parent) :
     QQuickItem(parent),
@@ -164,7 +165,8 @@ QString OPMLInteractor::importErrorString()
     case ParserInterface::EMPTY_DOCUMENT:
         return "OPML file did not contain any feeds";
     default:
-        Q_ASSERT(false); // Forgot to handle this error. Jerk.
+        FANG_UNREACHABLE("Unknown OPML parser error code");
+        return "Unknown error";
     }
     
     return "Unknown error";

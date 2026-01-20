@@ -4,6 +4,8 @@
 #include <QElapsedTimer>
 #include <QImageReader>
 
+#include "utilities/ErrorHandling.h"
+
 #include "operations/UpdateFeedOperation.h"
 #include "operations/LoadAllFeedsOperation.h"
 #include "operations/AddFeedOperation.h"
@@ -47,7 +49,9 @@ FangApp::FangApp(QApplication *parent, QQmlApplicationEngine* engine, QSingleIns
     isPinnedNewsVisible(true),
     lastFeedSelected(nullptr)
 {
-    Q_ASSERT(_instance == nullptr);
+    if (_instance != nullptr) {
+        qCritical() << "FangApp: Multiple instances created! Previous instance exists.";
+    }
     _instance = this;
     
     // Setup signals.
@@ -167,8 +171,11 @@ void FangApp::onFeedSelected(ListItem* _item)
 void FangApp::onNewFeedAddedSelect(Operation* addFeedOperation)
 {
     AddFeedOperation* op = qobject_cast<AddFeedOperation*>(addFeedOperation);
-    Q_ASSERT(op != nullptr);
-    
+    if (!op) {
+        qCritical() << "FangApp::onNewFeedAddedSelect: Operation is not an AddFeedOperation";
+        return;
+    }
+
     // Tell me about it.
     feedList.setSelected(op->getFeedItem());
 }
@@ -205,7 +212,9 @@ void FangApp::onLoadAllFinished(Operation *op)
             break;
 
         default:
-            Q_ASSERT(false); // You forgot to add the new special feed here.
+            // Note: Did you add a new type of special feed and forget to update the above switch?
+            FANG_UNREACHABLE("Unknown special feed: Expected All News or Pinned feed");
+            break;
         }
     }
 
@@ -224,8 +233,11 @@ void FangApp::onLoadAllFinished(Operation *op)
 
 void FangApp::refreshFeed(FeedItem *feed)
 {
-    Q_ASSERT(feed != nullptr);
-    
+    if (!feed) {
+        qCritical() << "FangApp::refreshFeed: feed is null";
+        return;
+    }
+
     QList<FeedItem*> feedsToUpdate;
     bool useCache = true; // Use cache by default.
     
@@ -235,7 +247,10 @@ void FangApp::refreshFeed(FeedItem *feed)
         for (int i = 0; i < feedList.rowCount(); i++)
         {
             FeedItem* item = qobject_cast<FeedItem*>(feedList.row(i));
-            Q_ASSERT(item != nullptr);
+            if (!item) {
+                qCritical() << "FangApp::refreshFeed: Feed item at index" << i << "is null";
+                continue;
+            }
             if (item->isSpecialFeed() || item->isFolder()) {
                 continue; // Skip special feeds and folders.
             }
@@ -251,7 +266,10 @@ void FangApp::refreshFeed(FeedItem *feed)
         for (int i = 0; i < feedList.rowCount(); i++)
         {
             FeedItem* item = qobject_cast<FeedItem*>(feedList.row(i));
-            Q_ASSERT(item != nullptr);
+            if (!item) {
+                qCritical() << "FangApp::refreshFeed: Feed item at index" << i << "is null";
+                continue;
+            }
             if (item->getParentFolderID() == folderID) {
                 feedsToUpdate.append(item);
             }
@@ -296,22 +314,25 @@ FeedItem* FangApp::feedForId(const qint64 id)
             return pinnedNews;
 
         default:
-            Q_ASSERT(false); // You added a new special feed but forgot to update this switch
+            // Note: Did you add a new type of special feed and forget to update the above switch?
+            FANG_UNREACHABLE("Unknown special feed: ID is not all news or pinned");
+            return nullptr;
         }
-
-        return nullptr; // Should never make it this far.
     }
 
     // Plain ol' feeds.
     for (int i = 0; i < feedList.rowCount(); ++i) {
         FeedItem* feed = qobject_cast<FeedItem*>(feedList.row(i));
-        Q_ASSERT(feed != nullptr);
-        
+        if (!feed) {
+            qCritical() << "FangApp::feedForId: Feed item at index" << i << "is null";
+            continue;
+        }
+
         if (feed->getDbID() == id) {
             return feed;
         }
     }
-    
+
     return nullptr;
 }
 
@@ -372,13 +393,9 @@ void FangApp::onObjectCreated(QObject* object, const QUrl& url)
 
     // Locate settings.
     fangSettings = object->findChild<FangSettings*>("fangSettings");
-    
+
     // Do a sanity check.
-    if (fangSettings == nullptr) {
-        qDebug() << "Could not find QML objects!";
-        
-        return;
-    }
+    FANG_REQUIRE_VOID(fangSettings != nullptr);
 
     // Init settings.
     fangSettings->init(&dbSettings);
@@ -532,7 +549,7 @@ QString FangApp::getPlatform()
 #elif defined(Q_OS_UNIX)  // Should be next-to last
     return "UNIX";
 #else                     // Must be last!
-    Q_ASSERT(false);
+    FANG_UNREACHABLE("Unknown platform");
     return "UNKNOWN";
 #endif
 }
@@ -552,7 +569,7 @@ bool FangApp::isDesktop()
 #elif defined(Q_OS_UNIX)  // Should be next-to last
     return true;
 #else                     // Must be last!
-    Q_ASSERT(false);
+    FANG_UNREACHABLE("Unknown platform");
     return true;
 #endif
 }
@@ -623,8 +640,12 @@ void FangApp::setRefreshTimer()
     } else if (refresh == "1HOUR") {
         minutes = 60;
     } else {
-        // You added a new refresh rate timeout but didn't add it here
-        Q_ASSERT(false);
+        // You added a new refresh rate timeout but didn't add it here. Either that or someone is
+        // messing with the preferences outside of Fang. Or the drive is failing?
+        FANG_UNREACHABLE("Invalid refresh rate");
+
+        // Default: 10 minutes
+        minutes = 10;
     }
 
     updateTimer->setInterval(minutes * 60 * 1000);
@@ -633,7 +654,10 @@ void FangApp::setRefreshTimer()
 
 FangApp* FangApp::instance()
 {
-    Q_ASSERT(_instance != nullptr);
+    if (!_instance) {
+        qCritical() << "FangApp instance is not initialized";
+    }
+
     return _instance;
 }
 

@@ -1,4 +1,5 @@
 #include "FangSettings.h"
+#include "../utilities/ErrorHandling.h"
 #include <QDebug>
 
 FangSettings::FangSettings(QQuickItem *parent) :
@@ -65,7 +66,8 @@ void FangSettings::onDBSettingChanged(DBSettingsKey key, QString value)
         break;
 
     default:
-        Q_ASSERT(false); // You forgot to handle your new key here, dumas.
+        FANG_UNREACHABLE("Unknown settings key in FangSettings");
+        break;
     }
 }
 
