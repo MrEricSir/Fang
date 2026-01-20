@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-01-19 05:32:02</td>
+            <td class="headerValue">2026-01-20 03:55:32</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryMed">83.3&nbsp;%</td>
@@ -66,84 +66,85 @@
 <span id="L4"><span class="lineNum">       4</span>              : #include &lt;QString&gt;</span>
 <span id="L5"><span class="lineNum">       5</span>              : #include &lt;QStringList&gt;</span>
 <span id="L6"><span class="lineNum">       6</span>              : #include &lt;QNetworkReply&gt;</span>
-<span id="L7"><span class="lineNum">       7</span>              : </span>
-<span id="L8"><span class="lineNum">       8</span> <span class="tlaGNC tlaBgGNC">          27 : ImageGrabber::ImageGrabber(QObject *parent) :</span></span>
-<span id="L9"><span class="lineNum">       9</span>              :     FangObject(parent),</span>
-<span id="L10"><span class="lineNum">      10</span> <span class="tlaGNC">          27 :     manager(),</span></span>
-<span id="L11"><span class="lineNum">      11</span> <span class="tlaGNC">          27 :     urlsToCheck(),</span></span>
-<span id="L12"><span class="lineNum">      12</span> <span class="tlaGNC">          54 :     results()</span></span>
-<span id="L13"><span class="lineNum">      13</span>              : {</span>
-<span id="L14"><span class="lineNum">      14</span>              :     // Signals!</span>
-<span id="L15"><span class="lineNum">      15</span> <span class="tlaGNC">          27 :     connect(&amp;manager, &amp;FangNetworkAccessManager::finished, this, &amp;ImageGrabber::onRequestFinished);</span></span>
-<span id="L16"><span class="lineNum">      16</span> <span class="tlaGNC">          27 : }</span></span>
-<span id="L17"><span class="lineNum">      17</span>              : </span>
-<span id="L18"><span class="lineNum">      18</span> <span class="tlaUNC tlaBgUNC">           0 : void ImageGrabber::fetchUrl(const QUrl &amp;url)</span></span>
-<span id="L19"><span class="lineNum">      19</span>              : {</span>
-<span id="L20"><span class="lineNum">      20</span> <span class="tlaUNC">           0 :     QList&lt;QUrl&gt; urls;</span></span>
-<span id="L21"><span class="lineNum">      21</span> <span class="tlaUNC">           0 :     urls.append(url);</span></span>
-<span id="L22"><span class="lineNum">      22</span> <span class="tlaUNC">           0 :     fetchUrls(urls);</span></span>
-<span id="L23"><span class="lineNum">      23</span> <span class="tlaUNC">           0 : }</span></span>
-<span id="L24"><span class="lineNum">      24</span>              : </span>
-<span id="L25"><span class="lineNum">      25</span> <span class="tlaGNC tlaBgGNC">           3 : void ImageGrabber::fetchUrls(const QList&lt;QUrl&gt; &amp;urls)</span></span>
-<span id="L26"><span class="lineNum">      26</span>              : {</span>
-<span id="L27"><span class="lineNum">      27</span>              :     // Reset everything.</span>
-<span id="L28"><span class="lineNum">      28</span> <span class="tlaGNC">           3 :     results.clear();</span></span>
-<span id="L29"><span class="lineNum">      29</span> <span class="tlaGNC">           3 :     urlsToCheck.clear();</span></span>
-<span id="L30"><span class="lineNum">      30</span>              :     </span>
-<span id="L31"><span class="lineNum">      31</span>              :     // Do it!</span>
-<span id="L32"><span class="lineNum">      32</span> <span class="tlaGNC">           6 :     for (QUrl url : urls) {</span></span>
-<span id="L33"><span class="lineNum">      33</span> <span class="tlaGNC">           3 :         checkUrl(url);</span></span>
-<span id="L34"><span class="lineNum">      34</span> <span class="tlaGNC">           3 :     }</span></span>
-<span id="L35"><span class="lineNum">      35</span> <span class="tlaGNC">           3 : }</span></span>
-<span id="L36"><span class="lineNum">      36</span>              : </span>
-<span id="L37"><span class="lineNum">      37</span> <span class="tlaGNC">           3 : void ImageGrabber::checkUrl(const QUrl &amp;url)</span></span>
-<span id="L38"><span class="lineNum">      38</span>              : {</span>
-<span id="L39"><span class="lineNum">      39</span> <span class="tlaGNC">           3 :     if (urlsToCheck.contains(url)) {</span></span>
-<span id="L40"><span class="lineNum">      40</span> <span class="tlaUNC tlaBgUNC">           0 :         return; // Already workin' on this one.</span></span>
-<span id="L41"><span class="lineNum">      41</span>              :     }</span>
-<span id="L42"><span class="lineNum">      42</span>              :     </span>
-<span id="L43"><span class="lineNum">      43</span> <span class="tlaGNC tlaBgGNC">           3 :     urlsToCheck.append(url);</span></span>
-<span id="L44"><span class="lineNum">      44</span>              :     </span>
-<span id="L45"><span class="lineNum">      45</span> <span class="tlaGNC">           3 :     QNetworkRequest request(url);</span></span>
-<span id="L46"><span class="lineNum">      46</span> <span class="tlaGNC">           3 :     manager.get(request);</span></span>
-<span id="L47"><span class="lineNum">      47</span> <span class="tlaGNC">           3 : }</span></span>
-<span id="L48"><span class="lineNum">      48</span>              : </span>
-<span id="L49"><span class="lineNum">      49</span> <span class="tlaGNC">           3 : void ImageGrabber::onRequestFinished(QNetworkReply * reply)</span></span>
-<span id="L50"><span class="lineNum">      50</span>              : {</span>
-<span id="L51"><span class="lineNum">      51</span> <span class="tlaGNC">           3 :     QUrl requestedUrl = reply-&gt;request().url();</span></span>
-<span id="L52"><span class="lineNum">      52</span> <span class="tlaGNC">           3 :     Q_ASSERT(urlsToCheck.contains(requestedUrl));</span></span>
-<span id="L53"><span class="lineNum">      53</span>              : </span>
-<span id="L54"><span class="lineNum">      54</span>              :     //</span>
-<span id="L55"><span class="lineNum">      55</span>              :     // TODO: Handle HTTP redirects correctly.</span>
-<span id="L56"><span class="lineNum">      56</span>              :     //</span>
-<span id="L57"><span class="lineNum">      57</span>              :     </span>
-<span id="L58"><span class="lineNum">      58</span>              :     // Let's see what we got 'ere.</span>
-<span id="L59"><span class="lineNum">      59</span> <span class="tlaGNC">           3 :     if (reply-&gt;error() != QNetworkReply::NoError) {</span></span>
-<span id="L60"><span class="lineNum">      60</span>              :         // Error.</span>
-<span id="L61"><span class="lineNum">      61</span>              :         // Insert an empty image.</span>
-<span id="L62"><span class="lineNum">      62</span> <span class="tlaUNC tlaBgUNC">           0 :         results.insert(requestedUrl, QImage());</span></span>
-<span id="L63"><span class="lineNum">      63</span>              :     } else {</span>
-<span id="L64"><span class="lineNum">      64</span>              :         // Great success!</span>
-<span id="L65"><span class="lineNum">      65</span>              :         // Got something, maybe it's an image.  Who knows!  More importantly, who cares?</span>
-<span id="L66"><span class="lineNum">      66</span> <span class="tlaGNC tlaBgGNC">           3 :         results.insert(requestedUrl, QImage::fromData(reply-&gt;readAll()));</span></span>
-<span id="L67"><span class="lineNum">      67</span>              :     }</span>
-<span id="L68"><span class="lineNum">      68</span>              :     </span>
-<span id="L69"><span class="lineNum">      69</span>              :     // Are we there yet?</span>
-<span id="L70"><span class="lineNum">      70</span> <span class="tlaGNC">           3 :     checkCompletion();</span></span>
-<span id="L71"><span class="lineNum">      71</span> <span class="tlaGNC">           3 : }</span></span>
-<span id="L72"><span class="lineNum">      72</span>              : </span>
+<span id="L7"><span class="lineNum">       7</span>              : #include &quot;ErrorHandling.h&quot;</span>
+<span id="L8"><span class="lineNum">       8</span>              : </span>
+<span id="L9"><span class="lineNum">       9</span> <span class="tlaGNC tlaBgGNC">          27 : ImageGrabber::ImageGrabber(QObject *parent) :</span></span>
+<span id="L10"><span class="lineNum">      10</span>              :     FangObject(parent),</span>
+<span id="L11"><span class="lineNum">      11</span> <span class="tlaGNC">          27 :     manager(),</span></span>
+<span id="L12"><span class="lineNum">      12</span> <span class="tlaGNC">          27 :     urlsToCheck(),</span></span>
+<span id="L13"><span class="lineNum">      13</span> <span class="tlaGNC">          54 :     results()</span></span>
+<span id="L14"><span class="lineNum">      14</span>              : {</span>
+<span id="L15"><span class="lineNum">      15</span>              :     // Signals!</span>
+<span id="L16"><span class="lineNum">      16</span> <span class="tlaGNC">          27 :     connect(&amp;manager, &amp;FangNetworkAccessManager::finished, this, &amp;ImageGrabber::onRequestFinished);</span></span>
+<span id="L17"><span class="lineNum">      17</span> <span class="tlaGNC">          27 : }</span></span>
+<span id="L18"><span class="lineNum">      18</span>              : </span>
+<span id="L19"><span class="lineNum">      19</span> <span class="tlaUNC tlaBgUNC">           0 : void ImageGrabber::fetchUrl(const QUrl &amp;url)</span></span>
+<span id="L20"><span class="lineNum">      20</span>              : {</span>
+<span id="L21"><span class="lineNum">      21</span> <span class="tlaUNC">           0 :     QList&lt;QUrl&gt; urls;</span></span>
+<span id="L22"><span class="lineNum">      22</span> <span class="tlaUNC">           0 :     urls.append(url);</span></span>
+<span id="L23"><span class="lineNum">      23</span> <span class="tlaUNC">           0 :     fetchUrls(urls);</span></span>
+<span id="L24"><span class="lineNum">      24</span> <span class="tlaUNC">           0 : }</span></span>
+<span id="L25"><span class="lineNum">      25</span>              : </span>
+<span id="L26"><span class="lineNum">      26</span> <span class="tlaGNC tlaBgGNC">           3 : void ImageGrabber::fetchUrls(const QList&lt;QUrl&gt; &amp;urls)</span></span>
+<span id="L27"><span class="lineNum">      27</span>              : {</span>
+<span id="L28"><span class="lineNum">      28</span>              :     // Reset everything.</span>
+<span id="L29"><span class="lineNum">      29</span> <span class="tlaGNC">           3 :     results.clear();</span></span>
+<span id="L30"><span class="lineNum">      30</span> <span class="tlaGNC">           3 :     urlsToCheck.clear();</span></span>
+<span id="L31"><span class="lineNum">      31</span>              :     </span>
+<span id="L32"><span class="lineNum">      32</span>              :     // Do it!</span>
+<span id="L33"><span class="lineNum">      33</span> <span class="tlaGNC">           6 :     for (QUrl url : urls) {</span></span>
+<span id="L34"><span class="lineNum">      34</span> <span class="tlaGNC">           3 :         checkUrl(url);</span></span>
+<span id="L35"><span class="lineNum">      35</span> <span class="tlaGNC">           3 :     }</span></span>
+<span id="L36"><span class="lineNum">      36</span> <span class="tlaGNC">           3 : }</span></span>
+<span id="L37"><span class="lineNum">      37</span>              : </span>
+<span id="L38"><span class="lineNum">      38</span> <span class="tlaGNC">           3 : void ImageGrabber::checkUrl(const QUrl &amp;url)</span></span>
+<span id="L39"><span class="lineNum">      39</span>              : {</span>
+<span id="L40"><span class="lineNum">      40</span> <span class="tlaGNC">           3 :     if (urlsToCheck.contains(url)) {</span></span>
+<span id="L41"><span class="lineNum">      41</span> <span class="tlaUNC tlaBgUNC">           0 :         return; // Already workin' on this one.</span></span>
+<span id="L42"><span class="lineNum">      42</span>              :     }</span>
+<span id="L43"><span class="lineNum">      43</span>              :     </span>
+<span id="L44"><span class="lineNum">      44</span> <span class="tlaGNC tlaBgGNC">           3 :     urlsToCheck.append(url);</span></span>
+<span id="L45"><span class="lineNum">      45</span>              :     </span>
+<span id="L46"><span class="lineNum">      46</span> <span class="tlaGNC">           3 :     QNetworkRequest request(url);</span></span>
+<span id="L47"><span class="lineNum">      47</span> <span class="tlaGNC">           3 :     manager.get(request);</span></span>
+<span id="L48"><span class="lineNum">      48</span> <span class="tlaGNC">           3 : }</span></span>
+<span id="L49"><span class="lineNum">      49</span>              : </span>
+<span id="L50"><span class="lineNum">      50</span> <span class="tlaGNC">           3 : void ImageGrabber::onRequestFinished(QNetworkReply * reply)</span></span>
+<span id="L51"><span class="lineNum">      51</span>              : {</span>
+<span id="L52"><span class="lineNum">      52</span> <span class="tlaGNC">           3 :     QUrl requestedUrl = reply-&gt;request().url();</span></span>
+<span id="L53"><span class="lineNum">      53</span> <span class="tlaGNC">           3 :     FANG_CHECK(urlsToCheck.contains(requestedUrl), &quot;ImageGrabber: Unexpected URL received&quot;);</span></span>
+<span id="L54"><span class="lineNum">      54</span>              : </span>
+<span id="L55"><span class="lineNum">      55</span>              :     //</span>
+<span id="L56"><span class="lineNum">      56</span>              :     // TODO: Handle HTTP redirects correctly.</span>
+<span id="L57"><span class="lineNum">      57</span>              :     //</span>
+<span id="L58"><span class="lineNum">      58</span>              :     </span>
+<span id="L59"><span class="lineNum">      59</span>              :     // Let's see what we got 'ere.</span>
+<span id="L60"><span class="lineNum">      60</span> <span class="tlaGNC">           3 :     if (reply-&gt;error() != QNetworkReply::NoError) {</span></span>
+<span id="L61"><span class="lineNum">      61</span>              :         // Error.</span>
+<span id="L62"><span class="lineNum">      62</span>              :         // Insert an empty image.</span>
+<span id="L63"><span class="lineNum">      63</span> <span class="tlaUNC tlaBgUNC">           0 :         results.insert(requestedUrl, QImage());</span></span>
+<span id="L64"><span class="lineNum">      64</span>              :     } else {</span>
+<span id="L65"><span class="lineNum">      65</span>              :         // Great success!</span>
+<span id="L66"><span class="lineNum">      66</span>              :         // Got something, maybe it's an image.  Who knows!  More importantly, who cares?</span>
+<span id="L67"><span class="lineNum">      67</span> <span class="tlaGNC tlaBgGNC">           3 :         results.insert(requestedUrl, QImage::fromData(reply-&gt;readAll()));</span></span>
+<span id="L68"><span class="lineNum">      68</span>              :     }</span>
+<span id="L69"><span class="lineNum">      69</span>              :     </span>
+<span id="L70"><span class="lineNum">      70</span>              :     // Are we there yet?</span>
+<span id="L71"><span class="lineNum">      71</span> <span class="tlaGNC">           3 :     checkCompletion();</span></span>
+<span id="L72"><span class="lineNum">      72</span> <span class="tlaGNC">           3 : }</span></span>
 <span id="L73"><span class="lineNum">      73</span>              : </span>
-<span id="L74"><span class="lineNum">      74</span> <span class="tlaGNC">           3 : void ImageGrabber::checkCompletion()</span></span>
-<span id="L75"><span class="lineNum">      75</span>              : {</span>
-<span id="L76"><span class="lineNum">      76</span>              :     // Only continue if we're done.</span>
-<span id="L77"><span class="lineNum">      77</span> <span class="tlaGNC">           3 :     if (results.size() != urlsToCheck.size()) {</span></span>
-<span id="L78"><span class="lineNum">      78</span> <span class="tlaUNC tlaBgUNC">           0 :         return;</span></span>
-<span id="L79"><span class="lineNum">      79</span>              :     }</span>
-<span id="L80"><span class="lineNum">      80</span>              :     </span>
-<span id="L81"><span class="lineNum">      81</span>              :     // And we're done here!</span>
-<span id="L82"><span class="lineNum">      82</span> <span class="tlaGNC tlaBgGNC">           3 :     emit finished();</span></span>
-<span id="L83"><span class="lineNum">      83</span>              : }</span>
-<span id="L84"><span class="lineNum">      84</span>              : </span>
+<span id="L74"><span class="lineNum">      74</span>              : </span>
+<span id="L75"><span class="lineNum">      75</span> <span class="tlaGNC">           3 : void ImageGrabber::checkCompletion()</span></span>
+<span id="L76"><span class="lineNum">      76</span>              : {</span>
+<span id="L77"><span class="lineNum">      77</span>              :     // Only continue if we're done.</span>
+<span id="L78"><span class="lineNum">      78</span> <span class="tlaGNC">           3 :     if (results.size() != urlsToCheck.size()) {</span></span>
+<span id="L79"><span class="lineNum">      79</span> <span class="tlaUNC tlaBgUNC">           0 :         return;</span></span>
+<span id="L80"><span class="lineNum">      80</span>              :     }</span>
+<span id="L81"><span class="lineNum">      81</span>              :     </span>
+<span id="L82"><span class="lineNum">      82</span>              :     // And we're done here!</span>
+<span id="L83"><span class="lineNum">      83</span> <span class="tlaGNC tlaBgGNC">           3 :     emit finished();</span></span>
+<span id="L84"><span class="lineNum">      84</span>              : }</span>
+<span id="L85"><span class="lineNum">      85</span>              : </span>
         </pre>
               </td>
             </tr>
