@@ -84,6 +84,11 @@ Dialog {
 
                         onTextChanged: () => {
                             parent._validator.setFeedTitle(modelData.index, text);
+
+                            // If set programatically, reset cursor to the left.
+                            if (!focus) {
+                                cursorPosition = 0;
+                            }
                         }
                     }
                 }
