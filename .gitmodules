@@ -1,3 +1,6 @@
 [submodule "external/QSingleInstanceCheck"]
 	path = external/QSingleInstanceCheck
 	url = git@github.com:MrEricSir/QSingleInstanceCheck.git
+[submodule "external/QSimpleStateMachine"]
+	path = external/QSimpleStateMachine
+	url = git@github.com:MrEricSir/QSimpleStateMachine.git

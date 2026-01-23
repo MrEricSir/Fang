@@ -6,7 +6,8 @@
 #include <QString>
 #include <QUrl>
 
-#include "QSimpleStateMachine.h"
+#include <QSimpleStateMachine/QSimpleStateMachine.h>
+
 #include "../parser/ParserInterface.h"
 #include "../parser/RawFeed.h"
 #include "../parser/BatchNewsParser.h"

@@ -76,6 +76,9 @@ add_subdirectory(external/tidylib)
 # Add QSingleInstanceCheck directory
 add_subdirectory(external/QSingleInstanceCheck)
 
+# Add QSimpleStateMachine directory
+add_subdirectory(external/QSimpleStateMachine)
+
 # Main application target
 qt_add_executable(Fang WIN32
     # Sources
@@ -194,7 +197,6 @@ qt_add_executable(Fang WIN32
     src/operations/UpdateOrdinalsOperation.h
     src/utilities/NetworkUtilities.h
     src/parser/OPMLParser.h
-    src/utilities/QSimpleStateMachine.h
     src/utilities/FeedDiscovery.h
     src/models/OPMLInteractor.h
     src/utilities/OPMLExport.h
@@ -249,6 +251,7 @@ set_property(TARGET Fang PROPERTY COMPILE_WARNING_AS_ERROR ON)
 target_link_libraries(Fang PRIVATE
     TidyLib
     QSingleInstanceCheck
+    QSimpleStateMachine::QSimpleStateMachine
     Qt6::Core
     Qt6::Qml
     Qt6::Quick

@@ -9,10 +9,10 @@
 #include <QImage>
 #include <QSet>
 
+#include <QSimpleStateMachine/QSimpleStateMachine.h>
+
 #include "WebPageGrabber.h"
-#include "QSimpleStateMachine.h"
 #include "../FangObject.h"
-#include "../network/FangNetworkAccessManager.h"
 
 class FaviconGrabber : public FangObject
 {

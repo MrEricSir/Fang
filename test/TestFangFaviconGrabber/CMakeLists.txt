@@ -18,7 +18,6 @@ qt_add_executable(tst_testfangfavicongrabbertest
     # Include corresponding headers for AUTOMOC
     ${CMAKE_SOURCE_DIR}/src/utilities/FaviconGrabber.h
     ${CMAKE_SOURCE_DIR}/src/utilities/WebPageGrabber.h
-    ${CMAKE_SOURCE_DIR}/src/utilities/QSimpleStateMachine.h
     ${CMAKE_SOURCE_DIR}/src/FangObject.h
     ${CMAKE_SOURCE_DIR}/src/network/FangNetworkAccessManager.h
     ${CMAKE_SOURCE_DIR}/src/network/NetworkRetryPolicy.h
@@ -29,7 +28,7 @@ qt_add_executable(tst_testfangfavicongrabbertest
     ${CMAKE_SOURCE_DIR}/src/utilities/FangLogging.h
 )
 
-# Include directories for FangLogging.h
+# Include directories
 target_include_directories(tst_testfangfavicongrabbertest PRIVATE
     ${CMAKE_SOURCE_DIR}/src/utilities
 )
@@ -42,6 +41,7 @@ target_compile_definitions(tst_testfangfavicongrabbertest PRIVATE
 # Link TidyLib and Qt modules
 target_link_libraries(tst_testfangfavicongrabbertest PRIVATE
     TidyLib
+    QSimpleStateMachine::QSimpleStateMachine
     Qt6::Test
     Qt6::Network
     Qt6::Gui
