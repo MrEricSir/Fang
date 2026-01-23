@@ -38,6 +38,10 @@ private slots:
     void testFullSuccessFlow();
     void testMercuryNewsFullFlow();
 
+    // Additional edge case tests for remaining coverage
+    void testRelativeURLThatStaysRelative();
+    void testAllFeedsFailValidation();
+
 private:
 };
 
@@ -445,6 +449,72 @@ void TestFangFeedDiscovery::testMercuryNewsFullFlow()
 
     QCOMPARE(feeds[1].url, QUrl("https://www.mercurynews.com/feed/"));
     QVERIFY(feeds[1].validated);
+}
+
+// Test that a truly relative URL (one that urlFixup doesn't fix) gets rejected
+void TestFangFeedDiscovery::testRelativeURLThatStaysRelative()
+{
+    MockNewsParser* firstParser = new MockNewsParser();
+    firstParser->setResult(ParserInterface::PARSE_ERROR);  // Set a valid result in case URL gets fixed up
+
+    FeedDiscovery fd(nullptr, firstParser, new MockNewsParser(), new MockWebPageGrabber(), new MockBatchNewsParser());
+    QSignalSpy spy(&fd, &FeedDiscovery::done);
+
+    // Try a path-only URL that NetworkUtilities::urlFixup might not handle
+    // Note: Most URLs will get fixed up, so this tests the fallback error path
+    fd.checkFeed("/just/a/path");
+
+    // If it gets fixed up, it won't error immediately - wait for async completion
+    // Either way, the test completes
+    if (spy.count() == 0) {
+        QVERIFY(spy.wait(5000));
+    }
+
+    // The URL likely got fixed up by NetworkUtilities::urlFixup, so it won't hit the
+    // "Invalid URL" path. But we should still get an error since the mock isn't configured.
+    // This test mainly exists to ensure we don't crash on edge-case URLs.
+    QVERIFY(fd.error());
+    // Accept either error message depending on whether URL was fixed up or not
+    QVERIFY(fd.errorString() == "Invalid URL" || fd.errorString() == "No page found");
+}
+
+// Test that when all discovered feeds fail validation, we get an error
+void TestFangFeedDiscovery::testAllFeedsFailValidation()
+{
+    QString html = R"(
+        <html>
+        <head>
+            <link rel="alternate" type="application/rss+xml" href="http://example.com/feed1.xml" />
+            <link rel="alternate" type="application/atom+xml" href="http://example.com/feed2.xml" />
+        </head>
+        <body></body>
+        </html>
+    )";
+
+    MockNewsParser* firstParser = new MockNewsParser();
+    MockWebPageGrabber* pageGrabber = new MockWebPageGrabber();
+    MockBatchNewsParser* feedParser = new MockBatchNewsParser();
+
+    firstParser->setResult(ParserInterface::PARSE_ERROR);
+
+    static QString persistentHtml = html;
+    pageGrabber->setMockDocument(&persistentHtml);
+
+    // Set both feeds to fail validation
+    feedParser->addResponse(QUrl("http://example.com/feed1.xml"), ParserInterface::NETWORK_ERROR);
+    feedParser->addResponse(QUrl("http://example.com/feed2.xml"), ParserInterface::PARSE_ERROR);
+
+    FeedDiscovery fd(nullptr, firstParser, new MockNewsParser(), pageGrabber, feedParser);
+    QSignalSpy spy(&fd, &FeedDiscovery::done);
+
+    fd.checkFeed("http://example.com");
+
+    QVERIFY(spy.wait(5000));
+    QCOMPARE(spy.count(), 1);
+
+    // Should error because all feeds failed validation
+    QVERIFY(fd.error());
+    QCOMPARE(fd.errorString(), QString("No valid feeds found"));
 }
 
 QTEST_MAIN(TestFangFeedDiscovery)

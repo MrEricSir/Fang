@@ -15,13 +15,11 @@ FaviconGrabber::FaviconGrabber(QObject *parent, QNetworkAccessManager* networkMa
     webGrabber(true, 5000, this, networkManager)
 {
     // Set up our state machine.
-    machine.setReceiver(this);
+    machine.addStateChange(START, WEB_GRABBER, [this]() { onWebGrabber(); });
+    machine.addStateChange(WEB_GRABBER, CHECK_ICONS, [this]() { onCheckIcons(); });
+    machine.addStateChange(CHECK_ICONS, PICK_BEST, [this]() { onPickBest(); });
 
-    machine.addStateChange(START, WEB_GRABBER, SLOT(onWebGrabber()));
-    machine.addStateChange(WEB_GRABBER, CHECK_ICONS, SLOT(onCheckIcons()));
-    machine.addStateChange(CHECK_ICONS, PICK_BEST, SLOT(onPickBest()));
-
-    machine.addStateChange(-1, GRAB_ERROR, SLOT(onError())); // Many errors, one slot.
+    machine.addStateChange(-1, GRAB_ERROR, [this]() { onError(); }); // Many errors, one slot.
 
     // Signals!
     connect(manager, &QNetworkAccessManager::finished, this, &FaviconGrabber::onRequestFinished);

@@ -11,8 +11,7 @@ qt_add_executable(tst_testbatchfeeddiscovery
     ${CMAKE_SOURCE_DIR}/src/utilities/BatchFeedDiscovery.h
     ${CMAKE_SOURCE_DIR}/src/utilities/FeedDiscovery.cpp
     ${CMAKE_SOURCE_DIR}/src/utilities/FeedDiscovery.h
-    ${CMAKE_SOURCE_DIR}/src/utilities/SimpleStateMachine.cpp
-    ${CMAKE_SOURCE_DIR}/src/utilities/SimpleStateMachine.h
+    ${CMAKE_SOURCE_DIR}/src/utilities/QSimpleStateMachine.h
     ${CMAKE_SOURCE_DIR}/src/utilities/WebPageGrabber.cpp
     ${CMAKE_SOURCE_DIR}/src/utilities/WebPageGrabber.h
     ${CMAKE_SOURCE_DIR}/src/utilities/SimpleHTTPDownloader.cpp

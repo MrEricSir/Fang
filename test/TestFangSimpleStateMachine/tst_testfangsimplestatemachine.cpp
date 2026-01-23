@@ -2,7 +2,7 @@
 #include <QTest>
 #include <QSignalSpy>
 
-#include "../../src/utilities/SimpleStateMachine.h"
+#include "../../src/utilities/QSimpleStateMachine.h"
 
 class TestFangSimpleStateMachine : public QObject
 {
@@ -34,18 +34,17 @@ private slots:
     
     
 private:
-    SimpleStateMachine machine;
+    QSimpleStateMachine machine;
     int stateCounter;
 };
 
 TestFangSimpleStateMachine::TestFangSimpleStateMachine()
 {
     stateCounter = 0;
-    
-    machine.setReceiver(this);
-    machine.addStateChange(START, STATE_A, SLOT(onStateA()));
-    machine.addStateChange(STATE_A, STATE_B, SLOT(onStateB()));
-    machine.addStateChange(-1, COMPLETE, SLOT(onStateComplete()));
+
+    machine.addStateChange(START, STATE_A, [this]() { onStateA(); });
+    machine.addStateChange(STATE_A, STATE_B, [this]() { onStateB(); });
+    machine.addStateChange(-1, COMPLETE, [this]() { onStateComplete(); });
 }
 
 void TestFangSimpleStateMachine::initTestCase()

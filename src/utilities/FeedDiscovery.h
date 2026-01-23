@@ -6,7 +6,7 @@
 #include <QString>
 #include <QUrl>
 
-#include "SimpleStateMachine.h"
+#include "QSimpleStateMachine.h"
 #include "../parser/ParserInterface.h"
 #include "../parser/RawFeed.h"
 #include "../parser/BatchNewsParser.h"
@@ -153,7 +153,7 @@ private:
     // Sets the error flag, error string, and triggers the ERROR state.
     void reportError(QString errorString);
 
-    SimpleStateMachine machine;
+    QSimpleStateMachine machine;
 
     QUrl _feedURL;
     bool _error;

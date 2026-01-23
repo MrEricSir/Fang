@@ -122,7 +122,6 @@ qt_add_executable(Fang WIN32
     src/operations/UpdateOrdinalsOperation.cpp
     src/utilities/NetworkUtilities.cpp
     src/parser/OPMLParser.cpp
-    src/utilities/SimpleStateMachine.cpp
     src/utilities/FeedDiscovery.cpp
     src/models/OPMLInteractor.cpp
     src/utilities/OPMLExport.cpp
@@ -195,7 +194,7 @@ qt_add_executable(Fang WIN32
     src/operations/UpdateOrdinalsOperation.h
     src/utilities/NetworkUtilities.h
     src/parser/OPMLParser.h
-    src/utilities/SimpleStateMachine.h
+    src/utilities/QSimpleStateMachine.h
     src/utilities/FeedDiscovery.h
     src/models/OPMLInteractor.h
     src/utilities/OPMLExport.h

@@ -10,7 +10,7 @@
 #include <QSet>
 
 #include "WebPageGrabber.h"
-#include "SimpleStateMachine.h"
+#include "QSimpleStateMachine.h"
 #include "../FangObject.h"
 #include "../network/FangNetworkAccessManager.h"
 
@@ -75,7 +75,7 @@ private slots:
     void findIcons(const QString& document);
     
 private:
-    SimpleStateMachine machine;
+    QSimpleStateMachine machine;
     QList<QUrl> urlsToCheck;
     int repliesWaiting;
     QList<QPair<QUrl, QImage> > imagesToCheck;

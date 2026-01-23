@@ -7,7 +7,6 @@ qt_add_executable(tst_testfangfavicongrabbertest
     # Shared sources from main project
     ${CMAKE_SOURCE_DIR}/src/utilities/FaviconGrabber.cpp
     ${CMAKE_SOURCE_DIR}/src/utilities/WebPageGrabber.cpp
-    ${CMAKE_SOURCE_DIR}/src/utilities/SimpleStateMachine.cpp
     ${CMAKE_SOURCE_DIR}/src/FangObject.cpp
     ${CMAKE_SOURCE_DIR}/src/network/FangNetworkAccessManager.cpp
     ${CMAKE_SOURCE_DIR}/src/network/NetworkRetryPolicy.cpp
@@ -19,7 +18,7 @@ qt_add_executable(tst_testfangfavicongrabbertest
     # Include corresponding headers for AUTOMOC
     ${CMAKE_SOURCE_DIR}/src/utilities/FaviconGrabber.h
     ${CMAKE_SOURCE_DIR}/src/utilities/WebPageGrabber.h
-    ${CMAKE_SOURCE_DIR}/src/utilities/SimpleStateMachine.h
+    ${CMAKE_SOURCE_DIR}/src/utilities/QSimpleStateMachine.h
     ${CMAKE_SOURCE_DIR}/src/FangObject.h
     ${CMAKE_SOURCE_DIR}/src/network/FangNetworkAccessManager.h
     ${CMAKE_SOURCE_DIR}/src/network/NetworkRetryPolicy.h

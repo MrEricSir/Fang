@@ -44,15 +44,13 @@ FeedDiscovery::FeedDiscovery(QObject *parent,
     }
 
     // Set up our state machine.
-    machine.setReceiver(this);
+    machine.addStateChange(CHECK_FEED, TRY_FEED, [this]() { onTryFeed(); });
+    machine.addStateChange(TRY_FEED, FEED_FOUND, [this]() { onFeedFound(); });
+    machine.addStateChange(TRY_FEED, WEB_GRABBER, [this]() { onWebGrabber(); });
+    machine.addStateChange(WEB_GRABBER, VALIDATE_FEEDS, [this]() { onValidateFeeds(); });
+    machine.addStateChange(VALIDATE_FEEDS, FEED_FOUND, [this]() { onFeedFound(); });
 
-    machine.addStateChange(CHECK_FEED, TRY_FEED, SLOT(onTryFeed()));
-    machine.addStateChange(TRY_FEED, FEED_FOUND, SLOT(onFeedFound()));
-    machine.addStateChange(TRY_FEED, WEB_GRABBER, SLOT(onWebGrabber()));
-    machine.addStateChange(WEB_GRABBER, VALIDATE_FEEDS, SLOT(onValidateFeeds()));
-    machine.addStateChange(VALIDATE_FEEDS, FEED_FOUND, SLOT(onFeedFound()));
-
-    machine.addStateChange(-1, FEED_ERROR, SLOT(onError())); // All errors.
+    machine.addStateChange(-1, FEED_ERROR, [this]() { onError(); }); // All errors.
 
     // Parser signals.
     connect(parserFirstTry, &ParserInterface::done, this, &FeedDiscovery::onFirstParseDone);
