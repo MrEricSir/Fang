@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-01-22 07:03:01</td>
+            <td class="headerValue">2026-01-23 03:39:35</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryLo">66.7&nbsp;%</td>
@@ -68,24 +68,24 @@
 <span id="L6"><span class="lineNum">       6</span>              : #include &lt;QNetworkDiskCache&gt;</span>
 <span id="L7"><span class="lineNum">       7</span>              : #include &lt;QStandardPaths&gt;</span>
 <span id="L8"><span class="lineNum">       8</span>              : </span>
-<span id="L9"><span class="lineNum">       9</span> <span class="tlaGNC tlaBgGNC">         210 : FangNetworkAccessManager::FangNetworkAccessManager(QObject *parent) :</span></span>
-<span id="L10"><span class="lineNum">      10</span> <span class="tlaGNC">         210 :     QNetworkAccessManager(parent)</span></span>
+<span id="L9"><span class="lineNum">       9</span> <span class="tlaGNC tlaBgGNC">         212 : FangNetworkAccessManager::FangNetworkAccessManager(QObject *parent) :</span></span>
+<span id="L10"><span class="lineNum">      10</span> <span class="tlaGNC">         212 :     QNetworkAccessManager(parent)</span></span>
 <span id="L11"><span class="lineNum">      11</span>              : {</span>
-<span id="L12"><span class="lineNum">      12</span> <span class="tlaGNC">         210 :     QNetworkDiskCache* diskCache = new QNetworkDiskCache(this);</span></span>
-<span id="L13"><span class="lineNum">      13</span> <span class="tlaGNC">         210 :     QString cacheDir = QStandardPaths::writableLocation(QStandardPaths::CacheLocation);</span></span>
-<span id="L14"><span class="lineNum">      14</span> <span class="tlaGNC">         210 :     diskCache-&gt;setCacheDirectory(cacheDir);</span></span>
-<span id="L15"><span class="lineNum">      15</span> <span class="tlaGNC">         210 :     if (!cacheDir.isEmpty())</span></span>
-<span id="L16"><span class="lineNum">      16</span> <span class="tlaGNC">         210 :         setCache(diskCache);</span></span>
+<span id="L12"><span class="lineNum">      12</span> <span class="tlaGNC">         212 :     QNetworkDiskCache* diskCache = new QNetworkDiskCache(this);</span></span>
+<span id="L13"><span class="lineNum">      13</span> <span class="tlaGNC">         212 :     QString cacheDir = QStandardPaths::writableLocation(QStandardPaths::CacheLocation);</span></span>
+<span id="L14"><span class="lineNum">      14</span> <span class="tlaGNC">         212 :     diskCache-&gt;setCacheDirectory(cacheDir);</span></span>
+<span id="L15"><span class="lineNum">      15</span> <span class="tlaGNC">         212 :     if (!cacheDir.isEmpty())</span></span>
+<span id="L16"><span class="lineNum">      16</span> <span class="tlaGNC">         212 :         setCache(diskCache);</span></span>
 <span id="L17"><span class="lineNum">      17</span>              : </span>
 <span id="L18"><span class="lineNum">      18</span>              :     // Set up our circuit breaker.</span>
-<span id="L19"><span class="lineNum">      19</span> <span class="tlaGNC">         210 :     NetworkStateMonitor&amp; monitor = NetworkStateMonitor::instance();</span></span>
-<span id="L20"><span class="lineNum">      20</span> <span class="tlaGNC">         210 :     connect(&amp;monitor, &amp;NetworkStateMonitor::circuitOpened,</span></span>
-<span id="L21"><span class="lineNum">      21</span> <span class="tlaGNC">         210 :             this, &amp;FangNetworkAccessManager::onCircuitOpened);</span></span>
-<span id="L22"><span class="lineNum">      22</span> <span class="tlaGNC">         210 :     connect(&amp;monitor, &amp;NetworkStateMonitor::circuitClosed,</span></span>
-<span id="L23"><span class="lineNum">      23</span> <span class="tlaGNC">         210 :             this, &amp;FangNetworkAccessManager::onCircuitClosed);</span></span>
+<span id="L19"><span class="lineNum">      19</span> <span class="tlaGNC">         212 :     NetworkStateMonitor&amp; monitor = NetworkStateMonitor::instance();</span></span>
+<span id="L20"><span class="lineNum">      20</span> <span class="tlaGNC">         212 :     connect(&amp;monitor, &amp;NetworkStateMonitor::circuitOpened,</span></span>
+<span id="L21"><span class="lineNum">      21</span> <span class="tlaGNC">         212 :             this, &amp;FangNetworkAccessManager::onCircuitOpened);</span></span>
+<span id="L22"><span class="lineNum">      22</span> <span class="tlaGNC">         212 :     connect(&amp;monitor, &amp;NetworkStateMonitor::circuitClosed,</span></span>
+<span id="L23"><span class="lineNum">      23</span> <span class="tlaGNC">         212 :             this, &amp;FangNetworkAccessManager::onCircuitClosed);</span></span>
 <span id="L24"><span class="lineNum">      24</span>              : </span>
 <span id="L25"><span class="lineNum">      25</span>              :     //qCDebug(logNetwork) &lt;&lt; &quot;FangNetworkAccessManager initialized with resilience features&quot;;</span>
-<span id="L26"><span class="lineNum">      26</span> <span class="tlaGNC">         210 : }</span></span>
+<span id="L26"><span class="lineNum">      26</span> <span class="tlaGNC">         212 : }</span></span>
 <span id="L27"><span class="lineNum">      27</span>              : </span>
 <span id="L28"><span class="lineNum">      28</span> <span class="tlaGNC">          30 : QNetworkReply* FangNetworkAccessManager::createRequest(QNetworkAccessManager::Operation op, const QNetworkRequest&amp; request, QIODevice* outgoingData)</span></span>
 <span id="L29"><span class="lineNum">      29</span>              : {</span>

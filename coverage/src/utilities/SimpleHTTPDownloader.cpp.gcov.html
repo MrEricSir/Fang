@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-01-22 07:03:01</td>
+            <td class="headerValue">2026-01-23 03:39:35</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryLo">62.5&nbsp;%</td>
@@ -62,28 +62,28 @@
 <pre class="source">
 <span id="L1"><span class="lineNum">       1</span>              : #include &quot;SimpleHTTPDownloader.h&quot;</span>
 <span id="L2"><span class="lineNum">       2</span>              : </span>
-<span id="L3"><span class="lineNum">       3</span> <span class="tlaGNC tlaBgGNC">         102 : SimpleHTTPDownloader::SimpleHTTPDownloader(int timeoutMS, QObject *parent, QNetworkAccessManager* networkManager) :</span></span>
+<span id="L3"><span class="lineNum">       3</span> <span class="tlaGNC tlaBgGNC">         104 : SimpleHTTPDownloader::SimpleHTTPDownloader(int timeoutMS, QObject *parent, QNetworkAccessManager* networkManager) :</span></span>
 <span id="L4"><span class="lineNum">       4</span>              :     FangObject(parent),</span>
-<span id="L5"><span class="lineNum">       5</span> <span class="tlaGNC">         102 :     manager(networkManager ? networkManager : new FangNetworkAccessManager(this)),</span></span>
-<span id="L6"><span class="lineNum">       6</span> <span class="tlaGNC">         102 :     ownsManager(networkManager == nullptr),</span></span>
-<span id="L7"><span class="lineNum">       7</span> <span class="tlaGNC">         102 :     timeoutMS(timeoutMS),</span></span>
-<span id="L8"><span class="lineNum">       8</span> <span class="tlaGNC">         102 :     currentReply(nullptr),</span></span>
-<span id="L9"><span class="lineNum">       9</span> <span class="tlaGNC">         204 :     redirectAttempts(0)</span></span>
+<span id="L5"><span class="lineNum">       5</span> <span class="tlaGNC">         104 :     manager(networkManager ? networkManager : new FangNetworkAccessManager(this)),</span></span>
+<span id="L6"><span class="lineNum">       6</span> <span class="tlaGNC">         104 :     ownsManager(networkManager == nullptr),</span></span>
+<span id="L7"><span class="lineNum">       7</span> <span class="tlaGNC">         104 :     timeoutMS(timeoutMS),</span></span>
+<span id="L8"><span class="lineNum">       8</span> <span class="tlaGNC">         104 :     currentReply(nullptr),</span></span>
+<span id="L9"><span class="lineNum">       9</span> <span class="tlaGNC">         208 :     redirectAttempts(0)</span></span>
 <span id="L10"><span class="lineNum">      10</span>              : {</span>
-<span id="L11"><span class="lineNum">      11</span> <span class="tlaGNC">         102 :     timeout.setSingleShot(true);</span></span>
+<span id="L11"><span class="lineNum">      11</span> <span class="tlaGNC">         104 :     timeout.setSingleShot(true);</span></span>
 <span id="L12"><span class="lineNum">      12</span>              : </span>
 <span id="L13"><span class="lineNum">      13</span>              :     // Signals!</span>
-<span id="L14"><span class="lineNum">      14</span> <span class="tlaGNC">         102 :     connect(manager, &amp;QNetworkAccessManager::finished, this, &amp;SimpleHTTPDownloader::onRequestFinished);</span></span>
-<span id="L15"><span class="lineNum">      15</span> <span class="tlaGNC">         102 :     connect(&amp;timeout, &amp;QTimer::timeout, this, &amp;SimpleHTTPDownloader::onTimeout);</span></span>
-<span id="L16"><span class="lineNum">      16</span> <span class="tlaGNC">         102 : }</span></span>
+<span id="L14"><span class="lineNum">      14</span> <span class="tlaGNC">         104 :     connect(manager, &amp;QNetworkAccessManager::finished, this, &amp;SimpleHTTPDownloader::onRequestFinished);</span></span>
+<span id="L15"><span class="lineNum">      15</span> <span class="tlaGNC">         104 :     connect(&amp;timeout, &amp;QTimer::timeout, this, &amp;SimpleHTTPDownloader::onTimeout);</span></span>
+<span id="L16"><span class="lineNum">      16</span> <span class="tlaGNC">         104 : }</span></span>
 <span id="L17"><span class="lineNum">      17</span>              : </span>
-<span id="L18"><span class="lineNum">      18</span> <span class="tlaGNC">         102 : SimpleHTTPDownloader::~SimpleHTTPDownloader()</span></span>
+<span id="L18"><span class="lineNum">      18</span> <span class="tlaGNC">         104 : SimpleHTTPDownloader::~SimpleHTTPDownloader()</span></span>
 <span id="L19"><span class="lineNum">      19</span>              : {</span>
-<span id="L20"><span class="lineNum">      20</span> <span class="tlaGNC">         102 :     if (currentReply) {</span></span>
+<span id="L20"><span class="lineNum">      20</span> <span class="tlaGNC">         104 :     if (currentReply) {</span></span>
 <span id="L21"><span class="lineNum">      21</span> <span class="tlaGNC">           6 :         currentReply-&gt;deleteLater();</span></span>
 <span id="L22"><span class="lineNum">      22</span> <span class="tlaGNC">           6 :         currentReply = nullptr;</span></span>
 <span id="L23"><span class="lineNum">      23</span>              :     }</span>
-<span id="L24"><span class="lineNum">      24</span> <span class="tlaGNC">         102 : }</span></span>
+<span id="L24"><span class="lineNum">      24</span> <span class="tlaGNC">         104 : }</span></span>
 <span id="L25"><span class="lineNum">      25</span>              : </span>
 <span id="L26"><span class="lineNum">      26</span> <span class="tlaGNC">           7 : void SimpleHTTPDownloader::load(const QUrl &amp;url)</span></span>
 <span id="L27"><span class="lineNum">      27</span>              : {</span>

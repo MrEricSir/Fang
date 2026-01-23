@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-01-22 07:03:01</td>
+            <td class="headerValue">2026-01-23 03:39:35</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -82,17 +82,17 @@
 <span id="L20"><span class="lineNum">      20</span>              :     using TidyDocPtr = std::unique_ptr&lt;std::remove_pointer&lt;TidyDoc&gt;::type, TidyDocDeleter&gt;;</span>
 <span id="L21"><span class="lineNum">      21</span>              : }</span>
 <span id="L22"><span class="lineNum">      22</span>              : </span>
-<span id="L23"><span class="lineNum">      23</span> <span class="tlaGNC">          75 : WebPageGrabber::WebPageGrabber(bool handleMetaRefresh, int timeoutMS, QObject *parent, QNetworkAccessManager* networkManager) :</span></span>
+<span id="L23"><span class="lineNum">      23</span> <span class="tlaGNC">          77 : WebPageGrabber::WebPageGrabber(bool handleMetaRefresh, int timeoutMS, QObject *parent, QNetworkAccessManager* networkManager) :</span></span>
 <span id="L24"><span class="lineNum">      24</span>              :     FangObject(parent),</span>
-<span id="L25"><span class="lineNum">      25</span> <span class="tlaGNC">          75 :     downloader(timeoutMS, this, networkManager),</span></span>
-<span id="L26"><span class="lineNum">      26</span> <span class="tlaGNC">          75 :     handleMetaRefresh(handleMetaRefresh),</span></span>
-<span id="L27"><span class="lineNum">      27</span> <span class="tlaGNC">          75 :     redirectAttempts(0),</span></span>
-<span id="L28"><span class="lineNum">      28</span> <span class="tlaGNC">          75 :     error(true),</span></span>
-<span id="L29"><span class="lineNum">      29</span> <span class="tlaGNC">          75 :     done(false)</span></span>
+<span id="L25"><span class="lineNum">      25</span> <span class="tlaGNC">          77 :     downloader(timeoutMS, this, networkManager),</span></span>
+<span id="L26"><span class="lineNum">      26</span> <span class="tlaGNC">          77 :     handleMetaRefresh(handleMetaRefresh),</span></span>
+<span id="L27"><span class="lineNum">      27</span> <span class="tlaGNC">          77 :     redirectAttempts(0),</span></span>
+<span id="L28"><span class="lineNum">      28</span> <span class="tlaGNC">          77 :     error(true),</span></span>
+<span id="L29"><span class="lineNum">      29</span> <span class="tlaGNC">          77 :     done(false)</span></span>
 <span id="L30"><span class="lineNum">      30</span>              : </span>
 <span id="L31"><span class="lineNum">      31</span>              : {</span>
-<span id="L32"><span class="lineNum">      32</span> <span class="tlaGNC">          75 :     init();</span></span>
-<span id="L33"><span class="lineNum">      33</span> <span class="tlaGNC">          75 : }</span></span>
+<span id="L32"><span class="lineNum">      32</span> <span class="tlaGNC">          77 :     init();</span></span>
+<span id="L33"><span class="lineNum">      33</span> <span class="tlaGNC">          77 : }</span></span>
 <span id="L34"><span class="lineNum">      34</span>              : </span>
 <span id="L35"><span class="lineNum">      35</span> <span class="tlaGNC">          27 : WebPageGrabber::WebPageGrabber(QObject *parent) :</span></span>
 <span id="L36"><span class="lineNum">      36</span>              :     FangObject(parent),</span>
@@ -299,11 +299,11 @@
 <span id="L237"><span class="lineNum">     237</span> <span class="tlaGNC">          59 :     emit ready(this, document);</span></span>
 <span id="L238"><span class="lineNum">     238</span> <span class="tlaGNC">          59 : }</span></span>
 <span id="L239"><span class="lineNum">     239</span>              : </span>
-<span id="L240"><span class="lineNum">     240</span> <span class="tlaGNC">         102 : void WebPageGrabber::init()</span></span>
+<span id="L240"><span class="lineNum">     240</span> <span class="tlaGNC">         104 : void WebPageGrabber::init()</span></span>
 <span id="L241"><span class="lineNum">     241</span>              : {</span>
-<span id="L242"><span class="lineNum">     242</span> <span class="tlaGNC">         102 :     connect(&amp;downloader, &amp;SimpleHTTPDownloader::error, this, &amp;WebPageGrabber::onDownloadError);</span></span>
-<span id="L243"><span class="lineNum">     243</span> <span class="tlaGNC">         102 :     connect(&amp;downloader, &amp;SimpleHTTPDownloader::finished, this, &amp;WebPageGrabber::onDownloadFinished);</span></span>
-<span id="L244"><span class="lineNum">     244</span> <span class="tlaGNC">         102 : }</span></span>
+<span id="L242"><span class="lineNum">     242</span> <span class="tlaGNC">         104 :     connect(&amp;downloader, &amp;SimpleHTTPDownloader::error, this, &amp;WebPageGrabber::onDownloadError);</span></span>
+<span id="L243"><span class="lineNum">     243</span> <span class="tlaGNC">         104 :     connect(&amp;downloader, &amp;SimpleHTTPDownloader::finished, this, &amp;WebPageGrabber::onDownloadFinished);</span></span>
+<span id="L244"><span class="lineNum">     244</span> <span class="tlaGNC">         104 : }</span></span>
 <span id="L245"><span class="lineNum">     245</span>              : </span>
 <span id="L246"><span class="lineNum">     246</span>              : </span>
         </pre>
