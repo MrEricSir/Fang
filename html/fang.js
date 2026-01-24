@@ -719,6 +719,67 @@ function jumpNextPrev(jumpNext)
 }
 
 /**
+  * Sets up the loading spinner to appear during fetch API calls.
+  */
+function initLoadingSpinner() {
+    const MIN_DISPLAY_TIME = 800; // ms
+    let activeFetches = 0;
+    let loadingStartTime = 0;
+
+    const showLoadingSpinner = () => {
+        if (activeFetches === 0) {
+            loadingStartTime = Date.now();
+            $('#loading-indicator').fadeIn(200);
+        }
+        activeFetches++;
+    };
+
+    const hideLoadingSpinner = () => {
+        activeFetches--;
+
+        if (activeFetches <= 0) {
+            activeFetches = 0; // Guard against negative counts
+
+            const currentTime = Date.now();
+            const elapsedTime = currentTime - loadingStartTime;
+            const remainingTime = Math.max(0, MIN_DISPLAY_TIME - elapsedTime);
+
+            // Wait for the remaining time before hiding
+            setTimeout(() => {
+                // Double-check activeFetches in case a new one started during the timeout
+                if (activeFetches === 0) {
+                    $('#loading-indicator').fadeOut(400);
+                }
+            }, remainingTime);
+        }
+    };
+
+    // Patch the native Fetch API
+    const originalFetch = window.fetch;
+    window.fetch = async (...args) => {
+        // Only show spinner for news load requests.
+        const url = (typeof args[0] === 'string') ? args[0] : args[0].url;
+        const shouldShowSpinner = url.includes('/api/load/');
+
+        // Show, then hide the loader.
+        if (shouldShowSpinner) {
+            showLoadingSpinner();
+        }
+        try {
+            const response = await originalFetch(...args);
+            return response;
+        } catch (error) {
+            // Still hide even if the request fails
+            throw error;
+        } finally {
+            if (shouldShowSpinner) {
+                hideLoadingSpinner();
+            }
+        }
+    };
+}
+
+/**
   * Window resize handler.
   * When the window is resized, jumps to bookmark after a short delay.
   */
@@ -738,8 +799,13 @@ $(document).ready(function() {
     // Start our WebSocket client
     initWebSocket();
 
-    // console.log("--PAGE LOADED --");
+    // Handle light/dark mode.
     updateCSS();
+
+    // Setup loading spinner.
+    initLoadingSpinner();
+
+    // Load our news feed~
     requestNews("initial");
 
     ////////////////////////////////////////////////////////////////////////////////////////////
