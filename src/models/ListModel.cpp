@@ -6,7 +6,6 @@
  */
  
 #include "ListModel.h"
-#include "../utilities/ErrorHandling.h"
 
 #include <QDebug>
  
