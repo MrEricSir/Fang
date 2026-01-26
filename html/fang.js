@@ -319,12 +319,10 @@ function installMouseHandlers(parentElement)
   */
 function appendNews(append, firstNewsID, newsList)
 {
-    // Unescape newlines.  (This allows pre tags to work.)
-    //jsonNews = jsonNews.replace(/[\u0018]/g, "\n");
-    
-    // Unroll the JSON string into a Javascript object.
-    //let newsList = eval('(' + jsonNews + ')');
-    //console.log("News list: ", newsList);
+    if (newsList.length === 0) {
+        // Bail early if there's nothing new.
+        return;
+    }
     
     // Remember where we are.
     let currentScroll = $(document).scrollTop();
@@ -722,35 +720,48 @@ function jumpNextPrev(jumpNext)
   * Sets up the loading spinner to appear during fetch API calls.
   */
 function initLoadingSpinner() {
-    const MIN_DISPLAY_TIME = 800; // ms
+    const GRACE_PERIOD = 150;     // Ms to wait before displaying timer for short requests
+    const MIN_DISPLAY_TIME = 800; // Minimium ms to display timer
     let activeFetches = 0;
     let loadingStartTime = 0;
+    let showTimer = null;
 
     const showLoadingSpinner = () => {
-        if (activeFetches === 0) {
-            loadingStartTime = Date.now();
-            $('#loading-indicator').fadeIn(200);
-        }
         activeFetches++;
+
+        if (activeFetches === 1 && !showTimer) {
+            // Show timer after grace period.
+            showTimer = setTimeout(() => {
+                loadingStartTime = Date.now();
+                $('#loading-indicator').fadeIn(200);
+                showTimer = null; // Timer has finished.
+            }, GRACE_PERIOD);
+        }
     };
 
     const hideLoadingSpinner = () => {
         activeFetches--;
 
         if (activeFetches <= 0) {
-            activeFetches = 0; // Guard against negative counts
+            activeFetches = 0; // Guard against negative count.
 
-            const currentTime = Date.now();
-            const elapsedTime = currentTime - loadingStartTime;
-            const remainingTime = Math.max(0, MIN_DISPLAY_TIME - elapsedTime);
+            if (showTimer) {
+                // We've already stopped showing the timer, so end here.
+                clearTimeout(showTimer);
+                showTimer = null;
+            } else if (loadingStartTime > 0) {
+                // Fade out spinner after delay.
+                const currentTime = Date.now();
+                const elapsedTime = currentTime - loadingStartTime;
+                const remainingTime = Math.max(0, MIN_DISPLAY_TIME - elapsedTime);
 
-            // Wait for the remaining time before hiding
-            setTimeout(() => {
-                // Double-check activeFetches in case a new one started during the timeout
-                if (activeFetches === 0) {
-                    $('#loading-indicator').fadeOut(400);
-                }
-            }, remainingTime);
+                setTimeout(() => {
+                    // Ignore timeout unless it's the final active fetch.
+                    if (activeFetches === 0) {
+                        $('#loading-indicator').fadeOut(400);
+                    }
+                }, remainingTime);
+            }
         }
     };
 
