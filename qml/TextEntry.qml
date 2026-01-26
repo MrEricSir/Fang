@@ -1,8 +1,9 @@
 import QtQuick
-import QtQuick.Controls.Basic
+import QtQuick.Controls
+import QtQuick.Controls.Basic as Basic
 
 // A text entry box.
-TextField {
+Basic.TextField {
     id: textEntry;
 
     Style {
@@ -26,4 +27,32 @@ TextField {
 
     topPadding: 6  * style.scale;
     bottomPadding: topPadding;
+
+    ContextMenu.menu: Menu {
+        id: contextMenu;
+
+        MenuItem {
+            text: "Cut";
+            enabled: textEntry.selectedText !== "" && !textEntry.readOnly;
+            onTriggered: textEntry.cut();
+        }
+        MenuItem {
+            text: "Copy";
+            enabled: textEntry.selectedText !== "";
+            onTriggered: textEntry.copy();
+        }
+        MenuItem {
+            text: "Paste";
+            enabled: textEntry.canPaste;
+            onTriggered: textEntry.paste();
+        }
+
+        MenuSeparator { }
+
+        MenuItem {
+            text: "Select All"
+            enabled: textEntry.length > 0
+            onTriggered: textEntry.selectAll()
+        }
+    }
 }
