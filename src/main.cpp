@@ -31,6 +31,9 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     qmlRegisterType<NewsFeedInteractor>("Fang", 1, 0, "NewsFeedInteractor");
     qmlRegisterType<ListItem>("Fang", 1, 0, "ListItem");
     qmlRegisterType<OPMLInteractor>("Fang", 1, 0, "OPMLInteractor");
+
+    // Prevent graphical stutter/tearing on WebEngineView.
+    QQuickWindow::setGraphicsApi(QSGRendererInterface::OpenGL);
     
     QApplication app(argc, argv);
     app.setOrganizationName("EricGregory");
