@@ -6,32 +6,28 @@
 
 #include "../FangApp.h"
 #include "../utilities/NetworkUtilities.h"
+#include "../utilities/ErrorHandling.h"
 
 WebServer::WebServer(QObject *parent) :
-    FangObject(parent)
+    FangObject(parent),
+    webSocketPort(0)
 {
     qDebug() << "Launching WebServer...";
 
     tcpServer = new QTcpServer(this);
 
     // Listen for incoming connections!
-    if (!tcpServer->listen(QHostAddress::LocalHost, 2844)) {
-        qDebug() << "WebServer: TCP server unable to listen";
+    FANG_CHECK(tcpServer->listen(QHostAddress::LocalHost),
+               "WebServer: TCP server unable to listen");
 
-        // TODO: Throw an exception?
-    }
+    FANG_CHECK(server.bind(tcpServer),
+               "WebServer: Unable to bind to TCP server");
 
-    if (!server.bind(tcpServer)) {
-        qDebug() << "WebServer: Unable to bind to TCP server";
+    // Routes ------
 
-        // TODO: Throw an exception?
-    }
-
-    // Needed for CORS due to qrc file paths.
-    server.addAfterRequestHandler(&server, [](const QHttpServerRequest &, QHttpServerResponse &response) {
-        auto headers = response.headers();
-        headers.append(QHttpHeaders::WellKnownHeader::AccessControlAllowOrigin, "*");
-        response.setHeaders(std::move(headers));
+    server.route("/html/<arg>", this, [] (QString path) {
+        // Assume the files is in our QRC and attempt to load it.
+        return QHttpServerResponse::fromFile(":/html/" + path);
     });
 
     server.route("/api/open_link", QHttpServerRequest::Method::Post, this, [] (const QHttpServerRequest &request) {
@@ -74,8 +70,22 @@ WebServer::WebServer(QObject *parent) :
     });
 
     server.route("/api/css", this, [this] {
-        return QString::fromUtf8(QJsonDocument::fromVariant(getCSS()).toJson());
+        return getCSS();
     });
+
+    server.route("/api/config", this, [this]  {
+        return getConfig();
+    });
+}
+
+QString WebServer::getConfig()
+{
+    // NOTE: If we wind up adding a lot of stuff in here, we may want to merge it
+    // with the existing FangSettings object.
+    QVariantMap document;
+    document.insert("webSocketPort", webSocketPort);
+
+    return QString::fromUtf8(QJsonDocument::fromVariant(document).toJson());
 }
 
 QString WebServer::updatePinObject(qint64 newsID, bool pinned)
@@ -184,7 +194,7 @@ QString WebServer::buildDocument(const QVariantList &newsList, bool showWelcome,
     return QString::fromUtf8(QJsonDocument::fromVariant(document).toJson());
 }
 
-QVariantList WebServer::getCSS()
+QString WebServer::getCSS()
 {
     FangApp* app = FangApp::instance();
     QVariantList classes;
@@ -197,6 +207,6 @@ QVariantList WebServer::getCSS()
         classes << "bookmarksDisabled";
     }
 
-    return classes;
+    return QString::fromUtf8(QJsonDocument::fromVariant(classes).toJson());
 }
 

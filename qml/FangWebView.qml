@@ -25,15 +25,15 @@ WebEngineView {
     ]
 
     onStateChanged: {
-        console.log("webengine state changed:", state)
+        console.log("webengine state changed:", state);
         switch (state) {
         case "news":
-            newsView.url = "qrc:///html/index.html";
+            newsView.url = "http://localhost:" + localServerPort + "/html/index.html";
 
             break;
 
         case "closing":
-            newsView.url = "qrc:///html/blank.html";
+            newsView.url = "http://localhost:" + localServerPort + "/html/blank.html";
 
             break;
 
