@@ -188,7 +188,7 @@ Pre-releases follow these conventions:
 In `CMakeLists.txt` we use the suffix to designate these, for example:
 ```
 project(Fang VERSION 1.2.3 LANGUAGES CXX C)
-set(VERSION_SUFFIX "1.2.3-beta.1")
+set(VERSION_SUFFIX "-beta.1")
 ```
 
 The git tags should use the entire version string:
