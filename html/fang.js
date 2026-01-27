@@ -5,6 +5,9 @@
   * and a websocket that live in the C++ layer.
   */
 
+// Config option fetched from Fang.
+let config = null;
+
 // Selects all news containers
 let newsContainerSelector = 'body>#newsView>.newsContainer:not(#model)';
 
@@ -12,7 +15,6 @@ let newsContainerSelector = 'body>#newsView>.newsContainer:not(#model)';
 let currentMode = "newsView";
 
 // Websocket
-let wsUri = "ws://localhost:2842";
 let websocket = null;
 let websocketRestartTimerID = null;
 const websocketRestartTimeoutMs = 250;
@@ -31,7 +33,7 @@ function initWebSocket()
             websocket.close();
         }
 
-        websocket = new WebSocket( wsUri );
+        websocket = new WebSocket(`ws://localhost:${config.webSocketPort}`);
         websocket.onopen = function (evt) {
             console.log("WebSocket: CONNECTED");
         };
@@ -123,7 +125,7 @@ function processMessage(message)
   */
 function apiGetRequest(method, params)
 {
-    let url = 'http://localhost:2844/api/' + method;
+    let url = '/api/' + method;
     if (params) {
         url += '/' + params;
     }
@@ -140,7 +142,7 @@ function apiGetRequest(method, params)
   */
 function apiPostRequest(method, object)
 {
-    let url = 'http://localhost:2844/api/' + method;
+    let url = '/api/' + method;
 
     return fetch(url, {
                      method: "POST",
@@ -807,8 +809,16 @@ $(window).resize(function()
   * Main method.
   */
 $(document).ready(function() {
-    // Start our WebSocket client
-    initWebSocket();
+    // Fetch our config.
+    // IMPORTANT: This must be done before attempting to connect to the websocket.
+    apiGetRequest("config")
+    .then((response) => response.json())
+    .then((data) => {
+              config = data;
+
+              // Start our WebSocket client.
+              initWebSocket();
+          });
 
     // Handle light/dark mode.
     updateCSS();

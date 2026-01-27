@@ -5,8 +5,8 @@
 #include <QtWebSockets>
 #include "../models/FangSettings.h"
 
-/**
- * @brief This is the WebSocket server that manages the news page.
+/*!
+    This is the WebSocket server that manages the news page.
  */
 class WebSocketServer : public QObject
 {
@@ -19,10 +19,15 @@ public:
 
 public slots:
 
-    /**
-     * @return True if the server is set up and ready to go.
+    /*!
+        Returns true if the server is set up and ready to go.
      */
     bool isServerReady() { return isReady; }
+
+    /*!
+      Returns the websocket server port, or 0 if not running..
+     */
+    inline quint16 getPort() { return server.serverPort(); }
 
     /**
      * @brief Manually moves the bookmark to the provided position. (Not needed on initial load)

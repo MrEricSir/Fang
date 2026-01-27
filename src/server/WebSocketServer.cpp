@@ -6,6 +6,9 @@
 
 #include "../FangApp.h"
 
+#include "../utilities/ErrorHandling.h"
+
+
 WebSocketServer::WebSocketServer(QObject *parent) :
     QObject(parent),
     server("Fang WebSocket", QWebSocketServer::NonSecureMode),
@@ -14,12 +17,8 @@ WebSocketServer::WebSocketServer(QObject *parent) :
     fangSettings(nullptr)
 {
     // Listen for incoming connections!
-    if (!server.listen(QHostAddress::LocalHost, 2842)) {
-        //
-        // TODO: Panic!
-        //
-        qDebug() << "Websocket unable to listen";
-    }
+    FANG_CHECK(server.listen(QHostAddress::LocalHost),
+               "Websocket unable to listen");
 
     connect(&server, &QWebSocketServer::newConnection, this, &WebSocketServer::onNewConnection);
 }

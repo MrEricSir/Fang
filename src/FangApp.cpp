@@ -53,6 +53,9 @@ FangApp::FangApp(QApplication *parent, QQmlApplicationEngine* engine, QSingleIns
         qCritical() << "FangApp: Multiple instances created! Previous instance exists.";
     }
     _instance = this;
+
+    // Set config for webserver.
+    webServer.setWebsocketPort(webSocketServer.getPort());
     
     // Setup signals.
     connect(parent, &QApplication::aboutToQuit, this, &FangApp::onQuit);
@@ -87,6 +90,7 @@ void FangApp::init()
     engine->rootContext()->setContextProperty("platform", getPlatform()); // platform string ID
     engine->rootContext()->setContextProperty("isDesktop", isDesktop()); // whether we're on desktop (vs mobile etc.)
     engine->rootContext()->setContextProperty("fangVersion", APP_VERSION);
+    engine->rootContext()->setContextProperty("localServerPort", webServer.port()); // Port the server is listening on
 
 #ifdef QT_DEBUG
     bool isDebugBuild = true;
