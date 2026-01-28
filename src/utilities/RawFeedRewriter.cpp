@@ -11,6 +11,12 @@
 // Image width max.
 #define MAX_ELEMENT_WIDTH 400
 
+// Maximum image size (in bytes) to embed as base64.
+// Images larger than this will keep their original URL.
+// 1MB is a reasonable limit that covers most article images while avoiding
+// excessive database bloat from very large images.
+#define MAX_EMBED_IMAGE_SIZE (1024 * 1024)
+
 // Strings.
 #define S_WIDTH "width"
 #define S_HEIGHT "height"
@@ -358,6 +364,7 @@ QString RawFeedRewriter::rewriteSecondPass(QString &docString)
                     skip = 1;
                 } else if (tagName == S_IMG) {
                     QString url = xml.attributes().value(S_SRC).toString();
+                    QString srcToUse = url; // Default to original URL.
 
                     int width = 0;
                     int height = 0;
@@ -369,17 +376,24 @@ QString RawFeedRewriter::rewriteSecondPass(QString &docString)
                         width = xml.attributes().value(S_WIDTH).toInt();
                         height = xml.attributes().value(S_HEIGHT).toInt();
                     } else {
-                        QImage image = imageGrabber.getResults()->value(url);
-                        if (!image.isNull()) {
+                        ImageData imageData = imageGrabber.getResults()->value(url);
+                        if (imageData.isValid()) {
                             // Resize that baby, yeah!
-                            imageResize(image.width(), image.height(), &width, &height);
+                            imageResize(imageData.image.width(), imageData.image.height(), &width, &height);
+
+                            // Embed image as base64 data URI for offline viewing.
+                            // Returns empty if image is too large to embed.
+                            QString dataUri = imageToDataUri(imageData);
+                            if (!dataUri.isEmpty()) {
+                                srcToUse = dataUri;
+                            }
                         }
                     }
 
                     if (width > 2 && height > 2) {
                         // Okay, we got a good image and it's not a tracking pixel. Satisfaction!
                         writer.writeStartElement(tagName);
-                        writer.writeAttribute(S_SRC, url);
+                        writer.writeAttribute(S_SRC, srcToUse);
                         writer.writeAttribute(S_WIDTH, QString::number(width));
                         writer.writeAttribute(S_HEIGHT, QString::number(height));
                         writer.writeAttribute("align", "left"); // Always left-align.
@@ -517,10 +531,21 @@ QString RawFeedRewriter::rewriteTextOnlyNews(QString input)
     }
 
     // As a signal to the 2nd pass, we prepend the output with an ASCII beep character.  2nd pass
-    // will remove this and return the string without further modification.s
+    // will remove this and return the string without further modification.
     output = '\07' + output;
 
     return output;
+}
+
+QString RawFeedRewriter::imageToDataUri(const ImageData& imageData)
+{
+    // Don't embed if invalid or too large.
+    if (!imageData.isValid() || imageData.rawData.size() > MAX_EMBED_IMAGE_SIZE) {
+        return "";
+    }
+
+    // Use the original image data and MIME type to preserve format.
+    return "data:" + imageData.mimeType + ";base64," + QString::fromLatin1(imageData.rawData.toBase64());
 }
 
 void RawFeedRewriter::onImageGrabberFinished()

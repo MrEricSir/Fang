@@ -4,6 +4,7 @@
 #include <QString>
 #include <QStringList>
 #include <QNetworkReply>
+#include <QMimeDatabase>
 #include "ErrorHandling.h"
 
 ImageGrabber::ImageGrabber(QObject *parent) :
@@ -55,18 +56,30 @@ void ImageGrabber::onRequestFinished(QNetworkReply * reply)
     //
     // TODO: Handle HTTP redirects correctly.
     //
-    
+
+    ImageData imageData;
+
     // Let's see what we got 'ere.
     if (reply->error() != QNetworkReply::NoError) {
-        // Error.
-        // Insert an empty image.
-        results.insert(requestedUrl, QImage());
+        // Error: Don't do anything, maybe the image will work later, maybe not. *shrug*
     } else {
         // Great success!
-        // Got something, maybe it's an image.  Who knows!  More importantly, who cares?
-        results.insert(requestedUrl, QImage::fromData(reply->readAll()));
+        QByteArray rawData = reply->readAll();
+        QImage image = QImage::fromData(rawData);
+
+        if (!image.isNull()) {
+            imageData.image = image;
+            imageData.rawData = rawData;
+
+            // Detect MIME type from the raw data.
+            QMimeDatabase mimeDb;
+            QMimeType mimeType = mimeDb.mimeTypeForData(rawData);
+            imageData.mimeType = mimeType.name();
+        }
     }
-    
+
+    results.insert(requestedUrl, imageData);
+
     // Are we there yet?
     checkCompletion();
 }
