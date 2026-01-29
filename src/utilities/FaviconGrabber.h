@@ -8,11 +8,15 @@
 #include <QPair>
 #include <QImage>
 #include <QSet>
+#include <QBuffer>
 
 #include <QSimpleStateMachine/QSimpleStateMachine.h>
 
 #include "WebPageGrabber.h"
 #include "../FangObject.h"
+
+// Maximum favicon width and/or height to store.
+#define MAX_FAVICON_DIMENSION 512
 
 class FaviconGrabber : public FangObject
 {
@@ -34,9 +38,9 @@ public:
 signals:
     /**
      * @brief Called when complete.
-     * @param faviconUrl Either a valid favicon url, or an invalid URL.
+     * @param faviconDataUri A data URI containing the favicon as PNG, or empty string on failure.
      */
-    void finished(const QUrl& faviconUrl);
+    void finished(const QString& faviconDataUri);
     
 public slots:
     
@@ -73,7 +77,10 @@ private slots:
 
     // Searches for icons in our XHTML doc.
     void findIcons(const QString& document);
-    
+
+    // Convert a QImage to a PNG data URI, scaling down if needed.
+    QString imageToDataUri(const QImage& image);
+
 private:
     QSimpleStateMachine machine;
     QList<QUrl> urlsToCheck;

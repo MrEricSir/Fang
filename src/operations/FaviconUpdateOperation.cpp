@@ -19,50 +19,47 @@ FaviconUpdateOperation::~FaviconUpdateOperation()
 void FaviconUpdateOperation::execute()
 {
     FANG_BACKGROUND_CHECK;
-    
-    // Only update icon once a week.
-    QDateTime lastWeek = QDateTime::currentDateTime().addDays( -7 );
-    if (feed->getLastIconUpdate() > lastWeek) {
+
+    // Only update icon once a week, unless we need to convert a URL to data URI.
+    QDateTime lastWeek = QDateTime::currentDateTime().addDays(-7);
+    if (feed->getLastIconUpdate() > lastWeek && feed->getImageURL().scheme() == "data") {
         emit finished(this);
-        
-        return; // Nothing to do, bye!
+        return; // Already up-to-date and embedded, nothing to do.
     }
-    
+
     if (feed->getSiteURL().isValid() && !feed->getSiteURL().isRelative()) {
         grabber.find(feed->getSiteURL());
     } else {
-        // No site to examine.  Try the feed URL instead.
+        // No site to examine. Try the feed URL instead.
         grabber.find(feed->getURL());
     }
 }
 
-void FaviconUpdateOperation::onGrabberFinished(const QUrl &faviconUrl)
+void FaviconUpdateOperation::onGrabberFinished(const QString& faviconDataUri)
 {
     FANG_BACKGROUND_CHECK;
-    
-    if (!faviconUrl.isValid() || faviconUrl.isRelative()) {
-        // Not a valid URL.
-        reportError("No valid URL to update. URL is: " + faviconUrl.toString());
-        
+
+    if (faviconDataUri.isEmpty()) {
+        reportError("No favicon found.");
         return;
     }
-    
+
     QDateTime now = QDateTime::currentDateTime();
-    
-    if (faviconUrl == feed->getImageURL()) {
-        // Well, we got the same favicon.  What a surprise!  Only not.
-        
-        // Update timestamp.
+
+    // Convert data URI to QUrl for comparison and storage.
+    QUrl dataUrl(faviconDataUri);
+
+    if (dataUrl == feed->getImageURL()) {
+        // Same favicon as before. Just update the timestamp.
         db().transaction();
         QSqlQuery query(db());
         query.prepare("UPDATE FeedItemTable SET lastIconUpdate = :lastIconUpdate WHERE id = :id");
         query.bindValue(":id", feed->getDbID());
         query.bindValue(":lastIconUpdate", now.toMSecsSinceEpoch());
-        
+
         if (!query.exec()) {
             reportSQLError(query, "Unable to update favicon update timestamp.");
             db().rollback();
-            
             return;
         } else {
             db().commit();
@@ -70,29 +67,28 @@ void FaviconUpdateOperation::onGrabberFinished(const QUrl &faviconUrl)
         }
 
         emit finished(this);
-        
         return;
     }
-    
-    // Save the new URL to the DB. Oh, and update the timestamp.
+
+    // Save the favicon data to the DB and and update the timestamp.
     db().transaction();
     QSqlQuery query(db());
     query.prepare("UPDATE FeedItemTable SET imageURL = :imageURL, "
                   "lastIconUpdate = :lastIconUpdate WHERE id = :id");
     query.bindValue(":id", feed->getDbID());
-    query.bindValue(":imageURL", faviconUrl.toString());
+    query.bindValue(":imageURL", faviconDataUri);
     query.bindValue(":lastIconUpdate", now.toMSecsSinceEpoch());
-    
+
     if (!query.exec()) {
         reportSQLError(query, "Unable to update favicon.");
         db().rollback();
-        
         return;
     } else {
+        qDebug() << " ----- UPDATING FAVICON -----";
         db().commit();
-        feed->setImageURL(faviconUrl);
+        feed->setImageURL(dataUrl);
         feed->setLastIconUpdate(now);
     }
-    
+
     emit finished(this);
 }

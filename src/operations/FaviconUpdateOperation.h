@@ -25,7 +25,7 @@ private slots:
     /**
      * @brief Grabber found a favicon, maybe.
      */
-    void onGrabberFinished(const QUrl& faviconUrl);
+    void onGrabberFinished(const QString& faviconDataUri);
     
 private:
     FeedItem* feed;
