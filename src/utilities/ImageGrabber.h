@@ -6,10 +6,25 @@
 #include <QList>
 #include <QUrl>
 #include <QMap>
+#include <QByteArray>
 
 #include "../network/FangNetworkAccessManager.h"
 #include "../FangObject.h"
 
+/*!
+    \brief ImageData stores downloaded image data for offline embedding.
+ */
+struct ImageData {
+    QImage image;       // Decoded image
+    QByteArray rawData; // Original bytes (for base64 encoding)
+    QString mimeType;   // MIME type (jpeg vs png, etc.)
+
+    inline bool isValid() const { return !image.isNull() && !rawData.isEmpty(); }
+};
+
+/*!
+    \brief The ImageGrabber attempts to download all images from a list of URLs.
+ */
 class ImageGrabber : public FangObject
 {
     Q_OBJECT
@@ -36,19 +51,19 @@ public slots:
      */
     void fetchUrl(const QUrl &url);
     
-    inline QMap<QUrl, QImage>* getResults() {  return &results; }
-    
+    inline QMap<QUrl, ImageData>* getResults() { return &results; }
+
 private slots:
     void onRequestFinished(QNetworkReply *reply);
-    
+
     void checkCompletion();
-    
+
     void checkUrl(const QUrl &url);
-    
+
 private:
     FangNetworkAccessManager manager;
     QList<QUrl> urlsToCheck;
-    QMap<QUrl, QImage> results;
+    QMap<QUrl, ImageData> results;
 };
 
 #endif // IMAGEGRABBER_H

@@ -75,26 +75,37 @@ void UpdateFeedOperation::onFeedFinished()
 
         return;
     }
-    
+
+    // Set error flag for network errors (server unreachable, etc.)
+    if (parser.getResult() == ParserInterface::NETWORK_ERROR) {
+        qDebug() << "UpdateFeedOperation: Network error for feed:" << feed->getTitle();
+        feed->setErrorFlag(true);
+        feed->setIsUpdating(false);
+        emit finished(this);
+
+        return;
+    }
+
     feed->setIsUpdating(false);
-    
+
     if (rawFeed == nullptr) {
         rawFeed = parser.getFeed();
     }
-    
+
     if (rawFeed == nullptr) {
         // This is often the result of the feed not having been updated, and thus
         // it was already cached.  We return null in that case to save time.
-        
+        feed->setErrorFlag(false); // Clear error flag, if set.
         emit finished(this);
-        
+
         return;
     }
-    
+
     if (rawFeed->items.size() == 0) {
         qDebug() << "Feed list was empty! (Could be cache.)";
+        feed->setErrorFlag(false);
         emit finished(this);
-        
+
         return;
     }
     
@@ -119,8 +130,9 @@ void UpdateFeedOperation::onFeedFinished()
     // Check if we really need to update by comparing the dates of the most recent news items.
     QDateTime newestNewNews = rawFeed->items.last()->timestamp;
     if (newestNewNews <= newestLocalNews) {
+        feed->setErrorFlag(false);
         emit finished(this);
-        
+
         return;
     }
     
@@ -136,9 +148,10 @@ void UpdateFeedOperation::onFeedFinished()
     
     // Check should be a duplicate of the one above, but just in case...
     if (newIndex < 0) {
+        feed->setErrorFlag(false);
         emit finished(this);
         qDebug() << "New index was negative, all feeds must be up to date!";
-        
+
         return;
     }
     
@@ -206,7 +219,10 @@ void UpdateFeedOperation::onRewriterFinished()
     }
     
     db().commit(); // Done with db!
-    
+
+    // Clear any previous error flag since update succeeded.
+    feed->setErrorFlag(false);
+
     emit finished(this);
 }
 
@@ -220,6 +236,8 @@ void UpdateFeedOperation::onDiscoveryDone(FeedDiscovery* feedDiscovery)
         qDebug() << "UpdateFeedOperation: Could not rediscover URL for feed: "
                  << feed->getTitle() << " -- " << feed->getUserURL();
 
+        // Set error flag since we couldn't recover from the 404.
+        feed->setErrorFlag(true);
         feed->setIsUpdating(false);
         emit finished(this);
         return;

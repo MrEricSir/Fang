@@ -40,16 +40,20 @@ NewsParser::~NewsParser()
 void NewsParser::parse(const QUrl& url, bool noParseIfCached)
 {
     initParse(url);
-    
+
     this->noParseIfCached = noParseIfCached;
-    
+
     // in with the new
     QNetworkRequest request(url);
+
+    // Sets a 30 second timeout in case the connection is lost or screwy.
+    request.setTransferTimeout(30000);
+
     if (currentReply) {
         currentReply->disconnect(this);
         currentReply->deleteLater();
     }
-    
+
     currentReply = manager.get(request);
     connect(currentReply, &QNetworkReply::readyRead, this, &NewsParser::readyRead);
     connect(currentReply, &QNetworkReply::metaDataChanged, this, &NewsParser::metaDataChanged);

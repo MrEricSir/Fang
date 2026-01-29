@@ -96,6 +96,10 @@ protected:
     // Some news is text instead of HTML (Hearst's papers, for example.)
     QString rewriteTextOnlyNews(QString input);
 
+    // Convert image data to a base64 data URI for offline viewing.
+    // Returns empty string if the image is too large to embed.
+    QString imageToDataUri(const ImageData& imageData);
+
 protected slots:
     // We've grabbed our images.
     void onImageGrabberFinished();

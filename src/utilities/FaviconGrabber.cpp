@@ -89,7 +89,7 @@ void FaviconGrabber::onPickBest()
     }
 
     int topTotalPixels = 0;
-    QUrl topURL;
+    QImage topImage;
 
     // Go over all the images. Find the one with the max total pixels.
     for (const auto& pair : std::as_const(imagesToCheck)) {
@@ -97,13 +97,16 @@ void FaviconGrabber::onPickBest()
         int totalPixels = img.width() * img.height();
         if (totalPixels > topTotalPixels) {
             topTotalPixels = totalPixels;
-            topURL = pair.first;
+            topImage = img;
         }
     }
 
     if (topTotalPixels > 0) {
-        emit finished(topURL);
-        return;
+        QString dataUri = imageToDataUri(topImage);
+        if (!dataUri.isEmpty()) {
+            emit finished(dataUri);
+            return;
+        }
     }
 
     machine.setState(GRAB_ERROR);
@@ -111,7 +114,31 @@ void FaviconGrabber::onPickBest()
 
 void FaviconGrabber::onError()
 {
-    emit finished(QUrl()); // invalid URL
+    emit finished(QString()); // empty string indicates failure
+}
+
+QString FaviconGrabber::imageToDataUri(const QImage& image)
+{
+    if (image.isNull()) {
+        // Not much we can do here.
+        return "";
+    }
+
+    QImage finalImage = image;
+
+    // Scale down large images. Shouldn't happen, but we want to be defensive.
+    if (image.width() > MAX_FAVICON_DIMENSION || image.height() > MAX_FAVICON_DIMENSION) {
+        finalImage = image.scaled(MAX_FAVICON_DIMENSION, MAX_FAVICON_DIMENSION,
+                                  Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    }
+
+    // Convert to PNG and base64 encode.
+    QByteArray imageData;
+    QBuffer buffer(&imageData);
+    buffer.open(QIODevice::WriteOnly);
+    finalImage.save(&buffer, "PNG");
+
+    return "data:image/png;base64," + QString::fromLatin1(imageData.toBase64());
 }
 
 void FaviconGrabber::onRequestFinished(QNetworkReply * reply)

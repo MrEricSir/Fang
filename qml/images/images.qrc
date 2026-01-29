@@ -47,5 +47,7 @@
         <file>opener_dark.png</file>
         <file>system_tray_icon_badge.png</file>
         <file>system_tray_icon.png</file>
+        <file>symbol_warning.svg</file>
+        <file>symbol_dark_warning.svg</file>
     </qresource>
 </RCC>

@@ -105,6 +105,20 @@ RearrangeableDelegate {
                             asynchronous: true;
                         }
 
+                        Image {
+                            id: errorIcon;
+
+                            visible: errorFlag;
+
+                            source: (fangSettings.currentStyle === "LIGHT" ? "images/symbol_warning.svg"
+                                                                           : "images/symbol_dark_warning.svg");
+                            width: parent.width * 0.75;
+                            height: width;
+                            anchors.right: parent.right;
+                            anchors.bottom: parent.bottom
+                            anchors.margins: -parent.width * 0.25;
+                        }
+
                         property bool updating: isUpdating;
                         onUpdatingChanged: {
                             if (updating) {

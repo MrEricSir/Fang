@@ -417,14 +417,31 @@ void TestFeedItem::testSetErrorFlag()
     FeedItem* feed = createTestFeed();
     QSignalSpy spy(feed, &FeedItem::dataChanged);
 
-    feed->setErrorFlag(true);
+    // Initially no error.
+    QCOMPARE(feed->getErrorFlag(), false);
 
+    // Set error flag.
+    feed->setErrorFlag(true);
     QCOMPARE(feed->getErrorFlag(), true);
     QCOMPARE(spy.count(), 1);
 
     // Setting to same value shouldn't repeat changed signal.
     feed->setErrorFlag(true);
     QCOMPARE(spy.count(), 1);
+
+    // Clear error flag (simulates successful feed update).
+    feed->setErrorFlag(false);
+    QCOMPARE(feed->getErrorFlag(), false);
+    QCOMPARE(spy.count(), 2);
+
+    // Setting to same value (false) shouldn't repeat changed signal.
+    feed->setErrorFlag(false);
+    QCOMPARE(spy.count(), 2);
+
+    // Error flag can be set again after being cleared.
+    feed->setErrorFlag(true);
+    QCOMPARE(feed->getErrorFlag(), true);
+    QCOMPARE(spy.count(), 3);
 
     delete feed;
 }
