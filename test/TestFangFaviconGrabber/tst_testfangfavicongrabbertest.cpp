@@ -2,6 +2,7 @@
 #include <QTest>
 #include <QCoreApplication>
 #include <QSignalSpy>
+#include <QImage>
 
 #include "../../src/utilities/FaviconGrabber.h"
 #include "../MockNetworkAccessManager.h"
@@ -9,10 +10,14 @@
 class TestFangFaviconGrabberTest : public QObject
 {
     Q_OBJECT
-    
+
 public:
     TestFangFaviconGrabberTest();
-    
+
+private:
+    // Validate that a string is a valid PNG data URI
+    bool isValidPngDataUri(const QString& dataUri);
+
 private slots:
     void initTestCase();
     void cleanupTestCase();
@@ -22,6 +27,22 @@ private slots:
 
 TestFangFaviconGrabberTest::TestFangFaviconGrabberTest()
 {
+}
+
+bool TestFangFaviconGrabberTest::isValidPngDataUri(const QString& dataUri)
+{
+    // Check prefix
+    if (!dataUri.startsWith("data:image/png;base64,")) {
+        return false;
+    }
+
+    // Extract and decode base64
+    QString base64Data = dataUri.mid(QString("data:image/png;base64,").length());
+    QByteArray imageData = QByteArray::fromBase64(base64Data.toLatin1());
+
+    // Verify it's a valid image
+    QImage image;
+    return image.loadFromData(imageData, "PNG");
 }
 
 void TestFangFaviconGrabberTest::initTestCase()
@@ -78,8 +99,10 @@ void TestFangFaviconGrabberTest::testCase1()
     QVERIFY(spy.wait(10000));  // Up to 10 seconds
     QCOMPARE(spy.count(), 1);
 
-    QList<QVariant> arguments = spy.takeFirst(); // take the first signal
-    QCOMPARE(arguments.at(0).toUrl(), faviconURL);
+    // Verify we got a valid PNG data URI (favicons are now embedded for offline use)
+    QList<QVariant> arguments = spy.takeFirst();
+    QString dataUri = arguments.at(0).toString();
+    QVERIFY2(isValidPngDataUri(dataUri), "Expected a valid PNG data URI");
 }
 
 void TestFangFaviconGrabberTest::testCase1_data()

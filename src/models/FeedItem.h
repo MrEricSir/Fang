@@ -10,7 +10,6 @@
 #include "DBObject.h"
 #include "ListModel.h"
 #include "src/models/NewsList.h"
-#include "../utilities/ErrorHandling.h"
 
 class NewsItem;
 class NewsList;

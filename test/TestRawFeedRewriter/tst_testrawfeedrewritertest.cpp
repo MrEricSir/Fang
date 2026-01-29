@@ -2,16 +2,22 @@
 #include <QTest>
 #include <QCoreApplication>
 #include <QSignalSpy>
+#include <QRegularExpression>
 
 #include "../../src/utilities/RawFeedRewriter.h"
 
 class TestRawFeedRewriterTest : public QObject
 {
     Q_OBJECT
-    
+
 public:
     TestRawFeedRewriterTest();
-    
+
+private:
+    // Normalize image src attributes for comparison.
+    // Replaces base64 data URIs with a placeholder so we can compare structure.
+    static QString normalizeImageSrc(const QString& html);
+
 private slots:
     void testCase1();
     void testCase1_data();
@@ -19,6 +25,16 @@ private slots:
 
 TestRawFeedRewriterTest::TestRawFeedRewriterTest()
 {
+}
+
+QString TestRawFeedRewriterTest::normalizeImageSrc(const QString& html)
+{
+    // Replace base64 data URIs with a placeholder for comparison.
+    // This allows us to verify structure without matching exact image data.
+    QString normalized = html;
+    QRegularExpression dataUriRegex("src=\"data:image/[^;]+;base64,[^\"]+\"");
+    normalized.replace(dataUriRegex, "src=\"[BASE64_IMAGE]\"");
+    return normalized;
 }
 
 void TestRawFeedRewriterTest::testCase1()
@@ -46,12 +62,17 @@ void TestRawFeedRewriterTest::testCase1()
     }
     
     QCOMPARE(spy.count(), 1);
-    
-    qDebug() << "Expected output: " << output;
-    qDebug() << "Output: " << news.description;
-    
+
+    // Normalize both strings to handle base64 embedded images.
+    // Images that are successfully downloaded are now embedded as data URIs.
+    QString normalizedOutput = normalizeImageSrc(news.description);
+    QString normalizedExpected = normalizeImageSrc(output);
+
+    qDebug() << "Expected output: " << normalizedExpected;
+    qDebug() << "Output: " << normalizedOutput;
+
     // Check to see what we got!
-    QCOMPARE(news.description, output);
+    QCOMPARE(normalizedOutput, normalizedExpected);
 }
 
 void TestRawFeedRewriterTest::testCase1_data()
@@ -89,14 +110,15 @@ void TestRawFeedRewriterTest::testCase1_data()
                               << "<p>hi</p>";
 
     // Image size rewriter (and reducer.)
+    // Images that are successfully downloaded are embedded as base64 data URIs for offline viewing.
     QTest::newRow("Image test") << "<img src=\"https://www.mrericsir.com/blog/wp-content/uploads/IMG_9016-768x1024.jpeg\">"
-                              << "<img src=\"https://www.mrericsir.com/blog/wp-content/uploads/IMG_9016-768x1024.jpeg\""
+                              << "<img src=\"[BASE64_IMAGE]\""
                                  " width=\"400\" height=\"533\" align=\"left\"/>";
 
     // Image size rewriter (and reducer) with STYLE.
     QTest::newRow("Image test 2") << "<img src=\"https://www.mrericsir.com/blog/wp-content/uploads/IMG_9016-768x1024.jpeg\" style=\""
                                  "width: 500px;\">"
-                              << "<img src=\"https://www.mrericsir.com/blog/wp-content/uploads/IMG_9016-768x1024.jpeg\""
+                              << "<img src=\"[BASE64_IMAGE]\""
                                  " width=\"400\" height=\"533\" align=\"left\"/>";
 
     // Image size WITHOUT rewriter.

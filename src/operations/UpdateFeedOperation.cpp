@@ -75,7 +75,17 @@ void UpdateFeedOperation::onFeedFinished()
 
         return;
     }
-    
+
+    // Set error flag for network errors (server unreachable, etc.)
+    if (parser.getResult() == ParserInterface::NETWORK_ERROR) {
+        qDebug() << "UpdateFeedOperation: Network error for feed:" << feed->getTitle();
+        feed->setErrorFlag(true);
+        feed->setIsUpdating(false);
+        emit finished(this);
+
+        return;
+    }
+
     feed->setIsUpdating(false);
     
     if (rawFeed == nullptr) {
@@ -206,7 +216,10 @@ void UpdateFeedOperation::onRewriterFinished()
     }
     
     db().commit(); // Done with db!
-    
+
+    // Clear any previous error flag since update succeeded.
+    feed->setErrorFlag(false);
+
     emit finished(this);
 }
 
@@ -220,6 +233,8 @@ void UpdateFeedOperation::onDiscoveryDone(FeedDiscovery* feedDiscovery)
         qDebug() << "UpdateFeedOperation: Could not rediscover URL for feed: "
                  << feed->getTitle() << " -- " << feed->getUserURL();
 
+        // Set error flag since we couldn't recover from the 404.
+        feed->setErrorFlag(true);
         feed->setIsUpdating(false);
         emit finished(this);
         return;
