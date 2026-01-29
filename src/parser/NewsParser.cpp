@@ -4,14 +4,14 @@
 #include <QFile>
 #include <QFileInfo>
 
-#include "../utilities/ErrorHandling.h"
 #include "ParserXMLWorker.h"
 
 NewsParser::NewsParser(QObject *parent) :
     ParserInterface(parent),
     feed(nullptr), result(OK), networkError(QNetworkReply::NetworkError::NoError),
     currentReply(nullptr), redirectReply(nullptr),
-    fromCache(false), noParseIfCached(false)
+    fromCache(false), noParseIfCached(false),
+    redirectAttempts(0)
 {
     // Connex0r teh siganls.
     connect(&manager, &FangNetworkAccessManager::finished,
@@ -38,6 +38,14 @@ NewsParser::~NewsParser()
 }
 
 void NewsParser::parse(const QUrl& url, bool noParseIfCached)
+{
+    // Reset redirect counter.
+    redirectAttempts = 0;
+
+    parseInternal(url, noParseIfCached);
+}
+
+void NewsParser::parseInternal(const QUrl& url, bool noParseIfCached)
 {
     initParse(url);
 
@@ -108,12 +116,25 @@ void NewsParser::metaDataChanged()
 {
     QUrl redirectionTarget = currentReply->attribute(
                 QNetworkRequest::RedirectionTargetAttribute).toUrl();
-    
-    // TODO: prevent endless loooooping!!!
+
     if (redirectionTarget.isValid()) {
-        qDebug() << "Redirect: " << redirectionTarget.toString();
+        // Guard against unlimited redirects.
+        if (redirectAttempts >= MAX_PARSER_REDIRECTS) {
+            qDebug() << "NewsParser: Maximum redirects reached, aborting";
+            currentReply->disconnect(this);
+            currentReply->deleteLater();
+            currentReply = nullptr;
+
+            result = NewsParser::NETWORK_ERROR;
+            networkError = QNetworkReply::TooManyRedirectsError;
+            emit done();
+            return;
+        }
+
+        qDebug() << "Redirect:" << redirectionTarget.toString();
+        redirectAttempts++;
         redirectReply = currentReply;
-        parse(redirectionTarget, noParseIfCached);
+        parseInternal(redirectionTarget, noParseIfCached);
     }
     
     if (currentReply->attribute(

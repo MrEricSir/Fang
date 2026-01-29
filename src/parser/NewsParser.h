@@ -10,7 +10,12 @@
 #include "../network/FangNetworkAccessManager.h"
 #include "ParserInterface.h"
 
-// PaRSSes RSS/Atom feeds into RawFeed/RawNews objects.
+// Max number of HTTP redirects to prevent looping.
+#define MAX_PARSER_REDIRECTS 10
+
+/*!
+    PaRSSes RSS/Atom feeds into RawFeed/RawNews objects.
+ */
 class NewsParser : public ParserInterface
 {
     Q_OBJECT
@@ -55,6 +60,7 @@ protected slots:
     
 private:
     void initParse(const QUrl& url = QUrl("")); // called prior to parse.
+    void parseInternal(const QUrl& url, bool noParseIfCached); // used for redirects.
     
     RawFeed* feed;
     ParseResult result;
@@ -67,7 +73,9 @@ private:
     
     bool fromCache;
     bool noParseIfCached;
-    
+
+    int redirectAttempts;
+
     QThread workerThread;
 };
 

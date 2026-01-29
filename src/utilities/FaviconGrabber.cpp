@@ -76,6 +76,7 @@ void FaviconGrabber::onCheckIcons()
         }
 
         QNetworkRequest request(url);
+        request.setTransferTimeout(15000); // 15 sec timeout.
         QNetworkReply* reply = manager->get(request);
         faviconReplies.insert(reply);  // Track this reply
     }

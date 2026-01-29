@@ -43,8 +43,9 @@ void ImageGrabber::checkUrl(const QUrl &url)
     }
     
     urlsToCheck.append(url);
-    
+
     QNetworkRequest request(url);
+    request.setTransferTimeout(30000); // 30 secs.
     manager.get(request);
 }
 
