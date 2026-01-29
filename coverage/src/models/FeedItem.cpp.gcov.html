@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-01-27 22:31:25</td>
+            <td class="headerValue">2026-01-29 08:30:12</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -347,14 +347,14 @@
 <span id="L285"><span class="lineNum">     285</span> <span class="tlaGNC">           1 :     ordinal = newOrdinal;</span></span>
 <span id="L286"><span class="lineNum">     286</span> <span class="tlaGNC">           1 : }</span></span>
 <span id="L287"><span class="lineNum">     287</span>              : </span>
-<span id="L288"><span class="lineNum">     288</span> <span class="tlaGNC">           5 : void FeedItem::setErrorFlag(bool errorFlag)</span></span>
+<span id="L288"><span class="lineNum">     288</span> <span class="tlaGNC">           8 : void FeedItem::setErrorFlag(bool errorFlag)</span></span>
 <span id="L289"><span class="lineNum">     289</span>              : {</span>
-<span id="L290"><span class="lineNum">     290</span> <span class="tlaGNC">           5 :     if (_errorFlag == errorFlag) {</span></span>
-<span id="L291"><span class="lineNum">     291</span> <span class="tlaGNC">           1 :         return;</span></span>
+<span id="L290"><span class="lineNum">     290</span> <span class="tlaGNC">           8 :     if (_errorFlag == errorFlag) {</span></span>
+<span id="L291"><span class="lineNum">     291</span> <span class="tlaGNC">           2 :         return;</span></span>
 <span id="L292"><span class="lineNum">     292</span>              :     }</span>
 <span id="L293"><span class="lineNum">     293</span>              :     </span>
-<span id="L294"><span class="lineNum">     294</span> <span class="tlaGNC">           4 :     _errorFlag = errorFlag;</span></span>
-<span id="L295"><span class="lineNum">     295</span> <span class="tlaGNC">           4 :     emit dataChanged();</span></span>
+<span id="L294"><span class="lineNum">     294</span> <span class="tlaGNC">           6 :     _errorFlag = errorFlag;</span></span>
+<span id="L295"><span class="lineNum">     295</span> <span class="tlaGNC">           6 :     emit dataChanged();</span></span>
 <span id="L296"><span class="lineNum">     296</span>              : }</span>
 <span id="L297"><span class="lineNum">     297</span>              : </span>
 <span id="L298"><span class="lineNum">     298</span> <span class="tlaGNC">          37 : void FeedItem::setURL(QUrl url)</span></span>

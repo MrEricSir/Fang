@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-01-27 22:31:25</td>
+            <td class="headerValue">2026-01-29 08:30:12</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryMed">85.7&nbsp;%</td>
@@ -72,264 +72,263 @@
 <span id="L10"><span class="lineNum">      10</span>              : #include &quot;DBObject.h&quot;</span>
 <span id="L11"><span class="lineNum">      11</span>              : #include &quot;ListModel.h&quot;</span>
 <span id="L12"><span class="lineNum">      12</span>              : #include &quot;src/models/NewsList.h&quot;</span>
-<span id="L13"><span class="lineNum">      13</span>              : #include &quot;../utilities/ErrorHandling.h&quot;</span>
-<span id="L14"><span class="lineNum">      14</span>              : </span>
-<span id="L15"><span class="lineNum">      15</span>              : class NewsItem;</span>
-<span id="L16"><span class="lineNum">      16</span>              : class NewsList;</span>
-<span id="L17"><span class="lineNum">      17</span>              : </span>
-<span id="L18"><span class="lineNum">      18</span>              : // IDs of special feeds.  (Normal feed IDs start at 0.)</span>
-<span id="L19"><span class="lineNum">      19</span>              : </span>
-<span id="L20"><span class="lineNum">      20</span>              : enum SpecialFeedID {</span>
-<span id="L21"><span class="lineNum">      21</span>              :     FEED_ID_ALLNEWS = -2,</span>
-<span id="L22"><span class="lineNum">      22</span>              :     FEED_ID_PINNED = -1</span>
-<span id="L23"><span class="lineNum">      23</span>              : };</span>
-<span id="L24"><span class="lineNum">      24</span>              : </span>
-<span id="L25"><span class="lineNum">      25</span>              : class FeedItem : public ListItem, DBObject</span>
-<span id="L26"><span class="lineNum">      26</span>              : {</span>
-<span id="L27"><span class="lineNum">      27</span>              :     Q_OBJECT</span>
-<span id="L28"><span class="lineNum">      28</span>              :     </span>
-<span id="L29"><span class="lineNum">      29</span>              : public:</span>
-<span id="L30"><span class="lineNum">      30</span>              :     </span>
-<span id="L31"><span class="lineNum">      31</span>              :     enum Roles {</span>
-<span id="L32"><span class="lineNum">      32</span>              :         TitleRole = Qt::UserRole+1,</span>
-<span id="L33"><span class="lineNum">      33</span>              :         SubtitleRole,</span>
-<span id="L34"><span class="lineNum">      34</span>              :         LastUpdatedRole,</span>
-<span id="L35"><span class="lineNum">      35</span>              :         MinutesToUpdateRole,</span>
-<span id="L36"><span class="lineNum">      36</span>              :         UrlRole,</span>
-<span id="L37"><span class="lineNum">      37</span>              :         SiteURLRole,</span>
-<span id="L38"><span class="lineNum">      38</span>              :         ImageURLRole,</span>
-<span id="L39"><span class="lineNum">      39</span>              :         IsUpdatingRole,</span>
-<span id="L40"><span class="lineNum">      40</span>              :         UnreadCountRole,</span>
-<span id="L41"><span class="lineNum">      41</span>              :         DropTargetRole,</span>
-<span id="L42"><span class="lineNum">      42</span>              :         ErrorFlagRole,</span>
-<span id="L43"><span class="lineNum">      43</span>              :         IsSelectedRole,</span>
-<span id="L44"><span class="lineNum">      44</span>              :         IsSpecialFeedRole,</span>
-<span id="L45"><span class="lineNum">      45</span>              :         IsFolderRole,</span>
-<span id="L46"><span class="lineNum">      46</span>              :         ParentFolderRole,</span>
-<span id="L47"><span class="lineNum">      47</span>              :         FolderOpenRole,</span>
-<span id="L48"><span class="lineNum">      48</span>              :         BookmarksEnabledRole,</span>
-<span id="L49"><span class="lineNum">      49</span>              :         UIDRole,</span>
-<span id="L50"><span class="lineNum">      50</span>              :         SelfRole</span>
-<span id="L51"><span class="lineNum">      51</span>              :     };</span>
-<span id="L52"><span class="lineNum">      52</span>              :     </span>
-<span id="L53"><span class="lineNum">      53</span>              :     FeedItem(QObject *parent = nullptr);</span>
-<span id="L54"><span class="lineNum">      54</span>              :     </span>
-<span id="L55"><span class="lineNum">      55</span>              :     // This class is immutable, so this is the c'tor you'll want to use.</span>
-<span id="L56"><span class="lineNum">      56</span>              :     explicit FeedItem(</span>
-<span id="L57"><span class="lineNum">      57</span>              :             const qint64 id,</span>
-<span id="L58"><span class="lineNum">      58</span>              :             const qint32 ordinal,</span>
-<span id="L59"><span class="lineNum">      59</span>              :             const QString&amp; title,</span>
-<span id="L60"><span class="lineNum">      60</span>              :             const QString&amp; subtitle,</span>
-<span id="L61"><span class="lineNum">      61</span>              :             const QDateTime&amp; lastUpdated,</span>
-<span id="L62"><span class="lineNum">      62</span>              :             quint32 minutesToUpdate,</span>
-<span id="L63"><span class="lineNum">      63</span>              :             const QUrl&amp; url,</span>
-<span id="L64"><span class="lineNum">      64</span>              :             const QUrl&amp; siteURL,</span>
-<span id="L65"><span class="lineNum">      65</span>              :             const QString&amp; userURL,</span>
-<span id="L66"><span class="lineNum">      66</span>              :             const QUrl&amp; imageURL,</span>
-<span id="L67"><span class="lineNum">      67</span>              :             const QDateTime&amp; lastIconUpdate,</span>
-<span id="L68"><span class="lineNum">      68</span>              :             qint64 parentFolder = -1, // Default values for top level non-folder.</span>
-<span id="L69"><span class="lineNum">      69</span>              :             bool folderOpen = true,   // TODO: Save folder open state from last session.</span>
-<span id="L70"><span class="lineNum">      70</span>              :             QObject *parent = nullptr);</span>
-<span id="L71"><span class="lineNum">      71</span>              :     </span>
-<span id="L72"><span class="lineNum">      72</span>              :     virtual ~FeedItem();</span>
-<span id="L73"><span class="lineNum">      73</span>              :     </span>
-<span id="L74"><span class="lineNum">      74</span>              :     /**</span>
-<span id="L75"><span class="lineNum">      75</span>              :      * @brief Ordinal-based sort, used for re-sorting the list.</span>
-<span id="L76"><span class="lineNum">      76</span>              :      * @param rhs</span>
-<span id="L77"><span class="lineNum">      77</span>              :      * @return </span>
-<span id="L78"><span class="lineNum">      78</span>              :      */</span>
-<span id="L79"><span class="lineNum">      79</span>              :     bool operator&lt;(const FeedItem&amp; rhs);</span>
-<span id="L80"><span class="lineNum">      80</span>              :     </span>
-<span id="L81"><span class="lineNum">      81</span>              :     QVariant data(int role) const;</span>
-<span id="L82"><span class="lineNum">      82</span>              :     bool setData(const QVariant &amp;value, int role);</span>
-<span id="L83"><span class="lineNum">      83</span>              :     Qt::ItemFlags flags() const;</span>
-<span id="L84"><span class="lineNum">      84</span>              :     QHash&lt;int, QByteArray&gt; roleNames() const;</span>
-<span id="L85"><span class="lineNum">      85</span>              :     </span>
-<span id="L86"><span class="lineNum">      86</span>              :     void setIsUpdating(bool isUpdating);</span>
-<span id="L87"><span class="lineNum">      87</span>              :     </span>
-<span id="L88"><span class="lineNum">      88</span>              :     // Unused, required for ListItem base class.</span>
-<span id="L89"><span class="lineNum">      89</span> <span class="tlaUNC tlaBgUNC">           0 :     inline QString id() const {</span></span>
-<span id="L90"><span class="lineNum">      90</span> <span class="tlaUNC">           0 :         QString ret;</span></span>
-<span id="L91"><span class="lineNum">      91</span> <span class="tlaUNC">           0 :         QTextStream output(&amp;ret);</span></span>
-<span id="L92"><span class="lineNum">      92</span> <span class="tlaUNC">           0 :         output &lt;&lt; &quot;FeedItem_&quot; &lt;&lt; _id;</span></span>
-<span id="L93"><span class="lineNum">      93</span> <span class="tlaUNC">           0 :         return ret;</span></span>
-<span id="L94"><span class="lineNum">      94</span> <span class="tlaUNC">           0 :     }</span></span>
-<span id="L95"><span class="lineNum">      95</span>              : </span>
-<span id="L96"><span class="lineNum">      96</span>              : public slots:</span>
-<span id="L97"><span class="lineNum">      97</span>              :     </span>
-<span id="L98"><span class="lineNum">      98</span> <span class="tlaGNC tlaBgGNC">          17 :     inline QString getTitle() const { return title; }</span></span>
-<span id="L99"><span class="lineNum">      99</span> <span class="tlaGNC">           4 :     inline QString getSubtitle() const { return subtitle; }</span></span>
-<span id="L100"><span class="lineNum">     100</span> <span class="tlaGNC">           3 :     inline QDateTime getLastUpdated() const { return lastUpdated; }</span></span>
-<span id="L101"><span class="lineNum">     101</span> <span class="tlaGNC">           4 :     inline quint32 getMinutesToUpdate() const { return minutesToUpdate; }</span></span>
-<span id="L102"><span class="lineNum">     102</span> <span class="tlaGNC">          29 :     inline QUrl getURL() const { return url; }</span></span>
-<span id="L103"><span class="lineNum">     103</span> <span class="tlaGNC">          14 :     inline QUrl getSiteURL() const { return siteURL; }</span></span>
-<span id="L104"><span class="lineNum">     104</span> <span class="tlaGNC">           2 :     inline QString getUserURL() const { return userURL; }</span></span>
-<span id="L105"><span class="lineNum">     105</span> <span class="tlaGNC">           4 :     inline QUrl getImageURL() const { return imageURL; }</span></span>
-<span id="L106"><span class="lineNum">     106</span> <span class="tlaGNC">          20 :     inline int getIsUpdating() const { return isUpdating; }</span></span>
-<span id="L107"><span class="lineNum">     107</span> <span class="tlaGNC">           4 :     inline quint32 getUnreadCount() const { return unreadCount; }</span></span>
-<span id="L108"><span class="lineNum">     108</span> <span class="tlaGNC">           5 :     inline QString getDropTarget() const { return dropTarget; }</span></span>
-<span id="L109"><span class="lineNum">     109</span> <span class="tlaGNC">           2 :     inline FeedItem* getSelf() const { return const_cast&lt;FeedItem*&gt;(this); }</span></span>
-<span id="L110"><span class="lineNum">     110</span> <span class="tlaGNC">          88 :     virtual inline qint64 getDbID() const { return _id; }</span></span>
-<span id="L111"><span class="lineNum">     111</span> <span class="tlaGNC">           4 :     inline bool isSpecialFeed() const { return _id &lt; 0; }</span></span>
-<span id="L112"><span class="lineNum">     112</span>              :     </span>
-<span id="L113"><span class="lineNum">     113</span>              :     void setImageURL(const QUrl&amp; url);</span>
-<span id="L114"><span class="lineNum">     114</span>              :     </span>
-<span id="L115"><span class="lineNum">     115</span>              :     void setTitle(const QString&amp; newTitle);</span>
-<span id="L116"><span class="lineNum">     116</span>              :     </span>
-<span id="L117"><span class="lineNum">     117</span>              :     void setDropTarget(const QString&amp; dropTarget);</span>
-<span id="L118"><span class="lineNum">     118</span>              :     </span>
-<span id="L119"><span class="lineNum">     119</span>              :     void setIsSelected(bool s);</span>
-<span id="L120"><span class="lineNum">     120</span>              : </span>
-<span id="L121"><span class="lineNum">     121</span>              :     // Override for folders.</span>
-<span id="L122"><span class="lineNum">     122</span> <span class="tlaGNC">           2 :     virtual bool isFolder() const { return false; }</span></span>
-<span id="L123"><span class="lineNum">     123</span> <span class="tlaUNC tlaBgUNC">           0 :     virtual void setIsFolder(bool isFolder) {</span></span>
-<span id="L124"><span class="lineNum">     124</span>              :         Q_UNUSED(isFolder);</span>
-<span id="L125"><span class="lineNum">     125</span> <span class="tlaUNC">           0 :         qCritical() &lt;&lt; &quot;FeedItem::setIsFolder: Unsupported on base type&quot;;</span></span>
-<span id="L126"><span class="lineNum">     126</span> <span class="tlaUNC">           0 :     }</span></span>
-<span id="L127"><span class="lineNum">     127</span>              : </span>
-<span id="L128"><span class="lineNum">     128</span>              :     void setParentFolder(qint64 parentFolder);</span>
-<span id="L129"><span class="lineNum">     129</span>              :     void setFolderOpen(bool folderOpen);</span>
-<span id="L130"><span class="lineNum">     130</span>              :     </span>
-<span id="L131"><span class="lineNum">     131</span>              :     /**</span>
-<span id="L132"><span class="lineNum">     132</span>              :      * @brief Clears all news items.  Does NOT signal.</span>
-<span id="L133"><span class="lineNum">     133</span>              :      * @return </span>
-<span id="L134"><span class="lineNum">     134</span>              :      */</span>
-<span id="L135"><span class="lineNum">     135</span>              :     virtual void clearNews();</span>
-<span id="L136"><span class="lineNum">     136</span>              :     </span>
-<span id="L137"><span class="lineNum">     137</span>              :     /**</span>
-<span id="L138"><span class="lineNum">     138</span>              :      * @brief Provides direct access to the news list.</span>
-<span id="L139"><span class="lineNum">     139</span>              :      *</span>
-<span id="L140"><span class="lineNum">     140</span>              :      * Note: This represents news items that are loaded and can be viewed. As such it will</span>
-<span id="L141"><span class="lineNum">     141</span>              :      * slowly grow as more news items are added to the feed.</span>
-<span id="L142"><span class="lineNum">     142</span>              :      */</span>
-<span id="L143"><span class="lineNum">     143</span> <span class="tlaGNC tlaBgGNC">           1 :     inline NewsList* getNewsList() { return &amp;newsList; }</span></span>
-<span id="L144"><span class="lineNum">     144</span>              :     </span>
-<span id="L145"><span class="lineNum">     145</span>              :     /**</span>
-<span id="L146"><span class="lineNum">     146</span>              :      * @brief Used to set the bookmark internally.  External classes shouldn't need to call this.</span>
-<span id="L147"><span class="lineNum">     147</span>              :      * @param bookmark Item ID or -1 to clear.t</span>
-<span id="L148"><span class="lineNum">     148</span>              :      */</span>
-<span id="L149"><span class="lineNum">     149</span>              :     virtual void setBookmark(qint64 toBookmarkID);</span>
-<span id="L150"><span class="lineNum">     150</span>              :     </span>
-<span id="L151"><span class="lineNum">     151</span>              :     /**</span>
-<span id="L152"><span class="lineNum">     152</span>              :      * @param item</span>
-<span id="L153"><span class="lineNum">     153</span>              :      * @param allowBackward</span>
-<span id="L154"><span class="lineNum">     154</span>              :      * @return True if this item can be bookmarked.</span>
-<span id="L155"><span class="lineNum">     155</span>              :      */</span>
-<span id="L156"><span class="lineNum">     156</span>              :     virtual bool canBookmark(qint64 proposedBookmarkID, bool allowBackward);</span>
-<span id="L157"><span class="lineNum">     157</span>              :     </span>
-<span id="L158"><span class="lineNum">     158</span>              :     /**</span>
-<span id="L159"><span class="lineNum">     159</span>              :      * @brief Returns the current bookmark ID or -1 if none.</span>
-<span id="L160"><span class="lineNum">     160</span>              :      * @return </span>
-<span id="L161"><span class="lineNum">     161</span>              :      */</span>
-<span id="L162"><span class="lineNum">     162</span> <span class="tlaGNC">           3 :     inline qint64 getBookmarkID() const { return _bookmarkID; }</span></span>
-<span id="L163"><span class="lineNum">     163</span>              :     </span>
-<span id="L164"><span class="lineNum">     164</span>              :     /**</span>
-<span id="L165"><span class="lineNum">     165</span>              :      * @brief Detaches the feed ID when this feed is being disconnected.</span>
-<span id="L166"><span class="lineNum">     166</span>              :      */</span>
-<span id="L167"><span class="lineNum">     167</span> <span class="tlaUNC tlaBgUNC">           0 :     inline void clearDbId() { _id = -100; }</span></span>
-<span id="L168"><span class="lineNum">     168</span>              :     </span>
-<span id="L169"><span class="lineNum">     169</span>              :     /**</span>
-<span id="L170"><span class="lineNum">     170</span>              :      * @return The ID of the very first item in the feed that we have in our database;</span>
-<span id="L171"><span class="lineNum">     171</span>              :      *         not the ID that's necessarily currently loaded.</span>
-<span id="L172"><span class="lineNum">     172</span>              :      */</span>
-<span id="L173"><span class="lineNum">     173</span> <span class="tlaGNC tlaBgGNC">           3 :     inline qint64 getFirstNewsID() { return firstNewsID; }</span></span>
-<span id="L174"><span class="lineNum">     174</span>              :     </span>
-<span id="L175"><span class="lineNum">     175</span>              :     /**</span>
-<span id="L176"><span class="lineNum">     176</span>              :      * @brief setFirstNewsID Sets the first item available in the feed.  This is used</span>
-<span id="L177"><span class="lineNum">     177</span>              :      *                       to tell if we should draw the top bookmark to unbookmark all.</span>
-<span id="L178"><span class="lineNum">     178</span>              :      * @param id</span>
-<span id="L179"><span class="lineNum">     179</span>              :      */</span>
-<span id="L180"><span class="lineNum">     180</span> <span class="tlaGNC">           1 :     inline void setFirstNewsID(qint64 id) { firstNewsID = id; }</span></span>
-<span id="L181"><span class="lineNum">     181</span>              :     </span>
-<span id="L182"><span class="lineNum">     182</span>              :     /**</span>
-<span id="L183"><span class="lineNum">     183</span>              :      * @brief Sets the unread count to the new value and emits a change signal.</span>
-<span id="L184"><span class="lineNum">     184</span>              :      * @param unreadCount</span>
-<span id="L185"><span class="lineNum">     185</span>              :      */</span>
-<span id="L186"><span class="lineNum">     186</span>              :     void setUnreadCount(qint32 unreadCount);</span>
-<span id="L187"><span class="lineNum">     187</span>              :     </span>
-<span id="L188"><span class="lineNum">     188</span>              :     /**</span>
-<span id="L189"><span class="lineNum">     189</span>              :      * @brief Returns the ordinal (note: only really used in resorting the list.)</span>
-<span id="L190"><span class="lineNum">     190</span>              :      * @return </span>
-<span id="L191"><span class="lineNum">     191</span>              :      */</span>
-<span id="L192"><span class="lineNum">     192</span> <span class="tlaGNC">           6 :     inline int getOrdinal() const { return ordinal; }</span></span>
-<span id="L193"><span class="lineNum">     193</span>              :     </span>
-<span id="L194"><span class="lineNum">     194</span>              :     /**</span>
-<span id="L195"><span class="lineNum">     195</span>              :      * @brief Sets the ordinal.</span>
-<span id="L196"><span class="lineNum">     196</span>              :      */</span>
-<span id="L197"><span class="lineNum">     197</span>              :     void setOrdinal(int newOrdinal);</span>
-<span id="L198"><span class="lineNum">     198</span>              :     </span>
-<span id="L199"><span class="lineNum">     199</span>              :     /**</span>
-<span id="L200"><span class="lineNum">     200</span>              :      * @brief Sets the optional error flag.  Used in batch import.</span>
-<span id="L201"><span class="lineNum">     201</span>              :      * @param errorFlag</span>
-<span id="L202"><span class="lineNum">     202</span>              :      */</span>
-<span id="L203"><span class="lineNum">     203</span>              :     void setErrorFlag(bool errorFlag);</span>
-<span id="L204"><span class="lineNum">     204</span>              :     </span>
-<span id="L205"><span class="lineNum">     205</span>              :     /**</span>
-<span id="L206"><span class="lineNum">     206</span>              :      * @return True if error flag is set, else false.</span>
-<span id="L207"><span class="lineNum">     207</span>              :      */</span>
-<span id="L208"><span class="lineNum">     208</span> <span class="tlaGNC">          15 :     inline bool getErrorFlag() const { return _errorFlag; }</span></span>
-<span id="L209"><span class="lineNum">     209</span>              :     </span>
-<span id="L210"><span class="lineNum">     210</span>              :     /**</span>
-<span id="L211"><span class="lineNum">     211</span>              :      * @brief Changes the URL.</span>
-<span id="L212"><span class="lineNum">     212</span>              :      * @param url</span>
-<span id="L213"><span class="lineNum">     213</span>              :      */</span>
-<span id="L214"><span class="lineNum">     214</span>              :     void setURL(QUrl url);</span>
-<span id="L215"><span class="lineNum">     215</span>              :     </span>
-<span id="L216"><span class="lineNum">     216</span>              :     /**</span>
-<span id="L217"><span class="lineNum">     217</span>              :      * @return True if this item is selected.</span>
-<span id="L218"><span class="lineNum">     218</span>              :      */</span>
-<span id="L219"><span class="lineNum">     219</span> <span class="tlaGNC">          20 :     inline bool getIsSelected() const { return isSelected; }</span></span>
-<span id="L220"><span class="lineNum">     220</span>              :     </span>
-<span id="L221"><span class="lineNum">     221</span> <span class="tlaUNC tlaBgUNC">           0 :     void setLastIconUpdate(QDateTime last) { lastIconUpdate = last; }</span></span>
-<span id="L222"><span class="lineNum">     222</span> <span class="tlaGNC tlaBgGNC">           1 :     QDateTime getLastIconUpdate() { return lastIconUpdate; }</span></span>
-<span id="L223"><span class="lineNum">     223</span>              : </span>
-<span id="L224"><span class="lineNum">     224</span>              :     /**</span>
-<span id="L225"><span class="lineNum">     225</span>              :      * @brief If true, the feed supports bookmarks.  Otherwise false.</span>
-<span id="L226"><span class="lineNum">     226</span>              :      * @return  By default, returns true.  Override if you want it to return false.</span>
-<span id="L227"><span class="lineNum">     227</span>              :      */</span>
-<span id="L228"><span class="lineNum">     228</span>              :     virtual bool bookmarksEnabled() const;</span>
-<span id="L229"><span class="lineNum">     229</span>              : </span>
-<span id="L230"><span class="lineNum">     230</span>              :     /**</span>
-<span id="L231"><span class="lineNum">     231</span>              :      * @brief getParentFolderID</span>
-<span id="L232"><span class="lineNum">     232</span>              :      * @return The ID of the parent folder, or -1 if none.</span>
-<span id="L233"><span class="lineNum">     233</span>              :      */</span>
-<span id="L234"><span class="lineNum">     234</span> <span class="tlaGNC">           4 :     qint64 getParentFolderID() const {</span></span>
-<span id="L235"><span class="lineNum">     235</span> <span class="tlaGNC">           4 :         return _parentFolder;</span></span>
-<span id="L236"><span class="lineNum">     236</span>              :     }</span>
-<span id="L237"><span class="lineNum">     237</span>              :     </span>
-<span id="L238"><span class="lineNum">     238</span>              : signals:</span>
-<span id="L239"><span class="lineNum">     239</span>              :     </span>
-<span id="L240"><span class="lineNum">     240</span>              :     void appended(NewsItem* item);</span>
-<span id="L241"><span class="lineNum">     241</span>              :     void removed(NewsItem* item);</span>
-<span id="L242"><span class="lineNum">     242</span>              :     void titleChanged();</span>
-<span id="L243"><span class="lineNum">     243</span>              :     void unreadCountChanged(quint32 unread);</span>
-<span id="L244"><span class="lineNum">     244</span>              :     void folderOpenChanged();</span>
-<span id="L245"><span class="lineNum">     245</span>              :         </span>
-<span id="L246"><span class="lineNum">     246</span>              : private:</span>
-<span id="L247"><span class="lineNum">     247</span>              :     qint64 _id;</span>
-<span id="L248"><span class="lineNum">     248</span>              :     qint32 ordinal;</span>
-<span id="L249"><span class="lineNum">     249</span>              :     QString title;</span>
-<span id="L250"><span class="lineNum">     250</span>              :     QString subtitle;</span>
-<span id="L251"><span class="lineNum">     251</span>              :     QDateTime lastUpdated;</span>
-<span id="L252"><span class="lineNum">     252</span>              :     quint32 minutesToUpdate;</span>
-<span id="L253"><span class="lineNum">     253</span>              :     QUrl url;</span>
-<span id="L254"><span class="lineNum">     254</span>              :     QUrl siteURL;</span>
-<span id="L255"><span class="lineNum">     255</span>              :     QString userURL;</span>
-<span id="L256"><span class="lineNum">     256</span>              :     QUrl imageURL;</span>
-<span id="L257"><span class="lineNum">     257</span>              :     NewsList newsList;</span>
-<span id="L258"><span class="lineNum">     258</span>              :     int isUpdating;</span>
-<span id="L259"><span class="lineNum">     259</span>              :     qint32 unreadCount;</span>
-<span id="L260"><span class="lineNum">     260</span>              :     qint64 _bookmarkID;</span>
-<span id="L261"><span class="lineNum">     261</span>              :     QString dropTarget;</span>
-<span id="L262"><span class="lineNum">     262</span>              :     bool _errorFlag;</span>
-<span id="L263"><span class="lineNum">     263</span>              :     bool isSelected;</span>
-<span id="L264"><span class="lineNum">     264</span>              :     QDateTime lastIconUpdate;</span>
-<span id="L265"><span class="lineNum">     265</span>              :     qint64 firstNewsID;</span>
-<span id="L266"><span class="lineNum">     266</span>              :     qint64 _parentFolder;</span>
-<span id="L267"><span class="lineNum">     267</span>              :     bool _folderOpen;</span>
-<span id="L268"><span class="lineNum">     268</span>              : };</span>
-<span id="L269"><span class="lineNum">     269</span>              : </span>
-<span id="L270"><span class="lineNum">     270</span>              : #endif // FEEDITEM_H</span>
+<span id="L13"><span class="lineNum">      13</span>              : </span>
+<span id="L14"><span class="lineNum">      14</span>              : class NewsItem;</span>
+<span id="L15"><span class="lineNum">      15</span>              : class NewsList;</span>
+<span id="L16"><span class="lineNum">      16</span>              : </span>
+<span id="L17"><span class="lineNum">      17</span>              : // IDs of special feeds.  (Normal feed IDs start at 0.)</span>
+<span id="L18"><span class="lineNum">      18</span>              : </span>
+<span id="L19"><span class="lineNum">      19</span>              : enum SpecialFeedID {</span>
+<span id="L20"><span class="lineNum">      20</span>              :     FEED_ID_ALLNEWS = -2,</span>
+<span id="L21"><span class="lineNum">      21</span>              :     FEED_ID_PINNED = -1</span>
+<span id="L22"><span class="lineNum">      22</span>              : };</span>
+<span id="L23"><span class="lineNum">      23</span>              : </span>
+<span id="L24"><span class="lineNum">      24</span>              : class FeedItem : public ListItem, DBObject</span>
+<span id="L25"><span class="lineNum">      25</span>              : {</span>
+<span id="L26"><span class="lineNum">      26</span>              :     Q_OBJECT</span>
+<span id="L27"><span class="lineNum">      27</span>              :     </span>
+<span id="L28"><span class="lineNum">      28</span>              : public:</span>
+<span id="L29"><span class="lineNum">      29</span>              :     </span>
+<span id="L30"><span class="lineNum">      30</span>              :     enum Roles {</span>
+<span id="L31"><span class="lineNum">      31</span>              :         TitleRole = Qt::UserRole+1,</span>
+<span id="L32"><span class="lineNum">      32</span>              :         SubtitleRole,</span>
+<span id="L33"><span class="lineNum">      33</span>              :         LastUpdatedRole,</span>
+<span id="L34"><span class="lineNum">      34</span>              :         MinutesToUpdateRole,</span>
+<span id="L35"><span class="lineNum">      35</span>              :         UrlRole,</span>
+<span id="L36"><span class="lineNum">      36</span>              :         SiteURLRole,</span>
+<span id="L37"><span class="lineNum">      37</span>              :         ImageURLRole,</span>
+<span id="L38"><span class="lineNum">      38</span>              :         IsUpdatingRole,</span>
+<span id="L39"><span class="lineNum">      39</span>              :         UnreadCountRole,</span>
+<span id="L40"><span class="lineNum">      40</span>              :         DropTargetRole,</span>
+<span id="L41"><span class="lineNum">      41</span>              :         ErrorFlagRole,</span>
+<span id="L42"><span class="lineNum">      42</span>              :         IsSelectedRole,</span>
+<span id="L43"><span class="lineNum">      43</span>              :         IsSpecialFeedRole,</span>
+<span id="L44"><span class="lineNum">      44</span>              :         IsFolderRole,</span>
+<span id="L45"><span class="lineNum">      45</span>              :         ParentFolderRole,</span>
+<span id="L46"><span class="lineNum">      46</span>              :         FolderOpenRole,</span>
+<span id="L47"><span class="lineNum">      47</span>              :         BookmarksEnabledRole,</span>
+<span id="L48"><span class="lineNum">      48</span>              :         UIDRole,</span>
+<span id="L49"><span class="lineNum">      49</span>              :         SelfRole</span>
+<span id="L50"><span class="lineNum">      50</span>              :     };</span>
+<span id="L51"><span class="lineNum">      51</span>              :     </span>
+<span id="L52"><span class="lineNum">      52</span>              :     FeedItem(QObject *parent = nullptr);</span>
+<span id="L53"><span class="lineNum">      53</span>              :     </span>
+<span id="L54"><span class="lineNum">      54</span>              :     // This class is immutable, so this is the c'tor you'll want to use.</span>
+<span id="L55"><span class="lineNum">      55</span>              :     explicit FeedItem(</span>
+<span id="L56"><span class="lineNum">      56</span>              :             const qint64 id,</span>
+<span id="L57"><span class="lineNum">      57</span>              :             const qint32 ordinal,</span>
+<span id="L58"><span class="lineNum">      58</span>              :             const QString&amp; title,</span>
+<span id="L59"><span class="lineNum">      59</span>              :             const QString&amp; subtitle,</span>
+<span id="L60"><span class="lineNum">      60</span>              :             const QDateTime&amp; lastUpdated,</span>
+<span id="L61"><span class="lineNum">      61</span>              :             quint32 minutesToUpdate,</span>
+<span id="L62"><span class="lineNum">      62</span>              :             const QUrl&amp; url,</span>
+<span id="L63"><span class="lineNum">      63</span>              :             const QUrl&amp; siteURL,</span>
+<span id="L64"><span class="lineNum">      64</span>              :             const QString&amp; userURL,</span>
+<span id="L65"><span class="lineNum">      65</span>              :             const QUrl&amp; imageURL,</span>
+<span id="L66"><span class="lineNum">      66</span>              :             const QDateTime&amp; lastIconUpdate,</span>
+<span id="L67"><span class="lineNum">      67</span>              :             qint64 parentFolder = -1, // Default values for top level non-folder.</span>
+<span id="L68"><span class="lineNum">      68</span>              :             bool folderOpen = true,   // TODO: Save folder open state from last session.</span>
+<span id="L69"><span class="lineNum">      69</span>              :             QObject *parent = nullptr);</span>
+<span id="L70"><span class="lineNum">      70</span>              :     </span>
+<span id="L71"><span class="lineNum">      71</span>              :     virtual ~FeedItem();</span>
+<span id="L72"><span class="lineNum">      72</span>              :     </span>
+<span id="L73"><span class="lineNum">      73</span>              :     /**</span>
+<span id="L74"><span class="lineNum">      74</span>              :      * @brief Ordinal-based sort, used for re-sorting the list.</span>
+<span id="L75"><span class="lineNum">      75</span>              :      * @param rhs</span>
+<span id="L76"><span class="lineNum">      76</span>              :      * @return </span>
+<span id="L77"><span class="lineNum">      77</span>              :      */</span>
+<span id="L78"><span class="lineNum">      78</span>              :     bool operator&lt;(const FeedItem&amp; rhs);</span>
+<span id="L79"><span class="lineNum">      79</span>              :     </span>
+<span id="L80"><span class="lineNum">      80</span>              :     QVariant data(int role) const;</span>
+<span id="L81"><span class="lineNum">      81</span>              :     bool setData(const QVariant &amp;value, int role);</span>
+<span id="L82"><span class="lineNum">      82</span>              :     Qt::ItemFlags flags() const;</span>
+<span id="L83"><span class="lineNum">      83</span>              :     QHash&lt;int, QByteArray&gt; roleNames() const;</span>
+<span id="L84"><span class="lineNum">      84</span>              :     </span>
+<span id="L85"><span class="lineNum">      85</span>              :     void setIsUpdating(bool isUpdating);</span>
+<span id="L86"><span class="lineNum">      86</span>              :     </span>
+<span id="L87"><span class="lineNum">      87</span>              :     // Unused, required for ListItem base class.</span>
+<span id="L88"><span class="lineNum">      88</span> <span class="tlaUNC tlaBgUNC">           0 :     inline QString id() const {</span></span>
+<span id="L89"><span class="lineNum">      89</span> <span class="tlaUNC">           0 :         QString ret;</span></span>
+<span id="L90"><span class="lineNum">      90</span> <span class="tlaUNC">           0 :         QTextStream output(&amp;ret);</span></span>
+<span id="L91"><span class="lineNum">      91</span> <span class="tlaUNC">           0 :         output &lt;&lt; &quot;FeedItem_&quot; &lt;&lt; _id;</span></span>
+<span id="L92"><span class="lineNum">      92</span> <span class="tlaUNC">           0 :         return ret;</span></span>
+<span id="L93"><span class="lineNum">      93</span> <span class="tlaUNC">           0 :     }</span></span>
+<span id="L94"><span class="lineNum">      94</span>              : </span>
+<span id="L95"><span class="lineNum">      95</span>              : public slots:</span>
+<span id="L96"><span class="lineNum">      96</span>              :     </span>
+<span id="L97"><span class="lineNum">      97</span> <span class="tlaGNC tlaBgGNC">          17 :     inline QString getTitle() const { return title; }</span></span>
+<span id="L98"><span class="lineNum">      98</span> <span class="tlaGNC">           4 :     inline QString getSubtitle() const { return subtitle; }</span></span>
+<span id="L99"><span class="lineNum">      99</span> <span class="tlaGNC">           3 :     inline QDateTime getLastUpdated() const { return lastUpdated; }</span></span>
+<span id="L100"><span class="lineNum">     100</span> <span class="tlaGNC">           4 :     inline quint32 getMinutesToUpdate() const { return minutesToUpdate; }</span></span>
+<span id="L101"><span class="lineNum">     101</span> <span class="tlaGNC">          29 :     inline QUrl getURL() const { return url; }</span></span>
+<span id="L102"><span class="lineNum">     102</span> <span class="tlaGNC">          14 :     inline QUrl getSiteURL() const { return siteURL; }</span></span>
+<span id="L103"><span class="lineNum">     103</span> <span class="tlaGNC">           2 :     inline QString getUserURL() const { return userURL; }</span></span>
+<span id="L104"><span class="lineNum">     104</span> <span class="tlaGNC">           4 :     inline QUrl getImageURL() const { return imageURL; }</span></span>
+<span id="L105"><span class="lineNum">     105</span> <span class="tlaGNC">          20 :     inline int getIsUpdating() const { return isUpdating; }</span></span>
+<span id="L106"><span class="lineNum">     106</span> <span class="tlaGNC">           4 :     inline quint32 getUnreadCount() const { return unreadCount; }</span></span>
+<span id="L107"><span class="lineNum">     107</span> <span class="tlaGNC">           5 :     inline QString getDropTarget() const { return dropTarget; }</span></span>
+<span id="L108"><span class="lineNum">     108</span> <span class="tlaGNC">           2 :     inline FeedItem* getSelf() const { return const_cast&lt;FeedItem*&gt;(this); }</span></span>
+<span id="L109"><span class="lineNum">     109</span> <span class="tlaGNC">          88 :     virtual inline qint64 getDbID() const { return _id; }</span></span>
+<span id="L110"><span class="lineNum">     110</span> <span class="tlaGNC">           4 :     inline bool isSpecialFeed() const { return _id &lt; 0; }</span></span>
+<span id="L111"><span class="lineNum">     111</span>              :     </span>
+<span id="L112"><span class="lineNum">     112</span>              :     void setImageURL(const QUrl&amp; url);</span>
+<span id="L113"><span class="lineNum">     113</span>              :     </span>
+<span id="L114"><span class="lineNum">     114</span>              :     void setTitle(const QString&amp; newTitle);</span>
+<span id="L115"><span class="lineNum">     115</span>              :     </span>
+<span id="L116"><span class="lineNum">     116</span>              :     void setDropTarget(const QString&amp; dropTarget);</span>
+<span id="L117"><span class="lineNum">     117</span>              :     </span>
+<span id="L118"><span class="lineNum">     118</span>              :     void setIsSelected(bool s);</span>
+<span id="L119"><span class="lineNum">     119</span>              : </span>
+<span id="L120"><span class="lineNum">     120</span>              :     // Override for folders.</span>
+<span id="L121"><span class="lineNum">     121</span> <span class="tlaGNC">           2 :     virtual bool isFolder() const { return false; }</span></span>
+<span id="L122"><span class="lineNum">     122</span> <span class="tlaUNC tlaBgUNC">           0 :     virtual void setIsFolder(bool isFolder) {</span></span>
+<span id="L123"><span class="lineNum">     123</span>              :         Q_UNUSED(isFolder);</span>
+<span id="L124"><span class="lineNum">     124</span> <span class="tlaUNC">           0 :         qCritical() &lt;&lt; &quot;FeedItem::setIsFolder: Unsupported on base type&quot;;</span></span>
+<span id="L125"><span class="lineNum">     125</span> <span class="tlaUNC">           0 :     }</span></span>
+<span id="L126"><span class="lineNum">     126</span>              : </span>
+<span id="L127"><span class="lineNum">     127</span>              :     void setParentFolder(qint64 parentFolder);</span>
+<span id="L128"><span class="lineNum">     128</span>              :     void setFolderOpen(bool folderOpen);</span>
+<span id="L129"><span class="lineNum">     129</span>              :     </span>
+<span id="L130"><span class="lineNum">     130</span>              :     /**</span>
+<span id="L131"><span class="lineNum">     131</span>              :      * @brief Clears all news items.  Does NOT signal.</span>
+<span id="L132"><span class="lineNum">     132</span>              :      * @return </span>
+<span id="L133"><span class="lineNum">     133</span>              :      */</span>
+<span id="L134"><span class="lineNum">     134</span>              :     virtual void clearNews();</span>
+<span id="L135"><span class="lineNum">     135</span>              :     </span>
+<span id="L136"><span class="lineNum">     136</span>              :     /**</span>
+<span id="L137"><span class="lineNum">     137</span>              :      * @brief Provides direct access to the news list.</span>
+<span id="L138"><span class="lineNum">     138</span>              :      *</span>
+<span id="L139"><span class="lineNum">     139</span>              :      * Note: This represents news items that are loaded and can be viewed. As such it will</span>
+<span id="L140"><span class="lineNum">     140</span>              :      * slowly grow as more news items are added to the feed.</span>
+<span id="L141"><span class="lineNum">     141</span>              :      */</span>
+<span id="L142"><span class="lineNum">     142</span> <span class="tlaGNC tlaBgGNC">           1 :     inline NewsList* getNewsList() { return &amp;newsList; }</span></span>
+<span id="L143"><span class="lineNum">     143</span>              :     </span>
+<span id="L144"><span class="lineNum">     144</span>              :     /**</span>
+<span id="L145"><span class="lineNum">     145</span>              :      * @brief Used to set the bookmark internally.  External classes shouldn't need to call this.</span>
+<span id="L146"><span class="lineNum">     146</span>              :      * @param bookmark Item ID or -1 to clear.t</span>
+<span id="L147"><span class="lineNum">     147</span>              :      */</span>
+<span id="L148"><span class="lineNum">     148</span>              :     virtual void setBookmark(qint64 toBookmarkID);</span>
+<span id="L149"><span class="lineNum">     149</span>              :     </span>
+<span id="L150"><span class="lineNum">     150</span>              :     /**</span>
+<span id="L151"><span class="lineNum">     151</span>              :      * @param item</span>
+<span id="L152"><span class="lineNum">     152</span>              :      * @param allowBackward</span>
+<span id="L153"><span class="lineNum">     153</span>              :      * @return True if this item can be bookmarked.</span>
+<span id="L154"><span class="lineNum">     154</span>              :      */</span>
+<span id="L155"><span class="lineNum">     155</span>              :     virtual bool canBookmark(qint64 proposedBookmarkID, bool allowBackward);</span>
+<span id="L156"><span class="lineNum">     156</span>              :     </span>
+<span id="L157"><span class="lineNum">     157</span>              :     /**</span>
+<span id="L158"><span class="lineNum">     158</span>              :      * @brief Returns the current bookmark ID or -1 if none.</span>
+<span id="L159"><span class="lineNum">     159</span>              :      * @return </span>
+<span id="L160"><span class="lineNum">     160</span>              :      */</span>
+<span id="L161"><span class="lineNum">     161</span> <span class="tlaGNC">           3 :     inline qint64 getBookmarkID() const { return _bookmarkID; }</span></span>
+<span id="L162"><span class="lineNum">     162</span>              :     </span>
+<span id="L163"><span class="lineNum">     163</span>              :     /**</span>
+<span id="L164"><span class="lineNum">     164</span>              :      * @brief Detaches the feed ID when this feed is being disconnected.</span>
+<span id="L165"><span class="lineNum">     165</span>              :      */</span>
+<span id="L166"><span class="lineNum">     166</span> <span class="tlaUNC tlaBgUNC">           0 :     inline void clearDbId() { _id = -100; }</span></span>
+<span id="L167"><span class="lineNum">     167</span>              :     </span>
+<span id="L168"><span class="lineNum">     168</span>              :     /**</span>
+<span id="L169"><span class="lineNum">     169</span>              :      * @return The ID of the very first item in the feed that we have in our database;</span>
+<span id="L170"><span class="lineNum">     170</span>              :      *         not the ID that's necessarily currently loaded.</span>
+<span id="L171"><span class="lineNum">     171</span>              :      */</span>
+<span id="L172"><span class="lineNum">     172</span> <span class="tlaGNC tlaBgGNC">           3 :     inline qint64 getFirstNewsID() { return firstNewsID; }</span></span>
+<span id="L173"><span class="lineNum">     173</span>              :     </span>
+<span id="L174"><span class="lineNum">     174</span>              :     /**</span>
+<span id="L175"><span class="lineNum">     175</span>              :      * @brief setFirstNewsID Sets the first item available in the feed.  This is used</span>
+<span id="L176"><span class="lineNum">     176</span>              :      *                       to tell if we should draw the top bookmark to unbookmark all.</span>
+<span id="L177"><span class="lineNum">     177</span>              :      * @param id</span>
+<span id="L178"><span class="lineNum">     178</span>              :      */</span>
+<span id="L179"><span class="lineNum">     179</span> <span class="tlaGNC">           1 :     inline void setFirstNewsID(qint64 id) { firstNewsID = id; }</span></span>
+<span id="L180"><span class="lineNum">     180</span>              :     </span>
+<span id="L181"><span class="lineNum">     181</span>              :     /**</span>
+<span id="L182"><span class="lineNum">     182</span>              :      * @brief Sets the unread count to the new value and emits a change signal.</span>
+<span id="L183"><span class="lineNum">     183</span>              :      * @param unreadCount</span>
+<span id="L184"><span class="lineNum">     184</span>              :      */</span>
+<span id="L185"><span class="lineNum">     185</span>              :     void setUnreadCount(qint32 unreadCount);</span>
+<span id="L186"><span class="lineNum">     186</span>              :     </span>
+<span id="L187"><span class="lineNum">     187</span>              :     /**</span>
+<span id="L188"><span class="lineNum">     188</span>              :      * @brief Returns the ordinal (note: only really used in resorting the list.)</span>
+<span id="L189"><span class="lineNum">     189</span>              :      * @return </span>
+<span id="L190"><span class="lineNum">     190</span>              :      */</span>
+<span id="L191"><span class="lineNum">     191</span> <span class="tlaGNC">           6 :     inline int getOrdinal() const { return ordinal; }</span></span>
+<span id="L192"><span class="lineNum">     192</span>              :     </span>
+<span id="L193"><span class="lineNum">     193</span>              :     /**</span>
+<span id="L194"><span class="lineNum">     194</span>              :      * @brief Sets the ordinal.</span>
+<span id="L195"><span class="lineNum">     195</span>              :      */</span>
+<span id="L196"><span class="lineNum">     196</span>              :     void setOrdinal(int newOrdinal);</span>
+<span id="L197"><span class="lineNum">     197</span>              :     </span>
+<span id="L198"><span class="lineNum">     198</span>              :     /**</span>
+<span id="L199"><span class="lineNum">     199</span>              :      * @brief Sets the optional error flag.  Used in batch import.</span>
+<span id="L200"><span class="lineNum">     200</span>              :      * @param errorFlag</span>
+<span id="L201"><span class="lineNum">     201</span>              :      */</span>
+<span id="L202"><span class="lineNum">     202</span>              :     void setErrorFlag(bool errorFlag);</span>
+<span id="L203"><span class="lineNum">     203</span>              :     </span>
+<span id="L204"><span class="lineNum">     204</span>              :     /**</span>
+<span id="L205"><span class="lineNum">     205</span>              :      * @return True if error flag is set, else false.</span>
+<span id="L206"><span class="lineNum">     206</span>              :      */</span>
+<span id="L207"><span class="lineNum">     207</span> <span class="tlaGNC">          18 :     inline bool getErrorFlag() const { return _errorFlag; }</span></span>
+<span id="L208"><span class="lineNum">     208</span>              :     </span>
+<span id="L209"><span class="lineNum">     209</span>              :     /**</span>
+<span id="L210"><span class="lineNum">     210</span>              :      * @brief Changes the URL.</span>
+<span id="L211"><span class="lineNum">     211</span>              :      * @param url</span>
+<span id="L212"><span class="lineNum">     212</span>              :      */</span>
+<span id="L213"><span class="lineNum">     213</span>              :     void setURL(QUrl url);</span>
+<span id="L214"><span class="lineNum">     214</span>              :     </span>
+<span id="L215"><span class="lineNum">     215</span>              :     /**</span>
+<span id="L216"><span class="lineNum">     216</span>              :      * @return True if this item is selected.</span>
+<span id="L217"><span class="lineNum">     217</span>              :      */</span>
+<span id="L218"><span class="lineNum">     218</span> <span class="tlaGNC">          20 :     inline bool getIsSelected() const { return isSelected; }</span></span>
+<span id="L219"><span class="lineNum">     219</span>              :     </span>
+<span id="L220"><span class="lineNum">     220</span> <span class="tlaUNC tlaBgUNC">           0 :     void setLastIconUpdate(QDateTime last) { lastIconUpdate = last; }</span></span>
+<span id="L221"><span class="lineNum">     221</span> <span class="tlaGNC tlaBgGNC">           1 :     QDateTime getLastIconUpdate() { return lastIconUpdate; }</span></span>
+<span id="L222"><span class="lineNum">     222</span>              : </span>
+<span id="L223"><span class="lineNum">     223</span>              :     /**</span>
+<span id="L224"><span class="lineNum">     224</span>              :      * @brief If true, the feed supports bookmarks.  Otherwise false.</span>
+<span id="L225"><span class="lineNum">     225</span>              :      * @return  By default, returns true.  Override if you want it to return false.</span>
+<span id="L226"><span class="lineNum">     226</span>              :      */</span>
+<span id="L227"><span class="lineNum">     227</span>              :     virtual bool bookmarksEnabled() const;</span>
+<span id="L228"><span class="lineNum">     228</span>              : </span>
+<span id="L229"><span class="lineNum">     229</span>              :     /**</span>
+<span id="L230"><span class="lineNum">     230</span>              :      * @brief getParentFolderID</span>
+<span id="L231"><span class="lineNum">     231</span>              :      * @return The ID of the parent folder, or -1 if none.</span>
+<span id="L232"><span class="lineNum">     232</span>              :      */</span>
+<span id="L233"><span class="lineNum">     233</span> <span class="tlaGNC">           4 :     qint64 getParentFolderID() const {</span></span>
+<span id="L234"><span class="lineNum">     234</span> <span class="tlaGNC">           4 :         return _parentFolder;</span></span>
+<span id="L235"><span class="lineNum">     235</span>              :     }</span>
+<span id="L236"><span class="lineNum">     236</span>              :     </span>
+<span id="L237"><span class="lineNum">     237</span>              : signals:</span>
+<span id="L238"><span class="lineNum">     238</span>              :     </span>
+<span id="L239"><span class="lineNum">     239</span>              :     void appended(NewsItem* item);</span>
+<span id="L240"><span class="lineNum">     240</span>              :     void removed(NewsItem* item);</span>
+<span id="L241"><span class="lineNum">     241</span>              :     void titleChanged();</span>
+<span id="L242"><span class="lineNum">     242</span>              :     void unreadCountChanged(quint32 unread);</span>
+<span id="L243"><span class="lineNum">     243</span>              :     void folderOpenChanged();</span>
+<span id="L244"><span class="lineNum">     244</span>              :         </span>
+<span id="L245"><span class="lineNum">     245</span>              : private:</span>
+<span id="L246"><span class="lineNum">     246</span>              :     qint64 _id;</span>
+<span id="L247"><span class="lineNum">     247</span>              :     qint32 ordinal;</span>
+<span id="L248"><span class="lineNum">     248</span>              :     QString title;</span>
+<span id="L249"><span class="lineNum">     249</span>              :     QString subtitle;</span>
+<span id="L250"><span class="lineNum">     250</span>              :     QDateTime lastUpdated;</span>
+<span id="L251"><span class="lineNum">     251</span>              :     quint32 minutesToUpdate;</span>
+<span id="L252"><span class="lineNum">     252</span>              :     QUrl url;</span>
+<span id="L253"><span class="lineNum">     253</span>              :     QUrl siteURL;</span>
+<span id="L254"><span class="lineNum">     254</span>              :     QString userURL;</span>
+<span id="L255"><span class="lineNum">     255</span>              :     QUrl imageURL;</span>
+<span id="L256"><span class="lineNum">     256</span>              :     NewsList newsList;</span>
+<span id="L257"><span class="lineNum">     257</span>              :     int isUpdating;</span>
+<span id="L258"><span class="lineNum">     258</span>              :     qint32 unreadCount;</span>
+<span id="L259"><span class="lineNum">     259</span>              :     qint64 _bookmarkID;</span>
+<span id="L260"><span class="lineNum">     260</span>              :     QString dropTarget;</span>
+<span id="L261"><span class="lineNum">     261</span>              :     bool _errorFlag;</span>
+<span id="L262"><span class="lineNum">     262</span>              :     bool isSelected;</span>
+<span id="L263"><span class="lineNum">     263</span>              :     QDateTime lastIconUpdate;</span>
+<span id="L264"><span class="lineNum">     264</span>              :     qint64 firstNewsID;</span>
+<span id="L265"><span class="lineNum">     265</span>              :     qint64 _parentFolder;</span>
+<span id="L266"><span class="lineNum">     266</span>              :     bool _folderOpen;</span>
+<span id="L267"><span class="lineNum">     267</span>              : };</span>
+<span id="L268"><span class="lineNum">     268</span>              : </span>
+<span id="L269"><span class="lineNum">     269</span>              : #endif // FEEDITEM_H</span>
         </pre>
               </td>
             </tr>
