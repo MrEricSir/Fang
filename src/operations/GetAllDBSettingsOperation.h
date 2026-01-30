@@ -8,8 +8,8 @@
 #include <QString>
 #include <QMap>
 
-/**
- * @brief Loads every setting stored in the database into a key/value pair map.
+/*!
+    \brief Loads every setting stored in the database into a key/value pair map.
  */
 class GetAllDBSettingsOperation : public DBOperation
 {

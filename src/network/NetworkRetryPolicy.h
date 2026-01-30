@@ -4,8 +4,8 @@
 #include <QObject>
 #include <QNetworkReply>
 
-/**
- * @brief Defines retry behavior.
+/*!
+    \brief Defines retry behavior.
  */
 class NetworkRetryPolicy
 {
@@ -28,38 +28,38 @@ public:
     static NetworkRetryPolicy forCritical();
     static NetworkRetryPolicy noRetry();
 
-    /**
-     * @brief Whether or not we should try, try again.
+    /*!
+        \brief Whether or not we should try, try again.
      */
     bool isRetryable(QNetworkReply::NetworkError error) const;
 
-    /**
-     * @brief Returns retry delay.
+    /*!
+        \brief Returns retry delay.
      */
     int calculateDelay(int attemptNumber) const;
 
-    /**
-     * @brief Returns max retries.
+    /*!
+        \brief Returns max retries.
      */
     int maxRetries() const { return maxNumRetries; }
 
-    /**
-     * @brief Check if retries should continue or give up.
+    /*!
+        \brief Check if retries should continue or give up.
      */
     bool shouldRetry(int currentAttempt) const { return currentAttempt < maxNumRetries; }
 
-    /**
-     * @brief Sets if we will retry on timeout errors.
+    /*!
+        \brief Sets if we will retry on timeout errors.
      */
     void setRetryOnTimeout(bool retry) { shouldRetryOnTimeout = retry; }
 
-    /**
-     * @brief Sets if we will retry on DNS errors.
+    /*!
+        \brief Sets if we will retry on DNS errors.
      */
     void setRetryOnDnsFailure(bool retry) { shouldRetryOnDnsFailure = retry; }
 
-    /**
-     * @brief Sets if we will retry on connection refused.
+    /*!
+        \brief Sets if we will retry on connection refused.
      */
     void setRetryOnConnectionRefused(bool retry) { shouldRetryOnConnectionRefused = retry; }
 

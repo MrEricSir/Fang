@@ -22,8 +22,8 @@ public slots:
     virtual void execute();
     
 private slots:
-    /**
-     * @brief Grabber found a favicon, maybe.
+    /*!
+        \brief Grabber found a favicon, maybe.
      */
     void onGrabberFinished(const QString& faviconDataUri);
     

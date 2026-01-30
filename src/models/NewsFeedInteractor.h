@@ -8,8 +8,8 @@
 #include "../operations/OperationManager.h"
 #include "../operations/Operation.h"
 
-/**
- * @brief Interacts with the QML layer of the news view.
+/*!
+    \brief Interacts with the QML layer of the news view.
  */
 class NewsFeedInteractor : public QQuickItem
 {
@@ -31,13 +31,13 @@ public:
 
 signals:
 
-    /**
-     * @brief The number of special feeds in the feed list has changed.
+    /*!
+        \brief The number of special feeds in the feed list has changed.
      */
     void specialFeedCountChanged();
 
-    /**
-     * @brief Number of unread news items in all feeds has changed.
+    /*!
+        \brief Number of unread news items in all feeds has changed.
      */
     void allUnreadCountChanged();
 

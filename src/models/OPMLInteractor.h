@@ -14,15 +14,15 @@
 #include "FeedItem.h"
 #include "../utilities/BatchFeedDiscovery.h"
 
-/**
- * @brief Handles interaction with the QML dialogs for OPML import/export.
- * 
- * Elaine: Art Vandelay? This is my boyfriend?
- *  Jerry: That's your boyfriend.
- * Elaine: What does he do?
- *  Jerry: He's an importer.
- * Elaine: Just imports? No exports?
- *  Jerry: He's an importer-exporter. Okay?
+/*!
+    \brief Handles interaction with the QML dialogs for OPML import/export.
+
+    Elaine: Art Vandelay? This is my boyfriend?
+     Jerry: That's your boyfriend.
+    Elaine: What does he do?
+     Jerry: He's an importer.
+    Elaine: Just imports? No exports?
+     Jerry: He's an importer-exporter. Okay?
  */
 class OPMLInteractor : public QQuickItem
 {

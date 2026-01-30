@@ -7,8 +7,8 @@
 #include "../models/FeedItem.h"
 #include "../models/ListModel.h"
 
-/**
- * @brief Removes an existing feed from the model and DB.
+/*!
+    \brief Removes an existing feed from the model and DB.
  */
 class RemoveFeedOperation : public DBOperationSynchronous
 {

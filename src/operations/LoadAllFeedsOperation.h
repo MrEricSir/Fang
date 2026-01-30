@@ -10,10 +10,10 @@
 #include "../models/FeedItem.h"
 #include "../models/ListModel.h"
 
-/**
- * @brief Initializes and loads all existing feeds off the disk.
- * Adds "all news" meta-item to the list.
- * (Does not perform network update or any fancy shenaniganry like that.)
+/*!
+    \brief Initializes and loads all existing feeds off the disk.
+    Adds "all news" meta-item to the list.
+    (Does not perform network update or any fancy shenaniganry like that.)
  */
 class LoadAllFeedsOperation : public DBOperation
 {

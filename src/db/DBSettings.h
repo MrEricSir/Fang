@@ -9,8 +9,8 @@
 
 #include "../operations/OperationManager.h"
 
-/**
- * @brief A key/value store for saving special settings in the database.
+/*!
+    \brief A key/value store for saving special settings in the database.
  */
 class DBSettings : public QObject
 {

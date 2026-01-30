@@ -70,10 +70,10 @@ public:
     
     virtual ~FeedItem();
     
-    /**
-     * @brief Ordinal-based sort, used for re-sorting the list.
-     * @param rhs
-     * @return 
+    /*!
+        \brief Ordinal-based sort, used for re-sorting the list.
+        \param rhs
+        \return
      */
     bool operator<(const FeedItem& rhs);
     
@@ -127,108 +127,108 @@ public slots:
     void setParentFolder(qint64 parentFolder);
     void setFolderOpen(bool folderOpen);
     
-    /**
-     * @brief Clears all news items.  Does NOT signal.
-     * @return 
+    /*!
+        \brief Clears all news items.  Does NOT signal.
+        \return
      */
     virtual void clearNews();
     
-    /**
-     * @brief Provides direct access to the news list.
-     *
-     * Note: This represents news items that are loaded and can be viewed. As such it will
-     * slowly grow as more news items are added to the feed.
+    /*!
+        \brief Provides direct access to the news list.
+
+        Note: This represents news items that are loaded and can be viewed. As such it will
+        slowly grow as more news items are added to the feed.
      */
     inline NewsList* getNewsList() { return &newsList; }
     
-    /**
-     * @brief Used to set the bookmark internally.  External classes shouldn't need to call this.
-     * @param bookmark Item ID or -1 to clear.t
+    /*!
+        \brief Used to set the bookmark internally.  External classes shouldn't need to call this.
+        \param bookmark Item ID or -1 to clear.t
      */
     virtual void setBookmark(qint64 toBookmarkID);
     
-    /**
-     * @param item
-     * @param allowBackward
-     * @return True if this item can be bookmarked.
+    /*!
+        \param item
+        \param allowBackward
+        \return True if this item can be bookmarked.
      */
     virtual bool canBookmark(qint64 proposedBookmarkID, bool allowBackward);
     
-    /**
-     * @brief Returns the current bookmark ID or -1 if none.
-     * @return 
+    /*!
+        \brief Returns the current bookmark ID or -1 if none.
+        \return
      */
     inline qint64 getBookmarkID() const { return _bookmarkID; }
     
-    /**
-     * @brief Detaches the feed ID when this feed is being disconnected.
+    /*!
+        \brief Detaches the feed ID when this feed is being disconnected.
      */
     inline void clearDbId() { _id = -100; }
     
-    /**
-     * @return The ID of the very first item in the feed that we have in our database;
-     *         not the ID that's necessarily currently loaded.
+    /*!
+        \return The ID of the very first item in the feed that we have in our database;
+                not the ID that's necessarily currently loaded.
      */
     inline qint64 getFirstNewsID() { return firstNewsID; }
     
-    /**
-     * @brief setFirstNewsID Sets the first item available in the feed.  This is used
-     *                       to tell if we should draw the top bookmark to unbookmark all.
-     * @param id
+    /*!
+        \brief setFirstNewsID Sets the first item available in the feed.  This is used
+                              to tell if we should draw the top bookmark to unbookmark all.
+        \param id
      */
     inline void setFirstNewsID(qint64 id) { firstNewsID = id; }
     
-    /**
-     * @brief Sets the unread count to the new value and emits a change signal.
-     * @param unreadCount
+    /*!
+        \brief Sets the unread count to the new value and emits a change signal.
+        \param unreadCount
      */
     void setUnreadCount(qint32 unreadCount);
     
-    /**
-     * @brief Returns the ordinal (note: only really used in resorting the list.)
-     * @return 
+    /*!
+        \brief Returns the ordinal (note: only really used in resorting the list.)
+        \return
      */
     inline int getOrdinal() const { return ordinal; }
     
-    /**
-     * @brief Sets the ordinal.
+    /*!
+        \brief Sets the ordinal.
      */
     void setOrdinal(int newOrdinal);
     
-    /**
-     * @brief Sets the optional error flag.  Used in batch import.
-     * @param errorFlag
+    /*!
+        \brief Sets the optional error flag.  Used in batch import.
+        \param errorFlag
      */
     void setErrorFlag(bool errorFlag);
     
-    /**
-     * @return True if error flag is set, else false.
+    /*!
+        \return True if error flag is set, else false.
      */
     inline bool getErrorFlag() const { return _errorFlag; }
     
-    /**
-     * @brief Changes the URL.
-     * @param url
+    /*!
+        \brief Changes the URL.
+        \param url
      */
     void setURL(QUrl url);
     
-    /**
-     * @return True if this item is selected.
+    /*!
+        \return True if this item is selected.
      */
     inline bool getIsSelected() const { return isSelected; }
     
     void setLastIconUpdate(QDateTime last) { lastIconUpdate = last; }
     QDateTime getLastIconUpdate() { return lastIconUpdate; }
 
-    /**
-     * @brief If true, the feed supports bookmarks.  Otherwise false.
-     * @return  By default, returns true.  Override if you want it to return false.
+    /*!
+        \brief If true, the feed supports bookmarks.  Otherwise false.
+        \return  By default, returns true.  Override if you want it to return false.
      */
     virtual bool bookmarksEnabled() const;
 
-    /**
-     * @brief getParentFolderID
-     * @return The ID of the parent folder, or -1 if none.
+    /*!
+        \brief getParentFolderID
+        \return The ID of the parent folder, or -1 if none.
      */
     qint64 getParentFolderID() const {
         return _parentFolder;

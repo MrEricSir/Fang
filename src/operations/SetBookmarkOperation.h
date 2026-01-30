@@ -6,8 +6,8 @@
 #include "../models/AllNewsFeedItem.h"
 #include "../models/FolderFeedItem.h"
 
-/**
- * @brief Sets a bookmark to whatever news id you'd like.
+/*!
+    \brief Sets a bookmark to whatever news id you'd like.
  */
 class SetBookmarkOperation : public BookmarkOperation
 {

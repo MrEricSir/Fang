@@ -7,10 +7,10 @@
 
 #include "../db/DBSettingsKey.h"
 
-/**
- * @brief Sets a key-value pair for storing data in a special SQLite data.
- *
- * This should ONLY be used for data that configures the database, such as how much old news to keep around.
+/*!
+    \brief Sets a key-value pair for storing data in a special SQLite data.
+
+    This should ONLY be used for data that configures the database, such as how much old news to keep around.
  */
 class SetDBSettingOperation : public DBOperation
 {

@@ -34,9 +34,9 @@ class FangSettings : public QQuickItem
 public:
     explicit FangSettings(QQuickItem *parent = nullptr);
 
-    /**
-     * @brief The stuff the settings object needs to do its job properly.
-     * @param manager
+    /*!
+        \brief The stuff the settings object needs to do its job properly.
+        \param manager
      */
     void init(DBSettings* dbSettings);
     
@@ -66,53 +66,53 @@ signals:
     void showTrayIconChanged(bool);
     
 private slots:
-    /**
-     * @brief Gets a string value or its default if not present
-     * @param name
-     * @param defaultValue
-     * @return 
+    /*!
+        \brief Gets a string value or its default if not present
+        \param name
+        \param defaultValue
+        \return
      */
     QString getStringSetting(const QString& name, const QString& defaultValue);
     
-    /**
-     * @brief Sets a string value
-     * @param name
-     * @param newValue
+    /*!
+        \brief Sets a string value
+        \param name
+        \param newValue
      */
     void setStringSetting(const QString& name, const QString& newValue);
 
-    /**
-     * @brief Gets a bool value or its default if not present
-     * @param name
-     * @param defaultValue
-     * @return
+    /*!
+        \brief Gets a bool value or its default if not present
+        \param name
+        \param defaultValue
+        \return
      */
     bool getBoolSetting(const QString& name, bool defaultValue);
 
-    /**
-     * @brief Sets a bool value
-     * @param name
-     * @param newValue
+    /*!
+        \brief Sets a bool value
+        \param name
+        \param newValue
      */
     void setBoolSetting(const QString& name, bool newValue);
 
-    /**
-     * @brief Called when a DB setting has changed.
-     * @param key
-     * @param value
+    /*!
+        \brief Called when a DB setting has changed.
+        \param key
+        \param value
      */
     void onDBSettingChanged(DBSettingsKey key, QString value);
 
-    /**
-     * @brief Called when the system color scheme has changed.
-     * @param colorScheme
+    /*!
+        \brief Called when the system color scheme has changed.
+        \param colorScheme
      */
     void onSystemColorSchemeChanged(Qt::ColorScheme colorScheme);
 
-    /**
-     * @brief Converts a Qt color scheme into either "LIGHT" or "DARK" (LIGHT is default)
-     * @param colorScheme
-     * @return
+    /*!
+        \brief Converts a Qt color scheme into either "LIGHT" or "DARK" (LIGHT is default)
+        \param colorScheme
+        \return
      */
     QString colorSchemeToString(Qt::ColorScheme colorScheme);
     

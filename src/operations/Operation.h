@@ -9,8 +9,8 @@
 
 class OperationManager;
 
-/**
- * @brief Interface for operations.
+/*!
+    \brief Interface for operations.
  */
 class Operation : public FangObject
 {
@@ -26,61 +26,61 @@ class Operation : public FangObject
     // OperationManager is parent.
     explicit Operation(PriorityLevel priority, OperationManager* parent);
     
-    /**
-     * @brief All operations must clean up their memory.
+    /*!
+        \brief All operations must clean up their memory.
      */
     virtual ~Operation() = default;
     
 protected slots:
-    
-    /**
-     * @brief Call this to report an error.  Automatically emits finished()
-     * @param errorString The text that will be logged along with the error.
+
+    /*!
+        \brief Call this to report an error.  Automatically emits finished()
+        \param errorString The text that will be logged along with the error.
      */
     void reportError(const QString& errorString);
     
-    /**
-     * @brief Pass any QObjects that might be deleted during the run into this method.
-     * It will cause the operation to be canceled gracefully, emitting done().
-     * See also: FANG_BACKGROUND_CHECK macro.
-     * @param object
+    /*!
+        \brief Pass any QObjects that might be deleted during the run into this method.
+        It will cause the operation to be canceled gracefully, emitting done().
+        See also: FANG_BACKGROUND_CHECK macro.
+        \param object
      */
     void requireObject(QObject* object);
     
-    /**
-     * @brief Used by the FANG_BACKGROUND_CHECK macro.
-     * @return 
+    /*!
+        \brief Used by the FANG_BACKGROUND_CHECK macro.
+        \return
      */
     bool shouldTerminate() { return terminate; }
     
 signals:
-    
-    /**
-     * @brief Indicates that the operation is complete and may be freed.
+
+    /*!
+        \brief Indicates that the operation is complete and may be freed.
      */
     void finished(Operation* myself);
     
 public slots:
-    
-    /**
-     * @brief Runs the operation.  When complete, finished() must be emitted.
+
+    /*!
+        \brief Runs the operation.  When complete, finished() must be emitted.
      */
     virtual void execute() = 0;
     
-    /**
-     * @return Priority level of this operation type.
+    /*!
+        \return Priority level of this operation type.
      */
     inline PriorityLevel getPriority() { return priority; }
     
-    /**
-     * @return Returns true if there was an error, else false. 
+    /*!
+        \return Returns true if there was an error, else false.
      */
     inline bool isError() { return error; }
     
-    /**
-     * @brief If your operation needs to invoke other operations (yo dawg, I heard you like
-     * operations) then you'll want to use this.
-     * @return The operation manager used for getting/setting operations.
+    /*!
+        \brief If your operation needs to invoke other operations (yo dawg, I heard you like
+        operations) then you'll want to use this.
+        \return The operation manager used for getting/setting operations.
      */
     OperationManager* getOperationManager() { return operationManager; }
     

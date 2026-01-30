@@ -11,11 +11,11 @@ class UpdateFeedURLOperation : public DBOperation
 {
     Q_OBJECT
 public:
-    /**
-     * @brief UpdateFeedURLOperation
-     * @param parent   Set this to the manager
-     * @param feed     Feed to update
-     * @param newURL   Updated URL of the feed
+    /*!
+        \brief UpdateFeedURLOperation
+        \param parent   Set this to the manager
+        \param feed     Feed to update
+        \param newURL   Updated URL of the feed
      */
     explicit UpdateFeedURLOperation(OperationManager *parent, FeedItem* feed, QUrl newURL);
 

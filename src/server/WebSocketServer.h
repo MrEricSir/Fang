@@ -29,34 +29,34 @@ public slots:
      */
     inline quint16 getPort() { return server.serverPort(); }
 
-    /**
-     * @brief Manually moves the bookmark to the provided position. (Not needed on initial load)
-     * @param bookmarkID
+    /*!
+        \brief Manually moves the bookmark to the provided position. (Not needed on initial load)
+        \param bookmarkID
      */
     void drawBookmark(qint64 bookmarkID);
 
-    /**
-     * @brief Jumps the view to the bookmark (if any)
+    /*!
+        \brief Jumps the view to the bookmark (if any)
      */
     void jumpToBookmark();
 
-    /**
-     * @brief Jumps to the next news item (if any)
+    /*!
+        \brief Jumps to the next news item (if any)
      */
     void jumpNext();
 
-    /**
-     * @brief Jumps to the previous news item (if any)
+    /*!
+        \brief Jumps to the previous news item (if any)
      */
     void jumpPrevious();
 
-    /**
-     * @brief Show the news view.
+    /*!
+        \brief Show the news view.
      */
     void showNews();
 
-    /**
-     * @brief Show the welcome/help view.
+    /*!
+        \brief Show the welcome/help view.
      */
     void showWelcome();
 

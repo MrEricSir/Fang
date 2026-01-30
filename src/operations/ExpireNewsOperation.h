@@ -7,8 +7,8 @@
 
 #include "../models/ListModel.h"
 
-/**
- * @brief Deletes old news.  Unread and pinned items are spared.
+/*!
+    \brief Deletes old news.  Unread and pinned items are spared.
  */
 class ExpireNewsOperation : public DBOperation
 {

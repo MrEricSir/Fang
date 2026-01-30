@@ -11,8 +11,8 @@
 #define FANG_OBJECT_LEAK_CHECK
 #endif
 
-/**
- * @brief Base object class for detecting leaks.
+/*!
+    \brief Base object class for detecting leaks.
  */
 class FangObject : public QObject
 {

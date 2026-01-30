@@ -25,10 +25,10 @@ inline QString DBSettingsKeyDefaultValue(DBSettingsKey key) {
     }
 }
 
-/**
- * @brief Asserts if the value isn't valid for this key.
- * @param key
- * @param value
+/*!
+    \brief Asserts if the value isn't valid for this key.
+    \param key
+    \param value
  */
 inline void DBSettingsKeyAssert(DBSettingsKey key, const QString& value) {
     switch (key) {

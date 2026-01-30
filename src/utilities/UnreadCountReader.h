@@ -9,19 +9,19 @@
 
 #include "../models/FeedItem.h"
 
-/**
- * @brief Reads unread counts from the database.
+/*!
+    \brief Reads unread counts from the database.
  */
 class UnreadCountReader
 {
 public:
     UnreadCountReader();
     
-    /**
-     * @brief Updates the unread count of a given feed (and/or related feeds.)
-     *        NOTE: Must be called from within a DBOperation.
-     * @param db   DBOperation's database object
-     * @param feed The feed in question.
+    /*!
+        \brief Updates the unread count of a given feed (and/or related feeds.)
+               NOTE: Must be called from within a DBOperation.
+        \param db   DBOperation's database object
+        \param feed The feed in question.
      */
     static void update(QSqlDatabase db, FeedItem* feed);
     

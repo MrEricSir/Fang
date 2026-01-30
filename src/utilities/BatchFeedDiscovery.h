@@ -10,15 +10,15 @@
 #include <QMap>
 #include <QQueue>
 
-/**
- * @brief Calls FeedDiscovery on a bunch of feeds at once in a list.
- * 
- * Each FeedItem will have IsUpdating and HasError set:
- *   IsUpdating: The feed discovery is in progress
- *   IsError: The feed discovery completed with an error
- * 
- * If both are false at the time done() is emitted, you're hella
- * ready to rock and roll!
+/*!
+    \brief Calls FeedDiscovery on a bunch of feeds at once in a list.
+
+    Each FeedItem will have IsUpdating and HasError set:
+      IsUpdating: The feed discovery is in progress
+      IsError: The feed discovery completed with an error
+
+    If both are false at the time done() is emitted, you're hella
+    ready to rock and roll!
  */
 class BatchFeedDiscovery : public FangObject
 {
@@ -27,21 +27,21 @@ public:
     explicit BatchFeedDiscovery(QObject *parent = nullptr);
     
 signals:
-    
-    /**
-     * @brief Completion signal.
+
+    /*!
+        \brief Completion signal.
      */
     void done();
     
 public slots:
-    
-    /**
-     * @brief Checks an entire feed list.
+
+    /*!
+        \brief Checks an entire feed list.
      */
     void checkFeedList(ListModel* feedList, int maxConcurrent = 3);
     
-    /**
-     * @return The list of feeds you asked me to check?  Here they are.
+    /*!
+        \return The list of feeds you asked me to check?  Here they are.
      */
     inline ListModel* getFeedList() { return feedList; }
     
@@ -52,8 +52,8 @@ protected slots:
     void runDiscovery(FeedDiscovery* discovery, FeedItem* item);
 
 protected:
-    /**
-     * @brief Creates a FeedDiscovery instance. Virtual to allow mocking in tests.
+    /*!
+        \brief Creates a FeedDiscovery instance. Virtual to allow mocking in tests.
      */
     virtual FeedDiscovery* createFeedDiscovery();
 

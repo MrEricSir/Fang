@@ -4,8 +4,8 @@
 #include "LisvelLoadNewsOperation.h"
 #include "../models/PinnedFeedItem.h"
 
-/**
- * @brief Loads news items that are pinned.
+/*!
+    \brief Loads news items that are pinned.
  */
 class LoadPinnedNewsOperation : public LisvelLoadNewsOperation
 {

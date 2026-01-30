@@ -5,17 +5,17 @@
 
 #include "FeedItem.h"
 
-/**
- * @brief LISVEL is Fang's secret sauce for keeping a stable order of news
- * items as you scroll through the view.
- *
- * LISVEL stands for:
- *   Limmited
- *   Infinite
- *   Scrolling
- *   Via
- *   Exclusion
- *   List
+/*!
+    \brief LISVEL is Fang's secret sauce for keeping a stable order of news
+    items as you scroll through the view.
+
+    LISVEL stands for:
+      Limmited
+      Infinite
+      Scrolling
+      Via
+      Exclusion
+      List
  */
 class LisvelFeedItem : public FeedItem
 {
@@ -23,10 +23,10 @@ class LisvelFeedItem : public FeedItem
 public:
     explicit LisvelFeedItem(const qint64 id, const qint32 ordinal, const QString &title, QObject *parent = nullptr);
 
-    /**
-     * @param proposedBookmarkID
-     * @param allowBackward
-     * @return True if this item can be bookmarked.
+    /*!
+        \param proposedBookmarkID
+        \param allowBackward
+        \return True if this item can be bookmarked.
      */
     virtual bool canBookmark(qint64 proposedBookmarkID, bool allowBackward);
 };

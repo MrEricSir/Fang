@@ -10,9 +10,9 @@
 #include "RawFeed.h"
 #include "../FangObject.h"
 
-/**
- * @brief Parses an OPML document containing an RSS list.  The feeds are
- *        validated and can be added immediately.
+/*!
+    \brief Parses an OPML document containing an RSS list.  The feeds are
+           validated and can be added immediately.
  */
 class OPMLParser : public FangObject
 {

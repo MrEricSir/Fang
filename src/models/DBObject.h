@@ -3,8 +3,8 @@
 
 #include <QtCore/qtypes.h>
 
-/**
- * @brief Represents an object that is or can be stored as a database row.
+/*!
+    \brief Represents an object that is or can be stored as a database row.
  */
 class DBObject
 {

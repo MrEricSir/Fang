@@ -8,8 +8,8 @@
 #include "../models/FeedItem.h"
 #include "../models/NewsItem.h"
 
-/**
- * @brief Loads a batch of NewsItems.
+/*!
+    \brief Loads a batch of NewsItems.
  */
 class LoadNewsOperation : public DBOperationSynchronous
 {
@@ -23,11 +23,11 @@ public:
         Prepend       // Prepends loadLimit items (load previous)
     };
     
-    /**
-     * @param parent    The manager
-     * @param feedItem  The feed item to grab
-     * @param mode      Type of load operation (see above)
-     * @param loadLimit Max number of news items to load
+    /*!
+        \param parent    The manager
+        \param feedItem  The feed item to grab
+        \param mode      Type of load operation (see above)
+        \param loadLimit Max number of news items to load
      */
     explicit LoadNewsOperation(OperationManager *parent, FeedItem* feedItem, LoadMode mode, int loadLimit = 15);
     
@@ -39,50 +39,50 @@ public:
 public slots:
     virtual void executeSynchronous();
     
-    /**
-     * @return The Feed associated with this load.
+    /*!
+        \return The Feed associated with this load.
      */
     inline FeedItem* getFeedItem() { return feedItem; }
     
-    /**
-     * @return Returns the operational mode.
+    /*!
+        \return Returns the operational mode.
      */
     inline LoadNewsOperation::LoadMode getMode() { return mode; }
     
-    /**
-     * @return List of items that this load appended.
+    /*!
+        \return List of items that this load appended.
      */
     inline QList<NewsItem*>& getAppendList() { return listAppend; }
     
-    /**
-     * @return List of items that this load prepended.
+    /*!
+        \return List of items that this load prepended.
      */
     inline QList<NewsItem*>& getPrependList() { return listPrepend; }
     
-    /**
-     * @return Max number of items to load (specified as loadLimit in constructor.)
+    /*!
+        \return Max number of items to load (specified as loadLimit in constructor.)
      */
     inline int getLoadLimit() const { return loadLimit; }
     
 protected slots:
-    
-    /**
-     * @brief Extracts news items from a database query.
-     * @param query  Database query containing zero or more News Items.
-     * @param list   The list of items items we just created.
+
+    /*!
+        \brief Extracts news items from a database query.
+        \param query  Database query containing zero or more News Items.
+        \param list   The list of items items we just created.
      */
     void queryToNewsList(QSqlQuery& query, QList<NewsItem*>* list);
     
-    /**
-     * @brief Call this during the initial load of a feed.
-     *@ return id of feed's bookmark.
+    /*!
+        \brief Call this during the initial load of a feed.
+        \return id of feed's bookmark.
      */
     qint64 getBookmarkID();
     
-    /**
-     * @brief Finds the very first item available in this feed, loaded or not. This is
-     *        used to determine whether or not to display the top bookmark.
-     * @return id of the first item in the entire feed.
+    /*!
+        \brief Finds the very first item available in this feed, loaded or not. This is
+               used to determine whether or not to display the top bookmark.
+        \return id of the first item in the entire feed.
      */
     virtual qint64 getFirstNewsID();
     
@@ -90,11 +90,11 @@ protected slots:
     
     bool doPrepend(qint64 startId);
     
-    /**
-     * @brief Performs the actual query and loads the results into the appropriate list
-     * @param startId ID to start with
-     * @param append Which direction and which list to load into
-     * @return True if successful, false on an error
+    /*!
+        \brief Performs the actual query and loads the results into the appropriate list
+        \param startId ID to start with
+        \param append Which direction and which list to load into
+        \return True if successful, false on an error
      */
     virtual bool executeLoadQuery(qint64 startId, bool append);
 

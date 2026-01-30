@@ -7,12 +7,12 @@
 // Error handling.
 //
 
-/**
- * @brief Validate condition and return a value if it fails.
- *
- * Examples:
- *   FANG_REQUIRE(feed != nullptr, false);
- *   FANG_REQUIRE(index >= 0, -1);
+/*!
+    \brief Validate condition and return a value if it fails.
+
+    Examples:
+      FANG_REQUIRE(feed != nullptr, false);
+      FANG_REQUIRE(index >= 0, -1);
  */
 #define FANG_REQUIRE(condition, returnValue) \
     do { \
@@ -23,11 +23,11 @@
         } \
     } while (0)
 
-/**
- * @brief Validate condition and return early if it fails (for void functions.)
- *
- * Example:
- *   FANG_REQUIRE_VOID(operation != nullptr);
+/*!
+    \brief Validate condition and return early if it fails (for void functions.)
+
+    Example:
+      FANG_REQUIRE_VOID(operation != nullptr);
  */
 #define FANG_REQUIRE_VOID(condition) \
     do { \
@@ -38,11 +38,11 @@
         } \
     } while (0)
 
-/**
- * @brief Validate condition and log error if it fails, then continue.
- *
- * Example:
- *   FANG_CHECK(isValid, "Data validation failed");
+/*!
+    \brief Validate condition and log error if it fails, then continue.
+
+    Example:
+      FANG_CHECK(isValid, "Data validation failed");
  */
 #define FANG_CHECK(condition, message) \
     do { \
@@ -51,12 +51,12 @@
         } \
     } while (0)
 
-/**
- * @brief Mark code as intentionally unreachable. Useful for default in switches, etc.
- * Example:
- *   default:
- *       FANG_UNREACHABLE("Unhandled enum value");
- *       return fallbackValue;
+/*!
+    \brief Mark code as intentionally unreachable. Useful for default in switches, etc.
+    Example:
+      default:
+          FANG_UNREACHABLE("Unhandled enum value");
+          return fallbackValue;
  */
 #define FANG_UNREACHABLE(message) \
     do { \

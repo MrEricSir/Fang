@@ -21,13 +21,13 @@ class WebPageGrabber : public FangObject
 {
     Q_OBJECT
 public:
-    /**
-     * @brief WebPageGrabber creates an XHTML document from either a string or a URL.
-     * @param handleMetaRefresh If true, handles refreshes from within HTML documents rather than
-     *                          just HTTP communication.
-     * @param timeoutMS         Timeout after last download activity in milliseconds
-     * @param parent
-     * @param networkManager    Optional network manager for dependency injection (for testing)
+    /*!
+        \brief WebPageGrabber creates an XHTML document from either a string or a URL.
+        \param handleMetaRefresh If true, handles refreshes from within HTML documents rather than
+                                 just HTTP communication.
+        \param timeoutMS         Timeout after last download activity in milliseconds
+        \param parent
+        \param networkManager    Optional network manager for dependency injection (for testing)
      */
     explicit WebPageGrabber(bool handleMetaRefresh = DEFAULT_HANDLE_META_REFRESH,
                             int timeoutMS = DEFAULT_TIMEOUT_MS,

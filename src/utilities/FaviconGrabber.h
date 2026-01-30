@@ -40,17 +40,17 @@ public:
     explicit FaviconGrabber(QObject *parent = nullptr, QNetworkAccessManager* networkManager = nullptr);
 
 signals:
-    /**
-     * @brief Called when complete.
-     * @param faviconDataUri A data URI containing the favicon as PNG, or empty string on failure.
+    /*!
+        \brief Called when complete.
+        \param faviconDataUri A data URI containing the favicon as PNG, or empty string on failure.
      */
     void finished(const QString& faviconDataUri);
 
 public slots:
 
-    /**
-     * @brief Looks for a favicon for the given URL.
-     * @param url
+    /*!
+        \brief Looks for a favicon for the given URL.
+        \param url
      */
     void find(const QUrl& url);
 
@@ -68,13 +68,13 @@ private slots:
     // ERROR
     void onError();
 
-    /**
-     * @brief Completion for CHECK_ICONS (from BatchDownloadCore)
+    /*!
+        \brief Completion for CHECK_ICONS (from BatchDownloadCore)
      */
     void onBatchFinished();
 
-    /**
-     * @brief Completion for WEB_GRABBER
+    /*!
+        \brief Completion for WEB_GRABBER
      */
     void onWebGrabberReady(WebPageGrabber* grabber, QString* document);
 

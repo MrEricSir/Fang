@@ -14,25 +14,25 @@ class Utilities
 public:
     Utilities();
     
-    /**
-     * @brief Converts a RawFeed object into a good, proper FeedItem.
-     * @param raw
-     * @param dbId
-     * @param userURL
-     * @param parent
-     * @return 
+    /*!
+        \brief Converts a RawFeed object into a good, proper FeedItem.
+        \param raw
+        \param dbId
+        \param userURL
+        \param parent
+        \return
      */
     static FeedItem* feedItemFromRaw(const RawFeed *raw, qint64 dbId, const QString& userURL, QObject* parent);
 
-    /**
-     * @brief Generates a comma separated string list from a vector (no trailing comma)
-     * @param input
-     * @return
+    /*!
+        \brief Generates a comma separated string list from a vector (no trailing comma)
+        \param input
+        \return
      */
     static QString commaSeparatedStringList(const QVector<qint64> input);
 
-    /**
-     * @return True if and only if we're running in the main application thread.
+    /*!
+        \return True if and only if we're running in the main application thread.
      */
     static bool isInMainThread();
 };

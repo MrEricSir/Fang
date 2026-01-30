@@ -7,8 +7,8 @@
 
 #include "ListModel.h"
 
-/**
- * @brief A pseudo-feed of all pinned news items.
+/*!
+    \brief A pseudo-feed of all pinned news items.
  */
 class PinnedFeedItem : public LisvelFeedItem
 {

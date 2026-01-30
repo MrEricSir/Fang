@@ -5,10 +5,10 @@
 
 #include "../models/ListModel.h"
 
-/**
- * @brief Exports a given feed list to an OPML file.
- * 
- * That's all.  Nothing more to see here, sir.
+/*!
+    \brief Exports a given feed list to an OPML file.
+
+    That's all.  Nothing more to see here, sir.
  */
 class OPMLExport
 {

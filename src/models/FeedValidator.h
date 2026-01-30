@@ -8,9 +8,9 @@
 
 #include "../utilities/FeedDiscovery.h"
 
-/**
- * @brief Initially this class was for validating feed URLs, but has now outgrown that to handle
- *        adding and removing feeds and folders.
+/*!
+    \brief Initially this class was for validating feed URLs, but has now outgrown that to handle
+           adding and removing feeds and folders.
  */
 class FeedValidator : public QQuickItem
 {

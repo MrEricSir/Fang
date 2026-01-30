@@ -8,8 +8,8 @@
 
 #include "../FangObject.h"
 
-/**
- * @brief Interface for RSS/Atom parser.
+/*!
+    \brief Interface for RSS/Atom parser.
  */
 class ParserInterface : public FangObject
 {
@@ -27,12 +27,12 @@ signals:
     void done();
     
 public slots:
-    
-    /**
-     * @brief Contacts URL and parses the RSS/Atom feed, if it exists.
-     * @param url               The URL
-     * @param noParseIfCached   If true, this won't bother with the 
-     *                          parse if the content was cached.
+
+    /*!
+        \brief Contacts URL and parses the RSS/Atom feed, if it exists.
+        \param url               The URL
+        \param noParseIfCached   If true, this won't bother with the
+                                 parse if the content was cached.
      */
     virtual void parse(const QUrl& url, bool noParseIfCached = false) =0;
     

@@ -32,13 +32,13 @@ public:
     int numChildren;
 };
 
-/**
- * @brief Takes a "raw" HTML feed and processes it in the following ways:
- *          - Tidy'd into XHTML fragments
- *          - Image sizes are baked in
- *          - Javascript is stripped
- *          - Common social media buttons removed
- *          - Tracking pixels?  Nope.
+/*!
+    \brief Takes a "raw" HTML feed and processes it in the following ways:
+             - Tidy'd into XHTML fragments
+             - Image sizes are baked in
+             - Javascript is stripped
+             - Common social media buttons removed
+             - Tracking pixels?  Nope.
  */
 class RawFeedRewriter : public FangObject
 {
@@ -48,8 +48,8 @@ public:
     
     
 signals:
-    /**
-     * @brief We're done!  The feed you passed in as been modified.
+    /*!
+        \brief We're done!  The feed you passed in as been modified.
      */
     void finished();
     
@@ -57,8 +57,8 @@ public slots:
     
     void rewrite(QList<RawNews*>* newsList);
     
-    /**
-     * @return 
+    /*!
+        \return
      */
     inline QList<RawNews*>* getNewsList() { return newsList; }
 

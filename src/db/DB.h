@@ -11,8 +11,8 @@
 
 #include "../FangObject.h"
 
-/**
- * @brief Singleton database for DB.
+/*!
+    \brief Singleton database for DB.
  */
 class DB : public FangObject
 {
@@ -30,44 +30,44 @@ public slots:
     
     inline QSqlDatabase db() { return _db; }
     
-    /**
-     * @brief Executes a simple DB query and logs error to debug.
-     * @param query
-     * @return 
+    /*!
+        \brief Executes a simple DB query and logs error to debug.
+        \param query
+        \return
      */
     bool executeSimpleQuery(QString query);
     
 private:
-    /**
-     * @brief Performs DB init. Called by c'tor.
+    /*!
+        \brief Performs DB init. Called by c'tor.
      */
     void init();
     
-    /**
-     * @brief Returns the version of our schema.
-     * Called by upgrade()
-     * @return 0 for no schema, 1 or greater for schema version.
+    /*!
+        \brief Returns the version of our schema.
+        Called by upgrade()
+        \return 0 for no schema, 1 or greater for schema version.
      */
     int getSchemaVersion();
     
-    /**
-     * @brief Updates the version of the database. 
-     * Called by upgrade()
-     * @param version 1..n
+    /*!
+        \brief Updates the version of the database.
+        Called by upgrade()
+        \param version 1..n
      */
     void setSchemaVersion(int version);
     
-    /** 
-     *Creates and/or upgrades database, if necessary.
-     * Assumes "sql/[1..n].sql" files exist, where 1.sql creates the
-     * initial schema, and each version through n is run sequentially to
-     * update to version n.
+    /*!
+        Creates and/or upgrades database, if necessary.
+        Assumes "sql/[1..n].sql" files exist, where 1.sql creates the
+        initial schema, and each version through n is run sequentially to
+        update to version n.
      */
     void upgrade();
     
-    /**
-     * @brief Runs a SQL file on our database.
-     * @param sqlFile Text file containing SQL code.
+    /*!
+        \brief Runs a SQL file on our database.
+        \param sqlFile Text file containing SQL code.
      */
     bool executeSqlFile(QFile& sqlFile);
     

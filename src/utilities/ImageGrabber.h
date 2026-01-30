@@ -37,22 +37,22 @@ public:
     explicit ImageGrabber(QObject *parent = nullptr, QNetworkAccessManager* networkManager = nullptr);
 
 signals:
-    /**
-     * @brief Called when all images are found.
+    /*!
+        \brief Called when all images are found.
      */
     void finished();
 
 public slots:
 
-    /**
-     * @brief Fetch a group of remote images.
-     * @param urls
+    /*!
+        \brief Fetch a group of remote images.
+        \param urls
      */
     void fetchUrls(const QList<QUrl> &urls);
 
-    /**
-     * @brief Fetch a remote image.
-     * @param url
+    /*!
+        \brief Fetch a remote image.
+        \param url
      */
     void fetchUrl(const QUrl &url);
 

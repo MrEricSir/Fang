@@ -11,8 +11,8 @@
 #include "../models/ListModel.h"
 #include "../models/FolderFeedItem.h"
 
-/**
- * @brief Inserts a folder at the given index and reparents the next two items.
+/*!
+    \brief Inserts a folder at the given index and reparents the next two items.
  */
 class InsertFolderOperation : public DBOperation
 {
