@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-01-29 10:38:06</td>
+            <td class="headerValue">2026-01-30 17:44:47</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryLo">33.3&nbsp;%</td>
@@ -68,91 +68,92 @@
 <span id="L6"><span class="lineNum">       6</span>              : #include &lt;QUrl&gt;</span>
 <span id="L7"><span class="lineNum">       7</span>              : #include &lt;QTimer&gt;</span>
 <span id="L8"><span class="lineNum">       8</span>              : #include &quot;../FangObject.h&quot;</span>
-<span id="L9"><span class="lineNum">       9</span>              : #include &quot;SimpleHTTPDownloader.h&quot;</span>
+<span id="L9"><span class="lineNum">       9</span>              : #include &quot;../network/NetworkDownloadCore.h&quot;</span>
 <span id="L10"><span class="lineNum">      10</span>              : </span>
 <span id="L11"><span class="lineNum">      11</span>              : #define DEFAULT_HANDLE_META_REFRESH true</span>
 <span id="L12"><span class="lineNum">      12</span>              : #define DEFAULT_TIMEOUT_MS 5000</span>
-<span id="L13"><span class="lineNum">      13</span>              : </span>
-<span id="L14"><span class="lineNum">      14</span>              : /*!</span>
-<span id="L15"><span class="lineNum">      15</span>              :  * @brief Loads a web page at a given URL and signals with the XHTML document when done.</span>
-<span id="L16"><span class="lineNum">      16</span>              :  *</span>
-<span id="L17"><span class="lineNum">      17</span>              :  * Note that this class is not rentrant.</span>
-<span id="L18"><span class="lineNum">      18</span>              :  */</span>
-<span id="L19"><span class="lineNum">      19</span>              : class WebPageGrabber : public FangObject</span>
-<span id="L20"><span class="lineNum">      20</span>              : {</span>
-<span id="L21"><span class="lineNum">      21</span>              :     Q_OBJECT</span>
-<span id="L22"><span class="lineNum">      22</span>              : public:</span>
-<span id="L23"><span class="lineNum">      23</span>              :     /**</span>
-<span id="L24"><span class="lineNum">      24</span>              :      * @brief WebPageGrabber creates an XHTML document from either a string or a URL.</span>
-<span id="L25"><span class="lineNum">      25</span>              :      * @param handleMetaRefresh If true, handles refreshes from within HTML documents rather than</span>
-<span id="L26"><span class="lineNum">      26</span>              :      *                          just HTTP communication.</span>
-<span id="L27"><span class="lineNum">      27</span>              :      * @param timeoutMS         Timeout after last download activity in milliseconds</span>
-<span id="L28"><span class="lineNum">      28</span>              :      * @param parent</span>
-<span id="L29"><span class="lineNum">      29</span>              :      * @param networkManager    Optional network manager for dependency injection (for testing)</span>
-<span id="L30"><span class="lineNum">      30</span>              :      */</span>
-<span id="L31"><span class="lineNum">      31</span>              :     explicit WebPageGrabber(bool handleMetaRefresh = DEFAULT_HANDLE_META_REFRESH,</span>
-<span id="L32"><span class="lineNum">      32</span>              :                             int timeoutMS = DEFAULT_TIMEOUT_MS,</span>
-<span id="L33"><span class="lineNum">      33</span>              :                             QObject *parent = nullptr,</span>
-<span id="L34"><span class="lineNum">      34</span>              :                             QNetworkAccessManager* networkManager = nullptr);</span>
-<span id="L35"><span class="lineNum">      35</span>              : </span>
-<span id="L36"><span class="lineNum">      36</span>              :     /*!</span>
-<span id="L37"><span class="lineNum">      37</span>              :      * \brief Just like the above but with all the defaults specified *except* for parent.</span>
-<span id="L38"><span class="lineNum">      38</span>              :      */</span>
-<span id="L39"><span class="lineNum">      39</span>              :     explicit WebPageGrabber(QObject *parent);</span>
-<span id="L40"><span class="lineNum">      40</span>              : </span>
+<span id="L13"><span class="lineNum">      13</span>              : #define MAX_REDIRECTS 10</span>
+<span id="L14"><span class="lineNum">      14</span>              : </span>
+<span id="L15"><span class="lineNum">      15</span>              : /*!</span>
+<span id="L16"><span class="lineNum">      16</span>              :     \brief Loads a web page at a given URL and signals with the XHTML document when done.</span>
+<span id="L17"><span class="lineNum">      17</span>              : </span>
+<span id="L18"><span class="lineNum">      18</span>              :     Note that this class is not rentrant.</span>
+<span id="L19"><span class="lineNum">      19</span>              :  */</span>
+<span id="L20"><span class="lineNum">      20</span>              : class WebPageGrabber : public FangObject</span>
+<span id="L21"><span class="lineNum">      21</span>              : {</span>
+<span id="L22"><span class="lineNum">      22</span>              :     Q_OBJECT</span>
+<span id="L23"><span class="lineNum">      23</span>              : public:</span>
+<span id="L24"><span class="lineNum">      24</span>              :     /**</span>
+<span id="L25"><span class="lineNum">      25</span>              :      * @brief WebPageGrabber creates an XHTML document from either a string or a URL.</span>
+<span id="L26"><span class="lineNum">      26</span>              :      * @param handleMetaRefresh If true, handles refreshes from within HTML documents rather than</span>
+<span id="L27"><span class="lineNum">      27</span>              :      *                          just HTTP communication.</span>
+<span id="L28"><span class="lineNum">      28</span>              :      * @param timeoutMS         Timeout after last download activity in milliseconds</span>
+<span id="L29"><span class="lineNum">      29</span>              :      * @param parent</span>
+<span id="L30"><span class="lineNum">      30</span>              :      * @param networkManager    Optional network manager for dependency injection (for testing)</span>
+<span id="L31"><span class="lineNum">      31</span>              :      */</span>
+<span id="L32"><span class="lineNum">      32</span>              :     explicit WebPageGrabber(bool handleMetaRefresh = DEFAULT_HANDLE_META_REFRESH,</span>
+<span id="L33"><span class="lineNum">      33</span>              :                             int timeoutMS = DEFAULT_TIMEOUT_MS,</span>
+<span id="L34"><span class="lineNum">      34</span>              :                             QObject *parent = nullptr,</span>
+<span id="L35"><span class="lineNum">      35</span>              :                             QNetworkAccessManager* networkManager = nullptr);</span>
+<span id="L36"><span class="lineNum">      36</span>              : </span>
+<span id="L37"><span class="lineNum">      37</span>              :     /*!</span>
+<span id="L38"><span class="lineNum">      38</span>              :      * \brief Just like the above but with all the defaults specified *except* for parent.</span>
+<span id="L39"><span class="lineNum">      39</span>              :      */</span>
+<span id="L40"><span class="lineNum">      40</span>              :     explicit WebPageGrabber(QObject *parent);</span>
 <span id="L41"><span class="lineNum">      41</span>              : </span>
-<span id="L42"><span class="lineNum">      42</span>              : signals:</span>
-<span id="L43"><span class="lineNum">      43</span>              :     // If you requested a URL, ready() will be emitted when it's ready!</span>
-<span id="L44"><span class="lineNum">      44</span>              :     // If document is null, an error happened. :(</span>
-<span id="L45"><span class="lineNum">      45</span>              :     void ready(WebPageGrabber* grabber, QString* document);</span>
-<span id="L46"><span class="lineNum">      46</span>              : </span>
-<span id="L47"><span class="lineNum">      47</span>              : public slots:</span>
-<span id="L48"><span class="lineNum">      48</span>              :     // Fetches the webpage and emits ready() with the XHTML document.</span>
-<span id="L49"><span class="lineNum">      49</span>              :     // Signals with null on an error.</span>
-<span id="L50"><span class="lineNum">      50</span>              :     virtual void load(const QUrl &amp;url);</span>
-<span id="L51"><span class="lineNum">      51</span>              : </span>
-<span id="L52"><span class="lineNum">      52</span>              :     // Load the HTML string into a Tidy'd XHTML document and returns it (no signal is emmitted.)</span>
-<span id="L53"><span class="lineNum">      53</span>              :     // Returns null on an error.</span>
-<span id="L54"><span class="lineNum">      54</span>              :     QString* load(const QString&amp; htmlString);</span>
-<span id="L55"><span class="lineNum">      55</span>              : </span>
-<span id="L56"><span class="lineNum">      56</span>              :     // Returns the previously loaded document, or the empty string if there was an error.</span>
-<span id="L57"><span class="lineNum">      57</span> <span class="tlaGNC tlaBgGNC">           3 :     inline QString* getDocument() { return error ? nullptr : &amp;document; }</span></span>
-<span id="L58"><span class="lineNum">      58</span>              : </span>
-<span id="L59"><span class="lineNum">      59</span> <span class="tlaUNC tlaBgUNC">           0 :     inline QUrl getOriginalURL() const { return originalUrl; }</span></span>
-<span id="L60"><span class="lineNum">      60</span>              : </span>
-<span id="L61"><span class="lineNum">      61</span> <span class="tlaUNC">           0 :     inline bool isDone() const { return done; }</span></span>
-<span id="L62"><span class="lineNum">      62</span>              :     </span>
-<span id="L63"><span class="lineNum">      63</span>              : private slots:</span>
-<span id="L64"><span class="lineNum">      64</span>              :     // Internal load methods.</span>
-<span id="L65"><span class="lineNum">      65</span>              :     void loadInternal(const QUrl &amp;url);</span>
-<span id="L66"><span class="lineNum">      66</span>              :     QString* loadInternal(const QString&amp; htmlString, bool handleRefresh);</span>
-<span id="L67"><span class="lineNum">      67</span>              : </span>
-<span id="L68"><span class="lineNum">      68</span>              :     // Uh oh, an error!</span>
-<span id="L69"><span class="lineNum">      69</span>              :     void onDownloadError(QString err);</span>
-<span id="L70"><span class="lineNum">      70</span>              : </span>
-<span id="L71"><span class="lineNum">      71</span>              :     // We got some HTTP content!</span>
-<span id="L72"><span class="lineNum">      72</span>              :     void onDownloadFinished(QByteArray array);</span>
-<span id="L73"><span class="lineNum">      73</span>              : </span>
-<span id="L74"><span class="lineNum">      74</span>              :     // Searches the XHTML'd document for a redirect URL.</span>
-<span id="L75"><span class="lineNum">      75</span>              :     // Returns the redirect URL, or the empty string.</span>
-<span id="L76"><span class="lineNum">      76</span>              :     QString searchForRedirect(const QString&amp; document);</span>
-<span id="L77"><span class="lineNum">      77</span>              : </span>
-<span id="L78"><span class="lineNum">      78</span>              :     // Handles the boilerplate involved with emitting the ready() signal.</span>
-<span id="L79"><span class="lineNum">      79</span>              :     void emitReadySignal(QString* document);</span>
-<span id="L80"><span class="lineNum">      80</span>              :     </span>
-<span id="L81"><span class="lineNum">      81</span>              : private:</span>
-<span id="L82"><span class="lineNum">      82</span>              :     void init();</span>
-<span id="L83"><span class="lineNum">      83</span>              : </span>
-<span id="L84"><span class="lineNum">      84</span>              :     SimpleHTTPDownloader downloader;</span>
-<span id="L85"><span class="lineNum">      85</span>              :     QString document;</span>
-<span id="L86"><span class="lineNum">      86</span>              :     bool handleMetaRefresh;</span>
-<span id="L87"><span class="lineNum">      87</span>              :     int redirectAttempts;</span>
-<span id="L88"><span class="lineNum">      88</span>              :     bool error;</span>
-<span id="L89"><span class="lineNum">      89</span>              :     QUrl originalUrl;</span>
-<span id="L90"><span class="lineNum">      90</span>              :     bool done;</span>
-<span id="L91"><span class="lineNum">      91</span>              : };</span>
-<span id="L92"><span class="lineNum">      92</span>              : </span>
-<span id="L93"><span class="lineNum">      93</span>              : #endif // WEBPAGEGRABBER_H</span>
+<span id="L42"><span class="lineNum">      42</span>              : </span>
+<span id="L43"><span class="lineNum">      43</span>              : signals:</span>
+<span id="L44"><span class="lineNum">      44</span>              :     // If you requested a URL, ready() will be emitted when it's ready!</span>
+<span id="L45"><span class="lineNum">      45</span>              :     // If document is null, an error happened. :(</span>
+<span id="L46"><span class="lineNum">      46</span>              :     void ready(WebPageGrabber* grabber, QString* document);</span>
+<span id="L47"><span class="lineNum">      47</span>              : </span>
+<span id="L48"><span class="lineNum">      48</span>              : public slots:</span>
+<span id="L49"><span class="lineNum">      49</span>              :     // Fetches the webpage and emits ready() with the XHTML document.</span>
+<span id="L50"><span class="lineNum">      50</span>              :     // Signals with null on an error.</span>
+<span id="L51"><span class="lineNum">      51</span>              :     virtual void load(const QUrl &amp;url);</span>
+<span id="L52"><span class="lineNum">      52</span>              : </span>
+<span id="L53"><span class="lineNum">      53</span>              :     // Load the HTML string into a Tidy'd XHTML document and returns it (no signal is emmitted.)</span>
+<span id="L54"><span class="lineNum">      54</span>              :     // Returns null on an error.</span>
+<span id="L55"><span class="lineNum">      55</span>              :     QString* load(const QString&amp; htmlString);</span>
+<span id="L56"><span class="lineNum">      56</span>              : </span>
+<span id="L57"><span class="lineNum">      57</span>              :     // Returns the previously loaded document, or the empty string if there was an error.</span>
+<span id="L58"><span class="lineNum">      58</span> <span class="tlaGNC tlaBgGNC">           3 :     inline QString* getDocument() { return error ? nullptr : &amp;document; }</span></span>
+<span id="L59"><span class="lineNum">      59</span>              : </span>
+<span id="L60"><span class="lineNum">      60</span> <span class="tlaUNC tlaBgUNC">           0 :     inline QUrl getOriginalURL() const { return originalUrl; }</span></span>
+<span id="L61"><span class="lineNum">      61</span>              : </span>
+<span id="L62"><span class="lineNum">      62</span> <span class="tlaUNC">           0 :     inline bool isDone() const { return done; }</span></span>
+<span id="L63"><span class="lineNum">      63</span>              :     </span>
+<span id="L64"><span class="lineNum">      64</span>              : private slots:</span>
+<span id="L65"><span class="lineNum">      65</span>              :     // Internal load methods.</span>
+<span id="L66"><span class="lineNum">      66</span>              :     void loadInternal(const QUrl &amp;url);</span>
+<span id="L67"><span class="lineNum">      67</span>              :     QString* loadInternal(const QString&amp; htmlString, bool handleRefresh);</span>
+<span id="L68"><span class="lineNum">      68</span>              : </span>
+<span id="L69"><span class="lineNum">      69</span>              :     // Uh oh, an error!</span>
+<span id="L70"><span class="lineNum">      70</span>              :     void onDownloadError(const QUrl&amp; url, const QString&amp; errorString);</span>
+<span id="L71"><span class="lineNum">      71</span>              : </span>
+<span id="L72"><span class="lineNum">      72</span>              :     // We got some HTTP content!</span>
+<span id="L73"><span class="lineNum">      73</span>              :     void onDownloadFinished(const QUrl&amp; url, const QByteArray&amp; data);</span>
+<span id="L74"><span class="lineNum">      74</span>              : </span>
+<span id="L75"><span class="lineNum">      75</span>              :     // Searches the XHTML'd document for a redirect URL.</span>
+<span id="L76"><span class="lineNum">      76</span>              :     // Returns the redirect URL, or the empty string.</span>
+<span id="L77"><span class="lineNum">      77</span>              :     QString searchForRedirect(const QString&amp; document);</span>
+<span id="L78"><span class="lineNum">      78</span>              : </span>
+<span id="L79"><span class="lineNum">      79</span>              :     // Handles the boilerplate involved with emitting the ready() signal.</span>
+<span id="L80"><span class="lineNum">      80</span>              :     void emitReadySignal(QString* document);</span>
+<span id="L81"><span class="lineNum">      81</span>              :     </span>
+<span id="L82"><span class="lineNum">      82</span>              : private:</span>
+<span id="L83"><span class="lineNum">      83</span>              :     void init();</span>
+<span id="L84"><span class="lineNum">      84</span>              : </span>
+<span id="L85"><span class="lineNum">      85</span>              :     NetworkDownloadCore* core;</span>
+<span id="L86"><span class="lineNum">      86</span>              :     QString document;</span>
+<span id="L87"><span class="lineNum">      87</span>              :     bool handleMetaRefresh;</span>
+<span id="L88"><span class="lineNum">      88</span>              :     int redirectAttempts;</span>
+<span id="L89"><span class="lineNum">      89</span>              :     bool error;</span>
+<span id="L90"><span class="lineNum">      90</span>              :     QUrl originalUrl;</span>
+<span id="L91"><span class="lineNum">      91</span>              :     bool done;</span>
+<span id="L92"><span class="lineNum">      92</span>              : };</span>
+<span id="L93"><span class="lineNum">      93</span>              : </span>
+<span id="L94"><span class="lineNum">      94</span>              : #endif // WEBPAGEGRABBER_H</span>
         </pre>
               </td>
             </tr>
