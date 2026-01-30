@@ -1,20 +1,14 @@
 #include "ImageGrabber.h"
+#include "../network/BatchDownloadCore.h"
 
-#include <QDebug>
-#include <QString>
-#include <QStringList>
-#include <QNetworkReply>
 #include <QMimeDatabase>
-#include "ErrorHandling.h"
 
-ImageGrabber::ImageGrabber(QObject *parent) :
+ImageGrabber::ImageGrabber(QObject *parent, QNetworkAccessManager* networkManager) :
     FangObject(parent),
-    manager(),
-    urlsToCheck(),
-    results()
+    batchDownloader(new BatchDownloadCore(30000, 10, this, networkManager))
 {
-    // Signals!
-    connect(&manager, &FangNetworkAccessManager::finished, this, &ImageGrabber::onRequestFinished);
+    connect(batchDownloader, &BatchDownloadCore::finished,
+            this, &ImageGrabber::onBatchFinished);
 }
 
 void ImageGrabber::fetchUrl(const QUrl &url)
@@ -26,74 +20,37 @@ void ImageGrabber::fetchUrl(const QUrl &url)
 
 void ImageGrabber::fetchUrls(const QList<QUrl> &urls)
 {
-    // Reset everything.
     results.clear();
-    urlsToCheck.clear();
-    
-    // Do it!
-    for (QUrl url : urls) {
-        checkUrl(url);
-    }
+    batchDownloader->download(urls);
 }
 
-void ImageGrabber::checkUrl(const QUrl &url)
+void ImageGrabber::onBatchFinished()
 {
-    if (urlsToCheck.contains(url)) {
-        return; // Already workin' on this one.
-    }
-    
-    urlsToCheck.append(url);
+    // Convert batch results to results in ImageData format.
+    QMap<QUrl, BatchDownloadResult> batchResults = batchDownloader->results();
 
-    QNetworkRequest request(url);
-    request.setTransferTimeout(30000); // 30 secs.
-    manager.get(request);
-}
+    for (auto it = batchResults.constBegin(); it != batchResults.constEnd(); ++it) {
+        const QUrl& url = it.key();
+        const BatchDownloadResult& batchResult = it.value();
 
-void ImageGrabber::onRequestFinished(QNetworkReply * reply)
-{
-    QUrl requestedUrl = reply->request().url();
-    FANG_CHECK(urlsToCheck.contains(requestedUrl), "ImageGrabber: Unexpected URL received");
+        ImageData imageData;
 
-    //
-    // TODO: Handle HTTP redirects correctly.
-    //
+        if (batchResult.success && !batchResult.data.isEmpty()) {
+            QImage image = QImage::fromData(batchResult.data);
 
-    ImageData imageData;
+            if (!image.isNull()) {
+                imageData.image = image;
+                imageData.rawData = batchResult.data;
 
-    // Let's see what we got 'ere.
-    if (reply->error() != QNetworkReply::NoError) {
-        // Error: Don't do anything, maybe the image will work later, maybe not. *shrug*
-    } else {
-        // Great success!
-        QByteArray rawData = reply->readAll();
-        QImage image = QImage::fromData(rawData);
-
-        if (!image.isNull()) {
-            imageData.image = image;
-            imageData.rawData = rawData;
-
-            // Detect MIME type from the raw data.
-            QMimeDatabase mimeDb;
-            QMimeType mimeType = mimeDb.mimeTypeForData(rawData);
-            imageData.mimeType = mimeType.name();
+                // Detect MIME type from the raw data.
+                QMimeDatabase mimeDb;
+                QMimeType mimeType = mimeDb.mimeTypeForData(batchResult.data);
+                imageData.mimeType = mimeType.name();
+            }
         }
+
+        results.insert(url, imageData);
     }
 
-    results.insert(requestedUrl, imageData);
-
-    // Are we there yet?
-    checkCompletion();
-}
-
-
-void ImageGrabber::checkCompletion()
-{
-    // Only continue if we're done.
-    if (results.size() != urlsToCheck.size()) {
-        return;
-    }
-    
-    // And we're done here!
     emit finished();
 }
-

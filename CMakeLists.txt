@@ -134,8 +134,7 @@ qt_add_executable(Fang WIN32
     src/network/FangNetworkAccessManager.cpp
     src/network/FangQQmlNetworkAccessManagerFactory.cpp
     src/network/NetworkRetryPolicy.cpp
-    src/network/NetworkStateMonitor.cpp
-    src/network/ResilientNetworkReply.cpp
+    src/network/BatchDownloadCore.cpp
     src/notifications/NotificationBase.cpp
     src/operations/SetPinOperation.cpp
     src/models/PinnedFeedItem.cpp
@@ -149,7 +148,7 @@ qt_add_executable(Fang WIN32
     src/parser/BatchNewsParser.h
     src/parser/BatchNewsParser.cpp
     src/parser/NewsParser.cpp
-    src/utilities/SimpleHTTPDownloader.cpp
+    src/network/NetworkDownloadCore.cpp
     src/server/WebSocketServer.cpp
     src/server/WebServer.cpp
 
@@ -206,8 +205,8 @@ qt_add_executable(Fang WIN32
     src/network/FangNetworkAccessManager.h
     src/network/FangQQmlNetworkAccessManagerFactory.h
     src/network/NetworkRetryPolicy.h
-    src/network/NetworkStateMonitor.h
-    src/network/ResilientNetworkReply.h
+    src/network/NetworkDownloadCore.h
+    src/network/BatchDownloadCore.h
     src/notifications/NotificationBase.h
 
     src/operations/SetPinOperation.h
@@ -222,7 +221,6 @@ qt_add_executable(Fang WIN32
     src/db/DBSettingsKey.h
     src/parser/BatchNewsParser.h
     src/parser/NewsParser.h
-    src/utilities/SimpleHTTPDownloader.h
     src/server/WebSocketServer.h
     src/server/WebServer.h
 

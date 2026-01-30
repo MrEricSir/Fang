@@ -13,8 +13,8 @@ qt_add_executable(tst_testbatchfeeddiscovery
     ${CMAKE_SOURCE_DIR}/src/utilities/FeedDiscovery.h
     ${CMAKE_SOURCE_DIR}/src/utilities/WebPageGrabber.cpp
     ${CMAKE_SOURCE_DIR}/src/utilities/WebPageGrabber.h
-    ${CMAKE_SOURCE_DIR}/src/utilities/SimpleHTTPDownloader.cpp
-    ${CMAKE_SOURCE_DIR}/src/utilities/SimpleHTTPDownloader.h
+    ${CMAKE_SOURCE_DIR}/src/network/NetworkDownloadCore.cpp
+    ${CMAKE_SOURCE_DIR}/src/network/NetworkDownloadCore.h
     ${CMAKE_SOURCE_DIR}/src/utilities/NetworkUtilities.cpp
     ${CMAKE_SOURCE_DIR}/src/utilities/NetworkUtilities.h
     ${CMAKE_SOURCE_DIR}/src/utilities/FangLogging.cpp
@@ -48,10 +48,6 @@ qt_add_executable(tst_testbatchfeeddiscovery
     ${CMAKE_SOURCE_DIR}/src/network/FangNetworkAccessManager.h
     ${CMAKE_SOURCE_DIR}/src/network/NetworkRetryPolicy.cpp
     ${CMAKE_SOURCE_DIR}/src/network/NetworkRetryPolicy.h
-    ${CMAKE_SOURCE_DIR}/src/network/NetworkStateMonitor.cpp
-    ${CMAKE_SOURCE_DIR}/src/network/NetworkStateMonitor.h
-    ${CMAKE_SOURCE_DIR}/src/network/ResilientNetworkReply.cpp
-    ${CMAKE_SOURCE_DIR}/src/network/ResilientNetworkReply.h
 )
 
 # Include directories

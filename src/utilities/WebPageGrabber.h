@@ -6,15 +6,16 @@
 #include <QUrl>
 #include <QTimer>
 #include "../FangObject.h"
-#include "SimpleHTTPDownloader.h"
+#include "../network/NetworkDownloadCore.h"
 
 #define DEFAULT_HANDLE_META_REFRESH true
 #define DEFAULT_TIMEOUT_MS 5000
+#define MAX_REDIRECTS 10
 
 /*!
- * @brief Loads a web page at a given URL and signals with the XHTML document when done.
- *
- * Note that this class is not rentrant.
+    \brief Loads a web page at a given URL and signals with the XHTML document when done.
+
+    Note that this class is not rentrant.
  */
 class WebPageGrabber : public FangObject
 {
@@ -66,10 +67,10 @@ private slots:
     QString* loadInternal(const QString& htmlString, bool handleRefresh);
 
     // Uh oh, an error!
-    void onDownloadError(QString err);
+    void onDownloadError(const QUrl& url, const QString& errorString);
 
     // We got some HTTP content!
-    void onDownloadFinished(QByteArray array);
+    void onDownloadFinished(const QUrl& url, const QByteArray& data);
 
     // Searches the XHTML'd document for a redirect URL.
     // Returns the redirect URL, or the empty string.
@@ -81,7 +82,7 @@ private slots:
 private:
     void init();
 
-    SimpleHTTPDownloader downloader;
+    NetworkDownloadCore* core;
     QString document;
     bool handleMetaRefresh;
     int redirectAttempts;

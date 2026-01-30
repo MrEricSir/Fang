@@ -3,11 +3,9 @@
 
 #include <QObject>
 #include <QUrl>
-#include <QNetworkReply>
 #include <QList>
 #include <QPair>
 #include <QImage>
-#include <QSet>
 #include <QBuffer>
 
 #include <QSimpleStateMachine/QSimpleStateMachine.h>
@@ -15,15 +13,21 @@
 #include "WebPageGrabber.h"
 #include "../FangObject.h"
 
+class BatchDownloadCore;
+class QNetworkAccessManager;
+
 // Maximum favicon width and/or height to store.
 #define MAX_FAVICON_DIMENSION 512
 
+/*!
+   Favicon Grabber attempts to find the best available favicon for a URL.
+ */
 class FaviconGrabber : public FangObject
 {
     Q_OBJECT
-    
+
 private:
-    
+
     enum FaviconGrabberState {
         START,           // Starts off our list by checking standard /favicon.* urls.
         WEB_GRABBER,     // Checks the webpage for links to favicons.
@@ -31,45 +35,44 @@ private:
         PICK_BEST,       // Determine which icon is best. (Emits finished() signal)
         GRAB_ERROR       // We're done, but there was a problemo.
     };
-    
+
 public:
     explicit FaviconGrabber(QObject *parent = nullptr, QNetworkAccessManager* networkManager = nullptr);
-    
+
 signals:
     /**
      * @brief Called when complete.
      * @param faviconDataUri A data URI containing the favicon as PNG, or empty string on failure.
      */
     void finished(const QString& faviconDataUri);
-    
+
 public slots:
-    
+
     /**
      * @brief Looks for a favicon for the given URL.
      * @param url
      */
     void find(const QUrl& url);
-    
+
 private slots:
-    
+
     // WEB_GRABBER
     void onWebGrabber();
-    
+
     // CHECK_ICONS
     void onCheckIcons();
-    
+
     // PICK_BEST
     void onPickBest();
-    
+
     // ERROR
     void onError();
-    
+
     /**
-     * @brief Completion for CHECK_ICONS
-     * @param reply
+     * @brief Completion for CHECK_ICONS (from BatchDownloadCore)
      */
-    void onRequestFinished(QNetworkReply *reply);
-    
+    void onBatchFinished();
+
     /**
      * @brief Completion for WEB_GRABBER
      */
@@ -84,13 +87,10 @@ private slots:
 private:
     QSimpleStateMachine machine;
     QList<QUrl> urlsToCheck;
-    int repliesWaiting;
-    QList<QPair<QUrl, QImage> > imagesToCheck;
-    QNetworkAccessManager* manager;
-    bool ownsManager;
+    QList<QPair<QUrl, QImage>> imagesToCheck;
+    BatchDownloadCore* batchDownloader;
     WebPageGrabber webGrabber;
     QUrl location;
-    QSet<QNetworkReply*> faviconReplies;  // Track replies we created
 };
 
 #endif // FAVICONGRABBER_H

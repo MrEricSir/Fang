@@ -9,8 +9,7 @@ add_library(FangTestLib STATIC
     # Network stack (used by most tests)
     ${CMAKE_SOURCE_DIR}/src/network/FangNetworkAccessManager.cpp
     ${CMAKE_SOURCE_DIR}/src/network/NetworkRetryPolicy.cpp
-    ${CMAKE_SOURCE_DIR}/src/network/NetworkStateMonitor.cpp
-    ${CMAKE_SOURCE_DIR}/src/network/ResilientNetworkReply.cpp
+    ${CMAKE_SOURCE_DIR}/src/network/BatchDownloadCore.cpp
 
     # Parser infrastructure (used by parser/feed tests)
     ${CMAKE_SOURCE_DIR}/src/parser/ParserInterface.cpp
@@ -21,9 +20,10 @@ add_library(FangTestLib STATIC
     ${CMAKE_SOURCE_DIR}/src/parser/BatchNewsParser.cpp
 
     # Utilities (used by multiple tests)
-    ${CMAKE_SOURCE_DIR}/src/utilities/SimpleHTTPDownloader.cpp
+    ${CMAKE_SOURCE_DIR}/src/network/NetworkDownloadCore.cpp
     ${CMAKE_SOURCE_DIR}/src/utilities/NetworkUtilities.cpp
     ${CMAKE_SOURCE_DIR}/src/utilities/WebPageGrabber.cpp
+    ${CMAKE_SOURCE_DIR}/src/utilities/ImageGrabber.cpp
     # NOTE: FeedDiscovery is NOT included here because it uses QSimpleStateMachine
     # Tests that need FeedDiscovery should compile it directly to avoid duplicate MOC symbols
 )
@@ -42,6 +42,7 @@ target_link_libraries(FangTestLib PUBLIC
     TidyLib
     Qt6::Core
     Qt6::Network
+    Qt6::Gui
 )
 
 # Precompiled headers for Qt (optimization #2)

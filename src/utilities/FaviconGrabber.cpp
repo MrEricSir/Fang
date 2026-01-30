@@ -1,4 +1,6 @@
 #include "FaviconGrabber.h"
+#include "../network/BatchDownloadCore.h"
+
 #include <QString>
 #include <QStringList>
 #include <QImage>
@@ -9,9 +11,7 @@
 
 FaviconGrabber::FaviconGrabber(QObject *parent, QNetworkAccessManager* networkManager) :
     FangObject(parent),
-    repliesWaiting(0),
-    manager(networkManager ? networkManager : new FangNetworkAccessManager(this)),
-    ownsManager(networkManager == nullptr),
+    batchDownloader(new BatchDownloadCore(15000, 10, this, networkManager)),
     webGrabber(true, 5000, this, networkManager)
 {
     // Set up our state machine.
@@ -22,14 +22,14 @@ FaviconGrabber::FaviconGrabber(QObject *parent, QNetworkAccessManager* networkMa
     machine.addStateChange(-1, GRAB_ERROR, [this]() { onError(); }); // Many errors, one slot.
 
     // Signals!
-    connect(manager, &QNetworkAccessManager::finished, this, &FaviconGrabber::onRequestFinished);
+    connect(batchDownloader, &BatchDownloadCore::finished, this, &FaviconGrabber::onBatchFinished);
     connect(&webGrabber, &WebPageGrabber::ready, this, &FaviconGrabber::onWebGrabberReady);
 }
 
 void FaviconGrabber::find(const QUrl &url)
 {
     urlsToCheck.clear();
-    faviconReplies.clear();
+    imagesToCheck.clear();
     location = url;
     machine.start(START);
 
@@ -61,25 +61,35 @@ void FaviconGrabber::onCheckIcons()
         return;
     }
 
-    // Pop each URL off the list and check it
-    repliesWaiting = 0;
-    while (!urlsToCheck.isEmpty()) {
-        repliesWaiting++;
+    // Start batch download of all favicon candidates.
+    batchDownloader->download(urlsToCheck);
+}
 
-        QUrl url = urlsToCheck.takeFirst();
-
-        // If it's not a fully formed URL, fill it out.
-        if (url.isValid() && url.isRelative()) {
-            QUrl newUrl = location;
-            newUrl.setPath(url.path());
-            url = newUrl;
-        }
-
-        QNetworkRequest request(url);
-        request.setTransferTimeout(15000); // 15 sec timeout.
-        QNetworkReply* reply = manager->get(request);
-        faviconReplies.insert(reply);  // Track this reply
+void FaviconGrabber::onBatchFinished()
+{
+    // Ignore if we've moved past CHECK_ICONS state.
+    if (machine.getState() != CHECK_ICONS) {
+        return;
     }
+
+    // Process batch results.
+    QMap<QUrl, BatchDownloadResult> results = batchDownloader->results();
+
+    for (auto it = results.constBegin(); it != results.constEnd(); ++it) {
+        const BatchDownloadResult& result = it.value();
+
+        if (result.success && !result.data.isEmpty()) {
+            QImage img;
+            if (img.loadFromData(result.data)) {
+                qCDebug(logFavicon) << "Successfully loaded image:" << img.width() << "x" << img.height();
+                imagesToCheck << QPair<QUrl, QImage>(it.key(), img);
+            } else {
+                qCDebug(logFavicon) << "Failed to load image from data";
+            }
+        }
+    }
+
+    machine.setState(PICK_BEST);
 }
 
 void FaviconGrabber::onPickBest()
@@ -140,36 +150,6 @@ QString FaviconGrabber::imageToDataUri(const QImage& image)
     finalImage.save(&buffer, "PNG");
 
     return "data:image/png;base64," + QString::fromLatin1(imageData.toBase64());
-}
-
-void FaviconGrabber::onRequestFinished(QNetworkReply * reply)
-{
-    // Only process replies that belong to us (ignore WebPageGrabber's replies)
-    if (!faviconReplies.contains(reply)) {
-        return;
-    }
-
-    // Remove from our tracking set
-    faviconReplies.remove(reply);
-
-    if (!reply->error()) {
-        QImage img;
-        QByteArray data = reply->readAll();
-        qCDebug(logFavicon) << "Trying to load image from" << reply->url() << "size:" << data.size();
-
-        if (img.loadFromData(data)) {
-            qCDebug(logFavicon) << "Successfully loaded image:" << img.width() << "x" << img.height();
-            imagesToCheck << QPair<QUrl, QImage>(reply->url(), img);
-        } else {
-            qCDebug(logFavicon) << "Failed to load image from data";
-        }
-    }
-
-    repliesWaiting--;
-    qCDebug(logFavicon) << "repliesWaiting:" << repliesWaiting << "imagesToCheck.size():" << imagesToCheck.size();
-    if (!repliesWaiting) {
-        machine.setState(PICK_BEST);
-    }
 }
 
 void FaviconGrabber::onWebGrabberReady(WebPageGrabber* grabber, QString *document)

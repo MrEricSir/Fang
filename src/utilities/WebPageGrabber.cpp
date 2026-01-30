@@ -22,24 +22,33 @@ namespace {
 
 WebPageGrabber::WebPageGrabber(bool handleMetaRefresh, int timeoutMS, QObject *parent, QNetworkAccessManager* networkManager) :
     FangObject(parent),
-    downloader(timeoutMS, this, networkManager),
+    core(nullptr),
     handleMetaRefresh(handleMetaRefresh),
     redirectAttempts(0),
     error(true),
     done(false)
-
 {
+    NetworkDownloadConfig config;
+    config.timeoutMs = timeoutMS;
+    config.maxRedirects = 10;
+    config.useInactivityTimeout = true;
+    core = new NetworkDownloadCore(config, this, networkManager);
     init();
 }
 
 WebPageGrabber::WebPageGrabber(QObject *parent) :
     FangObject(parent),
-    downloader(DEFAULT_TIMEOUT_MS, this, nullptr),
+    core(nullptr),
     handleMetaRefresh(DEFAULT_HANDLE_META_REFRESH),
     redirectAttempts(0),
     error(true),
     done(false)
 {
+    NetworkDownloadConfig config;
+    config.timeoutMs = DEFAULT_TIMEOUT_MS;
+    config.maxRedirects = 10;
+    config.useInactivityTimeout = true;
+    core = new NetworkDownloadCore(config, this, nullptr);
     init();
 }
 
@@ -65,7 +74,7 @@ QString *WebPageGrabber::load(const QString& htmlString)
 void WebPageGrabber::loadInternal(const QUrl& url)
 {
     originalUrl = url;
-    downloader.load(url);
+    core->download(url);
 }
 
 QString *WebPageGrabber::loadInternal(const QString& htmlString, bool handleRefresh)
@@ -164,17 +173,19 @@ QString *WebPageGrabber::loadInternal(const QString& htmlString, bool handleRefr
     return &document;
 }
 
-void WebPageGrabber::onDownloadError(QString err)
+void WebPageGrabber::onDownloadError(const QUrl& url, const QString& errorString)
 {
-    Q_UNUSED(err);
+    Q_UNUSED(url);
+    Q_UNUSED(errorString);
 
     // Crap. :(
     emitReadySignal(nullptr);
 }
 
-void WebPageGrabber::onDownloadFinished(QByteArray array)
+void WebPageGrabber::onDownloadFinished(const QUrl& url, const QByteArray& data)
 {
-    loadInternal(array, handleMetaRefresh);
+    Q_UNUSED(url);
+    loadInternal(data, handleMetaRefresh);
 }
 
 QString WebPageGrabber::searchForRedirect(const QString& document)
@@ -239,8 +250,8 @@ void WebPageGrabber::emitReadySignal(QString* document)
 
 void WebPageGrabber::init()
 {
-    connect(&downloader, &SimpleHTTPDownloader::error, this, &WebPageGrabber::onDownloadError);
-    connect(&downloader, &SimpleHTTPDownloader::finished, this, &WebPageGrabber::onDownloadFinished);
+    connect(core, &NetworkDownloadCore::error, this, &WebPageGrabber::onDownloadError);
+    connect(core, &NetworkDownloadCore::finished, this, &WebPageGrabber::onDownloadFinished);
 }
 
 

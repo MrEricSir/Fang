@@ -8,6 +8,8 @@ endif()
 add_subdirectory(FangTestLib)
 
 # Test suite
+add_subdirectory(TestImageGrabber)
+add_subdirectory(TestNetworkDownloadCore)
 add_subdirectory(TestFangParser)
 add_subdirectory(TestFangFaviconGrabber)
 add_subdirectory(TestFangFeedDiscovery)
@@ -29,8 +31,5 @@ add_subdirectory(TestFeedValidator)
 add_subdirectory(TestNewsItem)
 add_subdirectory(TestNewsList)
 
-# Network resilience tests
+# Network tests
 add_subdirectory(TestNetworkRetryPolicy)
-add_subdirectory(TestNetworkStateMonitor)
-add_subdirectory(TestResilientNetworkReply)
-add_subdirectory(TestFangNetworkIntegration)
