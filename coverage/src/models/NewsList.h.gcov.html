@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-01-30 17:44:47</td>
+            <td class="headerValue">2026-01-30 18:27:00</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -70,10 +70,10 @@
 <span id="L8"><span class="lineNum">       8</span>              : #include &quot;../FangObject.h&quot;</span>
 <span id="L9"><span class="lineNum">       9</span>              : class NewsItem;</span>
 <span id="L10"><span class="lineNum">      10</span>              : </span>
-<span id="L11"><span class="lineNum">      11</span>              : /**</span>
-<span id="L12"><span class="lineNum">      12</span>              :  * @brief The NewsList class contains a custom list type that internally is also stored as a set.</span>
-<span id="L13"><span class="lineNum">      13</span>              :  *</span>
-<span id="L14"><span class="lineNum">      14</span>              :  * Could be a generic list class.</span>
+<span id="L11"><span class="lineNum">      11</span>              : /*!</span>
+<span id="L12"><span class="lineNum">      12</span>              :     \brief The NewsList class contains a custom list type that internally is also stored as a set.</span>
+<span id="L13"><span class="lineNum">      13</span>              : </span>
+<span id="L14"><span class="lineNum">      14</span>              :     Could be a generic list class.</span>
 <span id="L15"><span class="lineNum">      15</span>              :  */</span>
 <span id="L16"><span class="lineNum">      16</span>              : class NewsList : public FangObject</span>
 <span id="L17"><span class="lineNum">      17</span>              : {</span>
@@ -81,8 +81,8 @@
 <span id="L19"><span class="lineNum">      19</span>              :     explicit NewsList(QObject *parent = nullptr);</span>
 <span id="L20"><span class="lineNum">      20</span>              :     virtual ~NewsList();</span>
 <span id="L21"><span class="lineNum">      21</span>              : </span>
-<span id="L22"><span class="lineNum">      22</span>              :     /**</span>
-<span id="L23"><span class="lineNum">      23</span>              :      * @brief Delete everything in the list and clear it.</span>
+<span id="L22"><span class="lineNum">      22</span>              :     /*!</span>
+<span id="L23"><span class="lineNum">      23</span>              :         \brief Delete everything in the list and clear it.</span>
 <span id="L24"><span class="lineNum">      24</span>              :      */</span>
 <span id="L25"><span class="lineNum">      25</span>              :     void clear();</span>
 <span id="L26"><span class="lineNum">      26</span>              : </span>
@@ -97,22 +97,22 @@
 <span id="L35"><span class="lineNum">      35</span>              :     void append(NewsItem* value);</span>
 <span id="L36"><span class="lineNum">      36</span>              :     void prepend(NewsItem* value);</span>
 <span id="L37"><span class="lineNum">      37</span>              : </span>
-<span id="L38"><span class="lineNum">      38</span>              :     /**</span>
-<span id="L39"><span class="lineNum">      39</span>              :      * @brief Removes a certain number of items from the start or end of the list and calls deleteLater() on them.</span>
-<span id="L40"><span class="lineNum">      40</span>              :      * @param fromStart True if from start of list, false if from end.</span>
-<span id="L41"><span class="lineNum">      41</span>              :      * @param numberToRemove</span>
+<span id="L38"><span class="lineNum">      38</span>              :     /*!</span>
+<span id="L39"><span class="lineNum">      39</span>              :         \brief Removes a certain number of items from the start or end of the list and calls deleteLater() on them.</span>
+<span id="L40"><span class="lineNum">      40</span>              :         \param fromStart True if from start of list, false if from end.</span>
+<span id="L41"><span class="lineNum">      41</span>              :         \param numberToRemove</span>
 <span id="L42"><span class="lineNum">      42</span>              :      */</span>
 <span id="L43"><span class="lineNum">      43</span>              :     void removeAndDelete(bool fromStart, qsizetype numberToRemove);</span>
 <span id="L44"><span class="lineNum">      44</span>              : </span>
-<span id="L45"><span class="lineNum">      45</span>              :     /**</span>
-<span id="L46"><span class="lineNum">      46</span>              :      * @brief If loaded, returns the news item for a given ID.</span>
-<span id="L47"><span class="lineNum">      47</span>              :      * Linear time complexity.</span>
+<span id="L45"><span class="lineNum">      45</span>              :     /*!</span>
+<span id="L46"><span class="lineNum">      46</span>              :         \brief If loaded, returns the news item for a given ID.</span>
+<span id="L47"><span class="lineNum">      47</span>              :         Linear time complexity.</span>
 <span id="L48"><span class="lineNum">      48</span>              :      */</span>
 <span id="L49"><span class="lineNum">      49</span>              :     NewsItem* newsItemForID(const qint64 id) const;</span>
 <span id="L50"><span class="lineNum">      50</span>              : </span>
-<span id="L51"><span class="lineNum">      51</span>              :     /**</span>
-<span id="L52"><span class="lineNum">      52</span>              :      * @brief Returns the index of the position in the list if a news item with ID is in it, otherwise -1.</span>
-<span id="L53"><span class="lineNum">      53</span>              :      * Linear time complexity.</span>
+<span id="L51"><span class="lineNum">      51</span>              :     /*!</span>
+<span id="L52"><span class="lineNum">      52</span>              :         \brief Returns the index of the position in the list if a news item with ID is in it, otherwise -1.</span>
+<span id="L53"><span class="lineNum">      53</span>              :         Linear time complexity.</span>
 <span id="L54"><span class="lineNum">      54</span>              :      */</span>
 <span id="L55"><span class="lineNum">      55</span>              :     qsizetype indexForItemID(const qint64 id) const;</span>
 <span id="L56"><span class="lineNum">      56</span>              : </span>

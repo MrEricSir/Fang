@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-01-30 17:44:47</td>
+            <td class="headerValue">2026-01-30 18:27:00</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryLo">50.0&nbsp;%</td>
@@ -94,13 +94,13 @@
 <span id="L32"><span class="lineNum">      32</span>              :     int numChildren;</span>
 <span id="L33"><span class="lineNum">      33</span>              : };</span>
 <span id="L34"><span class="lineNum">      34</span>              : </span>
-<span id="L35"><span class="lineNum">      35</span>              : /**</span>
-<span id="L36"><span class="lineNum">      36</span>              :  * @brief Takes a &quot;raw&quot; HTML feed and processes it in the following ways:</span>
-<span id="L37"><span class="lineNum">      37</span>              :  *          - Tidy'd into XHTML fragments</span>
-<span id="L38"><span class="lineNum">      38</span>              :  *          - Image sizes are baked in</span>
-<span id="L39"><span class="lineNum">      39</span>              :  *          - Javascript is stripped</span>
-<span id="L40"><span class="lineNum">      40</span>              :  *          - Common social media buttons removed</span>
-<span id="L41"><span class="lineNum">      41</span>              :  *          - Tracking pixels?  Nope.</span>
+<span id="L35"><span class="lineNum">      35</span>              : /*!</span>
+<span id="L36"><span class="lineNum">      36</span>              :     \brief Takes a &quot;raw&quot; HTML feed and processes it in the following ways:</span>
+<span id="L37"><span class="lineNum">      37</span>              :              - Tidy'd into XHTML fragments</span>
+<span id="L38"><span class="lineNum">      38</span>              :              - Image sizes are baked in</span>
+<span id="L39"><span class="lineNum">      39</span>              :              - Javascript is stripped</span>
+<span id="L40"><span class="lineNum">      40</span>              :              - Common social media buttons removed</span>
+<span id="L41"><span class="lineNum">      41</span>              :              - Tracking pixels?  Nope.</span>
 <span id="L42"><span class="lineNum">      42</span>              :  */</span>
 <span id="L43"><span class="lineNum">      43</span>              : class RawFeedRewriter : public FangObject</span>
 <span id="L44"><span class="lineNum">      44</span>              : {</span>
@@ -110,8 +110,8 @@
 <span id="L48"><span class="lineNum">      48</span>              :     </span>
 <span id="L49"><span class="lineNum">      49</span>              :     </span>
 <span id="L50"><span class="lineNum">      50</span>              : signals:</span>
-<span id="L51"><span class="lineNum">      51</span>              :     /**</span>
-<span id="L52"><span class="lineNum">      52</span>              :      * @brief We're done!  The feed you passed in as been modified.</span>
+<span id="L51"><span class="lineNum">      51</span>              :     /*!</span>
+<span id="L52"><span class="lineNum">      52</span>              :         \brief We're done!  The feed you passed in as been modified.</span>
 <span id="L53"><span class="lineNum">      53</span>              :      */</span>
 <span id="L54"><span class="lineNum">      54</span>              :     void finished();</span>
 <span id="L55"><span class="lineNum">      55</span>              :     </span>
@@ -119,8 +119,8 @@
 <span id="L57"><span class="lineNum">      57</span>              :     </span>
 <span id="L58"><span class="lineNum">      58</span>              :     void rewrite(QList&lt;RawNews*&gt;* newsList);</span>
 <span id="L59"><span class="lineNum">      59</span>              :     </span>
-<span id="L60"><span class="lineNum">      60</span>              :     /**</span>
-<span id="L61"><span class="lineNum">      61</span>              :      * @return </span>
+<span id="L60"><span class="lineNum">      60</span>              :     /*!</span>
+<span id="L61"><span class="lineNum">      61</span>              :         \return</span>
 <span id="L62"><span class="lineNum">      62</span>              :      */</span>
 <span id="L63"><span class="lineNum">      63</span> <span class="tlaUNC tlaBgUNC">           0 :     inline QList&lt;RawNews*&gt;* getNewsList() { return newsList; }</span></span>
 <span id="L64"><span class="lineNum">      64</span>              : </span>
