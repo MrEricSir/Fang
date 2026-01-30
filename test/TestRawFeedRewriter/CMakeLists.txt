@@ -3,6 +3,7 @@ qt_add_executable(tst_testrawfeedrewritertest
     tst_testrawfeedrewritertest.cpp
     # Shared sources from main project
     ${CMAKE_SOURCE_DIR}/src/utilities/RawFeedRewriter.cpp
+    ${CMAKE_SOURCE_DIR}/src/utilities/HTMLSanitizer.cpp
     ${CMAKE_SOURCE_DIR}/src/utilities/ImageGrabber.cpp
     ${CMAKE_SOURCE_DIR}/src/FangObject.cpp
     ${CMAKE_SOURCE_DIR}/src/parser/RawNews.cpp
@@ -15,6 +16,7 @@ qt_add_executable(tst_testrawfeedrewritertest
     ${CMAKE_SOURCE_DIR}/src/utilities/FangLogging.cpp
     # Include corresponding headers for AUTOMOC
     ${CMAKE_SOURCE_DIR}/src/utilities/RawFeedRewriter.h
+    ${CMAKE_SOURCE_DIR}/src/utilities/HTMLSanitizer.h
     ${CMAKE_SOURCE_DIR}/src/utilities/ImageGrabber.h
     ${CMAKE_SOURCE_DIR}/src/FangObject.h
     ${CMAKE_SOURCE_DIR}/src/parser/RawNews.h
