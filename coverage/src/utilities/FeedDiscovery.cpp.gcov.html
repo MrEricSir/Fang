@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-01-30 18:27:00</td>
+            <td class="headerValue">2026-01-31 01:40:31</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">95.2&nbsp;%</td>
@@ -61,10 +61,10 @@
 <pre class="sourceHeading">            Line data    Source code</pre>
 <pre class="source">
 <span id="L1"><span class="lineNum">       1</span>              : #include &quot;FeedDiscovery.h&quot;</span>
-<span id="L2"><span class="lineNum">       2</span>              : #include &lt;QXmlStreamReader&gt;</span>
-<span id="L3"><span class="lineNum">       3</span>              : #include &lt;QSet&gt;</span>
-<span id="L4"><span class="lineNum">       4</span>              : #include &lt;algorithm&gt;</span>
-<span id="L5"><span class="lineNum">       5</span>              : #include &lt;QDebug&gt;</span>
+<span id="L2"><span class="lineNum">       2</span>              : #include &quot;FangLogging.h&quot;</span>
+<span id="L3"><span class="lineNum">       3</span>              : #include &lt;QXmlStreamReader&gt;</span>
+<span id="L4"><span class="lineNum">       4</span>              : #include &lt;QSet&gt;</span>
+<span id="L5"><span class="lineNum">       5</span>              : #include &lt;algorithm&gt;</span>
 <span id="L6"><span class="lineNum">       6</span>              : #include &quot;NetworkUtilities.h&quot;</span>
 <span id="L7"><span class="lineNum">       7</span>              : #include &quot;ErrorHandling.h&quot;</span>
 <span id="L8"><span class="lineNum">       8</span>              : #include &quot;../parser/NewsParser.h&quot;</span>
@@ -145,7 +145,7 @@
 <span id="L83"><span class="lineNum">      83</span> <span class="tlaUNC">           0 :             url.setScheme(&quot;http&quot;);</span></span>
 <span id="L84"><span class="lineNum">      84</span>              :         }</span>
 <span id="L85"><span class="lineNum">      85</span>              :         </span>
-<span id="L86"><span class="lineNum">      86</span>              :         //qDebug() &lt;&lt; &quot;Location is adjusted to: &quot; &lt;&lt; location;</span>
+<span id="L86"><span class="lineNum">      86</span>              :         //qCDebug(logUtility) &lt;&lt; &quot;Location is adjusted to: &quot; &lt;&lt; location;</span>
 <span id="L87"><span class="lineNum">      87</span>              :         </span>
 <span id="L88"><span class="lineNum">      88</span>              :         // Final check!  If it's not valid, we'll set an error and bail.</span>
 <span id="L89"><span class="lineNum">      89</span> <span class="tlaUNC">           0 :         if (url.isRelative()) {</span></span>
@@ -238,15 +238,15 @@
 <span id="L176"><span class="lineNum">     176</span>              : </span>
 <span id="L177"><span class="lineNum">     177</span>              :     // Parse feed URLs from the HTML document</span>
 <span id="L178"><span class="lineNum">     178</span> <span class="tlaGNC">           3 :     QList&lt;QString&gt; feedURLs = parseFeedsFromXHTML(*document);</span></span>
-<span id="L179"><span class="lineNum">     179</span> <span class="tlaGNC">           3 :     qDebug() &lt;&lt; &quot;Parsed&quot; &lt;&lt; feedURLs.count() &lt;&lt; &quot;feed URLs from HTML&quot;;</span></span>
+<span id="L179"><span class="lineNum">     179</span> <span class="tlaGNC">           6 :     qCDebug(logUtility) &lt;&lt; &quot;Parsed&quot; &lt;&lt; feedURLs.count() &lt;&lt; &quot;feed URLs from HTML&quot;;</span></span>
 <span id="L180"><span class="lineNum">     180</span>              : </span>
 <span id="L181"><span class="lineNum">     181</span> <span class="tlaGNC">           3 :     if (feedURLs.isEmpty()) {</span></span>
-<span id="L182"><span class="lineNum">     182</span> <span class="tlaGNC">           1 :         qDebug() &lt;&lt; &quot;No feeds found in HTML!&quot;;</span></span>
+<span id="L182"><span class="lineNum">     182</span> <span class="tlaGNC">           2 :         qCDebug(logUtility) &lt;&lt; &quot;No feeds found in HTML!&quot;;</span></span>
 <span id="L183"><span class="lineNum">     183</span> <span class="tlaGNC">           1 :         reportError(&quot;No feed found&quot;);</span></span>
 <span id="L184"><span class="lineNum">     184</span> <span class="tlaGNC">           1 :         return;</span></span>
 <span id="L185"><span class="lineNum">     185</span>              :     }</span>
 <span id="L186"><span class="lineNum">     186</span>              : </span>
-<span id="L187"><span class="lineNum">     187</span> <span class="tlaGNC">           2 :     qDebug() &lt;&lt; &quot;Total feed URLs found:&quot; &lt;&lt; feedURLs.count();</span></span>
+<span id="L187"><span class="lineNum">     187</span> <span class="tlaGNC">           4 :     qCDebug(logUtility) &lt;&lt; &quot;Total feed URLs found:&quot; &lt;&lt; feedURLs.count();</span></span>
 <span id="L188"><span class="lineNum">     188</span>              : </span>
 <span id="L189"><span class="lineNum">     189</span>              :     // Sort by path length (longer paths first = more specific)</span>
 <span id="L190"><span class="lineNum">     190</span> <span class="tlaGNC">           2 :     QList&lt;QString&gt; feedURLStrings = feedURLs;</span></span>

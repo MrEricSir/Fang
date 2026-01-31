@@ -31,18 +31,18 @@
             <td class="headerValue">coverage.info.cleaned</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntryMed">75.0&nbsp;%</td>
-            <td class="headerCovTableEntry">4</td>
-            <td class="headerCovTableEntry">3</td>
+            <td class="headerCovTableEntryLo">50.0&nbsp;%</td>
+            <td class="headerCovTableEntry">12</td>
+            <td class="headerCovTableEntry">6</td>
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-01-30 18:27:00</td>
+            <td class="headerValue">2026-01-31 01:40:31</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntryMed">75.0&nbsp;%</td>
-            <td class="headerCovTableEntry">4</td>
-            <td class="headerCovTableEntry">3</td>
+            <td class="headerCovTableEntryLo">50.0&nbsp;%</td>
+            <td class="headerCovTableEntry">12</td>
+            <td class="headerCovTableEntry">6</td>
           </tr>
                   <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
                 </table>
@@ -64,19 +64,35 @@
 <span id="L2"><span class="lineNum">       2</span>              : </span>
 <span id="L3"><span class="lineNum">       3</span>              : // Define logging categories</span>
 <span id="L4"><span class="lineNum">       4</span>              : // In debug builds, these output at QtDebugMsg level</span>
-<span id="L5"><span class="lineNum">       5</span>              : // In release builds, they're disabled (QtInfoMsg level means debug messages won't show)</span>
+<span id="L5"><span class="lineNum">       5</span>              : // In release builds, they're disabled except for warnings/critical</span>
 <span id="L6"><span class="lineNum">       6</span>              : </span>
 <span id="L7"><span class="lineNum">       7</span>              : #ifdef QT_DEBUG</span>
-<span id="L8"><span class="lineNum">       8</span> <span class="tlaGNC tlaBgGNC">           4 : Q_LOGGING_CATEGORY(logFavicon, &quot;fang.favicon&quot;, QtDebugMsg)</span></span>
-<span id="L9"><span class="lineNum">       9</span> <span class="tlaGNC">          57 : Q_LOGGING_CATEGORY(logWebPage, &quot;fang.webpage&quot;, QtDebugMsg)</span></span>
-<span id="L10"><span class="lineNum">      10</span> <span class="tlaGNC">         375 : Q_LOGGING_CATEGORY(logMock, &quot;fang.mock&quot;, QtDebugMsg)</span></span>
-<span id="L11"><span class="lineNum">      11</span> <span class="tlaUNC tlaBgUNC">           0 : Q_LOGGING_CATEGORY(logNetwork, &quot;fang.network&quot;, QtDebugMsg)</span></span>
-<span id="L12"><span class="lineNum">      12</span>              : #else</span>
-<span id="L13"><span class="lineNum">      13</span>              : Q_LOGGING_CATEGORY(logFavicon, &quot;fang.favicon&quot;, QtInfoMsg)</span>
-<span id="L14"><span class="lineNum">      14</span>              : Q_LOGGING_CATEGORY(logWebPage, &quot;fang.webpage&quot;, QtInfoMsg)</span>
-<span id="L15"><span class="lineNum">      15</span>              : Q_LOGGING_CATEGORY(logMock, &quot;fang.mock&quot;, QtInfoMsg)</span>
-<span id="L16"><span class="lineNum">      16</span>              : Q_LOGGING_CATEGORY(logNetwork, &quot;fang.network&quot;, QtWarningMsg)  // Keep warnings in release builds</span>
-<span id="L17"><span class="lineNum">      17</span>              : #endif</span>
+<span id="L8"><span class="lineNum">       8</span> <span class="tlaUNC tlaBgUNC">           0 : Q_LOGGING_CATEGORY(logApp, &quot;fang.app&quot;, QtDebugMsg)</span></span>
+<span id="L9"><span class="lineNum">       9</span> <span class="tlaUNC">           0 : Q_LOGGING_CATEGORY(logDb, &quot;fang.db&quot;, QtDebugMsg)</span></span>
+<span id="L10"><span class="lineNum">      10</span> <span class="tlaGNC tlaBgGNC">           5 : Q_LOGGING_CATEGORY(logModel, &quot;fang.model&quot;, QtDebugMsg)</span></span>
+<span id="L11"><span class="lineNum">      11</span> <span class="tlaUNC tlaBgUNC">           0 : Q_LOGGING_CATEGORY(logOperation, &quot;fang.operation&quot;, QtDebugMsg)</span></span>
+<span id="L12"><span class="lineNum">      12</span> <span class="tlaUNC">           0 : Q_LOGGING_CATEGORY(logParser, &quot;fang.parser&quot;, QtDebugMsg)</span></span>
+<span id="L13"><span class="lineNum">      13</span> <span class="tlaGNC tlaBgGNC">          21 : Q_LOGGING_CATEGORY(logNetwork, &quot;fang.network&quot;, QtDebugMsg)</span></span>
+<span id="L14"><span class="lineNum">      14</span> <span class="tlaUNC tlaBgUNC">           0 : Q_LOGGING_CATEGORY(logRewriter, &quot;fang.rewriter&quot;, QtDebugMsg)</span></span>
+<span id="L15"><span class="lineNum">      15</span> <span class="tlaUNC">           0 : Q_LOGGING_CATEGORY(logServer, &quot;fang.server&quot;, QtDebugMsg)</span></span>
+<span id="L16"><span class="lineNum">      16</span> <span class="tlaGNC tlaBgGNC">           6 : Q_LOGGING_CATEGORY(logUtility, &quot;fang.utility&quot;, QtDebugMsg)</span></span>
+<span id="L17"><span class="lineNum">      17</span> <span class="tlaGNC">           4 : Q_LOGGING_CATEGORY(logFavicon, &quot;fang.favicon&quot;, QtDebugMsg)</span></span>
+<span id="L18"><span class="lineNum">      18</span> <span class="tlaGNC">          57 : Q_LOGGING_CATEGORY(logWebPage, &quot;fang.webpage&quot;, QtDebugMsg)</span></span>
+<span id="L19"><span class="lineNum">      19</span> <span class="tlaGNC">         375 : Q_LOGGING_CATEGORY(logMock, &quot;fang.mock&quot;, QtDebugMsg)</span></span>
+<span id="L20"><span class="lineNum">      20</span>              : #else</span>
+<span id="L21"><span class="lineNum">      21</span>              : Q_LOGGING_CATEGORY(logApp, &quot;fang.app&quot;, QtWarningMsg)</span>
+<span id="L22"><span class="lineNum">      22</span>              : Q_LOGGING_CATEGORY(logDb, &quot;fang.db&quot;, QtWarningMsg)</span>
+<span id="L23"><span class="lineNum">      23</span>              : Q_LOGGING_CATEGORY(logModel, &quot;fang.model&quot;, QtWarningMsg)</span>
+<span id="L24"><span class="lineNum">      24</span>              : Q_LOGGING_CATEGORY(logOperation, &quot;fang.operation&quot;, QtWarningMsg)</span>
+<span id="L25"><span class="lineNum">      25</span>              : Q_LOGGING_CATEGORY(logParser, &quot;fang.parser&quot;, QtWarningMsg)</span>
+<span id="L26"><span class="lineNum">      26</span>              : Q_LOGGING_CATEGORY(logNetwork, &quot;fang.network&quot;, QtWarningMsg)</span>
+<span id="L27"><span class="lineNum">      27</span>              : Q_LOGGING_CATEGORY(logRewriter, &quot;fang.rewriter&quot;, QtWarningMsg)</span>
+<span id="L28"><span class="lineNum">      28</span>              : Q_LOGGING_CATEGORY(logServer, &quot;fang.server&quot;, QtWarningMsg)</span>
+<span id="L29"><span class="lineNum">      29</span>              : Q_LOGGING_CATEGORY(logUtility, &quot;fang.utility&quot;, QtWarningMsg)</span>
+<span id="L30"><span class="lineNum">      30</span>              : Q_LOGGING_CATEGORY(logFavicon, &quot;fang.favicon&quot;, QtWarningMsg)</span>
+<span id="L31"><span class="lineNum">      31</span>              : Q_LOGGING_CATEGORY(logWebPage, &quot;fang.webpage&quot;, QtWarningMsg)</span>
+<span id="L32"><span class="lineNum">      32</span>              : Q_LOGGING_CATEGORY(logMock, &quot;fang.mock&quot;, QtWarningMsg)</span>
+<span id="L33"><span class="lineNum">      33</span>              : #endif</span>
         </pre>
               </td>
             </tr>

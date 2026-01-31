@@ -31,13 +31,13 @@
             <td class="headerValue">coverage.info.cleaned</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntryMed">84.6&nbsp;%</td>
-            <td class="headerCovTableEntry">39</td>
+            <td class="headerCovTableEntryMed">82.5&nbsp;%</td>
+            <td class="headerCovTableEntry">40</td>
             <td class="headerCovTableEntry">33</td>
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-01-30 18:27:00</td>
+            <td class="headerValue">2026-01-31 01:40:31</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryLo">50.0&nbsp;%</td>
@@ -61,92 +61,93 @@
 <pre class="sourceHeading">            Line data    Source code</pre>
 <pre class="source">
 <span id="L1"><span class="lineNum">       1</span>              : #include &quot;OPMLExport.h&quot;</span>
-<span id="L2"><span class="lineNum">       2</span>              : </span>
-<span id="L3"><span class="lineNum">       3</span>              : #include &lt;QXmlStreamWriter&gt;</span>
-<span id="L4"><span class="lineNum">       4</span>              : #include &lt;QDateTime&gt;</span>
-<span id="L5"><span class="lineNum">       5</span>              : #include &lt;QFile&gt;</span>
-<span id="L6"><span class="lineNum">       6</span>              : #include &quot;ErrorHandling.h&quot;</span>
-<span id="L7"><span class="lineNum">       7</span>              : #include &quot;../models/FeedItem.h&quot;</span>
-<span id="L8"><span class="lineNum">       8</span>              : </span>
-<span id="L9"><span class="lineNum">       9</span> <span class="tlaUNC tlaBgUNC">           0 : OPMLExport::OPMLExport()</span></span>
-<span id="L10"><span class="lineNum">      10</span>              : {</span>
-<span id="L11"><span class="lineNum">      11</span> <span class="tlaUNC">           0 : }</span></span>
-<span id="L12"><span class="lineNum">      12</span>              : </span>
-<span id="L13"><span class="lineNum">      13</span> <span class="tlaGNC tlaBgGNC">           8 : bool OPMLExport::save(const QString &amp;sFile, ListModel* feedList)</span></span>
-<span id="L14"><span class="lineNum">      14</span>              : {</span>
-<span id="L15"><span class="lineNum">      15</span> <span class="tlaGNC">           8 :     QFile file(sFile);</span></span>
-<span id="L16"><span class="lineNum">      16</span>              : </span>
-<span id="L17"><span class="lineNum">      17</span> <span class="tlaGNC">           8 :     if (!file.open(QIODevice::WriteOnly)) {</span></span>
-<span id="L18"><span class="lineNum">      18</span> <span class="tlaUNC tlaBgUNC">           0 :         qWarning() &lt;&lt; &quot;Could not open file: &quot; &lt;&lt; sFile &lt;&lt; &quot; error code: &quot; &lt;&lt; file.errorString();</span></span>
-<span id="L19"><span class="lineNum">      19</span> <span class="tlaUNC">           0 :         return false;</span></span>
-<span id="L20"><span class="lineNum">      20</span>              :     }</span>
-<span id="L21"><span class="lineNum">      21</span>              :     </span>
-<span id="L22"><span class="lineNum">      22</span>              :     // Create date time string.</span>
-<span id="L23"><span class="lineNum">      23</span>              :     // Format example: Tue, 18 Mar 2014 04:09:51 GMT</span>
-<span id="L24"><span class="lineNum">      24</span> <span class="tlaGNC tlaBgGNC">           8 :     QDateTime dateTime = QDateTime::currentDateTime();</span></span>
-<span id="L25"><span class="lineNum">      25</span> <span class="tlaGNC">           8 :     dateTime = dateTime.toUTC();</span></span>
-<span id="L26"><span class="lineNum">      26</span> <span class="tlaGNC">           8 :     QString dateTimeString = dateTime.toString(&quot;ddd, dd MMM yyyy hh:mm:ss&quot;) + &quot; GMT&quot;;</span></span>
-<span id="L27"><span class="lineNum">      27</span>              :     </span>
-<span id="L28"><span class="lineNum">      28</span>              :     // Start the document.</span>
-<span id="L29"><span class="lineNum">      29</span> <span class="tlaGNC">           8 :     QXmlStreamWriter xmlWriter(&amp;file);</span></span>
-<span id="L30"><span class="lineNum">      30</span> <span class="tlaGNC">           8 :     xmlWriter.setAutoFormatting(true);</span></span>
-<span id="L31"><span class="lineNum">      31</span> <span class="tlaGNC">           8 :     xmlWriter.writeStartDocument();</span></span>
-<span id="L32"><span class="lineNum">      32</span>              :     </span>
-<span id="L33"><span class="lineNum">      33</span>              :     // Main element.</span>
-<span id="L34"><span class="lineNum">      34</span>              :     // &lt;opml version=&quot;1.1&quot;&gt;</span>
-<span id="L35"><span class="lineNum">      35</span> <span class="tlaGNC">           8 :     xmlWriter.writeStartElement(&quot;opml&quot;);</span></span>
-<span id="L36"><span class="lineNum">      36</span> <span class="tlaGNC">           8 :     xmlWriter.writeAttribute(&quot;version&quot;, &quot;1.1&quot;);</span></span>
-<span id="L37"><span class="lineNum">      37</span>              :     </span>
-<span id="L38"><span class="lineNum">      38</span>              :     // Head element.</span>
-<span id="L39"><span class="lineNum">      39</span>              :     //&lt;head&gt;</span>
-<span id="L40"><span class="lineNum">      40</span>              :     //  &lt;title&gt;blah&lt;/title&gt;</span>
-<span id="L41"><span class="lineNum">      41</span>              :     //  &lt;dateModified&gt;Tue, 18 Mar 2014 04:09:51 GMT&lt;/dateModified&gt;</span>
-<span id="L42"><span class="lineNum">      42</span>              :     //&lt;/head&gt;</span>
-<span id="L43"><span class="lineNum">      43</span> <span class="tlaGNC">           8 :     xmlWriter.writeStartElement(&quot;head&quot;);</span></span>
-<span id="L44"><span class="lineNum">      44</span> <span class="tlaGNC">           8 :     xmlWriter.writeTextElement(&quot;title&quot;, &quot;Fang OPML export&quot;);</span></span>
-<span id="L45"><span class="lineNum">      45</span> <span class="tlaGNC">          16 :     xmlWriter.writeTextElement(&quot;dateModified&quot;, dateTimeString);</span></span>
-<span id="L46"><span class="lineNum">      46</span> <span class="tlaGNC">           8 :     xmlWriter.writeEndElement();</span></span>
-<span id="L47"><span class="lineNum">      47</span>              :     </span>
-<span id="L48"><span class="lineNum">      48</span>              :     // Start body.</span>
-<span id="L49"><span class="lineNum">      49</span> <span class="tlaGNC">           8 :     xmlWriter.writeStartElement(&quot;body&quot;);</span></span>
-<span id="L50"><span class="lineNum">      50</span>              :     </span>
-<span id="L51"><span class="lineNum">      51</span>              :     //</span>
-<span id="L52"><span class="lineNum">      52</span>              :     // Here's where we write the feed list!</span>
-<span id="L53"><span class="lineNum">      53</span>              :     //</span>
-<span id="L54"><span class="lineNum">      54</span>              :     // &lt;outline text=&quot;MrEricSir.com&quot; title=&quot;MrEricSir.com&quot; type=&quot;rss&quot; xmlUrl=&quot;http://www.mrericsir.com/blog/feed/&quot; htmlUrl=&quot;http://www.mrericsir.com/blog&quot;/&gt;</span>
-<span id="L55"><span class="lineNum">      55</span> <span class="tlaGNC">          14 :     for (int i = 1; i &lt; feedList-&gt;count(); i++) {</span></span>
-<span id="L56"><span class="lineNum">      56</span> <span class="tlaGNC">           6 :         FeedItem* feedItem = qobject_cast&lt;FeedItem*&gt;(feedList-&gt;row(i));</span></span>
-<span id="L57"><span class="lineNum">      57</span> <span class="tlaGNC">           6 :         if (!feedItem) {</span></span>
-<span id="L58"><span class="lineNum">      58</span> <span class="tlaUNC tlaBgUNC">           0 :             qCritical() &lt;&lt; &quot;OPMLExport: Feed item null at index&quot; &lt;&lt; i;</span></span>
-<span id="L59"><span class="lineNum">      59</span> <span class="tlaUNC">           0 :             continue;</span></span>
-<span id="L60"><span class="lineNum">      60</span>              :         }</span>
-<span id="L61"><span class="lineNum">      61</span>              : </span>
-<span id="L62"><span class="lineNum">      62</span> <span class="tlaGNC tlaBgGNC">           6 :         xmlWriter.writeStartElement(&quot;outline&quot;);</span></span>
-<span id="L63"><span class="lineNum">      63</span>              :         </span>
-<span id="L64"><span class="lineNum">      64</span> <span class="tlaGNC">          12 :         xmlWriter.writeAttribute(&quot;text&quot;, feedItem-&gt;getTitle());</span></span>
-<span id="L65"><span class="lineNum">      65</span> <span class="tlaGNC">          12 :         xmlWriter.writeAttribute(&quot;title&quot;, feedItem-&gt;getTitle());</span></span>
-<span id="L66"><span class="lineNum">      66</span> <span class="tlaGNC">           6 :         xmlWriter.writeAttribute(&quot;type&quot;, &quot;rss&quot;);</span></span>
-<span id="L67"><span class="lineNum">      67</span> <span class="tlaGNC">          12 :         xmlWriter.writeAttribute(&quot;xmlUrl&quot;, feedItem-&gt;getURL().toString());</span></span>
-<span id="L68"><span class="lineNum">      68</span> <span class="tlaGNC">           6 :         if (feedItem-&gt;getSiteURL().isValid()) {</span></span>
-<span id="L69"><span class="lineNum">      69</span> <span class="tlaGNC">          10 :             xmlWriter.writeAttribute(&quot;htmlUrl&quot;, feedItem-&gt;getSiteURL().toString());</span></span>
-<span id="L70"><span class="lineNum">      70</span>              :         }</span>
-<span id="L71"><span class="lineNum">      71</span>              :         </span>
-<span id="L72"><span class="lineNum">      72</span> <span class="tlaGNC">           6 :         xmlWriter.writeEndElement();</span></span>
-<span id="L73"><span class="lineNum">      73</span>              :     }</span>
-<span id="L74"><span class="lineNum">      74</span>              :     </span>
+<span id="L2"><span class="lineNum">       2</span>              : #include &quot;FangLogging.h&quot;</span>
+<span id="L3"><span class="lineNum">       3</span>              : </span>
+<span id="L4"><span class="lineNum">       4</span>              : #include &lt;QXmlStreamWriter&gt;</span>
+<span id="L5"><span class="lineNum">       5</span>              : #include &lt;QDateTime&gt;</span>
+<span id="L6"><span class="lineNum">       6</span>              : #include &lt;QFile&gt;</span>
+<span id="L7"><span class="lineNum">       7</span>              : #include &quot;ErrorHandling.h&quot;</span>
+<span id="L8"><span class="lineNum">       8</span>              : #include &quot;../models/FeedItem.h&quot;</span>
+<span id="L9"><span class="lineNum">       9</span>              : </span>
+<span id="L10"><span class="lineNum">      10</span> <span class="tlaUNC tlaBgUNC">           0 : OPMLExport::OPMLExport()</span></span>
+<span id="L11"><span class="lineNum">      11</span>              : {</span>
+<span id="L12"><span class="lineNum">      12</span> <span class="tlaUNC">           0 : }</span></span>
+<span id="L13"><span class="lineNum">      13</span>              : </span>
+<span id="L14"><span class="lineNum">      14</span> <span class="tlaGNC tlaBgGNC">           8 : bool OPMLExport::save(const QString &amp;sFile, ListModel* feedList)</span></span>
+<span id="L15"><span class="lineNum">      15</span>              : {</span>
+<span id="L16"><span class="lineNum">      16</span> <span class="tlaGNC">           8 :     QFile file(sFile);</span></span>
+<span id="L17"><span class="lineNum">      17</span>              : </span>
+<span id="L18"><span class="lineNum">      18</span> <span class="tlaGNC">           8 :     if (!file.open(QIODevice::WriteOnly)) {</span></span>
+<span id="L19"><span class="lineNum">      19</span> <span class="tlaUNC tlaBgUNC">           0 :         qCWarning(logUtility) &lt;&lt; &quot;Could not open file: &quot; &lt;&lt; sFile &lt;&lt; &quot; error code: &quot; &lt;&lt; file.errorString();</span></span>
+<span id="L20"><span class="lineNum">      20</span> <span class="tlaUNC">           0 :         return false;</span></span>
+<span id="L21"><span class="lineNum">      21</span>              :     }</span>
+<span id="L22"><span class="lineNum">      22</span>              :     </span>
+<span id="L23"><span class="lineNum">      23</span>              :     // Create date time string.</span>
+<span id="L24"><span class="lineNum">      24</span>              :     // Format example: Tue, 18 Mar 2014 04:09:51 GMT</span>
+<span id="L25"><span class="lineNum">      25</span> <span class="tlaGNC tlaBgGNC">           8 :     QDateTime dateTime = QDateTime::currentDateTime();</span></span>
+<span id="L26"><span class="lineNum">      26</span> <span class="tlaGNC">           8 :     dateTime = dateTime.toUTC();</span></span>
+<span id="L27"><span class="lineNum">      27</span> <span class="tlaGNC">           8 :     QString dateTimeString = dateTime.toString(&quot;ddd, dd MMM yyyy hh:mm:ss&quot;) + &quot; GMT&quot;;</span></span>
+<span id="L28"><span class="lineNum">      28</span>              :     </span>
+<span id="L29"><span class="lineNum">      29</span>              :     // Start the document.</span>
+<span id="L30"><span class="lineNum">      30</span> <span class="tlaGNC">           8 :     QXmlStreamWriter xmlWriter(&amp;file);</span></span>
+<span id="L31"><span class="lineNum">      31</span> <span class="tlaGNC">           8 :     xmlWriter.setAutoFormatting(true);</span></span>
+<span id="L32"><span class="lineNum">      32</span> <span class="tlaGNC">           8 :     xmlWriter.writeStartDocument();</span></span>
+<span id="L33"><span class="lineNum">      33</span>              :     </span>
+<span id="L34"><span class="lineNum">      34</span>              :     // Main element.</span>
+<span id="L35"><span class="lineNum">      35</span>              :     // &lt;opml version=&quot;1.1&quot;&gt;</span>
+<span id="L36"><span class="lineNum">      36</span> <span class="tlaGNC">           8 :     xmlWriter.writeStartElement(&quot;opml&quot;);</span></span>
+<span id="L37"><span class="lineNum">      37</span> <span class="tlaGNC">           8 :     xmlWriter.writeAttribute(&quot;version&quot;, &quot;1.1&quot;);</span></span>
+<span id="L38"><span class="lineNum">      38</span>              :     </span>
+<span id="L39"><span class="lineNum">      39</span>              :     // Head element.</span>
+<span id="L40"><span class="lineNum">      40</span>              :     //&lt;head&gt;</span>
+<span id="L41"><span class="lineNum">      41</span>              :     //  &lt;title&gt;blah&lt;/title&gt;</span>
+<span id="L42"><span class="lineNum">      42</span>              :     //  &lt;dateModified&gt;Tue, 18 Mar 2014 04:09:51 GMT&lt;/dateModified&gt;</span>
+<span id="L43"><span class="lineNum">      43</span>              :     //&lt;/head&gt;</span>
+<span id="L44"><span class="lineNum">      44</span> <span class="tlaGNC">           8 :     xmlWriter.writeStartElement(&quot;head&quot;);</span></span>
+<span id="L45"><span class="lineNum">      45</span> <span class="tlaGNC">           8 :     xmlWriter.writeTextElement(&quot;title&quot;, &quot;Fang OPML export&quot;);</span></span>
+<span id="L46"><span class="lineNum">      46</span> <span class="tlaGNC">          16 :     xmlWriter.writeTextElement(&quot;dateModified&quot;, dateTimeString);</span></span>
+<span id="L47"><span class="lineNum">      47</span> <span class="tlaGNC">           8 :     xmlWriter.writeEndElement();</span></span>
+<span id="L48"><span class="lineNum">      48</span>              :     </span>
+<span id="L49"><span class="lineNum">      49</span>              :     // Start body.</span>
+<span id="L50"><span class="lineNum">      50</span> <span class="tlaGNC">           8 :     xmlWriter.writeStartElement(&quot;body&quot;);</span></span>
+<span id="L51"><span class="lineNum">      51</span>              :     </span>
+<span id="L52"><span class="lineNum">      52</span>              :     //</span>
+<span id="L53"><span class="lineNum">      53</span>              :     // Here's where we write the feed list!</span>
+<span id="L54"><span class="lineNum">      54</span>              :     //</span>
+<span id="L55"><span class="lineNum">      55</span>              :     // &lt;outline text=&quot;MrEricSir.com&quot; title=&quot;MrEricSir.com&quot; type=&quot;rss&quot; xmlUrl=&quot;http://www.mrericsir.com/blog/feed/&quot; htmlUrl=&quot;http://www.mrericsir.com/blog&quot;/&gt;</span>
+<span id="L56"><span class="lineNum">      56</span> <span class="tlaGNC">          14 :     for (int i = 1; i &lt; feedList-&gt;count(); i++) {</span></span>
+<span id="L57"><span class="lineNum">      57</span> <span class="tlaGNC">           6 :         FeedItem* feedItem = qobject_cast&lt;FeedItem*&gt;(feedList-&gt;row(i));</span></span>
+<span id="L58"><span class="lineNum">      58</span> <span class="tlaGNC">           6 :         if (!feedItem) {</span></span>
+<span id="L59"><span class="lineNum">      59</span> <span class="tlaUNC tlaBgUNC">           0 :             qCCritical(logUtility) &lt;&lt; &quot;OPMLExport: Feed item null at index&quot; &lt;&lt; i;</span></span>
+<span id="L60"><span class="lineNum">      60</span> <span class="tlaUNC">           0 :             continue;</span></span>
+<span id="L61"><span class="lineNum">      61</span> <span class="tlaUNC">           0 :         }</span></span>
+<span id="L62"><span class="lineNum">      62</span>              : </span>
+<span id="L63"><span class="lineNum">      63</span> <span class="tlaGNC tlaBgGNC">           6 :         xmlWriter.writeStartElement(&quot;outline&quot;);</span></span>
+<span id="L64"><span class="lineNum">      64</span>              :         </span>
+<span id="L65"><span class="lineNum">      65</span> <span class="tlaGNC">          12 :         xmlWriter.writeAttribute(&quot;text&quot;, feedItem-&gt;getTitle());</span></span>
+<span id="L66"><span class="lineNum">      66</span> <span class="tlaGNC">          12 :         xmlWriter.writeAttribute(&quot;title&quot;, feedItem-&gt;getTitle());</span></span>
+<span id="L67"><span class="lineNum">      67</span> <span class="tlaGNC">           6 :         xmlWriter.writeAttribute(&quot;type&quot;, &quot;rss&quot;);</span></span>
+<span id="L68"><span class="lineNum">      68</span> <span class="tlaGNC">          12 :         xmlWriter.writeAttribute(&quot;xmlUrl&quot;, feedItem-&gt;getURL().toString());</span></span>
+<span id="L69"><span class="lineNum">      69</span> <span class="tlaGNC">           6 :         if (feedItem-&gt;getSiteURL().isValid()) {</span></span>
+<span id="L70"><span class="lineNum">      70</span> <span class="tlaGNC">          10 :             xmlWriter.writeAttribute(&quot;htmlUrl&quot;, feedItem-&gt;getSiteURL().toString());</span></span>
+<span id="L71"><span class="lineNum">      71</span>              :         }</span>
+<span id="L72"><span class="lineNum">      72</span>              :         </span>
+<span id="L73"><span class="lineNum">      73</span> <span class="tlaGNC">           6 :         xmlWriter.writeEndElement();</span></span>
+<span id="L74"><span class="lineNum">      74</span>              :     }</span>
 <span id="L75"><span class="lineNum">      75</span>              :     </span>
-<span id="L76"><span class="lineNum">      76</span>              :     // End body element.</span>
-<span id="L77"><span class="lineNum">      77</span> <span class="tlaGNC">           8 :     xmlWriter.writeEndElement();</span></span>
-<span id="L78"><span class="lineNum">      78</span>              :     </span>
-<span id="L79"><span class="lineNum">      79</span>              :     // End main element.</span>
-<span id="L80"><span class="lineNum">      80</span> <span class="tlaGNC">           8 :     xmlWriter.writeEndElement();</span></span>
-<span id="L81"><span class="lineNum">      81</span>              :     </span>
-<span id="L82"><span class="lineNum">      82</span>              :     // Finish 'er up.</span>
-<span id="L83"><span class="lineNum">      83</span> <span class="tlaGNC">           8 :     xmlWriter.writeEndDocument();</span></span>
-<span id="L84"><span class="lineNum">      84</span> <span class="tlaGNC">           8 :     file.close();</span></span>
-<span id="L85"><span class="lineNum">      85</span>              : </span>
-<span id="L86"><span class="lineNum">      86</span> <span class="tlaGNC">           8 :     return true;</span></span>
-<span id="L87"><span class="lineNum">      87</span> <span class="tlaGNC">           8 : }</span></span>
+<span id="L76"><span class="lineNum">      76</span>              :     </span>
+<span id="L77"><span class="lineNum">      77</span>              :     // End body element.</span>
+<span id="L78"><span class="lineNum">      78</span> <span class="tlaGNC">           8 :     xmlWriter.writeEndElement();</span></span>
+<span id="L79"><span class="lineNum">      79</span>              :     </span>
+<span id="L80"><span class="lineNum">      80</span>              :     // End main element.</span>
+<span id="L81"><span class="lineNum">      81</span> <span class="tlaGNC">           8 :     xmlWriter.writeEndElement();</span></span>
+<span id="L82"><span class="lineNum">      82</span>              :     </span>
+<span id="L83"><span class="lineNum">      83</span>              :     // Finish 'er up.</span>
+<span id="L84"><span class="lineNum">      84</span> <span class="tlaGNC">           8 :     xmlWriter.writeEndDocument();</span></span>
+<span id="L85"><span class="lineNum">      85</span> <span class="tlaGNC">           8 :     file.close();</span></span>
+<span id="L86"><span class="lineNum">      86</span>              : </span>
+<span id="L87"><span class="lineNum">      87</span> <span class="tlaGNC">           8 :     return true;</span></span>
+<span id="L88"><span class="lineNum">      88</span> <span class="tlaGNC">           8 : }</span></span>
         </pre>
               </td>
             </tr>
