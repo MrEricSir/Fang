@@ -127,6 +127,7 @@ qt_add_executable(Fang WIN32
     src/utilities/NetworkUtilities.cpp
     src/parser/OPMLParser.cpp
     src/utilities/FeedDiscovery.cpp
+    src/utilities/UpdateChecker.cpp
     src/models/OPMLInteractor.cpp
     src/utilities/OPMLExport.cpp
     src/utilities/BatchFeedDiscovery.cpp

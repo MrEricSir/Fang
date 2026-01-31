@@ -47,7 +47,8 @@ FangApp::FangApp(QApplication *parent, QQmlApplicationEngine* engine, QSingleIns
     allNews(nullptr),
     pinnedNews(nullptr),
     isPinnedNewsVisible(true),
-    lastFeedSelected(nullptr)
+    lastFeedSelected(nullptr),
+    updateChecker(this)
 {
     if (_instance != nullptr) {
         qCCritical(logApp) << "FangApp: Multiple instances created! Previous instance exists.";
@@ -426,6 +427,13 @@ void FangApp::onObjectCreated(QObject* object, const QUrl& url)
 
     // Maybe the user wants to change how often we refresh the feeds?  Let 'em.
     connect(fangSettings, &FangSettings::refreshChanged, this, &FangApp::setRefreshTimer);
+
+    // Send update signal to QML via FangSettings. (Kind of an awkward fit.)
+    connect(&updateChecker, &UpdateChecker::updateAvailable,
+            fangSettings, &FangSettings::updateAvailable);
+
+    // Start the update checker (checks immediately and then every 24 hours)
+    updateChecker.start();
 }
 
 void FangApp::onSecondInstanceStarted()

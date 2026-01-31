@@ -198,7 +198,13 @@ void FeedDiscovery::onPageGrabberReady(WebPageGrabber* grabber, QString* documen
     // Convert to QUrl list and store for validation
     _sortedFeedURLs.clear();
     for (const QString& urlString : feedURLStrings) {
-        _sortedFeedURLs.append(QUrl(urlString));
+        QUrl feedUrl(urlString);
+
+        // Fix relative URLs.
+        if (feedUrl.isRelative()) {
+            feedUrl = _feedURL.resolved(feedUrl);
+        }
+        _sortedFeedURLs.append(feedUrl);
     }
 
     // Trigger bulk feed validation

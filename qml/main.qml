@@ -52,6 +52,35 @@ Window {
         id: fangSettings;
         objectName: "fangSettings"; // Don't change this!
     }
+
+    // Latest version, will be displayed after UI has settled.
+    property string pendingUpdateVersion: "";
+
+    // Check for update notifications.
+    Connections {
+        target: fangSettings;
+
+        function onUpdateAvailable(newVersion) {
+            console.log("Update available: " + newVersion);
+            pendingUpdateVersion = newVersion;
+            showPendingUpdateIfReady();
+        }
+    }
+
+    // Displays the update dialog if there's a new version. Will only be shown
+    // after the UI has started and settled.
+    function showPendingUpdateIfReady() {
+        if (pendingUpdateVersion !== "" && openDialogs.length === 0) {
+            var dialog = openDialog("UpdateDialog.qml");
+            if (dialog) {
+                dialog.newVersion = pendingUpdateVersion;
+
+                // Set this version as "seen."
+                fangSettings.lastSeenVersion = pendingUpdateVersion;
+                pendingUpdateVersion = "";
+            }
+        }
+    }
     
     // Save window settings on close.
     Component.onDestruction: {
@@ -153,7 +182,7 @@ Window {
         // Remove the entry.
         openDialogs.splice(openDialogs.indexOf(dialog), 1);
         delete dialog;
-        
+
         // If it was the last one, give focus back to news
         if (openDialogs.length === 0) {
             news.newsFocus = true;
@@ -221,6 +250,9 @@ Window {
         // WebView visibility hack
         onFadeInComplete: {
             news.isVisible = true;
+
+            // Show pending update dialog after main view is fully visible
+            showPendingUpdateIfReady();
         }
 
         // Splitter works differently on desktop vs. mobile.

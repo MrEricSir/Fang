@@ -23,6 +23,7 @@
 #include "db/DBSettings.h"
 #include "server/WebServer.h"
 #include "server/WebSocketServer.h"
+#include "utilities/UpdateChecker.h"
 
 
 class FangApp : public FangObject
@@ -74,7 +75,7 @@ signals:
 
     // The number of special feeds has changed, huzzah!
     void specialFeedCountChanged();
-    
+
 public slots:
     inline int feedCount() { return feedList.rowCount(); }
 
@@ -224,7 +225,7 @@ public slots:
         \brief Show the welcome/help view.
      */
     void showWelcome();
-    
+
 private slots:
     /*!
         \brief QML layer created something for us to look at.
@@ -300,6 +301,7 @@ private:
     NotificationBase* notifications;
     WebSocketServer webSocketServer;
     WebServer webServer;
+    UpdateChecker updateChecker;
 
     // Special feeds.
     AllNewsFeedItem* allNews;

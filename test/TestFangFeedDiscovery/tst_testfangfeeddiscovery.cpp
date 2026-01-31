@@ -42,6 +42,9 @@ private slots:
     void testRelativeURLThatStaysRelative();
     void testAllFeedsFailValidation();
 
+    // Relative feed URL resolution
+    void testRelativeFeedURLResolution();
+
 private:
 };
 
@@ -158,6 +161,8 @@ void TestFangFeedDiscovery::testCase1_data()
                                           << "https://cdn.dnalounge.com/backstage/log/feed/" << "";
     QTest::newRow("Mercury News Business") << "mercurynews.com" << true
                                            << "https://www.mercurynews.com/feed/" << "";
+    QTest::newRow("GetFang") << "getfang.com" << true
+                             << "/feed.xml" << "";
 
     //
     // Unusual situations /////////////////////////////////////////////////////////////////////////
@@ -515,6 +520,57 @@ void TestFangFeedDiscovery::testAllFeedsFailValidation()
     // Should error because all feeds failed validation
     QVERIFY(fd.error());
     QCOMPARE(fd.errorString(), QString("No valid feeds found"));
+}
+
+// Test that relative feed URLs are resolved against the page URL
+void TestFangFeedDiscovery::testRelativeFeedURLResolution()
+{
+    // HTML with a relative feed URL (like getfang.com uses)
+    QString html = R"(
+        <html>
+        <head>
+            <link rel="alternate" type="application/rss+xml" title="Test Feed" href="/feed.xml" />
+        </head>
+        <body></body>
+        </html>
+    )";
+
+    MockNewsParser* firstParser = new MockNewsParser();
+    MockWebPageGrabber* pageGrabber = new MockWebPageGrabber();
+    MockBatchNewsParser* feedParser = new MockBatchNewsParser();
+
+    // First parse fails (it's HTML, not a feed)
+    firstParser->setResult(ParserInterface::PARSE_ERROR);
+
+    // Page grabber returns the HTML with relative feed URL
+    static QString persistentHtml = html;
+    pageGrabber->setMockDocument(&persistentHtml);
+
+    // Feed parser should receive the RESOLVED absolute URL, not the relative one
+    // The relative "/feed.xml" should be resolved to "https://example.com/feed.xml"
+    RawFeed* feed = new RawFeed();
+    feed->title = "Test Feed";
+    feed->url = QUrl("https://example.com/feed.xml");
+    feedParser->addResponse(QUrl("https://example.com/feed.xml"), ParserInterface::OK, feed);
+
+    FeedDiscovery fd(nullptr, firstParser, new MockNewsParser(), pageGrabber, feedParser);
+    QSignalSpy spy(&fd, &FeedDiscovery::done);
+
+    // Start discovery with a full URL - the relative feed URL should be resolved against this
+    fd.checkFeed("https://example.com/some/page.html");
+
+    QVERIFY(spy.wait(5000));
+    QCOMPARE(spy.count(), 1);
+
+    // Should succeed
+    QVERIFY2(!fd.error(), qPrintable("Unexpected error: " + fd.errorString()));
+
+    // The discovered feed should have the resolved absolute URL
+    QCOMPARE(fd.feedCount(), 1);
+    QList<FeedDiscovery::DiscoveredFeed> feeds = fd.discoveredFeeds();
+    QCOMPARE(feeds.count(), 1);
+    QCOMPARE(feeds.first().url, QUrl("https://example.com/feed.xml"));
+    QVERIFY(feeds.first().validated);
 }
 
 QTEST_MAIN(TestFangFeedDiscovery)

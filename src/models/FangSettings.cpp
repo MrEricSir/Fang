@@ -154,6 +154,21 @@ void FangSettings::setRefresh(QString s)
     emit refreshChanged(s);
 }
 
+QString FangSettings::getLastSeenVersion()
+{
+    return getStringSetting("lastSeenVersion", "");
+}
+
+void FangSettings::setLastSeenVersion(QString s)
+{
+    if (s == getLastSeenVersion()) {
+        return; // Nothing to do!
+    }
+
+    setStringSetting("lastSeenVersion", s);
+    emit lastSeenVersionChanged(s);
+}
+
 bool FangSettings::getShowTrayIcon()
 {
     bool defaultValue = false;

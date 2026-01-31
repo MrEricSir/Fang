@@ -19,6 +19,7 @@ add_subdirectory(TestFangOPMLParser)
 add_subdirectory(TestOPMLExport)
 add_subdirectory(TestRawFeedRewriter)
 add_subdirectory(TestURLFixup)
+add_subdirectory(TestUpdateChecker)
 add_subdirectory(TestWebPageGrabber)
 
 # Database tests

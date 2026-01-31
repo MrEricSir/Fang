@@ -33,5 +33,6 @@
         <file>+mobile/FangSplitView.qml</file>
         <file>RearrangeableDelegate.qml</file>
         <file>DialogGroup.qml</file>
+        <file>UpdateDialog.qml</file>
     </qresource>
 </RCC>

@@ -7,8 +7,9 @@
 #include <QStyleHints>
 
 #include "../db/DBSettings.h"
+#include "../utilities/SettingsInterface.h"
 
-class FangSettings : public QQuickItem
+class FangSettings : public QQuickItem, public SettingsInterface
 {
     Q_OBJECT
     Q_DISABLE_COPY(FangSettings)
@@ -27,6 +28,9 @@ class FangSettings : public QQuickItem
 
     // Refresh timer.  Values are "1MIN", "10MIN", "30MIN", and "1HOUR" (default: 10MIN)
     Q_PROPERTY(QString refresh READ getRefresh WRITE setRefresh NOTIFY refreshChanged)
+
+    // Last update version displayed to the user.
+    Q_PROPERTY(QString lastSeenVersion READ getLastSeenVersion WRITE setLastSeenVersion NOTIFY lastSeenVersionChanged)
 
     // (Windows only) Display tray icon.
     Q_PROPERTY(bool showTrayIcon READ getShowTrayIcon WRITE setShowTrayIcon NOTIFY showTrayIconChanged)
@@ -54,6 +58,9 @@ public:
     QString getRefresh();
     void setRefresh(QString s);
 
+    QString getLastSeenVersion() override;
+    void setLastSeenVersion(QString s);
+
     bool getShowTrayIcon();
     void setShowTrayIcon(bool b);
     
@@ -63,7 +70,14 @@ signals:
     void fontSizeChanged(QString);
     void cacheLengthChanged(QString);
     void refreshChanged(QString);
+    void lastSeenVersionChanged(QString);
     void showTrayIconChanged(bool);
+
+    /*!
+        \brief Emitted when a newer version of Fang is available.
+        \param newVersion The version string of the available update.
+     */
+    void updateAvailable(const QString& newVersion);
     
 private slots:
     /*!
