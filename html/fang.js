@@ -275,49 +275,82 @@ function htmlIdToId(htmlID)
   * Click handler for URLs.
   * Sends the link URL to the backend to decide what to do (open default browser, etc.)
   */
-function delegateLink()
+function handleLinkClick(event)
 {
-    const url = $(this).attr('href');
-    apiPostRequest('open_link', {
-                'url': url
-            });
-    return false; // Don't propogate link.
-};
+    const link = event.target.closest('a');
+    if (!link) {
+        // Not a link, allow it to it propagate.
+        return true;
+    }
 
-/**
-  * Given a parent element, setup the bookmark forcer and pin handler.
-  */
-function installMouseHandlers(parentElement)
-{
-    // Setup manual bookmarks.
-    $(parentElement).find( '.stripe' ).on( "click", function() { 
-        const elementID = htmlIdToId( $(this).parent().parent().attr( 'id' ) );
-
-        apiGetRequest('force_bookmark', elementID);
-    } );
-
-    // Setup the pin... pinner?  Pinteresting.
-    $(parentElement).find( '.pin' ).on( "click", function() {
-        const element = $(this).parent().parent();
-        const isPinned = element.find( '.pin' ).hasClass( 'pinned' );
-        const elementID = htmlIdToId(element.attr( 'id' ));
-
-        let apiResponse = null;
-        if (isPinned) {
-            apiResponse = apiGetRequest('unpin', elementID);
-        } else {
-            apiResponse = apiGetRequest('pin', elementID);
-        }
-
-        apiResponse.then((response) => response.json()).then((data) => {
-            console.log("update pin data:", data);
-            updatePin(data.newsID, data.pinned);
-        });
-    } );
+    const url = link.getAttribute('href');
+    if (url) {
+        apiPostRequest('open_link', { 'url': url });
+    }
+    event.preventDefault();
+    return false; // Don't propagate.
 }
 
 /**
-  * Appends (or prepends) news item(s) to the DOM.
+  * Sets up event delegation for click handlers on the news view.
+  * This replaces per-item event handlers with a single delegated handler.
+  */
+function initEventDelegation()
+{
+    const newsView = document.getElementById('newsView');
+    if (!newsView) return;
+
+    newsView.addEventListener('click', function(event) {
+        const target = event.target;
+
+        // Force bookmark if user clicks on it.
+        // Use closest() since clicks may land on child elements (.stripe_left, etc.)
+        if (target.closest('.stripe')) {
+            const container = target.closest('.newsContainer, .newsItemStyle');
+            if (container) {
+                const elementID = htmlIdToId(container.id);
+                apiGetRequest('force_bookmark', elementID);
+            }
+            return;
+        }
+
+        // Pin/unpin click.
+        if (target.classList.contains('pin')) {
+            const container = target.closest('.newsContainer');
+            if (container) {
+                const isPinned = target.classList.contains('pinned');
+                const elementID = htmlIdToId(container.id);
+
+                let apiResponse = isPinned
+                    ? apiGetRequest('unpin', elementID)
+                    : apiGetRequest('pin', elementID);
+
+                apiResponse.then((response) => response.json()).then((data) => {
+                    console.log("update pin data:", data);
+                    updatePin(data.newsID, data.pinned);
+                });
+            }
+            return;
+        }
+
+        // Links (requires special handling)
+        const link = target.closest('a');
+        if (link) {
+            handleLinkClick(event);
+        }
+    });
+
+    // Also take care of links in welcome section and other areas
+    document.addEventListener('click', function(event) {
+        const link = event.target.closest('a');
+        if (link && !link.closest('#newsView')) {
+            handleLinkClick(event);
+        }
+    });
+}
+
+/**
+  * Appends (or prepends) news item(s) to the DOM via DocumentFragment batches.
   */
 function appendNews(append, firstNewsID, newsList)
 {
@@ -325,62 +358,101 @@ function appendNews(append, firstNewsID, newsList)
         // Bail early if there's nothing new.
         return;
     }
-    
+
     // Remember where we are.
     let currentScroll = $(document).scrollTop();
     let addToScroll = 0;
-    
+
+    // Get the model element and container
+    const model = document.querySelector('body>#newsView>.newsContainer#model');
+    const container = document.getElementById('newsView');
+    if (!model || !container) {
+        // Possibly called too early?
+        return;
+    }
+
+    // Create a DocumentFragment to batch DOM insertions
+    const fragment = document.createDocumentFragment();
+    const items = [];
+
     for (let i = 0; i < newsList.length; i++) {
         let newsItem = newsList[i];
-        //console.log("news item:", newsItem);
-        
-        // Copy the model.
-        let item = $( 'body>#newsView>.newsContainer#model' ).clone();
-        item.attr( 'id', '' );
-        
-        // Assign data.
-        item.attr( 'id', idToHtmlId(newsItem['id']) );
-        item.find( '.link' ).attr( 'href', newsItem['url'] );
-        item.find( '.link' ).html( newsItem['title'] );
-        item.find( '.content' ).html( newsItem['content'] );
-        item.find( '.siteTitle' ).html( newsItem['feedTitle'] );
-        item.find( '.timestamp' ).html( newsItem['timestamp'] ); // Hidden timestamp (shh)
-        item.find( '.date' ).html( formatDateSimply(newsItem['timestamp']) );
 
-        // Set pin.
-        if (newsItem['pinned']) {
-            item.find( '.pin' ).addClass('pinned');
+        // Clone the model
+        const item = model.cloneNode(true);
+        item.id = idToHtmlId(newsItem['id']);
+
+        // Assign data using vanilla JS for better performance
+        const linkEl = item.querySelector('.link');
+        if (linkEl) {
+            linkEl.setAttribute('href', newsItem['url']);
+            linkEl.innerHTML = newsItem['title'];
         }
-        
-        //console.log(item.html());
-        //console.log("ID: ", id, "append: ", append)
-        
-        // Setup link delegator.
-        item.find( 'a' ).on( "click", delegateLink );
-        
-        // Setup mouse handlers (bookmark forcer, pinner, etc.)
-        installMouseHandlers(item);
-        
-        // Add the item to the DOM.
-        if (append) {
-            console.log("Append!")
-            item.insertAfter('body>#newsView>.newsContainer:last');
+
+        const contentEl = item.querySelector('.content');
+        if (contentEl) {
+            contentEl.innerHTML = newsItem['content'];
+        }
+
+        const siteTitleEl = item.querySelector('.siteTitle');
+        if (siteTitleEl) {
+            siteTitleEl.innerHTML = newsItem['feedTitle'];
+        }
+
+        const timestampEl = item.querySelector('.timestamp');
+        if (timestampEl) {
+            timestampEl.innerHTML = newsItem['timestamp'];
+        }
+
+        const dateEl = item.querySelector('.date');
+        if (dateEl) {
+            dateEl.innerHTML = formatDateSimply(newsItem['timestamp']);
+        }
+
+        // Set pin
+        if (newsItem['pinned']) {
+            const pinEl = item.querySelector('.pin');
+            if (pinEl) {
+                pinEl.classList.add('pinned');
+            }
+        }
+
+        items.push(item);
+        fragment.appendChild(item);
+    }
+
+    // Insert all items at once
+    if (append) {
+        console.log("Append!");
+        // Find the last news container and insert after it
+        const lastContainer = container.querySelector('.newsContainer:last-of-type');
+        if (lastContainer && lastContainer.nextSibling) {
+            container.insertBefore(fragment, lastContainer.nextSibling);
         } else {
-            console.log("Prepend!")
-            item.insertBefore( 'body>#newsView>.newsContainer:first' );
-            
-            // Calculate the size and add it to our prepend scroll tally.
-            //let verticalMargins = parseInt( item.css("marginBottom") ) + parseInt( item.css("marginTop") );
-            addToScroll += item.height(); /* + verticalMargins; */
-            console.log("adding to scroll:", item.height());
+            container.appendChild(fragment);
+        }
+    } else {
+        console.log("Prepend!");
+        // Find the first news container and insert before it
+        const firstContainer = container.querySelector('.newsContainer:not(#model)');
+        if (firstContainer) {
+            container.insertBefore(fragment, firstContainer);
+        } else {
+            container.appendChild(fragment);
+        }
+
+        // Calculate scroll adjustment for prepended items
+        for (let i = 0; i < items.length; i++) {
+            addToScroll += items[i].offsetHeight;
+            console.log("adding to scroll:", items[i].offsetHeight);
         }
     }
-    
+
     // Check total number of excessive news items.
     let extraItems = $(newsContainerSelector).length - 60; //"Too many."
     if (extraItems > 0) {
         //console.log("Total items: ", $(newsContainerSelector).length, " extra items: ", extraItems)
-        
+
         // Okay, we have too many damn items to display.  We need to remove a few.
         //
         // The assumption here is this will never be on the initial load; it will
@@ -388,26 +460,25 @@ function appendNews(append, firstNewsID, newsList)
         if (append) {
             let itemsOnTop = $('body>#newsView>.newsContainer:lt(' + extraItems + '):not(#model)');
             console.log("# Items to remove on the top:", itemsOnTop.length);
-            
+
             // We have to iterate over all the items to get an accurate height.
-            let myItem = itemsOnTop;
             itemsOnTop.each(function( index ) {
                 //console.log( index + ": " + this );
                 addToScroll -= $(this).height();
             });
-            
-            removeMatchingItems(itemsOnTop);
+
+            itemsOnTop.remove();
             sendCommand( 'removeNewsTop', itemsOnTop.length );
         } else {
             let itemsOnBottom = $('body>#newsView>.newsContainer:gt(-' + (extraItems + 1) + '):not(#model)');
             console.log("# Items to remove on the bottom:", itemsOnBottom.length);
-            removeMatchingItems(itemsOnBottom);
+            itemsOnBottom.remove();
             sendCommand( 'removeNewsBottom', itemsOnBottom.length );
         }
     }
-    
+
     console.log("first news id in this feed ", firstNewsID);
-    
+
     let myTopBookmark = $('#' + idToHtmlId(-1) );
     let topBookmarkIsEnabled = myTopBookmark.css('display') !== 'none';
     if (firstNewsID === -1) {
@@ -421,7 +492,7 @@ function appendNews(append, firstNewsID, newsList)
     } else {
         let firstIDInView = htmlIdToId( $(newsContainerSelector).attr('id') );
         console.log("First id in view", firstIDInView)
-        
+
         if (!topBookmarkIsEnabled && (firstNewsID === firstIDInView)) {
             console.log("Enabling the TOP bookmark!");
             myTopBookmark.css('display', 'block');
@@ -432,7 +503,7 @@ function appendNews(append, firstNewsID, newsList)
             myTopBookmark.css('display', 'none');
         }
     }
-    
+
     // Scroll back down if we added a bunch of old news at the top, or scroll up
     // if we removed items at the top.
     if ((!append && addToScroll > 10) ||
@@ -441,24 +512,9 @@ function appendNews(append, firstNewsID, newsList)
         if (newScroll < 0) {
             newScroll = 0;
         }
-        
+
         console.log("addToScroll ", addToScroll, " new scroll: ", newScroll)
         $(document).scrollTop( newScroll );
-    }
-}
-
-/**
-  * Removes provided items.
-  * item: selector of items to remove
-  */
-function removeMatchingItems(item)
-{
-    // Iterate over all items that match.
-    for ( let i = 0; i < item.length; i++ ) {
-        let current = item[i];
-        
-        // DELETE!
-        current.parentNode.removeChild( current );
     }
 }
 
@@ -467,7 +523,7 @@ function removeMatchingItems(item)
   */
 function clearNews()
 {
-    removeMatchingItems( $(newsContainerSelector) );
+    $(newsContainerSelector).remove();
 
     $(document).scrollTop( 0 );
 }
@@ -486,10 +542,10 @@ function getLastNewsContainer()
 function jumpTo(id)
 {
     //console.log("Jump to: ", id)
-    
+
     let elementId = '#' + idToHtmlId( id );
     let scrollTo = $( elementId ).offset().top;
-    
+
     //console.log("jump to: ", elementId, "scrolling to: ", scrollTo);
 
     $(document).scrollTop( scrollTo );
@@ -501,10 +557,10 @@ function jumpTo(id)
 function drawBookmark(id)
 {
     //console.log("draw bookmark: ", id)
-    
+
     // Remove any existing bookmark(s).
     $( ".bookmarked" ).removeClass('bookmarked');
-    
+
     // Add bookmark.
     let elementId = '#' + idToHtmlId(id);
     //console.log("adding bookmarked class to: ", elementId);
@@ -517,7 +573,7 @@ function drawBookmark(id)
 function jumpToBookmark()
 {
     console.log("Jump to bookmark");
-    
+
     // If there's a bookmark, this will jump to it.
     let element = $( ".bookmarked > .bookmark" );
     if (!element || element.length === 0) {
@@ -529,9 +585,9 @@ function jumpToBookmark()
     // Check if last element is the bookmark.
     let lastIsBookmark = getLastNewsContainer().hasClass("bookmarked");
     let scrollTo = element.offset().top - 10;
-    
+
     //console.log("Scroll to: ", scrollTo, " window height: ", window.innerHeight, " document h: ", $(document).height());
-    
+
     // Set max jump.
     if (scrollTo > $(document).height() - window.innerHeight) {
         scrollTo = $(document).height() - window.innerHeight;
@@ -544,7 +600,7 @@ function jumpToBookmark()
             }
         }
     }
-    
+
     $(document).scrollTop( scrollTo );
 }
 
@@ -593,7 +649,7 @@ function nextNewsContainer(element)
             return item;
         }
     }
-    
+
     return null; // :(
 }
 
@@ -603,7 +659,7 @@ function nextNewsContainer(element)
 function prevNewsContainer(element)
 {
     //console.log("prevNewsContainer for: ", element)
-    
+
     // Loop backwards until we find another valid news container.
     let item = element;
     while (item.length) {
@@ -614,7 +670,7 @@ function prevNewsContainer(element)
             return item;
         }
     }
-    
+
     return null; // :(
 }
 
@@ -636,7 +692,7 @@ function isAboveScroll(element)
 
     let allHeight = element.offset().top + element.height() - bookmarkHeight;
     let ret = $(window).scrollTop() >= allHeight;
-    
+
     //console.log("isAboveScroll: Scroll top: ", $(window).scrollTop(), " elem offset and height: ", allHeight, " ret: ", ret)
     return ret;
 }
@@ -648,7 +704,7 @@ function isTopAboveScroll(element)
 {
     //console.log("Is top above scroll: ", element)
     //console.log("isTopAboveScroll: Scroll top: ", $(window).scrollTop(), " elem offset and height: ", element.offset().top + element.height())
-    
+
     return $(window).scrollTop() >= element.offset().top + 10;
 }
 
@@ -664,10 +720,10 @@ function getFirstVisible()
         if (!isAboveScroll(item)) {
             return item;
         }
-        
+
         item = nextNewsContainer(item);
     }
-    
+
     // Just return the last item, then?
     return getLastNewsContainer();
 }
@@ -679,14 +735,14 @@ function getFirstVisible()
 function jumpNextPrev(jumpNext)
 {
     let current = getFirstVisible();
-    
+
     //console.log("JNP: first visible: ", current)
     //console.log("Is above scroll: ", isAboveScroll(current))
-    
+
     if (!current.length) {
         return;
     }
-    
+
     // Either go to the next item, or jump back up to the current one.
     let jumpTo = current;
     if (jumpNext) {
@@ -706,10 +762,10 @@ function jumpNextPrev(jumpNext)
             //console.log("Jump to current: ", jumpTo);
         }
     }
-    
+
     //console.log("Current is: ", current)
     //console.log("Jump to is: ", jumpTo)
-    
+
     if (jumpTo === null || !jumpTo.length) {
         console.log("No valid jumpTo item! Bail!");
         return;
@@ -793,17 +849,28 @@ function initLoadingSpinner() {
 }
 
 /**
+  * Creates a debounced version of a function.
+  */
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
+/**
   * Window resize handler.
   * When the window is resized, jumps to bookmark after a short delay.
   */
-$(window).resize(function()
-{
-    if(this.resizeTO) clearTimeout(this.resizeTO);
-        this.resizeTO = window.setTimeout(function() {
-            // console.log("RESIZE");
-            jumpToBookmark();
-    }, 50);
-});
+$(window).resize(debounce(function() {
+    // console.log("RESIZE");
+    jumpToBookmark();
+}, 50));
 
 /**
   * Main method.
@@ -826,66 +893,79 @@ $(document).ready(function() {
     // Setup loading spinner.
     initLoadingSpinner();
 
+    // Setup event delegation (replaces per-item event handlers)
+    initEventDelegation();
+
     // Load our news feed~
     requestNews("initial");
 
     ////////////////////////////////////////////////////////////////////////////////////////////
+
+    // Scroll watcher state
+    let prevScrollTop = 0;
+    let lastVeryBottom = 0;
+    let scrollTicking = false;
+    const SCROLL_DISTANCE = 250;
+
     /**
-     * distance: pixels from bottom that triggers callback.
-     * interval is how often the check will run (in milliseconds; 250-1000 is reasonable).
+     * Checks scroll position and triggers appropriate callbacks.
+     * Called on scroll events with requestAnimationFrame for smooth performance.
      */
-    function watchScrollPosition(bottomCallback, topCallback, bookmarkCallback, distance, interval) {
-        let $document = $(document);
-        
-        let prevScrollTop = 0;
-        let lastVeryBottom = 0;
-        
-        let checkScrollPosition = function() {
-            if (currentMode != 'newsView') {
-                return;
-            }
+    function checkScrollPosition() {
+        if (currentMode != 'newsView') {
+            return;
+        }
 
-            let scrollTop =  $(document).scrollTop();
-            
-            // If the user hasn't scrolled, check bottom and bail.
-            if (prevScrollTop === scrollTop) {
-                // Trigger callback if we're at the bottom.
-                if (isAtBottom(distance)) {
-                    // Only proceed with the callback if it's been more than 5 seconds since we last
-                    // hit bottom and hadn't scrolled.
-                    let now =  Date.now();
-                    if (now >= lastVeryBottom + 5000) {
-                        //console.log("at bottom!")
-                        lastVeryBottom = now;
-                        bottomCallback();
-                    }
+        const scrollTop = $(document).scrollTop();
+
+        // If the user hasn't scrolled, check bottom and bail.
+        if (prevScrollTop === scrollTop) {
+            // Trigger callback if we're at the bottom.
+            if (isAtBottom(SCROLL_DISTANCE)) {
+                // Only proceed with the callback if it's been more than 5 seconds since we last
+                // hit bottom and hadn't scrolled.
+                const now = Date.now();
+                if (now >= lastVeryBottom + 5000) {
+                    //console.log("at bottom!")
+                    lastVeryBottom = now;
+                    loadNext();
                 }
-                
-                return;
             }
-            
-            lastVeryBottom = 0; // Now that we've scrolled, clear this timer.
-            
-            // Check top.
-            let top = distance;
-            if (scrollTop <= top) {
-                console.log("Top callback")
-                topCallback();
-            }
-            
-            // Check bottom (note: calculation MUST be done after topCallback()!!!!)
-            if (isAtBottom(distance)) {
-                bottomCallback();
-            }
-            
-            bookmarkCallback();
-            
-            prevScrollTop = scrollTop;
-        };
 
-        setInterval(checkScrollPosition, interval);
+            return;
+        }
+
+        lastVeryBottom = 0; // Now that we've scrolled, clear this timer.
+
+        // Check top.
+        if (scrollTop <= SCROLL_DISTANCE) {
+            console.log("Top callback")
+            loadPrevious();
+        }
+
+        // Check bottom (note: calculation MUST be done after loadPrevious()!!!!)
+        if (isAtBottom(SCROLL_DISTANCE)) {
+            loadNext();
+        }
+
+        checkBookmark();
+
+        prevScrollTop = scrollTop;
     }
-    
+
+    /**
+     * Scroll event handler using requestAnimationFrame for smooth 60fps updates.
+     */
+    function onScroll() {
+        if (!scrollTicking) {
+            requestAnimationFrame(() => {
+                checkScrollPosition();
+                scrollTicking = false;
+            });
+            scrollTicking = true;
+        }
+    }
+
     // Adjust the bookmark if necessary.
     function checkBookmark() {
         // console.log("check bookmark")
@@ -893,7 +973,7 @@ $(document).ready(function() {
 
         if ($(newsContainerSelector).length === 0) {
             // console.log("checkBookmark: NO NEWS CONTAINERS to deal with, no need to set bookmark")
-            
+
             return;
         }
 
@@ -902,58 +982,56 @@ $(document).ready(function() {
             // console.log("checkBookmark: At bottom, bookmark all");
             bookmarkAll = true;
         }
-        
+
         // Start at the current bookmark.
         let bookmarkedItem = $( 'body>.bookmarked' );
         //console.log("Current bookmark: ", bookmarkedItem)
-        
+
         // Check if the current bookmark is valid.
         if (!bookmarkAll && bookmarkedItem.length && !isAboveScroll(bookmarkedItem)) {
             // console.log("checkBookmark Currently bookmarked item is not above scroll.  Goodbye!", bookmarkedItem.attr('id'));
-            
+
             return;
         }
-        
+
         // If there's a bookmark, get the next item.  Otherwise, get the first news container.
         let nextItem = bookmarkedItem.length ? nextNewsContainer(bookmarkedItem) : $(newsContainerSelector);
 
         //console.log("Bookmark is above scroll! ", bookmarkedItem);
         //console.log("Next available news item is: ", nextItem);
-        
+
         while (nextItem !== null && nextItem.length >= 1) {
             // Nothing more to do.
             if (!isAboveScroll(nextItem) && !bookmarkAll) {
                 // console.log("checkBookmark: item not above scroll:", nextItem.attr('id'))
-                
+
                 break;
             }
-            
+
             // Move the bookmark.
             // console.log("checkBookmark: set bookmark to ", nextItem.attr('id'));
             apiGetRequest('set_bookmark', htmlIdToId(nextItem.attr('id')));
-            
+
             // Continue to next item.
             nextItem = nextNewsContainer(nextItem);
         }
     }
-    
+
     function loadNext() {
         // console.log("loadNext");
         requestNews("append");
     }
-    
+
     function loadPrevious() {
         // console.log("loadPrevious");
         requestNews("prepend");
     }
-    
-    
+
+
     /**
      * Timestamp update timer.
      */
     function updateTimestamps(interval) {
-        let $document = $(document);
-        
         // Grab each timestamp, then re-call formatDateSimply() on it.
         let updateTimestampsCallback = function() {
             let item = $(newsContainerSelector);
@@ -970,20 +1048,17 @@ $(document).ready(function() {
 
         setInterval(updateTimestampsCallback, interval);
     }
-    
+
     /**
      * Initial setup.
      */
-    
-    // Poll for scroll position every 250 ms.
-    watchScrollPosition(loadNext, loadPrevious, checkBookmark, 250, 250);
-    
+
+    // Use passive scroll event listener instead of polling
+    window.addEventListener('scroll', onScroll, { passive: true });
+
+    // Also check periodically for edge cases (e.g., content loaded while at bottom)
+    setInterval(checkScrollPosition, 1000);
+
     // Update timestamps every 10 seconds.
     updateTimestamps(10000);
-    
-    // Setup the bookmark forcer on the top bookmark.
-    installMouseHandlers('#topBookmark');
-
-    // Setup link delegator on all non-news items.
-    $(document).find( 'a' ).on( "click", delegateLink );
 });

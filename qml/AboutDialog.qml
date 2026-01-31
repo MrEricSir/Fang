@@ -50,7 +50,7 @@ Dialog {
     DialogSpacer {}
     
     DialogText {
-        text: "Copyright 2013-2025 Eric Gregory.  All rights reserved.\n\n" +
+        text: "Copyright 2013-2026 Eric Gregory.  All rights reserved.\n\n" +
               "Made in San Francisco, California.";
     }
     
