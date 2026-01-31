@@ -3,6 +3,8 @@ qt_add_executable(tst_fangobject
     tst_fangobject.cpp
     ${CMAKE_SOURCE_DIR}/src/FangObject.cpp
     ${CMAKE_SOURCE_DIR}/src/FangObject.h
+    ${CMAKE_SOURCE_DIR}/src/utilities/FangLogging.cpp
+    ${CMAKE_SOURCE_DIR}/src/utilities/FangLogging.h
 )
 
 target_include_directories(tst_fangobject PRIVATE
