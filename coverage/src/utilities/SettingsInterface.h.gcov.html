@@ -4,7 +4,7 @@
 
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  <title>LCOV - coverage.info.cleaned - src/parser/ParserInterface.cpp</title>
+  <title>LCOV - coverage.info.cleaned - src/utilities/SettingsInterface.h</title>
   <link rel="stylesheet" type="text/css" href="../../gcov.css">
 </head>
 
@@ -19,7 +19,7 @@
                 <table cellpadding=1 border=0 width="100%">
           <tr>
             <td width="10%" class="headerItem">Current view:</td>
-            <td width="10%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">src/parser</a> - ParserInterface.cpp<span style="font-size: 80%;"> (source / <a href="ParserInterface.cpp.func-c.html">functions</a>)</span></td>
+            <td width="10%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">src/utilities</a> - SettingsInterface.h<span style="font-size: 80%;"> (source / <a href="SettingsInterface.h.func-c.html">functions</a>)</span></td>
             <td width="5%"></td>
             <td width="5%"></td>
             <td width="5%" class="headerCovTableHead">Coverage</td>
@@ -32,16 +32,16 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
-            <td class="headerCovTableEntry">3</td>
-            <td class="headerCovTableEntry">3</td>
+            <td class="headerCovTableEntry">1</td>
+            <td class="headerCovTableEntry">1</td>
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
             <td class="headerValue">2026-01-31 22:02:17</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
-            <td class="headerCovTableEntry">1</td>
+            <td class="headerCovTableEntryLo">50.0&nbsp;%</td>
+            <td class="headerCovTableEntry">2</td>
             <td class="headerCovTableEntry">1</td>
           </tr>
                   <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
@@ -60,12 +60,25 @@
               <td>
 <pre class="sourceHeading">            Line data    Source code</pre>
 <pre class="source">
-<span id="L1"><span class="lineNum">       1</span>              : #include &quot;ParserInterface.h&quot;</span>
-<span id="L2"><span class="lineNum">       2</span>              : </span>
-<span id="L3"><span class="lineNum">       3</span> <span class="tlaGNC tlaBgGNC">         163 : ParserInterface::ParserInterface(QObject *parent) :</span></span>
-<span id="L4"><span class="lineNum">       4</span> <span class="tlaGNC">         163 :     FangObject(parent)</span></span>
-<span id="L5"><span class="lineNum">       5</span>              : {</span>
-<span id="L6"><span class="lineNum">       6</span> <span class="tlaGNC">         163 : }</span></span>
+<span id="L1"><span class="lineNum">       1</span>              : #ifndef SETTINGSINTERFACE_H</span>
+<span id="L2"><span class="lineNum">       2</span>              : #define SETTINGSINTERFACE_H</span>
+<span id="L3"><span class="lineNum">       3</span>              : </span>
+<span id="L4"><span class="lineNum">       4</span>              : #include &lt;QString&gt;</span>
+<span id="L5"><span class="lineNum">       5</span>              : </span>
+<span id="L6"><span class="lineNum">       6</span>              : /*!</span>
+<span id="L7"><span class="lineNum">       7</span>              :     \brief Interface for settings needed by UpdateChecker.</span>
+<span id="L8"><span class="lineNum">       8</span>              : </span>
+<span id="L9"><span class="lineNum">       9</span>              :     This allows UpdateChecker to work with both the real FangSettings</span>
+<span id="L10"><span class="lineNum">      10</span>              :     and a mock for testing.</span>
+<span id="L11"><span class="lineNum">      11</span>              :  */</span>
+<span id="L12"><span class="lineNum">      12</span>              : class SettingsInterface</span>
+<span id="L13"><span class="lineNum">      13</span>              : {</span>
+<span id="L14"><span class="lineNum">      14</span>              : public:</span>
+<span id="L15"><span class="lineNum">      15</span> <span class="tlaGNC tlaBgGNC">          22 :     virtual ~SettingsInterface() = default;</span></span>
+<span id="L16"><span class="lineNum">      16</span>              :     virtual QString getLastSeenVersion() = 0;</span>
+<span id="L17"><span class="lineNum">      17</span>              : };</span>
+<span id="L18"><span class="lineNum">      18</span>              : </span>
+<span id="L19"><span class="lineNum">      19</span>              : #endif // SETTINGSINTERFACE_H</span>
         </pre>
               </td>
             </tr>

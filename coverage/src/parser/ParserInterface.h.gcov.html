@@ -31,18 +31,18 @@
             <td class="headerValue">coverage.info.cleaned</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntryLo">50.0&nbsp;%</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
             <td class="headerCovTableEntry">2</td>
-            <td class="headerCovTableEntry">1</td>
+            <td class="headerCovTableEntry">2</td>
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-01-31 07:52:44</td>
+            <td class="headerValue">2026-01-31 22:02:17</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntryLo">25.0&nbsp;%</td>
+            <td class="headerCovTableEntryMed">75.0&nbsp;%</td>
             <td class="headerCovTableEntry">4</td>
-            <td class="headerCovTableEntry">1</td>
+            <td class="headerCovTableEntry">3</td>
           </tr>
                   <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
                 </table>
@@ -79,10 +79,10 @@
 <span id="L17"><span class="lineNum">      17</span>              :     </span>
 <span id="L18"><span class="lineNum">      18</span>              : public:</span>
 <span id="L19"><span class="lineNum">      19</span>              :     enum ParseResult { OK, NETWORK_ERROR, FILE_ERROR, PARSE_ERROR, EMPTY_DOCUMENT, IN_PROGRESS };</span>
-<span id="L20"><span class="lineNum">      20</span> <span class="tlaUNC tlaBgUNC">           0 :     Q_ENUM(ParseResult)</span></span>
+<span id="L20"><span class="lineNum">      20</span> <span class="tlaGNC tlaBgGNC">           2 :     Q_ENUM(ParseResult)</span></span>
 <span id="L21"><span class="lineNum">      21</span>              :     </span>
 <span id="L22"><span class="lineNum">      22</span>              :     explicit ParserInterface(QObject *parent = nullptr);</span>
-<span id="L23"><span class="lineNum">      23</span> <span class="tlaGNC tlaBgGNC">         138 :     virtual ~ParserInterface() {}</span></span>
+<span id="L23"><span class="lineNum">      23</span> <span class="tlaGNC">         141 :     virtual ~ParserInterface() {}</span></span>
 <span id="L24"><span class="lineNum">      24</span>              :     </span>
 <span id="L25"><span class="lineNum">      25</span>              : signals:</span>
 <span id="L26"><span class="lineNum">      26</span>              :     // Call getResult() and getFeed() now, yo!</span>

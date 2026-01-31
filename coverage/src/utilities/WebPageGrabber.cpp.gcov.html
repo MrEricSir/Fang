@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-01-31 07:52:44</td>
+            <td class="headerValue">2026-01-31 22:02:17</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -73,46 +73,46 @@
 <span id="L11"><span class="lineNum">      11</span>              : namespace {</span>
 <span id="L12"><span class="lineNum">      12</span>              :     // RAII wrapper for TidyDoc to ensure cleanup</span>
 <span id="L13"><span class="lineNum">      13</span>              :     struct TidyDocDeleter {</span>
-<span id="L14"><span class="lineNum">      14</span> <span class="tlaGNC tlaBgGNC">          57 :         void operator()(TidyDoc doc) const {</span></span>
-<span id="L15"><span class="lineNum">      15</span> <span class="tlaGNC">          57 :             if (doc) {</span></span>
-<span id="L16"><span class="lineNum">      16</span> <span class="tlaGNC">          57 :                 tidyRelease(doc);</span></span>
+<span id="L14"><span class="lineNum">      14</span> <span class="tlaGNC tlaBgGNC">          58 :         void operator()(TidyDoc doc) const {</span></span>
+<span id="L15"><span class="lineNum">      15</span> <span class="tlaGNC">          58 :             if (doc) {</span></span>
+<span id="L16"><span class="lineNum">      16</span> <span class="tlaGNC">          58 :                 tidyRelease(doc);</span></span>
 <span id="L17"><span class="lineNum">      17</span>              :             }</span>
-<span id="L18"><span class="lineNum">      18</span> <span class="tlaGNC">          57 :         }</span></span>
+<span id="L18"><span class="lineNum">      18</span> <span class="tlaGNC">          58 :         }</span></span>
 <span id="L19"><span class="lineNum">      19</span>              :     };</span>
 <span id="L20"><span class="lineNum">      20</span>              :     using TidyDocPtr = std::unique_ptr&lt;std::remove_pointer&lt;TidyDoc&gt;::type, TidyDocDeleter&gt;;</span>
 <span id="L21"><span class="lineNum">      21</span>              : }</span>
 <span id="L22"><span class="lineNum">      22</span>              : </span>
-<span id="L23"><span class="lineNum">      23</span> <span class="tlaGNC">          77 : WebPageGrabber::WebPageGrabber(bool handleMetaRefresh, int timeoutMS, QObject *parent, QNetworkAccessManager* networkManager) :</span></span>
+<span id="L23"><span class="lineNum">      23</span> <span class="tlaGNC">          79 : WebPageGrabber::WebPageGrabber(bool handleMetaRefresh, int timeoutMS, QObject *parent, QNetworkAccessManager* networkManager) :</span></span>
 <span id="L24"><span class="lineNum">      24</span>              :     FangObject(parent),</span>
-<span id="L25"><span class="lineNum">      25</span> <span class="tlaGNC">          77 :     core(nullptr),</span></span>
-<span id="L26"><span class="lineNum">      26</span> <span class="tlaGNC">          77 :     handleMetaRefresh(handleMetaRefresh),</span></span>
-<span id="L27"><span class="lineNum">      27</span> <span class="tlaGNC">          77 :     redirectAttempts(0),</span></span>
-<span id="L28"><span class="lineNum">      28</span> <span class="tlaGNC">          77 :     error(true),</span></span>
-<span id="L29"><span class="lineNum">      29</span> <span class="tlaGNC">          77 :     done(false)</span></span>
+<span id="L25"><span class="lineNum">      25</span> <span class="tlaGNC">          79 :     core(nullptr),</span></span>
+<span id="L26"><span class="lineNum">      26</span> <span class="tlaGNC">          79 :     handleMetaRefresh(handleMetaRefresh),</span></span>
+<span id="L27"><span class="lineNum">      27</span> <span class="tlaGNC">          79 :     redirectAttempts(0),</span></span>
+<span id="L28"><span class="lineNum">      28</span> <span class="tlaGNC">          79 :     error(true),</span></span>
+<span id="L29"><span class="lineNum">      29</span> <span class="tlaGNC">          79 :     done(false)</span></span>
 <span id="L30"><span class="lineNum">      30</span>              : {</span>
-<span id="L31"><span class="lineNum">      31</span> <span class="tlaGNC">          77 :     NetworkDownloadConfig config;</span></span>
-<span id="L32"><span class="lineNum">      32</span> <span class="tlaGNC">          77 :     config.timeoutMs = timeoutMS;</span></span>
-<span id="L33"><span class="lineNum">      33</span> <span class="tlaGNC">          77 :     config.maxRedirects = 10;</span></span>
-<span id="L34"><span class="lineNum">      34</span> <span class="tlaGNC">          77 :     config.useInactivityTimeout = true;</span></span>
-<span id="L35"><span class="lineNum">      35</span> <span class="tlaGNC">          77 :     core = new NetworkDownloadCore(config, this, networkManager);</span></span>
-<span id="L36"><span class="lineNum">      36</span> <span class="tlaGNC">          77 :     init();</span></span>
-<span id="L37"><span class="lineNum">      37</span> <span class="tlaGNC">          77 : }</span></span>
+<span id="L31"><span class="lineNum">      31</span> <span class="tlaGNC">          79 :     NetworkDownloadConfig config;</span></span>
+<span id="L32"><span class="lineNum">      32</span> <span class="tlaGNC">          79 :     config.timeoutMs = timeoutMS;</span></span>
+<span id="L33"><span class="lineNum">      33</span> <span class="tlaGNC">          79 :     config.maxRedirects = 10;</span></span>
+<span id="L34"><span class="lineNum">      34</span> <span class="tlaGNC">          79 :     config.useInactivityTimeout = true;</span></span>
+<span id="L35"><span class="lineNum">      35</span> <span class="tlaGNC">          79 :     core = new NetworkDownloadCore(config, this, networkManager);</span></span>
+<span id="L36"><span class="lineNum">      36</span> <span class="tlaGNC">          79 :     init();</span></span>
+<span id="L37"><span class="lineNum">      37</span> <span class="tlaGNC">          79 : }</span></span>
 <span id="L38"><span class="lineNum">      38</span>              : </span>
-<span id="L39"><span class="lineNum">      39</span> <span class="tlaGNC">          27 : WebPageGrabber::WebPageGrabber(QObject *parent) :</span></span>
+<span id="L39"><span class="lineNum">      39</span> <span class="tlaGNC">          28 : WebPageGrabber::WebPageGrabber(QObject *parent) :</span></span>
 <span id="L40"><span class="lineNum">      40</span>              :     FangObject(parent),</span>
-<span id="L41"><span class="lineNum">      41</span> <span class="tlaGNC">          27 :     core(nullptr),</span></span>
-<span id="L42"><span class="lineNum">      42</span> <span class="tlaGNC">          27 :     handleMetaRefresh(DEFAULT_HANDLE_META_REFRESH),</span></span>
-<span id="L43"><span class="lineNum">      43</span> <span class="tlaGNC">          27 :     redirectAttempts(0),</span></span>
-<span id="L44"><span class="lineNum">      44</span> <span class="tlaGNC">          27 :     error(true),</span></span>
-<span id="L45"><span class="lineNum">      45</span> <span class="tlaGNC">          27 :     done(false)</span></span>
+<span id="L41"><span class="lineNum">      41</span> <span class="tlaGNC">          28 :     core(nullptr),</span></span>
+<span id="L42"><span class="lineNum">      42</span> <span class="tlaGNC">          28 :     handleMetaRefresh(DEFAULT_HANDLE_META_REFRESH),</span></span>
+<span id="L43"><span class="lineNum">      43</span> <span class="tlaGNC">          28 :     redirectAttempts(0),</span></span>
+<span id="L44"><span class="lineNum">      44</span> <span class="tlaGNC">          28 :     error(true),</span></span>
+<span id="L45"><span class="lineNum">      45</span> <span class="tlaGNC">          28 :     done(false)</span></span>
 <span id="L46"><span class="lineNum">      46</span>              : {</span>
-<span id="L47"><span class="lineNum">      47</span> <span class="tlaGNC">          27 :     NetworkDownloadConfig config;</span></span>
-<span id="L48"><span class="lineNum">      48</span> <span class="tlaGNC">          27 :     config.timeoutMs = DEFAULT_TIMEOUT_MS;</span></span>
-<span id="L49"><span class="lineNum">      49</span> <span class="tlaGNC">          27 :     config.maxRedirects = 10;</span></span>
-<span id="L50"><span class="lineNum">      50</span> <span class="tlaGNC">          27 :     config.useInactivityTimeout = true;</span></span>
-<span id="L51"><span class="lineNum">      51</span> <span class="tlaGNC">          27 :     core = new NetworkDownloadCore(config, this, nullptr);</span></span>
-<span id="L52"><span class="lineNum">      52</span> <span class="tlaGNC">          27 :     init();</span></span>
-<span id="L53"><span class="lineNum">      53</span> <span class="tlaGNC">          27 : }</span></span>
+<span id="L47"><span class="lineNum">      47</span> <span class="tlaGNC">          28 :     NetworkDownloadConfig config;</span></span>
+<span id="L48"><span class="lineNum">      48</span> <span class="tlaGNC">          28 :     config.timeoutMs = DEFAULT_TIMEOUT_MS;</span></span>
+<span id="L49"><span class="lineNum">      49</span> <span class="tlaGNC">          28 :     config.maxRedirects = 10;</span></span>
+<span id="L50"><span class="lineNum">      50</span> <span class="tlaGNC">          28 :     config.useInactivityTimeout = true;</span></span>
+<span id="L51"><span class="lineNum">      51</span> <span class="tlaGNC">          28 :     core = new NetworkDownloadCore(config, this, nullptr);</span></span>
+<span id="L52"><span class="lineNum">      52</span> <span class="tlaGNC">          28 :     init();</span></span>
+<span id="L53"><span class="lineNum">      53</span> <span class="tlaGNC">          28 : }</span></span>
 <span id="L54"><span class="lineNum">      54</span>              : </span>
 <span id="L55"><span class="lineNum">      55</span>              : </span>
 <span id="L56"><span class="lineNum">      56</span> <span class="tlaGNC">           7 : void WebPageGrabber::load(const QUrl&amp; url)</span></span>
@@ -125,12 +125,12 @@
 <span id="L63"><span class="lineNum">      63</span> <span class="tlaGNC">           7 :     loadInternal(url);</span></span>
 <span id="L64"><span class="lineNum">      64</span> <span class="tlaGNC">           7 : }</span></span>
 <span id="L65"><span class="lineNum">      65</span>              : </span>
-<span id="L66"><span class="lineNum">      66</span> <span class="tlaGNC">          52 : QString *WebPageGrabber::load(const QString&amp; htmlString)</span></span>
+<span id="L66"><span class="lineNum">      66</span> <span class="tlaGNC">          53 : QString *WebPageGrabber::load(const QString&amp; htmlString)</span></span>
 <span id="L67"><span class="lineNum">      67</span>              : {</span>
 <span id="L68"><span class="lineNum">      68</span>              :     // Reset!</span>
-<span id="L69"><span class="lineNum">      69</span> <span class="tlaGNC">          52 :     error = true;</span></span>
+<span id="L69"><span class="lineNum">      69</span> <span class="tlaGNC">          53 :     error = true;</span></span>
 <span id="L70"><span class="lineNum">      70</span>              : </span>
-<span id="L71"><span class="lineNum">      71</span> <span class="tlaGNC">          52 :     return loadInternal(htmlString, false);</span></span>
+<span id="L71"><span class="lineNum">      71</span> <span class="tlaGNC">          53 :     return loadInternal(htmlString, false);</span></span>
 <span id="L72"><span class="lineNum">      72</span>              : }</span>
 <span id="L73"><span class="lineNum">      73</span>              : </span>
 <span id="L74"><span class="lineNum">      74</span> <span class="tlaGNC">           7 : void WebPageGrabber::loadInternal(const QUrl&amp; url)</span></span>
@@ -139,64 +139,64 @@
 <span id="L77"><span class="lineNum">      77</span> <span class="tlaGNC">           7 :     core-&gt;download(url);</span></span>
 <span id="L78"><span class="lineNum">      78</span> <span class="tlaGNC">           7 : }</span></span>
 <span id="L79"><span class="lineNum">      79</span>              : </span>
-<span id="L80"><span class="lineNum">      80</span> <span class="tlaGNC">          57 : QString *WebPageGrabber::loadInternal(const QString&amp; htmlString, bool handleRefresh)</span></span>
+<span id="L80"><span class="lineNum">      80</span> <span class="tlaGNC">          58 : QString *WebPageGrabber::loadInternal(const QString&amp; htmlString, bool handleRefresh)</span></span>
 <span id="L81"><span class="lineNum">      81</span>              : {</span>
-<span id="L82"><span class="lineNum">      82</span> <span class="tlaGNC">          57 :     document.clear();</span></span>
+<span id="L82"><span class="lineNum">      82</span> <span class="tlaGNC">          58 :     document.clear();</span></span>
 <span id="L83"><span class="lineNum">      83</span>              : </span>
 <span id="L84"><span class="lineNum">      84</span>              :     // Tidy up the string!</span>
 <span id="L85"><span class="lineNum">      85</span>              :     TidyBuffer output;</span>
 <span id="L86"><span class="lineNum">      86</span>              :     TidyBuffer errbuf;</span>
-<span id="L87"><span class="lineNum">      87</span> <span class="tlaGNC">          57 :     tidyBufInit(&amp;output);</span></span>
-<span id="L88"><span class="lineNum">      88</span> <span class="tlaGNC">          57 :     tidyBufInit(&amp;errbuf);</span></span>
+<span id="L87"><span class="lineNum">      87</span> <span class="tlaGNC">          58 :     tidyBufInit(&amp;output);</span></span>
+<span id="L88"><span class="lineNum">      88</span> <span class="tlaGNC">          58 :     tidyBufInit(&amp;errbuf);</span></span>
 <span id="L89"><span class="lineNum">      89</span>              : </span>
-<span id="L90"><span class="lineNum">      90</span> <span class="tlaGNC">          57 :     TidyDocPtr tdoc(tidyCreate());</span></span>
-<span id="L91"><span class="lineNum">      91</span> <span class="tlaGNC">          57 :     if (!tdoc) {</span></span>
+<span id="L90"><span class="lineNum">      90</span> <span class="tlaGNC">          58 :     TidyDocPtr tdoc(tidyCreate());</span></span>
+<span id="L91"><span class="lineNum">      91</span> <span class="tlaGNC">          58 :     if (!tdoc) {</span></span>
 <span id="L92"><span class="lineNum">      92</span> <span class="tlaUNC tlaBgUNC">           0 :         emitReadySignal(nullptr);</span></span>
 <span id="L93"><span class="lineNum">      93</span> <span class="tlaUNC">           0 :         return nullptr;</span></span>
 <span id="L94"><span class="lineNum">      94</span>              :     }</span>
 <span id="L95"><span class="lineNum">      95</span>              : </span>
 <span id="L96"><span class="lineNum">      96</span>              :     // QString can convert to/from utf8</span>
-<span id="L97"><span class="lineNum">      97</span> <span class="tlaGNC tlaBgGNC">          57 :     tidySetInCharEncoding(tdoc.get(), &quot;utf8&quot;);</span></span>
-<span id="L98"><span class="lineNum">      98</span> <span class="tlaGNC">          57 :     tidySetOutCharEncoding(tdoc.get(), &quot;utf8&quot;);</span></span>
+<span id="L97"><span class="lineNum">      97</span> <span class="tlaGNC tlaBgGNC">          58 :     tidySetInCharEncoding(tdoc.get(), &quot;utf8&quot;);</span></span>
+<span id="L98"><span class="lineNum">      98</span> <span class="tlaGNC">          58 :     tidySetOutCharEncoding(tdoc.get(), &quot;utf8&quot;);</span></span>
 <span id="L99"><span class="lineNum">      99</span>              : </span>
 <span id="L100"><span class="lineNum">     100</span>              :     // Configure and process the HTML</span>
-<span id="L101"><span class="lineNum">     101</span> <span class="tlaGNC">          57 :     if (!tidyOptSetBool(tdoc.get(), TidyXhtmlOut, yes)) {</span></span>
+<span id="L101"><span class="lineNum">     101</span> <span class="tlaGNC">          58 :     if (!tidyOptSetBool(tdoc.get(), TidyXhtmlOut, yes)) {</span></span>
 <span id="L102"><span class="lineNum">     102</span> <span class="tlaUNC tlaBgUNC">           0 :         tidyBufFree(&amp;output);</span></span>
 <span id="L103"><span class="lineNum">     103</span> <span class="tlaUNC">           0 :         tidyBufFree(&amp;errbuf);</span></span>
 <span id="L104"><span class="lineNum">     104</span> <span class="tlaUNC">           0 :         emitReadySignal(nullptr);</span></span>
 <span id="L105"><span class="lineNum">     105</span> <span class="tlaUNC">           0 :         return nullptr;</span></span>
 <span id="L106"><span class="lineNum">     106</span>              :     }</span>
 <span id="L107"><span class="lineNum">     107</span>              : </span>
-<span id="L108"><span class="lineNum">     108</span> <span class="tlaGNC tlaBgGNC">          57 :     if (!tidyOptSetInt(tdoc.get(), TidyIndentContent, TidyNoState)) {</span></span>
+<span id="L108"><span class="lineNum">     108</span> <span class="tlaGNC tlaBgGNC">          58 :     if (!tidyOptSetInt(tdoc.get(), TidyIndentContent, TidyNoState)) {</span></span>
 <span id="L109"><span class="lineNum">     109</span> <span class="tlaUNC tlaBgUNC">           0 :         tidyBufFree(&amp;output);</span></span>
 <span id="L110"><span class="lineNum">     110</span> <span class="tlaUNC">           0 :         tidyBufFree(&amp;errbuf);</span></span>
 <span id="L111"><span class="lineNum">     111</span> <span class="tlaUNC">           0 :         emitReadySignal(nullptr);</span></span>
 <span id="L112"><span class="lineNum">     112</span> <span class="tlaUNC">           0 :         return nullptr;</span></span>
 <span id="L113"><span class="lineNum">     113</span>              :     }</span>
 <span id="L114"><span class="lineNum">     114</span>              : </span>
-<span id="L115"><span class="lineNum">     115</span> <span class="tlaGNC tlaBgGNC">          57 :     int rc = tidySetErrorBuffer(tdoc.get(), &amp;errbuf);</span></span>
-<span id="L116"><span class="lineNum">     116</span> <span class="tlaGNC">          57 :     if (rc &gt;= 0) {</span></span>
-<span id="L117"><span class="lineNum">     117</span> <span class="tlaGNC">          57 :         rc = tidyParseString(tdoc.get(), htmlString.toUtf8().constData());</span></span>
+<span id="L115"><span class="lineNum">     115</span> <span class="tlaGNC tlaBgGNC">          58 :     int rc = tidySetErrorBuffer(tdoc.get(), &amp;errbuf);</span></span>
+<span id="L116"><span class="lineNum">     116</span> <span class="tlaGNC">          58 :     if (rc &gt;= 0) {</span></span>
+<span id="L117"><span class="lineNum">     117</span> <span class="tlaGNC">          58 :         rc = tidyParseString(tdoc.get(), htmlString.toUtf8().constData());</span></span>
 <span id="L118"><span class="lineNum">     118</span>              :     }</span>
-<span id="L119"><span class="lineNum">     119</span> <span class="tlaGNC">          57 :     if (rc &gt;= 0) {</span></span>
-<span id="L120"><span class="lineNum">     120</span> <span class="tlaGNC">          57 :         rc = tidyCleanAndRepair(tdoc.get());</span></span>
+<span id="L119"><span class="lineNum">     119</span> <span class="tlaGNC">          58 :     if (rc &gt;= 0) {</span></span>
+<span id="L120"><span class="lineNum">     120</span> <span class="tlaGNC">          58 :         rc = tidyCleanAndRepair(tdoc.get());</span></span>
 <span id="L121"><span class="lineNum">     121</span>              :     }</span>
-<span id="L122"><span class="lineNum">     122</span> <span class="tlaGNC">          57 :     if (rc &gt;= 0) {</span></span>
-<span id="L123"><span class="lineNum">     123</span> <span class="tlaGNC">          57 :         rc = tidyRunDiagnostics(tdoc.get());</span></span>
+<span id="L122"><span class="lineNum">     122</span> <span class="tlaGNC">          58 :     if (rc &gt;= 0) {</span></span>
+<span id="L123"><span class="lineNum">     123</span> <span class="tlaGNC">          58 :         rc = tidyRunDiagnostics(tdoc.get());</span></span>
 <span id="L124"><span class="lineNum">     124</span>              :     }</span>
-<span id="L125"><span class="lineNum">     125</span> <span class="tlaGNC">          57 :     if (rc &gt; 1) {</span></span>
+<span id="L125"><span class="lineNum">     125</span> <span class="tlaGNC">          58 :     if (rc &gt; 1) {</span></span>
 <span id="L126"><span class="lineNum">     126</span>              :         // If error, force output</span>
-<span id="L127"><span class="lineNum">     127</span> <span class="tlaGNC">          20 :         rc = tidyOptSetBool(tdoc.get(), TidyForceOutput, yes) ? rc : -1;</span></span>
+<span id="L127"><span class="lineNum">     127</span> <span class="tlaGNC">          21 :         rc = tidyOptSetBool(tdoc.get(), TidyForceOutput, yes) ? rc : -1;</span></span>
 <span id="L128"><span class="lineNum">     128</span>              :     }</span>
-<span id="L129"><span class="lineNum">     129</span> <span class="tlaGNC">          57 :     if (rc &gt;= 0) {</span></span>
-<span id="L130"><span class="lineNum">     130</span> <span class="tlaGNC">          57 :         rc = tidySaveBuffer(tdoc.get(), &amp;output);</span></span>
+<span id="L129"><span class="lineNum">     129</span> <span class="tlaGNC">          58 :     if (rc &gt;= 0) {</span></span>
+<span id="L130"><span class="lineNum">     130</span> <span class="tlaGNC">          58 :         rc = tidySaveBuffer(tdoc.get(), &amp;output);</span></span>
 <span id="L131"><span class="lineNum">     131</span>              :     }</span>
 <span id="L132"><span class="lineNum">     132</span>              : </span>
-<span id="L133"><span class="lineNum">     133</span> <span class="tlaGNC">          57 :     QString result;</span></span>
-<span id="L134"><span class="lineNum">     134</span> <span class="tlaGNC">         114 :     qCDebug(logWebPage) &lt;&lt; &quot;TidyLib rc:&quot; &lt;&lt; rc &lt;&lt; &quot;output.bp:&quot; &lt;&lt; (output.bp != nullptr);</span></span>
+<span id="L133"><span class="lineNum">     133</span> <span class="tlaGNC">          58 :     QString result;</span></span>
+<span id="L134"><span class="lineNum">     134</span> <span class="tlaGNC">         116 :     qCDebug(logWebPage) &lt;&lt; &quot;TidyLib rc:&quot; &lt;&lt; rc &lt;&lt; &quot;output.bp:&quot; &lt;&lt; (output.bp != nullptr);</span></span>
 <span id="L135"><span class="lineNum">     135</span>              : </span>
-<span id="L136"><span class="lineNum">     136</span> <span class="tlaGNC">          57 :     if (rc &gt;= 0 &amp;&amp; output.bp) {</span></span>
-<span id="L137"><span class="lineNum">     137</span> <span class="tlaGNC">          57 :         result = QString::fromUtf8(reinterpret_cast&lt;const char*&gt;(output.bp));</span></span>
+<span id="L136"><span class="lineNum">     136</span> <span class="tlaGNC">          58 :     if (rc &gt;= 0 &amp;&amp; output.bp) {</span></span>
+<span id="L137"><span class="lineNum">     137</span> <span class="tlaGNC">          58 :         result = QString::fromUtf8(reinterpret_cast&lt;const char*&gt;(output.bp));</span></span>
 <span id="L138"><span class="lineNum">     138</span>              :     } else {</span>
 <span id="L139"><span class="lineNum">     139</span> <span class="tlaUNC tlaBgUNC">           0 :         qCDebug(logWebPage) &lt;&lt; &quot;WebPageGrabber error!&quot;;</span></span>
 <span id="L140"><span class="lineNum">     140</span> <span class="tlaUNC">           0 :         tidyBufFree(&amp;output);</span></span>
@@ -206,13 +206,13 @@
 <span id="L144"><span class="lineNum">     144</span>              :     }</span>
 <span id="L145"><span class="lineNum">     145</span>              : </span>
 <span id="L146"><span class="lineNum">     146</span>              :     // Free memory (tdoc is automatically freed by unique_ptr)</span>
-<span id="L147"><span class="lineNum">     147</span> <span class="tlaGNC tlaBgGNC">          57 :     tidyBufFree(&amp;output);</span></span>
-<span id="L148"><span class="lineNum">     148</span> <span class="tlaGNC">          57 :     tidyBufFree(&amp;errbuf);</span></span>
+<span id="L147"><span class="lineNum">     147</span> <span class="tlaGNC tlaBgGNC">          58 :     tidyBufFree(&amp;output);</span></span>
+<span id="L148"><span class="lineNum">     148</span> <span class="tlaGNC">          58 :     tidyBufFree(&amp;errbuf);</span></span>
 <span id="L149"><span class="lineNum">     149</span>              : </span>
-<span id="L150"><span class="lineNum">     150</span> <span class="tlaGNC">          57 :     document = result;</span></span>
+<span id="L150"><span class="lineNum">     150</span> <span class="tlaGNC">          58 :     document = result;</span></span>
 <span id="L151"><span class="lineNum">     151</span>              : </span>
 <span id="L152"><span class="lineNum">     152</span>              :     // Check for an HTML meta refresh if requested.</span>
-<span id="L153"><span class="lineNum">     153</span> <span class="tlaGNC">          57 :     if (handleRefresh) {</span></span>
+<span id="L153"><span class="lineNum">     153</span> <span class="tlaGNC">          58 :     if (handleRefresh) {</span></span>
 <span id="L154"><span class="lineNum">     154</span> <span class="tlaGNC">           5 :         QString redirectURL = searchForRedirect(document);</span></span>
 <span id="L155"><span class="lineNum">     155</span> <span class="tlaGNC">           5 :         if (redirectAttempts &gt; MAX_REDIRECTS) {</span></span>
 <span id="L156"><span class="lineNum">     156</span> <span class="tlaUNC tlaBgUNC">           0 :             qCDebug(logWebPage) &lt;&lt; &quot;Error: Maximum HTML redirects&quot;;</span></span>
@@ -230,10 +230,10 @@
 <span id="L168"><span class="lineNum">     168</span> <span class="tlaGNC tlaBgGNC">           5 :     }</span></span>
 <span id="L169"><span class="lineNum">     169</span>              : </span>
 <span id="L170"><span class="lineNum">     170</span>              :     // Woo-hoo! We have a document!</span>
-<span id="L171"><span class="lineNum">     171</span> <span class="tlaGNC">          57 :     error = false;</span></span>
-<span id="L172"><span class="lineNum">     172</span> <span class="tlaGNC">          57 :     emitReadySignal(&amp;document);</span></span>
-<span id="L173"><span class="lineNum">     173</span> <span class="tlaGNC">          57 :     return &amp;document;</span></span>
-<span id="L174"><span class="lineNum">     174</span> <span class="tlaGNC">          57 : }</span></span>
+<span id="L171"><span class="lineNum">     171</span> <span class="tlaGNC">          58 :     error = false;</span></span>
+<span id="L172"><span class="lineNum">     172</span> <span class="tlaGNC">          58 :     emitReadySignal(&amp;document);</span></span>
+<span id="L173"><span class="lineNum">     173</span> <span class="tlaGNC">          58 :     return &amp;document;</span></span>
+<span id="L174"><span class="lineNum">     174</span> <span class="tlaGNC">          58 : }</span></span>
 <span id="L175"><span class="lineNum">     175</span>              : </span>
 <span id="L176"><span class="lineNum">     176</span> <span class="tlaGNC">           2 : void WebPageGrabber::onDownloadError(const QUrl&amp; url, const QString&amp; errorString)</span></span>
 <span id="L177"><span class="lineNum">     177</span>              : {</span>
@@ -301,20 +301,20 @@
 <span id="L239"><span class="lineNum">     239</span> <span class="tlaUNC tlaBgUNC">           0 :     return QString();</span></span>
 <span id="L240"><span class="lineNum">     240</span> <span class="tlaGNC tlaBgGNC">           5 : }</span></span>
 <span id="L241"><span class="lineNum">     241</span>              : </span>
-<span id="L242"><span class="lineNum">     242</span> <span class="tlaGNC">          59 : void WebPageGrabber::emitReadySignal(QString* document)</span></span>
+<span id="L242"><span class="lineNum">     242</span> <span class="tlaGNC">          60 : void WebPageGrabber::emitReadySignal(QString* document)</span></span>
 <span id="L243"><span class="lineNum">     243</span>              : {</span>
 <span id="L244"><span class="lineNum">     244</span>              :     // Remember that we're done.</span>
-<span id="L245"><span class="lineNum">     245</span> <span class="tlaGNC">          59 :     done = true;</span></span>
+<span id="L245"><span class="lineNum">     245</span> <span class="tlaGNC">          60 :     done = true;</span></span>
 <span id="L246"><span class="lineNum">     246</span>              : </span>
 <span id="L247"><span class="lineNum">     247</span>              :     // Now emit the signal.</span>
-<span id="L248"><span class="lineNum">     248</span> <span class="tlaGNC">          59 :     emit ready(this, document);</span></span>
-<span id="L249"><span class="lineNum">     249</span> <span class="tlaGNC">          59 : }</span></span>
+<span id="L248"><span class="lineNum">     248</span> <span class="tlaGNC">          60 :     emit ready(this, document);</span></span>
+<span id="L249"><span class="lineNum">     249</span> <span class="tlaGNC">          60 : }</span></span>
 <span id="L250"><span class="lineNum">     250</span>              : </span>
-<span id="L251"><span class="lineNum">     251</span> <span class="tlaGNC">         104 : void WebPageGrabber::init()</span></span>
+<span id="L251"><span class="lineNum">     251</span> <span class="tlaGNC">         107 : void WebPageGrabber::init()</span></span>
 <span id="L252"><span class="lineNum">     252</span>              : {</span>
-<span id="L253"><span class="lineNum">     253</span> <span class="tlaGNC">         104 :     connect(core, &amp;NetworkDownloadCore::error, this, &amp;WebPageGrabber::onDownloadError);</span></span>
-<span id="L254"><span class="lineNum">     254</span> <span class="tlaGNC">         104 :     connect(core, &amp;NetworkDownloadCore::finished, this, &amp;WebPageGrabber::onDownloadFinished);</span></span>
-<span id="L255"><span class="lineNum">     255</span> <span class="tlaGNC">         104 : }</span></span>
+<span id="L253"><span class="lineNum">     253</span> <span class="tlaGNC">         107 :     connect(core, &amp;NetworkDownloadCore::error, this, &amp;WebPageGrabber::onDownloadError);</span></span>
+<span id="L254"><span class="lineNum">     254</span> <span class="tlaGNC">         107 :     connect(core, &amp;NetworkDownloadCore::finished, this, &amp;WebPageGrabber::onDownloadFinished);</span></span>
+<span id="L255"><span class="lineNum">     255</span> <span class="tlaGNC">         107 : }</span></span>
 <span id="L256"><span class="lineNum">     256</span>              : </span>
 <span id="L257"><span class="lineNum">     257</span>              : </span>
         </pre>
