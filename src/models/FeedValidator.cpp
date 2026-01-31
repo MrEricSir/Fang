@@ -1,5 +1,6 @@
 #include "FeedValidator.h"
 #include "../FangApp.h"
+#include "../utilities/FangLogging.h"
 
 FeedValidator::FeedValidator(QQuickItem *parent) :
     QQuickItem(parent),
@@ -58,7 +59,7 @@ void FeedValidator::setFeedSelected(int index, bool selected)
         _feeds[index].selected = selected;
         emit feedsToAddCountChanged();
     } else {
-        qWarning() << "setFeedSelected: No feed found for index: " << index;
+        qCWarning(logModel) << "setFeedSelected: No feed found for index: " << index;
     }
 }
 
@@ -68,7 +69,7 @@ void FeedValidator::setFeedTitle(int index, QString title)
         _feeds[index].title = title;
         emit feedsToAddCountChanged();
     } else {
-        qWarning() << "setFeedTitle: No feed found for index: " << index;
+        qCWarning(logModel) << "setFeedTitle: No feed found for index: " << index;
     }
 }
 

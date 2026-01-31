@@ -6,6 +6,7 @@
 #include "../models/AllNewsFeedItem.h"
 #include "../utilities/UnreadCountReader.h"
 #include "../utilities/ErrorHandling.h"
+#include "../utilities/FangLogging.h"
 #include "../FangApp.h"
 
 UpdateFeedOperation::UpdateFeedOperation(OperationManager *parent, FeedItem *feed, RawFeed* rawFeed, bool useCache) :
@@ -33,19 +34,19 @@ void UpdateFeedOperation::execute()
     FANG_BACKGROUND_CHECK;
 
     if (!feed) {
-        qCritical() << "UpdateFeedOperation::execute: feed is null, cannot execute";
+        qCCritical(logOperation) << "UpdateFeedOperation::execute: feed is null, cannot execute";
         emit finished(this);
         return;
     }
 
     if (feed->isSpecialFeed()) {
-        qDebug() <<  "Cannot update special feed";
+        qCDebug(logOperation) <<  "Cannot update special feed";
         emit finished(this);
         return;
     }
 
     if (feed->isFolder()) {
-        qDebug() <<  "Cannot update folder";
+        qCDebug(logOperation) <<  "Cannot update folder";
         emit finished(this);
         return;
     }
@@ -70,7 +71,7 @@ void UpdateFeedOperation::onFeedFinished()
     // Try feed rediscovery if needed. This will update the URL and refresh.
     if (parser.getResult() == ParserInterface::NETWORK_ERROR &&
         parser.getNetworkError() == QNetworkReply::NetworkError::ContentNotFoundError) {
-        qDebug() << "UpdateFeedOperation: Feed not found. Attempting to rediscover feed.";
+        qCDebug(logOperation) << "UpdateFeedOperation: Feed not found. Attempting to rediscover feed.";
         discovery.checkFeed(feed->getUserURL());
 
         return;
@@ -78,7 +79,7 @@ void UpdateFeedOperation::onFeedFinished()
 
     // Set error flag for network errors (server unreachable, etc.)
     if (parser.getResult() == ParserInterface::NETWORK_ERROR) {
-        qDebug() << "UpdateFeedOperation: Network error for feed:" << feed->getTitle();
+        qCDebug(logOperation) << "UpdateFeedOperation: Network error for feed:" << feed->getTitle();
         feed->setErrorFlag(true);
         feed->setIsUpdating(false);
         emit finished(this);
@@ -102,7 +103,7 @@ void UpdateFeedOperation::onFeedFinished()
     }
 
     if (rawFeed->items.size() == 0) {
-        qDebug() << "Feed list was empty! (Could be cache.)";
+        qCDebug(logOperation) << "Feed list was empty! (Could be cache.)";
         feed->setErrorFlag(false);
         emit finished(this);
 
@@ -150,7 +151,7 @@ void UpdateFeedOperation::onFeedFinished()
     if (newIndex < 0) {
         feed->setErrorFlag(false);
         emit finished(this);
-        qDebug() << "New index was negative, all feeds must be up to date!";
+        qCDebug(logOperation) << "New index was negative, all feeds must be up to date!";
 
         return;
     }
@@ -233,7 +234,7 @@ void UpdateFeedOperation::onDiscoveryDone(FeedDiscovery* feedDiscovery)
     if (discovery.error() || // Error trying to find feed.
         (feed->getURL() == discovery.feedURL()) // No change to URL, so nothing to do.
         ) {
-        qDebug() << "UpdateFeedOperation: Could not rediscover URL for feed: "
+        qCDebug(logOperation) << "UpdateFeedOperation: Could not rediscover URL for feed: "
                  << feed->getTitle() << " -- " << feed->getUserURL();
 
         // Set error flag since we couldn't recover from the 404.
@@ -243,8 +244,8 @@ void UpdateFeedOperation::onDiscoveryDone(FeedDiscovery* feedDiscovery)
         return;
     }
 
-    qDebug() << "UpdateFeedOperation: For feed: " << feed->getUserURL();
-    qDebug() << "                     Updated URL is: " << discovery.feedURL();
+    qCDebug(logOperation) << "UpdateFeedOperation: For feed: " << feed->getUserURL();
+    qCDebug(logOperation) << "                     Updated URL is: " << discovery.feedURL();
 
     // Update DB. Note that this will also update the feed object's URL.
     UpdateFeedURLOperation* op = new UpdateFeedURLOperation(getOperationManager(), feed, discovery.feedURL());
@@ -257,6 +258,6 @@ void UpdateFeedOperation::onUpdateFeedURLFinished(Operation * op)
     Q_UNUSED(op);
 
     // Send network request.
-    qDebug() << "Finished updating feed URL, updating feed " << feed->getURL();
+    qCDebug(logOperation) << "Finished updating feed URL, updating feed " << feed->getURL();
     parser.parse(feed->getURL(), useCache);
 }

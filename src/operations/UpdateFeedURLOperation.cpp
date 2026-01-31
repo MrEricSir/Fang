@@ -1,4 +1,5 @@
 #include "UpdateFeedURLOperation.h"
+#include "../utilities/FangLogging.h"
 
 UpdateFeedURLOperation::UpdateFeedURLOperation(OperationManager *parent, FeedItem* feed, QUrl newURL) :
     DBOperation(IMMEDIATE, parent),
@@ -10,7 +11,7 @@ UpdateFeedURLOperation::UpdateFeedURLOperation(OperationManager *parent, FeedIte
 
 void UpdateFeedURLOperation::execute()
 {
-    qDebug() << "Updating feed URL from " << feed->getURL() << " to " << newURL;
+    qCDebug(logOperation) << "Updating feed URL from " << feed->getURL() << " to " << newURL;
 
     db().transaction();
 

@@ -1,8 +1,8 @@
 #include "FeedDiscovery.h"
+#include "FangLogging.h"
 #include <QXmlStreamReader>
 #include <QSet>
 #include <algorithm>
-#include <QDebug>
 #include "NetworkUtilities.h"
 #include "ErrorHandling.h"
 #include "../parser/NewsParser.h"
@@ -83,7 +83,7 @@ void FeedDiscovery::checkFeed(QString sURL)
             url.setScheme("http");
         }
         
-        //qDebug() << "Location is adjusted to: " << location;
+        //qCDebug(logUtility) << "Location is adjusted to: " << location;
         
         // Final check!  If it's not valid, we'll set an error and bail.
         if (url.isRelative()) {
@@ -176,15 +176,15 @@ void FeedDiscovery::onPageGrabberReady(WebPageGrabber* grabber, QString* documen
 
     // Parse feed URLs from the HTML document
     QList<QString> feedURLs = parseFeedsFromXHTML(*document);
-    qDebug() << "Parsed" << feedURLs.count() << "feed URLs from HTML";
+    qCDebug(logUtility) << "Parsed" << feedURLs.count() << "feed URLs from HTML";
 
     if (feedURLs.isEmpty()) {
-        qDebug() << "No feeds found in HTML!";
+        qCDebug(logUtility) << "No feeds found in HTML!";
         reportError("No feed found");
         return;
     }
 
-    qDebug() << "Total feed URLs found:" << feedURLs.count();
+    qCDebug(logUtility) << "Total feed URLs found:" << feedURLs.count();
 
     // Sort by path length (longer paths first = more specific)
     QList<QString> feedURLStrings = feedURLs;

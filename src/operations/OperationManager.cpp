@@ -2,6 +2,7 @@
 
 #include "../utilities/Utilities.h"
 #include "../utilities/ErrorHandling.h"
+#include "../utilities/FangLogging.h"
 
 OperationManager::OperationManager(QObject *parent) :
     FangObject(parent),
@@ -95,7 +96,7 @@ void OperationManager::runNextOperations()
         i++;
         Operation* operation = queue.dequeue();
         if (operation == nullptr) {
-            qDebug() << "Op null";
+            qCDebug(logOperation) << "Op null";
             continue;
         }
         

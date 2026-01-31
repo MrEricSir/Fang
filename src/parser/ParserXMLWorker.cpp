@@ -1,6 +1,7 @@
 #include "ParserXMLWorker.h"
 #include <QtCore/qtimezone.h>
 #include "../utilities/ErrorHandling.h"
+#include "../utilities/FangLogging.h"
 
 ParserXMLWorker::ParserXMLWorker(QObject *parent) :
     FangObject(parent), feed(nullptr), currentItem(nullptr), isValid(false), inAtomXHTML(false)
@@ -61,7 +62,7 @@ void ParserXMLWorker::addXML(QByteArray data)
     if (xml.error() && xml.error() != QXmlStreamReader::PrematureEndOfDocumentError &&
             xml.error() != QXmlStreamReader::NotWellFormedError) {
         isValid = false;
-        qWarning() << "XML ERROR:" << xml.lineNumber() << ": " << xml.errorString();
+        qCWarning(logParser) << "XML ERROR:" << xml.lineNumber() << ": " << xml.errorString();
         emit done(nullptr);
     }
     
@@ -134,9 +135,9 @@ void ParserXMLWorker::elementEnd()
         //qDebug() << "End element:" << xml.name().toString();
         if (currentItem == nullptr) {
             // Throw some kinda error, this can't happen.
-            qDebug() << "Current item is null!";
-            qDebug() << "Current title: " << title;
-            qDebug() << "Xml element: " << tagName;
+            qCDebug(logParser) << "Current item is null!";
+            qCDebug(logParser) << "Current title: " << title;
+            qCDebug(logParser) << "Xml element: " << tagName;
         }
         
         // Figure out which date to use.
@@ -167,8 +168,8 @@ void ParserXMLWorker::elementEnd()
 
         // Skip items without a GUID - malformed feed
         if (myGuid.isEmpty()) {
-            qWarning() << "ParserXMLWorker: RSS/Atom item missing GUID/URL, skipping item";
-            qWarning() << "  Title:" << title;
+            qCWarning(logParser) << "ParserXMLWorker: RSS/Atom item missing GUID/URL, skipping item";
+            qCWarning(logParser) << "  Title:" << title;
             delete currentItem;
             currentItem = nullptr;
 
@@ -189,8 +190,8 @@ void ParserXMLWorker::elementEnd()
         
         // Okay, give it up. :(
         if (!currentItem->timestamp.isValid()) {
-            qDebug() << "Time string: " << timestamp;
-            qDebug() << "invalid date!";
+            qCDebug(logParser) << "Time string: " << timestamp;
+            qCDebug(logParser) << "invalid date!";
         }
         
         

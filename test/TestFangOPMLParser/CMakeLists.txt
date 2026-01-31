@@ -7,6 +7,7 @@ qt_add_executable(tst_testfangopmlparser
     ${CMAKE_SOURCE_DIR}/src/parser/RawNews.cpp
     ${CMAKE_SOURCE_DIR}/src/parser/ParserInterface.cpp
     ${CMAKE_SOURCE_DIR}/src/FangObject.cpp
+    ${CMAKE_SOURCE_DIR}/src/utilities/FangLogging.cpp
     # Include corresponding headers for AUTOMOC
     ${CMAKE_SOURCE_DIR}/src/parser/OPMLParser.h
     ${CMAKE_SOURCE_DIR}/src/parser/RawFeed.h

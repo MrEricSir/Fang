@@ -1,9 +1,9 @@
 #include "HTMLSanitizer.h"
+#include "FangLogging.h"
 
 #include <QXmlStreamReader>
 #include <QXmlStreamWriter>
 #include <QStack>
-#include <QDebug>
 
 #include "NetworkUtilities.h"
 
@@ -95,7 +95,7 @@ QString HTMLSanitizer::sanitize(const QString &document, QSet<QUrl> &imageURLs)
     // out in a separate post-processing method.  You'll see.
     QString* doc = webPageGrabber.load("<html><body>" + document + "</body></html>");
     if (doc == nullptr) {
-        qDebug() << "Error loading HTML document";
+        qCDebug(logRewriter) << "Error loading HTML document";
 
         return "";
     }
@@ -265,11 +265,11 @@ QString HTMLSanitizer::sanitize(const QString &document, QSet<QUrl> &imageURLs)
     }
 
     if (xml.hasError()) {
-        qDebug() << "Error reading XML: " << xml.errorString();
+        qCDebug(logRewriter) << "Error reading XML: " << xml.errorString();
     }
 
     if (writer.hasError()) {
-        qDebug() << "QXmlStreamWriter had an error of some kind.";
+        qCDebug(logRewriter) << "QXmlStreamWriter had an error of some kind.";
     }
 
 
@@ -402,11 +402,11 @@ QString HTMLSanitizer::finalize(const QString &html, const QMap<QUrl, ImageData>
     }
 
     if (xml.hasError()) {
-        qDebug() << "QXmlStreamReader had error: " << xml.errorString();
+        qCDebug(logRewriter) << "QXmlStreamReader had error: " << xml.errorString();
     }
 
     if (writer.hasError()) {
-        qDebug() << "QXmlStreamWriter had an error of some kind.";
+        qCDebug(logRewriter) << "QXmlStreamWriter had an error of some kind.";
     }
 
     // Post-process and return.

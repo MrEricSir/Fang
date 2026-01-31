@@ -1,6 +1,8 @@
 # TestNewsItem test executable
 qt_add_executable(tst_newsitem
     tst_newsitem.cpp
+    # Utilities
+    ${CMAKE_SOURCE_DIR}/src/utilities/FangLogging.cpp
     # Models
     ${CMAKE_SOURCE_DIR}/src/models/NewsItem.cpp
     ${CMAKE_SOURCE_DIR}/src/models/FeedItem.cpp

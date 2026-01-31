@@ -1,4 +1,5 @@
 #include "OPMLExport.h"
+#include "FangLogging.h"
 
 #include <QXmlStreamWriter>
 #include <QDateTime>
@@ -15,7 +16,7 @@ bool OPMLExport::save(const QString &sFile, ListModel* feedList)
     QFile file(sFile);
 
     if (!file.open(QIODevice::WriteOnly)) {
-        qWarning() << "Could not open file: " << sFile << " error code: " << file.errorString();
+        qCWarning(logUtility) << "Could not open file: " << sFile << " error code: " << file.errorString();
         return false;
     }
     
@@ -55,7 +56,7 @@ bool OPMLExport::save(const QString &sFile, ListModel* feedList)
     for (int i = 1; i < feedList->count(); i++) {
         FeedItem* feedItem = qobject_cast<FeedItem*>(feedList->row(i));
         if (!feedItem) {
-            qCritical() << "OPMLExport: Feed item null at index" << i;
+            qCCritical(logUtility) << "OPMLExport: Feed item null at index" << i;
             continue;
         }
 

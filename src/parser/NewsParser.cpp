@@ -1,8 +1,9 @@
 #include "NewsParser.h"
 
-#include <QDebug>
 #include <QFile>
 #include <QFileInfo>
+
+#include "../utilities/FangLogging.h"
 
 #include "ParserXMLWorker.h"
 
@@ -76,12 +77,12 @@ void NewsParser::parseFile(const QString &filename)
     QFile file(filename);
 
     if (!file.exists()) {
-        qCritical() << "NewsParser::parseFile: File does not exist:" << filename;
+        qCCritical(logParser) << "NewsParser::parseFile: File does not exist:" << filename;
         return;
     }
 
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        qCritical() << "NewsParser::parseFile: Cannot open file:" << filename;
+        qCCritical(logParser) << "NewsParser::parseFile: Cannot open file:" << filename;
         return;
     }
 
@@ -120,7 +121,7 @@ void NewsParser::metaDataChanged()
     if (redirectionTarget.isValid()) {
         // Guard against unlimited redirects.
         if (redirectAttempts >= MAX_PARSER_REDIRECTS) {
-            qDebug() << "NewsParser: Maximum redirects reached, aborting";
+            qCDebug(logParser) << "NewsParser: Maximum redirects reached, aborting";
             currentReply->disconnect(this);
             currentReply->deleteLater();
             currentReply = nullptr;
@@ -131,7 +132,7 @@ void NewsParser::metaDataChanged()
             return;
         }
 
-        qDebug() << "Redirect:" << redirectionTarget.toString();
+        qCDebug(logParser) << "Redirect:" << redirectionTarget.toString();
         redirectAttempts++;
         redirectReply = currentReply;
         parseInternal(redirectionTarget, noParseIfCached);

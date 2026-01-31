@@ -1,7 +1,6 @@
 #include "UnreadCountReader.h"
+#include "FangLogging.h"
 #include "ErrorHandling.h"
-
-#include <QDebug>
 
 UnreadCountReader::UnreadCountReader()
 {
@@ -41,8 +40,8 @@ qint32 UnreadCountReader::forAllNews(QSqlDatabase db)
                   "(SELECT bookmark_id from FeedItemTable WHERE id = N.feed_id)");
     
     if (!query.exec() || !query.next()) {
-       qDebug() << "Could not update unread count for all news feed";
-       qDebug() << query.lastError();
+       qCDebug(logUtility) << "Could not update unread count for all news feed";
+       qCDebug(logUtility) << query.lastError();
        
        return -1;
     }
@@ -57,14 +56,14 @@ qint32 UnreadCountReader::forPinned(QSqlDatabase db)
     query.prepare("SELECT count(id) FROM NewsItemTable WHERE pinned");
 
     if (!query.exec() || !query.next()) {
-       qDebug() << "Could not update unread count for pinned news feed";
-       qDebug() << query.lastError();
+       qCDebug(logUtility) << "Could not update unread count for pinned news feed";
+       qCDebug(logUtility) << query.lastError();
 
        return -1;
     }
 
     int ret = query.value(0).toInt();
-    //qDebug() << "Unread count for pinned: " << ret;
+    //qCDebug(logUtility) << "Unread count for pinned: " << ret;
     return ret;
 }
 
@@ -78,8 +77,8 @@ qint32 UnreadCountReader::forFolder(QSqlDatabase db, qint64 folderID)
     query.bindValue(":folder_id", folderID);
 
     if (!query.exec() || !query.next()) {
-       qDebug() << "Could not update unread count for folder";
-       qDebug() << query.lastError();
+       qCDebug(logUtility) << "Could not update unread count for folder";
+       qCDebug(logUtility) << query.lastError();
 
        return -1;
     }
@@ -96,8 +95,8 @@ qint32 UnreadCountReader::forFeed(QSqlDatabase db, quint64 id)
     query.bindValue(":id2", id);
     
     if (!query.exec() || !query.next()) {
-       qDebug() << "Could not update unread count for feed id: " << id;
-       qDebug() << query.lastError();
+       qCDebug(logUtility) << "Could not update unread count for feed id: " << id;
+       qCDebug(logUtility) << query.lastError();
        
        return -1;
     }

@@ -1,6 +1,6 @@
 #include "FaviconUpdateOperation.h"
-#include <QDebug>
 #include <QDateTime>
+#include "../utilities/FangLogging.h"
 
 FaviconUpdateOperation::FaviconUpdateOperation(OperationManager *parent, FeedItem* feed) :
     DBOperation(BACKGROUND, parent),
@@ -84,7 +84,7 @@ void FaviconUpdateOperation::onGrabberFinished(const QString& faviconDataUri)
         db().rollback();
         return;
     } else {
-        qDebug() << " ----- UPDATING FAVICON -----";
+        qCDebug(logOperation) << " ----- UPDATING FAVICON -----";
         db().commit();
         feed->setImageURL(dataUrl);
         feed->setLastIconUpdate(now);

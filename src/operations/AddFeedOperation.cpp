@@ -1,5 +1,6 @@
 #include "AddFeedOperation.h"
 #include "../utilities/Utilities.h"
+#include "../utilities/FangLogging.h"
 
 AddFeedOperation::AddFeedOperation(OperationManager *parent, ListModel *feedList,
                                    const QString userURL, QString title) :
@@ -101,7 +102,7 @@ void AddFeedOperation::commitRawFeed() {
     
     db().commit();
     
-    qDebug() << "Insert new feed with ID: " << insertID;
+    qCDebug(logOperation) << "Insert new feed with ID: " << insertID;
     
     // Create our item.
     item = Utilities::feedItemFromRaw(rawFeed, insertID, userURL, feedList);

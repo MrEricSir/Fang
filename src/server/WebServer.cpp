@@ -5,14 +5,15 @@
 #include <QUrl>
 
 #include "../FangApp.h"
-#include "../utilities/NetworkUtilities.h"
 #include "../utilities/ErrorHandling.h"
+#include "../utilities/FangLogging.h"
+#include "../utilities/NetworkUtilities.h"
 
 WebServer::WebServer(QObject *parent) :
     FangObject(parent),
     webSocketPort(0)
 {
-    qDebug() << "Launching WebServer...";
+    qCDebug(logServer) << "Launching WebServer...";
 
     tcpServer = new QTcpServer(this);
 
@@ -33,7 +34,7 @@ WebServer::WebServer(QObject *parent) :
     server.route("/api/open_link", QHttpServerRequest::Method::Post, this, [] (const QHttpServerRequest &request) {
         QJsonObject json = QJsonDocument::fromJson(request.body()).object();
         QString url = json.value("url").toString();
-        qDebug() << "Open URL:" << url;
+        qCDebug(logServer) << "Open URL:" << url;
 
         QString urlFixed = NetworkUtilities::urlFixup(url);
         QDesktopServices::openUrl(QUrl(urlFixed));

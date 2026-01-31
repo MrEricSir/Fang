@@ -2,6 +2,8 @@
 
 #include <QByteArray>
 
+#include "../utilities/FangLogging.h"
+
 OPMLParser::OPMLParser(QObject *parent) :
     FangObject(parent),
     file(),
@@ -22,7 +24,7 @@ void OPMLParser::parseFile(QString filename)
     // Open the file or die with an error.
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         result = ParserInterface::FILE_ERROR;
-        qDebug() << "Couldn't read file: " << file.fileName();
+        qCDebug(logParser) << "Couldn't read file: " << file.fileName();
         
         emit done();
         

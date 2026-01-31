@@ -1,9 +1,9 @@
 #include "OPMLInteractor.h"
 
 #include <QDir>
-#include <QDebug>
 
 #include "../FangApp.h"
+#include "../utilities/FangLogging.h"
 #include "../utilities/Utilities.h"
 #include "../utilities/OPMLExport.h"
 #include "../utilities/ErrorHandling.h"
@@ -68,13 +68,13 @@ void OPMLInteractor::importStart()
     // Clear internal map.
     clear();
     
-    qDebug() << "Import: " << filename;
+    qCDebug(logModel) << "Import: " << filename;
     parser.parseFile(filename);
 }
 
 void OPMLInteractor::confirmImport()
 {
-    qDebug() << "Import confirm: TODO";
+    qCDebug(logModel) << "Import confirm: TODO";
 }
 
 void OPMLInteractor::exportFile()
@@ -92,7 +92,7 @@ void OPMLInteractor::addSelected()
             continue;
         }
         
-        qDebug() << "Add feed " << item->getTitle() << " " << item->getURL();
+        qCDebug(logModel) << "Add feed " << item->getTitle() << " " << item->getURL();
         
         // Add it!
         FangApp::instance()->addFeed(item->getURL().toString(), feedToRaw[item], first);
@@ -108,10 +108,10 @@ void OPMLInteractor::onImportFileSelected(const QString &file)
 
 void OPMLInteractor::onExportFileSelected(const QString &file)
 {
-    qDebug() << "Export: " << file;
+    qCDebug(logModel) << "Export: " << file;
     bool res = OPMLExport::save(file, FangApp::instance()->getFeedList());
     if (!res) {
-        qWarning() << "Error: unable to write file.";
+        qCWarning(logModel) << "Error: unable to write file.";
     }
 }
 
@@ -122,7 +122,7 @@ void OPMLInteractor::onDialogClosed()
 
 void OPMLInteractor::onParserDone()
 {
-    qDebug() << "Parser done! Result: " << importErrorString();
+    qCDebug(logModel) << "Parser done! Result: " << importErrorString();
     
     // Convert parser's feed list to "actual" feed items
     // (for data representation purposes)

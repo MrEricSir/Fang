@@ -1,12 +1,12 @@
 #include "WebSocketServer.h"
 
 #include <QDesktopServices>
-#include <QDebug>
 #include <QTextStream>
 
 #include "../FangApp.h"
 
 #include "../utilities/ErrorHandling.h"
+#include "../utilities/FangLogging.h"
 
 
 WebSocketServer::WebSocketServer(QObject *parent) :
@@ -34,7 +34,7 @@ void WebSocketServer::init(FangSettings *fangSettings)
 
 void WebSocketServer::onNewConnection()
 {
-    qDebug() << "NewsWebSocketServer::onNewConnection()";
+    qCDebug(logServer) << "NewsWebSocketServer::onNewConnection()";
 
     // Kill any existing connections.
     socketDisconnected();
@@ -51,7 +51,7 @@ void WebSocketServer::processMessage(QString message)
     // Break up our message into a command and execute it.
     int spaceIndex = message.indexOf(' ');
     if (spaceIndex <= 0) {
-        qDebug() << "NewsWebSocketServer didn't understand this command: " << message;
+        qCDebug(logServer) << "NewsWebSocketServer didn't understand this command: " << message;
 
         return;
     }
@@ -86,8 +86,8 @@ void WebSocketServer::sendCommand(const QString &command, const QString &data)
 {
     // TODO: Should we queue up messages before the socket's ready, or is that CrazyTalk (SM)?
     if (!pSocket) {
-        qDebug() << "WebSocket: The socket is not connected yet! Slow down!";
-        qDebug() << "WebSocket: Tried to send command " << command;
+        qCDebug(logServer) << "WebSocket: The socket is not connected yet! Slow down!";
+        qCDebug(logServer) << "WebSocket: Tried to send command " << command;
 
         return;
     }

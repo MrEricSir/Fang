@@ -108,6 +108,38 @@ It is recommended to build, run, and debug from Qt Creator for development purpo
 
 ## Debugging Tips
 
+### Logging
+
+Set which logs to include via `QT_LOGGING_RULES`. Here are some examples of setting
+logs via the command line, though they can also be set in the Project -> Run environment
+in Qt Creator.
+
+```bash
+# Enable all logs:
+export QT_LOGGING_RULES="fang.*=true"
+
+# Enable only a single category:
+export QT_LOGGING_RULES="fang.network=true"
+
+# Selectively disable certain categories:
+export QT_LOGGING_RULES="fang.*=true;fang.parser=false"
+```
+
+Current categories:
+* `fang.app`
+* `fang.db`
+* `fang.model`
+* `fang.operation`
+* `fang.parser`
+* `fang.network`
+* `fang.rewriter`
+* `fang.server`
+* `fang.utility`
+* `fang.favicon`
+* `fang.webpage`
+
+### WebEngine Debugging
+
 To debug the Javascript and HTML, you'll need to set a debugging port and set it as an environment variable. For example, we'll use `9999` as our port.
 
 * Set the `QTWEBENGINE_REMOTE_DEBUGGING` variable to `9999`. In Qt Creator this can be found in Projects, Build & Run, Run, Environment. Click Add and enter:

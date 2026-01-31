@@ -2,7 +2,7 @@
 #include "NewsList.h"
 #include "FeedItem.h"
 
-#include <QDebug>
+#include "../utilities/FangLogging.h"
 
 FeedItem::FeedItem(QObject *parent) :
     ListItem(parent),
@@ -260,7 +260,7 @@ bool FeedItem::canBookmark(qint64 proposedBookmarkID, bool allowBackward)
 
 void FeedItem::setBookmark(qint64 toBookmarkID)
 {
-    qDebug() << "FeedItem::setBookmark to " << toBookmarkID;
+    qCDebug(logModel) << "FeedItem::setBookmark to " << toBookmarkID;
     if (toBookmarkID == _bookmarkID) {
         return; // Nothing to do.
     }

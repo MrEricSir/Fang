@@ -1,6 +1,6 @@
 #include "FangApp.h"
 
-#include <QDebug>
+#include "utilities/FangLogging.h"
 #include <QElapsedTimer>
 #include <QImageReader>
 
@@ -50,7 +50,7 @@ FangApp::FangApp(QApplication *parent, QQmlApplicationEngine* engine, QSingleIns
     lastFeedSelected(nullptr)
 {
     if (_instance != nullptr) {
-        qCritical() << "FangApp: Multiple instances created! Previous instance exists.";
+        qCCritical(logApp) << "FangApp: Multiple instances created! Previous instance exists.";
     }
     _instance = this;
 
@@ -79,10 +79,10 @@ FangApp::~FangApp()
 
 void FangApp::init()
 {
-    qInfo() << "FangApp init version: " << APP_VERSION;
-    qInfo() << "";
+    qCInfo(logApp) << "FangApp init version: " << APP_VERSION;
+    qCInfo(logApp) << "";
 
-    qInfo() << "Image formats: " << QImageReader::supportedImageFormats();
+    qCInfo(logApp) << "Image formats: " << QImageReader::supportedImageFormats();
 
     // Setup our QML.
     engine->rootContext()->setContextProperty("feedListModel", &feedList); // list of feeds
@@ -98,7 +98,7 @@ void FangApp::init()
     bool isDebugBuild = false;
 #endif // QT_DEBUG
     engine->rootContext()->setContextProperty("isDebugBuild", isDebugBuild); // let QML know if we're a debug build or not
-    qInfo() << "Is debug build: " << isDebugBuild;
+    qCInfo(logApp) << "Is debug build: " << isDebugBuild;
     
     // Load feed list.
     LoadAllFeedsOperation* loadAllOp = new LoadAllFeedsOperation(&manager, &feedList);
@@ -111,7 +111,7 @@ FeedItem* FangApp::getFeed(qsizetype index)
     ListItem* listItem = feedList.row(index);
     FeedItem* item = qobject_cast<FeedItem*>(listItem);
     if (item == nullptr) {
-        qDebug() << "Feed #" << index << " was NULL";
+        qCDebug(logApp) << "Feed #" << index << " was NULL";
         
         return nullptr;
     }
@@ -135,7 +135,7 @@ void FangApp::onFeedAdded(ListItem *item)
 {
     FeedItem* feed = qobject_cast<FeedItem *>(item);
     if (feed == nullptr) {
-        qDebug() << "Null feed was added!";
+        qCDebug(logApp) << "Null feed was added!";
         
         return;
     }
@@ -176,7 +176,7 @@ void FangApp::onNewFeedAddedSelect(Operation* addFeedOperation)
 {
     AddFeedOperation* op = qobject_cast<AddFeedOperation*>(addFeedOperation);
     if (!op) {
-        qCritical() << "FangApp::onNewFeedAddedSelect: Operation is not an AddFeedOperation";
+        qCCritical(logApp) << "FangApp::onNewFeedAddedSelect: Operation is not an AddFeedOperation";
         return;
     }
 
@@ -238,7 +238,7 @@ void FangApp::onLoadAllFinished(Operation *op)
 void FangApp::refreshFeed(FeedItem *feed)
 {
     if (!feed) {
-        qCritical() << "FangApp::refreshFeed: feed is null";
+        qCCritical(logApp) << "FangApp::refreshFeed: feed is null";
         return;
     }
 
@@ -252,7 +252,7 @@ void FangApp::refreshFeed(FeedItem *feed)
         {
             FeedItem* item = qobject_cast<FeedItem*>(feedList.row(i));
             if (!item) {
-                qCritical() << "FangApp::refreshFeed: Feed item at index" << i << "is null";
+                qCCritical(logApp) << "FangApp::refreshFeed: Feed item at index" << i << "is null";
                 continue;
             }
             if (item->isSpecialFeed() || item->isFolder()) {
@@ -271,7 +271,7 @@ void FangApp::refreshFeed(FeedItem *feed)
         {
             FeedItem* item = qobject_cast<FeedItem*>(feedList.row(i));
             if (!item) {
-                qCritical() << "FangApp::refreshFeed: Feed item at index" << i << "is null";
+                qCCritical(logApp) << "FangApp::refreshFeed: Feed item at index" << i << "is null";
                 continue;
             }
             if (item->getParentFolderID() == folderID) {
@@ -328,7 +328,7 @@ FeedItem* FangApp::feedForId(const qint64 id)
     for (int i = 0; i < feedList.rowCount(); ++i) {
         FeedItem* feed = qobject_cast<FeedItem*>(feedList.row(i));
         if (!feed) {
-            qCritical() << "FangApp::feedForId: Feed item at index" << i << "is null";
+            qCCritical(logApp) << "FangApp::feedForId: Feed item at index" << i << "is null";
             continue;
         }
 
@@ -343,7 +343,7 @@ FeedItem* FangApp::feedForId(const qint64 id)
 void FangApp::setBookmark(qint64 id, bool allowBackward)
 {
     if (nullptr == currentFeed) {
-        qDebug() << "setBookmark: Current feed is null, cannot set bookmark to: " << id;
+        qCDebug(logApp) << "setBookmark: Current feed is null, cannot set bookmark to: " << id;
         return;
     }
 
@@ -354,7 +354,7 @@ void FangApp::setBookmark(qint64 id, bool allowBackward)
 
     NewsItem* bookmark = currentFeed->getNewsList()->newsItemForID(id);
     if (nullptr == bookmark) {
-        qDebug() << "Invalid bookmark ID for news item: " << id;
+        qCDebug(logApp) << "Invalid bookmark ID for news item: " << id;
         return;
     }
 
@@ -368,7 +368,7 @@ void FangApp::setBookmark(qint64 id, bool allowBackward)
 
 void FangApp::setPin(qint64 id, bool pin)
 {
-    qDebug() << "Someone wants to " << (pin ? "pin: " : "unpin: ") << id;
+    qCDebug(logApp) << "Someone wants to " << (pin ? "pin: " : "unpin: ") << id;
     if (nullptr == currentFeed) {
         return;
     }
@@ -439,7 +439,7 @@ void FangApp::onSecondInstanceStarted()
         window->requestActivate();
         window->raise();
     } else {
-        qWarning() << "Could not locate window";
+        qCWarning(logApp) << "Could not locate window";
     }
 }
 
@@ -486,8 +486,8 @@ void FangApp::setCurrentFeed(FeedItem *feed, bool reloadIfSameFeed)
 LoadNewsOperation* FangApp::loadNews(LoadNewsOperation::LoadMode mode)
 {
     if (currentFeed == nullptr) {
-        qDebug() << "loadNews: Current feed is null";
-        qDebug() << "Loaded feeds: " << feedList.count();
+        qCDebug(logApp) << "loadNews: Current feed is null";
+        qCDebug(logApp) << "Loaded feeds: " << feedList.count();
         return nullptr;
     }
 
@@ -522,7 +522,7 @@ LoadNewsOperation* FangApp::loadNews(LoadNewsOperation::LoadMode mode)
     manager.runSynchronously(loader);
     loader->deleteLater();
 
-    qDebug() << "Load news operation took [ " << timer.elapsed() << " ] milliseconds";
+    qCDebug(logApp) << "Load news operation took [ " << timer.elapsed() << " ] milliseconds";
     return loader;
 }
 
@@ -659,7 +659,7 @@ void FangApp::setRefreshTimer()
 FangApp* FangApp::instance()
 {
     if (!_instance) {
-        qCritical() << "FangApp instance is not initialized";
+        qCCritical(logApp) << "FangApp instance is not initialized";
     }
 
     return _instance;
@@ -678,7 +678,7 @@ qint32 FangApp::specialFeedCount()
 
 void FangApp::addFeed(const QString userURL, const RawFeed* rawFeed, bool switchTo)
 {
-    qDebug() << "Add feed: " << userURL;
+    qCDebug(logApp) << "Add feed: " << userURL;
     AddFeedOperation* addOp = new AddFeedOperation(
                                   &manager, &feedList, userURL, rawFeed);
     

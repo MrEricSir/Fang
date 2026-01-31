@@ -1,6 +1,7 @@
 #include "LisvelLoadNewsOperation.h"
 #include "src/models/NewsList.h"
 #include "../utilities/ErrorHandling.h"
+#include "../utilities/FangLogging.h"
 
 
 LisvelLoadNewsOperation::LisvelLoadNewsOperation(OperationManager *parent, LisvelFeedItem *feedItem, LoadMode mode, int loadLimit, bool prependOnInit) :
@@ -12,7 +13,7 @@ LisvelLoadNewsOperation::LisvelLoadNewsOperation(OperationManager *parent, Lisve
 
 void LisvelLoadNewsOperation::executeSynchronous()
 {
-    qDebug() << "LisvelLoadNewsOperation::execute load for feed: " << lisvelNews->getDbID();
+    qCDebug(logOperation) << "LisvelLoadNewsOperation::execute load for feed: " << lisvelNews->getDbID();
     // For an initial load, make sure the feed isn't populated yet.
     if (getMode() == LoadNewsOperation::Initial) {
         FANG_CHECK(feedItem->getNewsList() != nullptr || feedItem->getNewsList()->isEmpty(),
@@ -148,8 +149,8 @@ bool LisvelLoadNewsOperation::doPrepend()
         query.bindValue(":load_limit", remainingLoadLimit);
 
         if (!query.exec()) {
-            qDebug() << "Could not load news! (lisvel prepend step 1)";
-            qDebug() << query.lastError();
+            qCDebug(logOperation) << "Could not load news! (lisvel prepend step 1)";
+            qCDebug(logOperation) << query.lastError();
 
             return false;
         }
@@ -173,8 +174,8 @@ bool LisvelLoadNewsOperation::doPrepend()
         query.bindValue(":load_limit", remainingLoadLimit);
 
         if (!query.exec()) {
-            qDebug() << "Could not load news! (lisvel prepend step 2)";
-            qDebug() << query.lastError();
+            qCDebug(logOperation) << "Could not load news! (lisvel prepend step 2)";
+            qCDebug(logOperation) << query.lastError();
 
             return false;
         }
@@ -221,14 +222,14 @@ bool LisvelLoadNewsOperation::doAppend()
         // Load the items.
         QString queryString = "SELECT * FROM NewsItemTable N WHERE id IN (" + idString +
                               ") ORDER BY CASE id " + whenString + " END LIMIT :load_limit";
-        qDebug() << " ===== doAppend query: " << queryString;
+        qCDebug(logOperation) << " ===== doAppend query: " << queryString;
         QSqlQuery query(db());
         query.prepare(queryString);
         query.bindValue(":load_limit", remainingLoadLimit);
 
         if (!query.exec()) {
-            // qDebug() << "Could not load news! (lisvel append step 1)";
-            qDebug() << query.lastError();
+            // qCDebug(logOperation) << "Could not load news! (lisvel append step 1)";
+            qCDebug(logOperation) << query.lastError();
 
             return false;
         }
@@ -251,8 +252,8 @@ bool LisvelLoadNewsOperation::doAppend()
         query.bindValue(":load_limit", remainingLoadLimit);
 
         if (!query.exec()) {
-            qDebug() << "Could not load news! (lisvel append step 2)";
-            qDebug() << query.lastError();
+            qCDebug(logOperation) << "Could not load news! (lisvel append step 2)";
+            qCDebug(logOperation) << query.lastError();
 
             return false;
         }

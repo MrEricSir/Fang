@@ -1,6 +1,6 @@
 #include "Operation.h"
 #include "../utilities/ErrorHandling.h"
-#include <QDebug>
+#include "../utilities/FangLogging.h"
 
 Operation::Operation(PriorityLevel priority, OperationManager* parent) :
     FangObject((QObject*)parent),
@@ -14,7 +14,7 @@ Operation::Operation(PriorityLevel priority, OperationManager* parent) :
 
 void Operation::reportError(const QString& errorString)
 {
-    qDebug() << "Error: [ " << metaObject()->className() << " ] " << errorString;
+    qCDebug(logOperation) << "Error: [ " << metaObject()->className() << " ] " << errorString;
     error = true;
     emit finished(this);
 }

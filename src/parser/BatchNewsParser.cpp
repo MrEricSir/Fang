@@ -1,6 +1,6 @@
 #include "BatchNewsParser.h"
 #include "NewsParser.h"
-#include <QDebug>
+#include "../utilities/FangLogging.h"
 
 BatchNewsParser::BatchNewsParser(QObject *parent)
     : FangObject{parent}
@@ -42,13 +42,13 @@ void BatchNewsParser::onParserDone()
 {
     ParserInterface* parser = qobject_cast<ParserInterface*>(sender());
     if (!parser) {
-        qWarning() << "BatchNewsParser: onParserDone called but sender is not a ParserInterface";
+        qCWarning(logParser) << "BatchNewsParser: onParserDone called but sender is not a ParserInterface";
         return;
     }
 
     QUrl url = parser->getURL();
     if (!parsers.keys().contains(url)) {
-        qWarning() << "BatchNewsParser: URL returned but not found:" << url;
+        qCWarning(logParser) << "BatchNewsParser: URL returned but not found:" << url;
         return;
     }
 

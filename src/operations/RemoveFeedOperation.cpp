@@ -1,10 +1,10 @@
 #include "RemoveFeedOperation.h"
 
-#include <QDebug>
 #include <QThread>
 
 #include "../utilities/UnreadCountReader.h"
 #include "../utilities/ErrorHandling.h"
+#include "../utilities/FangLogging.h"
 #include "../FangApp.h"
 
 RemoveFeedOperation::RemoveFeedOperation(OperationManager *parent, FeedItem* feed, ListModel *feedList) :
@@ -19,12 +19,12 @@ RemoveFeedOperation::RemoveFeedOperation(OperationManager *parent, FeedItem* fee
 void RemoveFeedOperation::executeSynchronous()
 {
     if (!feed) {
-        qCritical() << "RemoveFeedOperation::executeSynchronous: feed is null";
+        qCCritical(logOperation) << "RemoveFeedOperation::executeSynchronous: feed is null";
         return;
     }
 
     if (feed->isSpecialFeed()) {
-        qDebug() << "Cannot remove special feed";
+        qCDebug(logOperation) << "Cannot remove special feed";
     }
 
     bool isFolder = feed->isFolder();
@@ -68,7 +68,7 @@ void RemoveFeedOperation::executeSynchronous()
         for (int i = 0; i < feedList->rowCount(); i++) {
             FeedItem* feed = qobject_cast<FeedItem*>(feedList->row(i));
             if (!feed) {
-                qCritical() << "RemoveFeedOperation: Feed item at index" << i << "is null";
+                qCCritical(logOperation) << "RemoveFeedOperation: Feed item at index" << i << "is null";
                 continue;
             }
             if (feed->getParentFolderID() == dbID) {

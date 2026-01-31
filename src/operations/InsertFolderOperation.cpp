@@ -1,6 +1,7 @@
 #include "InsertFolderOperation.h"
 #include "../utilities/Utilities.h"
 #include "../utilities/ErrorHandling.h"
+#include "../utilities/FangLogging.h"
 #include "../models/FolderFeedItem.h"
 
 InsertFolderOperation::InsertFolderOperation(OperationManager *parent, int newIndex, QString name, ListModel *feedList)
@@ -24,7 +25,7 @@ void InsertFolderOperation::execute()
 
     // Make sure we have a realistic newIndex before we get started.
     if (newIndex < 0 || newIndex >= feedList->count()) {
-        qCritical() << "InsertFolderOperation: Invalid newIndex" << newIndex
+        qCCritical(logOperation) << "InsertFolderOperation: Invalid newIndex" << newIndex
                     << "for feedList with count" << feedList->count();
         emit finished(this);
         return;
@@ -36,7 +37,7 @@ void InsertFolderOperation::execute()
     for (int i = newIndex; i < newIndex + 2; i++) {
         FeedItem* next = qobject_cast<FeedItem*>(feedList->row(i));
         if (!next) {
-            qCritical() << "InsertFolderOperation: Feed item at index" << i << "is null";
+            qCCritical(logOperation) << "InsertFolderOperation: Feed item at index" << i << "is null";
             emit finished(this);
             return;
         }
@@ -68,7 +69,7 @@ void InsertFolderOperation::execute()
     }
 
     if (insertID <= -1) {
-        qCritical() << "InsertFolderOperation: Invalid insert ID" << insertID;
+        qCCritical(logOperation) << "InsertFolderOperation: Invalid insert ID" << insertID;
         db().rollback();
         emit finished(this);
         return;

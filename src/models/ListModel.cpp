@@ -4,10 +4,10 @@
  * Website: http://cdumez.blogspot.com/
  * Version: 1.0
  */
- 
+
 #include "ListModel.h"
 
-#include <QDebug>
+#include "../utilities/FangLogging.h"
  
 ListModel::ListModel(ListItem* prototype, QObject *parent) :
     QAbstractListModel(parent), m_prototype(prototype), _selected(nullptr)
@@ -44,7 +44,7 @@ QVariant ListModel::dataByField(int row, const QString &field_name) const
 
     int roleIndex = roleNameToRole(field_name);
     if (roleIndex < 0) {
-        qCritical() << "ListModel::dataByField: Invalid field name" << field_name;
+        qCCritical(logModel) << "ListModel::dataByField: Invalid field name" << field_name;
         return QVariant();
     }
 
@@ -77,7 +77,7 @@ void ListModel::setData(int row, const QString &field_name, QVariant new_value)
 
     int roleIndex = roleNameToRole(field_name);
     if (roleIndex < 0) {
-        qCritical() << "ListModel::setData: Invalid field name" << field_name;
+        qCCritical(logModel) << "ListModel::setData: Invalid field name" << field_name;
         return;
     }
     m_list.at(row)->setData(new_value, roleIndex);
@@ -161,7 +161,7 @@ ListItem * ListModel::find(const QString &id) const
 QModelIndex ListModel::indexFromItem(const ListItem *item) const
 {
   if (!item) {
-      qCritical() << "ListModel::indexFromItem: item is null";
+      qCCritical(logModel) << "ListModel::indexFromItem: item is null";
       return QModelIndex();
   }
   for(int row=0; row<m_list.size(); ++row) {
@@ -244,7 +244,7 @@ bool ListModel::removeItem(const ListItem *item)
     QModelIndex index = indexFromItem(item);
     int row = index.row();
     
-    qDebug() << "Remove item at: " << row;
+    qCDebug(logModel) << "Remove item at: " << row;
     
     if (row == -1) {
         return false; // Not found.

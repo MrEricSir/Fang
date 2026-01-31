@@ -1,6 +1,8 @@
 # TestFeedItem test executable
 qt_add_executable(tst_feeditem
     tst_feeditem.cpp
+    # Utilities
+    ${CMAKE_SOURCE_DIR}/src/utilities/FangLogging.cpp
     # Models
     ${CMAKE_SOURCE_DIR}/src/models/FeedItem.cpp
     ${CMAKE_SOURCE_DIR}/src/models/ListModel.cpp

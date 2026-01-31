@@ -4,6 +4,8 @@ qt_add_executable(tst_opmlexport
     # OPML Export
     ${CMAKE_SOURCE_DIR}/src/utilities/OPMLExport.cpp
     ${CMAKE_SOURCE_DIR}/src/utilities/OPMLExport.h
+    # Utilities
+    ${CMAKE_SOURCE_DIR}/src/utilities/FangLogging.cpp
     # Models
     ${CMAKE_SOURCE_DIR}/src/models/ListModel.cpp
     ${CMAKE_SOURCE_DIR}/src/models/FeedItem.cpp

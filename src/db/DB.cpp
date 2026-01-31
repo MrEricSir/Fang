@@ -1,5 +1,7 @@
 #include "DB.h"
 
+#include "../utilities/FangLogging.h"
+
 #include <QFile>
 #include <QDir>
 #include <QStringList>
@@ -28,7 +30,7 @@ void DB::init()
     // Find out where our data storage should go.
     QStringList list = QStandardPaths::standardLocations(QStandardPaths::ConfigLocation);
     if (list.size() == 0) {
-        qDebug() << "Qt couldn't find a data folder!";
+        qCDebug(logDb) << "Qt couldn't find a data folder!";
         return;
     }
     
@@ -36,7 +38,7 @@ void DB::init()
     QString sDir = list.at(0);
     QDir dataDirectory(sDir);
     if (!dataDirectory.exists()) {
-        qDebug() << "Need to create config path: " << sDir;
+        qCDebug(logDb) << "Need to create config path: " << sDir;
         dataDirectory.mkpath(sDir);
     }
     
@@ -44,9 +46,9 @@ void DB::init()
     QFile dbFile(sDir + "/fang.sqlite");
     _db = QSqlDatabase::addDatabase("QSQLITE");
     _db.setDatabaseName(dbFile.fileName());
-    qDebug() << "DB filename: " << dbFile.fileName();
+    qCDebug(logDb) << "DB filename: " << dbFile.fileName();
     if (!_db.open()) {
-        qDebug() << "Could not create database.";
+        qCDebug(logDb) << "Could not create database.";
         return;
     }
     
@@ -67,7 +69,7 @@ bool DB::executeSimpleQuery(QString query)
     
     // Set database mode.
     if (!q.exec(query)) {
-        qDebug() << q.lastError().text();
+        qCDebug(logDb) << q.lastError().text();
         
         return false;
     }
@@ -98,8 +100,8 @@ void DB::setSchemaVersion(int version)
     
     QSqlQuery q(db());
     if (!q.exec(statement)) {
-        qDebug() << "Couldn't set DB version to " << version;
-        qDebug() << "Error: " << q.lastError().text();
+        qCDebug(logDb) << "Couldn't set DB version to " << version;
+        qCDebug(logDb) << "Error: " << q.lastError().text();
     }
 }
 
@@ -129,7 +131,7 @@ void DB::upgrade()
 bool DB::executeSqlFile(QFile& sqlFile)
 {
     if (!sqlFile.open(QIODevice::ReadOnly)) {
-        qDebug() << "Could not open file: " << sqlFile.fileName();
+        qCDebug(logDb) << "Could not open file: " << sqlFile.fileName();
         return false;
     }
     
@@ -162,8 +164,8 @@ bool DB::executeSqlFile(QFile& sqlFile)
         
         QSqlQuery q(db());
         if (!q.exec(s)) {
-            qDebug() << "Could not execute sql statement: " << q.lastError().text();
-            qDebug() << s;
+            qCDebug(logDb) << "Could not execute sql statement: " << q.lastError().text();
+            qCDebug(logDb) << s;
             return false;
         }
     }

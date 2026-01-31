@@ -1,8 +1,9 @@
 #include "FangObject.h"
 
 #include <QMutexLocker>
-#include <QDebug>
 #include <QMap>
+
+#include "utilities/FangLogging.h"
 
 QSet<FangObject*> FangObject::allObjects;
 
@@ -26,10 +27,10 @@ FangObject::~FangObject()
 void FangObject::printRemainingObjects()
 {
 #ifdef FANG_OBJECT_LEAK_CHECK
-    qInfo();
-    qInfo() << "========== FangObject leak check ==========";
-    qInfo() << "Remaining objects: " << allObjects.size();
-    qInfo();
+    qCInfo(logApp);
+    qCInfo(logApp) << "========== FangObject leak check ==========";
+    qCInfo(logApp) << "Remaining objects: " << allObjects.size();
+    qCInfo(logApp);
 
     // Key:   Class name
     // Value: Number of instances
@@ -42,12 +43,12 @@ void FangObject::printRemainingObjects()
 
     // Print 'em out!
     for (QString className : instanceCount.keys()) {
-        qDebug() << QString("%1 : %2").
+        qCDebug(logApp) << QString("%1 : %2").
                     arg(instanceCount[className], 4).arg(className);
     }
 
-    qInfo() << "===========================================";
-    qInfo();
+    qCInfo(logApp) << "===========================================";
+    qCInfo(logApp);
 #endif
 }
 

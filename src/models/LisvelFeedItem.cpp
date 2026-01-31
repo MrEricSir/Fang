@@ -1,6 +1,7 @@
 #include "LisvelFeedItem.h"
 #include "src/models/NewsItem.h"
 #include "src/models/NewsList.h"
+#include "../utilities/FangLogging.h"
 
 LisvelFeedItem::LisvelFeedItem(const qint64 id, const qint32 ordinal, const QString& title, QObject *parent) :
     FeedItem(id, ordinal, title, "", QDateTime(), 0, QUrl(), QUrl(), "", QUrl(), QDateTime(), -1, true, parent)
@@ -36,7 +37,7 @@ bool LisvelFeedItem::canBookmark(qint64 proposedBookmarkID, bool allowBackward)
 
     // If the bookmark ID wasn't find
     if (proposedIndex < 0) {
-        qDebug() << "Bookmark ID not found in memory: " << proposedBookmarkID;
+        qCDebug(logModel) << "Bookmark ID not found in memory: " << proposedBookmarkID;
         return false;
     }
 

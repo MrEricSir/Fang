@@ -1,7 +1,7 @@
 #include "LoadNewsOperation.h"
 #include "../models/NewsList.h"
 #include "../utilities/ErrorHandling.h"
-#include <QDebug>
+#include "../utilities/FangLogging.h"
 
 LoadNewsOperation::LoadNewsOperation(OperationManager *parent, FeedItem* feedItem, LoadMode mode, int loadLimit) :
     DBOperationSynchronous(parent),
@@ -42,7 +42,7 @@ LoadNewsOperation::LoadMode LoadNewsOperation::stringToMode(QString modeString)
     } else if (modeString == "append") {
         return LoadMode::Append;
     } else {
-        qWarning() << "Invalid string load mode: " << modeString;
+        qCWarning(logOperation) << "Invalid string load mode: " << modeString;
         FANG_UNREACHABLE("Invalid LoadMode string");
         return LoadMode::Error;
     }
@@ -77,8 +77,8 @@ qint64 LoadNewsOperation::getBookmarkID()
     query.bindValue(":id", feedItem->getDbID());
     
     if (!query.exec() || !query.next()) {
-       qDebug() << "Could not update bookmark for feed id: " << feedItem->getDbID();
-       qDebug() << query.lastError();
+       qCDebug(logOperation) << "Could not update bookmark for feed id: " << feedItem->getDbID();
+       qCDebug(logOperation) << query.lastError();
        
        return -1;
     }
@@ -106,14 +106,14 @@ qint64 LoadNewsOperation::getFirstNewsID()
 
 bool LoadNewsOperation::doAppend(qint64 startId)
 {
-    qDebug() << "LoadNewsOperation::doAppend " << startId;
+    qCDebug(logOperation) << "LoadNewsOperation::doAppend " << startId;
     // Extract the query into our news list.
     return executeLoadQuery(startId, true);
 }
 
 bool LoadNewsOperation::doPrepend(qint64 startId)
 {
-    qDebug() << "LoadNewsOperation::doPrepend " << startId;
+    qCDebug(logOperation) << "LoadNewsOperation::doPrepend " << startId;
     // Extract the query into our news list.
     return executeLoadQuery(startId, false);
 }
@@ -132,7 +132,7 @@ bool LoadNewsOperation::executeLoadQuery(qint64 startId, bool append)
             + direction + " :start_id ORDER BY timestamp " + sortOrder + ", id " + sortOrder
             + " LIMIT :load_limit";
     
-    qDebug() << "executeLoadQuery: Query string: " << queryString;
+    qCDebug(logOperation) << "executeLoadQuery: Query string: " << queryString;
     QSqlQuery query(db());
     query.prepare(queryString);
     
@@ -141,8 +141,8 @@ bool LoadNewsOperation::executeLoadQuery(qint64 startId, bool append)
     query.bindValue(":load_limit", loadLimit);
     
     if (!query.exec()) {
-       qDebug() << "Could not load news for feed id: " << feedItem->getDbID();
-       qDebug() << query.lastError();
+       qCDebug(logOperation) << "Could not load news for feed id: " << feedItem->getDbID();
+       qCDebug(logOperation) << query.lastError();
        
        return false;
     }
@@ -177,7 +177,7 @@ void LoadNewsOperation::executeSynchronous()
 {
     if (feedItem->isSpecialFeed()) {
         // Wrong type of load operation for special feed.
-        qCritical() << "LoadNewsOperation: Cannot use base LoadNewsOperation for special feeds";
+        qCCritical(logOperation) << "LoadNewsOperation: Cannot use base LoadNewsOperation for special feeds";
         return;
     }
     
@@ -198,7 +198,7 @@ void LoadNewsOperation::executeSynchronous()
             // Try to load previous items.
             dbResult &= doPrepend(startId);
             
-            qDebug() << "Start id: " << startId;
+            qCDebug(logOperation) << "Start id: " << startId;
         }
         
         // Load next items, if available.
