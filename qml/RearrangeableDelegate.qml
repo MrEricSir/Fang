@@ -209,6 +209,13 @@ Rectangle {
 
                     state: folderOpen ? "open" : "closed";
 
+                    Component.onCompleted: {
+                        // When launched, rotate graphic to indicate folder is closed.
+                        if (!folderOpen) {
+                            rotation = -90;
+                        }
+                    }
+
                     // Animate the opener with a quick rotation.
                     transitions: [
                         Transition {

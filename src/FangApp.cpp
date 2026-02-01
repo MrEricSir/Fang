@@ -12,6 +12,7 @@
 #include "operations/RemoveFeedOperation.h"
 #include "operations/UpdateOrdinalsOperation.h"
 #include "operations/UpdateTitleOperation.h"
+#include "operations/SetFolderOpenOperation.h"
 #include "operations/ExpireNewsOperation.h"
 #include "operations/SetBookmarkOperation.h"
 #include "operations/SetPinOperation.h"
@@ -188,11 +189,13 @@ void FangApp::onNewFeedAddedSelect(Operation* addFeedOperation)
 void FangApp::connectFeed(FeedItem *feed)
 {
     connect(feed, &FeedItem::titleChanged, this, &FangApp::onFeedTitleChanged);
+    connect(feed, &FeedItem::folderOpenChanged, this, &FangApp::onFolderOpenChanged);
 }
 
 void FangApp::disconnectFeed(FeedItem *feed)
 {
     disconnect(feed, &FeedItem::titleChanged, this, &FangApp::onFeedTitleChanged);
+    disconnect(feed, &FeedItem::folderOpenChanged, this, &FangApp::onFolderOpenChanged);
 }
 
 void FangApp::onLoadAllFinished(Operation *op)
@@ -541,9 +544,21 @@ void FangApp::onFeedTitleChanged()
     if (feed == nullptr) {
         return;
     }
-    
+
     UpdateTitleOperation updateTitle(&manager, feed);
     manager.runSynchronously(&updateTitle);
+}
+
+void FangApp::onFolderOpenChanged()
+{
+    // The sender is the feed itself, so grab it and do a DB update.
+    FeedItem* feed = qobject_cast<FeedItem *>(sender());
+    if (feed == nullptr) {
+        return;
+    }
+
+    SetFolderOpenOperation setFolderOpen(&manager, feed);
+    manager.runSynchronously(&setFolderOpen);
 }
 
 QString FangApp::getPlatform()

@@ -270,9 +270,13 @@ private slots:
     
     /*!
         \brief Updates the feed's title.
-        \param feed
      */
     void onFeedTitleChanged();
+
+    /*!
+        \brief Saves the folder open/closed state.
+     */
+    void onFolderOpenChanged();
 
     /*!
         \brief Adds/removes the pinned news item to the list.

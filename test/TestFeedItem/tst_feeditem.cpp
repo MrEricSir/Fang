@@ -370,12 +370,24 @@ void TestFeedItem::testSetParentFolder()
 void TestFeedItem::testSetFolderOpen()
 {
     FeedItem* feed = createTestFeed();
-    QSignalSpy spy(feed, &FeedItem::dataChanged);
+    QSignalSpy dataChangedSpy(feed, &FeedItem::dataChanged);
+    QSignalSpy folderOpenChangedSpy(feed, &FeedItem::folderOpenChanged);
 
     feed->setFolderOpen(false);
 
     QCOMPARE(feed->data(FeedItem::FolderOpenRole).toBool(), false);
-    QCOMPARE(spy.count(), 1);
+    QCOMPARE(dataChangedSpy.count(), 1);
+    QCOMPARE(folderOpenChangedSpy.count(), 1);
+
+    // Setting to same value shouldn't emit signals.
+    feed->setFolderOpen(false);
+    QCOMPARE(dataChangedSpy.count(), 1);
+    QCOMPARE(folderOpenChangedSpy.count(), 1);
+
+    // Setting to different value should emit signals.
+    feed->setFolderOpen(true);
+    QCOMPARE(dataChangedSpy.count(), 2);
+    QCOMPARE(folderOpenChangedSpy.count(), 2);
 
     delete feed;
 }
