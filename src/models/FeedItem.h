@@ -64,8 +64,8 @@ public:
             const QString& userURL,
             const QUrl& imageURL,
             const QDateTime& lastIconUpdate,
-            qint64 parentFolder = -1, // Default values for top level non-folder.
-            bool folderOpen = true,   // TODO: Save folder open state from last session.
+            qint64 parentFolder = -1,
+            bool folderOpen = true,
             QObject *parent = nullptr);
     
     virtual ~FeedItem();

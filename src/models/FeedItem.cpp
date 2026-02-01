@@ -223,7 +223,12 @@ void FeedItem::setParentFolder(qint64 parentFolder)
 
 void FeedItem::setFolderOpen(bool folderOpen)
 {
+    if (_folderOpen == folderOpen) {
+        return; // Nothing to do!
+    }
+
     _folderOpen = folderOpen;
+    emit folderOpenChanged();
     emit dataChanged();
 }
 
