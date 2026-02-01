@@ -4,7 +4,7 @@
 #include "../operations/GetAllDBSettingsOperation.h"
 
 DBSettings::DBSettings(OperationManager *manager) :
-    QObject(manager),
+    DBSettingsInterface(manager),
     manager(manager)
 {
     // Load all of our settings into the map.

@@ -9,8 +9,8 @@
 #include "../utilities/FangLogging.h"
 
 
-WebSocketServer::WebSocketServer(QObject *parent) :
-    QObject(parent),
+WebSocketServer::WebSocketServer(FangObject *parent) :
+    FangObject(parent),
     server("Fang WebSocket", QWebSocketServer::NonSecureMode),
     pSocket(nullptr),
     isReady(false),

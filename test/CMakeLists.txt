@@ -27,6 +27,7 @@ add_subdirectory(TestDatabaseOperations)
 
 # Model tests
 add_subdirectory(TestFangObject)
+add_subdirectory(TestFangSettings)
 add_subdirectory(TestFeedItem)
 add_subdirectory(TestFeedValidator)
 add_subdirectory(TestNewsItem)

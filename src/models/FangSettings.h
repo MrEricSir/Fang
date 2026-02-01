@@ -6,7 +6,7 @@
 #include <QSettings>
 #include <QStyleHints>
 
-#include "../db/DBSettings.h"
+#include "../db/DBSettingsInterface.h"
 #include "../utilities/SettingsInterface.h"
 
 class FangSettings : public QQuickItem, public SettingsInterface
@@ -40,9 +40,9 @@ public:
 
     /*!
         \brief The stuff the settings object needs to do its job properly.
-        \param manager
+        \param dbSettings
      */
-    void init(DBSettings* dbSettings);
+    void init(DBSettingsInterface* dbSettings);
     
     QString getStyle();
     void setStyle(QString s);
@@ -132,7 +132,7 @@ private slots:
     
 private:
     QSettings settings;
-    DBSettings* dbSettings;
+    DBSettingsInterface* dbSettings;
     QStyleHints* styleHints;
 };
 

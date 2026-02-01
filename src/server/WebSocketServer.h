@@ -3,16 +3,17 @@
 
 #include <QObject>
 #include <QtWebSockets>
+#include "../FangObject.h"
 #include "../models/FangSettings.h"
 
 /*!
     This is the WebSocket server that manages the news page.
  */
-class WebSocketServer : public QObject
+class WebSocketServer : public FangObject
 {
     Q_OBJECT
 public:
-    explicit WebSocketServer(QObject *parent = nullptr);
+    explicit WebSocketServer(FangObject *parent = nullptr);
 
     // Users MUST call this before using any method.
     void init(FangSettings *fangSettings);

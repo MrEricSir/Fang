@@ -146,6 +146,7 @@ qt_add_executable(Fang WIN32
     src/operations/ExpireNewsOperation.cpp
     src/operations/SetDBSettingOperation.cpp
     src/db/DBSettings.cpp
+    src/db/DBSettingsInterface.cpp
     src/operations/GetAllDBSettingsOperation.cpp
     src/parser/BatchNewsParser.h
     src/parser/BatchNewsParser.cpp
@@ -220,6 +221,7 @@ qt_add_executable(Fang WIN32
     src/operations/ExpireNewsOperation.h
     src/operations/SetDBSettingOperation.h
     src/db/DBSettings.h
+    src/db/DBSettingsInterface.h
     src/operations/GetAllDBSettingsOperation.h
     src/db/DBSettingsKey.h
     src/parser/BatchNewsParser.h

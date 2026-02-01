@@ -9,11 +9,11 @@ FangSettings::FangSettings(QQuickItem *parent) :
 {
 }
 
-void FangSettings::init(DBSettings *dbSettings)
+void FangSettings::init(DBSettingsInterface *dbSettings)
 {
     // Database
     this->dbSettings = dbSettings;
-    connect(this->dbSettings, &DBSettings::settingChanged, this, &FangSettings::onDBSettingChanged);
+    connect(this->dbSettings, &DBSettingsInterface::settingChanged, this, &FangSettings::onDBSettingChanged);
 
     // System default color scheme.
     styleHints = QGuiApplication::styleHints();

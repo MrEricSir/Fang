@@ -5,28 +5,25 @@
 #include <QString>
 #include <QMap>
 
-#include "DBSettingsKey.h"
+#include "DBSettingsInterface.h"
 
 #include "../operations/OperationManager.h"
 
 /*!
     \brief A key/value store for saving special settings in the database.
  */
-class DBSettings : public QObject
+class DBSettings : public DBSettingsInterface
 {
     Q_OBJECT
 public:
     explicit DBSettings(OperationManager *manager);
 
-signals:
-    void settingChanged(DBSettingsKey key, QString value);
-
 public slots:
     // Set a key to a new value.
-    void set(DBSettingsKey key, const QString& value);
+    void set(DBSettingsKey key, const QString& value) override;
 
     // Get an existing key.  Returns the default value if never set.
-    QString get(DBSettingsKey key);
+    QString get(DBSettingsKey key) override;
 
 private:
 
