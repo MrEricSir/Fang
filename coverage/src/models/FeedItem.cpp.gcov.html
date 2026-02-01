@@ -32,12 +32,12 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntryHi">97.1&nbsp;%</td>
-            <td class="headerCovTableEntry">208</td>
-            <td class="headerCovTableEntry">202</td>
+            <td class="headerCovTableEntry">210</td>
+            <td class="headerCovTableEntry">204</td>
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-02-01 08:53:30</td>
+            <td class="headerValue">2026-02-01 22:07:45</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -283,94 +283,99 @@
 <span id="L221"><span class="lineNum">     221</span> <span class="tlaGNC">           2 :     emit dataChanged();</span></span>
 <span id="L222"><span class="lineNum">     222</span> <span class="tlaGNC">           2 : }</span></span>
 <span id="L223"><span class="lineNum">     223</span>              : </span>
-<span id="L224"><span class="lineNum">     224</span> <span class="tlaGNC">           2 : void FeedItem::setFolderOpen(bool folderOpen)</span></span>
+<span id="L224"><span class="lineNum">     224</span> <span class="tlaGNC">           4 : void FeedItem::setFolderOpen(bool folderOpen)</span></span>
 <span id="L225"><span class="lineNum">     225</span>              : {</span>
-<span id="L226"><span class="lineNum">     226</span> <span class="tlaGNC">           2 :     _folderOpen = folderOpen;</span></span>
-<span id="L227"><span class="lineNum">     227</span> <span class="tlaGNC">           2 :     emit dataChanged();</span></span>
-<span id="L228"><span class="lineNum">     228</span> <span class="tlaGNC">           2 : }</span></span>
+<span id="L226"><span class="lineNum">     226</span> <span class="tlaGNC">           4 :     if (_folderOpen == folderOpen) {</span></span>
+<span id="L227"><span class="lineNum">     227</span> <span class="tlaGNC">           1 :         return; // Nothing to do!</span></span>
+<span id="L228"><span class="lineNum">     228</span>              :     }</span>
 <span id="L229"><span class="lineNum">     229</span>              : </span>
-<span id="L230"><span class="lineNum">     230</span> <span class="tlaGNC">           1 : void FeedItem::clearNews()</span></span>
-<span id="L231"><span class="lineNum">     231</span>              : {</span>
-<span id="L232"><span class="lineNum">     232</span> <span class="tlaGNC">           1 :     newsList.clear();</span></span>
-<span id="L233"><span class="lineNum">     233</span> <span class="tlaGNC">           1 : }</span></span>
+<span id="L230"><span class="lineNum">     230</span> <span class="tlaGNC">           3 :     _folderOpen = folderOpen;</span></span>
+<span id="L231"><span class="lineNum">     231</span> <span class="tlaGNC">           3 :     emit folderOpenChanged();</span></span>
+<span id="L232"><span class="lineNum">     232</span> <span class="tlaGNC">           3 :     emit dataChanged();</span></span>
+<span id="L233"><span class="lineNum">     233</span>              : }</span>
 <span id="L234"><span class="lineNum">     234</span>              : </span>
-<span id="L235"><span class="lineNum">     235</span> <span class="tlaGNC">          17 : bool FeedItem::canBookmark(qint64 proposedBookmarkID, bool allowBackward)</span></span>
+<span id="L235"><span class="lineNum">     235</span> <span class="tlaGNC">           1 : void FeedItem::clearNews()</span></span>
 <span id="L236"><span class="lineNum">     236</span>              : {</span>
-<span id="L237"><span class="lineNum">     237</span>              :     // What is this? I don't even.</span>
-<span id="L238"><span class="lineNum">     238</span> <span class="tlaGNC">          17 :     if (proposedBookmarkID &lt; -1) {</span></span>
-<span id="L239"><span class="lineNum">     239</span> <span class="tlaGNC">           3 :         return false;</span></span>
-<span id="L240"><span class="lineNum">     240</span>              :     }</span>
-<span id="L241"><span class="lineNum">     241</span>              :     </span>
-<span id="L242"><span class="lineNum">     242</span>              :     // Given no current bookmark, anything will do.</span>
-<span id="L243"><span class="lineNum">     243</span> <span class="tlaGNC">          14 :     if (_bookmarkID &lt; 0) {</span></span>
-<span id="L244"><span class="lineNum">     244</span> <span class="tlaGNC">           4 :         return true;</span></span>
+<span id="L237"><span class="lineNum">     237</span> <span class="tlaGNC">           1 :     newsList.clear();</span></span>
+<span id="L238"><span class="lineNum">     238</span> <span class="tlaGNC">           1 : }</span></span>
+<span id="L239"><span class="lineNum">     239</span>              : </span>
+<span id="L240"><span class="lineNum">     240</span> <span class="tlaGNC">          17 : bool FeedItem::canBookmark(qint64 proposedBookmarkID, bool allowBackward)</span></span>
+<span id="L241"><span class="lineNum">     241</span>              : {</span>
+<span id="L242"><span class="lineNum">     242</span>              :     // What is this? I don't even.</span>
+<span id="L243"><span class="lineNum">     243</span> <span class="tlaGNC">          17 :     if (proposedBookmarkID &lt; -1) {</span></span>
+<span id="L244"><span class="lineNum">     244</span> <span class="tlaGNC">           3 :         return false;</span></span>
 <span id="L245"><span class="lineNum">     245</span>              :     }</span>
 <span id="L246"><span class="lineNum">     246</span>              :     </span>
-<span id="L247"><span class="lineNum">     247</span>              :     // That's a no-op for you, young man.</span>
-<span id="L248"><span class="lineNum">     248</span> <span class="tlaGNC">          10 :     if (_bookmarkID == proposedBookmarkID) {</span></span>
-<span id="L249"><span class="lineNum">     249</span> <span class="tlaGNC">           2 :         return false;</span></span>
+<span id="L247"><span class="lineNum">     247</span>              :     // Given no current bookmark, anything will do.</span>
+<span id="L248"><span class="lineNum">     248</span> <span class="tlaGNC">          14 :     if (_bookmarkID &lt; 0) {</span></span>
+<span id="L249"><span class="lineNum">     249</span> <span class="tlaGNC">           4 :         return true;</span></span>
 <span id="L250"><span class="lineNum">     250</span>              :     }</span>
 <span id="L251"><span class="lineNum">     251</span>              :     </span>
-<span id="L252"><span class="lineNum">     252</span>              :     // Sure, whatever you want.</span>
-<span id="L253"><span class="lineNum">     253</span> <span class="tlaGNC">           8 :     if (allowBackward) {</span></span>
-<span id="L254"><span class="lineNum">     254</span> <span class="tlaGNC">           4 :         return true;</span></span>
+<span id="L252"><span class="lineNum">     252</span>              :     // That's a no-op for you, young man.</span>
+<span id="L253"><span class="lineNum">     253</span> <span class="tlaGNC">          10 :     if (_bookmarkID == proposedBookmarkID) {</span></span>
+<span id="L254"><span class="lineNum">     254</span> <span class="tlaGNC">           2 :         return false;</span></span>
 <span id="L255"><span class="lineNum">     255</span>              :     }</span>
-<span id="L256"><span class="lineNum">     256</span>              : </span>
-<span id="L257"><span class="lineNum">     257</span>              :     // We asked SQLite to always increase our IDs, remember.</span>
-<span id="L258"><span class="lineNum">     258</span> <span class="tlaGNC">           4 :     return proposedBookmarkID &gt; _bookmarkID;</span></span>
-<span id="L259"><span class="lineNum">     259</span>              : }</span>
-<span id="L260"><span class="lineNum">     260</span>              : </span>
-<span id="L261"><span class="lineNum">     261</span> <span class="tlaGNC">           5 : void FeedItem::setBookmark(qint64 toBookmarkID)</span></span>
-<span id="L262"><span class="lineNum">     262</span>              : {</span>
-<span id="L263"><span class="lineNum">     263</span> <span class="tlaGNC">          10 :     qCDebug(logModel) &lt;&lt; &quot;FeedItem::setBookmark to &quot; &lt;&lt; toBookmarkID;</span></span>
-<span id="L264"><span class="lineNum">     264</span> <span class="tlaGNC">           5 :     if (toBookmarkID == _bookmarkID) {</span></span>
-<span id="L265"><span class="lineNum">     265</span> <span class="tlaGNC">           1 :         return; // Nothing to do.</span></span>
-<span id="L266"><span class="lineNum">     266</span>              :     }</span>
-<span id="L267"><span class="lineNum">     267</span>              :     </span>
-<span id="L268"><span class="lineNum">     268</span> <span class="tlaGNC">           4 :     _bookmarkID = toBookmarkID;</span></span>
-<span id="L269"><span class="lineNum">     269</span> <span class="tlaGNC">           4 :     emit dataChanged();</span></span>
-<span id="L270"><span class="lineNum">     270</span>              : }</span>
-<span id="L271"><span class="lineNum">     271</span>              : </span>
-<span id="L272"><span class="lineNum">     272</span> <span class="tlaGNC">           2 : void FeedItem::setUnreadCount(qint32 unreadCount)</span></span>
-<span id="L273"><span class="lineNum">     273</span>              : {</span>
-<span id="L274"><span class="lineNum">     274</span> <span class="tlaGNC">           2 :     if (this-&gt;unreadCount == unreadCount) {</span></span>
-<span id="L275"><span class="lineNum">     275</span> <span class="tlaGNC">           1 :         return;</span></span>
-<span id="L276"><span class="lineNum">     276</span>              :     }</span>
-<span id="L277"><span class="lineNum">     277</span>              :     </span>
-<span id="L278"><span class="lineNum">     278</span> <span class="tlaGNC">           1 :     this-&gt;unreadCount = unreadCount;</span></span>
-<span id="L279"><span class="lineNum">     279</span> <span class="tlaGNC">           1 :     emit dataChanged();</span></span>
-<span id="L280"><span class="lineNum">     280</span> <span class="tlaGNC">           1 :     emit unreadCountChanged(unreadCount);</span></span>
-<span id="L281"><span class="lineNum">     281</span>              : }</span>
-<span id="L282"><span class="lineNum">     282</span>              : </span>
-<span id="L283"><span class="lineNum">     283</span> <span class="tlaGNC">           1 : void FeedItem::setOrdinal(int newOrdinal)</span></span>
-<span id="L284"><span class="lineNum">     284</span>              : {</span>
-<span id="L285"><span class="lineNum">     285</span> <span class="tlaGNC">           1 :     ordinal = newOrdinal;</span></span>
-<span id="L286"><span class="lineNum">     286</span> <span class="tlaGNC">           1 : }</span></span>
+<span id="L256"><span class="lineNum">     256</span>              :     </span>
+<span id="L257"><span class="lineNum">     257</span>              :     // Sure, whatever you want.</span>
+<span id="L258"><span class="lineNum">     258</span> <span class="tlaGNC">           8 :     if (allowBackward) {</span></span>
+<span id="L259"><span class="lineNum">     259</span> <span class="tlaGNC">           4 :         return true;</span></span>
+<span id="L260"><span class="lineNum">     260</span>              :     }</span>
+<span id="L261"><span class="lineNum">     261</span>              : </span>
+<span id="L262"><span class="lineNum">     262</span>              :     // We asked SQLite to always increase our IDs, remember.</span>
+<span id="L263"><span class="lineNum">     263</span> <span class="tlaGNC">           4 :     return proposedBookmarkID &gt; _bookmarkID;</span></span>
+<span id="L264"><span class="lineNum">     264</span>              : }</span>
+<span id="L265"><span class="lineNum">     265</span>              : </span>
+<span id="L266"><span class="lineNum">     266</span> <span class="tlaGNC">           5 : void FeedItem::setBookmark(qint64 toBookmarkID)</span></span>
+<span id="L267"><span class="lineNum">     267</span>              : {</span>
+<span id="L268"><span class="lineNum">     268</span> <span class="tlaGNC">          10 :     qCDebug(logModel) &lt;&lt; &quot;FeedItem::setBookmark to &quot; &lt;&lt; toBookmarkID;</span></span>
+<span id="L269"><span class="lineNum">     269</span> <span class="tlaGNC">           5 :     if (toBookmarkID == _bookmarkID) {</span></span>
+<span id="L270"><span class="lineNum">     270</span> <span class="tlaGNC">           1 :         return; // Nothing to do.</span></span>
+<span id="L271"><span class="lineNum">     271</span>              :     }</span>
+<span id="L272"><span class="lineNum">     272</span>              :     </span>
+<span id="L273"><span class="lineNum">     273</span> <span class="tlaGNC">           4 :     _bookmarkID = toBookmarkID;</span></span>
+<span id="L274"><span class="lineNum">     274</span> <span class="tlaGNC">           4 :     emit dataChanged();</span></span>
+<span id="L275"><span class="lineNum">     275</span>              : }</span>
+<span id="L276"><span class="lineNum">     276</span>              : </span>
+<span id="L277"><span class="lineNum">     277</span> <span class="tlaGNC">           2 : void FeedItem::setUnreadCount(qint32 unreadCount)</span></span>
+<span id="L278"><span class="lineNum">     278</span>              : {</span>
+<span id="L279"><span class="lineNum">     279</span> <span class="tlaGNC">           2 :     if (this-&gt;unreadCount == unreadCount) {</span></span>
+<span id="L280"><span class="lineNum">     280</span> <span class="tlaGNC">           1 :         return;</span></span>
+<span id="L281"><span class="lineNum">     281</span>              :     }</span>
+<span id="L282"><span class="lineNum">     282</span>              :     </span>
+<span id="L283"><span class="lineNum">     283</span> <span class="tlaGNC">           1 :     this-&gt;unreadCount = unreadCount;</span></span>
+<span id="L284"><span class="lineNum">     284</span> <span class="tlaGNC">           1 :     emit dataChanged();</span></span>
+<span id="L285"><span class="lineNum">     285</span> <span class="tlaGNC">           1 :     emit unreadCountChanged(unreadCount);</span></span>
+<span id="L286"><span class="lineNum">     286</span>              : }</span>
 <span id="L287"><span class="lineNum">     287</span>              : </span>
-<span id="L288"><span class="lineNum">     288</span> <span class="tlaGNC">           8 : void FeedItem::setErrorFlag(bool errorFlag)</span></span>
+<span id="L288"><span class="lineNum">     288</span> <span class="tlaGNC">           1 : void FeedItem::setOrdinal(int newOrdinal)</span></span>
 <span id="L289"><span class="lineNum">     289</span>              : {</span>
-<span id="L290"><span class="lineNum">     290</span> <span class="tlaGNC">           8 :     if (_errorFlag == errorFlag) {</span></span>
-<span id="L291"><span class="lineNum">     291</span> <span class="tlaGNC">           2 :         return;</span></span>
-<span id="L292"><span class="lineNum">     292</span>              :     }</span>
-<span id="L293"><span class="lineNum">     293</span>              :     </span>
-<span id="L294"><span class="lineNum">     294</span> <span class="tlaGNC">           6 :     _errorFlag = errorFlag;</span></span>
-<span id="L295"><span class="lineNum">     295</span> <span class="tlaGNC">           6 :     emit dataChanged();</span></span>
-<span id="L296"><span class="lineNum">     296</span>              : }</span>
-<span id="L297"><span class="lineNum">     297</span>              : </span>
-<span id="L298"><span class="lineNum">     298</span> <span class="tlaGNC">          37 : void FeedItem::setURL(QUrl url)</span></span>
-<span id="L299"><span class="lineNum">     299</span>              : {</span>
-<span id="L300"><span class="lineNum">     300</span> <span class="tlaGNC">          37 :     if (this-&gt;url == url) {</span></span>
-<span id="L301"><span class="lineNum">     301</span> <span class="tlaGNC">           1 :         return;</span></span>
-<span id="L302"><span class="lineNum">     302</span>              :     }</span>
-<span id="L303"><span class="lineNum">     303</span>              :     </span>
-<span id="L304"><span class="lineNum">     304</span> <span class="tlaGNC">          36 :     this-&gt;url = url;</span></span>
-<span id="L305"><span class="lineNum">     305</span> <span class="tlaGNC">          36 :     emit dataChanged();</span></span>
-<span id="L306"><span class="lineNum">     306</span>              : }</span>
-<span id="L307"><span class="lineNum">     307</span>              : </span>
-<span id="L308"><span class="lineNum">     308</span> <span class="tlaGNC">           2 : bool FeedItem::bookmarksEnabled() const</span></span>
-<span id="L309"><span class="lineNum">     309</span>              : {</span>
-<span id="L310"><span class="lineNum">     310</span> <span class="tlaGNC">           2 :     return true;</span></span>
+<span id="L290"><span class="lineNum">     290</span> <span class="tlaGNC">           1 :     ordinal = newOrdinal;</span></span>
+<span id="L291"><span class="lineNum">     291</span> <span class="tlaGNC">           1 : }</span></span>
+<span id="L292"><span class="lineNum">     292</span>              : </span>
+<span id="L293"><span class="lineNum">     293</span> <span class="tlaGNC">           8 : void FeedItem::setErrorFlag(bool errorFlag)</span></span>
+<span id="L294"><span class="lineNum">     294</span>              : {</span>
+<span id="L295"><span class="lineNum">     295</span> <span class="tlaGNC">           8 :     if (_errorFlag == errorFlag) {</span></span>
+<span id="L296"><span class="lineNum">     296</span> <span class="tlaGNC">           2 :         return;</span></span>
+<span id="L297"><span class="lineNum">     297</span>              :     }</span>
+<span id="L298"><span class="lineNum">     298</span>              :     </span>
+<span id="L299"><span class="lineNum">     299</span> <span class="tlaGNC">           6 :     _errorFlag = errorFlag;</span></span>
+<span id="L300"><span class="lineNum">     300</span> <span class="tlaGNC">           6 :     emit dataChanged();</span></span>
+<span id="L301"><span class="lineNum">     301</span>              : }</span>
+<span id="L302"><span class="lineNum">     302</span>              : </span>
+<span id="L303"><span class="lineNum">     303</span> <span class="tlaGNC">          37 : void FeedItem::setURL(QUrl url)</span></span>
+<span id="L304"><span class="lineNum">     304</span>              : {</span>
+<span id="L305"><span class="lineNum">     305</span> <span class="tlaGNC">          37 :     if (this-&gt;url == url) {</span></span>
+<span id="L306"><span class="lineNum">     306</span> <span class="tlaGNC">           1 :         return;</span></span>
+<span id="L307"><span class="lineNum">     307</span>              :     }</span>
+<span id="L308"><span class="lineNum">     308</span>              :     </span>
+<span id="L309"><span class="lineNum">     309</span> <span class="tlaGNC">          36 :     this-&gt;url = url;</span></span>
+<span id="L310"><span class="lineNum">     310</span> <span class="tlaGNC">          36 :     emit dataChanged();</span></span>
 <span id="L311"><span class="lineNum">     311</span>              : }</span>
+<span id="L312"><span class="lineNum">     312</span>              : </span>
+<span id="L313"><span class="lineNum">     313</span> <span class="tlaGNC">           2 : bool FeedItem::bookmarksEnabled() const</span></span>
+<span id="L314"><span class="lineNum">     314</span>              : {</span>
+<span id="L315"><span class="lineNum">     315</span> <span class="tlaGNC">           2 :     return true;</span></span>
+<span id="L316"><span class="lineNum">     316</span>              : }</span>
         </pre>
               </td>
             </tr>
