@@ -82,6 +82,9 @@ TestFangSettings::TestFangSettings()
     : settings(nullptr),
       mockDBSettings(nullptr)
 {
+    QCoreApplication::setOrganizationName("EricGregory");
+    QCoreApplication::setOrganizationDomain("GetFang.com");
+    QCoreApplication::setApplicationName("FangUnitTests");
 }
 
 void TestFangSettings::clearTestSettings()
