@@ -2,12 +2,31 @@
 #include <QDebug>
 #include "../../src/FangObject.h"
 
+// For capturing log output
+static QStringList capturedMessages;
+static QtMessageHandler originalHandler = nullptr;
+
+void testMessageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
+{
+    Q_UNUSED(type);
+    Q_UNUSED(context);
+    capturedMessages.append(msg);
+}
+
 // Helper class for testing
 class TestObject : public FangObject
 {
     Q_OBJECT
 public:
     explicit TestObject(QObject *parent = nullptr) : FangObject(parent) {}
+};
+
+// Another helper class with a different name for testing class name output
+class AnotherTestObject : public FangObject
+{
+    Q_OBJECT
+public:
+    explicit AnotherTestObject(QObject *parent = nullptr) : FangObject(parent) {}
 };
 
 class TestFangObject : public QObject
@@ -28,6 +47,11 @@ private slots:
     void testParentDeletesChildren();
     void testMultipleChildrenDeleted();
     void testLeakDetectionAfterCleanup();
+
+    // printRemainingObjects tests
+    void testPrintRemainingObjects_emptyOutput();
+    void testPrintRemainingObjects_withObjects();
+    void testPrintRemainingObjects_showsClassNames();
 };
 
 void TestFangObject::initTestCase()
@@ -239,6 +263,130 @@ void TestFangObject::testLeakDetectionAfterCleanup()
     delete obj2;
 
     // Now should be clean
+    QCOMPARE(FangObject::getRemainingObjectCount(), initialCount);
+#endif
+}
+
+void TestFangObject::testPrintRemainingObjects_emptyOutput()
+{
+#ifdef FANG_OBJECT_LEAK_CHECK
+    int initialCount = FangObject::getRemainingObjectCount();
+
+    // Only run this test if we start with no objects (or known count)
+    // This ensures a clean baseline for testing output
+
+    // Install custom message handler
+    capturedMessages.clear();
+    originalHandler = qInstallMessageHandler(testMessageHandler);
+
+    // Call with no additional objects created
+    FangObject::printRemainingObjects();
+
+    // Restore original handler
+    qInstallMessageHandler(originalHandler);
+
+    // Verify output contains the expected header
+    bool foundHeader = false;
+    bool foundCount = false;
+    for (const QString& msg : capturedMessages) {
+        if (msg.contains("FangObject leak check")) {
+            foundHeader = true;
+        }
+        if (msg.contains("Remaining objects:")) {
+            foundCount = true;
+            // Verify the count matches what we expect
+            QVERIFY(msg.contains(QString::number(initialCount)));
+        }
+    }
+
+    QVERIFY(foundHeader);
+    QVERIFY(foundCount);
+#endif
+}
+
+void TestFangObject::testPrintRemainingObjects_withObjects()
+{
+#ifdef FANG_OBJECT_LEAK_CHECK
+    int initialCount = FangObject::getRemainingObjectCount();
+
+    // Create some objects
+    FangObject* obj1 = new FangObject();
+    FangObject* obj2 = new FangObject();
+
+    QCOMPARE(FangObject::getRemainingObjectCount(), initialCount + 2);
+
+    // Install custom message handler
+    capturedMessages.clear();
+    originalHandler = qInstallMessageHandler(testMessageHandler);
+
+    // Call printRemainingObjects
+    FangObject::printRemainingObjects();
+
+    // Restore original handler
+    qInstallMessageHandler(originalHandler);
+
+    // Verify output shows correct count
+    bool foundCorrectCount = false;
+    for (const QString& msg : capturedMessages) {
+        if (msg.contains("Remaining objects:") &&
+            msg.contains(QString::number(initialCount + 2))) {
+            foundCorrectCount = true;
+        }
+    }
+
+    QVERIFY(foundCorrectCount);
+
+    // Cleanup
+    delete obj1;
+    delete obj2;
+
+    QCOMPARE(FangObject::getRemainingObjectCount(), initialCount);
+#endif
+}
+
+void TestFangObject::testPrintRemainingObjects_showsClassNames()
+{
+#ifdef FANG_OBJECT_LEAK_CHECK
+    int initialCount = FangObject::getRemainingObjectCount();
+
+    // Create objects of different types
+    TestObject* testObj1 = new TestObject();
+    TestObject* testObj2 = new TestObject();
+    AnotherTestObject* anotherObj = new AnotherTestObject();
+
+    QCOMPARE(FangObject::getRemainingObjectCount(), initialCount + 3);
+
+    // Install custom message handler
+    capturedMessages.clear();
+    originalHandler = qInstallMessageHandler(testMessageHandler);
+
+    // Call printRemainingObjects
+    FangObject::printRemainingObjects();
+
+    // Restore original handler
+    qInstallMessageHandler(originalHandler);
+
+    // Verify output contains class names
+    bool foundTestObject = false;
+    bool foundAnotherTestObject = false;
+
+    for (const QString& msg : capturedMessages) {
+        if (msg.contains("TestObject")) {
+            foundTestObject = true;
+        }
+        if (msg.contains("AnotherTestObject")) {
+            foundAnotherTestObject = true;
+        }
+    }
+
+    QVERIFY(foundTestObject);
+    QVERIFY(foundAnotherTestObject);
+
+    // Cleanup
+    delete testObj1;
+    delete testObj2;
+    delete anotherObj;
+
     QCOMPARE(FangObject::getRemainingObjectCount(), initialCount);
 #endif
 }
