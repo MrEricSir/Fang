@@ -8,34 +8,30 @@ BatchNewsParser::BatchNewsParser(QObject *parent)
 
 void BatchNewsParser::parse(const QList<QUrl> &urls)
 {
-    // Clear any existing parsers and results, in case this object is being reused. This will
-    // also remove the feed data owned by these objects.
-    for (ParserInterface* parser : parsers.values()) {
-        delete parser;
-    }
+    // Clear any existing parsers and results, in case this object is being reused.
     parsers.clear();
     results.clear();
 
-    // Clear feed map as the pointers are no longer valid (they were deleted above.)
+    // Clear feed map as the pointers are no longer valid (they were owned by parsers.)
     feeds.clear();
 
     // Set up parsers.
     for (const QUrl& url : urls) {
         // Skip this URL if we've already seen it.
-        if (parsers.keys().contains(url)) {
+        if (parsers.count(url) > 0) {
             continue;
         }
 
-        ParserInterface *parser = createParser();
-        connect(parser, &ParserInterface::done, this, &BatchNewsParser::onParserDone);
+        auto parser = createParser();
+        connect(parser.get(), &ParserInterface::done, this, &BatchNewsParser::onParserDone);
         parser->parse(url);
-        parsers[url] = parser;
+        parsers[url] = std::move(parser);
     }
 }
 
-ParserInterface* BatchNewsParser::createParser()
+std::unique_ptr<ParserInterface> BatchNewsParser::createParser()
 {
-    return new NewsParser(this);
+    return std::make_unique<NewsParser>();
 }
 
 void BatchNewsParser::onParserDone()
@@ -47,7 +43,7 @@ void BatchNewsParser::onParserDone()
     }
 
     QUrl url = parser->getURL();
-    if (!parsers.keys().contains(url)) {
+    if (parsers.count(url) == 0) {
         qCWarning(logParser) << "BatchNewsParser: URL returned but not found:" << url;
         return;
     }
@@ -65,8 +61,8 @@ void BatchNewsParser::onParserDone()
     }
 
     // Check if we're done.
-    for (ParserInterface* p : parsers.values()) {
-        if (p->getResult() == ParserInterface::IN_PROGRESS) {
+    for (auto it = parsers.cbegin(); it != parsers.cend(); ++it) {
+        if (it->second->getResult() == ParserInterface::IN_PROGRESS) {
             // Not done yet!
             return;
         }

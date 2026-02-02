@@ -15,7 +15,6 @@ const int UpdateChecker::CHECK_INTERVAL_MS = 24 * 60 * 60 * 1000; // 24 hours
 UpdateChecker::UpdateChecker(QObject *parent, ParserInterface* injectedParser, SettingsInterface* injectedSettings) :
     FangObject(parent),
     parser(injectedParser ? injectedParser : new NewsParser(this)),
-    ownsParser(injectedParser == nullptr),
     settingsInterface(injectedSettings),
     timer(this),
     _latestVersion(""),
@@ -25,13 +24,6 @@ UpdateChecker::UpdateChecker(QObject *parent, ParserInterface* injectedParser, S
     connect(&timer, &QTimer::timeout, this, &UpdateChecker::checkNow);
 
     timer.setInterval(CHECK_INTERVAL_MS);
-}
-
-UpdateChecker::~UpdateChecker()
-{
-    if (ownsParser && parser) {
-        delete parser;
-    }
 }
 
 void UpdateChecker::start()

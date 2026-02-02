@@ -1,3 +1,5 @@
+#include <memory>
+
 #include <QString>
 #include <QTest>
 #include <QSignalSpy>
@@ -33,12 +35,12 @@ public:
 
 protected:
     // Override factory method to create mock parsers instead of real ones
-    ParserInterface* createParser() override
+    std::unique_ptr<ParserInterface> createParser() override
     {
-        MockNewsParser* parser = new MockNewsParser(this);
+        auto parser = std::make_unique<MockNewsParser>();
 
-        // Store the parser so we can configure it when parse() is called with a URL
-        pendingParsers.enqueue(parser);
+        // Store the raw pointer so we can configure it when parse() is called with a URL
+        pendingParsers.enqueue(parser.get());
 
         return parser;
     }

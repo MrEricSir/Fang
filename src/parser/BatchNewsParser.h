@@ -1,6 +1,9 @@
 #ifndef BATCHNEWSPARSER_H
 #define BATCHNEWSPARSER_H
 
+#include <map>
+#include <memory>
+
 #include <QMap>
 #include <QUrl>
 
@@ -31,18 +34,18 @@ signals:
 
 protected:
     // Virtual method for creating parsers; can be overridden for unit tests.
-    virtual ParserInterface* createParser();
+    virtual std::unique_ptr<ParserInterface> createParser();
 
     // Called whenever a parser is done.
     void onParserDone();
 
     // Parsers that are in flight.
-    QMap<QUrl, ParserInterface*> parsers;
+    std::map<QUrl, std::unique_ptr<ParserInterface>> parsers;
 
     // Results of parsing per-URL.
     QMap<QUrl, ParserInterface::ParseResult> results;
 
-    // Parsed feeds per-URL (owned by this object).
+    // Parsed feeds per-URL (references to feeds owned by parsers).
     QMap<QUrl, RawFeed*> feeds;
 };
 

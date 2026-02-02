@@ -9,7 +9,6 @@ BatchDownloadCore::BatchDownloadCore(int timeoutMs,
                                      QNetworkAccessManager* networkManager)
     : FangObject(parent)
     , manager(networkManager ? networkManager : new FangNetworkAccessManager(this))
-    , ownsManager(networkManager == nullptr)
     , totalCount(0)
 {
     config.timeoutMs = timeoutMs;

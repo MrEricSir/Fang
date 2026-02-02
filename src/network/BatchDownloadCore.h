@@ -31,11 +31,17 @@ class BatchDownloadCore : public FangObject
 {
     Q_OBJECT
 public:
+    /*!
+        \param timeoutMs
+        \param maxRedirects
+        \param parent
+        \param networkManager If specified, caller is responsible for its lifecycle.
+     */
     explicit BatchDownloadCore(int timeoutMs = 30000,
                                int maxRedirects = 10,
                                QObject* parent = nullptr,
                                QNetworkAccessManager* networkManager = nullptr);
-    ~BatchDownloadCore();
+    virtual ~BatchDownloadCore();
 
     /*!
         Start downloading a list of URLs, emits finished() when done.
@@ -74,7 +80,6 @@ private:
     void checkCompletion();
 
     QNetworkAccessManager* manager;
-    bool ownsManager;
     NetworkDownloadConfig config;
 
     int totalCount;

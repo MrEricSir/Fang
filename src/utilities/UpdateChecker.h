@@ -23,17 +23,16 @@ class UpdateChecker : public FangObject
 
 public:
     /*!
-        \brief Constructs an UpdateChecker.
         \param parent Parent QObject.
         \param parser Optional parser for dependency injection (used for testing).
-                      If null, creates its own NewsParser.
+                      If this is provided the caller is responsible for its lifecycle.
         \param settings Optional settings for dependency injection (used for testing).
                         If null, uses FangApp::instance()->getSettings().
      */
     explicit UpdateChecker(QObject *parent = nullptr,
                            ParserInterface* parser = nullptr,
                            SettingsInterface* settings = nullptr);
-    virtual ~UpdateChecker();
+    inline virtual ~UpdateChecker() = default;
 
     /*!
         \brief Starts the update checker.
@@ -87,8 +86,7 @@ private:
     static const int CHECK_INTERVAL_MS; // 24 hours in milliseconds
 
     ParserInterface* parser;
-    bool ownsParser;  // True if we created the parser and need to delete it
-    SettingsInterface* settingsInterface;  // Injected or from FangApp::instance()
+    SettingsInterface* settingsInterface;  // Injected or from FangApp
     QTimer timer;
     QString _latestVersion;
     bool _updateAvailable;
