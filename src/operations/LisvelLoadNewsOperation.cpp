@@ -18,6 +18,8 @@ void LisvelLoadNewsOperation::executeSynchronous()
     if (getMode() == LoadNewsOperation::Initial) {
         FANG_CHECK(feedItem->getNewsList() != nullptr || feedItem->getNewsList()->isEmpty(),
                    "LisvelLoadNewsOperation: Initial load on populated feed");
+        // Clear the exclusion list. This is necessary if we're re-using an existing LisvelFeeditem.
+        lisvelNews->clearExclusionList();
     }
 
     // DB query/ies.
@@ -84,25 +86,17 @@ void LisvelLoadNewsOperation::executeSynchronous()
     // Append/prepend items from our lists.
     if (!listAppend.isEmpty()) {
         for (NewsItem* newsItem: std::as_const(listAppend)) {
-            // News item list.
             feedItem->getNewsList()->append(newsItem);
-
-            // News ID list.
-            if (!lisvelNews->getNewsList()->contains(newsItem)) {
-                lisvelNews->getNewsList()->append(newsItem);
-            }
+            // Track in exclusion list.
+            lisvelNews->addToExclusionList(newsItem->getDbID());
         }
     }
 
     if (!listPrepend.isEmpty()) {
         for (NewsItem* newsItem: std::as_const(listPrepend)) {
-            // News item list.
             feedItem->getNewsList()->prepend(newsItem);
-
-            // News ID list.
-            if (!lisvelNews->getNewsList()->contains(newsItem)) {
-                lisvelNews->getNewsList()->prepend(newsItem);
-            }
+            // Track in exclusion list.
+            lisvelNews->addToExclusionList(newsItem->getDbID());
         }
     }
 
@@ -267,18 +261,23 @@ bool LisvelLoadNewsOperation::doAppend()
 
 QString LisvelLoadNewsOperation::getLoadedIDString()
 {
+    // Use the exclusion list which tracks ALL items loaded this session,
+    // not just items currently in the display list.
+    const QSet<qint64>& exclusionList = lisvelNews->getExclusionList();
+
+    if (exclusionList.isEmpty()) {
+        return "-1";  // Return invalid ID to avoid SQL syntax error with empty IN clause
+    }
+
     QString ret = "";
+    bool first = true;
 
-    qsizetype i = 0;
-    qsizetype lastIndex = lisvelNews->getNewsList()->size();
-
-    for (NewsItem* item : *feedItem->getNewsList()) {
-        ret += QString::number(item->getDbID());
-        i++;
-
-        if (lastIndex != i) {
+    for (qint64 id : exclusionList) {
+        if (!first) {
             ret += ", ";
         }
+        ret += QString::number(id);
+        first = false;
     }
 
     return ret;
