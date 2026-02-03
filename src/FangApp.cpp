@@ -22,6 +22,7 @@
 #include "operations/InsertFolderOperation.h"
 #include "operations/MarkAllReadOrUnreadOperation.h"
 #include "operations/FaviconUpdateOperation.h"
+#include "operations/ReloadNewsOperation.h"
 #include "src/models/NewsList.h"
 
 #if defined(Q_OS_MAC)
@@ -57,7 +58,8 @@ FangApp::FangApp(QApplication *parent, QQmlApplicationEngine* engine, QSingleIns
     _instance = this;
 
     // Set config for webserver.
-    webServer.setWebsocketPort(webSocketServer.getPort());
+    webServer = new WebServer(this, this);
+    webServer->setWebsocketPort(webSocketServer.getPort());
     
     // Setup signals.
     connect(parent, &QApplication::aboutToQuit, this, &FangApp::onQuit);
@@ -79,6 +81,55 @@ FangApp::~FangApp()
     disconnect(&feedList, &ListModel::selectedChanged, this, &FangApp::onFeedSelected);
 }
 
+FangApp::FangApp(QObject *parent) :
+    FangObject(parent),
+    engine(nullptr),
+    single(nullptr),
+    manager(this),
+    feedList(new FeedItem, this),
+    importList(new ListModel(new FeedItem, this)),
+    currentFeed(nullptr),
+    loadAllFinished(false),
+    fangSettings(nullptr),
+    dbSettings(&manager),
+    updateTimer(nullptr),
+    window(nullptr),
+    webServer(nullptr),
+    allNews(nullptr),
+    pinnedNews(nullptr),
+    isPinnedNewsVisible(false),
+    lastFeedSelected(nullptr),
+    updateChecker(this)
+{
+}
+
+void FangApp::initForTesting()
+{
+    // Set up singleton for test access.
+    _instance = this;
+
+    // Create WebServer.
+    webServer = new WebServer(this, this);
+
+    // Connect signals.
+    connect(&feedList, &ListModel::added, this, &FangApp::onFeedAdded);
+    connect(&feedList, &ListModel::removed, this, &FangApp::onFeedRemoved);
+    connect(&feedList, &ListModel::selectedChanged, this, &FangApp::onFeedSelected);
+
+    // Create special feeds for testing.
+    allNews = new AllNewsFeedItem(&feedList);
+    feedList.appendRow(allNews);
+    feedIdMap.insert(allNews->getDbID(), allNews);
+    connectFeed(allNews);
+
+    pinnedNews = new PinnedFeedItem(&feedList);
+    // Pinned news starts hidden (added dynamically when items are pinned).
+    feedIdMap.insert(pinnedNews->getDbID(), pinnedNews);
+    connectFeed(pinnedNews);
+
+    loadAllFinished = true;
+}
+
 void FangApp::init()
 {
     qCInfo(logApp) << "FangApp init version: " << APP_VERSION;
@@ -92,7 +143,7 @@ void FangApp::init()
     engine->rootContext()->setContextProperty("platform", getPlatform()); // platform string ID
     engine->rootContext()->setContextProperty("isDesktop", isDesktop()); // whether we're on desktop (vs mobile etc.)
     engine->rootContext()->setContextProperty("fangVersion", APP_VERSION);
-    engine->rootContext()->setContextProperty("localServerPort", webServer.port()); // Port the server is listening on
+    engine->rootContext()->setContextProperty("localServerPort", webServer->port()); // Port the server is listening on
 
 #ifdef QT_DEBUG
     bool isDebugBuild = true;
@@ -352,15 +403,33 @@ void FangApp::setBookmark(qint64 id, bool allowBackward)
     }
 
     if (!currentFeed->canBookmark(id, allowBackward)) {
-        // qDebug() << "Cannot set bookmark to: " << id;
+        // Only log rejections when not allowBackward to reduce noise
+        if (!allowBackward) {
+            qCDebug(logApp) << "setBookmark: canBookmark REJECTED id" << id
+                            << "allowBackward=" << allowBackward
+                            << "currentBookmark=" << currentFeed->getBookmarkID();
+        }
         return;
     }
 
-    NewsItem* bookmark = currentFeed->getNewsList()->newsItemForID(id);
+    // For force-bookmark (allowBackward=true), search the full list including items
+    // that have been trimmed from the display window but are still in memory.
+    // For regular bookmarks, only search the display window.
+    NewsItem* bookmark = allowBackward
+        ? currentFeed->getNewsList()->fullNewsItemForID(id)
+        : currentFeed->getNewsList()->newsItemForID(id);
+
     if (nullptr == bookmark) {
-        qCDebug(logApp) << "Invalid bookmark ID for news item: " << id;
+        qCDebug(logApp) << "setBookmark: Item" << id << "not found in"
+                        << (allowBackward ? "full list" : "display window");
         return;
     }
+
+    qCDebug(logApp) << "setBookmark: ACCEPTING id" << id
+                    << "allowBackward=" << allowBackward
+                    << "previousBookmark=" << currentFeed->getBookmarkID()
+                    << "itemIndex=" << currentFeed->getNewsList()->indexOf(bookmark)
+                    << "fullIndex=" << currentFeed->getNewsList()->fullIndexForItemID(id);
 
     // I bookmark you!
     SetBookmarkOperation bookmarkOp(&manager, currentFeed, bookmark);
@@ -389,6 +458,8 @@ void FangApp::removeAndDelete(bool fromStart, qsizetype numberToRemove)
         return;
     }
 
+    // NewsList keeps items in memory and just shrinks the display window.
+    // Items can be paged back into view without re-fetching from DB.
     currentFeed->getNewsList()->removeAndDelete(fromStart, numberToRemove);
 }
 
@@ -485,6 +556,15 @@ void FangApp::setCurrentFeed(FeedItem *feed, bool reloadIfSameFeed)
     //qDebug() << "You've set the feed to "<< (feed != NULL ? feed->getTitle() : "(null)");
 
     currentFeed = feed;
+
+    // Set up the reload callback for this feed's news list.
+    // This allows the NewsList to reload unloaded items from the database.
+    OperationManager* mgr = &manager;
+    currentFeed->getNewsList()->setReloadCallback([this, mgr](const QList<qint64>& ids) {
+        ReloadNewsOperation reloadOp(mgr, currentFeed, ids);
+        mgr->runSynchronously(&reloadOp);
+        return reloadOp.getReloadedItems();
+    });
 
     if (previousFeed == pinnedNews) {
         pinnedNewsWatcher(); // If we were on pinned items, it can be removed now.

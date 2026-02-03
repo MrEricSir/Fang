@@ -14,10 +14,11 @@ public:
     explicit LoadAllNewsOperation(OperationManager *parent, AllNewsFeedItem* feedItem, LoadMode mode, int loadLimit = 15);
     
 protected slots:
-    
-    virtual qint64 getFirstNewsID();
-    virtual QString appendNewQueryString();
-    virtual QString prependNewQueryString();
+
+    virtual qint64 getFirstNewsID() override;
+    virtual QString appendNewQueryString() override;
+    virtual QString prependNewQueryString() override;
+    virtual QString appendAfterPositionQueryString() override;
 };
 
 #endif // LOADALLNEWSOPERATION_H

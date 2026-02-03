@@ -80,6 +80,9 @@ private slots:
     void testCanBookmark_MultipleTrimCycles();
     void testCanBookmark_PositionPreservedAcrossMultipleSetBookmarks();
 
+    // ========== Display window tests ==========
+    void testSetBookmark_ItemOutsideDisplayWindow_PositionCaptured();
+
     // ========== Realistic multi-feed scenarios ==========
     void testCanBookmark_MultiFeed_InterleavedTimestamps();
     void testCanBookmark_MultiFeed_ScrollUpThenDown();
@@ -293,11 +296,19 @@ void TestLisvelFeedItem::testCanBookmark_CurrentNotInList_BackwardRejected()
     newsList->append(createNewsItemWithTimestamp(feed, 100, t100));
     feed->setBookmark(100);  // Captures NewsPosition(100, t100)
 
-    // Now "trim" item 100 (user scrolled up) and add older items
-    newsList->removeAndDelete(true, 1);  // Remove item 100 from start
+    // LISVEL change: removeAndDelete only shrinks the display window, items stay in memory.
+    // To test the "current bookmark not in list" scenario, we need to completely clear
+    // the list and add different items. This simulates the case where the bookmark item
+    // was never loaded (e.g., user is viewing a different part of a very long feed).
+    newsList->clear();
+
+    // Add older items - item 100 is now completely gone from the list
     newsList->append(createNewsItemWithTimestamp(feed, 40, t40));
     newsList->append(createNewsItemWithTimestamp(feed, 50, t50));
     newsList->append(createNewsItemWithTimestamp(feed, 60, t60));
+
+    // Verify item 100 is not in the list
+    QVERIFY(newsList->fullIndexForItemID(100) < 0);
 
     // Backward bookmarks should be rejected via NewsPosition comparison
     QVERIFY(!feed->canBookmark(40, false));  // t40 < t100
@@ -742,7 +753,6 @@ void TestLisvelFeedItem::testSetBookmark_PreservesPositionWhenItemNotFound()
     NewsList* newsList = feed->getNewsList();
 
     QDateTime t100 = QDateTime(QDate(2024, 1, 1), QTime(10, 0, 0));
-    QDateTime t200 = QDateTime(QDate(2024, 1, 1), QTime(11, 0, 0));
 
     // Add item 100, set bookmark to capture position
     newsList->append(createNewsItemWithTimestamp(feed, 100, t100));
@@ -754,12 +764,13 @@ void TestLisvelFeedItem::testSetBookmark_PreservesPositionWhenItemNotFound()
     QCOMPARE(originalPosition.timestamp(), t100);
 
     // Now set bookmark to item 200 which is NOT in the list
-    // Position should be preserved (not cleared)
+    // Position should be CLEARED (not preserved) to allow proper lazy init
+    // with the correct bookmark ID later
     feed->setBookmark(200);
 
-    // Bookmark ID changes, but position is preserved
+    // Bookmark ID changes, position is cleared
     QCOMPARE(feed->getBookmarkID(), 200LL);
-    QCOMPARE(feed->getBookmarkPosition(), originalPosition);
+    QVERIFY(!feed->getBookmarkPosition().isValid());
 
     delete feed;
 }
@@ -1066,14 +1077,80 @@ void TestLisvelFeedItem::testCanBookmark_PositionPreservedAcrossMultipleSetBookm
     newsList->removeAndDelete(false, 1);
 
     // Try to set bookmark to 300 (not in list)
-    // Position should be preserved from 200
+    // Position should be CLEARED (not preserved) to avoid stale data with wrong ID
     feed->setBookmark(300);
     QCOMPARE(feed->getBookmarkID(), 300LL);
-    QCOMPARE(feed->getBookmarkPosition().id(), 200LL);  // Position preserved
-    QCOMPARE(feed->getBookmarkPosition().timestamp(), t200);
+    QVERIFY(!feed->getBookmarkPosition().isValid());  // Position cleared
 
-    // Item 100 (t100 < t200) should still be rejected
+    // Item 100 should still be rejected (no valid position for comparison,
+    // and bookmark item 300 can't be found for lazy init, so fall through to reject)
     QVERIFY(!feed->canBookmark(100, false));
+
+    delete feed;
+}
+
+void TestLisvelFeedItem::testSetBookmark_ItemOutsideDisplayWindow_PositionCaptured()
+{
+    // This test verifies that setBookmark can capture the position for items
+    // that have been trimmed from the display window but still exist in the
+    // full NewsList memory. This is critical for force-bookmark functionality.
+    //
+    // Scenario:
+    // 1. User scrolls way up, items are prepended
+    // 2. User force-bookmarks an old item (which is in display window)
+    // 3. User scrolls back down, old items get trimmed from display window
+    // 4. Bookmark item is now outside display window but still in memory
+    // 5. Regular bookmark proposals should be rejected because they're newer
+
+    LisvelFeedItem* feed = createTestFeed();
+    NewsList* newsList = feed->getNewsList();
+
+    QDateTime baseTime = QDateTime(QDate(2024, 1, 1), QTime(0, 0, 0));
+
+    // Add items 100-109 (timestamps are ID minutes from baseTime)
+    for (int i = 100; i < 110; i++) {
+        newsList->append(createNewsItemWithTimestamp(feed, i, baseTime.addSecs(i * 60)));
+    }
+
+    // Set bookmark to item 103 (index 3)
+    feed->setBookmark(103);
+    QCOMPARE(feed->getBookmarkID(), 103LL);
+    QVERIFY(feed->getBookmarkPosition().isValid());
+    QCOMPARE(feed->getBookmarkPosition().id(), 103LL);
+
+    // Shrink display window from start (simulating scroll down - old items trimmed)
+    // Items 100-104 are now outside display window but still in memory
+    newsList->shrinkDisplayWindow(true, 5);
+
+    // Display window is now [5, 10) meaning items 105-109 are visible
+    QCOMPARE(newsList->size(), 5);
+    QCOMPARE(newsList->fullSize(), 10);
+
+    // The bookmark item (103) is now OUTSIDE the display window
+    QVERIFY(newsList->newsItemForID(103) == nullptr);  // Not in display window
+    QVERIFY(newsList->fullNewsItemForID(103) != nullptr);  // But in full list
+
+    // Critical: the position should still be valid because it was captured
+    // when the bookmark was set (the item was in memory)
+    QVERIFY(feed->getBookmarkPosition().isValid());
+    QCOMPARE(feed->getBookmarkPosition().id(), 103LL);
+
+    // Now try to re-set the bookmark to item 103 (simulating force-bookmark
+    // when the item is outside display window but in memory)
+    feed->setBookmark(103);
+
+    // The position should STILL be captured from the full list
+    QVERIFY(feed->getBookmarkPosition().isValid());
+    QCOMPARE(feed->getBookmarkPosition().id(), 103LL);
+    QCOMPARE(feed->getBookmarkPosition().timestamp(), baseTime.addSecs(103 * 60));
+
+    // Items in display window (105-109) are all newer than bookmark (103)
+    // and should be allowed to advance the bookmark
+    QVERIFY(feed->canBookmark(105, false));  // 105 > 103
+    QVERIFY(feed->canBookmark(109, false));  // 109 > 103
+
+    // If we had an item older than 103 in the display window, it would be rejected
+    // But items 100-104 are outside display window, so canBookmark won't find them
 
     delete feed;
 }

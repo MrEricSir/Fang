@@ -4,6 +4,7 @@
 #include "LoadNewsOperation.h"
 
 #include <QString>
+#include <QSqlQuery>
 
 #include "../models/LisvelFeedItem.h"
 
@@ -45,6 +46,21 @@ protected slots:
                 if prepend is not supported.
      */
     virtual QString prependNewQueryString() = 0;
+
+    /*!
+        \return Query string to load items chronologically after a given position.
+                Used as a fallback when append finds nothing but trimmed items need reloading.
+                The query should use :last_timestamp, :last_id, and :load_limit parameters.
+                Return empty string if not supported.
+     */
+    virtual QString appendAfterPositionQueryString();
+
+    /*!
+        \brief Bind additional parameters to query string.
+
+        Not used here, but can be used by subclasses.
+     */
+    virtual void bindQueryParameters(QSqlQuery& query);
 
 private:
     // Lisvel feed.

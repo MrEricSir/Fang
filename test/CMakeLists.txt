@@ -34,5 +34,9 @@ add_subdirectory(TestLisvelFeedItem)
 add_subdirectory(TestNewsItem)
 add_subdirectory(TestNewsList)
 
+# Integration tests
+add_subdirectory(TestBookmarkIntegration)
+add_subdirectory(TestWebServer)
+
 # Network tests
 add_subdirectory(TestNetworkRetryPolicy)

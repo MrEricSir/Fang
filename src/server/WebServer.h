@@ -7,6 +7,9 @@
 
 #include "../operations/LoadNewsOperation.h"
 
+// Forward declaration to avoid circular include
+class FangApp;
+
 /*!
   WebServer used internally by Fang for the WebView.
  */
@@ -14,7 +17,12 @@ class WebServer : public FangObject
 {
     Q_OBJECT
 public:
-    WebServer(QObject *parent = nullptr);
+    /*!
+        \brief Constructs WebServer with a reference to FangApp.
+        \param appInstance The FangApp instance to use for all operations. (Can be mocked in tests.)
+        \param parent QObject parent.
+     */
+    explicit WebServer(FangApp* appInstance, FangObject *parent = nullptr);
 
     // Gets the port for this server, or zero if invalid.
     inline quint16 port() { return tcpServer ? tcpServer->serverPort() : 0; }
@@ -44,6 +52,7 @@ private:
 
     QString getCSS();
 
+    FangApp* app;
     QHttpServer server;
     QTcpServer* tcpServer;
     quint16 webSocketPort;

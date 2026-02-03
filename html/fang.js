@@ -19,7 +19,7 @@ let websocket = null;
 let websocketRestartTimerID = null;
 const websocketRestartTimeoutMs = 250;
 
-// Prefetch state - loads next batch before user reaches bottom
+// Prefetch data for loading an update
 let prefetchPromise = null;
 let prefetchedData = null;
 let isPrefetching = false;
@@ -330,7 +330,10 @@ function initEventDelegation()
             const container = target.closest('.newsContainer, .newsItemStyle');
             if (container) {
                 const elementID = htmlIdToId(container.id);
+                console.log('Force bookmark clicked: ID=' + elementID + ' container=' + container.id);
                 apiGetRequest('force_bookmark', elementID);
+            } else {
+                console.log('Force bookmark: No container found for target', target);
             }
             return;
         }
@@ -1116,7 +1119,8 @@ $(document).ready(function() {
     function loadPrevious() {
         // console.log("loadPrevious");
 
-        // Clear prefetch when scrolling up - the prefetched "append" data won't be valid
+        // Clear prefetch data when scrolling upward. This is because the prefetch data will
+        // be for appending to the bottom.
         clearPrefetch();
 
         requestNews("prepend");

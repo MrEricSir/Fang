@@ -1,8 +1,6 @@
 #ifndef LISVELFEEDITEM_H
 #define LISVELFEEDITEM_H
 
-#include <QSet>
-
 #include "FeedItem.h"
 #include "NewsPosition.h"
 
@@ -11,16 +9,16 @@
     items as you scroll through the view.
 
     LISVEL stands for:
-      Limmited
+      Limited
       Infinite
       Scrolling
       Via
       Exclusion
       List
 
-    The exclusion list tracks all news item IDs that have been loaded this session,
-    even after items are trimmed from the display list. This prevents the same
-    item from being loaded multiple times, which would cause ordering issues.
+    The NewsList maintains all loaded items in memory with a display window,
+    allowing paging through previously loaded content without re-fetching
+    from the database.
  */
 class LisvelFeedItem : public FeedItem
 {
@@ -45,25 +43,7 @@ public:
      */
     inline const NewsPosition& getBookmarkPosition() const { return _bookmarkPosition; }
 
-    /*!
-        \brief Adds an ID to the exclusion list. Used when loading news.
-     */
-    inline void addToExclusionList(qint64 id) { exclusionList.insert(id); }
-
-    /*!
-        \brief Gets all IDs in the exclusion list.
-     */
-    inline const QSet<qint64>& getExclusionList() const { return exclusionList; }
-
-    /*!
-        \brief Clears the exclusion list.
-     */
-    inline void clearExclusionList() { exclusionList.clear(); }
-
 private:
-    // Set of all news item IDs loaded this session (persists even after trimming)
-    QSet<qint64> exclusionList;
-
     // Position of current bookmark (timestamp, id) for proper ordering comparison
     NewsPosition _bookmarkPosition;
 };

@@ -18,8 +18,8 @@ void LisvelLoadNewsOperation::executeSynchronous()
     if (getMode() == LoadNewsOperation::Initial) {
         FANG_CHECK(feedItem->getNewsList() != nullptr || feedItem->getNewsList()->isEmpty(),
                    "LisvelLoadNewsOperation: Initial load on populated feed");
-        // Clear the exclusion list. This is necessary if we're re-using an existing LisvelFeeditem.
-        lisvelNews->clearExclusionList();
+        // Clear the list for a fresh start if re-using an existing LisvelFeeditem.
+        feedItem->getNewsList()->clear();
     }
 
     // DB query/ies.
@@ -63,41 +63,39 @@ void LisvelLoadNewsOperation::executeSynchronous()
     }
 
 
-    if (getMode() == Initial) {
-        // For the initial load, set the bookmark to the first prepended item.
-         // It's okay for the FeedItem not to have a bookmark.
-        if (!listPrepend.isEmpty()) {
-            feedItem->setBookmark(listPrepend.first()->getDbID());
-
-        }
+    // For initial load, save the bookmark ID before modifying the lists.
+    // We'll set the bookmark AFTER items are added to NewsList so the
+    // NewsPosition can be properly captured.
+    qint64 initialBookmarkID = -1;
+    if (getMode() == Initial && !listPrepend.isEmpty()) {
+        initialBookmarkID = listPrepend.first()->getDbID();
 
         // As an optimization, we only want to present *one* list -- an append list.
         // So we rewind our prepend list on top of it, then delete the prepend list.
-        if (!listPrepend.isEmpty()) {
-            for (NewsItem* newsItem: std::as_const(listPrepend)) {
-                // News item list.
-                listAppend.prepend(newsItem);
-            }
-
-            listPrepend.clear();
+        for (NewsItem* newsItem: std::as_const(listPrepend)) {
+            listAppend.prepend(newsItem);
         }
+        listPrepend.clear();
     }
 
     // Append/prepend items from our lists.
+    // The NewsList now tracks all loaded items automatically (no separate exclusion list needed).
     if (!listAppend.isEmpty()) {
         for (NewsItem* newsItem: std::as_const(listAppend)) {
             feedItem->getNewsList()->append(newsItem);
-            // Track in exclusion list.
-            lisvelNews->addToExclusionList(newsItem->getDbID());
         }
     }
 
     if (!listPrepend.isEmpty()) {
         for (NewsItem* newsItem: std::as_const(listPrepend)) {
             feedItem->getNewsList()->prepend(newsItem);
-            // Track in exclusion list.
-            lisvelNews->addToExclusionList(newsItem->getDbID());
         }
+    }
+
+    // Set the bookmark, as by now the bookmarked item should be in the NewsList
+    // with its correct position.
+    if (initialBookmarkID >= 0) {
+        feedItem->setBookmark(initialBookmarkID);
     }
 
     // Set the first possible ID for that top bookmark display action.
@@ -108,64 +106,49 @@ bool LisvelLoadNewsOperation::doPrepend()
 {
     // Remaining items to load.
     int remainingLoadLimit = getLoadLimit();
+    NewsList* newsList = lisvelNews->getNewsList();
 
-    //
-    // STEP ONE: Page up the ID list.
-    //
-    NewsItem* firstItem = lisvelNews->getNewsList()->isEmpty() ? nullptr :
-                             lisvelNews->getNewsList()->first();
-
-    // Assuming we even got a valid ID, only continue if the items isn't the first
-    // one on the list.  If it is, we're already at the top and can skip over this.
-    if (firstItem && lisvelNews->getNewsList()->indexOf(firstItem) > 0) {
-        // Get the initial and previous list positions.
-        int initial = lisvelNews->getNewsList()->indexOf(firstItem) - 1; // Remember that it's > 0!
-        int previous = qMax(0, initial - remainingLoadLimit);
-
-        QString idString;   // List of IDs
-        QString whenString; // List if WHEN statements for ordering switch statement.
-        int index = 0;
-        for(int i = initial; i >= previous; i--, index++) {
-            if (index != 0) {
-                idString += ", ";
-            }
-
-            QString currentID = QString::number(lisvelNews->getNewsList()->at(i)->getDbID());
-            idString += currentID;
-            whenString += "WHEN " + currentID + " THEN " + QString::number(index) + " ";
-        }
-
-        // Load the items.
-        QString queryString = "SELECT * FROM NewsItemTable N WHERE id IN (" + idString +
-                              ") ORDER BY CASE id " + whenString + " END LIMIT :load_limit";
-        QSqlQuery query(db());
-        query.prepare(queryString);
-        query.bindValue(":load_limit", remainingLoadLimit);
-
-        if (!query.exec()) {
-            qCDebug(logOperation) << "Could not load news! (lisvel prepend step 1)";
-            qCDebug(logOperation) << query.lastError();
-
-            return false;
-        }
-
-        // Extract the query.
-        queryToNewsList(query, &listPrepend);
-
-        // Keep track of our load limit.
-        remainingLoadLimit -= listPrepend.size();
+    // Log current list state for debugging
+    if (!newsList->isEmpty()) {
+        NewsItem* first = newsList->first();
+        qCDebug(logOperation) << "doPrepend: First item in display window: id=" << first->getDbID()
+                              << "timestamp=" << first->getTimestamp().toString(Qt::ISODate)
+                              << "displayStart=" << newsList->getDisplayStart()
+                              << "fullSize=" << newsList->fullSize();
     }
 
     //
-    // STEP TWO: Load new items.
+    // STEP ONE: Page up through items already in memory (before the display window).
     //
+    if (newsList->canPageUp()) {
+        // Record current start before paging so we can add the newly-visible items to listPrepend.
+        qsizetype oldDisplayStart = newsList->getDisplayStart();
 
-    // Do we still have items to load?  If so, load 'em now.
+        qsizetype paged = newsList->pageUp(remainingLoadLimit);
+        qCDebug(logOperation) << "doPrepend step 1: Paged up" << paged << "items from memory";
+        remainingLoadLimit -= paged;
+
+        // Add the newly-visible items to listPrepend so they get sent to JS.
+        // Items need to be in DESC order (newest first among the paged items) to match DB query order.
+        for (qsizetype i = oldDisplayStart - 1; i >= newsList->getDisplayStart(); --i) {
+            NewsItem* item = newsList->fullAt(i);
+            if (item) {
+                listPrepend.append(item);
+            } else {
+                qCWarning(logOperation) << "doPrepend: Unexpected null item at index" << i;
+            }
+        }
+    }
+
+    //
+    // STEP TWO: Load new items from DB if we still need more.
+    //
     QString prependQuery = prependNewQueryString();
     if (remainingLoadLimit > 0 && !prependQuery.isEmpty()) {
         QSqlQuery query(db());
         query.prepare(prependQuery);
         query.bindValue(":load_limit", remainingLoadLimit);
+        bindQueryParameters(query);
 
         if (!query.exec()) {
             qCDebug(logOperation) << "Could not load news! (lisvel prepend step 2)";
@@ -175,7 +158,17 @@ bool LisvelLoadNewsOperation::doPrepend()
         }
 
         // Extract the query into our news list.
+        int beforeCount = listPrepend.size();
         queryToNewsList(query, &listPrepend);
+
+        // Log the prepended items to debug ordering issues
+        qCDebug(logOperation) << "Prepend loaded" << (listPrepend.size() - beforeCount) << "items from DB";
+        for (int i = beforeCount; i < listPrepend.size(); i++) {
+            NewsItem* item = listPrepend.at(i);
+            qCDebug(logOperation) << "  [" << i << "] id=" << item->getDbID()
+                                  << "timestamp=" << item->getTimestamp().toString(Qt::ISODate)
+                                  << "feed=" << item->getFeedId();
+        }
     }
 
     return true;
@@ -185,65 +178,41 @@ bool LisvelLoadNewsOperation::doAppend()
 {
     // Remaining items to load.
     int remainingLoadLimit = getLoadLimit();
+    NewsList* newsList = lisvelNews->getNewsList();
 
     //
-    // STEP ONE: Page down the ID list.
+    // STEP ONE: Page down through items already in memory (after the display window).
     //
-    NewsItem* lastItem = lisvelNews->getNewsList()->isEmpty() ? nullptr :
-                             lisvelNews->getNewsList()->last();
+    if (newsList->canPageDown()) {
+        // Record current end before paging so we can add the newly-visible items to listAppend.
+        qsizetype oldDisplayEnd = newsList->getDisplayEnd();
 
+        qsizetype paged = newsList->pageDown(remainingLoadLimit);
+        qCDebug(logOperation) << "doAppend step 1: Paged down" << paged << "items from memory";
+        remainingLoadLimit -= paged;
 
-    // Assuming we even got a valid ID, only continue if the items isn't the last
-    // one on the list.  If it is, we're already at the bottom and can skip over this.
-    if (lastItem && lisvelNews->getNewsList()->indexOf(lastItem) < lisvelNews->getNewsList()->size() - 1) {
-        // Get the initial and next list positions.
-        int initial = lisvelNews->getNewsList()->indexOf(lastItem) + 1; // Remember that it's not at the end!
-        int next = qMin(lisvelNews->getNewsList()->size() - 1, initial + remainingLoadLimit);
-
-        QString idString;   // List of IDs
-        QString whenString; // List if WHEN statements for ordering switch statement.
-        int index = 0;
-        for(int i = initial; i <= next; i++, index++) {
-            if (index != 0) {
-                idString += ", ";
+        // Add the newly-visible items to listAppend so they get sent to JS.
+        for (qsizetype i = oldDisplayEnd; i < newsList->getDisplayEnd(); ++i) {
+            NewsItem* item = newsList->fullAt(i);
+            if (item) {
+                listAppend.append(item);
+            } else {
+                qCWarning(logOperation) << "doAppend: Unexpected null item at index" << i;
             }
-
-            QString currentID = QString::number(lisvelNews->getNewsList()->at(i)->getDbID());
-            idString += currentID;
-            whenString += "WHEN " + currentID + " THEN " + QString::number(index) + " ";
         }
-
-        // Load the items.
-        QString queryString = "SELECT * FROM NewsItemTable N WHERE id IN (" + idString +
-                              ") ORDER BY CASE id " + whenString + " END LIMIT :load_limit";
-        qCDebug(logOperation) << " ===== doAppend query: " << queryString;
-        QSqlQuery query(db());
-        query.prepare(queryString);
-        query.bindValue(":load_limit", remainingLoadLimit);
-
-        if (!query.exec()) {
-            // qCDebug(logOperation) << "Could not load news! (lisvel append step 1)";
-            qCDebug(logOperation) << query.lastError();
-
-            return false;
-        }
-
-        // Extract the query.
-        queryToNewsList(query, &listAppend);
-
-        // Keep track of our load limit.
-        remainingLoadLimit -= listAppend.size();
     }
 
-    //
-    // STEP TWO: Load new items.
-    //
+    // Get the last item for position-based queries
+    NewsItem* lastItem = newsList->isEmpty() ? nullptr : newsList->last();
 
-    // Do we still have items to load?  If so, load 'em now.
+    //
+    // STEP TWO: Load new (unread) items from DB.
+    //
     if (remainingLoadLimit > 0) {
         QSqlQuery query(db());
         query.prepare(appendNewQueryString());
         query.bindValue(":load_limit", remainingLoadLimit);
+        bindQueryParameters(query);
 
         if (!query.exec()) {
             qCDebug(logOperation) << "Could not load news! (lisvel append step 2)";
@@ -253,30 +222,71 @@ bool LisvelLoadNewsOperation::doAppend()
         }
 
         // Extract the query into our news list.
+        int beforeCount = listAppend.size();
         queryToNewsList(query, &listAppend);
+        remainingLoadLimit -= (listAppend.size() - beforeCount);
+
+        qCDebug(logOperation) << "doAppend step 2: Loaded" << (listAppend.size() - beforeCount) << "unread items from DB";
+    }
+
+    //
+    // STEP THREE: If we still need items and have a position reference,
+    // try loading items that come chronologically after the last item.
+    // This handles loading read items that we haven't seen yet.
+    //
+    if (remainingLoadLimit > 0 && lastItem != nullptr) {
+        QString fallbackQuery = appendAfterPositionQueryString();
+        if (!fallbackQuery.isEmpty()) {
+            QSqlQuery query(db());
+            query.prepare(fallbackQuery);
+            query.bindValue(":load_limit", remainingLoadLimit);
+            query.bindValue(":last_timestamp", lastItem->getTimestamp());
+            query.bindValue(":last_id", lastItem->getDbID());
+            bindQueryParameters(query);
+
+            if (query.exec()) {
+                int beforeCount = listAppend.size();
+                queryToNewsList(query, &listAppend);
+                qCDebug(logOperation) << "doAppend step 3 (fallback): Loaded" << (listAppend.size() - beforeCount)
+                                      << "items after position" << lastItem->getTimestamp().toString(Qt::ISODate);
+            } else {
+                qCDebug(logOperation) << "doAppend fallback query failed:" << query.lastError();
+            }
+        }
     }
 
     return true;
 }
 
+void LisvelLoadNewsOperation::bindQueryParameters(QSqlQuery& query)
+{
+    Q_UNUSED(query);
+}
+
+QString LisvelLoadNewsOperation::appendAfterPositionQueryString()
+{
+    // Default: no fallback query. Subclasses can override.
+    return QString();
+}
+
 QString LisvelLoadNewsOperation::getLoadedIDString()
 {
-    // Use the exclusion list which tracks ALL items loaded this session,
-    // not just items currently in the display list.
-    const QSet<qint64>& exclusionList = lisvelNews->getExclusionList();
+    // Get all IDs from the full NewsList to prevent loading duplicates.
+    // positionAt() works even for unloaded items.
+    NewsList* newsList = lisvelNews->getNewsList();
 
-    if (exclusionList.isEmpty()) {
+    if (newsList->fullSize() == 0) {
         return "-1";  // Return invalid ID to avoid SQL syntax error with empty IN clause
     }
 
     QString ret = "";
     bool first = true;
 
-    for (qint64 id : exclusionList) {
+    for (qsizetype i = 0; i < newsList->fullSize(); ++i) {
         if (!first) {
             ret += ", ";
         }
-        ret += QString::number(id);
+        ret += QString::number(newsList->positionAt(i).id());
         first = false;
     }
 

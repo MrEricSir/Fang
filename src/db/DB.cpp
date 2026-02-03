@@ -25,6 +25,17 @@ DB *DB::instance()
     return _instance;
 }
 
+void DB::initForTesting(QSqlDatabase testDb)
+{
+    _db = testDb;
+
+    // Enable foreign keys.
+    executeSimpleQuery("PRAGMA foreign_keys = ON");
+
+    // Create schema for testing.
+    upgrade();
+}
+
 void DB::init()
 {
     // Find out where our data storage should go.

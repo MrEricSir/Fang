@@ -34,3 +34,13 @@ QString LoadAllNewsOperation::prependNewQueryString()
            "FeedItemTable WHERE id = N.feed_id) AND id NOT IN (" + getLoadedIDString() +
            ") ORDER BY timestamp DESC, id DESC LIMIT :load_limit";
 }
+
+QString LoadAllNewsOperation::appendAfterPositionQueryString()
+{
+    // Load items chronologically after a given position, regardless of bookmark.
+    // Used to reload trimmed items when scrolling back down through read items.
+    return "SELECT * FROM NewsItemTable N WHERE "
+           "(timestamp > :last_timestamp OR (timestamp = :last_timestamp AND id > :last_id)) "
+           "AND id NOT IN (" + getLoadedIDString() + ") "
+           "ORDER BY timestamp ASC, id ASC LIMIT :load_limit";
+}

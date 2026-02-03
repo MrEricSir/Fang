@@ -9,8 +9,9 @@
 #include "../utilities/FangLogging.h"
 #include "../utilities/NetworkUtilities.h"
 
-WebServer::WebServer(QObject *parent) :
+WebServer::WebServer(FangApp* appInstance, FangObject *parent) :
     FangObject(parent),
+    app(appInstance),
     webSocketPort(0)
 {
     qCDebug(logServer) << "Launching WebServer...";
@@ -41,29 +42,35 @@ WebServer::WebServer(QObject *parent) :
         return "";
     });
 
-    server.route("/api/set_bookmark/<arg>", this, [] (qlonglong newsID) {
-        FangApp::instance()->setBookmark(newsID);
+    server.route("/api/set_bookmark/<arg>", this, [this] (qlonglong newsID) {
+        app->setBookmark(newsID);
         return "";
     });
 
-    server.route("/api/force_bookmark/<arg>", this, [] (qlonglong newsID) {
-        FangApp::instance()->setBookmark(newsID, true);
+    server.route("/api/force_bookmark/<arg>", this, [this] (qlonglong newsID) {
+        qCDebug(logServer) << "Force bookmark API called: newsID=" << newsID
+                           << "currentBookmark=" << (app->getCurrentFeed()
+                              ? app->getCurrentFeed()->getBookmarkID() : -1);
+        app->setBookmark(newsID, true);
+        qCDebug(logServer) << "Force bookmark completed: newsID=" << newsID
+                           << "newBookmark=" << (app->getCurrentFeed()
+                              ? app->getCurrentFeed()->getBookmarkID() : -1);
         return "";
     });
 
     server.route("/api/pin/<arg>", this, [this] (qlonglong newsID) {
-        FangApp::instance()->setPin(newsID, true);
+        app->setPin(newsID, true);
         return updatePinObject(newsID, true);
     });
 
     server.route("/api/unpin/<arg>", this, [this] (qlonglong newsID) {
-        FangApp::instance()->setPin(newsID, false);
+        app->setPin(newsID, false);
         return updatePinObject(newsID, false);
     });
 
     server.route("/api/load/<arg>", this, [this] (QString mode) {
         // Show news, or welcome screen if there's no feeds.
-        if (FangApp::instance()->feedCount() <= 1) {
+        if (app->feedCount() <= 1) {
             return loadWelcome();
         } else {
             return loadNews(LoadNewsOperation::stringToMode(mode));
@@ -104,12 +111,12 @@ QString WebServer::loadNews(LoadNewsOperation::LoadMode mode)
     QVariantList newsList;
 
     // Perform load.
-    LoadNewsOperation* loader = FangApp::instance()->loadNews(mode);
+    LoadNewsOperation* loader = app->loadNews(mode);
 
     // Load mode.
     extras.insert("mode", LoadNewsOperation::modeToString(mode));
 
-    FeedItem* currentFeed = FangApp::instance()->getCurrentFeed();
+    FeedItem* currentFeed = app->getCurrentFeed();
     if (mode == LoadNewsOperation::Initial)  {
         // Bookmark (if needed)
         if (currentFeed->bookmarksEnabled() && currentFeed->getBookmarkID() >= 0) {
@@ -122,17 +129,12 @@ QString WebServer::loadNews(LoadNewsOperation::LoadMode mode)
     extras.insert("firstNewsID", currentFeed->getFirstNewsID());
 
     // Build our news list.
+    // The prepend list comes from the DB query in DESC order (newest first among read items).
+    // We need to reverse it so items are sent to the JS in chronological order (oldest first).
     if (!loader->getPrependList().isEmpty()) {
-        if (mode == LoadNewsOperation::Initial) {
-            // Reverse list.
-            for (qsizetype i = loader->getPrependList().size() - 1; i >= 0; i--) {
-                NewsItem* item = loader->getPrependList().at(i);
-                addNewsItem(item, &newsList);
-            }
-        } else {
-            for (NewsItem* item : loader->getPrependList()) {
-                addNewsItem(item, &newsList);
-            }
+        for (qsizetype i = loader->getPrependList().size() - 1; i >= 0; i--) {
+            NewsItem* item = loader->getPrependList().at(i);
+            addNewsItem(item, &newsList);
         }
     }
 
@@ -152,10 +154,10 @@ void WebServer::addNewsItem(NewsItem *item, QVariantList *newsList)
     QString feedTitle;
     if (item->getFeed()->isSpecialFeed() || item->getFeed()->isFolder()) {
         // For a special feeds and folder views, show the name of the feed for this news item.
-        feedTitle = FangApp::instance()->feedForId(item->getFeedId())->getTitle();
+        feedTitle = app->feedForId(item->getFeedId())->getTitle();
     } else if (item->getFeed()->getParentFolderID() >= 0) {
         // For feeds inside folders, show both the parent folder name and the feed name.
-        feedTitle = FangApp::instance()->feedForId(item->getFeed()->getParentFolderID())->getTitle() +
+        feedTitle = app->feedForId(item->getFeed()->getParentFolderID())->getTitle() +
                     " → " + item->getFeed()->getTitle();
     } else {
         // For all other feeds simply show the feed title.
@@ -197,7 +199,6 @@ QString WebServer::buildDocument(const QVariantList &newsList, bool showWelcome,
 
 QString WebServer::getCSS()
 {
-    FangApp* app = FangApp::instance();
     QVariantList classes;
 
     classes << app->getPlatform();

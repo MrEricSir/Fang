@@ -24,11 +24,17 @@ public:
 signals:
     
 public slots:
-    
+
     // Creates/returns singleton instance.
     static DB* instance();
-    
+
     inline QSqlDatabase db() { return _db; }
+
+    /*!
+        \brief Initialize DB with an existing connection for testing.
+        \param testDb The pre-configured database connection to use.
+     */
+    void initForTesting(QSqlDatabase testDb);
     
     /*!
         \brief Executes a simple DB query and logs error to debug.
