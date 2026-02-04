@@ -14,6 +14,16 @@ LisvelLoadNewsOperation::LisvelLoadNewsOperation(OperationManager *parent, Lisve
 void LisvelLoadNewsOperation::executeSynchronous()
 {
     qCDebug(logOperation) << "LisvelLoadNewsOperation::execute load for feed: " << lisvelNews->getDbID();
+
+    // Ensure lists are empty just in case the operation object gets reused somehow.
+    if (!listAppend.isEmpty() || !listPrepend.isEmpty()) {
+        qCWarning(logOperation) << "LisvelLoadNewsOperation: Lists not empty at start!"
+                                << "listAppend:" << listAppend.size()
+                                << "listPrepend:" << listPrepend.size();
+        listAppend.clear();
+        listPrepend.clear();
+    }
+
     // For an initial load, make sure the feed isn't populated yet.
     if (getMode() == LoadNewsOperation::Initial) {
         FANG_CHECK(feedItem->getNewsList() != nullptr || feedItem->getNewsList()->isEmpty(),
@@ -78,19 +88,84 @@ void LisvelLoadNewsOperation::executeSynchronous()
         listPrepend.clear();
     }
 
-    // Append/prepend items from our lists.
-    // The NewsList now tracks all loaded items automatically (no separate exclusion list needed).
-    if (!listAppend.isEmpty()) {
-        for (NewsItem* newsItem: std::as_const(listAppend)) {
-            feedItem->getNewsList()->append(newsItem);
+    // Remove any duplicate IDs within the lists. (Note: should not be necessary.)
+    QSet<qint64> seenIds;
+    QList<NewsItem*> duplicatesToDelete;
+
+    // Rmove duplicates from listAppend.
+    for (int i = listAppend.size() - 1; i >= 0; --i) {
+        NewsItem* item = listAppend.at(i);
+        if (seenIds.contains(item->getDbID())) {
+            qCCritical(logOperation) << "LisvelLoadNewsOperation: DUPLICATE ID" << item->getDbID()
+                                     << "found in listAppend at index" << i << "- removing duplicate.";
+            duplicatesToDelete.append(item);
+            listAppend.removeAt(i);
+        } else {
+            seenIds.insert(item->getDbID());
         }
     }
 
-    if (!listPrepend.isEmpty()) {
-        for (NewsItem* newsItem: std::as_const(listPrepend)) {
-            feedItem->getNewsList()->prepend(newsItem);
+    // Remove duplicates from listPrepend.
+    for (int i = listPrepend.size() - 1; i >= 0; --i) {
+        NewsItem* item = listPrepend.at(i);
+        if (seenIds.contains(item->getDbID())) {
+            qCCritical(logOperation) << "LisvelLoadNewsOperation: DUPLICATE ID" << item->getDbID()
+                                     << "found in listPrepend at index" << i << "- removing duplicate.";
+            duplicatesToDelete.append(item);
+            listPrepend.removeAt(i);
+        } else {
+            seenIds.insert(item->getDbID());
         }
     }
+
+    // Delete the duplicate NewsItem objects to prevent memory leaks.
+    for (NewsItem* dup : duplicatesToDelete) {
+        dup->deleteLater();
+    }
+
+    // Append/prepend items from our lists.
+    // Note: listAppend/listPrepend may contain items that are already in NewsList
+    // (paged from memory in step 1). We only call append/prepend for items NOT
+    // already in the list. Paged items are already in NewsList (just outside the
+    // display window) - pageUp/pageDown already expanded the window to include them.
+    qCDebug(logOperation) << "LisvelLoadNewsOperation: Processing" << listAppend.size()
+                          << "items to append," << listPrepend.size() << "items to prepend";
+
+    int appendedCount = 0;
+    int skippedAppend = 0;
+    if (!listAppend.isEmpty()) {
+        for (NewsItem* newsItem: std::as_const(listAppend)) {
+            // Only add items not already in NewsList (i.e., items from DB queries).
+            // Items paged from memory are already in NewsList - skip them.
+            if (!feedItem->getNewsList()->containsID(newsItem->getDbID())) {
+                feedItem->getNewsList()->append(newsItem);
+                appendedCount++;
+            } else {
+                skippedAppend++;
+            }
+        }
+    }
+
+    int prependedCount = 0;
+    int skippedPrepend = 0;
+    if (!listPrepend.isEmpty()) {
+        for (NewsItem* newsItem: std::as_const(listPrepend)) {
+            // Only add items not already in NewsList.
+            if (!feedItem->getNewsList()->containsID(newsItem->getDbID())) {
+                feedItem->getNewsList()->prepend(newsItem);
+                prependedCount++;
+            } else {
+                skippedPrepend++;
+            }
+        }
+    }
+
+    // Log final state
+    qCDebug(logOperation) << "LisvelLoadNewsOperation: Added" << appendedCount << "appended,"
+                          << prependedCount << "prepended. Skipped" << skippedAppend + skippedPrepend
+                          << "already in list. NewsList now has"
+                          << feedItem->getNewsList()->size() << "items in display window,"
+                          << feedItem->getNewsList()->fullSize() << "total";
 
     // Set the bookmark, as by now the bookmarked item should be in the NewsList
     // with its correct position.
@@ -278,18 +353,33 @@ QString LisvelLoadNewsOperation::getLoadedIDString()
     QSet<qint64> ids;
 
     // Add IDs from the NewsList.
+    qsizetype newsListCount = 0;
     for (qsizetype i = 0; i < newsList->fullSize(); ++i) {
         ids.insert(newsList->positionAt(i).id());
+        newsListCount++;
     }
 
     // Also add IDs from items already loaded in this operation (listAppend/listPrepend).
     // This prevents the same item from being loaded by multiple steps within doAppend/doPrepend.
+    qsizetype listAppendCount = 0;
     for (NewsItem* item : std::as_const(listAppend)) {
+        if (!ids.contains(item->getDbID())) {
+            listAppendCount++;  // Count only IDs not already in NewsList
+        }
         ids.insert(item->getDbID());
     }
+    qsizetype listPrependCount = 0;
     for (NewsItem* item : std::as_const(listPrepend)) {
+        if (!ids.contains(item->getDbID())) {
+            listPrependCount++;  // Count only IDs not already counted
+        }
         ids.insert(item->getDbID());
     }
+
+    qCDebug(logOperation) << "getLoadedIDString: Excluding" << ids.size() << "IDs"
+                          << "(NewsList:" << newsListCount
+                          << "listAppend:" << listAppendCount
+                          << "listPrepend:" << listPrependCount << ")";
 
     if (ids.isEmpty()) {
         return "-1";  // Return invalid ID to avoid SQL syntax error with empty IN clause

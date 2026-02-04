@@ -94,6 +94,8 @@ private slots:
     // Duplicate detection tests
     void testAppendRejectsDuplicateByID();
     void testPrependRejectsDuplicateByID();
+    void testContainsIDOutsideDisplayWindow();
+    void testAppendRejectsDuplicateOutsideDisplayWindow();
 
 private:
     FeedItem* createTestFeed();
@@ -1580,6 +1582,87 @@ void TestNewsList::testPrependRejectsDuplicateByID()
 
     // Clean up the rejected item manually
     delete news2;
+
+    delete newsList;
+    delete feed;
+}
+
+void TestNewsList::testContainsIDOutsideDisplayWindow()
+{
+    // Test that containsID finds items even when they are outside the display window.
+    // This is critical for duplicate prevention during loading operations.
+    NewsList* newsList = new NewsList(this);
+    FeedItem* feed = createTestFeed();
+
+    QDateTime base = QDateTime::currentDateTime();
+
+    // Add 10 items with IDs 1-10
+    for (int i = 1; i <= 10; i++) {
+        NewsItem* news = createTestNews(i, base.addSecs(i), feed);
+        newsList->append(news);
+    }
+
+    QCOMPARE(newsList->size(), 10);
+    QCOMPARE(newsList->fullSize(), 10);
+
+    // All IDs should be found
+    for (int i = 1; i <= 10; i++) {
+        QVERIFY(newsList->containsID(i));
+    }
+
+    // Shrink the display window to only show items 4-7 (middle 4 items)
+    newsList->shrinkDisplayWindow(true, 3);   // Remove items 1-3 from display
+    newsList->shrinkDisplayWindow(false, 3);  // Remove items 8-10 from display
+    QCOMPARE(newsList->size(), 4);  // Display window: [3, 7) = items 4,5,6,7
+    QCOMPARE(newsList->fullSize(), 10);  // Full list still has all 10
+
+    // All IDs should STILL be found via containsID (searches full list)
+    for (int i = 1; i <= 10; i++) {
+        QVERIFY2(newsList->containsID(i),
+                 qPrintable(QString("containsID(%1) should be true").arg(i)));
+    }
+
+    // IDs not in the list should not be found
+    QVERIFY(!newsList->containsID(0));
+    QVERIFY(!newsList->containsID(11));
+    QVERIFY(!newsList->containsID(100));
+
+    delete newsList;
+    delete feed;
+}
+
+void TestNewsList::testAppendRejectsDuplicateOutsideDisplayWindow()
+{
+    // Test that append rejects duplicates even when the original item
+    // is outside the current display window (e.g., was trimmed but not unloaded).
+    NewsList* newsList = new NewsList(this);
+    FeedItem* feed = createTestFeed();
+
+    QDateTime base = QDateTime::currentDateTime();
+
+    // Add items 1-5
+    for (int i = 1; i <= 5; i++) {
+        NewsItem* news = createTestNews(i, base.addSecs(i), feed);
+        newsList->append(news);
+    }
+
+    QCOMPARE(newsList->size(), 5);
+
+    // Shrink to only show item 5 (items 1-4 are now outside display window)
+    newsList->shrinkDisplayWindow(true, 4);
+    QCOMPARE(newsList->size(), 1);
+    QCOMPARE(newsList->first()->getDbID(), 5LL);
+
+    // Try to append an item with ID 1 (which exists outside display window)
+    NewsItem* duplicate = createTestNews(1, base.addSecs(100), feed);
+    newsList->append(duplicate);
+
+    // Should be rejected - size should not change
+    QCOMPARE(newsList->size(), 1);
+    QCOMPARE(newsList->fullSize(), 5);  // Still 5 total items
+
+    // Clean up the rejected duplicate
+    delete duplicate;
 
     delete newsList;
     delete feed;

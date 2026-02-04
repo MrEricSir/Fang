@@ -132,6 +132,7 @@ QString WebServer::loadNews(LoadNewsOperation::LoadMode mode)
     // The prepend list comes from the DB query in DESC order (newest first among read items).
     // We need to reverse it so items are sent to the JS in chronological order (oldest first).
     if (!loader->getPrependList().isEmpty()) {
+        qCDebug(logServer) << "loadNews: Sending" << loader->getPrependList().size() << "prepended items to JS";
         for (qsizetype i = loader->getPrependList().size() - 1; i >= 0; i--) {
             NewsItem* item = loader->getPrependList().at(i);
             addNewsItem(item, &newsList);
@@ -140,6 +141,7 @@ QString WebServer::loadNews(LoadNewsOperation::LoadMode mode)
 
     // Stuff the new items into our feed.
     if (!loader->getAppendList().isEmpty()) {
+        qCDebug(logServer) << "loadNews: Sending" << loader->getAppendList().size() << "appended items to JS";
         for (NewsItem* item : std::as_const(loader->getAppendList())) {
             addNewsItem(item, &newsList);
         }

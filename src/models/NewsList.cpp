@@ -217,7 +217,14 @@ void NewsList::append(NewsItem *value)
 {
     // Check for duplicate by ID.
     if (containsID(value->getDbID())) {
-        qCCritical(logModel) << "NewsList::append: Attempting to add duplicate item with ID" << value->getDbID();
+        qsizetype existingIndex = fullIndexForItemID(value->getDbID());
+        NewsItem* existingItem = existingIndex >= 0 ? slotList.at(existingIndex).item : nullptr;
+        qCCritical(logModel) << "NewsList::append: DUPLICATE ID" << value->getDbID()
+                             << "- new item ptr:" << (void*)value
+                             << "existing item ptr:" << (void*)existingItem
+                             << "at index:" << existingIndex
+                             << "display window: [" << displayStart << "," << displayEnd << ")"
+                             << "fullSize:" << slotList.size();
         return;
     }
 
@@ -234,7 +241,14 @@ void NewsList::prepend(NewsItem *value)
 {
     // Check for duplicate by ID.
     if (containsID(value->getDbID())) {
-        qCCritical(logModel) << "NewsList::prepend: Attempting to add duplicate item with ID" << value->getDbID();
+        qsizetype existingIndex = fullIndexForItemID(value->getDbID());
+        NewsItem* existingItem = existingIndex >= 0 ? slotList.at(existingIndex).item : nullptr;
+        qCCritical(logModel) << "NewsList::prepend: DUPLICATE ID" << value->getDbID()
+                             << "- new item ptr:" << (void*)value
+                             << "existing item ptr:" << (void*)existingItem
+                             << "at index:" << existingIndex
+                             << "display window: [" << displayStart << "," << displayEnd << ")"
+                             << "fullSize:" << slotList.size();
         return;
     }
 
