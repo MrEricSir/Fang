@@ -1,6 +1,7 @@
 #include "NewsItem.h"
 #include "NewsList.h"
 #include "../utilities/FangLogging.h"
+#include "../utilities/ErrorHandling.h"
 
 // NewsSlot implementation
 NewsSlot::NewsSlot(NewsItem* newsItem)
@@ -147,14 +148,26 @@ qsizetype NewsList::pageUp(qsizetype count)
         }
 
         // Reload if needed
-        if (!toReload.isEmpty() && reloadCallback) {
-            QList<NewsItem*> reloaded = reloadCallback(toReload);
-            populateSlots(reloaded);
+        if (!toReload.isEmpty()) {
+            FANG_CHECK(reloadCallback, "NewsList::pageUp: Reload callback not set");
+            if (reloadCallback) {
+                QList<NewsItem*> reloaded = reloadCallback(toReload);
+                populateSlots(reloaded);
+
+                // Verify all items were reloaded
+                for (qsizetype i = displayStart - toAdd; i < displayStart; ++i) {
+                    FANG_CHECK(slotList[i].isLoaded(),
+                               "NewsList::pageUp: Item not loaded after reload callback");
+                }
+            }
         }
 
         displayStart -= toAdd;
         qCDebug(logModel) << "NewsList::pageUp: Expanded window by" << toAdd
                           << "items, new window [" << displayStart << "," << displayEnd << ")";
+
+        // Last step: Verify integrity.
+        verifyDisplayWindowIntegrity();
     }
 
     return toAdd;
@@ -175,14 +188,26 @@ qsizetype NewsList::pageDown(qsizetype count)
         }
 
         // Reload if needed
-        if (!toReload.isEmpty() && reloadCallback) {
-            QList<NewsItem*> reloaded = reloadCallback(toReload);
-            populateSlots(reloaded);
+        if (!toReload.isEmpty()) {
+            FANG_CHECK(reloadCallback, "NewsList::pageDown: Reload callback not set");
+            if (reloadCallback) {
+                QList<NewsItem*> reloaded = reloadCallback(toReload);
+                populateSlots(reloaded);
+
+                // Verify all items were reloaded
+                for (qsizetype i = displayEnd; i < displayEnd + toAdd; ++i) {
+                    FANG_CHECK(slotList[i].isLoaded(),
+                               "NewsList::pageDown: Item not loaded after reload callback");
+                }
+            }
         }
 
         displayEnd += toAdd;
         qCDebug(logModel) << "NewsList::pageDown: Expanded window by" << toAdd
                           << "items, new window [" << displayStart << "," << displayEnd << ")";
+
+        // Last step: Verify integrity.
+        verifyDisplayWindowIntegrity();
     }
 
     return toAdd;
@@ -370,4 +395,18 @@ void NewsList::populateSlots(const QList<NewsItem*>& items)
             item->deleteLater();
         }
     }
+}
+
+bool NewsList::verifyDisplayWindowIntegrity() const
+{
+    bool allLoaded = true;
+    for (qsizetype i = displayStart; i < displayEnd; ++i) {
+        if (!slotList[i].isLoaded()) {
+            qCCritical(logModel) << "NewsList::verifyDisplayWindowIntegrity: Unloaded item at index"
+                                 << i << "(ID:" << slotList[i].id() << ") within display window ["
+                                 << displayStart << "," << displayEnd << ")";
+            allLoaded = false;
+        }
+    }
+    return allLoaded;
 }

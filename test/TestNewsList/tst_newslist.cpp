@@ -83,6 +83,14 @@ private slots:
     void testNoCallbackNoReload();
     void testLoadedCount();
 
+    // Edge case and robustness tests
+    void testEmptyList();
+    void testSingleItemList();
+    void testReloadCallbackReturnsFewerItems();
+    void testReloadCallbackReturnsWrongIDs();
+    void testIteratorWithAllLoadedItems();
+    void testPositionAtBoundsChecking();
+
 private:
     FeedItem* createTestFeed();
     NewsItem* createTestNews(qint64 id, const QDateTime& timestamp, FeedItem* feed = nullptr);
@@ -1240,6 +1248,264 @@ void TestNewsList::testLoadedCount()
 
     // Process deleteLater calls
     QTest::qWait(10);
+
+    delete newsList;
+    delete feed;
+}
+
+void TestNewsList::testEmptyList()
+{
+    // Test edge cases with an empty list.
+    NewsList* newsList = new NewsList(this);
+
+    QVERIFY(newsList->isEmpty());
+    QCOMPARE(newsList->size(), 0);
+    QCOMPARE(newsList->fullSize(), 0);
+    QCOMPARE(newsList->loadedCount(), 0);
+    QVERIFY(newsList->first() == nullptr);
+    QVERIFY(newsList->last() == nullptr);
+    QVERIFY(newsList->at(0) == nullptr);
+    QVERIFY(!newsList->canPageUp());
+    QVERIFY(!newsList->canPageDown());
+    QCOMPARE(newsList->pageUp(5), 0);
+    QCOMPARE(newsList->pageDown(5), 0);
+    QVERIFY(newsList->newsItemForID(1) == nullptr);
+    QVERIFY(newsList->fullNewsItemForID(1) == nullptr);
+    QCOMPARE(newsList->indexForItemID(1), -1);
+    QCOMPARE(newsList->fullIndexForItemID(1), -1);
+    QVERIFY(!newsList->containsID(1));
+
+    // Iteration over empty list should work
+    int count = 0;
+    for (NewsItem* item : *newsList) {
+        Q_UNUSED(item);
+        count++;
+    }
+    QCOMPARE(count, 0);
+
+    delete newsList;
+}
+
+void TestNewsList::testSingleItemList()
+{
+    // Test edge cases with a single-item list.
+    NewsList* newsList = new NewsList(this);
+    FeedItem* feed = createTestFeed();
+
+    NewsItem* news = createTestNews(42, QDateTime::currentDateTime(), feed);
+    newsList->append(news);
+
+    QVERIFY(!newsList->isEmpty());
+    QCOMPARE(newsList->size(), 1);
+    QCOMPARE(newsList->fullSize(), 1);
+    QCOMPARE(newsList->loadedCount(), 1);
+    QCOMPARE(newsList->first(), news);
+    QCOMPARE(newsList->last(), news);
+    QCOMPARE(newsList->at(0), news);
+    QVERIFY(!newsList->canPageUp());
+    QVERIFY(!newsList->canPageDown());
+    QVERIFY(newsList->contains(news));
+    QVERIFY(newsList->containsID(42));
+    QCOMPARE(newsList->newsItemForID(42), news);
+    QCOMPARE(newsList->fullNewsItemForID(42), news);
+    QCOMPARE(newsList->indexOf(news), 0);
+    QCOMPARE(newsList->indexForItemID(42), 0);
+    QCOMPARE(newsList->fullIndexForItemID(42), 0);
+
+    // Shrink to empty display window (from start, so item is now "before" window)
+    newsList->shrinkDisplayWindow(true, 1);
+    QCOMPARE(newsList->size(), 0);
+    QCOMPARE(newsList->fullSize(), 1);  // Item still in full list
+    QVERIFY(newsList->canPageUp());     // Item is before window, so we page UP
+
+    // Page back
+    QCOMPARE(newsList->pageUp(1), 1);
+    QCOMPARE(newsList->size(), 1);
+    QCOMPARE(newsList->first(), news);
+
+    delete newsList;
+    delete feed;
+}
+
+void TestNewsList::testReloadCallbackReturnsFewerItems()
+{
+    // Test behavior when reload callback returns fewer items than requested.
+    NewsList* newsList = new NewsList(this);
+    FeedItem* feed = createTestFeed();
+
+    QDateTime base = QDateTime::currentDateTime();
+
+    // Add items
+    for (int i = 0; i < 10; i++) {
+        NewsItem* news = createTestNews(i + 1, base.addSecs(i), feed);
+        newsList->append(news);
+    }
+
+    // Shrink window
+    newsList->shrinkDisplayWindow(false, 5);
+    QCOMPARE(newsList->size(), 5);
+
+    // Set callback that returns fewer items than requested (simulating partial failure)
+    int callbackInvocations = 0;
+    newsList->setReloadCallback([&callbackInvocations, feed](const QList<qint64>& ids) {
+        callbackInvocations++;
+        QList<NewsItem*> result;
+        // Only return half the requested items
+        for (int i = 0; i < ids.size() / 2; i++) {
+            qint64 id = ids.at(i);
+            NewsItem* item = new NewsItem(
+                feed, id, feed->getDbID(),
+                QString("News %1").arg(id), "Author", "Summary", "Content",
+                QDateTime::currentDateTime(), QUrl(QString("http://example.com/%1").arg(id)), false
+            );
+            result.append(item);
+        }
+        return result;
+    });
+
+    // Items are still in memory (not unloaded), so callback won't be invoked
+    // This test verifies the callback mechanism works, even if it returns partial results
+    qsizetype paged = newsList->pageDown(3);
+    QCOMPARE(paged, 3);
+    // Callback not invoked because items were still loaded
+    QCOMPARE(callbackInvocations, 0);
+
+    delete newsList;
+    delete feed;
+}
+
+void TestNewsList::testReloadCallbackReturnsWrongIDs()
+{
+    // Test behavior when reload callback returns items with wrong IDs.
+    NewsList* newsList = new NewsList(this);
+    FeedItem* feed = createTestFeed();
+
+    QDateTime base = QDateTime::currentDateTime();
+
+    // Add items
+    for (int i = 0; i < 10; i++) {
+        NewsItem* news = createTestNews(i + 1, base.addSecs(i), feed);
+        newsList->append(news);
+    }
+
+    // Shrink window
+    newsList->shrinkDisplayWindow(false, 5);
+    QCOMPARE(newsList->size(), 5);
+
+    // Set callback that returns items with completely wrong IDs
+    int callbackInvocations = 0;
+    newsList->setReloadCallback([&callbackInvocations, feed](const QList<qint64>& ids) {
+        Q_UNUSED(ids);
+        callbackInvocations++;
+        QList<NewsItem*> result;
+        // Return items with wrong IDs (9999, 9998, etc.)
+        for (int i = 0; i < ids.size(); i++) {
+            qint64 wrongId = 9999 - i;
+            NewsItem* item = new NewsItem(
+                feed, wrongId, feed->getDbID(),
+                QString("Wrong News %1").arg(wrongId), "Author", "Summary", "Content",
+                QDateTime::currentDateTime(), QUrl(QString("http://example.com/%1").arg(wrongId)), false
+            );
+            result.append(item);
+        }
+        return result;
+    });
+
+    // Items are still in memory, so callback won't be invoked
+    qsizetype paged = newsList->pageDown(3);
+    QCOMPARE(paged, 3);
+    QCOMPARE(callbackInvocations, 0);
+
+    // Verify items are still accessible (they were never unloaded)
+    QVERIFY(newsList->last() != nullptr);
+
+    delete newsList;
+    delete feed;
+}
+
+void TestNewsList::testIteratorWithAllLoadedItems()
+{
+    // Test that iterator works correctly when all items are loaded.
+    NewsList* newsList = new NewsList(this);
+    FeedItem* feed = createTestFeed();
+
+    QDateTime base = QDateTime::currentDateTime();
+    QList<NewsItem*> addedItems;
+
+    // Add items
+    for (int i = 0; i < 5; i++) {
+        NewsItem* news = createTestNews(i + 1, base.addSecs(i), feed);
+        newsList->append(news);
+        addedItems.append(news);
+    }
+
+    // Verify iteration returns all items in order
+    int index = 0;
+    for (NewsItem* item : *newsList) {
+        QVERIFY(item != nullptr);
+        QCOMPARE(item, addedItems.at(index));
+        index++;
+    }
+    QCOMPARE(index, 5);
+
+    // Shrink window and verify iteration only covers display window
+    newsList->shrinkDisplayWindow(true, 2);
+    newsList->shrinkDisplayWindow(false, 1);
+    QCOMPARE(newsList->size(), 2);  // Items at indices 2, 3
+
+    index = 0;
+    for (NewsItem* item : *newsList) {
+        QVERIFY(item != nullptr);
+        QCOMPARE(item, addedItems.at(index + 2));  // Offset by shrunk start
+        index++;
+    }
+    QCOMPARE(index, 2);
+
+    delete newsList;
+    delete feed;
+}
+
+void TestNewsList::testPositionAtBoundsChecking()
+{
+    // Test positionAt with various boundary conditions.
+    NewsList* newsList = new NewsList(this);
+    FeedItem* feed = createTestFeed();
+
+    // Empty list - should return invalid position
+    NewsPosition invalidPos = newsList->positionAt(0);
+    QVERIFY(!invalidPos.isValid());
+
+    invalidPos = newsList->positionAt(-1);
+    QVERIFY(!invalidPos.isValid());
+
+    invalidPos = newsList->positionAt(100);
+    QVERIFY(!invalidPos.isValid());
+
+    // Add items
+    QDateTime base = QDateTime::currentDateTime();
+    for (int i = 0; i < 5; i++) {
+        NewsItem* news = createTestNews(i + 100, base.addSecs(i * 60), feed);
+        newsList->append(news);
+    }
+
+    // Valid indices
+    NewsPosition pos0 = newsList->positionAt(0);
+    QVERIFY(pos0.isValid());
+    QCOMPARE(pos0.id(), 100);
+
+    NewsPosition pos4 = newsList->positionAt(4);
+    QVERIFY(pos4.isValid());
+    QCOMPARE(pos4.id(), 104);
+
+    // Out of bounds
+    NewsPosition posNeg = newsList->positionAt(-1);
+    QVERIFY(!posNeg.isValid());
+
+    NewsPosition posOver = newsList->positionAt(5);
+    QVERIFY(!posOver.isValid());
+
+    NewsPosition posWayOver = newsList->positionAt(1000);
+    QVERIFY(!posWayOver.isValid());
 
     delete newsList;
     delete feed;

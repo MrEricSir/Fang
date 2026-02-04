@@ -251,6 +251,13 @@ private:
         \param items The reloaded items (matched by ID to existing slotList).
      */
     void populateSlots(const QList<NewsItem*>& items);
+
+    /*!
+        \brief Verifies all items in the display window are loaded.
+        Logs errors for any unloaded items found.
+        \return true if all items are loaded, false otherwise.
+     */
+    bool verifyDisplayWindowIntegrity() const;
 };
 
 #endif // NEWSLIST_H
