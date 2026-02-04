@@ -275,18 +275,34 @@ QString LisvelLoadNewsOperation::getLoadedIDString()
     // positionAt() works even for unloaded items.
     NewsList* newsList = lisvelNews->getNewsList();
 
-    if (newsList->fullSize() == 0) {
+    QSet<qint64> ids;
+
+    // Add IDs from the NewsList.
+    for (qsizetype i = 0; i < newsList->fullSize(); ++i) {
+        ids.insert(newsList->positionAt(i).id());
+    }
+
+    // Also add IDs from items already loaded in this operation (listAppend/listPrepend).
+    // This prevents the same item from being loaded by multiple steps within doAppend/doPrepend.
+    for (NewsItem* item : std::as_const(listAppend)) {
+        ids.insert(item->getDbID());
+    }
+    for (NewsItem* item : std::as_const(listPrepend)) {
+        ids.insert(item->getDbID());
+    }
+
+    if (ids.isEmpty()) {
         return "-1";  // Return invalid ID to avoid SQL syntax error with empty IN clause
     }
 
     QString ret = "";
     bool first = true;
 
-    for (qsizetype i = 0; i < newsList->fullSize(); ++i) {
+    for (qint64 id : ids) {
         if (!first) {
             ret += ", ";
         }
-        ret += QString::number(newsList->positionAt(i).id());
+        ret += QString::number(id);
         first = false;
     }
 
