@@ -91,6 +91,10 @@ private slots:
     void testIteratorWithAllLoadedItems();
     void testPositionAtBoundsChecking();
 
+    // Duplicate detection tests
+    void testAppendRejectsDuplicateByID();
+    void testPrependRejectsDuplicateByID();
+
 private:
     FeedItem* createTestFeed();
     NewsItem* createTestNews(qint64 id, const QDateTime& timestamp, FeedItem* feed = nullptr);
@@ -1506,6 +1510,76 @@ void TestNewsList::testPositionAtBoundsChecking()
 
     NewsPosition posWayOver = newsList->positionAt(1000);
     QVERIFY(!posWayOver.isValid());
+
+    delete newsList;
+    delete feed;
+}
+
+void TestNewsList::testAppendRejectsDuplicateByID()
+{
+    // Test that append rejects items with duplicate IDs, even if they are
+    // different NewsItem* objects. This can happen when the same item is
+    // loaded from the database multiple times.
+    NewsList* newsList = new NewsList(this);
+    FeedItem* feed = createTestFeed();
+
+    QDateTime base = QDateTime::currentDateTime();
+
+    // Add first item with ID 100
+    NewsItem* news1 = createTestNews(100, base, feed);
+    newsList->append(news1);
+    QCOMPARE(newsList->size(), 1);
+    QCOMPARE(newsList->fullSize(), 1);
+
+    // Create a DIFFERENT NewsItem object with the SAME ID (simulating duplicate load)
+    NewsItem* news2 = createTestNews(100, base, feed);
+    QVERIFY(news1 != news2);  // Different pointers
+    QCOMPARE(news1->getDbID(), news2->getDbID());  // Same ID
+
+    // Append should reject the duplicate
+    newsList->append(news2);
+    QCOMPARE(newsList->size(), 1);  // Should still be 1
+    QCOMPARE(newsList->fullSize(), 1);
+
+    // The original item should still be there
+    QCOMPARE(newsList->newsItemForID(100), news1);
+
+    // Clean up the rejected item manually since NewsList didn't take ownership
+    delete news2;
+
+    delete newsList;
+    delete feed;
+}
+
+void TestNewsList::testPrependRejectsDuplicateByID()
+{
+    // Test that prepend rejects items with duplicate IDs, even if they are
+    // different NewsItem* objects.
+    NewsList* newsList = new NewsList(this);
+    FeedItem* feed = createTestFeed();
+
+    QDateTime base = QDateTime::currentDateTime();
+
+    // Add first item with ID 200
+    NewsItem* news1 = createTestNews(200, base, feed);
+    newsList->append(news1);
+    QCOMPARE(newsList->size(), 1);
+
+    // Create a DIFFERENT NewsItem object with the SAME ID
+    NewsItem* news2 = createTestNews(200, base, feed);
+    QVERIFY(news1 != news2);  // Different pointers
+    QCOMPARE(news1->getDbID(), news2->getDbID());  // Same ID
+
+    // Prepend should reject the duplicate
+    newsList->prepend(news2);
+    QCOMPARE(newsList->size(), 1);  // Should still be 1
+    QCOMPARE(newsList->fullSize(), 1);
+
+    // The original item should still be there
+    QCOMPARE(newsList->newsItemForID(200), news1);
+
+    // Clean up the rejected item manually
+    delete news2;
 
     delete newsList;
     delete feed;

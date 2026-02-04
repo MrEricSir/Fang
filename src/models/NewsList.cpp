@@ -215,7 +215,8 @@ qsizetype NewsList::pageDown(qsizetype count)
 
 void NewsList::append(NewsItem *value)
 {
-    if (loadedSet.contains(value)) {
+    // Check for duplicate by ID.
+    if (containsID(value->getDbID())) {
         qCCritical(logModel) << "NewsList::append: Attempting to add duplicate item with ID" << value->getDbID();
         return;
     }
@@ -231,7 +232,8 @@ void NewsList::append(NewsItem *value)
 
 void NewsList::prepend(NewsItem *value)
 {
-    if (loadedSet.contains(value)) {
+    // Check for duplicate by ID.
+    if (containsID(value->getDbID())) {
         qCCritical(logModel) << "NewsList::prepend: Attempting to add duplicate item with ID" << value->getDbID();
         return;
     }
