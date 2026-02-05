@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-02-02 04:10:31</td>
+            <td class="headerValue">2026-02-05 19:27:29</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryMed">85.7&nbsp;%</td>
@@ -168,7 +168,7 @@
 <span id="L106"><span class="lineNum">     106</span> <span class="tlaGNC">           4 :     inline quint32 getUnreadCount() const { return unreadCount; }</span></span>
 <span id="L107"><span class="lineNum">     107</span> <span class="tlaGNC">           5 :     inline QString getDropTarget() const { return dropTarget; }</span></span>
 <span id="L108"><span class="lineNum">     108</span> <span class="tlaGNC">           2 :     inline FeedItem* getSelf() const { return const_cast&lt;FeedItem*&gt;(this); }</span></span>
-<span id="L109"><span class="lineNum">     109</span> <span class="tlaGNC">          88 :     virtual inline qint64 getDbID() const { return _id; }</span></span>
+<span id="L109"><span class="lineNum">     109</span> <span class="tlaGNC">         559 :     virtual inline qint64 getDbID() const { return _id; }</span></span>
 <span id="L110"><span class="lineNum">     110</span> <span class="tlaGNC">           4 :     inline bool isSpecialFeed() const { return _id &lt; 0; }</span></span>
 <span id="L111"><span class="lineNum">     111</span>              :     </span>
 <span id="L112"><span class="lineNum">     112</span>              :     void setImageURL(const QUrl&amp; url);</span>
@@ -201,7 +201,7 @@
 <span id="L139"><span class="lineNum">     139</span>              :         Note: This represents news items that are loaded and can be viewed. As such it will</span>
 <span id="L140"><span class="lineNum">     140</span>              :         slowly grow as more news items are added to the feed.</span>
 <span id="L141"><span class="lineNum">     141</span>              :      */</span>
-<span id="L142"><span class="lineNum">     142</span> <span class="tlaGNC tlaBgGNC">           1 :     inline NewsList* getNewsList() { return &amp;newsList; }</span></span>
+<span id="L142"><span class="lineNum">     142</span> <span class="tlaGNC tlaBgGNC">        2955 :     inline NewsList* getNewsList() { return &amp;newsList; }</span></span>
 <span id="L143"><span class="lineNum">     143</span>              :     </span>
 <span id="L144"><span class="lineNum">     144</span>              :     /*!</span>
 <span id="L145"><span class="lineNum">     145</span>              :         \brief Used to set the bookmark internally.  External classes shouldn't need to call this.</span>
@@ -220,7 +220,7 @@
 <span id="L158"><span class="lineNum">     158</span>              :         \brief Returns the current bookmark ID or -1 if none.</span>
 <span id="L159"><span class="lineNum">     159</span>              :         \return</span>
 <span id="L160"><span class="lineNum">     160</span>              :      */</span>
-<span id="L161"><span class="lineNum">     161</span> <span class="tlaGNC">           3 :     inline qint64 getBookmarkID() const { return _bookmarkID; }</span></span>
+<span id="L161"><span class="lineNum">     161</span> <span class="tlaGNC">         806 :     inline qint64 getBookmarkID() const { return _bookmarkID; }</span></span>
 <span id="L162"><span class="lineNum">     162</span>              :     </span>
 <span id="L163"><span class="lineNum">     163</span>              :     /*!</span>
 <span id="L164"><span class="lineNum">     164</span>              :         \brief Detaches the feed ID when this feed is being disconnected.</span>
