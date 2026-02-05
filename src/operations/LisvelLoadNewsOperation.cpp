@@ -133,18 +133,31 @@ void LisvelLoadNewsOperation::executeSynchronous()
 
     int appendedCount = 0;
     int skippedAppend = 0;
+    QList<NewsItem*> itemsToSendToJS;  // Track items that should actually be sent to JS
+
     if (!listAppend.isEmpty()) {
         for (NewsItem* newsItem: std::as_const(listAppend)) {
             // Only add items not already in NewsList (i.e., items from DB queries).
-            // Items paged from memory are already in NewsList - skip them.
+            // Items paged from memory are already in NewsList.
             if (!feedItem->getNewsList()->containsID(newsItem->getDbID())) {
                 feedItem->getNewsList()->append(newsItem);
                 appendedCount++;
+                itemsToSendToJS.append(newsItem);  // New items should be sent to JS
             } else {
+                // Item already in NewsList. Check to make sure we didn't load it twice..
+                qsizetype fullIdx = feedItem->getNewsList()->fullIndexForItemID(newsItem->getDbID());
+                qCDebug(logOperation) << "Skipped append for id=" << newsItem->getDbID()
+                                      << "already at fullIndex=" << fullIdx
+                                      << "(paged item will still be sent to JS)";
                 skippedAppend++;
+                // Paged items should still be sent to JS since they were shrunk from the display
+                itemsToSendToJS.append(newsItem);
             }
         }
     }
+
+    // Replace listAppend with only the items that should be sent to JS.
+    listAppend = itemsToSendToJS;
 
     int prependedCount = 0;
     int skippedPrepend = 0;
@@ -255,21 +268,44 @@ bool LisvelLoadNewsOperation::doAppend()
     int remainingLoadLimit = getLoadLimit();
     NewsList* newsList = lisvelNews->getNewsList();
 
+    // Log state before doAppend for debugging duplicate issues
+    qCDebug(logOperation) << "doAppend: Starting with displayWindow ["
+                          << newsList->getDisplayStart() << "," << newsList->getDisplayEnd() << ")"
+                          << "fullSize=" << newsList->fullSize()
+                          << "canPageDown=" << newsList->canPageDown();
+
     //
     // STEP ONE: Page down through items already in memory (after the display window).
+    // This handles items that were previously loaded, then removed when the window was
+    // adjusted, and now need to be loaded again.
     //
+    // Should only trigger if items were shrunk from the bottom/end of the list.
     if (newsList->canPageDown()) {
         // Record current end before paging so we can add the newly-visible items to listAppend.
         qsizetype oldDisplayEnd = newsList->getDisplayEnd();
+        qsizetype fullSize = newsList->fullSize();
+
+        // Warning: This suggests items were shrunk from the bottom at some point.
+        // This typically happens during prepend mode (scrolling up), not append mode.
+        qCWarning(logOperation) << "doAppend step 1: canPageDown=true while in Append mode!"
+                                << "displayEnd=" << oldDisplayEnd << "fullSize=" << fullSize
+                                << "- suggests previous removeNewsBottom occurred";
 
         qsizetype paged = newsList->pageDown(remainingLoadLimit);
-        qCDebug(logOperation) << "doAppend step 1: Paged down" << paged << "items from memory";
+        qCDebug(logOperation) << "doAppend step 1: Paged down" << paged << "items from memory"
+                              << "oldDisplayEnd=" << oldDisplayEnd
+                              << "newDisplayEnd=" << newsList->getDisplayEnd();
         remainingLoadLimit -= paged;
 
         // Add the newly-visible items to listAppend so they get sent to JS.
+        // NOTE: These items are ALREADY in NewsList but were outside the display window.
+        // They were previously sent to JS and then shrunk (via removeAndDelete from the END).
         for (qsizetype i = oldDisplayEnd; i < newsList->getDisplayEnd(); ++i) {
             NewsItem* item = newsList->fullAt(i);
             if (item) {
+                qCDebug(logOperation) << "doAppend step 1: Re-sending paged item id=" << item->getDbID()
+                                      << "at fullIndex=" << i
+                                      << "timestamp=" << item->getTimestamp().toString(Qt::ISODate);
                 listAppend.append(item);
             } else {
                 qCWarning(logOperation) << "doAppend: Unexpected null item at index" << i;

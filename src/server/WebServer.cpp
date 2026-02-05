@@ -131,18 +131,42 @@ QString WebServer::loadNews(LoadNewsOperation::LoadMode mode)
     // Build our news list.
     // The prepend list comes from the DB query in DESC order (newest first among read items).
     // We need to reverse it so items are sent to the JS in chronological order (oldest first).
+    QSet<qint64> sentIDs;  // Track IDs sent to JS to detect duplicates
+
     if (!loader->getPrependList().isEmpty()) {
         qCDebug(logServer) << "loadNews: Sending" << loader->getPrependList().size() << "prepended items to JS";
         for (qsizetype i = loader->getPrependList().size() - 1; i >= 0; i--) {
             NewsItem* item = loader->getPrependList().at(i);
+            if (sentIDs.contains(item->getDbID())) {
+                qCCritical(logServer) << "loadNews: DUPLICATE in prependList! id=" << item->getDbID()
+                                      << "already sent in this response";
+            }
+            sentIDs.insert(item->getDbID());
             addNewsItem(item, &newsList);
         }
     }
 
     // Stuff the new items into our feed.
     if (!loader->getAppendList().isEmpty()) {
-        qCDebug(logServer) << "loadNews: Sending" << loader->getAppendList().size() << "appended items to JS";
+        qCDebug(logServer) << "loadNews: Sending" << loader->getAppendList().size() << "appended items to JS"
+                           << "mode=" << LoadNewsOperation::modeToString(mode);
+        qint64 lastTimestamp = 0;
         for (NewsItem* item : std::as_const(loader->getAppendList())) {
+            if (sentIDs.contains(item->getDbID())) {
+                qCCritical(logServer) << "loadNews: DUPLICATE in appendList! id=" << item->getDbID()
+                                      << "already sent in this response";
+            }
+            sentIDs.insert(item->getDbID());
+
+            // Check if items are in timestamp order (should be ascending for append mode)
+            qint64 itemTimestamp = item->getTimestamp().toMSecsSinceEpoch();
+            if (lastTimestamp > 0 && itemTimestamp < lastTimestamp) {
+                qCWarning(logServer) << "loadNews: Item id=" << item->getDbID()
+                                     << "has EARLIER timestamp than previous item!"
+                                     << "This may cause display order issues.";
+            }
+            lastTimestamp = itemTimestamp;
+
             addNewsItem(item, &newsList);
         }
     }

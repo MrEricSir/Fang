@@ -25,6 +25,9 @@ let prefetchedData = null;
 let isPrefetching = false;
 const PREFETCH_THRESHOLD = 0.7; // Start prefetch at 70% scroll
 
+// Concurrent load request guard (prevent duplicate NewsItems.)
+let isLoadingNews = false;
+
 /**
   * Establishes a websocket connection to the backend.
   */
@@ -196,7 +199,10 @@ function requestNews(mode)
                       jumpToBookmark();
                   }
               }
-          });
+          })
+    .finally(() => {
+        isLoadingNews = false;
+    });
 }
 
 /**
@@ -206,6 +212,7 @@ function clearPrefetch() {
     prefetchedData = null;
     prefetchPromise = null;
     isPrefetching = false;
+    isLoadingNews = false;
 }
 
 
@@ -398,15 +405,24 @@ function appendNews(append, firstNewsID, newsList)
     // Create a DocumentFragment to batch DOM insertions
     const fragment = document.createDocumentFragment();
     const items = [];
+    let skippedDuplicates = 0;
 
     for (let i = 0; i < newsList.length; i++) {
         let newsItem = newsList[i];
+        const itemHtmlId = idToHtmlId(newsItem['id']);
+
+        // IMPORTANT!!!!1 Skip any NewsItems that are already in the DOM.
+        if (document.getElementById(itemHtmlId)) {
+            console.log("appendNews: Skipping duplicate item id=" + newsItem['id']);
+            skippedDuplicates++;
+            continue;
+        }
 
         // Clone the model
         const item = model.cloneNode(true);
-        item.id = idToHtmlId(newsItem['id']);
+        item.id = itemHtmlId;
 
-        // Assign data using vanilla JS for better performance
+        // Assign data.
         const linkEl = item.querySelector('.link');
         if (linkEl) {
             linkEl.setAttribute('href', newsItem['url']);
@@ -445,9 +461,14 @@ function appendNews(append, firstNewsID, newsList)
         fragment.appendChild(item);
     }
 
+    // Log if we skipped any duplicates
+    if (skippedDuplicates > 0) {
+        console.log("appendNews: Skipped " + skippedDuplicates + " duplicate items");
+    }
+
     // Insert all items at once
     if (append) {
-        console.log("Append!");
+        console.log("Append! Adding " + items.length + " items");
         // Find the last news container and insert after it
         const lastContainer = container.querySelector('.newsContainer:last-of-type');
         if (lastContainer && lastContainer.nextSibling) {
@@ -1088,6 +1109,12 @@ $(document).ready(function() {
     function loadNext() {
         // console.log("loadNext");
 
+        // Prevent duplicate requests.
+        if (isLoadingNews) {
+            console.log("loadNext: Already loading, skipping");
+            return;
+        }
+
         // Use prefetched data if available
         if (prefetchedData !== null) {
             console.log("Using prefetched data");
@@ -1113,16 +1140,24 @@ $(document).ready(function() {
         }
 
         // No prefetch available, make a regular request
+        isLoadingNews = true;
         requestNews("append");
     }
 
     function loadPrevious() {
         // console.log("loadPrevious");
 
+        // Prevent concurrent requests which can cause duplicates
+        if (isLoadingNews) {
+            console.log("loadPrevious: Already loading, skipping");
+            return;
+        }
+
         // Clear prefetch data when scrolling upward. This is because the prefetch data will
         // be for appending to the bottom.
         clearPrefetch();
 
+        isLoadingNews = true;
         requestNews("prepend");
     }
 
