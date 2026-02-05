@@ -54,6 +54,11 @@ private slots:
     void testModeInExtras();
     void testFirstNewsIDInExtras();
 
+    // Duplicate detection tests (simulating WebServer::loadNews behavior)
+    void testDuplicateDetectionInSameResponse();
+    void testPagedItemsOrderWithDbItems();
+    void testDuplicateIDsAcrossLists();
+
 private:
     // Simulates WebServer::addNewsItem
     void addNewsItem(NewsItem* item, QVariantList* newsList, const QString& feedTitle);
@@ -353,6 +358,160 @@ void TestWebServerData::testFirstNewsIDInExtras()
 
     QJsonObject doc = QJsonDocument::fromJson(json.toUtf8()).object();
     QCOMPARE(doc["firstNewsID"].toVariant().toLongLong(), 100LL);
+}
+
+void TestWebServerData::testDuplicateDetectionInSameResponse()
+{
+    // Test that simulates WebServer::loadNews duplicate detection.
+    // The server should detect and log if the same ID appears twice
+    // in the same HTTP response (from prepend + append lists).
+    //
+    // This mirrors the logic added to WebServer::loadNews:
+    //   QSet<qint64> sentIDs;
+    //   if (sentIDs.contains(item->getDbID())) { log error }
+
+    qDebug() << "\n=== testDuplicateDetectionInSameResponse ===";
+
+    QSet<qint64> sentIDs;  // Track IDs to detect duplicates
+    QVariantList newsList;
+    int duplicatesFound = 0;
+
+    // Create items including a duplicate
+    QList<NewsItem*> items;
+    items.append(createNewsItem(100, baseTime.addSecs(10)));
+    items.append(createNewsItem(101, baseTime.addSecs(20)));
+    items.append(createNewsItem(100, baseTime.addSecs(30)));  // DUPLICATE ID!
+    items.append(createNewsItem(102, baseTime.addSecs(40)));
+
+    // Simulate WebServer::loadNews processing
+    for (NewsItem* item : items) {
+        if (sentIDs.contains(item->getDbID())) {
+            qDebug() << "DUPLICATE detected: id=" << item->getDbID();
+            duplicatesFound++;
+            // WebServer would log this as a critical error
+            // but still add the item for debugging purposes
+        }
+        sentIDs.insert(item->getDbID());
+        addNewsItem(item, &newsList, "Test Feed");
+    }
+
+    // Should have detected exactly one duplicate
+    QCOMPARE(duplicatesFound, 1);
+
+    // All items were added (including duplicate for visibility)
+    QCOMPARE(newsList.size(), 4);
+
+    qDeleteAll(items);
+    qDebug() << "=== PASSED ===\n";
+}
+
+void TestWebServerData::testPagedItemsOrderWithDbItems()
+{
+    // Test the scenario where items from pageDown (memory) are mixed with
+    // items from DB queries. The order should be maintained properly.
+    //
+    // Scenario:
+    // - Items 1-5 were paged from memory (already in NewsList, shrunk then paged back)
+    // - Items 6-10 were loaded fresh from DB
+    // Both should be sent to JS in order.
+
+    qDebug() << "\n=== testPagedItemsOrderWithDbItems ===";
+
+    // Simulate items that were paged from memory (older timestamps)
+    QList<NewsItem*> pagedItems;
+    for (int i = 1; i <= 5; i++) {
+        pagedItems.append(createNewsItem(i, baseTime.addSecs(i * 60)));
+    }
+
+    // Simulate items loaded from DB (newer timestamps, continuing the sequence)
+    QList<NewsItem*> dbItems;
+    for (int i = 6; i <= 10; i++) {
+        dbItems.append(createNewsItem(i, baseTime.addSecs(i * 60)));
+    }
+
+    // Build combined list as WebServer would (paged items first, then DB items)
+    QVariantList newsList;
+
+    for (NewsItem* item : pagedItems) {
+        addNewsItem(item, &newsList, "Test Feed");
+    }
+
+    for (NewsItem* item : dbItems) {
+        addNewsItem(item, &newsList, "Test Feed");
+    }
+
+    QCOMPARE(newsList.size(), 10);
+
+    // Verify chronological order is maintained
+    qint64 prevTimestamp = 0;
+    for (int i = 0; i < newsList.size(); i++) {
+        qint64 id = newsList[i].toMap()["id"].toLongLong();
+        qint64 timestamp = newsList[i].toMap()["timestamp"].toLongLong();
+
+        QVERIFY2(timestamp > prevTimestamp,
+                 qPrintable(QString("Item %1 timestamp not > previous").arg(id)));
+        prevTimestamp = timestamp;
+
+        // Verify IDs are in order (1, 2, 3, ..., 10)
+        QCOMPARE(id, static_cast<qint64>(i + 1));
+    }
+
+    qDeleteAll(pagedItems);
+    qDeleteAll(dbItems);
+    qDebug() << "=== PASSED ===\n";
+}
+
+void TestWebServerData::testDuplicateIDsAcrossLists()
+{
+    // Test detection of duplicates when the same ID appears in both
+    // the prepend list and append list (which shouldn't happen but
+    // could due to race conditions).
+
+    qDebug() << "\n=== testDuplicateIDsAcrossLists ===";
+
+    // Create prepend list (items before bookmark, DESC from DB, reversed for JS)
+    QList<NewsItem*> prependListFromDB;
+    prependListFromDB.append(createNewsItem(5, baseTime.addSecs(50)));  // Newest of prepend
+    prependListFromDB.append(createNewsItem(4, baseTime.addSecs(40)));
+    prependListFromDB.append(createNewsItem(3, baseTime.addSecs(30)));  // Will be duplicate
+
+    // Create append list (items after bookmark, ASC from DB)
+    QList<NewsItem*> appendListFromDB;
+    appendListFromDB.append(createNewsItem(3, baseTime.addSecs(30)));  // DUPLICATE!
+    appendListFromDB.append(createNewsItem(6, baseTime.addSecs(60)));
+    appendListFromDB.append(createNewsItem(7, baseTime.addSecs(70)));
+
+    // Track duplicates as WebServer would
+    QSet<qint64> sentIDs;
+    QVariantList newsList;
+    int duplicatesFound = 0;
+
+    // Process prepend list (reversed for JS)
+    for (qsizetype i = prependListFromDB.size() - 1; i >= 0; i--) {
+        NewsItem* item = prependListFromDB.at(i);
+        if (sentIDs.contains(item->getDbID())) {
+            duplicatesFound++;
+        }
+        sentIDs.insert(item->getDbID());
+        addNewsItem(item, &newsList, "Test Feed");
+    }
+
+    // Process append list
+    for (NewsItem* item : appendListFromDB) {
+        if (sentIDs.contains(item->getDbID())) {
+            qDebug() << "Duplicate ID" << item->getDbID() << "found in append list";
+            duplicatesFound++;
+        }
+        sentIDs.insert(item->getDbID());
+        addNewsItem(item, &newsList, "Test Feed");
+    }
+
+    // Should detect one duplicate (ID 3 appears in both lists)
+    QCOMPARE(duplicatesFound, 1);
+
+    qDeleteAll(prependListFromDB);
+    qDeleteAll(appendListFromDB);
+    qDebug() << "=== PASSED ===\n";
 }
 
 QTEST_MAIN(TestWebServerData)

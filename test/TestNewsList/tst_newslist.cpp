@@ -97,6 +97,12 @@ private slots:
     void testContainsIDOutsideDisplayWindow();
     void testAppendRejectsDuplicateOutsideDisplayWindow();
 
+    // Paging and duplicate scenario tests (for WebServer/JS sync)
+    void testPageDownAfterShrinkFromEnd();
+    void testPagedItemsAreAlreadyInList();
+    void testDisplayWindowSyncAfterPageDown();
+    void testCanPageDownOnlyAfterShrinkFromEnd();
+
 private:
     FeedItem* createTestFeed();
     NewsItem* createTestNews(qint64 id, const QDateTime& timestamp, FeedItem* feed = nullptr);
@@ -1663,6 +1669,211 @@ void TestNewsList::testAppendRejectsDuplicateOutsideDisplayWindow()
 
     // Clean up the rejected duplicate
     delete duplicate;
+
+    delete newsList;
+    delete feed;
+}
+
+void TestNewsList::testPageDownAfterShrinkFromEnd()
+{
+    // Test the scenario that can cause duplicates in JS:
+    // 1. Items are loaded and sent to JS
+    // 2. User scrolls up, items are shrunk from the END
+    // 3. User scrolls down, pageDown brings items back
+    // 4. These items are already in NewsList but need to be re-sent to JS
+    //
+    // This test verifies that paged items are correctly identified as
+    // existing in NewsList (for the duplicate detection code path).
+
+    NewsList* newsList = new NewsList(this);
+    FeedItem* feed = createTestFeed();
+    QDateTime base = QDateTime::currentDateTime();
+
+    // Add 20 items (simulating initial load + append)
+    for (int i = 1; i <= 20; i++) {
+        NewsItem* news = createTestNews(i, base.addSecs(i), feed);
+        newsList->append(news);
+    }
+
+    QCOMPARE(newsList->size(), 20);
+    QCOMPARE(newsList->fullSize(), 20);
+    QVERIFY(!newsList->canPageDown());  // displayEnd == fullSize
+
+    // User scrolls up - items are shrunk from the END (prepend mode scenario)
+    newsList->shrinkDisplayWindow(false, 10);  // Remove items 11-20 from display
+    QCOMPARE(newsList->size(), 10);
+    QCOMPARE(newsList->fullSize(), 20);
+    QCOMPARE(newsList->last()->getDbID(), 10LL);
+
+    // Now canPageDown should be true (displayEnd < fullSize)
+    QVERIFY(newsList->canPageDown());
+
+    // Track which items are paged back
+    qsizetype oldDisplayEnd = newsList->getDisplayEnd();
+    QList<qint64> pagedItemIDs;
+
+    // Page down 5 items
+    qsizetype paged = newsList->pageDown(5);
+    QCOMPARE(paged, 5);
+    QCOMPARE(newsList->size(), 15);
+
+    // Collect the paged items (these would be added to listAppend in LisvelLoadNewsOperation)
+    for (qsizetype i = oldDisplayEnd; i < newsList->getDisplayEnd(); ++i) {
+        NewsItem* item = newsList->fullAt(i);
+        QVERIFY(item != nullptr);
+        pagedItemIDs.append(item->getDbID());
+
+        // CRITICAL: These items are already in NewsList, so containsID should return true.
+        // This is what the duplicate prevention code checks before re-adding to NewsList.
+        QVERIFY2(newsList->containsID(item->getDbID()),
+                 qPrintable(QString("Paged item %1 should be in containsID").arg(item->getDbID())));
+    }
+
+    // Verify we got the expected items (11-15)
+    QCOMPARE(pagedItemIDs, QList<qint64>({11, 12, 13, 14, 15}));
+
+    delete newsList;
+    delete feed;
+}
+
+void TestNewsList::testPagedItemsAreAlreadyInList()
+{
+    // Test that items retrieved via pageDown/pageUp are the SAME objects
+    // that were originally added to the list. This verifies that paging
+    // returns pointers to existing items, not new copies.
+
+    NewsList* newsList = new NewsList(this);
+    FeedItem* feed = createTestFeed();
+    QDateTime base = QDateTime::currentDateTime();
+
+    // Store pointers to original items
+    QList<NewsItem*> originalItems;
+
+    // Add 10 items
+    for (int i = 1; i <= 10; i++) {
+        NewsItem* news = createTestNews(i, base.addSecs(i), feed);
+        originalItems.append(news);
+        newsList->append(news);
+    }
+
+    // Shrink from both ends
+    newsList->shrinkDisplayWindow(true, 3);   // Remove 1-3
+    newsList->shrinkDisplayWindow(false, 3);  // Remove 8-10
+    QCOMPARE(newsList->size(), 4);  // Display: 4-7
+
+    // Page down to bring back items 8-10
+    qsizetype oldEnd = newsList->getDisplayEnd();
+    newsList->pageDown(3);
+
+    // Verify the paged items are the SAME pointers as originals
+    for (qsizetype i = oldEnd; i < newsList->getDisplayEnd(); ++i) {
+        NewsItem* pagedItem = newsList->fullAt(i);
+        NewsItem* originalItem = originalItems.at(i);
+
+        QCOMPARE(pagedItem, originalItem);  // Same pointer
+        QCOMPARE(pagedItem->getDbID(), originalItem->getDbID());
+    }
+
+    // Page up to bring back items 1-3
+    qsizetype oldStart = newsList->getDisplayStart();
+    newsList->pageUp(3);
+
+    // Verify the paged items are the SAME pointers as originals
+    for (qsizetype i = newsList->getDisplayStart(); i < oldStart; ++i) {
+        NewsItem* pagedItem = newsList->fullAt(i);
+        NewsItem* originalItem = originalItems.at(i);
+
+        QCOMPARE(pagedItem, originalItem);  // Same pointer
+    }
+
+    delete newsList;
+    delete feed;
+}
+
+void TestNewsList::testDisplayWindowSyncAfterPageDown()
+{
+    // Test that displayEnd correctly tracks fullSize after normal operations.
+    // This ensures canPageDown only returns true when appropriate.
+
+    NewsList* newsList = new NewsList(this);
+    FeedItem* feed = createTestFeed();
+    QDateTime base = QDateTime::currentDateTime();
+
+    // Add 5 items
+    for (int i = 1; i <= 5; i++) {
+        NewsItem* news = createTestNews(i, base.addSecs(i), feed);
+        newsList->append(news);
+    }
+
+    // After appends, displayEnd should equal fullSize
+    QCOMPARE(newsList->getDisplayEnd(), newsList->fullSize());
+    QVERIFY(!newsList->canPageDown());
+
+    // Shrink from START (scrolling down scenario)
+    newsList->shrinkDisplayWindow(true, 2);
+    // displayEnd should still equal fullSize
+    QCOMPARE(newsList->getDisplayEnd(), newsList->fullSize());
+    QVERIFY(!newsList->canPageDown());  // No items after displayEnd
+
+    // Append more items
+    for (int i = 6; i <= 10; i++) {
+        NewsItem* news = createTestNews(i, base.addSecs(i), feed);
+        newsList->append(news);
+    }
+
+    // displayEnd should still equal fullSize
+    QCOMPARE(newsList->getDisplayEnd(), newsList->fullSize());
+    QVERIFY(!newsList->canPageDown());
+
+    // Now shrink from END (scrolling up scenario)
+    newsList->shrinkDisplayWindow(false, 5);
+
+    // displayEnd should now be < fullSize
+    QVERIFY(newsList->getDisplayEnd() < newsList->fullSize());
+    QVERIFY(newsList->canPageDown());
+
+    delete newsList;
+    delete feed;
+}
+
+void TestNewsList::testCanPageDownOnlyAfterShrinkFromEnd()
+{
+    // Verifies that canPageDown is ONLY true after shrinking from the end.
+    // This is important because the duplicate scenario only occurs when
+    // items are shrunk from the bottom (which happens during prepend/scroll-up).
+
+    NewsList* newsList = new NewsList(this);
+    FeedItem* feed = createTestFeed();
+    QDateTime base = QDateTime::currentDateTime();
+
+    // Add 20 items
+    for (int i = 1; i <= 20; i++) {
+        NewsItem* news = createTestNews(i, base.addSecs(i), feed);
+        newsList->append(news);
+    }
+
+    // Initial state: can't page down
+    QVERIFY(!newsList->canPageDown());
+    QCOMPARE(newsList->getDisplayEnd(), 20);
+    QCOMPARE(newsList->fullSize(), 20);
+
+    // Shrink from START multiple times (simulating scroll down)
+    newsList->shrinkDisplayWindow(true, 5);
+    QVERIFY(!newsList->canPageDown());  // Still can't page down
+
+    newsList->shrinkDisplayWindow(true, 5);
+    QVERIFY(!newsList->canPageDown());  // Still can't page down
+
+    // displayEnd should still equal fullSize
+    QCOMPARE(newsList->getDisplayEnd(), newsList->fullSize());
+
+    // Now shrink from END (simulating scroll up / prepend mode)
+    newsList->shrinkDisplayWindow(false, 5);
+    QVERIFY(newsList->canPageDown());  // NOW we can page down
+
+    // Verify state
+    QCOMPARE(newsList->getDisplayEnd(), 15);  // displayEnd was reduced
+    QCOMPARE(newsList->fullSize(), 20);        // fullSize unchanged
 
     delete newsList;
     delete feed;
