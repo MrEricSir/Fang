@@ -219,10 +219,11 @@ function clearPrefetch() {
 /**
   * Requests updated CSS from the backend and applies it.
   * Note: This is required to sync the light/dark modes and font sizes.
+  * Returns a Promise that resolves when CSS has been applied.
   */
 function updateCSS()
 {
-    apiGetRequest('css')
+    return apiGetRequest('css')
     .then((response) => response.json())
     .then((data) => {
               console.log("Update css:", data);
@@ -932,17 +933,29 @@ $(document).ready(function() {
               initWebSocket();
           });
 
-    // Handle light/dark mode.
-    updateCSS();
-
-    // Setup loading spinner.
+    // Setup loading spinner (can happen immediately).
     initLoadingSpinner();
 
-    // Setup event delegation (replaces per-item event handlers)
+    // Setup event delegation (replaces per-item event handlers).
     initEventDelegation();
 
-    // Load our news feed~
-    requestNews("initial");
+    // Wait for CSS to load before loading news to avoid visual flash/glitch.
+    updateCSS()
+    .then(() => {
+        console.log("CSS loaded, now loading news...");
+
+        // Remove the css-loading class and continue with news load.
+        document.body.classList.remove('css-loading');
+        requestNews('initial');
+    })
+    .catch((error) => {
+        console.error("Failed to load CSS:", error);
+
+        // Well... we tried our best! Attempt to soldier on without CSS.
+        // Remove the css-loading class and continue with news load.
+        document.body.classList.remove('css-loading');
+        requestNews('initial');
+    });
 
     ////////////////////////////////////////////////////////////////////////////////////////////
 

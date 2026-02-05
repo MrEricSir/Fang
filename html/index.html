@@ -446,6 +446,12 @@ body.FONT_LARGE > #welcome > #slogan { font-size: 30pt; }
 
 <style>
 #welcome { display: none; }
+
+/* Make everything hidden until fang.js applies the CSS rules. This prevents
+   UI flicker and displaying unstyled HTML. */
+body.css-loading {
+    visibility: hidden;
+}
 </style>
 
 <script type="text/javascript" src="jquery-2.0.3.js"></script>
@@ -455,7 +461,7 @@ body.FONT_LARGE > #welcome > #slogan { font-size: 30pt; }
 
 
 </head>
-<body>
+<body class="css-loading">
 
 <div id="newsView">
 
