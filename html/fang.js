@@ -19,6 +19,15 @@ let websocket = null;
 let websocketRestartTimerID = null;
 const websocketRestartTimeoutMs = 250;
 
+// Prefetch data for loading an update
+let prefetchPromise = null;
+let prefetchedData = null;
+let isPrefetching = false;
+const PREFETCH_THRESHOLD = 0.7; // Start prefetch at 70% scroll
+
+// Concurrent load request guard (prevent duplicate NewsItems.)
+let isLoadingNews = false;
+
 /**
   * Establishes a websocket connection to the backend.
   */
@@ -158,6 +167,11 @@ function requestNews(mode)
 {
     console.log("requestNews:", mode);
 
+    // Clear prefetch on initial or prepend (feed change or scroll up)
+    if (mode === 'initial' || mode === 'prepend') {
+        clearPrefetch();
+    }
+
     apiGetRequest('load', mode)
     .then((response) => response.json())
     .then((data) => {
@@ -185,8 +199,22 @@ function requestNews(mode)
                       jumpToBookmark();
                   }
               }
-          });
+          })
+    .finally(() => {
+        isLoadingNews = false;
+    });
 }
+
+/**
+ * Clears prefetch state. Called when feed changes or on initial load.
+ */
+function clearPrefetch() {
+    prefetchedData = null;
+    prefetchPromise = null;
+    isPrefetching = false;
+    isLoadingNews = false;
+}
+
 
 /**
   * Requests updated CSS from the backend and applies it.
@@ -309,7 +337,10 @@ function initEventDelegation()
             const container = target.closest('.newsContainer, .newsItemStyle');
             if (container) {
                 const elementID = htmlIdToId(container.id);
+                console.log('Force bookmark clicked: ID=' + elementID + ' container=' + container.id);
                 apiGetRequest('force_bookmark', elementID);
+            } else {
+                console.log('Force bookmark: No container found for target', target);
             }
             return;
         }
@@ -374,15 +405,24 @@ function appendNews(append, firstNewsID, newsList)
     // Create a DocumentFragment to batch DOM insertions
     const fragment = document.createDocumentFragment();
     const items = [];
+    let skippedDuplicates = 0;
 
     for (let i = 0; i < newsList.length; i++) {
         let newsItem = newsList[i];
+        const itemHtmlId = idToHtmlId(newsItem['id']);
+
+        // IMPORTANT!!!!1 Skip any NewsItems that are already in the DOM.
+        if (document.getElementById(itemHtmlId)) {
+            console.log("appendNews: Skipping duplicate item id=" + newsItem['id']);
+            skippedDuplicates++;
+            continue;
+        }
 
         // Clone the model
         const item = model.cloneNode(true);
-        item.id = idToHtmlId(newsItem['id']);
+        item.id = itemHtmlId;
 
-        // Assign data using vanilla JS for better performance
+        // Assign data.
         const linkEl = item.querySelector('.link');
         if (linkEl) {
             linkEl.setAttribute('href', newsItem['url']);
@@ -421,9 +461,14 @@ function appendNews(append, firstNewsID, newsList)
         fragment.appendChild(item);
     }
 
+    // Log if we skipped any duplicates
+    if (skippedDuplicates > 0) {
+        console.log("appendNews: Skipped " + skippedDuplicates + " duplicate items");
+    }
+
     // Insert all items at once
     if (append) {
-        console.log("Append!");
+        console.log("Append! Adding " + items.length + " items");
         // Find the last news container and insert after it
         const lastContainer = container.querySelector('.newsContainer:last-of-type');
         if (lastContainer && lastContainer.nextSibling) {
@@ -908,6 +953,44 @@ $(document).ready(function() {
     const SCROLL_DISTANCE = 250;
 
     /**
+     * Returns the current scroll position as a percentage (0.0 to 1.0).
+     */
+    function getScrollPercent() {
+        const scrollTop = $(document).scrollTop();
+        const docHeight = $(document).height();
+        const winHeight = window.innerHeight;
+        const scrollable = docHeight - winHeight;
+        if (scrollable <= 0) return 1.0;
+        return Math.min(1.0, scrollTop / scrollable);
+    }
+
+    /**
+     * Starts prefetching the next batch of news if not already prefetching.
+     */
+    function startPrefetch() {
+        if (isPrefetching || prefetchedData !== null) {
+            return; // Already prefetching or have prefetched data
+        }
+
+        console.log("Prefetching next batch...");
+        isPrefetching = true;
+
+        prefetchPromise = apiGetRequest('load', 'append')
+            .then((response) => response.json())
+            .then((data) => {
+                console.log("Prefetch complete, cached", data.news ? data.news.length : 0, "items");
+                prefetchedData = data;
+                isPrefetching = false;
+                return data;
+            })
+            .catch((error) => {
+                console.log("Prefetch failed:", error);
+                isPrefetching = false;
+                prefetchPromise = null;
+            });
+    }
+
+    /**
      * Checks scroll position and triggers appropriate callbacks.
      * Called on scroll events with requestAnimationFrame for smooth performance.
      */
@@ -936,6 +1019,12 @@ $(document).ready(function() {
         }
 
         lastVeryBottom = 0; // Now that we've scrolled, clear this timer.
+
+        // Prefetch when user is 70% scrolled down
+        const scrollPercent = getScrollPercent();
+        if (scrollPercent >= PREFETCH_THRESHOLD && !prefetchedData && !isPrefetching) {
+            startPrefetch();
+        }
 
         // Check top.
         if (scrollTop <= SCROLL_DISTANCE) {
@@ -984,7 +1073,7 @@ $(document).ready(function() {
         }
 
         // Start at the current bookmark.
-        let bookmarkedItem = $( 'body>.bookmarked' );
+        let bookmarkedItem = $( '#newsView>.bookmarked' );
         //console.log("Current bookmark: ", bookmarkedItem)
 
         // Check if the current bookmark is valid.
@@ -1019,11 +1108,56 @@ $(document).ready(function() {
 
     function loadNext() {
         // console.log("loadNext");
+
+        // Prevent duplicate requests.
+        if (isLoadingNews) {
+            console.log("loadNext: Already loading, skipping");
+            return;
+        }
+
+        // Use prefetched data if available
+        if (prefetchedData !== null) {
+            console.log("Using prefetched data");
+            const data = prefetchedData;
+            clearPrefetch();
+
+            if (data.news && data.news.length > 0) {
+                appendNews(true, data.firstNewsID, data.news);
+            }
+            return;
+        }
+
+        // If prefetch is in progress, wait for it instead of making a duplicate request
+        if (isPrefetching && prefetchPromise) {
+            console.log("Waiting for prefetch to complete...");
+            prefetchPromise.then((data) => {
+                clearPrefetch();
+                if (data && data.news && data.news.length > 0) {
+                    appendNews(true, data.firstNewsID, data.news);
+                }
+            });
+            return;
+        }
+
+        // No prefetch available, make a regular request
+        isLoadingNews = true;
         requestNews("append");
     }
 
     function loadPrevious() {
         // console.log("loadPrevious");
+
+        // Prevent concurrent requests which can cause duplicates
+        if (isLoadingNews) {
+            console.log("loadPrevious: Already loading, skipping");
+            return;
+        }
+
+        // Clear prefetch data when scrolling upward. This is because the prefetch data will
+        // be for appending to the bottom.
+        clearPrefetch();
+
+        isLoadingNews = true;
         requestNews("prepend");
     }
 

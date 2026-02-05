@@ -34,7 +34,7 @@ qint64 LoadFolderOperation::getFirstNewsID()
 QString LoadFolderOperation::appendNewQueryString()
 {
     return "SELECT * FROM NewsItemTable N WHERE N.feed_id IN "
-           "(SELECT id FROM FeedItemTable WHERE parent_folder = " + QString::number(feedItem->getDbID()) + ") "
+           "(SELECT id FROM FeedItemTable WHERE parent_folder = :parent_folder) "
            "AND id > (SELECT bookmark_id FROM FeedItemTable WHERE id = N.feed_id) AND "
            "id NOT IN (" + getLoadedIDString() + ") "
            "ORDER BY timestamp ASC, id ASC LIMIT :load_limit";
@@ -43,8 +43,24 @@ QString LoadFolderOperation::appendNewQueryString()
 QString LoadFolderOperation::prependNewQueryString()
 {
     return "SELECT * FROM NewsItemTable N WHERE N.feed_id IN "
-           "(SELECT id FROM FeedItemTable WHERE parent_folder = " + QString::number(feedItem->getDbID()) + ") "
+           "(SELECT id FROM FeedItemTable WHERE parent_folder = :parent_folder) "
            "AND id <= (SELECT bookmark_id FROM FeedItemTable WHERE id = N.feed_id) AND "
            "id NOT IN (" + getLoadedIDString() + ") "
            "ORDER BY timestamp DESC, id DESC LIMIT :load_limit";
+}
+
+QString LoadFolderOperation::appendAfterPositionQueryString()
+{
+    // Load items chronologically after a given position, regardless of bookmark.
+    // Used to reload trimmed items when scrolling back down through read items.
+    return "SELECT * FROM NewsItemTable N WHERE N.feed_id IN "
+           "(SELECT id FROM FeedItemTable WHERE parent_folder = :parent_folder) "
+           "AND (timestamp > :last_timestamp OR (timestamp = :last_timestamp AND id > :last_id)) "
+           "AND id NOT IN (" + getLoadedIDString() + ") "
+           "ORDER BY timestamp ASC, id ASC LIMIT :load_limit";
+}
+
+void LoadFolderOperation::bindQueryParameters(QSqlQuery& query)
+{
+    query.bindValue(":parent_folder", feedItem->getDbID());
 }

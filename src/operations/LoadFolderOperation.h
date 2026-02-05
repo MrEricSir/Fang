@@ -15,9 +15,11 @@ public:
 
 protected slots:
 
-    virtual qint64 getFirstNewsID();
-    virtual QString appendNewQueryString();
-    virtual QString prependNewQueryString();
+    virtual qint64 getFirstNewsID() override;
+    virtual QString appendNewQueryString() override;
+    virtual QString prependNewQueryString() override;
+    virtual QString appendAfterPositionQueryString() override;
+    virtual void bindQueryParameters(QSqlQuery& query) override;
 };
 
 #endif // LOADFOLDEROPERATION_H

@@ -1,21 +1,24 @@
 #ifndef LISVELFEEDITEM_H
 #define LISVELFEEDITEM_H
 
-#include <QList>
-
 #include "FeedItem.h"
+#include "NewsPosition.h"
 
 /*!
     \brief LISVEL is Fang's secret sauce for keeping a stable order of news
     items as you scroll through the view.
 
     LISVEL stands for:
-      Limmited
+      Limited
       Infinite
       Scrolling
       Via
       Exclusion
       List
+
+    The NewsList maintains all loaded items in memory with a display window,
+    allowing paging through previously loaded content without re-fetching
+    from the database.
  */
 class LisvelFeedItem : public FeedItem
 {
@@ -28,7 +31,21 @@ public:
         \param allowBackward
         \return True if this item can be bookmarked.
      */
-    virtual bool canBookmark(qint64 proposedBookmarkID, bool allowBackward);
+    virtual bool canBookmark(qint64 proposedBookmarkID, bool allowBackward) override;
+
+    /*!
+        \brief Overrides setBookmark to capture the timestamp for proper ordering.
+     */
+    virtual void setBookmark(qint64 toBookmarkID) override;
+
+    /*!
+        \brief Gets the current bookmark position (timestamp, id tuple).
+     */
+    inline const NewsPosition& getBookmarkPosition() const { return _bookmarkPosition; }
+
+private:
+    // Position of current bookmark (timestamp, id) for proper ordering comparison
+    NewsPosition _bookmarkPosition;
 };
 
 #endif // LISVELFEEDITEM_H

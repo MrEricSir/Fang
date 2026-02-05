@@ -30,8 +30,13 @@ add_subdirectory(TestFangObject)
 add_subdirectory(TestFangSettings)
 add_subdirectory(TestFeedItem)
 add_subdirectory(TestFeedValidator)
+add_subdirectory(TestLisvelFeedItem)
 add_subdirectory(TestNewsItem)
 add_subdirectory(TestNewsList)
+
+# Integration tests
+add_subdirectory(TestBookmarkIntegration)
+add_subdirectory(TestWebServer)
 
 # Network tests
 add_subdirectory(TestNetworkRetryPolicy)

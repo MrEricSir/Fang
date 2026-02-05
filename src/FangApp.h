@@ -31,8 +31,23 @@ class FangApp : public FangObject
     Q_OBJECT
 public:
     explicit FangApp(QApplication *parent, QQmlApplicationEngine* engine, QSingleInstanceCheck* single);
-    
+
     virtual ~FangApp();
+
+protected:
+    /*!
+        \brief Protected constructor for testing without UI.
+        Note: Only used for teseting. Test subclasses must call initForTesting() after construction.
+     */
+    explicit FangApp(QObject *parent);
+
+    /*!
+        \brief Initialize for testing with in-memory database.
+        Note: Only used for testing.
+     */
+    void initForTesting();
+
+public:
 
     void init();
     
@@ -304,7 +319,7 @@ private:
     QQuickWindow* window;
     NotificationBase* notifications;
     WebSocketServer webSocketServer;
-    WebServer webServer;
+    WebServer* webServer;
     UpdateChecker updateChecker;
 
     // Special feeds.
