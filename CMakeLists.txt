@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.16)
 
 # Version
-project(Fang VERSION 0.2.10 LANGUAGES CXX C)
+project(Fang VERSION 0.2.11 LANGUAGES CXX C)
 # Set suffix to:
 # "-beta.1"  Beta
 # "-rc.1"    Release candidate
