@@ -50,7 +50,8 @@ FangApp::FangApp(QApplication *parent, QQmlApplicationEngine* engine, QSingleIns
     pinnedNews(nullptr),
     isPinnedNewsVisible(true),
     lastFeedSelected(nullptr),
-    updateChecker(this)
+    updateChecker(this),
+    systemFont(QGuiApplication::font())
 {
     if (_instance != nullptr) {
         qCCritical(logApp) << "FangApp: Multiple instances created! Previous instance exists.";
@@ -137,6 +138,9 @@ void FangApp::init()
 
     qCInfo(logApp) << "Image formats: " << QImageReader::supportedImageFormats();
 
+    // Set font options.
+    systemFont.setKerning(true);
+
     // Setup our QML.
     engine->rootContext()->setContextProperty("feedListModel", &feedList); // list of feeds
     engine->rootContext()->setContextProperty("importListModel", importList); // list of feeds to be batch imported
@@ -144,6 +148,7 @@ void FangApp::init()
     engine->rootContext()->setContextProperty("isDesktop", isDesktop()); // whether we're on desktop (vs mobile etc.)
     engine->rootContext()->setContextProperty("fangVersion", APP_VERSION);
     engine->rootContext()->setContextProperty("localServerPort", webServer->port()); // Port the server is listening on
+    engine->rootContext()->setContextProperty("nativeFont", systemFont);
 
 #ifdef QT_DEBUG
     bool isDebugBuild = true;

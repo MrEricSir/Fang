@@ -31,7 +31,7 @@ RearrangeableDelegate {
 
     // Folders are always visible, but their children are not.
     visible: isFolder ? true : (parentFolder == -1 || folderOpen ? true : false);
-    height: visible ? 35 * style.scale : 0;
+    height: visible ? (35 * style.scale) : 0;
 
     Row {
         id: row1;
@@ -55,7 +55,7 @@ RearrangeableDelegate {
                            style.color.sidebarSelected : "transparent";
 
                 anchors.fill: parent;
-                anchors.topMargin: 5 * style.scale;
+                anchors.topMargin: style.defaultMarin;
                 anchors.leftMargin: 0;
                 anchors.rightMargin: 0;
                 
@@ -201,8 +201,8 @@ RearrangeableDelegate {
                     anchors.right: feedCountCol.left;
                     
                     anchors.rightMargin: 4 * style.scale;
-                    anchors.bottomMargin: 5 * style.scale;
-                    anchors.topMargin: 5 * style.scale;
+                    anchors.bottomMargin: style.defaultMargin;
+                    anchors.topMargin: style.defaultMargin;
                     anchors.leftMargin: 0;
                     
                     Text {
@@ -213,10 +213,9 @@ RearrangeableDelegate {
                         width: parent.width;
                         anchors.verticalCenter: parent.verticalCenter;
                         
-                        font.pointSize: style.font.defaultSize;
-                        font.family: style.font.defaultFamily;
+                        font: unreadCount > 0 ?
+                                  style.font.standardBold : style.font.standard;
                         color: style.color.sidebarSelectedText;
-                        renderType: style.textRendering;
                         
                         elide: Text.ElideRight;
                     }
@@ -231,7 +230,11 @@ RearrangeableDelegate {
                     ]
                     
                     state: unreadCount > 0 ? "unread" : "allread";
-                    opacity: unreadCount == 0 ? 0.0 : 1.0; // initial opacity
+
+                    Component.onCompleted: {
+                        // Set initial opacity.
+                        opacity = unreadCount == 0 ? 0.0 : 1.0;
+                    }
                     
                     transitions: [
                         Transition {
@@ -289,11 +292,9 @@ RearrangeableDelegate {
                             
                             anchors.horizontalCenter: parent.horizontalCenter
                             anchors.verticalCenter: parent.verticalCenter;
-                            font.pointSize: style.font.unreadCountSize;
-                            font.family: style.font.defaultFamily;
+                            font: style.font.unreadCount;
                             elide: Text.ElideRight;
                             color: style.color.badgeText;
-                            renderType: style.textRendering;
                         }
                     }
                 }

@@ -321,6 +321,7 @@ private:
     WebSocketServer webSocketServer;
     WebServer* webServer;
     UpdateChecker updateChecker;
+    QFont systemFont;
 
     // Special feeds.
     AllNewsFeedItem* allNews;

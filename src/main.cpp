@@ -34,6 +34,9 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
 
     // Prevent graphical stutter/tearing on WebEngineView.
     QQuickWindow::setGraphicsApi(QSGRendererInterface::OpenGL);
+
+    // Use native rendering for fonts.
+    QQuickWindow::setTextRenderType(QQuickWindow::NativeTextRendering);
     
     QApplication app(argc, argv);
     app.setOrganizationName("EricGregory");

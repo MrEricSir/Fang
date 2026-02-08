@@ -30,11 +30,9 @@ Button {
         verticalAlignment: Text.AlignVCenter;
         horizontalAlignment: Text.AlignHCenter;
         width: parent.width - 12;
-        renderType: style.textRendering;
         
         anchors.centerIn: parent;
-        font.pointSize: style.font.defaultSize;
-        font.family: style.font.defaultFamily;
+        font: style.font.standard
         color: style.color.dialogButtonText;
     }
 }

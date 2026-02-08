@@ -13,8 +13,7 @@ Basic.TextField {
     color: style.color.textEntryText;
 
     font {
-        family: style.font.defaultFamily;
-        pointSize: style.font.defaultSize;
+        font: style.font.standard;
     }
 
     placeholderTextColor: style.color.textEntryHint;
