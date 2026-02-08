@@ -11,10 +11,7 @@ Basic.TextField {
     }
 
     color: style.color.textEntryText;
-
-    font {
-        font: style.font.standard;
-    }
+    font: style.font.standard;
 
     placeholderTextColor: style.color.textEntryHint;
 

@@ -19,9 +19,17 @@ Item {
         case "MAC": return macFontStyle;
         case "WIN": return winFontStyle;
 //        case "IOS": return iosFontStyle;
-//        case "ANDROID": return androidFontStyle;
+        case "ANDROID": return androidFontStyle;
         case "LINUX": return linuxFontStyle;
 //        case "UNIX": return unixFontStyle;
+        }
+    }
+
+    function getSizeMultiplier() {
+        switch(fangSettings.fontSize) {
+        case "SMALL": return 0.75;
+        case "MEDIUM": return 1.0;
+        case "LARGE": return 1.3334;
         }
     }
     
@@ -30,23 +38,23 @@ Item {
 
         readonly property font standard: {
             let f = nativeFont;
-            f.pointSize = 13;
+            f.pointSize = 13 * getSizeMultiplier();
             return f;
         }
         readonly property font standardBold: {
             let f = nativeFont;
-            f.pointSize = 13;
+            f.pointSize = 13 * getSizeMultiplier();
             f.weight = Font.Bold;
             return f;
         }
         readonly property font unreadCount: {
             let f = nativeFont;
-            f.pointSize = 8;
+            f.pointSize = 8 * getSizeMultiplier();
             return f;
         }
         readonly property font title: {
             let f = nativeFont;
-            f.pointSize = 20;
+            f.pointSize = 20 * getSizeMultiplier();
             return f;
         }
     }
@@ -56,23 +64,23 @@ Item {
 
         readonly property font standard: {
             let f = nativeFont;
-            f.pointSize = 11;
+            f.pointSize = 11 * getSizeMultiplier();
             return f;
         }
         readonly property font standardBold: {
             let f = nativeFont;
-            f.pointSize = 11;
+            f.pointSize = 11 * getSizeMultiplier();
             f.weight = Font.Bold;
             return f;
         }
         readonly property font unreadCount: {
             let f = nativeFont;
-            f.pointSize = 8;
+            f.pointSize = 8 * getSizeMultiplier();
             return f;
         }
         readonly property font title: {
             let f = nativeFont;
-            f.pointSize = 20;
+            f.pointSize = 20 * getSizeMultiplier();
             return f;
         }
     }
@@ -82,23 +90,23 @@ Item {
 
         readonly property font standard: {
             let f = nativeFont;
-            f.pointSize = 11;
+            f.pointSize = 11 * getSizeMultiplier();
             return f;
         }
         readonly property font standardBold: {
             let f = nativeFont;
-            f.pointSize = 11;
+            f.pointSize = 11 * getSizeMultiplier();
             f.weight = Font.Bold;
             return f;
         }
         readonly property font unreadCount: {
             let f = nativeFont;
-            f.pointSize = 8;
+            f.pointSize = 8 * getSizeMultiplier();
             return f;
         }
         readonly property font title: {
             let f = nativeFont;
-            f.pointSize = 20;
+            f.pointSize = 20 * getSizeMultiplier();
             return f;
         }
     }
