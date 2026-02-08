@@ -19,7 +19,7 @@ Item {
         case "MAC": return macFontStyle;
         case "WIN": return winFontStyle;
 //        case "IOS": return iosFontStyle;
-        case "ANDROID": return androidFontStyle;
+//        case "ANDROID": return androidFontStyle;
         case "LINUX": return linuxFontStyle;
 //        case "UNIX": return unixFontStyle;
         }
@@ -27,24 +27,33 @@ Item {
     
     QtObject {
         id: macFontStyle;
-        
-        // Default UI font.
-        property int defaultSize: 13;
-        property int titleSize: 20;
-        property int unreadCountSize: 8;
-        property string defaultFamily: ""; // System default
+
+        readonly property font standard: {
+            let f = nativeFont;
+            f.pointSize = 13;
+            return f;
+        }
+        readonly property font standardBold: {
+            let f = nativeFont;
+            f.pointSize = 13;
+            f.weight = Font.Bold;
+            return f;
+        }
+        readonly property font unreadCount: {
+            let f = nativeFont;
+            f.pointSize = 8;
+            return f;
+        }
+        readonly property font title: {
+            let f = nativeFont;
+            f.pointSize = 20;
+            return f;
+        }
     }
     
     QtObject {
         id: winFontStyle;
-        
-        // Default UI font.
-        //property int defaultSize: 11;
-        //property int titleSize: 20;
-        //property int unreadCountSize: 8;
-        //property string defaultFamily: QFontDatabase.systemFont(QFontDatabase.GeneralFont).family; //""//"Segoe UI";
-        //property font standard: Qt.font({ pointSize: 11 })//QFontDatabase.systemFont(QFontDatabase.GeneralFont)
-        //property font standard: nativeFont;
+
         readonly property font standard: {
             let f = nativeFont;
             f.pointSize = 11;
@@ -71,21 +80,53 @@ Item {
     QtObject {
         id: linuxFontStyle;
 
-        // Default UI font.
-        property int defaultSize: 11;
-        property int titleSize: 20;
-        property int unreadCountSize: 8;
-        property string defaultFamily: "Geneva";
+        readonly property font standard: {
+            let f = nativeFont;
+            f.pointSize = 11;
+            return f;
+        }
+        readonly property font standardBold: {
+            let f = nativeFont;
+            f.pointSize = 11;
+            f.weight = Font.Bold;
+            return f;
+        }
+        readonly property font unreadCount: {
+            let f = nativeFont;
+            f.pointSize = 8;
+            return f;
+        }
+        readonly property font title: {
+            let f = nativeFont;
+            f.pointSize = 20;
+            return f;
+        }
     }
 
     QtObject {
         id: androidFontStyle;
 
-        // Default UI font.
-        property int defaultSize: 16;
-        property int titleSize: 30;
-        property int unreadCountSize: 13;
-        property string defaultFamily: "Roboto";
+        readonly property font standard: {
+            let f = nativeFont;
+            f.pointSize = 16;
+            return f;
+        }
+        readonly property font standardBold: {
+            let f = nativeFont;
+            f.pointSize = 16;
+            f.weight = Font.Bold;
+            return f;
+        }
+        readonly property font unreadCount: {
+            let f = nativeFont;
+            f.pointSize = 13;
+            return f;
+        }
+        readonly property font title: {
+            let f = nativeFont;
+            f.pointSize = 30;
+            return f;
+        }
     }
 
     QtObject {
