@@ -24,6 +24,7 @@
 #include "server/WebServer.h"
 #include "server/WebSocketServer.h"
 #include "utilities/UpdateChecker.h"
+#include "sync/SyncService.h"
 
 
 class FangApp : public FangObject
@@ -217,6 +218,11 @@ public slots:
     WebSocketServer* getWebSocketServer() { return &webSocketServer; }
 
     /*!
+        \return The sync service for cloud synchronization.
+     */
+    SyncService* getSyncService() { return syncService; }
+
+    /*!
         \brief Jumps the view to the bookmark (if any)
      */
     void jumpToBookmark();
@@ -302,7 +308,10 @@ private slots:
 
     // Updates the feed refresh timer.
     void setRefreshTimer();
-    
+
+    // Initialize sync service.
+    void setupSyncService();
+
 private:
     static FangApp* _instance;
     QQmlApplicationEngine* engine;
@@ -321,6 +330,7 @@ private:
     WebSocketServer webSocketServer;
     WebServer* webServer;
     UpdateChecker updateChecker;
+    SyncService* syncService;
 
     // Special feeds.
     AllNewsFeedItem* allNews;

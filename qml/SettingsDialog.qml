@@ -215,19 +215,69 @@ Dialog {
     DialogGroup {
         title: "OPML feed list";
         width: parent.width;
-        
+
         DialogButton {
             id: importOPML;
-            
+
             text: "Import";
             onClicked: opml.importFile();
         }
-        
+
         DialogButton {
             id: exportOPML;
-            
+
             text: "Export";
             onClicked: opml.exportFile();
+        }
+    }
+
+    DialogGroup {
+        title: "Cloud sync";
+        width: parent.width;
+
+        DialogText {
+            visible: syncService !== null;
+            text: {
+                if (syncService === null) {
+                    // Shouldn't happen!
+                    return "";
+                }
+                if (!syncService.enabled) {
+                    return "Sync is disabled";
+                }
+                if (syncService.syncing) {
+                    return "Syncing...";
+                }
+
+                return "Last sync: " + syncService.lastSyncTimeString;
+            }
+        }
+
+        DialogButton {
+            id: syncSignInButton;
+            visible: syncService !== null && syncService.enabled;
+
+            text: "Sign in with Google";
+            onClicked: {
+                syncService.authenticate();
+            }
+        }
+
+        DialogButton {
+            id: syncNowButton;
+            visible: syncService !== null && syncService.enabled;
+            enabled: !syncService.syncing;
+
+            text: "Sync now";
+            onClicked: syncService.sync();
+        }
+
+        DialogButton {
+            id: syncSignOutButton;
+            visible: syncService !== null && syncService.enabled;
+
+            text: "Sign out";
+            onClicked: syncService.signOut();
         }
     }
     

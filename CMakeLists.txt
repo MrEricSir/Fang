@@ -49,6 +49,7 @@ find_package(Qt6 REQUIRED COMPONENTS
     QuickControls2
     Widgets
     Network
+    NetworkAuth
     Sql
     Svg
     WebSockets
@@ -156,6 +157,10 @@ qt_add_executable(Fang WIN32
     src/network/NetworkDownloadCore.cpp
     src/server/WebSocketServer.cpp
     src/server/WebServer.cpp
+    src/sync/CloudStorageProvider.cpp
+    src/sync/SyncData.cpp
+    src/sync/SyncService.cpp
+    src/sync/GoogleDriveProvider.cpp
 
     # Headers
     src/models/DBObject.h
@@ -232,6 +237,10 @@ qt_add_executable(Fang WIN32
     src/parser/NewsParser.h
     src/server/WebSocketServer.h
     src/server/WebServer.h
+    src/sync/CloudStorageProvider.h
+    src/sync/SyncData.h
+    src/sync/SyncService.h
+    src/sync/GoogleDriveProvider.h
 
     # Resource files
     Resources.qrc
@@ -265,6 +274,7 @@ target_link_libraries(Fang PRIVATE
     Qt6::QuickControls2
     Qt6::Widgets
     Qt6::Network
+    Qt6::NetworkAuth
     Qt6::Sql
     Qt6::Svg
     Qt6::WebSockets

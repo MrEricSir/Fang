@@ -40,3 +40,6 @@ add_subdirectory(TestWebServer)
 
 # Network tests
 add_subdirectory(TestNetworkRetryPolicy)
+
+# Sync tests
+add_subdirectory(TestSync)

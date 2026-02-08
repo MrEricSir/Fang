@@ -3,8 +3,11 @@
 #include "utilities/FangLogging.h"
 #include <QElapsedTimer>
 #include <QImageReader>
+#include <QSettings>
+#include <QStandardPaths>
 
 #include "utilities/ErrorHandling.h"
+#include "sync/GoogleDriveProvider.h"
 
 #include "operations/UpdateFeedOperation.h"
 #include "operations/LoadAllFeedsOperation.h"
@@ -50,7 +53,8 @@ FangApp::FangApp(QApplication *parent, QQmlApplicationEngine* engine, QSingleIns
     pinnedNews(nullptr),
     isPinnedNewsVisible(true),
     lastFeedSelected(nullptr),
-    updateChecker(this)
+    updateChecker(this),
+    syncService(nullptr)
 {
     if (_instance != nullptr) {
         qCCritical(logApp) << "FangApp: Multiple instances created! Previous instance exists.";
@@ -60,6 +64,10 @@ FangApp::FangApp(QApplication *parent, QQmlApplicationEngine* engine, QSingleIns
     // Set config for webserver.
     webServer = new WebServer(this, this);
     webServer->setWebsocketPort(webSocketServer.getPort());
+
+    // Initialize sync service.
+    syncService = new SyncService(this, this);
+    setupSyncService();
     
     // Setup signals.
     connect(parent, &QApplication::aboutToQuit, this, &FangApp::onQuit);
@@ -99,7 +107,8 @@ FangApp::FangApp(QObject *parent) :
     pinnedNews(nullptr),
     isPinnedNewsVisible(false),
     lastFeedSelected(nullptr),
-    updateChecker(this)
+    updateChecker(this),
+    syncService(nullptr)
 {
 }
 
@@ -144,6 +153,7 @@ void FangApp::init()
     engine->rootContext()->setContextProperty("isDesktop", isDesktop()); // whether we're on desktop (vs mobile etc.)
     engine->rootContext()->setContextProperty("fangVersion", APP_VERSION);
     engine->rootContext()->setContextProperty("localServerPort", webServer->port()); // Port the server is listening on
+    engine->rootContext()->setContextProperty("syncService", syncService);
 
 #ifdef QT_DEBUG
     bool isDebugBuild = true;
@@ -152,7 +162,7 @@ void FangApp::init()
 #endif // QT_DEBUG
     engine->rootContext()->setContextProperty("isDebugBuild", isDebugBuild); // let QML know if we're a debug build or not
     qCInfo(logApp) << "Is debug build: " << isDebugBuild;
-    
+
     // Load feed list.
     LoadAllFeedsOperation* loadAllOp = new LoadAllFeedsOperation(&manager, &feedList);
     connect(loadAllOp, &LoadAllFeedsOperation::finished, this, &FangApp::onLoadAllFinished);
@@ -824,4 +834,45 @@ void FangApp::markAllAsRead(FeedItem* feed)
 void FangApp::markAllAsUnread(FeedItem* feed)
 {
     markAllAsReadOrUnread(feed, false);
+}
+
+void FangApp::setupSyncService()
+{
+    if (!syncService) {
+        qCInfo(logApp) << "Cannot setup sync service: Not configured";
+        return;
+    }
+
+    // TODO: Get OAuth credentials from settings... for now.
+    // These can be set in Fang.conf or via environment variables:
+    //   FANG_GOOGLE_CLIENT_ID
+    //   FANG_GOOGLE_CLIENT_SECRET
+    QSettings settings;
+    settings.beginGroup("Sync/GoogleDrive");
+
+    QString clientId = settings.value("clientId").toString();
+    QString clientSecret = settings.value("clientSecret").toString();
+
+    // Fall back to environment variables if not in settings.
+    if (clientId.isEmpty()) {
+        clientId = qEnvironmentVariable("FANG_GOOGLE_CLIENT_ID");
+    }
+    if (clientSecret.isEmpty()) {
+        clientSecret = qEnvironmentVariable("FANG_GOOGLE_CLIENT_SECRET");
+    }
+
+    settings.endGroup();
+
+    // Only proceed if we have credentials.
+    if (clientId.isEmpty() || clientSecret.isEmpty()) {
+        qCInfo(logApp) << "Google Drive sync not configured: Missing credentials.";
+        return;
+    }
+
+    qCInfo(logApp) << "Setting up Google Drive sync provider";
+
+    GoogleDriveProvider* provider = new GoogleDriveProvider();
+    provider->setCredentials(clientId, clientSecret);
+
+    syncService->setProvider(provider);
 }
