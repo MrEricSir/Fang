@@ -8,10 +8,10 @@ Item {
     readonly property var font: getPlatformFont();
     readonly property var color: fangSettings.currentStyle === "LIGHT" ? colorSchemeLight : colorSchemeDark;
     readonly property double scale: (platform === "ANDROID") ? 1.5 : 1.0;
-    readonly property var textRendering: (platform === "ANDROID") ? Text.QtRendering : Text.NativeRendering;
     readonly property alias colorSchemeLight: colorSchemeLight;
     readonly property alias colorSchemeDark: colorSchemeDark;
     readonly property double defaultRadius: 4 * scale;
+    readonly property double defaultMarin: 5 * scale;
 
 
     function getPlatformFont() {
@@ -24,45 +24,117 @@ Item {
 //        case "UNIX": return unixFontStyle;
         }
     }
+
+    function getSizeMultiplier() {
+        switch(fangSettings.fontSize) {
+        case "SMALL": return 0.75;
+        case "MEDIUM": return 1.0;
+        case "LARGE": return 1.3334;
+        }
+    }
     
     QtObject {
         id: macFontStyle;
-        
-        // Default UI font.
-        property int defaultSize: 13;
-        property int titleSize: 20;
-        property int unreadCountSize: 8;
-        property string defaultFamily: "Lucida Grande";
+
+        readonly property font standard: {
+            let f = nativeFont;
+            f.pointSize = 13 * getSizeMultiplier();
+            return f;
+        }
+        readonly property font standardBold: {
+            let f = nativeFont;
+            f.pointSize = 13 * getSizeMultiplier();
+            f.weight = Font.Bold;
+            return f;
+        }
+        readonly property font unreadCount: {
+            let f = nativeFont;
+            f.pointSize = 8 * getSizeMultiplier();
+            return f;
+        }
+        readonly property font title: {
+            let f = nativeFont;
+            f.pointSize = 20 * getSizeMultiplier();
+            return f;
+        }
     }
     
     QtObject {
         id: winFontStyle;
-        
-        // Default UI font.
-        property int defaultSize: 11;
-        property int titleSize: 20;
-        property int unreadCountSize: 8;
-        property string defaultFamily: "Segoe UI";
+
+        readonly property font standard: {
+            let f = nativeFont;
+            f.pointSize = 11 * getSizeMultiplier();
+            return f;
+        }
+        readonly property font standardBold: {
+            let f = nativeFont;
+            f.pointSize = 11 * getSizeMultiplier();
+            f.weight = Font.Bold;
+            return f;
+        }
+        readonly property font unreadCount: {
+            let f = nativeFont;
+            f.pointSize = 8 * getSizeMultiplier();
+            return f;
+        }
+        readonly property font title: {
+            let f = nativeFont;
+            f.pointSize = 20 * getSizeMultiplier();
+            return f;
+        }
     }
 
     QtObject {
         id: linuxFontStyle;
 
-        // Default UI font.
-        property int defaultSize: 11;
-        property int titleSize: 20;
-        property int unreadCountSize: 8;
-        property string defaultFamily: "Geneva";
+        readonly property font standard: {
+            let f = nativeFont;
+            f.pointSize = 11 * getSizeMultiplier();
+            return f;
+        }
+        readonly property font standardBold: {
+            let f = nativeFont;
+            f.pointSize = 11 * getSizeMultiplier();
+            f.weight = Font.Bold;
+            return f;
+        }
+        readonly property font unreadCount: {
+            let f = nativeFont;
+            f.pointSize = 8 * getSizeMultiplier();
+            return f;
+        }
+        readonly property font title: {
+            let f = nativeFont;
+            f.pointSize = 20 * getSizeMultiplier();
+            return f;
+        }
     }
 
     QtObject {
         id: androidFontStyle;
 
-        // Default UI font.
-        property int defaultSize: 16;
-        property int titleSize: 30;
-        property int unreadCountSize: 13;
-        property string defaultFamily: "Roboto";
+        readonly property font standard: {
+            let f = nativeFont;
+            f.pointSize = 16;
+            return f;
+        }
+        readonly property font standardBold: {
+            let f = nativeFont;
+            f.pointSize = 16;
+            f.weight = Font.Bold;
+            return f;
+        }
+        readonly property font unreadCount: {
+            let f = nativeFont;
+            f.pointSize = 13;
+            return f;
+        }
+        readonly property font title: {
+            let f = nativeFont;
+            f.pointSize = 30;
+            return f;
+        }
     }
 
     QtObject {

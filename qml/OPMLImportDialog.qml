@@ -159,12 +159,10 @@ Dialog {
 
                                 text: title;
 
-                                font.pointSize: style.font.defaultSize;
-                                font.family: style.font.defaultFamily;
+                                font: style.font.standard;
                                 color: style.color.dialogText;
 
                                 elide: Text.ElideRight;
-                                renderType: style.textRendering;
                             }
 
                             Text {
@@ -172,13 +170,11 @@ Dialog {
 
                                 text: url;
 
-                                font.pointSize: style.font.defaultSize;
-                                font.family: style.font.defaultFamily;
+                                font: style.font.standard;
                                 font.italic: true; // It's a-me! Mario!
                                 color: style.color.fadedText;
 
                                 elide: Text.ElideRight;
-                                renderType: style.textRendering;
                             }
                         }
                         

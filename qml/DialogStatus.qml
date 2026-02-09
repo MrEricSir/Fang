@@ -27,10 +27,8 @@ Rectangle {
         
         x: statusImage.width + 10; // margin
         
-        font.pointSize: style.font.defaultSize;
-        font.family: style.font.defaultFamily;
+        font: style.font.standard;
         color: style.color.dialogText;
-        renderType: style.textRendering;
         
         width: parent.width - x;
     }

@@ -22,7 +22,7 @@ Dialog {
     DialogText {
         text: "Feed on news";
         horizontalAlignment: Text.AlignHCenter;
-        fontPointSize: style.font.titleSize;
+        font: style.font.title;
     }
 
     DialogText {

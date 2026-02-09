@@ -7,7 +7,7 @@ Rectangle {
     color: "transparent";
     
     property alias horizontalAlignment: dialogTextText.horizontalAlignment;
-    property alias fontPointSize: dialogTextText.font.pointSize;
+    property alias font: dialogTextText.font;
     
     width: parent.width;
     height: dialogTextText.paintedHeight;
@@ -21,11 +21,9 @@ Rectangle {
         
         text: dialogText.text;
         
-        font.pointSize: style.font.defaultSize;
-        font.family: style.font.defaultFamily;
+        font: style.font.standard;
         color: dialogText.textColor;
         wrapMode: Text.WordWrap;
-        renderType: style.textRendering;
         
         // In case you want teh linkx0rz
         onLinkActivated: Qt.openUrlExternally(link);

@@ -152,10 +152,8 @@ FangScreen {
             
             text: dialog.title
             
-            font.pointSize: style.font.titleSize
-            font.family: style.font.defaultFamily
+            font: style.font.title;
             color: style.color.dialogText
-            renderType: style.textRendering;
             
             anchors.top: parent.top
             anchors.left: parent.left
