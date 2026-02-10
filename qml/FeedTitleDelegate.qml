@@ -1,20 +1,25 @@
 import QtQuick
+import RearrangeableTreeView
 
 RearrangeableDelegate {
     id: feedTitleDelegate;
-    
+
     Style {
         id: style;
     }
-    
+
     signal jumpToBookmark();
-    
+
     onClicked: (mouse) => {
         if (mouse.button === Qt.LeftButton) {
-            feedListView.currentIndex = index;
+            if (isFolder && opener.width > 0 && mouse.x < titleDelegate.x + opener.width) {
+               toggleFolder();
+            } else {
+               feedListView.currentIndex = index;
+            }
         }
     }
-    
+
     onDoubleClicked: (mouse) => {
         if (feedListView.currentIndex == index) {
             feedTitleDelegate.jumpToBookmark();
@@ -23,18 +28,79 @@ RearrangeableDelegate {
 
     dragEnabled: !isSpecialFeed;
 
-    qmlListModel: false;
-
-    openerImage: fangSettings.currentStyle === "LIGHT" ? "images/opener.png" : "images/opener_dark.png";
-    openerOffsetX: 10;
-    openerOffsetY: 10;
-
     // Folders are always visible, but their children are not.
     visible: isFolder ? true : (parentFolder == -1 || folderOpen ? true : false);
     height: visible ? (35 * style.scale) : 0;
 
+    folderIndent: height;
+
+    // Folder opener icon
+    Item {
+        id: opener;
+
+        visible: isFolder;
+        width: isFolder ? feedTitleDelegate.height : 0;
+        height: feedTitleDelegate.height;
+        z: 10;
+
+        Image {
+            id: openerIcon;
+
+            source: fangSettings.currentStyle === "LIGHT" ? "images/opener.png" : "images/opener_dark.png";
+            x: 10;
+            y: 10;
+
+            width: sourceSize.width;
+            height: sourceSize.height;
+
+            fillMode: Image.PreserveAspectCrop;
+            asynchronous: true;
+
+            states: [
+                State { name: "open"; },
+                State { name: "closed"; }
+            ]
+
+            state: folderOpen ? "open" : "closed";
+
+            Component.onCompleted: {
+                if (!folderOpen) {
+                    rotation = -90;
+                }
+            }
+
+            transitions: [
+                Transition {
+                    from: "*";
+                    to: "closed";
+                    RotationAnimation {
+                        running: false;
+                        direction: RotationAnimation.Counterclockwise;
+                        target: openerIcon;
+                        to: -90;
+                        duration: 250;
+                        property: "rotation";
+                    }
+                },
+                Transition {
+                    from: "*";
+                    to: "open";
+                    RotationAnimation {
+                        running: false;
+                        direction: RotationAnimation.Clockwise;
+                        target: openerIcon;
+                        to: 0;
+                        duration: 250;
+                        property: "rotation";
+                    }
+                }
+            ]
+        }
+    }
+
     Row {
         id: row1;
+         anchors.left: opener.right;
         
         Item {
             width: {

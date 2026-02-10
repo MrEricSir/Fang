@@ -79,6 +79,9 @@ add_subdirectory(external/QSingleInstanceCheck)
 # Add QSimpleStateMachine directory
 add_subdirectory(external/QSimpleStateMachine)
 
+# Add QMLRearrangeableTreeView directory
+add_subdirectory(external/QMLRearrangeableTreeView)
+
 # Main application target
 qt_add_executable(Fang WIN32
     # Sources
@@ -269,6 +272,8 @@ target_link_libraries(Fang PRIVATE
     Qt6::Svg
     Qt6::WebSockets
     Qt6::HttpServer
+    rearrangeabletreeview
+    rearrangeabletreeviewplugin
 )
 
 # Optional WebEngineQuick

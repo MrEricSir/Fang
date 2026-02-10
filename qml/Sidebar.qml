@@ -31,7 +31,7 @@ Item {
     readonly property var listView: feedListView;
     readonly property bool feedsExist: feedListModel.count > 1; // (There's always 1 item -- all news.)
 
-    // This is called by RearrangableDelegate when the user creates a new folder.  It
+    // This is called by RearrangeableDelegate when the user creates a new folder.  It
     // expects the folder's database ID to be returned.
     function insertFolder(firstItemIndex) {
         return newsFeedInteractor.insertFolder(firstItemIndex);

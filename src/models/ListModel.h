@@ -69,7 +69,12 @@ public:
 
 public slots:
   void setData(int row, const QString &field_name, QVariant new_value);
-  void move(int from, int to);
+  void move(int from, int to, int count = 1);
+
+  // QML ListModel-compatible API (for RearrangeableTreeView compatibility)
+  Q_INVOKABLE QVariantMap get(int row) const;
+  Q_INVOKABLE void setProperty(int row, const QString &name, QVariant value);
+  Q_INVOKABLE void remove(int row, int count = 1);
   
 signals:
   void added(ListItem* item);

@@ -92,15 +92,50 @@ Qt::ItemFlags ListModel::flags(const QModelIndex &index) const
     return m_list.at(index.row())->flags();
 }
 
-void ListModel::move(int from, int to)
+void ListModel::move(int from, int to, int count)
 {
     // From: https://qt.gitorious.org/qt-labs/qml-object-model/source/7c2207640a65dc59a420ebf71a45e38350840313:qobjectlistmodel.cpp
-    if (!beginMoveRows(QModelIndex(), from, from, QModelIndex(), to > from ? to+1 : to)) {
-        return;
+    // Move count items one at a time to match QML ListModel behavior.
+    for (int i = 0; i < count; ++i) {
+        int src = (to > from) ? from : from + i;
+        int dst = (to > from) ? to + i : to + i;
+        if (src < 0 || src >= m_list.size() || dst < 0 || dst >= m_list.size() || src == dst) {
+            continue;
+        }
+
+        int dest = (dst > src) ? dst + 1 : dst;
+        if (!beginMoveRows(QModelIndex(), src, src, QModelIndex(), dest)) {
+            continue;
+        }
+
+        m_list.move(src, dst);
+        endMoveRows();
     }
-    
-    m_list.move(from, to);
-    endMoveRows();
+}
+
+QVariantMap ListModel::get(int row) const
+{
+    QVariantMap map;
+    if (row < 0 || row >= m_list.size()) {
+        return map;
+    }
+
+    const ListItem* item = m_list.at(row);
+    QHash<int, QByteArray> roles = m_prototype->roleNames();
+    for (auto it = roles.constBegin(); it != roles.constEnd(); ++it) {
+        map[QString::fromUtf8(it.value())] = item->data(it.key());
+    }
+    return map;
+}
+
+void ListModel::setProperty(int row, const QString &name, QVariant value)
+{
+    setData(row, name, value);
+}
+
+void ListModel::remove(int row, int count)
+{
+    removeRows(row, count);
 }
  
 ListModel::~ListModel() {
