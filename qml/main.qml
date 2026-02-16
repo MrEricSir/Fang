@@ -353,6 +353,10 @@ Window {
                 onRemoveClicked: openDialog("RemoveDialog.qml", listView.model.selected);
                 onEditClicked: openDialog("EditDialog.qml", listView.model.selected);
 
+                onSearchButtonClicked: newsFeedInteractor.showSearchFeed();
+                onSearchRequested: (query) => { news.performSearch(query); }
+                onSearchCleared: news.clearSearch();
+
                 onMaximizeToggle: {
                     if (isDesktop) {
                         if (visibility === Window.Maximized) {

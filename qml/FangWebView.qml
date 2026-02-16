@@ -13,6 +13,20 @@ WebEngineView {
         state = "closing";
     }
 
+    // Search functions.
+    // scope: "global" (default), "feed", or "folder"
+    // scopeId: feed_id or folder_id when scope is "feed" or "folder"
+    function performSearch(query, scope, scopeId) {
+        var escapedQuery = query.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+        var scopeArg = scope || 'global';
+        var scopeIdArg = scopeId || -1;
+        runJavaScript("performSearch('" + escapedQuery + "', '" + scopeArg + "', " + scopeIdArg + ")");
+    }
+
+    function clearSearch() {
+        runJavaScript("clearSearch()");
+    }
+
     ///// END API /////
 
     state: "news";

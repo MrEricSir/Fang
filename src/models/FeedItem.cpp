@@ -86,6 +86,7 @@ QHash<int, QByteArray> FeedItem::roleNames() const
     names[FolderOpenRole] = "folderOpen";
     names[BookmarksEnabledRole] = "bookmarksEnabled";
     names[UIDRole] = "uid";
+    names[IsSearchFeedRole] = "isSearchFeed";
     return names;
 }
 
@@ -130,6 +131,8 @@ QVariant FeedItem::data(int role) const
             return bookmarksEnabled();
         case UIDRole:
             return getDbID();
+        case IsSearchFeedRole:
+            return getDbID() == FEED_ID_SEARCH;
         default:
             return QVariant();
     }

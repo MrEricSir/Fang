@@ -5,6 +5,7 @@
 #include <QUrl>
 
 #include "../FangApp.h"
+#include "../models/SearchFeedItem.h"
 #include "../utilities/ErrorHandling.h"
 #include "../utilities/FangLogging.h"
 #include "../utilities/NetworkUtilities.h"
@@ -84,6 +85,20 @@ WebServer::WebServer(FangApp* appInstance, FangObject *parent) :
     server.route("/api/config", this, [this]  {
         return getConfig();
     });
+
+    server.route("/api/search", QHttpServerRequest::Method::Post, this, [this] (const QHttpServerRequest &request) {
+        QJsonObject json = QJsonDocument::fromJson(request.body()).object();
+        QString query = json.value("query").toString();
+        QString scope = json.value("scope").toString("global");
+        qint64 scopeId = json.value("scopeId").toInteger(-1);
+        qCDebug(logServer) << "Search API called with query:" << query << "scope:" << scope << "scopeId:" << scopeId;
+        return performSearch(query, scope, scopeId);
+    });
+
+    server.route("/api/clear_search", this, [this] {
+        qCDebug(logServer) << "Clear search API called";
+        return clearSearch();
+    });
 }
 
 QString WebServer::getConfig()
@@ -128,12 +143,19 @@ QString WebServer::loadNews(LoadNewsOperation::LoadMode mode)
     // // First news ID.
     extras.insert("firstNewsID", currentFeed->getFirstNewsID());
 
+    // If this is a search feed, include the search query for client-side highlighting.
+    SearchFeedItem* searchFeed = qobject_cast<SearchFeedItem*>(currentFeed);
+    if (searchFeed && searchFeed->hasSearchQuery()) {
+        extras.insert("searchQuery", searchFeed->getSearchQuery());
+    }
+
     // Build our news list.
     // The prepend list comes from the DB query in DESC order (newest first among read items).
     // We need to reverse it so items are sent to the JS in chronological order (oldest first).
     QSet<qint64> sentIDs;  // Track IDs sent to JS to detect duplicates
 
-    if (!loader->getPrependList().isEmpty()) {
+    // Prepend older items to our list.
+    if (loader != nullptr && !loader->getPrependList().isEmpty()) {
         qCDebug(logServer) << "loadNews: Sending" << loader->getPrependList().size() << "prepended items to JS";
         for (qsizetype i = loader->getPrependList().size() - 1; i >= 0; i--) {
             NewsItem* item = loader->getPrependList().at(i);
@@ -147,7 +169,7 @@ QString WebServer::loadNews(LoadNewsOperation::LoadMode mode)
     }
 
     // Stuff the new items into our feed.
-    if (!loader->getAppendList().isEmpty()) {
+    if (loader != nullptr && !loader->getAppendList().isEmpty()) {
         qCDebug(logServer) << "loadNews: Sending" << loader->getAppendList().size() << "appended items to JS"
                            << "mode=" << LoadNewsOperation::modeToString(mode);
         qint64 lastTimestamp = 0;
@@ -236,5 +258,44 @@ QString WebServer::getCSS()
     }
 
     return QString::fromUtf8(QJsonDocument::fromVariant(classes).toJson());
+}
+
+QString WebServer::performSearch(const QString& query, const QString& scope, qint64 scopeId)
+{
+    QString trimmedQuery = query.trimmed();
+    if (trimmedQuery.isEmpty()) {
+        qCDebug(logServer) << "performSearch: Empty query";
+        QVariantMap document;
+        document.insert("error", "Empty search query");
+        return QString::fromUtf8(QJsonDocument::fromVariant(document).toJson());
+    }
+
+    // Convert string scope to enum.
+    SearchFeedItem::Scope searchScope = SearchFeedItem::Scope::Global;
+    if (scope == "feed") {
+        searchScope = SearchFeedItem::Scope::Feed;
+    } else if (scope == "folder") {
+        searchScope = SearchFeedItem::Scope::Folder;
+    }
+
+    // Perform the search (this switches to the search feed).
+    SearchFeedItem* searchFeed = app->performSearch(trimmedQuery, searchScope, scopeId);
+    if (!searchFeed) {
+        QVariantMap document;
+        document.insert("error", "Search failed");
+        return QString::fromUtf8(QJsonDocument::fromVariant(document).toJson());
+    }
+
+    // Load the search results using the standard loadNews path.
+    // performSearch already switched to the search feed, so loadNews will use it.
+    return loadNews(LoadNewsOperation::Initial);
+}
+
+QString WebServer::clearSearch()
+{
+    app->clearSearch();
+
+    // Return success and load the all news feed.
+    return loadNews(LoadNewsOperation::Initial);
 }
 

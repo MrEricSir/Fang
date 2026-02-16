@@ -145,9 +145,11 @@ qt_add_executable(Fang WIN32
     src/notifications/NotificationBase.cpp
     src/operations/SetPinOperation.cpp
     src/models/PinnedFeedItem.cpp
+    src/models/SearchFeedItem.cpp
     src/operations/LoadPinnedNewsOperation.cpp
     src/models/LisvelFeedItem.cpp
     src/operations/LisvelLoadNewsOperation.cpp
+    src/operations/SearchNewsOperation.cpp
     src/operations/ExpireNewsOperation.cpp
     src/operations/SetDBSettingOperation.cpp
     src/db/DBSettings.cpp
@@ -222,9 +224,11 @@ qt_add_executable(Fang WIN32
 
     src/operations/SetPinOperation.h
     src/models/PinnedFeedItem.h
+    src/models/SearchFeedItem.h
     src/operations/LoadPinnedNewsOperation.h
     src/models/LisvelFeedItem.h
     src/operations/LisvelLoadNewsOperation.h
+    src/operations/SearchNewsOperation.h
     src/operations/ExpireNewsOperation.h
     src/operations/SetDBSettingOperation.h
     src/db/DBSettings.h

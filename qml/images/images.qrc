@@ -49,5 +49,9 @@
         <file>system_tray_icon.png</file>
         <file>symbol_warning.svg</file>
         <file>symbol_dark_warning.svg</file>
+        <file>symbol_search.svg</file>
+        <file>symbol_dark_search.svg</file>
+        <file>symbol_close.svg</file>
+        <file>symbol_dark_close.svg</file>
     </qresource>
 </RCC>

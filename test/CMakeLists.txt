@@ -24,6 +24,7 @@ add_subdirectory(TestWebPageGrabber)
 
 # Database tests
 add_subdirectory(TestDatabaseOperations)
+add_subdirectory(TestSearch)
 
 # Model tests
 add_subdirectory(TestFangObject)

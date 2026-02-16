@@ -9,24 +9,31 @@ RearrangeableDelegate {
     }
 
     signal jumpToBookmark();
+    signal searchRequested(string query);
+    signal searchCleared();
 
     onClicked: (mouse) => {
         if (mouse.button === Qt.LeftButton) {
             if (isFolder && opener.width > 0 && mouse.x < titleDelegate.x + opener.width) {
                toggleFolder();
-            } else {
+            } else if (!isSearchFeed) {
+               // Don't change selection for search feed - let the input handle clicks
                feedListView.currentIndex = index;
             }
         }
     }
 
     onDoubleClicked: (mouse) => {
-        if (feedListView.currentIndex == index) {
+        // Don't trigger jump to bookmark for search feed
+        if (feedListView.currentIndex == index && !isSearchFeed) {
             feedTitleDelegate.jumpToBookmark();
         }
     }
 
-    dragEnabled: !isSpecialFeed;
+    dragEnabled: !isSpecialFeed && !isSearchFeed;
+
+    // Search feed needs to receive mouse events for text input
+    acceptMouseEvents: !isSearchFeed;
 
     // Folders are always visible, but their children are not.
     visible: isFolder ? true : (parentFolder == -1 || folderOpen ? true : false);
@@ -260,48 +267,144 @@ RearrangeableDelegate {
                 
                 Item {
                     id: feedTitleCol;
-                    
+
                     anchors.top: parent.top;
                     anchors.bottom: parent.bottom;
                     anchors.left: feedIconCol.right;
                     anchors.right: feedCountCol.left;
-                    
+
                     anchors.rightMargin: 4 * style.scale;
                     anchors.bottomMargin: style.defaultMargin;
                     anchors.topMargin: style.defaultMargin;
                     anchors.leftMargin: 0;
-                    
+
+                    // Feed title.
                     Text {
                         id: feedTitle;
-                        
+
+                        visible: !isSearchFeed;
                         text: title;
-                        
+
                         width: parent.width;
                         anchors.verticalCenter: parent.verticalCenter;
-                        
+
                         font: unreadCount > 0 ?
                                   style.font.standardBold : style.font.standard;
                         color: style.color.sidebarSelectedText;
-                        
+
                         elide: Text.ElideRight;
                     }
+
+                    // Search box.
+                    Row {
+                        id: searchInputRow;
+                        visible: isSearchFeed;
+                        anchors.verticalCenter: parent.verticalCenter;
+                        anchors.left: parent.left;
+                        anchors.right: parent.right;
+                        spacing: 4 * style.scale;
+
+                        // Search icon
+                        Image {
+                            id: searchIcon;
+                            source: fangSettings.currentStyle === "LIGHT"
+                                    ? "images/symbol_search.svg"
+                                    : "images/symbol_dark_search.svg";
+                            width: 16 * style.scale;
+                            height: 16 * style.scale;
+                            anchors.verticalCenter: parent.verticalCenter;
+                            sourceSize.width: width;
+                            sourceSize.height: height;
+                        }
+
+                        // Search text input.
+                        Rectangle {
+                            id: searchInputBg;
+                            width: parent.width - searchIcon.width - parent.spacing;
+                            height: 24 * style.scale;
+                            anchors.verticalCenter: parent.verticalCenter;
+                            color: style.color.textEntryBackground;
+                            border.color: style.color.textEntryBorder;
+                            border.width: 2 * style.scale;
+                            radius: style.defaultRadius;
+
+                            TextInput {
+                                id: searchInput;
+                                anchors.fill: parent;
+                                anchors.margins: 4 * style.scale;
+                                verticalAlignment: TextInput.AlignVCenter;
+                                font: style.font.standard;
+                                color: style.color.textEntryText;
+                                selectByMouse: true;
+                                clip: true;
+
+                                // Placeholder text
+                                Text {
+                                    anchors.fill: parent;
+                                    verticalAlignment: Text.AlignVCenter;
+                                    text: "Search news...";
+                                    color: style.color.textEntryHint;
+                                    font: style.font.standard;
+                                    visible: !searchInput.text && !searchInput.activeFocus;
+                                }
+
+                                // Focus when search feed becomes selected
+                                Component.onCompleted: {
+                                    if (isSearchFeed && feedListView.currentIndex === index) {
+                                        forceActiveFocus();
+                                    }
+                                }
+
+                                // Watch for when this item becomes selected
+                                Connections {
+                                    target: feedListView;
+                                    function onCurrentIndexChanged() {
+                                        if (isSearchFeed && feedListView.currentIndex === index) {
+                                            searchInput.forceActiveFocus();
+                                        }
+                                    }
+                                }
+
+                                Keys.onReturnPressed: {
+                                    if (text.trim() !== "") {
+                                        feedTitleDelegate.searchRequested(text.trim());
+                                    }
+                                }
+
+                                Keys.onEnterPressed: {
+                                    if (text.trim() !== "") {
+                                        feedTitleDelegate.searchRequested(text.trim());
+                                    }
+                                }
+
+                                Keys.onEscapePressed: {
+                                    text = "";
+                                    feedTitleDelegate.searchCleared();
+                                }
+                            }
+                        }
+                    }
+
                 }
                 
                 Item {
                     id: feedCountCol;
-                    
+
+                    // Hide for search feed
+                    visible: !isSearchFeed;
+
                     states: [
                         State { name: "allread"; },
                         State { name: "unread"; }
                     ]
-                    
+
                     state: unreadCount > 0 ? "unread" : "allread";
 
                     Component.onCompleted: {
                         // Set initial opacity.
                         opacity = unreadCount == 0 ? 0.0 : 1.0;
                     }
-                    
+
                     transitions: [
                         Transition {
                             from: "unread";
@@ -315,7 +418,7 @@ RearrangeableDelegate {
                                 easing.type: Easing.InOutQuad;
                             }
                         },
-                        
+
                         Transition {
                             from: "allread";
                             to: "unread";
@@ -329,7 +432,7 @@ RearrangeableDelegate {
                             }
                         }
                     ]
-                    
+
                     anchors.right: parent.right;
                     anchors.top: parent.top;
                     anchors.bottom: parent.bottom;
@@ -339,23 +442,23 @@ RearrangeableDelegate {
                             duration: 250;
                         }
                     }
-                    
+
                     width: childrenRect.width;
                     height: parent.height;
-                    
+
                     Rectangle {
                         color: style.color.badge;
-                        
+
                         width: unreadCountText.paintedWidth + 6;
                         height: unreadCountText.paintedHeight + 4;
                         anchors.verticalCenter: parent.verticalCenter;
                         radius: style.defaultRadius;
-                        
+
                         Text {
                             id: unreadCountText;
-                            
+
                             text: unreadCount;
-                            
+
                             anchors.horizontalCenter: parent.horizontalCenter
                             anchors.verticalCenter: parent.verticalCenter;
                             font: style.font.unreadCount;
@@ -364,9 +467,55 @@ RearrangeableDelegate {
                         }
                     }
                 }
+
+                // Search clear button.
+                Item {
+                    id: searchClearCol;
+
+                    visible: isSearchFeed && searchInput.text !== "";
+
+                    anchors.right: parent.right;
+                    // anchors.top: parent.top;
+                    // anchors.bottom: parent.bottom;
+                    anchors.verticalCenter: parent.verticalCenter;
+                    //anchors.horizontalCenter: parent.horizontalCenter;
+                    anchors.rightMargin: 7 + scrollView.effectiveScrollBarWidth;
+
+                    width: 20 * style.scale;
+                    height: parent.height;
+
+                    Rectangle {
+                        id: clearSearchButton;
+                        width: 20 * style.scale;
+                        height: 20 * style.scale;
+                        anchors.verticalCenter: parent.verticalCenter;
+                        color: "transparent";
+
+                        Image {
+                            anchors.verticalCenter: parent.verticalCenter;
+                            anchors.right: parent.right;
+                            width: 12 * style.scale;
+                            height: 12 * style.scale;
+                            source: fangSettings.currentStyle === "LIGHT"
+                                    ? "images/symbol_close.svg"
+                                    : "images/symbol_dark_close.svg";
+                            sourceSize.width: width;
+                            sourceSize.height: height;
+
+                            MouseArea {
+                                anchors.fill: parent;
+                                onClicked: {
+                                    searchInput.text = "";
+                                    searchInput.forceActiveFocus();
+                                }
+                            }
+                        }
+
+                    }
+                }
             }
         }
-        
+
         spacing: 10 * style.scale;
     }
 }

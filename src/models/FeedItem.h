@@ -17,6 +17,7 @@ class NewsList;
 // IDs of special feeds.  (Normal feed IDs start at 0.)
 
 enum SpecialFeedID {
+    FEED_ID_SEARCH = -3,
     FEED_ID_ALLNEWS = -2,
     FEED_ID_PINNED = -1
 };
@@ -46,7 +47,8 @@ public:
         FolderOpenRole,
         BookmarksEnabledRole,
         UIDRole,
-        SelfRole
+        SelfRole,
+        IsSearchFeedRole
     };
     
     FeedItem(QObject *parent = nullptr);
@@ -108,6 +110,7 @@ public slots:
     inline FeedItem* getSelf() const { return const_cast<FeedItem*>(this); }
     virtual inline qint64 getDbID() const { return _id; }
     inline bool isSpecialFeed() const { return _id < 0; }
+    inline bool isSearchFeed() const { return _id == FEED_ID_SEARCH; }
     
     void setImageURL(const QUrl& url);
     

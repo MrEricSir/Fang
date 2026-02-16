@@ -19,6 +19,7 @@ Button {
     hoverColor: style.color.sidebarButtonHover;
     pressedColor: style.color.sidebarButtonPressed;
     borderColor: style.color.sidebarButtonBorder;
+    toggledColor: style.color.sidebarButtonPressed;
     // We don't set a disabledColor because that hasn't been required (yet!)
     
     Image {

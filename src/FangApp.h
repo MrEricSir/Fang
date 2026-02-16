@@ -15,6 +15,7 @@
 #include "models/FeedItem.h"
 #include "models/AllNewsFeedItem.h"
 #include "models/PinnedFeedItem.h"
+#include "models/SearchFeedItem.h"
 #include "models/ListModel.h"
 #include "models/FangSettings.h"
 #include "parser/RawFeed.h"
@@ -241,6 +242,45 @@ public slots:
      */
     void showWelcome();
 
+    /*!
+        \brief Performs a global search and switches to the search results feed.
+        \param query The search query string.
+        \return The search feed item, or nullptr if the query is empty.
+     */
+    SearchFeedItem* performSearch(const QString& query);
+
+    /*!
+        \brief Performs a scoped search and switches to the search results feed.
+        \param query The search query string.
+        \param scope The search scope (Global, Feed, or Folder).
+        \param scopeId The feed ID or folder ID when scope is Feed or Folder.
+        \return The search feed item, or nullptr if the query is empty.
+     */
+    SearchFeedItem* performSearch(const QString& query,
+                                   SearchFeedItem::Scope scope,
+                                   qint64 scopeId);
+
+    /*!
+        \return The search feed (may be nullptr if never searched).
+     */
+    SearchFeedItem* getSearchFeed() { return searchFeed; }
+
+    /*!
+        \brief Shows the search feed, creating it if necessary.
+        This adds the search feed to the feed list and selects it.
+     */
+    void showSearchFeed();
+
+    /*!
+        \brief Closes the search feed and removes it from the feed list.
+     */
+    void closeSearchFeed();
+
+    /*!
+        \brief Clears the current search and returns to the previous feed.
+     */
+    void clearSearch();
+
 private slots:
     /*!
         \brief QML layer created something for us to look at.
@@ -326,8 +366,10 @@ private:
     // Special feeds.
     AllNewsFeedItem* allNews;
     PinnedFeedItem* pinnedNews;
+    SearchFeedItem* searchFeed;
 
     bool isPinnedNewsVisible;
+    bool isSearchFeedVisible;
 
     FeedItem* lastFeedSelected;
 };

@@ -348,6 +348,47 @@ body.DARK > #loading-indicator > .chasing-arrows { background-image: url('qrc://
     to { transform: rotate(359deg); }
 }
 
+/* Search highlight styling */
+mark {
+    background-color: hsla(48, 92%, 75%, .9);
+    color: inherit;
+    padding: 0.3em;
+    border-radius: 1em 0;
+}
+
+body.DARK mark {
+    background-color: hsla(48, 92%, 75%, .7);
+    color: #fff;
+}
+
+/* No search results styling */
+.noSearchResults {
+    text-align: center;
+    padding: 60px 20px;
+    color: #777;
+}
+
+.noSearchResults .noResultsIcon {
+    font-size: 48px;
+    margin-bottom: 20px;
+    opacity: 0.5;
+}
+
+.noSearchResults .noResultsText {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.noSearchResults .noResultsTip {
+    font-size: 14px;
+    font-style: italic;
+    opacity: 0.7;
+}
+
+body.DARK .noSearchResults {
+    color: #aaa;
+}
+
 </style>
 
 
