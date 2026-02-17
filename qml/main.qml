@@ -40,6 +40,12 @@ Window {
     Style {
         id: style;
     }
+
+    // Search feed keyboard shortcut (Ctrl/Cmd+Shift+F.)
+    Shortcut {
+        sequence: "Ctrl+Shift+F";
+        onActivated: sidebar.toggleSearch();
+    }
     
     visible: true;
 

@@ -40,6 +40,21 @@ Item {
         return newsFeedInteractor.insertFolder(firstItemIndex);
     }
 
+    // Toggles the search feed open/closed.
+    function toggleSearch() {
+        if (searchButton.isSearchActive) {
+            // Close search: Close the special feed and switch to All News.
+            newsFeedInteractor.closeSearchFeed();
+            feedListView.currentIndex = 0;
+        } else {
+            // Open search: Add and select the special feed.
+            newsFeedInteractor.showSearchFeed();
+            Qt.callLater(function() {
+                feedListView.currentIndex = sidebar.specialFeedCount - 1;
+            });
+        }
+    }
+
     Rectangle {
         id: sidebarTopControls;
         height: 40 * style.scale;
@@ -103,21 +118,7 @@ Item {
                 property bool isSearchActive: feedListView.model.selected && feedListView.model.selected.isSearchFeed();
                 toggled: isSearchActive;
 
-                onClicked: {
-                    if (isSearchActive) {
-                        // Close search: Remove the search feed and select All News.
-                        // We don't try to select the previous feed here as there's a possibility it may have been
-                        // removed and we don't want to juggle that state.
-                        newsFeedInteractor.closeSearchFeed();
-                        feedListView.currentIndex = 0;
-                    } else {
-                        // Open search: Insert the search feed and select it.
-                        newsFeedInteractor.showSearchFeed();
-                        Qt.callLater(function() {
-                            feedListView.currentIndex = sidebar.specialFeedCount - 1;
-                        });
-                    }
-                }
+                onClicked: sidebar.toggleSearch();
             }
 
             // HALP
