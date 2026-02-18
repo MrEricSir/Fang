@@ -1,5 +1,6 @@
 #include "UpdateOrdinalsOperation.h"
 #include "../models/FeedItem.h"
+#include "../models/FolderFeedItem.h"
 #include "../models/ListModel.h"
 
 #include <QList>
@@ -14,63 +15,99 @@ UpdateOrdinalsOperation::UpdateOrdinalsOperation(OperationManager *parent, ListM
 
 void UpdateOrdinalsOperation::executeSynchronous()
 {
-    QSet<int> folderIDs;
+    QSet<qint64> folderIDs;
     QList<FeedItem*> removedFromFolder;
     db().transaction();
-    
+
     // Update ordinals and gather folder IDs.
     for (int i = 0; i < feedList->count(); i++) {
-        QSqlQuery update(db());
         FeedItem* feedItem = qobject_cast<FeedItem*>(feedList->row(i));
         if (feedItem->isSpecialFeed()) {
-            // Item isn't in the db.
             continue;
         }
 
-        if (feedItem->isFolder()) {
-            folderIDs << feedItem->getDbID();
+        // Track folder IDs for later cleanup.
+        FolderFeedItem* folder = qobject_cast<FolderFeedItem*>(feedItem);
+        if (folder) {
+            folderIDs.insert(folder->getDbID());
         }
-        
-        update.prepare("UPDATE FeedItemTable SET ordinal = :ordinal WHERE id = "
-                       ":feed_id");
+
+        QSqlQuery update(db());
+        update.prepare("UPDATE FeedItemTable SET ordinal = :ordinal WHERE id = :feed_id");
         update.bindValue(":ordinal", i);
         update.bindValue(":feed_id", feedItem->getDbID());
-        
+
         if (!update.exec()) {
             reportSQLError(update, "Unable to update ordinal for feed id " + QString::number(feedItem->getDbID()));
             db().rollback();
-            
             return;
         }
     }
 
-    // Update ordinals and gather folder IDs.
+    // Update parent folder associations.
     for (int i = 0; i < feedList->count(); i++) {
-        QSqlQuery update(db());
         FeedItem* feedItem = qobject_cast<FeedItem*>(feedList->row(i));
         if (feedItem->isSpecialFeed()) {
-            // Item isn't in the db.
             continue;
         }
 
         if (!folderIDs.contains(feedItem->getParentFolderID())) {
-            // Build a list of feeds we've had to reparent so we can update the model later.
+            // Feed's parent folder no longer exists; track for model update later.
             removedFromFolder << feedItem;
         }
 
-        update.prepare("UPDATE FeedItemTable SET parent_folder = :parent_folder WHERE id = "
-                       ":feed_id");
+        QSqlQuery update(db());
+        update.prepare("UPDATE FeedItemTable SET parent_folder = :parent_folder WHERE id = :feed_id");
         update.bindValue(":parent_folder", feedItem->getParentFolderID());
         update.bindValue(":feed_id", feedItem->getDbID());
 
         if (!update.exec()) {
             reportSQLError(update, "Unable to update parent for feed id " + QString::number(feedItem->getDbID()));
             db().rollback();
-
             return;
         }
     }
-    
+
+    // Check for empty folders and remove them from model, DB, and/or both.
+    QSet<qint64> foldersWithChildren;
+    for (int i = 0; i < feedList->count(); i++) {
+        FeedItem* feedItem = qobject_cast<FeedItem*>(feedList->row(i));
+        if (feedItem->isSpecialFeed() || feedItem->isFolder()) {
+            continue;
+        }
+
+        qint64 parentId = feedItem->getParentFolderID();
+        if (parentId > 0) {
+            foldersWithChildren.insert(parentId);
+        }
+    }
+
+    // Remove empty folders from the model (work backwards to avoid altering the index).
+    for (int i = feedList->count() - 1; i >= 0; i--) {
+        FolderFeedItem* folder = qobject_cast<FolderFeedItem*>(feedList->row(i));
+        if (folder && !foldersWithChildren.contains(folder->getDbID())) {
+            feedList->removeItem(folder);
+            folderIDs.remove(folder->getDbID());
+        }
+    }
+
+    // Delete orphaned folders from the database.
+    QSqlQuery selectFolders(db());
+    selectFolders.prepare("SELECT id FROM FeedItemTable WHERE is_folder = 1");
+    if (selectFolders.exec()) {
+        while (selectFolders.next()) {
+            qint64 dbFolderId = selectFolders.value(0).toLongLong();
+            if (!folderIDs.contains(dbFolderId)) {
+                QSqlQuery deleteFolder(db());
+                deleteFolder.prepare("DELETE FROM FeedItemTable WHERE id = :folder_id");
+                deleteFolder.bindValue(":folder_id", dbFolderId);
+                if (!deleteFolder.exec()) {
+                    reportSQLError(deleteFolder, "Unable to delete empty folder " + QString::number(dbFolderId));
+                }
+            }
+        }
+    }
+
     // Complete the DB transaction.
     db().commit();
 
