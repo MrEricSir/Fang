@@ -40,6 +40,12 @@ Window {
     Style {
         id: style;
     }
+
+    // Search feed keyboard shortcut (Ctrl/Cmd+Shift+F.)
+    Shortcut {
+        sequence: "Ctrl+Shift+F";
+        onActivated: sidebar.toggleSearch();
+    }
     
     visible: true;
 
@@ -352,6 +358,10 @@ Window {
                 onAddClicked: openDialog("AddDialog.qml");
                 onRemoveClicked: openDialog("RemoveDialog.qml", listView.model.selected);
                 onEditClicked: openDialog("EditDialog.qml", listView.model.selected);
+
+                onSearchButtonClicked: newsFeedInteractor.showSearchFeed();
+                onSearchRequested: (query) => { news.performSearch(query); }
+                onSearchCleared: news.clearSearch();
 
                 onMaximizeToggle: {
                     if (isDesktop) {

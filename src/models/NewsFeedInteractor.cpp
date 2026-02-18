@@ -95,3 +95,13 @@ void NewsFeedInteractor::showWelcome()
 {
     FangApp::instance()->showWelcome();
 }
+
+void NewsFeedInteractor::showSearchFeed()
+{
+    FangApp::instance()->showSearchFeed();
+}
+
+void NewsFeedInteractor::closeSearchFeed()
+{
+    FangApp::instance()->closeSearchFeed();
+}

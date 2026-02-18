@@ -53,6 +53,18 @@ Item {
     function showWelcome() {
         newsFeedInteractor.showWelcome();
     }
+
+    // Perform a search.
+    // scope: "global" (default), "feed", or "folder"
+    // scopeId: feed_id or folder_id when scope is "feed" or "folder"
+    function performSearch(query, scope, scopeId) {
+        newsView.performSearch(query, scope, scopeId);
+    }
+
+    // Clear the current search.
+    function clearSearch() {
+        newsView.clearSearch();
+    }
     
     // This is a workaround for a bug on Winows; see the comment
     // in main.qml where this is called for more information.

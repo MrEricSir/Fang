@@ -14,6 +14,13 @@ let newsContainerSelector = 'body>#newsView>.newsContainer:not(#model)';
 // Current mode
 let currentMode = "newsView";
 
+// View state: welcome, feed, or search.
+// If we're in search mode, also tracks the search query for display purposes.
+let viewState = {
+    type: 'feed',
+    searchQuery: null
+};
+
 // Websocket
 let websocket = null;
 let websocketRestartTimerID = null;
@@ -178,20 +185,31 @@ function requestNews(mode)
               console.log("load news data:", data);
               if (data.showWelcome === true) {
                   setMode('welcome');
+                  viewState = { type: 'welcome', searchQuery: null };
               } else {
                   setMode('newsView');
 
                   if ('initial' === data.mode) {
-                      // Redo the view.
+                      // If we're in search state with no results, ignore empty feed loads.
+                      // This prevents the "no results" message from being cleared.
+                      const isEmpty = !data.news || data.news.length === 0;
+                      if (viewState.type === 'search' && isEmpty) {
+                          console.log("Ignoring empty load while in search state");
+                          return;
+                      }
 
+                      // Switching to feed view
+                      viewState = { type: 'feed', searchQuery: null };
+
+                      // Redo the view.
                       clearNews();
                   }
 
                   // Append or prepend?
                   let toAppend = 'prepend' !== data.mode;
 
-                  // Add all our news!
-                  appendNews(toAppend, data.firstNewsID, data.news);
+                  // Add all our news! Pass searchQuery for highlighting if present.
+                  appendNews(toAppend, data.firstNewsID, data.news, data.searchQuery);
 
                   // If we have a new bookmark, draw it and jump there.
                   if (data.bookmark) {
@@ -383,8 +401,12 @@ function initEventDelegation()
 
 /**
   * Appends (or prepends) news item(s) to the DOM via DocumentFragment batches.
+  * @param {boolean} append True to append, false to prepend.
+  * @param {number} firstNewsID The first news ID in this feed.
+  * @param {Array} newsList Array of news items to add.
+  * @param {string} searchQuery Optional search query for highlighting.
   */
-function appendNews(append, firstNewsID, newsList)
+function appendNews(append, firstNewsID, newsList, searchQuery = null)
 {
     if (newsList.length === 0) {
         // Bail early if there's nothing new.
@@ -423,16 +445,18 @@ function appendNews(append, firstNewsID, newsList)
         const item = model.cloneNode(true);
         item.id = itemHtmlId;
 
-        // Assign data.
+        // Assign data with optional search highlighting.
         const linkEl = item.querySelector('.link');
         if (linkEl) {
             linkEl.setAttribute('href', newsItem['url']);
-            linkEl.innerHTML = newsItem['title'];
+            // Title should be highlighted in C++, this is a backup method.
+            linkEl.innerHTML = searchQuery ? highlightHtml(newsItem['title'], searchQuery) : newsItem['title'];
         }
 
         const contentEl = item.querySelector('.content');
         if (contentEl) {
-            contentEl.innerHTML = newsItem['content'];
+            // Highlight search results.
+            contentEl.innerHTML = searchQuery ? highlightHtml(newsItem['content'], searchQuery) : newsItem['content'];
         }
 
         const siteTitleEl = item.querySelector('.siteTitle');
@@ -571,7 +595,219 @@ function clearNews()
 {
     $(newsContainerSelector).remove();
 
+    // Remove the "no results" message.
+    const noResults = document.getElementById('noSearchResults');
+    if (noResults) {
+        noResults.remove();
+    }
+
     $(document).scrollTop( 0 );
+}
+
+/**
+  * Performs a search and displays the results.
+  * @param {string} query The search query string.
+  * @param {string} scope Optional scope: "global" (default), "feed", or "folder".
+  * @param {number} scopeId Optional feed ID or folder ID when scope is "feed" or "folder".
+  */
+function performSearch(query, scope = 'global', scopeId = -1)
+{
+    if (!query || query.trim() === '') {
+        console.log("performSearch: Empty query, ignoring");
+        return;
+    }
+
+    console.log("performSearch:", query, "scope:", scope, "scopeId:", scopeId);
+
+    // Clear prefetch since we're changing feeds.
+    clearPrefetch();
+
+    // Set state.
+    viewState = { type: 'search', searchQuery: query };
+
+    apiPostRequest('search', { 'query': query, 'scope': scope, 'scopeId': scopeId })
+    .then((response) => response.json())
+    .then((data) => {
+        console.log("search results:", data);
+
+        if (data.error) {
+            console.log("Search error:", data.error);
+            viewState = { type: 'feed', searchQuery: null };
+            return;
+        }
+
+        // Switch to news view and display results.
+        setMode('newsView');
+        clearNews();
+
+        if (data.news && data.news.length > 0) {
+            // Splice in our search results.
+            appendNews(true, data.firstNewsID, data.news, data.searchQuery || query);
+        } else {
+            // Search returned no results.
+            showNoSearchResults(query);
+        }
+    })
+    .catch((error) => {
+        console.log("Search request failed:", error);
+    });
+}
+
+/**
+  * Clears the current search and returns to All News.
+  */
+function clearSearch()
+{
+    console.log("clearSearch");
+
+    // Reset to feed state.
+    viewState = { type: 'feed', searchQuery: null };
+
+    clearPrefetch();
+
+    apiGetRequest('clear_search')
+    .then((response) => response.json())
+    .then((data) => {
+        console.log("clear search response:", data);
+
+        // Switch to news view and display results
+        setMode('newsView');
+        clearNews();
+
+        // Load the returned news.
+        if (data.news && data.news.length > 0) {
+            appendNews(true, data.firstNewsID, data.news);
+        }
+
+        // Restore bookmark if present.
+        if (data.bookmark) {
+            drawBookmark(data.bookmark);
+            jumpToBookmark();
+        }
+    })
+    .catch((error) => {
+        console.log("Clear search request failed:", error);
+    });
+}
+
+/**
+  * Shows a "no results" message for a search query.
+  * @param {string} query The search query that returned no results.
+  */
+function showNoSearchResults(query)
+{
+    const newsView = document.getElementById('newsView');
+    if (!newsView) {
+        return;
+    }
+
+    // If we're already displaying the "no results" message, bail early.
+    if (document.getElementById('noSearchResults')) {
+        return;
+    }
+
+    // Create our "no results" message.
+    const noResults = document.createElement('div');
+    noResults.id = 'noSearchResults';
+    noResults.className = 'noSearchResults';
+    noResults.innerHTML = `
+        <div class="noResultsIcon">&#128269;</div>
+        <div class="noResultsText">No results for search: "<strong>${escapeHtml(query)}</strong>"</div>
+    `;
+
+    newsView.appendChild(noResults);
+}
+
+/**
+  * Escapes HTML special characters to prevent XSS.
+  * @param {string} text The text to escape.
+  * @returns {string} The escaped text.
+  */
+function escapeHtml(text)
+{
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+/**
+  * Highlights search terms, inside HTML tags only.
+  * @param {string} html The HTML content to highlight.
+  * @param {string} query The search query (space-separated terms).
+  * @returns {string} The HTML with highlighted terms.
+  */
+function highlightHtml(html, query)
+{
+    if (!query || !html) {
+        return html;
+    }
+
+    // Parse query into terms.
+    const terms = query.trim().split(/\s+/).filter(t => t.length > 0);
+    if (terms.length === 0) {
+        return html;
+    }
+
+    // Create a temporary container to parse the HTML.
+    const container = document.createElement('div');
+    container.innerHTML = html;
+
+    // Build a regex that matches any of the search terms (case-insensitive)
+    const escapedTerms = terms.map(t => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+    const regex = new RegExp('(' + escapedTerms.join('|') + ')', 'gi');
+
+    // Walk through all text nodes and highlight matches.
+    const walker = document.createTreeWalker(
+        container,
+        NodeFilter.SHOW_TEXT,
+        null,
+        false
+    );
+
+    const textNodes = [];
+    while (walker.nextNode()) {
+        textNodes.push(walker.currentNode);
+    }
+
+    // Process text nodes, working backwards to avoid overwriting any changes.
+    for (let i = textNodes.length - 1; i >= 0; i--) {
+        const textNode = textNodes[i];
+        const text = textNode.textContent;
+
+        if (regex.test(text)) {
+            // Reset regex lastIndex
+            regex.lastIndex = 0;
+
+            // Create a document fragment with highlighted content.
+            const fragment = document.createDocumentFragment();
+            let lastIndex = 0;
+            let match;
+
+            while ((match = regex.exec(text)) !== null) {
+                // Pre-match text.
+                if (match.index > lastIndex) {
+                    fragment.appendChild(document.createTextNode(text.substring(lastIndex, match.index)));
+                }
+
+                // Highlight the match text.
+                const mark = document.createElement('mark');
+                mark.textContent = match[0];
+                fragment.appendChild(mark);
+
+                lastIndex = regex.lastIndex;
+            }
+
+            // Add remaining text.
+            if (lastIndex < text.length) {
+                fragment.appendChild(document.createTextNode(text.substring(lastIndex)));
+            }
+
+            // Replace the text node.
+            textNode.parentNode.replaceChild(fragment, textNode);
+        }
+    }
+
+    return container.innerHTML;
 }
 
 /**
@@ -1135,7 +1371,7 @@ $(document).ready(function() {
             clearPrefetch();
 
             if (data.news && data.news.length > 0) {
-                appendNews(true, data.firstNewsID, data.news);
+                appendNews(true, data.firstNewsID, data.news, data.searchQuery);
             }
             return;
         }
@@ -1146,7 +1382,7 @@ $(document).ready(function() {
             prefetchPromise.then((data) => {
                 clearPrefetch();
                 if (data && data.news && data.news.length > 0) {
-                    appendNews(true, data.firstNewsID, data.news);
+                    appendNews(true, data.firstNewsID, data.news, data.searchQuery);
                 }
             });
             return;

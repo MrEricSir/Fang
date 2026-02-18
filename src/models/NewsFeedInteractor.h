@@ -79,7 +79,13 @@ public slots:
 
     // Show the welcome/help view.
     void showWelcome();
-    
+
+    // Show the search feed (adds to list and selects it).
+    void showSearchFeed();
+
+    // Close the search feed and return to all news.
+    void closeSearchFeed();
+
 private:
     // Op man!
     OperationManager* manager;

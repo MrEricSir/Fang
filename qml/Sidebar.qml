@@ -5,7 +5,7 @@ import Fang 1.0
 // Feed list sidebar
 Item {
     id: sidebar;
-    
+
     signal settingsClicked();
     signal addClicked();
     signal removeClicked();
@@ -21,6 +21,9 @@ Item {
     signal helpClicked();
     signal orderChanged();
     signal maximizeToggle();
+    signal searchButtonClicked();
+    signal searchRequested(string query);
+    signal searchCleared();
 
     // Set this to the number of special feeds at the top so I can treat them with
     // the care and respect that they deserve.
@@ -35,6 +38,21 @@ Item {
     // expects the folder's database ID to be returned.
     function insertFolder(firstItemIndex) {
         return newsFeedInteractor.insertFolder(firstItemIndex);
+    }
+
+    // Toggles the search feed open/closed.
+    function toggleSearch() {
+        if (searchButton.isSearchActive) {
+            // Close search: Close the special feed and switch to All News.
+            newsFeedInteractor.closeSearchFeed();
+            feedListView.currentIndex = 0;
+        } else {
+            // Open search: Add and select the special feed.
+            newsFeedInteractor.showSearchFeed();
+            Qt.callLater(function() {
+                feedListView.currentIndex = sidebar.specialFeedCount - 1;
+            });
+        }
     }
 
     Rectangle {
@@ -82,20 +100,41 @@ Item {
                 sourceSize.height: height;
             }
             
+            // Search
+            SidebarButton {
+                id: searchButton;
+
+                anchors.right: helpButton.left;
+                anchors.rightMargin: 15 * style.scale;
+                anchors.verticalCenter: parent.verticalCenter;
+
+                width: buttonSize;
+                height: buttonSize;
+
+                lightImageURL: "images/symbol_search.svg";
+                darkImageURL: "images/symbol_dark_search.svg";
+
+                // Show togled icon if search is open.
+                property bool isSearchActive: feedListView.model.selected && feedListView.model.selected.isSearchFeed();
+                toggled: isSearchActive;
+
+                onClicked: sidebar.toggleSearch();
+            }
+
             // HALP
             SidebarButton {
                 id: helpButton;
-                
+
                 anchors.right: settingsButton.left;
                 anchors.rightMargin: 15 * style.scale;
                 anchors.verticalCenter: parent.verticalCenter;
-                
+
                 width: buttonSize;
                 height: buttonSize;
-                
+
                 lightImageURL: "images/symbol_help.svg";
                 darkImageURL: "images/symbol_dark_help.svg";
-                
+
                 onClicked: {
                     helpClicked();
                 }
@@ -183,6 +222,14 @@ Item {
                         
                         onOrderChanged: {
                             sidebar.orderChanged();
+                        }
+
+                        onSearchRequested: (query) => {
+                            sidebar.searchRequested(query);
+                        }
+
+                        onSearchCleared: {
+                            sidebar.searchCleared();
                         }
 
                         ContextMenu.menu: Menu {

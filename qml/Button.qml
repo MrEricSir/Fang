@@ -54,6 +54,8 @@ Rectangle {
     onToggledChanged: {
         if (toggled) {
             state = "toggled";
+        } else if (enabled) {
+            state = "default";
         }
     }
     

@@ -19,6 +19,7 @@
 #include "operations/LoadAllNewsOperation.h"
 #include "operations/LoadFolderOperation.h"
 #include "operations/LoadPinnedNewsOperation.h"
+#include "operations/SearchNewsOperation.h"
 #include "operations/InsertFolderOperation.h"
 #include "operations/MarkAllReadOrUnreadOperation.h"
 #include "operations/FaviconUpdateOperation.h"
@@ -48,7 +49,9 @@ FangApp::FangApp(QApplication *parent, QQmlApplicationEngine* engine, QSingleIns
     window(nullptr),
     allNews(nullptr),
     pinnedNews(nullptr),
+    searchFeed(nullptr),
     isPinnedNewsVisible(true),
+    isSearchFeedVisible(false),
     lastFeedSelected(nullptr),
     updateChecker(this),
     systemFont(QGuiApplication::font())
@@ -98,7 +101,9 @@ FangApp::FangApp(QObject *parent) :
     webServer(nullptr),
     allNews(nullptr),
     pinnedNews(nullptr),
+    searchFeed(nullptr),
     isPinnedNewsVisible(false),
+    isSearchFeedVisible(false),
     lastFeedSelected(nullptr),
     updateChecker(this)
 {
@@ -377,9 +382,12 @@ FeedItem* FangApp::feedForId(const qint64 id)
         case FEED_ID_PINNED:
             return pinnedNews;
 
+        case FEED_ID_SEARCH:
+            return searchFeed;
+
         default:
             // Note: Did you add a new type of special feed and forget to update the above switch?
-            FANG_UNREACHABLE("Unknown special feed: ID is not all news or pinned");
+            FANG_UNREACHABLE("Unknown special feed: ID is not all news, pinned, or search");
             return nullptr;
         }
     }
@@ -575,6 +583,11 @@ void FangApp::setCurrentFeed(FeedItem *feed, bool reloadIfSameFeed)
         pinnedNewsWatcher(); // If we were on pinned items, it can be removed now.
     }
 
+    // Close the search feed if we're on it and a different feed is selected.
+    if (previousFeed == searchFeed && feed != searchFeed && isSearchFeedVisible) {
+        closeSearchFeed();
+    }
+
     // Signal that we've changed feeds.
     emit currentFeedChanged();
 }
@@ -604,8 +617,36 @@ LoadNewsOperation* FangApp::loadNews(LoadNewsOperation::LoadMode mode)
 
     case FEED_ID_PINNED:
         loader = new LoadPinnedNewsOperation(&manager, qobject_cast<PinnedFeedItem*>(currentFeed), mode);
-
         break;
+
+    case FEED_ID_SEARCH:
+    {
+        SearchFeedItem* searchItem = qobject_cast<SearchFeedItem*>(currentFeed);
+        if (searchItem && searchItem->hasSearchQuery()) {
+            // Convert SearchFeedItem::Scope to SearchNewsOperation::Scope
+            SearchNewsOperation::Scope opScope;
+            switch (searchItem->getScope()) {
+            case SearchFeedItem::Scope::Feed:
+                opScope = SearchNewsOperation::Scope::Feed;
+                break;
+            case SearchFeedItem::Scope::Folder:
+                opScope = SearchNewsOperation::Scope::Folder;
+                break;
+            case SearchFeedItem::Scope::Global:
+            default:
+                opScope = SearchNewsOperation::Scope::Global;
+                break;
+            }
+
+            loader = new SearchNewsOperation(&manager, searchItem, mode,
+                                              searchItem->getSearchQuery(),
+                                              opScope, searchItem->getScopeId());
+        } else {
+            // No query set at this time, nothing to do.
+            return nullptr;
+        }
+        break;
+    }
 
     default:
         if (currentFeed->isFolder()) {
@@ -775,13 +816,17 @@ FangApp* FangApp::instance()
 
 qint32 FangApp::specialFeedCount()
 {
-    // If pinned is visible, it's two.
+    qint32 count = 1;  // All News is always visible
+
     if (isPinnedNewsVisible) {
-        return 2;
+        count++;
     }
 
-    // Otherwise just one for all news.
-    return 1;
+    if (isSearchFeedVisible) {
+        count++;
+    }
+
+    return count;
 }
 
 void FangApp::addFeed(const QString userURL, const RawFeed* rawFeed, bool switchTo)
@@ -829,4 +874,120 @@ void FangApp::markAllAsRead(FeedItem* feed)
 void FangApp::markAllAsUnread(FeedItem* feed)
 {
     markAllAsReadOrUnread(feed, false);
+}
+
+SearchFeedItem* FangApp::performSearch(const QString& query)
+{
+    return performSearch(query, SearchFeedItem::Scope::Global, -1);
+}
+
+SearchFeedItem* FangApp::performSearch(const QString& query,
+                                        SearchFeedItem::Scope scope,
+                                        qint64 scopeId)
+{
+    QString trimmedQuery = query.trimmed();
+    if (trimmedQuery.isEmpty()) {
+        qCDebug(logApp) << "performSearch: Empty query, ignoring";
+        return nullptr;
+    }
+
+    qCDebug(logApp) << "performSearch: Searching for:" << trimmedQuery
+                    << "scope:" << static_cast<int>(scope)
+                    << "scopeId:" << scopeId;
+
+    // Create search feed lazily on first use.
+    if (searchFeed == nullptr) {
+        searchFeed = new SearchFeedItem(&feedList);
+        feedIdMap.insert(searchFeed->getDbID(), searchFeed);
+        connectFeed(searchFeed);
+    }
+
+    // Set up the search query and scope (this also clears previous results).
+    searchFeed->setSearchQuery(trimmedQuery);
+    searchFeed->setScope(scope, scopeId);
+
+    // Set up the reload callback for the search feed's news list.
+    OperationManager* mgr = &manager;
+    QString searchQuery = trimmedQuery;  // Capture for lambda
+    searchFeed->getNewsList()->setReloadCallback([this, mgr, searchQuery](const QList<qint64>& ids) {
+        // For search results, we need to re-run the search query to get highlighted results.
+        // ReloadNewsOperation doesn't apply the FTS5 highlighting, so we use SearchNewsOperation.
+        // However, this is a simplified reload that just returns the items by ID without highlighting.
+        ReloadNewsOperation reloadOp(mgr, searchFeed, ids);
+        mgr->runSynchronously(&reloadOp);
+        return reloadOp.getReloadedItems();
+    });
+
+    // Switch to the search feed and load initial results.
+    setCurrentFeed(searchFeed, true);
+
+    return searchFeed;
+}
+
+void FangApp::showSearchFeed()
+{
+    qCDebug(logApp) << "showSearchFeed: Showing search feed";
+
+    // Create search feed if it doesn't exist.
+    if (searchFeed == nullptr) {
+        searchFeed = new SearchFeedItem(&feedList);
+        feedIdMap.insert(searchFeed->getDbID(), searchFeed);
+        connectFeed(searchFeed);
+    }
+
+    // Add to feed list if not already present.
+    if (!isSearchFeedVisible) {
+        isSearchFeedVisible = true;
+
+        // Insert after other special feeds.
+        qsizetype insertIndex = specialFeedCount() - 1;  // -1 because we just set isSearchFeedVisible
+        feedList.insertRow(insertIndex, searchFeed);
+
+        emit specialFeedCountChanged();
+    }
+
+    // Clear any previous search state for a fresh start.
+    searchFeed->setSearchQuery("");
+    searchFeed->clearNews();
+
+    // Note: QML handles selection via feedListView.currentIndex
+}
+
+void FangApp::closeSearchFeed()
+{
+    if (searchFeed == nullptr || !isSearchFeedVisible) {
+        return;
+    }
+
+    qCDebug(logApp) << "closeSearchFeed: Removing search feed from list";
+
+    // Remove from feed list.
+    QModelIndex idx = feedList.indexFromItem(searchFeed);
+    if (idx.isValid()) {
+        feedList.removeRow(idx.row());
+    }
+    isSearchFeedVisible = false;
+
+    // Clear the search query and results.
+    searchFeed->setSearchQuery("");
+    searchFeed->clearNews();
+
+    emit specialFeedCountChanged();
+}
+
+void FangApp::clearSearch()
+{
+    if (searchFeed == nullptr) {
+        return;
+    }
+
+    qCDebug(logApp) << "clearSearch: Clearing search results";
+
+    // Clear the search query and results.
+    searchFeed->setSearchQuery("");
+
+    // If currently viewing search results, switch back to all news.
+    if (currentFeed == searchFeed) {
+        setCurrentFeed(allNews);
+    }
 }
