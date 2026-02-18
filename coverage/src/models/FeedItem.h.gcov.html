@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-02-18 02:39:22</td>
+            <td class="headerValue">2026-02-18 07:01:19</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryMed">82.8&nbsp;%</td>
@@ -170,8 +170,8 @@
 <span id="L108"><span class="lineNum">     108</span> <span class="tlaGNC">           4 :     inline quint32 getUnreadCount() const { return unreadCount; }</span></span>
 <span id="L109"><span class="lineNum">     109</span> <span class="tlaGNC">           5 :     inline QString getDropTarget() const { return dropTarget; }</span></span>
 <span id="L110"><span class="lineNum">     110</span> <span class="tlaGNC">           2 :     inline FeedItem* getSelf() const { return const_cast&lt;FeedItem*&gt;(this); }</span></span>
-<span id="L111"><span class="lineNum">     111</span> <span class="tlaGNC">         559 :     virtual inline qint64 getDbID() const { return _id; }</span></span>
-<span id="L112"><span class="lineNum">     112</span> <span class="tlaGNC">           4 :     inline bool isSpecialFeed() const { return _id &lt; 0; }</span></span>
+<span id="L111"><span class="lineNum">     111</span> <span class="tlaGNC">         617 :     virtual inline qint64 getDbID() const { return _id; }</span></span>
+<span id="L112"><span class="lineNum">     112</span> <span class="tlaGNC">          84 :     inline bool isSpecialFeed() const { return _id &lt; 0; }</span></span>
 <span id="L113"><span class="lineNum">     113</span> <span class="tlaUNC tlaBgUNC">           0 :     inline bool isSearchFeed() const { return _id == FEED_ID_SEARCH; }</span></span>
 <span id="L114"><span class="lineNum">     114</span>              :     </span>
 <span id="L115"><span class="lineNum">     115</span>              :     void setImageURL(const QUrl&amp; url);</span>
@@ -183,7 +183,7 @@
 <span id="L121"><span class="lineNum">     121</span>              :     void setIsSelected(bool s);</span>
 <span id="L122"><span class="lineNum">     122</span>              : </span>
 <span id="L123"><span class="lineNum">     123</span>              :     // Override for folders.</span>
-<span id="L124"><span class="lineNum">     124</span> <span class="tlaGNC tlaBgGNC">           2 :     virtual bool isFolder() const { return false; }</span></span>
+<span id="L124"><span class="lineNum">     124</span> <span class="tlaGNC tlaBgGNC">          15 :     virtual bool isFolder() const { return false; }</span></span>
 <span id="L125"><span class="lineNum">     125</span> <span class="tlaUNC tlaBgUNC">           0 :     virtual void setIsFolder(bool isFolder) {</span></span>
 <span id="L126"><span class="lineNum">     126</span>              :         Q_UNUSED(isFolder);</span>
 <span id="L127"><span class="lineNum">     127</span> <span class="tlaUNC">           0 :         qCritical() &lt;&lt; &quot;FeedItem::setIsFolder: Unsupported on base type&quot;;</span></span>
@@ -253,7 +253,7 @@
 <span id="L191"><span class="lineNum">     191</span>              :         \brief Returns the ordinal (note: only really used in resorting the list.)</span>
 <span id="L192"><span class="lineNum">     192</span>              :         \return</span>
 <span id="L193"><span class="lineNum">     193</span>              :      */</span>
-<span id="L194"><span class="lineNum">     194</span> <span class="tlaGNC">           6 :     inline int getOrdinal() const { return ordinal; }</span></span>
+<span id="L194"><span class="lineNum">     194</span> <span class="tlaGNC">           8 :     inline int getOrdinal() const { return ordinal; }</span></span>
 <span id="L195"><span class="lineNum">     195</span>              :     </span>
 <span id="L196"><span class="lineNum">     196</span>              :     /*!</span>
 <span id="L197"><span class="lineNum">     197</span>              :         \brief Sets the ordinal.</span>
@@ -295,8 +295,8 @@
 <span id="L233"><span class="lineNum">     233</span>              :         \brief getParentFolderID</span>
 <span id="L234"><span class="lineNum">     234</span>              :         \return The ID of the parent folder, or -1 if none.</span>
 <span id="L235"><span class="lineNum">     235</span>              :      */</span>
-<span id="L236"><span class="lineNum">     236</span> <span class="tlaGNC">           4 :     qint64 getParentFolderID() const {</span></span>
-<span id="L237"><span class="lineNum">     237</span> <span class="tlaGNC">           4 :         return _parentFolder;</span></span>
+<span id="L236"><span class="lineNum">     236</span> <span class="tlaGNC">          58 :     qint64 getParentFolderID() const {</span></span>
+<span id="L237"><span class="lineNum">     237</span> <span class="tlaGNC">          58 :         return _parentFolder;</span></span>
 <span id="L238"><span class="lineNum">     238</span>              :     }</span>
 <span id="L239"><span class="lineNum">     239</span>              :     </span>
 <span id="L240"><span class="lineNum">     240</span>              : signals:</span>
