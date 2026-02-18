@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-02-18 07:01:19</td>
+            <td class="headerValue">2026-02-18 07:44:36</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryMed">77.8&nbsp;%</td>
@@ -78,13 +78,13 @@
 <span id="L16"><span class="lineNum">      16</span> <span class="tlaGNC">           1 :     init();</span></span>
 <span id="L17"><span class="lineNum">      17</span> <span class="tlaGNC">           1 : }</span></span>
 <span id="L18"><span class="lineNum">      18</span>              : </span>
-<span id="L19"><span class="lineNum">      19</span> <span class="tlaGNC">          80 : DB *DB::instance()</span></span>
+<span id="L19"><span class="lineNum">      19</span> <span class="tlaGNC">          93 : DB *DB::instance()</span></span>
 <span id="L20"><span class="lineNum">      20</span>              : {</span>
-<span id="L21"><span class="lineNum">      21</span> <span class="tlaGNC">          80 :     if (_instance == nullptr) {</span></span>
+<span id="L21"><span class="lineNum">      21</span> <span class="tlaGNC">          93 :     if (_instance == nullptr) {</span></span>
 <span id="L22"><span class="lineNum">      22</span> <span class="tlaGNC">           1 :         _instance = new DB();</span></span>
 <span id="L23"><span class="lineNum">      23</span>              :     }</span>
 <span id="L24"><span class="lineNum">      24</span>              :     </span>
-<span id="L25"><span class="lineNum">      25</span> <span class="tlaGNC">          80 :     return _instance;</span></span>
+<span id="L25"><span class="lineNum">      25</span> <span class="tlaGNC">          93 :     return _instance;</span></span>
 <span id="L26"><span class="lineNum">      26</span>              : }</span>
 <span id="L27"><span class="lineNum">      27</span>              : </span>
 <span id="L28"><span class="lineNum">      28</span> <span class="tlaGNC">           1 : void DB::initForTesting(QSqlDatabase testDb)</span></span>

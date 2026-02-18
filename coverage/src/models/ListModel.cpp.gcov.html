@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-02-18 07:01:19</td>
+            <td class="headerValue">2026-02-18 07:44:36</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryLo">39.3&nbsp;%</td>
@@ -71,20 +71,20 @@
 <span id="L9"><span class="lineNum">       9</span>              : </span>
 <span id="L10"><span class="lineNum">      10</span>              : #include &quot;../utilities/FangLogging.h&quot;</span>
 <span id="L11"><span class="lineNum">      11</span>              :  </span>
-<span id="L12"><span class="lineNum">      12</span> <span class="tlaGNC tlaBgGNC">          68 : ListModel::ListModel(ListItem* prototype, QObject *parent) :</span></span>
-<span id="L13"><span class="lineNum">      13</span> <span class="tlaGNC">          68 :     QAbstractListModel(parent), m_prototype(prototype), _selected(nullptr)</span></span>
+<span id="L12"><span class="lineNum">      12</span> <span class="tlaGNC tlaBgGNC">          69 : ListModel::ListModel(ListItem* prototype, QObject *parent) :</span></span>
+<span id="L13"><span class="lineNum">      13</span> <span class="tlaGNC">          69 :     QAbstractListModel(parent), m_prototype(prototype), _selected(nullptr)</span></span>
 <span id="L14"><span class="lineNum">      14</span>              : {</span>
 <span id="L15"><span class="lineNum">      15</span>              :     // Populate our _roleNames reverse lookup map.</span>
-<span id="L16"><span class="lineNum">      16</span> <span class="tlaGNC">          68 :     QHash&lt;int, QByteArray&gt; roleNames = m_prototype-&gt;roleNames();</span></span>
-<span id="L17"><span class="lineNum">      17</span> <span class="tlaGNC">        1428 :     for (int roleIndex : roleNames.keys()) {</span></span>
-<span id="L18"><span class="lineNum">      18</span> <span class="tlaGNC">        1360 :         _roleNames[ roleNames[roleIndex] ] = roleIndex;</span></span>
-<span id="L19"><span class="lineNum">      19</span> <span class="tlaGNC">          68 :     }</span></span>
-<span id="L20"><span class="lineNum">      20</span> <span class="tlaGNC">          68 : }</span></span>
+<span id="L16"><span class="lineNum">      16</span> <span class="tlaGNC">          69 :     QHash&lt;int, QByteArray&gt; roleNames = m_prototype-&gt;roleNames();</span></span>
+<span id="L17"><span class="lineNum">      17</span> <span class="tlaGNC">        1449 :     for (int roleIndex : roleNames.keys()) {</span></span>
+<span id="L18"><span class="lineNum">      18</span> <span class="tlaGNC">        1380 :         _roleNames[ roleNames[roleIndex] ] = roleIndex;</span></span>
+<span id="L19"><span class="lineNum">      19</span> <span class="tlaGNC">          69 :     }</span></span>
+<span id="L20"><span class="lineNum">      20</span> <span class="tlaGNC">          69 : }</span></span>
 <span id="L21"><span class="lineNum">      21</span>              :  </span>
-<span id="L22"><span class="lineNum">      22</span> <span class="tlaGNC">         565 : int ListModel::rowCount(const QModelIndex &amp;parent) const</span></span>
+<span id="L22"><span class="lineNum">      22</span> <span class="tlaGNC">         629 : int ListModel::rowCount(const QModelIndex &amp;parent) const</span></span>
 <span id="L23"><span class="lineNum">      23</span>              : {</span>
 <span id="L24"><span class="lineNum">      24</span>              :     Q_UNUSED(parent);</span>
-<span id="L25"><span class="lineNum">      25</span> <span class="tlaGNC">         565 :     return m_list.size();</span></span>
+<span id="L25"><span class="lineNum">      25</span> <span class="tlaGNC">         629 :     return m_list.size();</span></span>
 <span id="L26"><span class="lineNum">      26</span>              : }</span>
 <span id="L27"><span class="lineNum">      27</span>              : </span>
 <span id="L28"><span class="lineNum">      28</span> <span class="tlaUNC tlaBgUNC">           0 : QVariant ListModel::data(const QModelIndex &amp;index, int role) const</span></span>
@@ -200,31 +200,31 @@
 <span id="L138"><span class="lineNum">     138</span> <span class="tlaUNC">           0 :     removeRows(row, count);</span></span>
 <span id="L139"><span class="lineNum">     139</span> <span class="tlaUNC">           0 : }</span></span>
 <span id="L140"><span class="lineNum">     140</span>              :  </span>
-<span id="L141"><span class="lineNum">     141</span> <span class="tlaGNC tlaBgGNC">         128 : ListModel::~ListModel() {</span></span>
-<span id="L142"><span class="lineNum">     142</span> <span class="tlaGNC">          68 :   delete m_prototype;</span></span>
-<span id="L143"><span class="lineNum">     143</span> <span class="tlaGNC">          68 :   clear();</span></span>
-<span id="L144"><span class="lineNum">     144</span> <span class="tlaGNC">         128 : }</span></span>
+<span id="L141"><span class="lineNum">     141</span> <span class="tlaGNC tlaBgGNC">         130 : ListModel::~ListModel() {</span></span>
+<span id="L142"><span class="lineNum">     142</span> <span class="tlaGNC">          69 :   delete m_prototype;</span></span>
+<span id="L143"><span class="lineNum">     143</span> <span class="tlaGNC">          69 :   clear();</span></span>
+<span id="L144"><span class="lineNum">     144</span> <span class="tlaGNC">         130 : }</span></span>
 <span id="L145"><span class="lineNum">     145</span>              :  </span>
-<span id="L146"><span class="lineNum">     146</span> <span class="tlaGNC">          51 : void ListModel::appendRow(ListItem *item)</span></span>
+<span id="L146"><span class="lineNum">     146</span> <span class="tlaGNC">          54 : void ListModel::appendRow(ListItem *item)</span></span>
 <span id="L147"><span class="lineNum">     147</span>              : {</span>
-<span id="L148"><span class="lineNum">     148</span> <span class="tlaGNC">          51 :   appendRows(QList&lt;ListItem*&gt;() &lt;&lt; item);</span></span>
-<span id="L149"><span class="lineNum">     149</span> <span class="tlaGNC">          51 : }</span></span>
+<span id="L148"><span class="lineNum">     148</span> <span class="tlaGNC">          54 :   appendRows(QList&lt;ListItem*&gt;() &lt;&lt; item);</span></span>
+<span id="L149"><span class="lineNum">     149</span> <span class="tlaGNC">          54 : }</span></span>
 <span id="L150"><span class="lineNum">     150</span>              :  </span>
-<span id="L151"><span class="lineNum">     151</span> <span class="tlaGNC">          51 : void ListModel::appendRows(const QList&lt;ListItem *&gt; &amp;items)</span></span>
+<span id="L151"><span class="lineNum">     151</span> <span class="tlaGNC">          54 : void ListModel::appendRows(const QList&lt;ListItem *&gt; &amp;items)</span></span>
 <span id="L152"><span class="lineNum">     152</span>              : {</span>
-<span id="L153"><span class="lineNum">     153</span> <span class="tlaGNC">          51 :   beginInsertRows(QModelIndex(), rowCount(), rowCount()+items.size()-1);</span></span>
-<span id="L154"><span class="lineNum">     154</span> <span class="tlaGNC">         102 :   for (ListItem *item : items) {</span></span>
-<span id="L155"><span class="lineNum">     155</span> <span class="tlaGNC">          51 :     connect(item, &amp;ListItem::dataChanged, this, &amp;ListModel::handleItemChange);</span></span>
-<span id="L156"><span class="lineNum">     156</span> <span class="tlaGNC">          51 :     m_list.append(item);</span></span>
+<span id="L153"><span class="lineNum">     153</span> <span class="tlaGNC">          54 :   beginInsertRows(QModelIndex(), rowCount(), rowCount()+items.size()-1);</span></span>
+<span id="L154"><span class="lineNum">     154</span> <span class="tlaGNC">         108 :   for (ListItem *item : items) {</span></span>
+<span id="L155"><span class="lineNum">     155</span> <span class="tlaGNC">          54 :     connect(item, &amp;ListItem::dataChanged, this, &amp;ListModel::handleItemChange);</span></span>
+<span id="L156"><span class="lineNum">     156</span> <span class="tlaGNC">          54 :     m_list.append(item);</span></span>
 <span id="L157"><span class="lineNum">     157</span>              :   }</span>
-<span id="L158"><span class="lineNum">     158</span> <span class="tlaGNC">          51 :   endInsertRows();</span></span>
+<span id="L158"><span class="lineNum">     158</span> <span class="tlaGNC">          54 :   endInsertRows();</span></span>
 <span id="L159"><span class="lineNum">     159</span>              :   </span>
-<span id="L160"><span class="lineNum">     160</span> <span class="tlaGNC">         102 :   for (ListItem* item : items) {</span></span>
-<span id="L161"><span class="lineNum">     161</span> <span class="tlaGNC">          51 :       emit added(item);</span></span>
+<span id="L160"><span class="lineNum">     160</span> <span class="tlaGNC">         108 :   for (ListItem* item : items) {</span></span>
+<span id="L161"><span class="lineNum">     161</span> <span class="tlaGNC">          54 :       emit added(item);</span></span>
 <span id="L162"><span class="lineNum">     162</span>              :   }</span>
 <span id="L163"><span class="lineNum">     163</span>              :   </span>
-<span id="L164"><span class="lineNum">     164</span> <span class="tlaGNC">          51 :   emit countChanged(count());</span></span>
-<span id="L165"><span class="lineNum">     165</span> <span class="tlaGNC">          51 : }</span></span>
+<span id="L164"><span class="lineNum">     164</span> <span class="tlaGNC">          54 :   emit countChanged(count());</span></span>
+<span id="L165"><span class="lineNum">     165</span> <span class="tlaGNC">          54 : }</span></span>
 <span id="L166"><span class="lineNum">     166</span>              :  </span>
 <span id="L167"><span class="lineNum">     167</span> <span class="tlaUNC tlaBgUNC">           0 : void ListModel::insertRow(int row, ListItem *item)</span></span>
 <span id="L168"><span class="lineNum">     168</span>              : {</span>
@@ -238,14 +238,14 @@
 <span id="L176"><span class="lineNum">     176</span> <span class="tlaUNC">           0 :   emit countChanged(count());</span></span>
 <span id="L177"><span class="lineNum">     177</span> <span class="tlaUNC">           0 : }</span></span>
 <span id="L178"><span class="lineNum">     178</span>              :  </span>
-<span id="L179"><span class="lineNum">     179</span> <span class="tlaGNC tlaBgGNC">          90 : void ListModel::handleItemChange()</span></span>
+<span id="L179"><span class="lineNum">     179</span> <span class="tlaGNC tlaBgGNC">          92 : void ListModel::handleItemChange()</span></span>
 <span id="L180"><span class="lineNum">     180</span>              : {</span>
-<span id="L181"><span class="lineNum">     181</span> <span class="tlaGNC">          90 :   ListItem* item = static_cast&lt;ListItem*&gt;(sender());</span></span>
-<span id="L182"><span class="lineNum">     182</span> <span class="tlaGNC">          90 :   QModelIndex index = indexFromItem(item);</span></span>
-<span id="L183"><span class="lineNum">     183</span> <span class="tlaGNC">          90 :   if(index.isValid()) {</span></span>
-<span id="L184"><span class="lineNum">     184</span> <span class="tlaGNC">          86 :     emit dataChanged(index, index);</span></span>
+<span id="L181"><span class="lineNum">     181</span> <span class="tlaGNC">          92 :   ListItem* item = static_cast&lt;ListItem*&gt;(sender());</span></span>
+<span id="L182"><span class="lineNum">     182</span> <span class="tlaGNC">          92 :   QModelIndex index = indexFromItem(item);</span></span>
+<span id="L183"><span class="lineNum">     183</span> <span class="tlaGNC">          92 :   if(index.isValid()) {</span></span>
+<span id="L184"><span class="lineNum">     184</span> <span class="tlaGNC">          88 :     emit dataChanged(index, index);</span></span>
 <span id="L185"><span class="lineNum">     185</span>              :   }</span>
-<span id="L186"><span class="lineNum">     186</span> <span class="tlaGNC">          90 : }</span></span>
+<span id="L186"><span class="lineNum">     186</span> <span class="tlaGNC">          92 : }</span></span>
 <span id="L187"><span class="lineNum">     187</span>              :  </span>
 <span id="L188"><span class="lineNum">     188</span> <span class="tlaUNC tlaBgUNC">           0 : ListItem * ListModel::find(const QString &amp;id) const</span></span>
 <span id="L189"><span class="lineNum">     189</span>              : {</span>
@@ -255,28 +255,28 @@
 <span id="L193"><span class="lineNum">     193</span> <span class="tlaUNC">           0 :   return 0;</span></span>
 <span id="L194"><span class="lineNum">     194</span>              : }</span>
 <span id="L195"><span class="lineNum">     195</span>              :  </span>
-<span id="L196"><span class="lineNum">     196</span> <span class="tlaGNC tlaBgGNC">          94 : QModelIndex ListModel::indexFromItem(const ListItem *item) const</span></span>
+<span id="L196"><span class="lineNum">     196</span> <span class="tlaGNC tlaBgGNC">          96 : QModelIndex ListModel::indexFromItem(const ListItem *item) const</span></span>
 <span id="L197"><span class="lineNum">     197</span>              : {</span>
-<span id="L198"><span class="lineNum">     198</span> <span class="tlaGNC">          94 :   if (!item) {</span></span>
+<span id="L198"><span class="lineNum">     198</span> <span class="tlaGNC">          96 :   if (!item) {</span></span>
 <span id="L199"><span class="lineNum">     199</span> <span class="tlaUNC tlaBgUNC">           0 :       qCCritical(logModel) &lt;&lt; &quot;ListModel::indexFromItem: item is null&quot;;</span></span>
 <span id="L200"><span class="lineNum">     200</span> <span class="tlaUNC">           0 :       return QModelIndex();</span></span>
 <span id="L201"><span class="lineNum">     201</span>              :   }</span>
-<span id="L202"><span class="lineNum">     202</span> <span class="tlaGNC tlaBgGNC">         217 :   for(int row=0; row&lt;m_list.size(); ++row) {</span></span>
-<span id="L203"><span class="lineNum">     203</span> <span class="tlaGNC">         213 :       if(m_list.at(row) == item) return index(row);</span></span>
+<span id="L202"><span class="lineNum">     202</span> <span class="tlaGNC tlaBgGNC">         219 :   for(int row=0; row&lt;m_list.size(); ++row) {</span></span>
+<span id="L203"><span class="lineNum">     203</span> <span class="tlaGNC">         215 :       if(m_list.at(row) == item) return index(row);</span></span>
 <span id="L204"><span class="lineNum">     204</span>              :   }</span>
 <span id="L205"><span class="lineNum">     205</span> <span class="tlaGNC">           4 :   return QModelIndex();</span></span>
 <span id="L206"><span class="lineNum">     206</span>              : }</span>
 <span id="L207"><span class="lineNum">     207</span>              :  </span>
-<span id="L208"><span class="lineNum">     208</span> <span class="tlaGNC">          68 : void ListModel::clear()</span></span>
+<span id="L208"><span class="lineNum">     208</span> <span class="tlaGNC">          69 : void ListModel::clear()</span></span>
 <span id="L209"><span class="lineNum">     209</span>              : {</span>
-<span id="L210"><span class="lineNum">     210</span> <span class="tlaGNC">         115 :     for (ListItem* item : m_list) {</span></span>
-<span id="L211"><span class="lineNum">     211</span> <span class="tlaGNC">          47 :         emit removed(item);</span></span>
+<span id="L210"><span class="lineNum">     210</span> <span class="tlaGNC">         119 :     for (ListItem* item : m_list) {</span></span>
+<span id="L211"><span class="lineNum">     211</span> <span class="tlaGNC">          50 :         emit removed(item);</span></span>
 <span id="L212"><span class="lineNum">     212</span>              :     }</span>
 <span id="L213"><span class="lineNum">     213</span>              :     </span>
-<span id="L214"><span class="lineNum">     214</span> <span class="tlaGNC">          68 :     m_list.clear();</span></span>
+<span id="L214"><span class="lineNum">     214</span> <span class="tlaGNC">          69 :     m_list.clear();</span></span>
 <span id="L215"><span class="lineNum">     215</span>              :     </span>
-<span id="L216"><span class="lineNum">     216</span> <span class="tlaGNC">          68 :     emit countChanged(count());</span></span>
-<span id="L217"><span class="lineNum">     217</span> <span class="tlaGNC">          68 : }</span></span>
+<span id="L216"><span class="lineNum">     216</span> <span class="tlaGNC">          69 :     emit countChanged(count());</span></span>
+<span id="L217"><span class="lineNum">     217</span> <span class="tlaGNC">          69 : }</span></span>
 <span id="L218"><span class="lineNum">     218</span>              : </span>
 <span id="L219"><span class="lineNum">     219</span> <span class="tlaUNC tlaBgUNC">           0 : void ListModel::setSelected(ListItem *selected)</span></span>
 <span id="L220"><span class="lineNum">     220</span>              : {</span>
