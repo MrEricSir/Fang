@@ -3,8 +3,8 @@
 #include <QThread>
 
 #include "../utilities/UnreadCountReader.h"
-#include "../utilities/ErrorHandling.h"
 #include "../utilities/FangLogging.h"
+#include "../models/FolderFeedItem.h"
 #include "../FangApp.h"
 
 RemoveFeedOperation::RemoveFeedOperation(OperationManager *parent, FeedItem* feed, ListModel *feedList) :
@@ -29,6 +29,7 @@ void RemoveFeedOperation::executeSynchronous()
 
     bool isFolder = feed->isFolder();
     qint64 dbID = feed->getDbID();
+    qint64 parentFolderID = feed->getParentFolderID();
 
     // Delete the feed.
     db().transaction();
@@ -80,4 +81,12 @@ void RemoveFeedOperation::executeSynchronous()
     // Update the unread count of our special feeds.
     UnreadCountReader::update(db(), FangApp::instance()->feedForId(FEED_ID_ALLNEWS));
     UnreadCountReader::update(db(), FangApp::instance()->feedForId(FEED_ID_PINNED));
+
+    // If feed was in a folder, update the folder's unread count.
+    if (parentFolderID > 0) {
+        FolderFeedItem* parentFolder = qobject_cast<FolderFeedItem*>(FangApp::instance()->feedForId(parentFolderID));
+        if (parentFolder) {
+            UnreadCountReader::update(db(), parentFolder);
+        }
+    }
 }

@@ -2,6 +2,7 @@
 #include "../models/FeedItem.h"
 #include "../models/FolderFeedItem.h"
 #include "../models/ListModel.h"
+#include "../utilities/UnreadCountReader.h"
 
 #include <QList>
 #include <QSet>
@@ -124,5 +125,14 @@ void UpdateOrdinalsOperation::executeSynchronous()
     // Second: parent folders (or lack thereof.)
     for (FeedItem* item : removedFromFolder) {
         item->setParentFolder(-1);
+    }
+
+    // Third: recalculate unread counts for all folders.
+    // This ensures folder counts are correct after feeds are moved between folders.
+    for (int i = 0; i < feedList->count(); i++) {
+        FolderFeedItem* folder = qobject_cast<FolderFeedItem*>(feedList->row(i));
+        if (folder) {
+            UnreadCountReader::update(db(), folder);
+        }
     }
 }

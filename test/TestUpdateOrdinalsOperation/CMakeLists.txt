@@ -4,6 +4,8 @@ qt_add_executable(tst_updateordinalsoperation
     # Utilities
     ${CMAKE_SOURCE_DIR}/src/utilities/FangLogging.cpp
     ${CMAKE_SOURCE_DIR}/src/utilities/Utilities.cpp
+    ${CMAKE_SOURCE_DIR}/src/utilities/UnreadCountReader.cpp
+    ${CMAKE_SOURCE_DIR}/src/utilities/UnreadCountReader.h
     # Core
     ${CMAKE_SOURCE_DIR}/src/FangObject.cpp
     ${CMAKE_SOURCE_DIR}/src/db/DB.cpp

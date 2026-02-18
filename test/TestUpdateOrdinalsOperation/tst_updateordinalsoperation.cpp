@@ -2,6 +2,7 @@
 #include <QSqlDatabase>
 #include <QSqlQuery>
 #include <QSqlError>
+#include <QUuid>
 #include <QVariant>
 
 #include "src/db/DB.h"
@@ -48,6 +49,9 @@ private slots:
     void testSpecialFeedsIgnored();
     void testRollbackOnError();
 
+    // Unread count tests
+    void testFolderUnreadCountUpdated();
+
 private:
     void createSchema();
     qint64 insertFeedHelper(const QString& title, int ordinal, qint64 parentFolder = -1);
@@ -57,6 +61,7 @@ private:
     qint64 getFeedOrdinalFromDb(qint64 feedId);
     qint64 getFeedParentFolderFromDb(qint64 feedId);
     bool folderExistsInDb(qint64 folderId);
+    qint64 insertNewsItemHelper(qint64 feedId, const QString& title);
 
     FeedItem* createTestFeed(qint64 id, int ordinal, const QString& title, qint64 parentFolder = -1);
     FolderFeedItem* createTestFolder(qint64 id, int ordinal, const QString& title);
@@ -115,12 +120,30 @@ void TestUpdateOrdinalsOperation::createSchema()
         ")"
     );
     QVERIFY2(success, qPrintable(query.lastError().text()));
+
+    // Create NewsItemTable for unread count tests.
+    success = query.exec(
+        "CREATE TABLE IF NOT EXISTS NewsItemTable ("
+        "  id INTEGER PRIMARY KEY,"
+        "  feed_id INTEGER REFERENCES FeedItemTable(id) ON DELETE CASCADE,"
+        "  guid TEXT NOT NULL,"
+        "  title TEXT NOT NULL,"
+        "  author TEXT NOT NULL DEFAULT '',"
+        "  summary TEXT NOT NULL DEFAULT '',"
+        "  content TEXT NOT NULL DEFAULT '',"
+        "  timestamp INTEGER DEFAULT 0,"
+        "  url TEXT NOT NULL DEFAULT '',"
+        "  pinned INTEGER DEFAULT 0"
+        ")"
+    );
+    QVERIFY2(success, qPrintable(query.lastError().text()));
 }
 
 void TestUpdateOrdinalsOperation::cleanup()
 {
     // Clear data between tests.
     QSqlQuery query(db);
+    query.exec("DROP TABLE IF EXISTS NewsItemTable");
     query.exec("DROP TABLE IF EXISTS FeedItemTable");
 
     // Recreate schema for next test.
@@ -226,6 +249,25 @@ bool TestUpdateOrdinalsOperation::folderExistsInDb(qint64 folderId)
         return query.value(0).toInt() > 0;
     }
     return false;
+}
+
+qint64 TestUpdateOrdinalsOperation::insertNewsItemHelper(qint64 feedId, const QString& title)
+{
+    QSqlQuery query(db);
+    query.prepare(
+        "INSERT INTO NewsItemTable (feed_id, guid, title) "
+        "VALUES (:feed_id, :guid, :title)"
+    );
+    query.bindValue(":feed_id", feedId);
+    query.bindValue(":guid", QUuid::createUuid().toString());
+    query.bindValue(":title", title);
+
+    if (!query.exec()) {
+        qWarning() << "insertNewsItemHelper failed:" << query.lastError().text();
+        return -1;
+    }
+
+    return query.lastInsertId().toLongLong();
 }
 
 FeedItem* TestUpdateOrdinalsOperation::createTestFeed(qint64 id, int ordinal, const QString& title, qint64 parentFolder)
@@ -572,6 +614,46 @@ void TestUpdateOrdinalsOperation::testRollbackOnError()
     // Verify everything is correct.
     QCOMPARE(getFeedOrdinalFromDb(feed1Id), 0LL);
     QCOMPARE(getFeedOrdinalFromDb(feed2Id), 1LL);
+
+    delete feedList;
+}
+
+// -------------------------------------------------------------------
+// Unread count tests
+// -------------------------------------------------------------------
+
+void TestUpdateOrdinalsOperation::testFolderUnreadCountUpdated()
+{
+    // Create folder with two feeds.
+    qint64 folderId = insertFolderHelper("Folder", 0);
+    qint64 feed1Id = insertFeedHelper("Feed 1", 1, folderId);
+    qint64 feed2Id = insertFeedHelper("Feed 2", 2, folderId);
+
+    QVERIFY(folderId > 0);
+    QVERIFY(feed1Id > 0);
+    QVERIFY(feed2Id > 0);
+
+    // Add news items to the feeds (IDs > bookmark_id=-1 are "unread").
+    insertNewsItemHelper(feed1Id, "News 1a");
+    insertNewsItemHelper(feed1Id, "News 1b");
+    insertNewsItemHelper(feed2Id, "News 2a");
+
+    // Create model.
+    ListModel* feedList = createFeedList();
+    FolderFeedItem* folder = createTestFolder(folderId, 0, "Folder");
+    feedList->appendRow(folder);
+    feedList->appendRow(createTestFeed(feed1Id, 1, "Feed 1", folderId));
+    feedList->appendRow(createTestFeed(feed2Id, 2, "Feed 2", folderId));
+
+    // Initially folder has unread count 0 (not yet calculated).
+    QCOMPARE(folder->getUnreadCount(), 0);
+
+    // Run operation.
+    UpdateOrdinalsOperation op(operationManager, feedList);
+    op.executeSynchronous();
+
+    // Folder's unread count should now reflect the 3 news items.
+    QCOMPARE(folder->getUnreadCount(), 3);
 
     delete feedList;
 }

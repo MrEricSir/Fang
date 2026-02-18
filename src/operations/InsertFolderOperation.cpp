@@ -2,6 +2,7 @@
 #include "../utilities/Utilities.h"
 #include "../utilities/ErrorHandling.h"
 #include "../utilities/FangLogging.h"
+#include "../utilities/UnreadCountReader.h"
 #include "../models/FolderFeedItem.h"
 
 InsertFolderOperation::InsertFolderOperation(OperationManager *parent, int newIndex, QString name, ListModel *feedList)
@@ -101,7 +102,8 @@ void InsertFolderOperation::execute()
     }
     feedList->insertRow(newIndex, folder);
 
-    // TODO: Model/DB: Redo all ordinals in the list
+    // Get the initial unread count based on the feeds within this folder.
+    UnreadCountReader::update(db(), folder);
 
     emit finished(this);
 }
