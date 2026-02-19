@@ -54,7 +54,7 @@ protected slots:
     void queryToNewsListWithHighlights(QSqlQuery& query, QList<NewsItem*>* list);
 
 public slots:
-    virtual void executeSynchronous() override;
+    virtual void execute() override;
 
 private:
     QString searchQuery;

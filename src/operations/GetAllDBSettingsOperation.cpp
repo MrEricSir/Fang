@@ -2,7 +2,7 @@
 #include <QVariant>
 
 GetAllDBSettingsOperation::GetAllDBSettingsOperation(OperationManager *parent, QMap<DBSettingsKey, QString>* settings) :
-     DBOperation(IMMEDIATE, parent),
+     DBOperation(parent),
      settings(settings)
 {
 
@@ -21,7 +21,4 @@ void GetAllDBSettingsOperation::execute()
         settings->insert( (DBSettingsKey)query.value("id").toInt(),
                          query.value("value").toString());
     }
-
-    // That's all folks.
-    emit finished(this);
 }

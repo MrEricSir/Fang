@@ -13,7 +13,7 @@ SetBookmarkOperation::SetBookmarkOperation(OperationManager *parent, FeedItem* f
 {
 }
 
-void SetBookmarkOperation::executeSynchronous()
+void SetBookmarkOperation::execute()
 {
     AllNewsFeedItem* allNews = qobject_cast<AllNewsFeedItem*>(feed);
     if (allNews) {

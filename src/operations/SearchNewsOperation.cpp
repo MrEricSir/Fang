@@ -160,7 +160,7 @@ void SearchNewsOperation::queryToNewsListWithHighlights(QSqlQuery& query, QList<
     }
 }
 
-void SearchNewsOperation::executeSynchronous()
+void SearchNewsOperation::execute()
 {
     qCDebug(logOperation) << "SearchNewsOperation::executeSynchronous for query:" << searchQuery;
 

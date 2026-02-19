@@ -18,17 +18,17 @@ OperationManager::~OperationManager()
 {
 }
 
-void OperationManager::add(Operation *operation)
+void OperationManager::enqueue(AsyncOperation *operation)
 {
     switch (operation->getPriority()) {
-    case Operation::BACKGROUND:
+    case AsyncOperation::BACKGROUND:
         // Queue for the future.
         queue.enqueue(operation);
         executeOperations();
-        
+
         break;
-        
-    case Operation::IMMEDIATE:
+
+    case AsyncOperation::IMMEDIATE:
         // Let's do it!
         runNow(operation);
 
@@ -43,18 +43,16 @@ void OperationManager::add(Operation *operation)
     }
 }
 
-void OperationManager::runSynchronously(DBOperationSynchronous *operation)
+void OperationManager::run(SyncOperation *operation)
 {
     // Runs the operation.
     operation->execute();
 }
 
-void OperationManager::onOperationFinished(Operation* operation)
+void OperationManager::onOperationFinished(AsyncOperation* operation)
 {
-    if (operation->getPriority() != Operation::SYNCHRONOUS) {
-        pending.remove(operation);
-        operation->deleteLater(); // Trigger safe deletion.
-    }
+    pending.remove(operation);
+    operation->deleteLater(); // Trigger safe deletion.
 }
 
 void OperationManager::executeOperations()
@@ -63,13 +61,13 @@ void OperationManager::executeOperations()
     operationTimer.start(300);
 }
 
-void OperationManager::runNow(Operation *operation)
+void OperationManager::runNow(AsyncOperation *operation)
 {
     // Double check that we're in the right thread.
     FANG_CHECK(Utilities::isInMainThread(), "OperationManager::runNow called from non-main thread");
 
     pending.insert(operation);
-    QObject::connect(operation, &Operation::finished, this, &OperationManager::onOperationFinished);
+    QObject::connect(operation, &AsyncOperation::finished, this, &OperationManager::onOperationFinished);
     operation->execute();
 }
 
@@ -78,32 +76,32 @@ void OperationManager::runNextOperations()
     if (queue.isEmpty()) {
         return; // Nothing to do.
     }
-    
+
     // Don't do too much at once.  Schedule another call in the future if we're still busy.
     if (pending.size() >= 2) {
         executeOperations();
-        
-        return; 
+
+        return;
     }
-    
+
     // Pop the next 2 ops off the queue and run 'em.
     int i = 0;
     while(!queue.isEmpty()) {
         if (i >= 2) {
             break;
         }
-        
+
         i++;
-        Operation* operation = queue.dequeue();
+        AsyncOperation* operation = queue.dequeue();
         if (operation == nullptr) {
             qCDebug(logOperation) << "Op null";
             continue;
         }
-        
+
         // And awaaaaay we go!
         runNow(operation);
     }
-    
+
     // Schedule the next call.
     executeOperations();
 }

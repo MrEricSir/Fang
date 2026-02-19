@@ -10,7 +10,7 @@
 #include "../FangApp.h"
 
 UpdateFeedOperation::UpdateFeedOperation(OperationManager *parent, FeedItem *feed, RawFeed* rawFeed, bool useCache) :
-    DBOperation(BACKGROUND, parent),
+    AsyncOperation(BACKGROUND, parent),
     parser(),
     feed(feed),
     rawFeed(rawFeed),
@@ -247,17 +247,11 @@ void UpdateFeedOperation::onDiscoveryDone(FeedDiscovery* feedDiscovery)
     qCDebug(logOperation) << "UpdateFeedOperation: For feed: " << feed->getUserURL();
     qCDebug(logOperation) << "                     Updated URL is: " << discovery.feedURL();
 
-    // Update DB. Note that this will also update the feed object's URL.
-    UpdateFeedURLOperation* op = new UpdateFeedURLOperation(getOperationManager(), feed, discovery.feedURL());
-    connect(op, &UpdateFeedURLOperation::finished, this, &UpdateFeedOperation::onUpdateFeedURLFinished);
-    getOperationManager()->add(op);
-}
+    // Update DB synchronously. This also updates the feed object's URL.
+    UpdateFeedURLOperation updateURLOp(getOperationManager(), feed, discovery.feedURL());
+    getOperationManager()->run(&updateURLOp);
 
-void UpdateFeedOperation::onUpdateFeedURLFinished(Operation * op)
-{
-    Q_UNUSED(op);
-
-    // Send network request.
+    // Send network request with the updated URL.
     qCDebug(logOperation) << "Finished updating feed URL, updating feed " << feed->getURL();
     parser.parse(feed->getURL(), useCache);
 }

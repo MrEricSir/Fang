@@ -4,14 +4,14 @@
 #include <QObject>
 #include <QList>
 
-#include "DBOperationSynchronous.h"
+#include "DBOperation.h"
 #include "../models/FeedItem.h"
 #include "../models/NewsItem.h"
 
 /*!
     \brief Loads a batch of NewsItems.
  */
-class LoadNewsOperation : public DBOperationSynchronous
+class LoadNewsOperation : public DBOperation
 {
     Q_OBJECT
 public:
@@ -37,7 +37,7 @@ public:
     static QString modeToString(LoadMode mode);
     
 public slots:
-    virtual void executeSynchronous();
+    virtual void execute();
     
     /*!
         \return The Feed associated with this load.

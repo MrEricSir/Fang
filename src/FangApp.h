@@ -303,7 +303,7 @@ private slots:
     void onFeedSelected(ListItem *item);
     
     // When a new feed is added, and we want to immediately select it.
-    void onNewFeedAddedSelect(Operation* addFeedOperation);
+    void onNewFeedAddedSelect(AsyncOperation* addFeedOperation);
     
     /*!
         \brief Monitors feed.
@@ -319,9 +319,8 @@ private slots:
     
     /*!
         \brief Called when all the feeds have been pulled from the database.
-        \param op
      */
-    void onLoadAllFinished(Operation* op);
+    void onLoadAllFinished();
     
     /*!
         \brief Updates the feed's title.

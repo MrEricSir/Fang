@@ -11,7 +11,7 @@ LisvelLoadNewsOperation::LisvelLoadNewsOperation(OperationManager *parent, Lisve
 {
 }
 
-void LisvelLoadNewsOperation::executeSynchronous()
+void LisvelLoadNewsOperation::execute()
 {
     qCDebug(logOperation) << "LisvelLoadNewsOperation::execute load for feed: " << lisvelNews->getDbID();
 

@@ -4,11 +4,11 @@
 #include "../utilities/UnreadCountReader.h"
 
 SetPinOperation::SetPinOperation(OperationManager *parent, PinnedFeedItem *pinnedNews, qint64 newsID, bool pin) :
-    DBOperationSynchronous(parent), pinnedNews(pinnedNews), newsID(newsID), pin(pin)
+    DBOperation(parent), pinnedNews(pinnedNews), newsID(newsID), pin(pin)
 {
 }
 
-void SetPinOperation::executeSynchronous()
+void SetPinOperation::execute()
 {
     db().transaction();
 

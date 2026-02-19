@@ -1,7 +1,7 @@
 #ifndef SETFOLDEROPENOPERATION_H
 #define SETFOLDEROPENOPERATION_H
 
-#include "DBOperationSynchronous.h"
+#include "DBOperation.h"
 
 #include <QObject>
 
@@ -10,7 +10,7 @@
 /*!
     \brief Saves the folder open/closed state to the database.
  */
-class SetFolderOpenOperation : public DBOperationSynchronous
+class SetFolderOpenOperation : public DBOperation
 {
     Q_OBJECT
 public:
@@ -19,7 +19,7 @@ public:
 signals:
 
 public slots:
-    virtual void executeSynchronous();
+    virtual void execute();
 
 private:
     FeedItem* feed;

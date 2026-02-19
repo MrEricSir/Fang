@@ -6,13 +6,12 @@
 #include "../models/FolderFeedItem.h"
 
 InsertFolderOperation::InsertFolderOperation(OperationManager *parent, int newIndex, QString name, ListModel *feedList)
-    : DBOperation(IMMEDIATE, parent),
+    : DBOperation(parent),
       newIndex(newIndex),
       name(name),
       feedList(feedList),
       newItem(nullptr)
 {
-    requireObject(feedList);
 }
 
 InsertFolderOperation::~InsertFolderOperation()
@@ -28,7 +27,6 @@ void InsertFolderOperation::execute()
     if (newIndex < 0 || newIndex >= feedList->count()) {
         qCCritical(logOperation) << "InsertFolderOperation: Invalid newIndex" << newIndex
                     << "for feedList with count" << feedList->count();
-        emit finished(this);
         return;
     }
 
@@ -39,7 +37,6 @@ void InsertFolderOperation::execute()
         FeedItem* next = qobject_cast<FeedItem*>(feedList->row(i));
         if (!next) {
             qCCritical(logOperation) << "InsertFolderOperation: Feed item at index" << i << "is null";
-            emit finished(this);
             return;
         }
         nextIDs.append(next->getDbID());
@@ -72,13 +69,11 @@ void InsertFolderOperation::execute()
     if (insertID <= -1) {
         qCCritical(logOperation) << "InsertFolderOperation: Invalid insert ID" << insertID;
         db().rollback();
-        emit finished(this);
         return;
     }
 
     {
         QString ids = Utilities::commaSeparatedStringList(nextIDs);
-        // qDebug() << "inserting folder with id " << insertID << " the following IDs: " << ids;
 
         QSqlQuery query(db());
         query.prepare("UPDATE FeedItemTable SET parent_folder = :parentFolder "
@@ -104,6 +99,4 @@ void InsertFolderOperation::execute()
 
     // Get the initial unread count based on the feeds within this folder.
     UnreadCountReader::update(db(), folder);
-
-    emit finished(this);
 }

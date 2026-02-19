@@ -5,7 +5,7 @@
 #include "../FangApp.h"
 
 BookmarkOperation::BookmarkOperation(OperationManager *parent, FeedItem* feed) :
-    DBOperationSynchronous(parent),
+    DBOperation(parent),
     feed(feed)
 {
 }

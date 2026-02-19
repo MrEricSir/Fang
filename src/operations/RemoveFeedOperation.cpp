@@ -8,15 +8,13 @@
 #include "../FangApp.h"
 
 RemoveFeedOperation::RemoveFeedOperation(OperationManager *parent, FeedItem* feed, ListModel *feedList) :
-    DBOperationSynchronous(parent),
+    DBOperation(parent),
     feed(feed),
     feedList(feedList)
 {
-    requireObject(feed);
-    requireObject(feedList);
 }
 
-void RemoveFeedOperation::executeSynchronous()
+void RemoveFeedOperation::execute()
 {
     if (!feed) {
         qCCritical(logOperation) << "RemoveFeedOperation::executeSynchronous: feed is null";

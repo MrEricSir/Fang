@@ -9,12 +9,12 @@
 #include <QDebug>
 
 UpdateOrdinalsOperation::UpdateOrdinalsOperation(OperationManager *parent, ListModel *feedList) :
-    DBOperationSynchronous(parent),
+    DBOperation(parent),
     feedList(feedList)
 {
 }
 
-void UpdateOrdinalsOperation::executeSynchronous()
+void UpdateOrdinalsOperation::execute()
 {
     QSet<qint64> folderIDs;
     QList<FeedItem*> removedFromFolder;
@@ -127,8 +127,9 @@ void UpdateOrdinalsOperation::executeSynchronous()
         item->setParentFolder(-1);
     }
 
-    // Third: recalculate unread counts for all folders.
-    // This ensures folder counts are correct after feeds are moved between folders.
+    // Recalculate unread counts for all folders; this handles the case where a feed
+    // item is moved from one folder to another and both folders need to have their
+    // feed counts updated.
     for (int i = 0; i < feedList->count(); i++) {
         FolderFeedItem* folder = qobject_cast<FolderFeedItem*>(feedList->row(i));
         if (folder) {

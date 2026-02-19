@@ -5,23 +5,26 @@
 #include <QSqlQuery>
 #include <QSqlError>
 
-#include "Operation.h"
+#include "SyncOperation.h"
 
-class DBOperation : public Operation
+/*!
+    \brief A synchronous operation with database access.
+    Subclass this for operations that need to run DB queries synchronously.
+ */
+class DBOperation : public SyncOperation
 {
     Q_OBJECT
 public:
-    explicit DBOperation(PriorityLevel priority, OperationManager* parent);
+    explicit DBOperation(OperationManager* parent);
     virtual ~DBOperation() = default;
-signals:
-    
+
 public slots:
     QSqlDatabase db();
-    
+
 protected:
 
     /*!
-        \brief Call this to report a SQL error.  Automatically emits finished()
+        \brief Call this to report a SQL error. Logs the error and sets the error flag.
         \param query
         \param errorString The text that will be logged along with the error.
      */

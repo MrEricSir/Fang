@@ -8,8 +8,8 @@
 #include <QTimer>
 #include <QSet>
 
-#include "Operation.h"
-#include "DBOperationSynchronous.h"
+#include "AsyncOperation.h"
+#include "SyncOperation.h"
 #include "../FangObject.h"
 
 class OperationManager : public FangObject
@@ -18,51 +18,51 @@ class OperationManager : public FangObject
 public:
     explicit OperationManager(QObject *parent = nullptr);
     virtual ~OperationManager();
-    
+
 public slots:
 
     /*!
-        \brief Adds an operation.  Depending on the priority level, it may or may not start immediately.
+        \brief Adds an async operation. Depending on the priority, it may or may not start immediately.
                Note: The operation WILL be deleted when finished.
         \param operation
      */
-    void add(Operation* operation);
+    void enqueue(AsyncOperation* operation);
 
     /*!
-        \brief Runs an operation without adding it to the queue. It will always be run immediately.
+        \brief Runs a synchronous operation immediately without adding it to the queue.
                Note: The operation will NOT be deleted.
         \param operation
      */
-    void runSynchronously(DBOperationSynchronous* operation);
-    
+    void run(SyncOperation* operation);
+
 private slots:
 
     /*!
-        \brief Called by an operation when it completes.
+        \brief Called by an async operation when it completes.
         \param operation
      */
-    void onOperationFinished(Operation* operation);
-    
+    void onOperationFinished(AsyncOperation* operation);
+
     /*!
         \brief Executes queued operations.
         Never call this directly; it's invoked by the timer. Call executeOperations() instead.
      */
     void runNextOperations();
-    
+
 private:
-    
+
     // Executes the operation queue (at some point in the future.)
     void executeOperations();
-    
+
     // Immediately runs an operation.
-    void runNow(Operation* operation);
-    
+    void runNow(AsyncOperation* operation);
+
     // Our queue.
-    QQueue<Operation*> queue;
-    
+    QQueue<AsyncOperation*> queue;
+
     // Pending operations.
-    QSet<Operation*> pending;
-    
+    QSet<AsyncOperation*> pending;
+
     // Timer to queue future operations.
     QTimer operationTimer;
 };

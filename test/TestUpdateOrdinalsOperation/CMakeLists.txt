@@ -17,9 +17,9 @@ qt_add_executable(tst_updateordinalsoperation
     ${CMAKE_SOURCE_DIR}/src/models/NewsList.cpp
     ${CMAKE_SOURCE_DIR}/src/models/NewsItem.cpp
     # Operations
-    ${CMAKE_SOURCE_DIR}/src/operations/Operation.cpp
+    ${CMAKE_SOURCE_DIR}/src/operations/AsyncOperation.cpp
+    ${CMAKE_SOURCE_DIR}/src/operations/SyncOperation.cpp
     ${CMAKE_SOURCE_DIR}/src/operations/DBOperation.cpp
-    ${CMAKE_SOURCE_DIR}/src/operations/DBOperationSynchronous.cpp
     ${CMAKE_SOURCE_DIR}/src/operations/OperationManager.cpp
     ${CMAKE_SOURCE_DIR}/src/operations/UpdateOrdinalsOperation.cpp
     # Headers for AUTOMOC
@@ -33,9 +33,9 @@ qt_add_executable(tst_updateordinalsoperation
     ${CMAKE_SOURCE_DIR}/src/models/DBObject.h
     ${CMAKE_SOURCE_DIR}/src/FangObject.h
     ${CMAKE_SOURCE_DIR}/src/db/DB.h
-    ${CMAKE_SOURCE_DIR}/src/operations/Operation.h
+    ${CMAKE_SOURCE_DIR}/src/operations/AsyncOperation.h
+    ${CMAKE_SOURCE_DIR}/src/operations/SyncOperation.h
     ${CMAKE_SOURCE_DIR}/src/operations/DBOperation.h
-    ${CMAKE_SOURCE_DIR}/src/operations/DBOperationSynchronous.h
     ${CMAKE_SOURCE_DIR}/src/operations/OperationManager.h
     ${CMAKE_SOURCE_DIR}/src/operations/UpdateOrdinalsOperation.h
 )

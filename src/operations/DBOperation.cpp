@@ -1,8 +1,8 @@
 #include "DBOperation.h"
 #include "../db/DB.h"
 
-DBOperation::DBOperation(PriorityLevel priority, OperationManager *parent) :
-    Operation(priority, parent)
+DBOperation::DBOperation(OperationManager *parent) :
+    SyncOperation(parent)
 {
 }
 

@@ -1,7 +1,7 @@
 #ifndef FAVICONUPDATEOPERATION_H
 #define FAVICONUPDATEOPERATION_H
 
-#include "DBOperation.h"
+#include "AsyncOperation.h"
 #include <QObject>
 #include <QUrl>
 #include <QImage>
@@ -9,7 +9,7 @@
 #include "../models/FeedItem.h"
 #include "../utilities/FaviconGrabber.h"
 
-class FaviconUpdateOperation : public DBOperation
+class FaviconUpdateOperation : public AsyncOperation
 {
     Q_OBJECT
 public:

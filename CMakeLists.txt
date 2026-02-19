@@ -93,7 +93,8 @@ qt_add_executable(Fang WIN32
     src/models/FeedItem.cpp
     src/models/NewsList.cpp
     src/operations/BookmarkOperation.cpp
-    src/operations/DBOperationSynchronous.cpp
+    src/operations/AsyncOperation.cpp
+    src/operations/SyncOperation.cpp
     src/operations/InsertFolderOperation.cpp
     src/operations/LoadFolderOperation.cpp
     src/operations/LoadNewsOperation.cpp
@@ -103,7 +104,6 @@ qt_add_executable(Fang WIN32
     src/parser/RawNews.cpp
     src/FangApp.cpp
     src/operations/OperationManager.cpp
-    src/operations/Operation.cpp
     src/operations/UpdateFeedOperation.cpp
     src/utilities/Utilities.cpp
     src/operations/LoadAllFeedsOperation.cpp
@@ -171,7 +171,8 @@ qt_add_executable(Fang WIN32
     src/models/FeedItem.h
     src/models/NewsList.h
     src/operations/BookmarkOperation.h
-    src/operations/DBOperationSynchronous.h
+    src/operations/AsyncOperation.h
+    src/operations/SyncOperation.h
     src/operations/InsertFolderOperation.h
     src/operations/LoadFolderOperation.h
     src/operations/LoadNewsOperation.h
@@ -181,7 +182,6 @@ qt_add_executable(Fang WIN32
     src/parser/RawNews.h
     src/FangApp.h
     src/operations/OperationManager.h
-    src/operations/Operation.h
     src/operations/UpdateFeedOperation.h
     src/utilities/Utilities.h
     src/operations/LoadAllFeedsOperation.h

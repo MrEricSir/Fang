@@ -4,7 +4,7 @@
 #include "../models/NewsItem.h"
 
 ExpireNewsOperation::ExpireNewsOperation(OperationManager *parent, ListModel *feedList, QDateTime olderThan, qint32 saveLast) :
-    DBOperation(IMMEDIATE, parent), // Must be immediate because we need to stop the app from shutting down.
+    DBOperation(parent),
     feedList(feedList),
     olderThan(olderThan),
     saveLast(saveLast)
@@ -59,6 +59,4 @@ void ExpireNewsOperation::execute()
         QSqlQuery query(db());
         query.exec("VACUUM");
     }
-
-    emit finished(this);
 }

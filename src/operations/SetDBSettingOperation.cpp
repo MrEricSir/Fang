@@ -3,7 +3,7 @@
 #include <QDebug>
 
 SetDBSettingOperation::SetDBSettingOperation(OperationManager *parent, DBSettingsKey setting, const QString &value) :
-    DBOperation(IMMEDIATE, parent), setting(setting), value(value)
+    DBOperation(parent), setting(setting), value(value)
 {
 
 }
@@ -25,6 +25,4 @@ void SetDBSettingOperation::execute()
     }
 
     db().commit();
-
-    emit finished(this);
 }

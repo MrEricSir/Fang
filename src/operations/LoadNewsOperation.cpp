@@ -4,7 +4,7 @@
 #include "../utilities/FangLogging.h"
 
 LoadNewsOperation::LoadNewsOperation(OperationManager *parent, FeedItem* feedItem, LoadMode mode, int loadLimit) :
-    DBOperationSynchronous(parent),
+    DBOperation(parent),
     feedItem(feedItem),
     listAppend(),
     listPrepend(),
@@ -173,7 +173,7 @@ qint64 LoadNewsOperation::getStartIDForPrepend()
     return startId;
 }
 
-void LoadNewsOperation::executeSynchronous()
+void LoadNewsOperation::execute()
 {
     if (feedItem->isSpecialFeed()) {
         // Wrong type of load operation for special feed.

@@ -5,14 +5,14 @@
 #include <QSqlError>
 
 ReloadNewsOperation::ReloadNewsOperation(OperationManager *parent, FeedItem* feedItem, const QList<qint64>& ids) :
-    DBOperationSynchronous(parent),
+    DBOperation(parent),
     feedItem(feedItem),
     idsToReload(ids),
     reloadedItems()
 {
 }
 
-void ReloadNewsOperation::executeSynchronous()
+void ReloadNewsOperation::execute()
 {
     if (idsToReload.isEmpty()) {
         qCDebug(logOperation) << "ReloadNewsOperation: No IDs to reload";

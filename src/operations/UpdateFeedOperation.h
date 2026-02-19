@@ -1,7 +1,7 @@
 #ifndef UPDATEFEEDOPERATION_H
 #define UPDATEFEEDOPERATION_H
 
-#include "DBOperation.h"
+#include "AsyncOperation.h"
 
 #include <QDateTime>
 
@@ -19,7 +19,7 @@
                          In other words, it's safe to call on feed x and y simultaneously, but not on
                          feed x and feed x at the same time.  Bad shit will happen, man.  Don't blame me.
  */
-class UpdateFeedOperation : public DBOperation
+class UpdateFeedOperation : public AsyncOperation
 {
     Q_OBJECT
 public:
@@ -57,12 +57,6 @@ private slots:
         \brief onDiscoveryDone
      */
     void onDiscoveryDone(FeedDiscovery* feedDiscovery);
-
-    /*!
-        \brief onUpdateFeedURLFinished
-        \param op
-     */
-    void onUpdateFeedURLFinished(Operation * op);
     
 private:
     NewsParser parser;
