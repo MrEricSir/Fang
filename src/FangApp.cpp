@@ -892,10 +892,6 @@ SearchFeedItem* FangApp::performSearch(const QString& query,
         return nullptr;
     }
 
-    qCDebug(logApp) << "performSearch: Searching for:" << trimmedQuery
-                    << "scope:" << static_cast<int>(scope)
-                    << "scopeId:" << scopeId;
-
     // Create search feed lazily on first use.
     if (searchFeed == nullptr) {
         searchFeed = new SearchFeedItem(&feedList);

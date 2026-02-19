@@ -5,7 +5,7 @@
 -- FTS5 virtual table for full-text search.
 -- Uses content= to avoid duplicating data (contentless FTS).
 -- The content is read from NewsItemTable when needed.
-CREATE VIRTUAL TABLE NewsItemFTS USING fts5(
+CREATE VIRTUAL TABLE IF NOT EXISTS NewsItemFTS USING fts5(
     title,
     summary,
     content,
@@ -14,9 +14,14 @@ CREATE VIRTUAL TABLE NewsItemFTS USING fts5(
     content_rowid='id'
 );
 
--- Populate FTS index from existing data.
-INSERT INTO NewsItemFTS(rowid, title, summary, content, author)
-SELECT id, title, summary, content, author FROM NewsItemTable;
+-- Rebuild FTS index from existing data.
+INSERT INTO NewsItemFTS(NewsItemFTS) VALUES('rebuild');
+
+-- Triggers: keep FTS in sync with NewsItemTable.
+-- Drop first in case of partial previous migration.
+DROP TRIGGER IF EXISTS NewsItemFTS_ai;
+DROP TRIGGER IF EXISTS NewsItemFTS_ad;
+DROP TRIGGER IF EXISTS NewsItemFTS_au;
 
 -- Trigger: keep FTS in sync after INSERT.
 CREATE TRIGGER NewsItemFTS_ai AFTER INSERT ON NewsItemTable BEGIN

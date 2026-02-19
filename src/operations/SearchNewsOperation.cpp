@@ -162,8 +162,6 @@ void SearchNewsOperation::queryToNewsListWithHighlights(QSqlQuery& query, QList<
 
 void SearchNewsOperation::execute()
 {
-    qCDebug(logOperation) << "SearchNewsOperation::executeSynchronous for query:" << searchQuery;
-
     // Validate search query.
     QString sanitized = sanitizeSearchQuery(searchQuery);
     if (sanitized.isEmpty()) {
@@ -208,8 +206,6 @@ void SearchNewsOperation::execute()
 
     // Extract results with highlighted fields
     queryToNewsListWithHighlights(query, &listAppend);
-
-    qCDebug(logOperation) << "SearchNewsOperation: Found" << listAppend.size() << "results";
 
     // Add items to the feed's news list
     if (!listAppend.isEmpty()) {

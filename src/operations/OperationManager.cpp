@@ -45,7 +45,6 @@ void OperationManager::enqueue(AsyncOperation *operation)
 
 void OperationManager::run(SyncOperation *operation)
 {
-    // Runs the operation.
     operation->execute();
 }
 

@@ -163,20 +163,61 @@ bool DB::executeSqlFile(QFile& sqlFile)
     
     sqlFile.close();
     
-    // Split the file by semi-colons.  (SQLite cannot execute multiple
-    // statements in one exec.)
-    QStringList statements = entireFile.split(";");
-    
+    // Split the file into individual SQL statements.
+    QStringList statements;
+    QString current;
+    int depth = 0;
+
+    const QStringList lines = entireFile.split("\n");
+    for (const QString& rawLine : lines) {
+        QString line = rawLine.trimmed();
+        if (line.isEmpty())
+            continue;
+
+        // Check if this line starts a BEGIN block (e.g., CREATE TRIGGER ... BEGIN).
+        // We look for BEGIN at the end of the line (after stripping whitespace).
+        if (line.endsWith("BEGIN", Qt::CaseInsensitive)) {
+            depth++;
+        }
+
+        current += rawLine + "\n";
+
+        if (depth > 0) {
+            // Inside a BEGIN...END block. Look for END; to close it.
+            if (line.startsWith("END;", Qt::CaseInsensitive) ||
+                line.startsWith("END ;", Qt::CaseInsensitive)) {
+                depth--;
+                if (depth == 0) {
+                    // Remove trailing semicolon from END; since we add the
+                    // whole block as one statement.
+                    statements << current.trimmed().chopped(1);
+                    current.clear();
+                }
+            }
+        } else {
+            // Outside a trigger body: split on semicolons normally.
+            if (line.endsWith(";")) {
+                statements << current.trimmed().chopped(1);
+                current.clear();
+            }
+        }
+    }
+
+    // Handle any remaining text (statement without trailing semicolon).
+    if (!current.trimmed().isEmpty()) {
+        statements << current.trimmed();
+    }
+
     // Execute each statement.
-    for (QString s : statements) {
-        s = s.trimmed();
-        if (s.isEmpty())
-            continue; // Ignore empty lines.
-        
+    for (const QString& s : std::as_const(statements)) {
+        QString trimmed = s.trimmed();
+        if (trimmed.isEmpty())
+            continue;
+
         QSqlQuery q(db());
-        if (!q.exec(s)) {
+        if (!q.exec(trimmed)) {
             qCDebug(logDb) << "Could not execute sql statement: " << q.lastError().text();
-            qCDebug(logDb) << s;
+            qCDebug(logDb) << trimmed;
             return false;
         }
     }
