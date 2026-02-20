@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-02-18 07:44:36</td>
+            <td class="headerValue">2026-02-20 01:09:38</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -71,12 +71,12 @@
 <span id="L9"><span class="lineNum">       9</span>              : #include &lt;QDebug&gt;</span>
 <span id="L10"><span class="lineNum">      10</span>              : </span>
 <span id="L11"><span class="lineNum">      11</span> <span class="tlaGNC tlaBgGNC">          12 : UpdateOrdinalsOperation::UpdateOrdinalsOperation(OperationManager *parent, ListModel *feedList) :</span></span>
-<span id="L12"><span class="lineNum">      12</span>              :     DBOperationSynchronous(parent),</span>
+<span id="L12"><span class="lineNum">      12</span>              :     DBOperation(parent),</span>
 <span id="L13"><span class="lineNum">      13</span> <span class="tlaGNC">          12 :     feedList(feedList)</span></span>
 <span id="L14"><span class="lineNum">      14</span>              : {</span>
 <span id="L15"><span class="lineNum">      15</span> <span class="tlaGNC">          12 : }</span></span>
 <span id="L16"><span class="lineNum">      16</span>              : </span>
-<span id="L17"><span class="lineNum">      17</span> <span class="tlaGNC">          12 : void UpdateOrdinalsOperation::executeSynchronous()</span></span>
+<span id="L17"><span class="lineNum">      17</span> <span class="tlaGNC">          12 : void UpdateOrdinalsOperation::execute()</span></span>
 <span id="L18"><span class="lineNum">      18</span>              : {</span>
 <span id="L19"><span class="lineNum">      19</span> <span class="tlaGNC">          12 :     QSet&lt;qint64&gt; folderIDs;</span></span>
 <span id="L20"><span class="lineNum">      20</span> <span class="tlaGNC">          12 :     QList&lt;FeedItem*&gt; removedFromFolder;</span></span>
@@ -189,15 +189,16 @@
 <span id="L127"><span class="lineNum">     127</span> <span class="tlaGNC">          18 :         item-&gt;setParentFolder(-1);</span></span>
 <span id="L128"><span class="lineNum">     128</span>              :     }</span>
 <span id="L129"><span class="lineNum">     129</span>              : </span>
-<span id="L130"><span class="lineNum">     130</span>              :     // Third: recalculate unread counts for all folders.</span>
-<span id="L131"><span class="lineNum">     131</span>              :     // This ensures folder counts are correct after feeds are moved between folders.</span>
-<span id="L132"><span class="lineNum">     132</span> <span class="tlaGNC">          32 :     for (int i = 0; i &lt; feedList-&gt;count(); i++) {</span></span>
-<span id="L133"><span class="lineNum">     133</span> <span class="tlaGNC">          20 :         FolderFeedItem* folder = qobject_cast&lt;FolderFeedItem*&gt;(feedList-&gt;row(i));</span></span>
-<span id="L134"><span class="lineNum">     134</span> <span class="tlaGNC">          20 :         if (folder) {</span></span>
-<span id="L135"><span class="lineNum">     135</span> <span class="tlaGNC">           4 :             UnreadCountReader::update(db(), folder);</span></span>
-<span id="L136"><span class="lineNum">     136</span>              :         }</span>
-<span id="L137"><span class="lineNum">     137</span>              :     }</span>
-<span id="L138"><span class="lineNum">     138</span> <span class="tlaGNC">          12 : }</span></span>
+<span id="L130"><span class="lineNum">     130</span>              :     // Recalculate unread counts for all folders; this handles the case where a feed</span>
+<span id="L131"><span class="lineNum">     131</span>              :     // item is moved from one folder to another and both folders need to have their</span>
+<span id="L132"><span class="lineNum">     132</span>              :     // feed counts updated.</span>
+<span id="L133"><span class="lineNum">     133</span> <span class="tlaGNC">          32 :     for (int i = 0; i &lt; feedList-&gt;count(); i++) {</span></span>
+<span id="L134"><span class="lineNum">     134</span> <span class="tlaGNC">          20 :         FolderFeedItem* folder = qobject_cast&lt;FolderFeedItem*&gt;(feedList-&gt;row(i));</span></span>
+<span id="L135"><span class="lineNum">     135</span> <span class="tlaGNC">          20 :         if (folder) {</span></span>
+<span id="L136"><span class="lineNum">     136</span> <span class="tlaGNC">           4 :             UnreadCountReader::update(db(), folder);</span></span>
+<span id="L137"><span class="lineNum">     137</span>              :         }</span>
+<span id="L138"><span class="lineNum">     138</span>              :     }</span>
+<span id="L139"><span class="lineNum">     139</span> <span class="tlaGNC">          12 : }</span></span>
         </pre>
               </td>
             </tr>

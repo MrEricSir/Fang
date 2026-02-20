@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-02-18 07:44:36</td>
+            <td class="headerValue">2026-02-20 01:09:38</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryLo">30.8&nbsp;%</td>
@@ -81,8 +81,8 @@
 <span id="L19"><span class="lineNum">      19</span>              :   Q_OBJECT</span>
 <span id="L20"><span class="lineNum">      20</span>              :  </span>
 <span id="L21"><span class="lineNum">      21</span>              : public:</span>
-<span id="L22"><span class="lineNum">      22</span> <span class="tlaGNC tlaBgGNC">         290 :   ListItem(QObject* parent = nullptr) : FangObject(parent) {}</span></span>
-<span id="L23"><span class="lineNum">      23</span> <span class="tlaGNC">         271 :   virtual ~ListItem() {}</span></span>
+<span id="L22"><span class="lineNum">      22</span> <span class="tlaGNC tlaBgGNC">         292 :   ListItem(QObject* parent = nullptr) : FangObject(parent) {}</span></span>
+<span id="L23"><span class="lineNum">      23</span> <span class="tlaGNC">         273 :   virtual ~ListItem() {}</span></span>
 <span id="L24"><span class="lineNum">      24</span> <span class="tlaUNC tlaBgUNC">           0 :   virtual QString id() const { return &quot;invalid id&quot;; }</span></span>
 <span id="L25"><span class="lineNum">      25</span> <span class="tlaUNC">           0 :   virtual QVariant data(int role) const { Q_UNUSED(role); return QVariant(); }</span></span>
 <span id="L26"><span class="lineNum">      26</span> <span class="tlaUNC">           0 :   virtual bool setData(const QVariant &amp;value, int role) { Q_UNUSED(value); Q_UNUSED(role); return false; }</span></span>
@@ -106,7 +106,7 @@
 <span id="L44"><span class="lineNum">      44</span>              :   explicit ListModel(ListItem* prototype, QObject* parent = nullptr);</span>
 <span id="L45"><span class="lineNum">      45</span>              :   ~ListModel();</span>
 <span id="L46"><span class="lineNum">      46</span>              :   int rowCount(const QModelIndex &amp;parent = QModelIndex()) const;</span>
-<span id="L47"><span class="lineNum">      47</span> <span class="tlaGNC tlaBgGNC">         375 :   inline int count() const { return rowCount(); }</span></span>
+<span id="L47"><span class="lineNum">      47</span> <span class="tlaGNC tlaBgGNC">         376 :   inline int count() const { return rowCount(); }</span></span>
 <span id="L48"><span class="lineNum">      48</span>              :   QVariant data(const QModelIndex &amp;index, int role = Qt::DisplayRole) const;</span>
 <span id="L49"><span class="lineNum">      49</span>              :   Q_INVOKABLE QVariant dataByField(int row, const QString &amp;field_name) const;</span>
 <span id="L50"><span class="lineNum">      50</span>              :   bool setData(const QModelIndex &amp;index, const QVariant &amp;value, int role = Qt::EditRole);</span>

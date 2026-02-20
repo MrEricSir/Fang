@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-02-18 07:44:36</td>
+            <td class="headerValue">2026-02-20 01:09:38</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryMed">82.8&nbsp;%</td>
@@ -204,7 +204,7 @@
 <span id="L142"><span class="lineNum">     142</span>              :         Note: This represents news items that are loaded and can be viewed. As such it will</span>
 <span id="L143"><span class="lineNum">     143</span>              :         slowly grow as more news items are added to the feed.</span>
 <span id="L144"><span class="lineNum">     144</span>              :      */</span>
-<span id="L145"><span class="lineNum">     145</span> <span class="tlaGNC tlaBgGNC">        2955 :     inline NewsList* getNewsList() { return &amp;newsList; }</span></span>
+<span id="L145"><span class="lineNum">     145</span> <span class="tlaGNC tlaBgGNC">        2994 :     inline NewsList* getNewsList() { return &amp;newsList; }</span></span>
 <span id="L146"><span class="lineNum">     146</span>              :     </span>
 <span id="L147"><span class="lineNum">     147</span>              :     /*!</span>
 <span id="L148"><span class="lineNum">     148</span>              :         \brief Used to set the bookmark internally.  External classes shouldn't need to call this.</span>
@@ -241,7 +241,7 @@
 <span id="L179"><span class="lineNum">     179</span>              :                               to tell if we should draw the top bookmark to unbookmark all.</span>
 <span id="L180"><span class="lineNum">     180</span>              :         \param id</span>
 <span id="L181"><span class="lineNum">     181</span>              :      */</span>
-<span id="L182"><span class="lineNum">     182</span> <span class="tlaGNC">           1 :     inline void setFirstNewsID(qint64 id) { firstNewsID = id; }</span></span>
+<span id="L182"><span class="lineNum">     182</span> <span class="tlaGNC">           8 :     inline void setFirstNewsID(qint64 id) { firstNewsID = id; }</span></span>
 <span id="L183"><span class="lineNum">     183</span>              :     </span>
 <span id="L184"><span class="lineNum">     184</span>              :     /*!</span>
 <span id="L185"><span class="lineNum">     185</span>              :         \brief Sets the unread count to the new value and emits a change signal.</span>
