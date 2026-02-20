@@ -11,7 +11,7 @@ MarkAllReadOrUnreadOperation::MarkAllReadOrUnreadOperation(OperationManager *par
 
 }
 
-void MarkAllReadOrUnreadOperation::executeSynchronous()
+void MarkAllReadOrUnreadOperation::execute()
 {
     if (!feed) {
         qCWarning(logOperation) << "Unable to update bookmark; feed is null";

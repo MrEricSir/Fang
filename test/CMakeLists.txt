@@ -28,6 +28,7 @@ add_subdirectory(TestSearch)
 
 # Operation tests
 add_subdirectory(TestUpdateOrdinalsOperation)
+add_subdirectory(TestSearchOperation)
 
 # Model tests
 add_subdirectory(TestFangObject)

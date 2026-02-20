@@ -2,11 +2,10 @@
 #include "../utilities/FangLogging.h"
 
 UpdateFeedURLOperation::UpdateFeedURLOperation(OperationManager *parent, FeedItem* feed, QUrl newURL) :
-    DBOperation(IMMEDIATE, parent),
+    DBOperation(parent),
     feed(feed),
     newURL(newURL)
 {
-    requireObject(feed);
 }
 
 void UpdateFeedURLOperation::execute()
@@ -25,11 +24,9 @@ void UpdateFeedURLOperation::execute()
         reportSQLError(query, "Unable to update feed URL");
         db().rollback();
 
-        emit finished(this);
         return;
     }
 
     db().commit();
     feed->setURL(newURL); // May or may not be needed, shouldn't hurt either way.
-    emit finished(this);
 }

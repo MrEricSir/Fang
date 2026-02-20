@@ -164,9 +164,9 @@ void FangApp::init()
     qCInfo(logApp) << "Is debug build: " << isDebugBuild;
     
     // Load feed list.
-    LoadAllFeedsOperation* loadAllOp = new LoadAllFeedsOperation(&manager, &feedList);
-    connect(loadAllOp, &LoadAllFeedsOperation::finished, this, &FangApp::onLoadAllFinished);
-    manager.add(loadAllOp);
+    LoadAllFeedsOperation loadAllOp(&manager, &feedList);
+    manager.run(&loadAllOp);
+    onLoadAllFinished();
 }
 
 FeedItem* FangApp::getFeed(qsizetype index)
@@ -235,7 +235,7 @@ void FangApp::onFeedSelected(ListItem* _item)
     lastFeedSelected = item;
 }
 
-void FangApp::onNewFeedAddedSelect(Operation* addFeedOperation)
+void FangApp::onNewFeedAddedSelect(AsyncOperation* addFeedOperation)
 {
     AddFeedOperation* op = qobject_cast<AddFeedOperation*>(addFeedOperation);
     if (!op) {
@@ -259,9 +259,8 @@ void FangApp::disconnectFeed(FeedItem *feed)
     disconnect(feed, &FeedItem::folderOpenChanged, this, &FangApp::onFolderOpenChanged);
 }
 
-void FangApp::onLoadAllFinished(Operation *op)
+void FangApp::onLoadAllFinished()
 {
-    Q_UNUSED(op);
     loadAllFinished = true;
 
     // Find our special feeds.
@@ -351,8 +350,8 @@ void FangApp::refreshFeed(FeedItem *feed)
     
     // Update 'em all!
     for (FeedItem* item : feedsToUpdate) {
-        manager.add(new UpdateFeedOperation(&manager, item, nullptr, useCache));
-        manager.add(new FaviconUpdateOperation(&manager, item));
+        manager.enqueue(new UpdateFeedOperation(&manager, item, nullptr, useCache));
+        manager.enqueue(new FaviconUpdateOperation(&manager, item));
     }
 }
 
@@ -446,7 +445,7 @@ void FangApp::setBookmark(qint64 id, bool allowBackward)
 
     // I bookmark you!
     SetBookmarkOperation bookmarkOp(&manager, currentFeed, bookmark);
-    manager.runSynchronously(&bookmarkOp);
+    manager.run(&bookmarkOp);
 
     currentFeed->setBookmark(bookmarkOp.getBookmark()->getDbID());
     webSocketServer.drawBookmark(currentFeed->getBookmarkID());
@@ -462,7 +461,7 @@ void FangApp::setPin(qint64 id, bool pin)
     PinnedFeedItem* pinnedNews = qobject_cast<PinnedFeedItem*>(feedForId(FEED_ID_PINNED));
 
     SetPinOperation pinOp(&manager, pinnedNews, id, pin);
-    manager.runSynchronously(&pinOp);
+    manager.run(&pinOp);
 }
 
 void FangApp::removeAndDelete(bool fromStart, qsizetype numberToRemove)
@@ -546,7 +545,8 @@ void FangApp::onQuit()
     qint32 saveLast = 25;
 
     // Clean up DB before we exit.
-    manager.add(new ExpireNewsOperation(&manager, &feedList, olderThan, saveLast));
+    ExpireNewsOperation expireOp(&manager, &feedList, olderThan, saveLast);
+    manager.run(&expireOp);
 }
 
 void FangApp::setCurrentFeed(FeedItem *feed, bool reloadIfSameFeed)
@@ -575,7 +575,7 @@ void FangApp::setCurrentFeed(FeedItem *feed, bool reloadIfSameFeed)
     OperationManager* mgr = &manager;
     currentFeed->getNewsList()->setReloadCallback([this, mgr](const QList<qint64>& ids) {
         ReloadNewsOperation reloadOp(mgr, currentFeed, ids);
-        mgr->runSynchronously(&reloadOp);
+        mgr->run(&reloadOp);
         return reloadOp.getReloadedItems();
     });
 
@@ -656,7 +656,7 @@ LoadNewsOperation* FangApp::loadNews(LoadNewsOperation::LoadMode mode)
         }
     }
 
-    manager.runSynchronously(loader);
+    manager.run(loader);
     loader->deleteLater();
 
     qCDebug(logApp) << "Load news operation took [ " << timer.elapsed() << " ] milliseconds";
@@ -672,7 +672,7 @@ void FangApp::onFeedTitleChanged()
     }
 
     UpdateTitleOperation updateTitle(&manager, feed);
-    manager.runSynchronously(&updateTitle);
+    manager.run(&updateTitle);
 }
 
 void FangApp::onFolderOpenChanged()
@@ -684,7 +684,7 @@ void FangApp::onFolderOpenChanged()
     }
 
     SetFolderOpenOperation setFolderOpen(&manager, feed);
-    manager.runSynchronously(&setFolderOpen);
+    manager.run(&setFolderOpen);
 }
 
 QString FangApp::getPlatform()
@@ -772,7 +772,7 @@ void FangApp::pinnedNewsWatcher()
 void FangApp::markAllAsReadOrUnread(FeedItem *feed, bool read)
 {
     MarkAllReadOrUnreadOperation markReadOp(&manager, feed, read);
-    manager.runSynchronously(&markReadOp);
+    manager.run(&markReadOp);
 
     // Update UI to bookmark last item in list.
     // NOTE: May lead to bugs if the last news item is not loaded into newsList
@@ -839,24 +839,25 @@ void FangApp::addFeed(const QString userURL, const RawFeed* rawFeed, bool switch
         connect(addOp, &AddFeedOperation::finished, this, &FangApp::onNewFeedAddedSelect);
     }
     
-    manager.add(addOp);
+    manager.enqueue(addOp);
 }
 
 void FangApp::removeFeed(FeedItem *feed)
 {
     // Remove feed from the DB and our feed list.
     RemoveFeedOperation removeFeedOp(&manager, feed, &feedList);
-    manager.runSynchronously(&removeFeedOp);
+    manager.run(&removeFeedOp);
 
     // Update orinals based on the new list order.
     UpdateOrdinalsOperation updateOp(&manager, &feedList);
-    manager.runSynchronously(&updateOp);
+    manager.run(&updateOp);
 }
 
 qint64 FangApp::insertFolder(qsizetype newIndex)
 {
     // Slap in a new folder, reparent the following two items.
-    manager.add(new InsertFolderOperation(&manager, newIndex, "New folder", &feedList));
+    InsertFolderOperation insertOp(&manager, newIndex, "New folder", &feedList);
+    manager.run(&insertOp);
     FeedItem* item = qobject_cast<FeedItem *>(feedList.row(newIndex));
     if (item == nullptr || !item->isFolder()) {
         return -1;
@@ -891,10 +892,6 @@ SearchFeedItem* FangApp::performSearch(const QString& query,
         return nullptr;
     }
 
-    qCDebug(logApp) << "performSearch: Searching for:" << trimmedQuery
-                    << "scope:" << static_cast<int>(scope)
-                    << "scopeId:" << scopeId;
-
     // Create search feed lazily on first use.
     if (searchFeed == nullptr) {
         searchFeed = new SearchFeedItem(&feedList);
@@ -914,7 +911,7 @@ SearchFeedItem* FangApp::performSearch(const QString& query,
         // ReloadNewsOperation doesn't apply the FTS5 highlighting, so we use SearchNewsOperation.
         // However, this is a simplified reload that just returns the items by ID without highlighting.
         ReloadNewsOperation reloadOp(mgr, searchFeed, ids);
-        mgr->runSynchronously(&reloadOp);
+        mgr->run(&reloadOp);
         return reloadOp.getReloadedItems();
     });
 

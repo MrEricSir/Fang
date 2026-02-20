@@ -3,7 +3,7 @@
 
 #include <QList>
 
-#include "DBOperationSynchronous.h"
+#include "DBOperation.h"
 #include "../models/FeedItem.h"
 #include "../models/NewsItem.h"
 
@@ -14,7 +14,7 @@
     to save resources, and need to be reloaded when the user scrolls
     back to view them.
  */
-class ReloadNewsOperation : public DBOperationSynchronous
+class ReloadNewsOperation : public DBOperation
 {
     Q_OBJECT
 public:
@@ -28,7 +28,7 @@ public:
     virtual ~ReloadNewsOperation() = default;
 
 public slots:
-    virtual void executeSynchronous() override;
+    virtual void execute() override;
 
     /*!
         \return List of reloaded NewsItem objects.

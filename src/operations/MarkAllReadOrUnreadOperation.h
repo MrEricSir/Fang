@@ -14,7 +14,7 @@ public:
     virtual ~MarkAllReadOrUnreadOperation() = default;
 
 public slots:
-    virtual void executeSynchronous();
+    virtual void execute();
 
 private:
     bool markAsRead;

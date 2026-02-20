@@ -8,7 +8,8 @@ DBSettings::DBSettings(OperationManager *manager) :
     manager(manager)
 {
     // Load all of our settings into the map.
-    manager->add(new GetAllDBSettingsOperation(manager, &settings));
+    GetAllDBSettingsOperation loadSettingsOp(manager, &settings);
+    manager->run(&loadSettingsOp);
 }
 
 void DBSettings::set(DBSettingsKey key, const QString& value)
@@ -22,7 +23,8 @@ void DBSettings::set(DBSettingsKey key, const QString& value)
 
     // Lookin' good.  Save to our map and the database.
     settings[key] = value;
-    manager->add(new SetDBSettingOperation(manager, key, value));
+    SetDBSettingOperation setOp(manager, key, value);
+    manager->run(&setOp);
     emit settingChanged(key, value);
 }
 

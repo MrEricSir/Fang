@@ -9,12 +9,8 @@
 #include "../utilities/UnreadCountReader.h"
 
 LoadAllFeedsOperation::LoadAllFeedsOperation(OperationManager *parent, ListModel *feedList) :
-    DBOperation(IMMEDIATE, parent),
+    DBOperation(parent),
     feedList(feedList)
-{
-}
-
-LoadAllFeedsOperation::~LoadAllFeedsOperation()
 {
 }
 
@@ -23,14 +19,14 @@ void LoadAllFeedsOperation::execute()
     // Setup our pseudo-feeds.
     AllNewsFeedItem* allNews = new AllNewsFeedItem(feedList);
     PinnedFeedItem* pinnedNews = new PinnedFeedItem(feedList);
-    
+
     // Kindly ask the database for the rest.
     QSqlQuery query(db());
     if (!query.exec("SELECT * FROM FeedItemTable ORDER BY ordinal ASC")) {
         reportError("Could not load feeds. :(");
         return;
     }
-    
+
     QList<ListItem*> tempFeedItemList; // Use ListItem so we can do an appendAll later.
     while (query.next()) {
         FeedItem* item = nullptr;
@@ -61,10 +57,10 @@ void LoadAllFeedsOperation::execute()
                         nullptr
                         );
         }
-        
+
         tempFeedItemList.append(item);
     }
-    
+
     // Set the initial unread counts.
     allNews->setUnreadCount(UnreadCountReader::forAllNews(db()));
     pinnedNews->setUnreadCount(UnreadCountReader::forPinned(db()));
@@ -76,14 +72,11 @@ void LoadAllFeedsOperation::execute()
             item->setUnreadCount(UnreadCountReader::forFeed(db(), item->getDbID()));
         }
     }
-    
+
     // Finally, put special items at the front (in reverse order, since we're prepending.)
     tempFeedItemList.prepend(pinnedNews);
     tempFeedItemList.prepend(allNews);
 
     // Add 'em all!
     feedList->appendRows(tempFeedItemList);
-    
-    // ...and we're done!  Yay!
-    emit finished(this);
 }

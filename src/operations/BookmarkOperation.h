@@ -1,14 +1,14 @@
 #ifndef BOOKMARKOPERATION_H
 #define BOOKMARKOPERATION_H
 
-#include "DBOperationSynchronous.h"
+#include "DBOperation.h"
 #include "../models/FeedItem.h"
 #include "../models/FolderFeedItem.h"
 
 /*!
     \brief Subclass that adds some bookmarking capabilities.
  */
-class BookmarkOperation : public DBOperationSynchronous
+class BookmarkOperation : public DBOperation
 {
     Q_OBJECT
 public:

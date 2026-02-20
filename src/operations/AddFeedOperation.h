@@ -1,7 +1,7 @@
 #ifndef ADDFEEDOPERATION_H
 #define ADDFEEDOPERATION_H
 
-#include "DBOperation.h"
+#include "AsyncOperation.h"
 
 #include <QUrl>
 #include <QString>
@@ -11,7 +11,7 @@
 #include "../models/FeedItem.h"
 #include "../parser/NewsParser.h"
 
-class AddFeedOperation : public DBOperation
+class AddFeedOperation : public AsyncOperation
 {
     Q_OBJECT
 public:

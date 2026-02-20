@@ -1,12 +1,12 @@
 #include "SetFolderOpenOperation.h"
 
 SetFolderOpenOperation::SetFolderOpenOperation(OperationManager *parent, FeedItem* feed) :
-    DBOperationSynchronous(parent),
+    DBOperation(parent),
     feed(feed)
 {
 }
 
-void SetFolderOpenOperation::executeSynchronous()
+void SetFolderOpenOperation::execute()
 {
     // Don't persist special feeds.
     if (feed->isSpecialFeed()) {

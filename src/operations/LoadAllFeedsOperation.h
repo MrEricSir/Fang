@@ -20,14 +20,10 @@ class LoadAllFeedsOperation : public DBOperation
     Q_OBJECT
 public:
     explicit LoadAllFeedsOperation(OperationManager *parent, ListModel *feedList);
-    virtual ~LoadAllFeedsOperation();
-    
-signals:
-    
+
 public slots:
     virtual void execute();
-    
-    
+
 private:
     ListModel *feedList;
 };

@@ -6,7 +6,6 @@
 
 #include "FeedItem.h"
 #include "../operations/OperationManager.h"
-#include "../operations/Operation.h"
 
 /*!
     \brief Interacts with the QML layer of the news view.

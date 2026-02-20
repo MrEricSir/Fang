@@ -315,7 +315,7 @@ void TestUpdateOrdinalsOperation::testOrdinalsUpdatedInDatabase()
 
     // Run operation.
     UpdateOrdinalsOperation op(operationManager, feedList);
-    op.executeSynchronous();
+    op.execute();
 
     // Verify ordinals in database match model positions.
     QCOMPARE(getFeedOrdinalFromDb(feed2Id), 0LL);  // Was position 0 in model
@@ -343,7 +343,7 @@ void TestUpdateOrdinalsOperation::testOrdinalsUpdatedInModel()
 
     // Run operation.
     UpdateOrdinalsOperation op(operationManager, feedList);
-    op.executeSynchronous();
+    op.execute();
 
     // Verify ordinals in model objects are updated.
     QCOMPARE(feed1->getOrdinal(), 0);
@@ -374,7 +374,7 @@ void TestUpdateOrdinalsOperation::testParentFolderUpdated()
 
     // Run operation.
     UpdateOrdinalsOperation op(operationManager, feedList);
-    op.executeSynchronous();
+    op.execute();
 
     // Verify parent folder is updated in database.
     QCOMPARE(getFeedParentFolderFromDb(feedId), folderId);
@@ -399,7 +399,7 @@ void TestUpdateOrdinalsOperation::testParentFolderClearedWhenFolderRemoved()
 
     // Run operation.
     UpdateOrdinalsOperation op(operationManager, feedList);
-    op.executeSynchronous();
+    op.execute();
 
     // Verify feed's parent folder is cleared in model (set to -1).
     QCOMPARE(feed->getParentFolderID(), -1LL);
@@ -426,7 +426,7 @@ void TestUpdateOrdinalsOperation::testEmptyFolderRemovedFromModel()
 
     // Run operation.
     UpdateOrdinalsOperation op(operationManager, feedList);
-    op.executeSynchronous();
+    op.execute();
 
     // Folder should be removed from model.
     QCOMPARE(feedList->count(), 0);
@@ -449,7 +449,7 @@ void TestUpdateOrdinalsOperation::testEmptyFolderRemovedFromDatabase()
 
     // Run operation.
     UpdateOrdinalsOperation op(operationManager, feedList);
-    op.executeSynchronous();
+    op.execute();
 
     // Folder should be removed from database.
     QVERIFY(!folderExistsInDb(folderId));
@@ -476,7 +476,7 @@ void TestUpdateOrdinalsOperation::testFolderWithChildrenNotRemoved()
 
     // Run operation.
     UpdateOrdinalsOperation op(operationManager, feedList);
-    op.executeSynchronous();
+    op.execute();
 
     // Folder should still exist in both model and database.
     QCOMPARE(feedList->count(), 2);
@@ -510,7 +510,7 @@ void TestUpdateOrdinalsOperation::testMultipleEmptyFoldersRemoved()
 
     // Run operation.
     UpdateOrdinalsOperation op(operationManager, feedList);
-    op.executeSynchronous();
+    op.execute();
 
     // Only the non-empty folder should remain.
     QCOMPARE(feedList->count(), 2);  // folder3 + feed
@@ -545,7 +545,7 @@ void TestUpdateOrdinalsOperation::testOrphanedFolderInDatabaseDeleted()
 
     // Run operation.
     UpdateOrdinalsOperation op(operationManager, feedList);
-    op.executeSynchronous();
+    op.execute();
 
     // Orphaned folder should be deleted from database.
     QVERIFY(!folderExistsInDb(orphanedFolderId));
@@ -579,7 +579,7 @@ void TestUpdateOrdinalsOperation::testSpecialFeedsIgnored()
 
     // Run operation.
     UpdateOrdinalsOperation op(operationManager, feedList);
-    op.executeSynchronous();
+    op.execute();
 
     // Regular feed ordinal should be 1 (after special feed), not 0.
     // Actually, looking at the code, special feeds are skipped, so regular feed gets ordinal based on its position.
@@ -609,7 +609,7 @@ void TestUpdateOrdinalsOperation::testRollbackOnError()
 
     // Run operation (should succeed).
     UpdateOrdinalsOperation op(operationManager, feedList);
-    op.executeSynchronous();
+    op.execute();
 
     // Verify everything is correct.
     QCOMPARE(getFeedOrdinalFromDb(feed1Id), 0LL);
@@ -650,7 +650,7 @@ void TestUpdateOrdinalsOperation::testFolderUnreadCountUpdated()
 
     // Run operation.
     UpdateOrdinalsOperation op(operationManager, feedList);
-    op.executeSynchronous();
+    op.execute();
 
     // Folder's unread count should now reflect the 3 news items.
     QCOMPARE(folder->getUnreadCount(), 3);

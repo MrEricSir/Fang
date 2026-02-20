@@ -3,7 +3,7 @@
 #include "../utilities/FangLogging.h"
 
 FaviconUpdateOperation::FaviconUpdateOperation(OperationManager *parent, FeedItem* feed) :
-    DBOperation(BACKGROUND, parent),
+    AsyncOperation(BACKGROUND, parent),
     feed(feed),
     grabber()
 {

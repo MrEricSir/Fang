@@ -3,21 +3,21 @@
 
 #include <QObject>
 
-#include "DBOperationSynchronous.h"
+#include "DBOperation.h"
 #include "../models/FeedItem.h"
 #include "../models/ListModel.h"
 
 /*!
     \brief Removes an existing feed from the model and DB.
  */
-class RemoveFeedOperation : public DBOperationSynchronous
+class RemoveFeedOperation : public DBOperation
 {
     Q_OBJECT
 public:
     explicit RemoveFeedOperation(OperationManager *parent, FeedItem* feed, ListModel *feedList);
     
 public slots:
-    virtual void executeSynchronous();
+    virtual void execute();
     
 private:
     FeedItem* feed;

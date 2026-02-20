@@ -7,6 +7,9 @@
 #include "DBOperation.h"
 #include "../models/FeedItem.h"
 
+/*!
+    \brief Updates the URL of an existing feed in the database.
+ */
 class UpdateFeedURLOperation : public DBOperation
 {
     Q_OBJECT

@@ -19,7 +19,7 @@ public:
 signals:
     
 public slots:
-    virtual void executeSynchronous();
+    virtual void execute();
 
     // Returns the bookmarked item.
     inline NewsItem* getBookmark() const { return bookmark; }

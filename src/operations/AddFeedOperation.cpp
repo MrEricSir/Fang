@@ -4,7 +4,7 @@
 
 AddFeedOperation::AddFeedOperation(OperationManager *parent, ListModel *feedList,
                                    const QString userURL, QString title) :
-    DBOperation(IMMEDIATE, parent),
+    AsyncOperation(IMMEDIATE, parent),
     feedList(feedList),
     userURL(userURL),
     rawFeed(nullptr),
@@ -16,7 +16,7 @@ AddFeedOperation::AddFeedOperation(OperationManager *parent, ListModel *feedList
 
 AddFeedOperation::AddFeedOperation(OperationManager *parent, ListModel *feedList, const QString userURL,
                                    const RawFeed* rawFeed) :
-    DBOperation(IMMEDIATE, parent),
+    AsyncOperation(IMMEDIATE, parent),
     feedList(feedList),
     userURL(userURL),
     rawFeed(rawFeed),
