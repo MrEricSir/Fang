@@ -26,9 +26,7 @@
 #include "operations/ReloadNewsOperation.h"
 #include "src/models/NewsList.h"
 
-#if defined(Q_OS_MAC)
-    #include "notifications/NotificationMac.h"
-#elif defined(Q_OS_WIN)
+#if defined(Q_OS_WIN)
     #include "notifications/NotificationWindows.h"
 #endif
 
@@ -498,12 +496,13 @@ void FangApp::onObjectCreated(QObject* object, const QUrl& url)
     AllNewsFeedItem* allNews = qobject_cast<AllNewsFeedItem*>(feedList.row(0));
     
     // Notifications, activate!
-#if defined(Q_OS_MAC)
-    notifications = new NotificationMac(fangSettings, &feedList,
-                                        allNews, window, this);
-#elif defined(Q_OS_WIN)
+#if defined(Q_OS_WIN)
     notifications = new NotificationWindows(fangSettings, &feedList,
                                             allNews, window, this);
+#else
+    notifications = new Notification(fangSettings, &feedList,
+                                         allNews, window, this);
+    notifications->init();
 #endif
     
     // Setup the feed refresh timer.

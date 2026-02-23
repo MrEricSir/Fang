@@ -7,7 +7,7 @@ NotificationWindows::NotificationWindows(FangSettings *fangSettings,
                                          AllNewsFeedItem *allNews,
                                          QQuickWindow* window,
                                          FangObject *parent) :
-    NotificationBase(fangSettings, feedList, allNews, window, parent)
+    Notification(fangSettings, feedList, allNews, window, parent)
 {
     // Set everything up.
     init();
@@ -15,12 +15,12 @@ NotificationWindows::NotificationWindows(FangSettings *fangSettings,
 
 void NotificationWindows::onUnreadCountChanged(quint32 unread)
 {
-    //qDebug() << "NOTIFICATION: unread count = " << unread;
+    Notification::onUnreadCountChanged(unread);
+
     QString windowTitle = "Fang";
     if (unread > 0) {
-        // Append count.
         windowTitle = QString("(%1) ").arg(unread) + windowTitle;
     }
-    
+
     window->setTitle(windowTitle);
 }

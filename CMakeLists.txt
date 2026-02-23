@@ -142,7 +142,7 @@ qt_add_executable(Fang WIN32
     src/network/FangQQmlNetworkAccessManagerFactory.cpp
     src/network/NetworkRetryPolicy.cpp
     src/network/BatchDownloadCore.cpp
-    src/notifications/NotificationBase.cpp
+    src/notifications/Notification.cpp
     src/operations/SetPinOperation.cpp
     src/models/PinnedFeedItem.cpp
     src/models/SearchFeedItem.cpp
@@ -220,7 +220,7 @@ qt_add_executable(Fang WIN32
     src/network/NetworkRetryPolicy.h
     src/network/NetworkDownloadCore.h
     src/network/BatchDownloadCore.h
-    src/notifications/NotificationBase.h
+    src/notifications/Notification.h
 
     src/operations/SetPinOperation.h
     src/models/PinnedFeedItem.h
@@ -308,14 +308,7 @@ target_precompile_headers(Fang PRIVATE
 # Platform: macOS
 if(APPLE)
     target_sources(Fang PRIVATE
-        src/notifications/NotificationMac.h
-        src/notifications/NotificationMac.mm
         icons/mac.icns
-    )
-
-    # Exclude Objective-C++ files from PCH (incompatible)
-    set_source_files_properties(src/notifications/NotificationMac.mm
-        PROPERTIES SKIP_PRECOMPILE_HEADERS ON
     )
 
     target_link_options(Fang PRIVATE -Wl,-dead_strip)

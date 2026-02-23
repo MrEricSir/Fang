@@ -20,7 +20,7 @@
 #include "models/FangSettings.h"
 #include "parser/RawFeed.h"
 #include "FangObject.h"
-#include "notifications/NotificationBase.h"
+#include "notifications/Notification.h"
 #include "db/DBSettings.h"
 #include "server/WebServer.h"
 #include "server/WebSocketServer.h"
@@ -356,7 +356,7 @@ private:
     QTimer *updateTimer;
     QMap<qint64, FeedItem*> feedIdMap;
     QQuickWindow* window;
-    NotificationBase* notifications;
+    Notification* notifications;
     WebSocketServer webSocketServer;
     WebServer* webServer;
     UpdateChecker updateChecker;

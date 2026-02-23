@@ -1,9 +1,9 @@
 #ifndef NOTIFICATIONWINDOWS_H
 #define NOTIFICATIONWINDOWS_H
 
-#include "NotificationBase.h"
+#include "Notification.h"
 
-class NotificationWindows : public NotificationBase
+class NotificationWindows : public Notification
 {
     Q_OBJECT
 public:
