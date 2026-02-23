@@ -180,6 +180,33 @@ Item {
                 width: 1 * style.scale;
             }
             
+            // Covers the scrollbar briefly while the selection highlight
+            // animates to make room, preventing visual overlap.
+            Rectangle {
+                id: scrollBarCover;
+                anchors.right: sidebarRightLine.left;
+                anchors.top: parent.top;
+                anchors.bottom: parent.bottom;
+                width: scrollView.effectiveScrollBarWidth;
+                color: style.color.sidebar;
+                visible: scrollBarCoverTimer.running;
+                z: 10;
+            }
+
+            Timer {
+                id: scrollBarCoverTimer;
+                interval: 260;
+            }
+
+            Connections {
+                target: scrollView;
+                function onEffectiveScrollBarWidthChanged() {
+                    if (scrollView.effectiveScrollBarWidth > 0) {
+                        scrollBarCoverTimer.restart();
+                    }
+                }
+            }
+
             FangScrollView {
                 id: scrollView;
                 anchors.fill: parent;

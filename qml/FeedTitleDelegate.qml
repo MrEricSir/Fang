@@ -123,14 +123,20 @@ RearrangeableDelegate {
             
             Rectangle {
                 id: rowBackground;
-                
-                color: index == feedListView.currentIndex ? 
+
+                color: index == feedListView.currentIndex ?
                            style.color.sidebarSelected : "transparent";
+                radius: 5 * style.scale;
 
                 anchors.fill: parent;
                 anchors.topMargin: style.defaultMarin;
-                anchors.leftMargin: 0;
-                anchors.rightMargin: 0;
+                anchors.leftMargin: 6 * style.scale;
+                anchors.rightMargin: 6 * style.scale + scrollView.effectiveScrollBarWidth;
+                Behavior on anchors.rightMargin { PropertyAnimation {
+                        easing.type: Easing.InOutQuad;
+                        duration: 250;
+                    }
+                }
                 
                 Item {
                     id: feedIconCol
@@ -290,7 +296,8 @@ RearrangeableDelegate {
 
                         font: unreadCount > 0 ?
                                   style.font.standardBold : style.font.standard;
-                        color: style.color.sidebarSelectedText;
+                        color: index == feedListView.currentIndex ?
+                                   style.color.sidebarSelectedText : style.color.sidebarText;
 
                         elide: Text.ElideRight;
                     }
@@ -436,12 +443,7 @@ RearrangeableDelegate {
                     anchors.right: parent.right;
                     anchors.top: parent.top;
                     anchors.bottom: parent.bottom;
-                    anchors.rightMargin: 7 + scrollView.effectiveScrollBarWidth;
-                    Behavior on anchors.rightMargin { PropertyAnimation {
-                            easing.type: Easing.InOutQuad;
-                            duration: 250;
-                        }
-                    }
+                    anchors.rightMargin: 7;
 
                     width: childrenRect.width;
                     height: parent.height;
@@ -449,10 +451,10 @@ RearrangeableDelegate {
                     Rectangle {
                         color: style.color.badge;
 
-                        width: unreadCountText.paintedWidth + 6;
+                        width: Math.max(unreadCountText.paintedWidth + 8, height);
                         height: unreadCountText.paintedHeight + 4;
                         anchors.verticalCenter: parent.verticalCenter;
-                        radius: style.defaultRadius;
+                        radius: height / 2;
 
                         Text {
                             id: unreadCountText;
@@ -479,7 +481,7 @@ RearrangeableDelegate {
                     // anchors.bottom: parent.bottom;
                     anchors.verticalCenter: parent.verticalCenter;
                     //anchors.horizontalCenter: parent.horizontalCenter;
-                    anchors.rightMargin: 7 + scrollView.effectiveScrollBarWidth;
+                    anchors.rightMargin: 7;
 
                     width: 20 * style.scale;
                     height: parent.height;

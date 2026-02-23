@@ -13,6 +13,8 @@ Item {
     readonly property double defaultRadius: 4 * scale;
     readonly property double defaultMarin: 5 * scale;
 
+    SystemPalette { id: sysPalette; colorGroup: SystemPalette.Active }
+
 
     function getPlatformFont() {
         switch(platform) {
@@ -166,31 +168,32 @@ Item {
         property color sidebar: "#efefef";
         property color sidebarToolbar: "#535353";
         property color sidebarRightLine: "#ccc";
-        property color sidebarSelected: "white";
+        property color sidebarSelected: "#D5D5DA";
         property color sidebarSelectedText: "black";
-        
+        property color sidebarText: "black";
+
         property color sidebarButton: "#777";
         property color sidebarButtonBorder: sidebarButton;
         property color sidebarButtonHover: "#aaa";
         property color sidebarButtonPressed: "white"
-        
-        property color badge: sidebarButton;
+
+        property color badge: sysPalette.accent;
         property color badgeText: "white";
     }
-    
+
     QtObject {
         id: colorSchemeDark;
-        
+
         property color scrollbar: "#ddd";
-        
+
         property color background: "black";
         property color blockerBackground: "#999";
-        
+
         property color dialogBackground: "black";
         property color dialogText: "white";
-        
+
         property color fadedText: "#999";
-        
+
         property color dialogButton: "#555";
         property color dialogButtonHover: "#454545";
         property color dialogButtonText: "white";
@@ -198,7 +201,7 @@ Item {
         property color dialogButtonPressed: Qt.lighter(colorSchemeDark.dialogButtonHover, 1.5);
         property color dialogButtonDisabled: Qt.darker(colorSchemeDark.dialogButton, 1.5);
         property color dialogButtonBorder: "transparent"
-        
+
         property color textEntryBackground: "black";
         property color textEntryText: "white";
         property color textEntryBorder: dialogButton;
@@ -207,15 +210,16 @@ Item {
         property color sidebar: "black";
         property color sidebarToolbar: "#333";
         property color sidebarRightLine: "#666";
-        property color sidebarSelected: "#444";
+        property color sidebarSelected: "#3A3A3C";
         property color sidebarSelectedText: "white";
-        
+        property color sidebarText: "white";
+
         property color sidebarButton: "#777";
         property color sidebarButtonBorder: sidebarButton;
         property color sidebarButtonHover: "#555";
         property color sidebarButtonPressed: "#333";
-        
-        property color badge: sidebarButton;
-        property color badgeText: "black";
+
+        property color badge: sysPalette.accent;
+        property color badgeText: "white";
     }
 }

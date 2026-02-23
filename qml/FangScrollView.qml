@@ -8,7 +8,7 @@ import QtQuick.Controls
  */
 ScrollView {
     id: fangScrollView;
-    
+
     anchors.fill: parent;
 
     // TODO: Re-enable transient scrollbar if possible.
