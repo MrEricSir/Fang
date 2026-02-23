@@ -335,8 +335,6 @@ endif()
 # Platform: Windows
 if(WIN32)
     target_sources(Fang PRIVATE
-        src/notifications/NotificationWindows.h
-        src/notifications/NotificationWindows.cpp
         win32.rc
     )
 endif()

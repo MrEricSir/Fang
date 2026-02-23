@@ -170,7 +170,7 @@ Item {
         property color sidebar: "#efefef";
         property color sidebarToolbar: "#535353";
         property color sidebarRightLine: "#ccc";
-        property color sidebarSelected: "#D5D5DA";
+        property color sidebarSelected: platform === "WIN" ? "#C4C4C9" : "#D5D5DA";
         property color sidebarSelectedText: "black";
         property color sidebarText: "black";
 
@@ -212,7 +212,7 @@ Item {
         property color sidebar: "black";
         property color sidebarToolbar: "#333";
         property color sidebarRightLine: "#666";
-        property color sidebarSelected: "#3A3A3C";
+        property color sidebarSelected: platform === "WIN" ? "#484850" : "#3A3A3C";
         property color sidebarSelectedText: "white";
         property color sidebarText: "white";
 
