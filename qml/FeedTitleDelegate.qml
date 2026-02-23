@@ -294,8 +294,7 @@ RearrangeableDelegate {
                         width: parent.width;
                         anchors.verticalCenter: parent.verticalCenter;
 
-                        font: unreadCount > 0 ?
-                                  style.font.standardBold : style.font.standard;
+                        font: style.font.standard;
                         color: index == feedListView.currentIndex ?
                                    style.color.sidebarSelectedText : style.color.sidebarText;
 

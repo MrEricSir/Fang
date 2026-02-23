@@ -167,8 +167,9 @@ Item {
         property color textEntryBorder: dialogButton;
         property color textEntryHint: sidebarRightLine;
         
-        property color sidebar: platform === "WIN" ? "#F3F3F3"
-                              : sysPalette.window;
+        property color sidebar: platform === "MAC" ? "#F0F0F0"
+                              : platform === "WIN" ? "#F3F3F3"
+                              : "#efefef";
         property color sidebarToolbar: "#535353";
         property color sidebarRightLine: "#ccc";
         property color sidebarSelected: platform === "WIN" ? "#C4C4C9" : "#D5D5DA";
@@ -210,8 +211,9 @@ Item {
         property color textEntryBorder: dialogButton;
         property color textEntryHint: sidebarRightLine;
 
-        property color sidebar: platform === "WIN" ? "#202020"
-                              : sysPalette.window;
+        property color sidebar: platform === "MAC" ? "#1E1E1E"
+                              : platform === "WIN" ? "#202020"
+                              : "black";
         property color sidebarToolbar: "#333";
         property color sidebarRightLine: "#666";
         property color sidebarSelected: platform === "WIN" ? "#555560" : "#3A3A3C";
