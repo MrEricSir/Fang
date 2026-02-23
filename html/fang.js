@@ -179,6 +179,9 @@ function requestNews(mode)
         clearPrefetch();
     }
 
+    // Prevent additional load requests while a load is already taking place.
+    isLoadingNews = true;
+
     apiGetRequest('load', mode)
     .then((response) => response.json())
     .then((data) => {
