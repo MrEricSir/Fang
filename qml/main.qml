@@ -192,6 +192,7 @@ Window {
         // If it was the last one, give focus back to news
         if (openDialogs.length === 0) {
             news.newsFocus = true;
+            news.grabFocus();
         }
     }
 

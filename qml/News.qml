@@ -74,6 +74,11 @@ Item {
     
     // Don't propagate key events while dialogs are up.
     property bool newsFocus: true;
+
+    // Give keyboard focus to the web view.
+    function grabFocus() {
+        newsView.forceActiveFocus();
+    }
     
     Item {
         id: newsMargin;
