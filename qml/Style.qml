@@ -13,8 +13,10 @@ Item {
     readonly property double defaultRadius: 4 * scale;
     readonly property double defaultMarin: 5 * scale;
 
-    SystemPalette { id: sysPalette; colorGroup: SystemPalette.Active }
-
+    SystemPalette {
+        id: sysPalette;
+        colorGroup: SystemPalette.Active;
+    }
 
     function getPlatformFont() {
         switch(platform) {

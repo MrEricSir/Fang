@@ -261,6 +261,7 @@ Item {
 
                         ContextMenu.menu: Menu {
                             id: contextMenu;
+                            popupType: Popup.Native;
 
                             MenuItem {
                                 text: "Refresh";

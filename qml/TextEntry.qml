@@ -26,6 +26,7 @@ Basic.TextField {
 
     ContextMenu.menu: Menu {
         id: contextMenu;
+        popupType: Popup.Native;
 
         MenuItem {
             text: "Cut";
