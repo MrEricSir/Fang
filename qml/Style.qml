@@ -149,7 +149,7 @@ Item {
         property color scrollbar: "#999";
         
         property color background: "white";
-        property color blockerBackground: "black";
+        property color blockerBackground: Qt.rgba(0, 0, 0, 0.3);
         
         property color dialogBackground: "white";
         property color dialogText: "black";
@@ -162,7 +162,7 @@ Item {
         property color dialogButtonTextDisabled: "#999";
         property color dialogButtonPressed: Qt.darker(colorSchemeLight.dialogButtonHover, 1.5);
         property color dialogButtonDisabled: "#ffffff"; // Update in SettingsDialog manually!
-        property color dialogButtonBorder: Qt.rgba(0, 0, 0, 0.15);
+        property color dialogButtonBorder: sysPalette.mid;
         property color dialogButtonPrimary: sysPalette.accent;
         property color dialogButtonPrimaryHover: Qt.darker(sysPalette.accent, 1.1);
         property color dialogButtonPrimaryPressed: Qt.darker(sysPalette.accent, 1.3);
@@ -196,7 +196,7 @@ Item {
         property color scrollbar: "#ddd";
 
         property color background: "black";
-        property color blockerBackground: "#999";
+        property color blockerBackground: Qt.rgba(0, 0, 0, 0.4);
 
         property color dialogBackground: "black";
         property color dialogText: "white";
@@ -209,7 +209,7 @@ Item {
         property color dialogButtonTextDisabled: "#666";
         property color dialogButtonPressed: Qt.lighter(colorSchemeDark.dialogButtonHover, 1.5);
         property color dialogButtonDisabled: Qt.darker(colorSchemeDark.dialogButton, 1.5);
-        property color dialogButtonBorder: Qt.rgba(1, 1, 1, 0.15);
+        property color dialogButtonBorder: sysPalette.placeholderText;
         property color dialogButtonPrimary: sysPalette.accent;
         property color dialogButtonPrimaryHover: Qt.lighter(sysPalette.accent, 1.15);
         property color dialogButtonPrimaryPressed: Qt.lighter(sysPalette.accent, 1.3);

@@ -201,8 +201,8 @@ Window {
         openDialog("SplashScreenDialog.qml");
     }
 
-    // Seen in transitions.
-    color: style.color.blockerBackground;
+    // Window background behind all screens.
+    color: "black";
 
     // Prevent closing when system tray icon is active.
     // Note: This is a valid property according to the docs; ignore the Qt Creator error message.

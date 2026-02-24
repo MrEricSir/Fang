@@ -1,25 +1,26 @@
 import QtQuick
+import QtQuick.Controls
 import Fang 1.0
 
 // Dialog container.
-// Takes up the entire screen.
-// Note: Mr. T. pitties the fool who uses this with anchors!  Specify x, y, width, height, please.
+// Regular dialogs display as a centered card over dimmed content.
+// Splash screen dialogs use full-screen layout.
 FangScreen {
     id: dialog;
-    
+
     signal dialogOpened(); // Open has completed
     signal dialogClosed(var self);
     signal dialogClosing(var self);
-    
+
     // Dialog title text.
     property string title;
 
     // [Optional] FeedItem object.
     property var feed;
-    
+
     // This allows children to be positioned within the element.
     default property alias contents: placeholder.children;
-    
+
     // Read only.
     property bool isClosing: dialogMainContainer.state === "closed" || dismissTimer.running;
     property bool isClosed: dialogMainContainer.state === "closed";
@@ -27,28 +28,29 @@ FangScreen {
 
     // Only used for splash screen.
     property bool openAtStart: false;
-    
-    color: style.color.dialogBackground
+
+    // Transparent background for card dialogs; solid for splash screen.
+    color: isSplashScreen ? style.color.dialogBackground : "transparent";
     visible: openAtStart ? true : false // Managed by state transitions
-    
+
     // Opens the dialog.
     function open() {
         wasOpened = true;
         dialogMainContainer.state = "open";
     }
-    
+
     // Dismisses the dialog after a short delay.  Normally it's best to use this instead of close.
     function dismiss() {
         dismissTimer.restart();
     }
-    
+
     // Immediately closes the dialog.
     function close() {
         if (dialogMainContainer.state === "open") {
             dialogClosing(dialog);
             Qt.inputMethod.hide(); // Ditch mobile keyboard
         }
-        
+
         dialogMainContainer.state = "closed";
     }
 
@@ -56,7 +58,7 @@ FangScreen {
     function forceFocus() {
         dialog.forceActiveFocus();
     }
-    
+
     // Send closed signal
     onIsClosedChanged: {
         if (isClosed && wasOpened) {
@@ -64,151 +66,240 @@ FangScreen {
             Qt.inputMethod.hide();  // Ditch mobile keyboard
         }
     }
-    
+
     Keys.onPressed: (event)=> {
         if ((event.key === Qt.Key_Escape || event.key === Qt.Key_Back) && !isSplashScreen) {
-            //console.log("close")
             close();
             event.accepted = true;
         }
     }
-    
+
     Item {
         id: dialogMainContainer
-        
+
         state: openAtStart ? "open" : "closed"
-        
+
         states: [
             State { name: "open" },
             State { name: "closed" }
         ]
-        
+
         anchors.fill: parent
-        
+
         transitions: [
+            // --- Close transition ---
             Transition {
                 from: "open"
                 to: "closed"
                 SequentialAnimation {
-                    // Move dialog off screen
-                    NumberAnimation {
-                        id: closeAnimation
-                        
-                        target: dialog
-                        properties: "y"
-                        from: 0
-                        to: parent.height
-                        duration: 300
-                        easing.type: Easing.InOutQuad
+                    ParallelAnimation {
+                        // Card: fade out + slide down (regular dialogs only).
+                        NumberAnimation {
+                            target: dialogCard
+                            property: "opacity"
+                            to: 0
+                            duration: isSplashScreen ? 0 : 200
+                            easing.type: Easing.InQuad
+                        }
+                        NumberAnimation {
+                            target: dialogCard
+                            property: "anchors.verticalCenterOffset"
+                            to: 20
+                            duration: isSplashScreen ? 0 : 200
+                            easing.type: Easing.InQuad
+                        }
+
+                        // Splash screen: fade out entire dialog to reveal blurred content.
+                        NumberAnimation {
+                            target: dialog
+                            property: "opacity"
+                            from: 1
+                            to: isSplashScreen ? 0 : 1
+                            duration: isSplashScreen ? 400 : 0
+                            easing.type: Easing.InOutQuad
+                        }
                     }
-                    
-                    // Make it invisible.
+
                     PropertyAction {
                         target: dialog
                         property: "visible"
-                        value: "false"
+                        value: false
+                    }
+
+                    // Reset opacity after hide (for splash screen).
+                    PropertyAction {
+                        target: dialog
+                        property: "opacity"
+                        value: 1
                     }
                 }
             },
+
+            // --- Open transition ---
             Transition {
                 from: "closed"
                 to: "open"
-               
+
                 SequentialAnimation {
-                    // Show the dialog.
                     PropertyAction {
                         target: dialog
                         property: "visible"
-                        value: "true"
+                        value: true
                     }
-                    
-                     // Move dialog back on screen
-                    NumberAnimation {
-                        id: openAnimation
-                        
-                        target: dialog
-                        properties: "y"
-                        from: parent.height
-                        to: 0
-                        duration: 300
-                        easing.type: Easing.InOutQuad
+
+                    ParallelAnimation {
+                        // Card: fade in + slide up.
+                        NumberAnimation {
+                            target: dialogCard
+                            property: "opacity"
+                            from: 0
+                            to: 1
+                            duration: isSplashScreen ? 0 : 250
+                            easing.type: Easing.OutQuad
+                        }
+                        NumberAnimation {
+                            target: dialogCard
+                            property: "anchors.verticalCenterOffset"
+                            from: 20
+                            to: 0
+                            duration: isSplashScreen ? 0 : 250
+                            easing.type: Easing.OutQuad
+                        }
                     }
-                    
+
                     ScriptAction {
                         script: {
-                            // Grab focus (you might want to set it to something else after this)
                             forceFocus();
-
-                            // Emit our signal!
                             dialog.dialogOpened();
                         }
                     }
                 }
             }
         ]
-        
-        Text {
-            id: dialogTitle
-            
-            text: dialog.title
-            
-            font: style.font.title;
-            color: style.color.dialogText
-            
-            anchors.top: parent.top
-            anchors.left: parent.left
-            anchors.topMargin: 20 * style.scale
-            anchors.leftMargin: 15 * style.scale
-        }
-        
-        // Catch-alls to prevent clicks under this container.
+
+        // Background click area — dismiss dialog when clicking outside the card.
         MouseArea {
             anchors.fill: parent
-            
-            // Capture scroll events and such from propagating to WebKit
+
+            // Capture scroll events and such from propagating to WebKit.
             hoverEnabled: true
             preventStealing: true
             onWheel: {}
-        }
-        
-        // Dialog contents
-        Item {
-            anchors.top: openAtStart? parent.top : dialogTitle.bottom
-            anchors.topMargin: 15 * style.scale
-            anchors.bottom: parent.bottom
-            anchors.left: parent.left
-            anchors.leftMargin: 15 * style.scale
-            anchors.right: parent.right
-            
-            FangScrollView {
-                anchors.fill: parent
 
-                Flickable {
-                    id: placeholderFlickable
-                    anchors.fill: parent
-                    
-                    contentWidth: width
-                    contentHeight: container.childrenRect.height
-                    flickableDirection: Flickable.VerticalFlick
-                    
-                    Item {
-                        id: container
-                        
-                        width: 400 * style.scale
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        
-                        // Children go here.
-                        Column {
-                            id: placeholder
-                            
-                            width: parent.width
-                            spacing: 10 * style.scale
-                        }
+            onClicked: {
+                if (!isSplashScreen) {
+                    close();
+                }
+            }
+        }
+
+        // --- Dialog card ---
+        // Centered modal card for regular dialogs; full-screen for splash screen.
+        Rectangle {
+            id: dialogCard
+
+            // Splash screen: fill window. Regular dialog: centered card.
+            width: isSplashScreen
+                   ? parent.width
+                   : Math.min(450 * style.scale, parent.width - 60 * style.scale)
+            height: isSplashScreen
+                    ? parent.height
+                    : Math.min(
+                        dialogTitle.height + dialogTitle.anchors.topMargin
+                            + contentFlickable.anchors.topMargin + contentFlickable.contentHeight
+                            + contentFlickable.anchors.bottomMargin,
+                        parent.height - 60 * style.scale
+                    )
+
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.verticalCenter: parent.verticalCenter
+
+            radius: isSplashScreen ? 0 : (platform === "MAC" ? 12 * style.scale : 8 * style.scale)
+            color: style.color.dialogBackground
+            border.color: isSplashScreen ? "transparent" : style.color.dialogButtonBorder
+            border.width: isSplashScreen ? 0 : 1
+            clip: true
+
+            // Absorb clicks within the card so they don't dismiss the dialog.
+            MouseArea {
+                anchors.fill: parent
+            }
+
+            Text {
+                id: dialogTitle
+
+                visible: !isSplashScreen
+                text: dialog.title
+
+                font: style.font.title;
+                color: style.color.dialogText
+
+                anchors.top: parent.top
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.topMargin: 20 * style.scale
+                anchors.leftMargin: 15 * style.scale
+                anchors.rightMargin: 15 * style.scale
+            }
+
+            // Separator line below title — fades in when content is scrolled.
+            Rectangle {
+                id: titleSeparator
+
+                visible: !isSplashScreen
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.top: dialogTitle.bottom
+                anchors.topMargin: 7 * style.scale
+
+                height: 1
+                color: style.color.dialogButtonBorder
+                opacity: 1
+                z: 1
+            }
+
+            // Scrollable dialog contents.
+            Flickable {
+                id: contentFlickable
+
+                anchors.top: isSplashScreen ? parent.top : dialogTitle.bottom
+                anchors.topMargin: isSplashScreen ? 0 : 15 * style.scale
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: isSplashScreen ? 0 : 15 * style.scale
+                anchors.left: parent.left
+                anchors.leftMargin: isSplashScreen ? 0 : 15 * style.scale
+                anchors.right: parent.right
+
+                contentWidth: width
+                contentHeight: container.childrenRect.height
+                flickableDirection: Flickable.VerticalFlick
+                boundsBehavior: Flickable.StopAtBounds
+                clip: true
+
+                ScrollBar.vertical: ScrollBar {
+                    policy: contentFlickable.contentHeight > contentFlickable.height
+                            ? ScrollBar.AsNeeded : ScrollBar.AlwaysOff
+                }
+
+                Item {
+                    id: container
+
+                    width: isSplashScreen
+                           ? 400 * style.scale
+                           : parent.width - 15 * style.scale
+                    x: isSplashScreen ? (parent.width - width) / 2 : 0
+
+                    // Children go here.
+                    Column {
+                        id: placeholder
+
+                        width: parent.width
+                        spacing: 8 * style.scale
                     }
                 }
             }
         }
-        
+
         // Timer so we give the user a glimpse of our message before closing
         // the dialog.
         Timer {
@@ -216,10 +307,10 @@ FangScreen {
             interval: 700
             running: false
             repeat: false
-            
+
             onTriggered: close()
         }
-        
+
         Style {
             id: style
         }

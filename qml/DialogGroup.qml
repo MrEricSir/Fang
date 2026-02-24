@@ -35,7 +35,7 @@ Item {
         id: placeholder;
         spacing: 10;
         uniformCellSizes: true;
-        anchors.topMargin: spacing;
+        anchors.topMargin: text.text ? spacing : 0;
         anchors.top: text.bottom;
         anchors.left: parent.left;
         anchors.right: parent.right;

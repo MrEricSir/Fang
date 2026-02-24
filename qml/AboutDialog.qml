@@ -8,12 +8,12 @@ Dialog {
     
     Image {
         source: "qrc:/qml/images/fang_logo_color.svg";
-        
-        // 20% margins, for a decent size.
-        x: parent.width * 0.2;
-        width: parent.width - (parent.width * 0.4);
-        fillMode: Image.PreserveAspectCrop;
-        
+
+        // 60% of parent width, centered.
+        width: parent.width * 0.6;
+        anchors.horizontalCenter: parent.horizontalCenter;
+        fillMode: Image.PreserveAspectFit;
+
         // Make SVGs render real good like.
         sourceSize.width: width;
         sourceSize.height: height;
@@ -62,7 +62,7 @@ Dialog {
         DialogButton {
             id: dismissButton;
 
-            text: "Dismiss";
+            text: "Close";
             onClicked: close();
         }
     }

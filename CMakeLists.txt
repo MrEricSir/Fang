@@ -47,6 +47,7 @@ find_package(Qt6 REQUIRED COMPONENTS
     Qml
     Quick
     QuickControls2
+    QuickEffects
     Widgets
     Network
     Sql
@@ -276,6 +277,7 @@ target_link_libraries(Fang PRIVATE
     Qt6::Svg
     Qt6::WebSockets
     Qt6::HttpServer
+    Qt6::QuickEffects
     rearrangeabletreeview
     rearrangeabletreeviewplugin
 )

@@ -50,7 +50,7 @@ Dialog {
         DialogButton {
             id: dismissButton;
 
-            text: "Dismiss";
+            text: "Close";
             onClicked: close();
         }
     }
