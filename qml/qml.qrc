@@ -6,6 +6,7 @@
         <file>Sidebar.qml</file>
         <file>Dialog.qml</file>
         <file>SidebarButton.qml</file>
+        <file>SidebarToolbar.qml</file>
         <file>AddDialog.qml</file>
         <file>DialogButton.qml</file>
         <file>TextEntry.qml</file>
