@@ -309,10 +309,15 @@ target_precompile_headers(Fang PRIVATE
 
 # Platform: macOS
 if(APPLE)
+    enable_language(OBJCXX)
+
     target_sources(Fang PRIVATE
         icons/mac.icns
+        src/platform/MacWindowHelper.mm
+        src/platform/MacWindowHelper.h
     )
 
+    target_link_libraries(Fang PRIVATE "-framework Cocoa")
     target_link_options(Fang PRIVATE -Wl,-dead_strip)
 
     # Configure macOS bundle

@@ -28,7 +28,10 @@ Item {
     // Set this to the number of special feeds at the top so I can treat them with
     // the care and respect that they deserve.
     property int specialFeedCount: 0;
-    
+
+    // Extra top padding for macOS transparent title bar (traffic lights).
+    readonly property int titleBarInset: platform === "MAC" ? 38 * style.scale : 0;
+
     // Read-only properties.
     readonly property int buttonSize: 35 * style.scale;
     readonly property var listView: feedListView;
@@ -58,23 +61,15 @@ Item {
     SidebarToolbar {
         id: sidebarTopControls;
         separatorOnBottom: true;
+        topInset: sidebar.titleBarInset;
+        draggable: true;
+
+        onDragStarted: startSystemMove();
+        onDragDoubleClicked: maximizeToggle();
 
         anchors.top: parent.top;
         anchors.left: parent.left;
         anchors.right: parent.right;
-
-        // Allow top of sidebar to drag window and maximize/restore size.
-        MouseArea {
-            anchors.fill: parent;
-
-            onPressed: (mouse) => {
-                startSystemMove();
-            }
-
-            onDoubleClicked: {
-                maximizeToggle();
-            }
-        }
 
         Image {
             id: fangLogo;
@@ -170,7 +165,7 @@ Item {
             }
         }
     }
-    
+
     Item {
         id: sidebarFeedList;
         anchors.right: parent.right;

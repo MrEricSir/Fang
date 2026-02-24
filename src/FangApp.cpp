@@ -26,6 +26,10 @@
 #include "operations/ReloadNewsOperation.h"
 #include "src/models/NewsList.h"
 
+#ifdef Q_OS_MAC
+#include "platform/MacWindowHelper.h"
+#endif
+
 
 FangApp* FangApp::_instance = nullptr;
 
@@ -476,6 +480,10 @@ void FangApp::onObjectCreated(QObject* object, const QUrl& url)
     
     // Save our window.
     window = qobject_cast<QQuickWindow*>(object);
+
+#ifdef Q_OS_MAC
+    configureTransparentTitleBar(window);
+#endif
 
     // Locate settings.
     fangSettings = object->findChild<FangSettings*>("fangSettings");

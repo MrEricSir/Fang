@@ -15,12 +15,35 @@ Rectangle {
     // false for bottom toolbar (separator on top edge).
     property bool separatorOnBottom: true;
 
+    // Extra top padding (e.g. for macOS traffic lights under transparent title bar).
+    property int topInset: 0;
+
+    // Enable a background drag area covering the full toolbar (including inset).
+    // Buttons in contentItem are on top and receive clicks first.
+    property bool draggable: false;
+    signal dragStarted();
+    signal dragDoubleClicked();
+
     // Child items go here.
     default property alias content: contentItem.data;
 
-    height: 48 * style.scale;
+    height: 48 * style.scale + topInset;
     color: style.color.sidebarToolbar;
     z: 10;
+
+    // Window drag area.
+    MouseArea {
+        anchors.fill: parent;
+        visible: sidebarToolbar.draggable;
+
+        onPressed: (mouse) => {
+            sidebarToolbar.dragStarted();
+        }
+
+        onDoubleClicked: {
+            sidebarToolbar.dragDoubleClicked();
+        }
+    }
 
     // Separator line.
     Rectangle {
@@ -36,6 +59,9 @@ Rectangle {
     Item {
         id: contentItem;
         anchors.fill: parent;
-        anchors.margins: 5 * style.scale;
+        anchors.topMargin: 5 * style.scale + topInset;
+        anchors.leftMargin: 5 * style.scale;
+        anchors.rightMargin: 5 * style.scale;
+        anchors.bottomMargin: 5 * style.scale;
     }
 }
