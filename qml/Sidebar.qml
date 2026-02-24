@@ -65,11 +65,20 @@ Item {
         color: style.color.sidebarToolbar;
         z: 10; // higher than list
         
+        // Separator line at bottom of top toolbar.
+        Rectangle {
+            anchors.bottom: parent.bottom;
+            anchors.left: parent.left;
+            anchors.right: parent.right;
+            height: 1;
+            color: style.color.sidebarRightLine;
+            z: 1;
+        }
+
         Item {
             id: toolbarTop;
             anchors.fill: parent;
             anchors.margins: 5 * style.scale;
-            opacity: style.windowActive ? 1.0 : 0.4;
 
             // Allow top of sidebar to drag window and maximize/restore size.
             MouseArea {
@@ -87,7 +96,8 @@ Item {
             Image {
                 id: fangLogo;
 
-                source: "images/fang_logo.svg";
+                source: fangSettings.currentStyle === "LIGHT"
+                        ? "images/fang_logo_color.svg" : "images/fang_logo.svg";
 
                 anchors.top: parent.top;
                 anchors.topMargin: 5 * style.scale;
@@ -105,8 +115,8 @@ Item {
             SidebarButton {
                 id: searchButton;
 
-                anchors.right: helpButton.left;
-                anchors.rightMargin: 15 * style.scale;
+                anchors.right: helpSettingsGroup.left;
+                anchors.rightMargin: 10 * style.scale;
                 anchors.verticalCenter: parent.verticalCenter;
 
                 width: buttonSize;
@@ -115,47 +125,67 @@ Item {
                 lightImageURL: "images/symbol_search.svg";
                 darkImageURL: "images/symbol_dark_search.svg";
 
-                // Show togled icon if search is open.
+                // Show toggled icon if search is open.
                 property bool isSearchActive: feedListView.model.selected && feedListView.model.selected.isSearchFeed();
                 toggled: isSearchActive;
 
                 onClicked: sidebar.toggleSearch();
             }
 
-            // HALP
-            SidebarButton {
-                id: helpButton;
+            // Help + Settings grouped in a pill.
+            Rectangle {
+                id: helpSettingsGroup;
 
-                anchors.right: settingsButton.left;
-                anchors.rightMargin: 15 * style.scale;
-                anchors.verticalCenter: parent.verticalCenter;
-
-                width: buttonSize;
-                height: buttonSize;
-
-                lightImageURL: "images/symbol_help.svg";
-                darkImageURL: "images/symbol_dark_help.svg";
-
-                onClicked: {
-                    helpClicked();
-                }
-            }
-            
-            // Fang settings.
-            SidebarButton {
-                id: settingsButton;
-                
                 anchors.right: parent.right;
                 anchors.rightMargin: 5 * style.scale;
                 anchors.verticalCenter: parent.verticalCenter;
-                
-                width: buttonSize;
+
+                width: buttonSize * 2 + helpSettingsDivider.width;
                 height: buttonSize;
-                
-                lightImageURL: "images/symbol_gear.svg";
-                darkImageURL: "images/symbol_dark_gear.svg";
-                
-                onClicked: settingsClicked();
+                radius: height / 2;
+                color: "transparent";
+                border.color: style.color.sidebarButtonBorder;
+                border.width: 1;
+
+                Row {
+                    anchors.fill: parent;
+
+                    SidebarButton {
+                        id: helpButton;
+
+                        width: buttonSize;
+                        height: buttonSize;
+                        radius: 0;
+                        borderColor: "transparent";
+
+                        lightImageURL: "images/symbol_help.svg";
+                        darkImageURL: "images/symbol_dark_help.svg";
+
+                        onClicked: helpClicked();
+                    }
+
+                    Rectangle {
+                        id: helpSettingsDivider;
+                        width: 1;
+                        height: parent.height * 0.6;
+                        anchors.verticalCenter: parent.verticalCenter;
+                        color: style.color.sidebarButtonBorder;
+                    }
+
+                    SidebarButton {
+                        id: settingsButton;
+
+                        width: buttonSize;
+                        height: buttonSize;
+                        radius: 0;
+                        borderColor: "transparent";
+
+                        lightImageURL: "images/symbol_gear.svg";
+                        darkImageURL: "images/symbol_dark_gear.svg";
+
+                        onClicked: settingsClicked();
+                    }
+                }
             }
         }
     }
@@ -335,63 +365,110 @@ Item {
         anchors.right: parent.right;
         color: style.color.sidebarToolbar;
         
+        // Separator line at top of bottom toolbar.
+        Rectangle {
+            anchors.top: parent.top;
+            anchors.left: parent.left;
+            anchors.right: parent.right;
+            height: 1;
+            color: style.color.sidebarRightLine;
+            z: 1;
+        }
+
         Item {
             id: toolbar;
             anchors.fill: parent;
-            opacity: style.windowActive ? 1.0 : 0.4;
             
-            // Adds a feed.
-            SidebarButton {
-                id: addButton;
-                
+            // Add + Edit + Remove grouped in a pill.
+            // When a special feed is selected, Edit/Remove hide and Add
+            // becomes a standalone circle.
+            Rectangle {
+                id: feedActionsGroup;
+
+                property bool showEditRemove: !feedListView.model.selected.isSpecialFeed();
+
                 anchors.left: parent.left;
                 anchors.verticalCenter: parent.verticalCenter;
                 anchors.leftMargin: 10 * style.scale;
-                
-                width: buttonSize;
+
+                width: showEditRemove
+                       ? (buttonSize * 3 + addEditDivider.width + editRemoveDivider.width)
+                       : buttonSize;
                 height: buttonSize;
-                
-                lightImageURL: "images/plus_dark.png";
-                darkImageURL: "images/plus.png";
-                
-                onClicked: addClicked();
-            }
-            
-            // Edits a feed.
-            SidebarButton {
-                id: editButton;
-                
-                anchors.right: removeButton.left;
-                anchors.verticalCenter: parent.verticalCenter;
-                anchors.rightMargin: 15 * style.scale;
-                
-                width: buttonSize;
-                height: buttonSize;
-                visible: !feedListView.model.selected.isSpecialFeed();
-                
-                lightImageURL: "images/symbol_pencil.svg";
-                darkImageURL: "images/symbol_dark_pencil.svg";
-                
-                onClicked: editClicked();
-            }
-            
-            // Removes a feed.
-            SidebarButton {
-                id: removeButton;
-                
-                anchors.right: refreshButton.left;
-                anchors.verticalCenter: parent.verticalCenter;
-                anchors.rightMargin: 15 * style.scale;
-                
-                width: buttonSize;
-                height: buttonSize;
-                
-                visible: !feedListView.model.selected.isSpecialFeed();
-                
-                lightImageURL: "images/minus_dark.png";
-                darkImageURL: "images/minus.png";
-                
-                onClicked: removeClicked();
+                radius: height / 2;
+                color: "transparent";
+                border.color: style.color.sidebarButtonBorder;
+                border.width: 1;
+
+                Behavior on width {
+                    NumberAnimation { duration: 150; easing.type: Easing.InOutQuad }
+                }
+
+                Row {
+                    anchors.fill: parent;
+
+                    SidebarButton {
+                        id: addButton;
+
+                        width: buttonSize;
+                        height: buttonSize;
+                        radius: 0;
+                        borderColor: "transparent";
+
+                        lightImageURL: "images/plus_dark.png";
+                        darkImageURL: "images/plus.png";
+
+                        onClicked: addClicked();
+                    }
+
+                    Rectangle {
+                        id: addEditDivider;
+                        width: feedActionsGroup.showEditRemove ? 1 : 0;
+                        height: parent.height * 0.6;
+                        anchors.verticalCenter: parent.verticalCenter;
+                        color: style.color.sidebarButtonBorder;
+                        visible: feedActionsGroup.showEditRemove;
+                    }
+
+                    SidebarButton {
+                        id: editButton;
+
+                        width: feedActionsGroup.showEditRemove ? buttonSize : 0;
+                        height: buttonSize;
+                        radius: 0;
+                        borderColor: "transparent";
+                        visible: feedActionsGroup.showEditRemove;
+
+                        lightImageURL: "images/symbol_pencil.svg";
+                        darkImageURL: "images/symbol_dark_pencil.svg";
+
+                        onClicked: editClicked();
+                    }
+
+                    Rectangle {
+                        id: editRemoveDivider;
+                        width: feedActionsGroup.showEditRemove ? 1 : 0;
+                        height: parent.height * 0.6;
+                        anchors.verticalCenter: parent.verticalCenter;
+                        color: style.color.sidebarButtonBorder;
+                        visible: feedActionsGroup.showEditRemove;
+                    }
+
+                    SidebarButton {
+                        id: removeButton;
+
+                        width: feedActionsGroup.showEditRemove ? buttonSize : 0;
+                        height: buttonSize;
+                        radius: 0;
+                        borderColor: "transparent";
+                        visible: feedActionsGroup.showEditRemove;
+
+                        lightImageURL: "images/minus_dark.png";
+                        darkImageURL: "images/minus.png";
+
+                        onClicked: removeClicked();
+                    }
+                }
             }
 
             SidebarButton {

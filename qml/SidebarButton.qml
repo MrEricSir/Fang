@@ -7,13 +7,15 @@ Button {
     property url lightImageURL: "";
     property url darkImageURL: "";
 
-    property url imageURL: fangSettings.currentStyle === "LIGHT" ? darkImageURL : lightImageURL;
-    property url imageHoverURL: fangSettings.currentStyle === "LIGHT" ? darkImageURL : lightImageURL;
-    property url imagePressedURL:  fangSettings.currentStyle === "DARK" ? darkImageURL : lightImageURL;
+    // lightImageURL = dark-colored icon (for light backgrounds)
+    // darkImageURL = light-colored icon (for dark backgrounds)
+    property url imageURL: fangSettings.currentStyle === "LIGHT" ? lightImageURL : darkImageURL;
+    property url imageHoverURL: fangSettings.currentStyle === "LIGHT" ? lightImageURL : darkImageURL;
+    property url imagePressedURL: fangSettings.currentStyle === "LIGHT" ? lightImageURL : darkImageURL;
     
-    property int imageMargin: 5 * style.scale;
+    property int imageMargin: 7 * style.scale;
     
-    radius: style.defaultRadius;
+    radius: width / 2;
     
     buttonColor: style.color.sidebarButton;
     hoverColor: style.color.sidebarButtonHover;

@@ -170,16 +170,16 @@ Item {
         property color textEntryHint: sidebarRightLine;
         
         property color sidebar: sysPalette.window;
-        property color sidebarToolbar: "#535353";
+        property color sidebarToolbar: Qt.darker(sysPalette.window, 1.05);
         property color sidebarRightLine: "#ccc";
         property color sidebarSelected: sysPalette.highlight;
         property color sidebarSelectedText: sysPalette.highlightedText;
         property color sidebarText: sysPalette.windowText;
 
-        property color sidebarButton: "#777";
-        property color sidebarButtonBorder: sidebarButton;
-        property color sidebarButtonHover: "#aaa";
-        property color sidebarButtonPressed: "white"
+        property color sidebarButton: "transparent";
+        property color sidebarButtonBorder: Qt.rgba(0, 0, 0, 0.15);
+        property color sidebarButtonHover: Qt.rgba(0, 0, 0, 0.06);
+        property color sidebarButtonPressed: Qt.rgba(0, 0, 0, 0.12);
 
         property color badge: platform === "WIN" ? "#0078D4" : sysPalette.accent;
         property color badgeText: "white";
@@ -212,16 +212,16 @@ Item {
         property color textEntryHint: sidebarRightLine;
 
         property color sidebar: sysPalette.window;
-        property color sidebarToolbar: "#333";
+        property color sidebarToolbar: Qt.lighter(sysPalette.window, 1.1);
         property color sidebarRightLine: "#666";
         property color sidebarSelected: sysPalette.highlight;
         property color sidebarSelectedText: sysPalette.highlightedText;
         property color sidebarText: sysPalette.windowText;
 
-        property color sidebarButton: "#777";
-        property color sidebarButtonBorder: sidebarButton;
-        property color sidebarButtonHover: "#555";
-        property color sidebarButtonPressed: "#333";
+        property color sidebarButton: "transparent";
+        property color sidebarButtonBorder: Qt.rgba(1, 1, 1, 0.2);
+        property color sidebarButtonHover: Qt.rgba(1, 1, 1, 0.06);
+        property color sidebarButtonPressed: Qt.rgba(1, 1, 1, 0.12);
 
         property color badge: platform === "WIN" ? "#0078D4" : sysPalette.accent;
         property color badgeText: "white";
