@@ -30,7 +30,7 @@ Item {
     property int specialFeedCount: 0;
     
     // Read-only properties.
-    readonly property int buttonSize: 25 * style.scale;
+    readonly property int buttonSize: 35 * style.scale;
     readonly property var listView: feedListView;
     readonly property bool feedsExist: feedListModel.count > 1; // (There's always 1 item -- all news.)
 
@@ -82,11 +82,10 @@ Item {
             source: fangSettings.currentStyle === "LIGHT"
                     ? "images/fang_logo_color.svg" : "images/fang_logo.svg";
 
-            anchors.top: parent.top;
-            anchors.topMargin: 5 * style.scale;
+            anchors.verticalCenter: parent.verticalCenter;
             anchors.left: parent.left;
             anchors.leftMargin: 5 * style.scale;
-            height: 25 * style.scale;
+            height: 28 * style.scale;
             asynchronous: true;
 
             // Hack to make SVGs render with anti-aliasing

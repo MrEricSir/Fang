@@ -13,7 +13,7 @@ Button {
     property url imageHoverURL: fangSettings.currentStyle === "LIGHT" ? lightImageURL : darkImageURL;
     property url imagePressedURL: fangSettings.currentStyle === "LIGHT" ? lightImageURL : darkImageURL;
     
-    property int imageMargin: 7 * style.scale;
+    property int imageMargin: 10 * style.scale;
     
     radius: width / 2;
     

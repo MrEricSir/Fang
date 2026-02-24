@@ -18,7 +18,7 @@ Rectangle {
     // Child items go here.
     default property alias content: contentItem.data;
 
-    height: 40 * style.scale;
+    height: 48 * style.scale;
     color: style.color.sidebarToolbar;
     z: 10;
 
