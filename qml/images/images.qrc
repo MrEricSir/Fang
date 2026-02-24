@@ -53,5 +53,6 @@
         <file>symbol_dark_search.svg</file>
         <file>symbol_close.svg</file>
         <file>symbol_dark_close.svg</file>
+        <file>fang_logo_dark.svg</file>
     </qresource>
 </RCC>

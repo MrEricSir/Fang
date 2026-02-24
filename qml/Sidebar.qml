@@ -80,7 +80,7 @@ Item {
             id: fangLogo;
 
             source: fangSettings.currentStyle === "LIGHT"
-                    ? "images/fang_logo_color.svg" : "images/fang_logo.svg";
+                    ? "images/fang_logo_dark.svg" : "images/fang_logo.svg";
 
             anchors.verticalCenter: parent.verticalCenter;
             anchors.left: parent.left;

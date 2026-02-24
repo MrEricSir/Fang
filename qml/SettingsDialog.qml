@@ -230,6 +230,8 @@ Dialog {
             onClicked: opml.exportFile();
         }
     }
+
+    DialogSpacer {}
     
     DialogGroup {
         width: parent.width;

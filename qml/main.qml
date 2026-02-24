@@ -41,12 +41,6 @@ Window {
         id: style;
     }
 
-    // Search feed keyboard shortcut (Ctrl/Cmd+Shift+F.)
-    Shortcut {
-        sequence: "Ctrl+Shift+F";
-        onActivated: sidebar.toggleSearch();
-    }
-    
     visible: true;
 
     // The "interactor" is what talks to the C++ layer.
@@ -244,6 +238,104 @@ Window {
             MenuItem {
                 text: qsTr("Quit");
                 onTriggered: Qt.quit();
+            }
+        }
+    }
+
+    // Native menu bar (macOS system menu bar, Windows/Linux window menu bar).
+    MenuBar {
+        // App menu — macOS auto-moves About, Settings, and Quit here.
+        Menu {
+            title: qsTr("Fang")
+
+            MenuItem {
+                text: qsTr("About Fang")
+                onTriggered: openDialog("AboutDialog.qml")
+            }
+
+            MenuSeparator {}
+
+            MenuItem {
+                text: qsTr("Settings...")
+                shortcut: "Ctrl+,"
+                onTriggered: openDialog("SettingsDialog.qml")
+            }
+
+            MenuSeparator {}
+
+            MenuItem {
+                text: qsTr("Quit Fang")
+                shortcut: StandardKey.Quit
+                onTriggered: Qt.quit()
+            }
+        }
+
+        Menu {
+            title: qsTr("Edit")
+
+            MenuItem {
+                text: qsTr("Cut")
+                shortcut: StandardKey.Cut
+            }
+            MenuItem {
+                text: qsTr("Copy")
+                shortcut: StandardKey.Copy
+            }
+            MenuItem {
+                text: qsTr("Paste")
+                shortcut: StandardKey.Paste
+            }
+            MenuSeparator {}
+            MenuItem {
+                text: qsTr("Select All")
+                shortcut: StandardKey.SelectAll
+            }
+        }
+
+        Menu {
+            title: qsTr("Feeds")
+
+            MenuItem {
+                text: qsTr("Search...")
+                shortcut: "Ctrl+Shift+F"
+                onTriggered: sidebar.toggleSearch()
+            }
+
+            MenuSeparator {}
+
+            MenuItem {
+                text: qsTr("Add Feed...")
+                shortcut: "Ctrl+N"
+                onTriggered: openDialog("AddDialog.qml")
+            }
+            MenuItem {
+                text: qsTr("Edit Feed...")
+                enabled: sidebar.listView.model.selected
+                         && !sidebar.listView.model.selected.isSpecialFeed()
+                onTriggered: openDialog("EditDialog.qml", sidebar.listView.model.selected)
+            }
+            MenuItem {
+                text: qsTr("Remove Feed...")
+                enabled: sidebar.listView.model.selected
+                         && !sidebar.listView.model.selected.isSpecialFeed()
+                onTriggered: openDialog("RemoveDialog.qml", sidebar.listView.model.selected)
+            }
+
+            MenuSeparator {}
+
+            MenuItem {
+                text: qsTr("Refresh")
+                shortcut: "Ctrl+R"
+                onTriggered: news.refreshCurrentFeed()
+            }
+        }
+
+        Menu {
+            title: qsTr("Help")
+
+            MenuItem {
+                text: qsTr("Fang Help")
+                onTriggered: news.showWelcome()
             }
         }
     }
