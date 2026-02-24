@@ -242,10 +242,6 @@ Dialog {
                 aboutDialog.onDialogClosed.connect(settingsDialog.forceFocus);
             }
         }
-    }
-    
-    DialogGroup {
-        width: parent.width;
 
         DialogButton {
             id: closeButton;

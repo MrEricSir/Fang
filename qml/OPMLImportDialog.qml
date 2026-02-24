@@ -229,10 +229,6 @@ Dialog {
 
             visible: false; // at first
         }
-    }
-    
-    DialogGroup {
-        width: parent.width;
 
         DialogButton {
             id: cancelButton;

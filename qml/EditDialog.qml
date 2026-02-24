@@ -53,10 +53,6 @@ Dialog {
             }
             enabled: !isClosing && feedTitle.text.trim() !== "";
         }
-    }
-    
-    DialogGroup {
-        width: parent.width;
 
         DialogButton {
             id: cancelButton;

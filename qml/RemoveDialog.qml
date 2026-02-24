@@ -39,10 +39,6 @@ Dialog {
                 id: newsFeedInteractor;
             }
         }
-    }
-    
-    DialogGroup {
-        width: parent.width;
 
         DialogButton {
             id: cancelButton;

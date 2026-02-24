@@ -137,10 +137,6 @@ Dialog {
             visible: addDialog.state === "add";
             enabled: validator.feedsToAddCount > 0;
         }
-    }
-    
-    DialogGroup {
-        width: parent.width;
 
         DialogButton {
             id: cancelButton;
