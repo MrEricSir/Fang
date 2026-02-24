@@ -1,4 +1,5 @@
 import QtQuick
+import QtQuick.Window
 import Fang 1.0
 
 /**
@@ -12,6 +13,7 @@ Item {
     readonly property alias colorSchemeDark: colorSchemeDark;
     readonly property double defaultRadius: 4 * scale;
     readonly property double defaultMarin: 5 * scale;
+    readonly property bool windowActive: Window.window ? Window.window.active : true;
 
     SystemPalette {
         id: sysPalette;
@@ -172,16 +174,20 @@ Item {
                               : "#efefef";
         property color sidebarToolbar: "#535353";
         property color sidebarRightLine: "#ccc";
-        property color sidebarSelected: platform === "WIN" ? "#C4C4C9" : "#D5D5DA";
-        property color sidebarSelectedText: "black";
-        property color sidebarText: "black";
+        property color sidebarSelected: windowActive
+                              ? (platform === "WIN" ? "#C4C4C9" : "#D5D5DA")
+                              : (platform === "WIN" ? "#D8D8DC" : "#E0E0E4");
+        property color sidebarSelectedText: windowActive
+                              ? (platform === "MAC" ? sysPalette.accent : "black")
+                              : "#888";
+        property color sidebarText: windowActive ? "black" : "#888";
 
         property color sidebarButton: "#777";
         property color sidebarButtonBorder: sidebarButton;
         property color sidebarButtonHover: "#aaa";
         property color sidebarButtonPressed: "white"
 
-        property color badge: sysPalette.accent;
+        property color badge: platform === "WIN" ? "#0078D4" : sysPalette.accent;
         property color badgeText: "white";
     }
 
@@ -216,16 +222,20 @@ Item {
                               : "black";
         property color sidebarToolbar: "#333";
         property color sidebarRightLine: "#666";
-        property color sidebarSelected: platform === "WIN" ? "#555560" : "#3A3A3C";
-        property color sidebarSelectedText: "white";
-        property color sidebarText: "white";
+        property color sidebarSelected: windowActive
+                              ? (platform === "WIN" ? "#555560" : "#3A3A3C")
+                              : (platform === "WIN" ? "#404048" : "#2E2E30");
+        property color sidebarSelectedText: windowActive
+                              ? (platform === "MAC" ? sysPalette.accent : "white")
+                              : "#777";
+        property color sidebarText: windowActive ? "white" : "#777";
 
         property color sidebarButton: "#777";
         property color sidebarButtonBorder: sidebarButton;
         property color sidebarButtonHover: "#555";
         property color sidebarButtonPressed: "#333";
 
-        property color badge: sysPalette.accent;
+        property color badge: platform === "WIN" ? "#0078D4" : sysPalette.accent;
         property color badgeText: "white";
     }
 }

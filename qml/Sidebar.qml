@@ -69,6 +69,7 @@ Item {
             id: toolbarTop;
             anchors.fill: parent;
             anchors.margins: 5 * style.scale;
+            opacity: style.windowActive ? 1.0 : 0.4;
 
             // Allow top of sidebar to drag window and maximize/restore size.
             MouseArea {
@@ -85,16 +86,16 @@ Item {
             
             Image {
                 id: fangLogo;
-                
+
                 source: "images/fang_logo.svg";
-                
+
                 anchors.top: parent.top;
                 anchors.topMargin: 5 * style.scale;
                 anchors.left: parent.left;
                 anchors.leftMargin: 5 * style.scale;
                 height: 25 * style.scale;
                 asynchronous: true;
-                
+
                 // Hack to make SVGs render with anti-aliasing
                 sourceSize.width: width;
                 sourceSize.height: height;
@@ -259,8 +260,10 @@ Item {
                             sidebar.searchCleared();
                         }
 
-                        ContextMenu.menu: Menu {
-                            id: contextMenu;
+                        ContextMenu.menu: isSpecialFeed ? specialFeedMenu : feedMenu;
+
+                        Menu {
+                            id: specialFeedMenu;
                             popupType: Popup.Native;
 
                             MenuItem {
@@ -270,22 +273,31 @@ Item {
 
                             MenuItem {
                                 text: unreadCount !== 0 ? "Mark all as read" : "Mark all as unread";
-                                visible: bookmarksEnabled;
-                                height: visible ? implicitHeight : 0;
+                                onTriggered: unreadCount !== 0 ? markAllAsReadClicked(thisFeed) : markAllAsUnreadClicked(thisFeed);
+                            }
+                        }
+
+                        Menu {
+                            id: feedMenu;
+                            popupType: Popup.Native;
+
+                            MenuItem {
+                                text: "Refresh";
+                                onTriggered: refreshFeedClicked(thisFeed);
+                            }
+
+                            MenuItem {
+                                text: unreadCount !== 0 ? "Mark all as read" : "Mark all as unread";
                                 onTriggered: unreadCount !== 0 ? markAllAsReadClicked(thisFeed) : markAllAsUnreadClicked(thisFeed);
                             }
 
                             MenuItem {
                                 text: "Edit";
-                                visible: !isSpecialFeed;
-                                height: visible ? implicitHeight : 0;
                                 onTriggered: openDialog("EditDialog.qml", thisFeed);
                             }
 
                             MenuItem {
                                 text: "Remove";
-                                visible: !isSpecialFeed;
-                                height: visible ? implicitHeight : 0;
                                 onTriggered: openDialog("RemoveDialog.qml", thisFeed);
                             }
                         }
@@ -326,6 +338,7 @@ Item {
         Item {
             id: toolbar;
             anchors.fill: parent;
+            opacity: style.windowActive ? 1.0 : 0.4;
             
             // Adds a feed.
             SidebarButton {
