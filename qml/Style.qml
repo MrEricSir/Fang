@@ -169,18 +169,14 @@ Item {
         property color textEntryBorder: dialogButton;
         property color textEntryHint: sidebarRightLine;
         
-        property color sidebar: platform === "MAC" ? "#F0F0F0"
-                              : platform === "WIN" ? "#F9F8F8"
-                              : "#efefef";
+        property color sidebar: sysPalette.window;
         property color sidebarToolbar: "#535353";
         property color sidebarRightLine: "#ccc";
         property color sidebarSelected: windowActive
-                              ? (platform === "WIN" ? "#C4C4C9" : "#D5D5DA")
-                              : (platform === "WIN" ? "#D8D8DC" : "#E0E0E4");
+                              ? sysPalette.highlight : Qt.darker(sysPalette.window, 1.1);
         property color sidebarSelectedText: windowActive
-                              ? (platform === "MAC" ? sysPalette.accent : "black")
-                              : "#888";
-        property color sidebarText: windowActive ? "black" : "#888";
+                              ? sysPalette.highlightedText : Qt.darker(sysPalette.windowText, 1.5);
+        property color sidebarText: windowActive ? sysPalette.windowText : Qt.darker(sysPalette.windowText, 1.5);
 
         property color sidebarButton: "#777";
         property color sidebarButtonBorder: sidebarButton;
@@ -217,18 +213,14 @@ Item {
         property color textEntryBorder: dialogButton;
         property color textEntryHint: sidebarRightLine;
 
-        property color sidebar: platform === "MAC" ? "#1E1E1E"
-                              : platform === "WIN" ? "#202020"
-                              : "black";
+        property color sidebar: sysPalette.window;
         property color sidebarToolbar: "#333";
         property color sidebarRightLine: "#666";
         property color sidebarSelected: windowActive
-                              ? (platform === "WIN" ? "#555560" : "#3A3A3C")
-                              : (platform === "WIN" ? "#404048" : "#2E2E30");
+                              ? sysPalette.highlight : Qt.lighter(sysPalette.window, 1.2);
         property color sidebarSelectedText: windowActive
-                              ? (platform === "MAC" ? sysPalette.accent : "white")
-                              : "#777";
-        property color sidebarText: windowActive ? "white" : "#777";
+                              ? sysPalette.highlightedText : Qt.lighter(sysPalette.windowText, 1.5);
+        property color sidebarText: windowActive ? sysPalette.windowText : Qt.lighter(sysPalette.windowText, 1.5);
 
         property color sidebarButton: "#777";
         property color sidebarButtonBorder: sidebarButton;
