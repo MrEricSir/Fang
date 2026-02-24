@@ -170,7 +170,7 @@ Item {
         property color textEntryHint: sidebarRightLine;
         
         property color sidebar: platform === "MAC" ? "#F0F0F0"
-                              : platform === "WIN" ? "#F3F3F3"
+                              : platform === "WIN" ? "#F9F8F8"
                               : "#efefef";
         property color sidebarToolbar: "#535353";
         property color sidebarRightLine: "#ccc";
