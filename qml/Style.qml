@@ -17,7 +17,7 @@ Item {
 
     SystemPalette {
         id: sysPalette;
-        colorGroup: SystemPalette.Active;
+        colorGroup: windowActive ? SystemPalette.Active : SystemPalette.Inactive;
     }
 
     function getPlatformFont() {
@@ -172,11 +172,9 @@ Item {
         property color sidebar: sysPalette.window;
         property color sidebarToolbar: "#535353";
         property color sidebarRightLine: "#ccc";
-        property color sidebarSelected: windowActive
-                              ? sysPalette.highlight : Qt.darker(sysPalette.window, 1.1);
-        property color sidebarSelectedText: windowActive
-                              ? sysPalette.highlightedText : Qt.darker(sysPalette.windowText, 1.5);
-        property color sidebarText: windowActive ? sysPalette.windowText : Qt.darker(sysPalette.windowText, 1.5);
+        property color sidebarSelected: sysPalette.highlight;
+        property color sidebarSelectedText: sysPalette.highlightedText;
+        property color sidebarText: sysPalette.windowText;
 
         property color sidebarButton: "#777";
         property color sidebarButtonBorder: sidebarButton;
@@ -216,11 +214,9 @@ Item {
         property color sidebar: sysPalette.window;
         property color sidebarToolbar: "#333";
         property color sidebarRightLine: "#666";
-        property color sidebarSelected: windowActive
-                              ? sysPalette.highlight : Qt.lighter(sysPalette.window, 1.2);
-        property color sidebarSelectedText: windowActive
-                              ? sysPalette.highlightedText : Qt.lighter(sysPalette.windowText, 1.5);
-        property color sidebarText: windowActive ? sysPalette.windowText : Qt.lighter(sysPalette.windowText, 1.5);
+        property color sidebarSelected: sysPalette.highlight;
+        property color sidebarSelectedText: sysPalette.highlightedText;
+        property color sidebarText: sysPalette.windowText;
 
         property color sidebarButton: "#777";
         property color sidebarButtonBorder: sidebarButton;
