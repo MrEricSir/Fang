@@ -22,6 +22,7 @@ Dialog {
         DialogButton {
             id: removeButton;
 
+            isPrimary: true;
             text: "Remove Feed";
             onClicked: {
                 // Remove a specific feed.

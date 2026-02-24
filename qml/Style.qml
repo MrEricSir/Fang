@@ -162,11 +162,16 @@ Item {
         property color dialogButtonTextDisabled: "#999";
         property color dialogButtonPressed: Qt.darker(colorSchemeLight.dialogButtonHover, 1.5);
         property color dialogButtonDisabled: "#ffffff"; // Update in SettingsDialog manually!
-        property color dialogButtonBorder: "transparent";
-        
+        property color dialogButtonBorder: Qt.rgba(0, 0, 0, 0.15);
+        property color dialogButtonPrimary: sysPalette.accent;
+        property color dialogButtonPrimaryHover: Qt.darker(sysPalette.accent, 1.1);
+        property color dialogButtonPrimaryPressed: Qt.darker(sysPalette.accent, 1.3);
+        property color dialogButtonPrimaryText: "white";
+
         property color textEntryBackground: "white";
         property color textEntryText: "black";
         property color textEntryBorder: dialogButton;
+        property color textEntryFocusBorder: sysPalette.accent;
         property color textEntryHint: sidebarRightLine;
         
         property color sidebar: sysPalette.window;
@@ -204,11 +209,16 @@ Item {
         property color dialogButtonTextDisabled: "#666";
         property color dialogButtonPressed: Qt.lighter(colorSchemeDark.dialogButtonHover, 1.5);
         property color dialogButtonDisabled: Qt.darker(colorSchemeDark.dialogButton, 1.5);
-        property color dialogButtonBorder: "transparent"
+        property color dialogButtonBorder: Qt.rgba(1, 1, 1, 0.15);
+        property color dialogButtonPrimary: sysPalette.accent;
+        property color dialogButtonPrimaryHover: Qt.lighter(sysPalette.accent, 1.15);
+        property color dialogButtonPrimaryPressed: Qt.lighter(sysPalette.accent, 1.3);
+        property color dialogButtonPrimaryText: "white";
 
         property color textEntryBackground: "black";
         property color textEntryText: "white";
         property color textEntryBorder: dialogButton;
+        property color textEntryFocusBorder: sysPalette.accent;
         property color textEntryHint: sidebarRightLine;
 
         property color sidebar: sysPalette.window;

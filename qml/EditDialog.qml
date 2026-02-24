@@ -42,6 +42,7 @@ Dialog {
         DialogButton {
             id: saveEditButton;
 
+            isPrimary: true;
             text: "Save";
             onClicked: {
                 // Save the new title.

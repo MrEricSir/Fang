@@ -714,7 +714,7 @@ function showNoSearchResults(query)
     noResults.id = 'noSearchResults';
     noResults.className = 'noSearchResults';
     noResults.innerHTML = `
-        <div class="noResultsIcon">&#128269;</div>
+        <div class="noResultsIcon"><img src="qrc:///qml/images/symbol_search.svg" width="48" height="48"></div>
         <div class="noResultsText">No results for search: "<strong>${escapeHtml(query)}</strong>"</div>
     `;
 

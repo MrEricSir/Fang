@@ -350,23 +350,50 @@ Item {
         Rectangle {
             id: feedActionsGroup;
 
-            property bool showEditRemove: !feedListView.model.selected.isSpecialFeed();
+            property bool showEditRemove: feedListView.model.selected
+                                          && !feedListView.model.selected.isSpecialFeed();
 
             anchors.left: parent.left;
             anchors.verticalCenter: parent.verticalCenter;
             anchors.leftMargin: 10 * style.scale;
 
-            width: showEditRemove
-                   ? (buttonSize * 3 + addEditDivider.width + editRemoveDivider.width)
-                   : buttonSize;
             height: buttonSize;
             radius: height / 2;
             color: "transparent";
             border.color: style.color.sidebarButtonBorder;
             border.width: 1;
 
-            Behavior on width {
-                NumberAnimation { duration: 150; easing.type: Easing.InOutQuad }
+            states: [
+                State {
+                    name: "expanded";
+                    when: feedActionsGroup.showEditRemove;
+                    PropertyChanges {
+                        feedActionsGroup { width: buttonSize * 3 + 2 }
+                        addEditDivider { width: 1; opacity: 1 }
+                        editButton { width: buttonSize; opacity: 1 }
+                        editRemoveDivider { width: 1; opacity: 1 }
+                        removeButton { width: buttonSize; opacity: 1 }
+                    }
+                },
+                State {
+                    name: "collapsed";
+                    when: !feedActionsGroup.showEditRemove;
+                    PropertyChanges {
+                        feedActionsGroup { width: buttonSize }
+                        addEditDivider { width: 0; opacity: 0 }
+                        editButton { width: 0; opacity: 0 }
+                        editRemoveDivider { width: 0; opacity: 0 }
+                        removeButton { width: 0; opacity: 0 }
+                    }
+                }
+            ]
+
+            transitions: Transition {
+                NumberAnimation {
+                    properties: "width,opacity";
+                    duration: 250;
+                    easing.type: Easing.InOutQuad;
+                }
             }
 
             Row {
@@ -388,21 +415,18 @@ Item {
 
                 Rectangle {
                     id: addEditDivider;
-                    width: feedActionsGroup.showEditRemove ? 1 : 0;
                     height: parent.height * 0.6;
                     anchors.verticalCenter: parent.verticalCenter;
                     color: style.color.sidebarButtonBorder;
-                    visible: feedActionsGroup.showEditRemove;
                 }
 
                 SidebarButton {
                     id: editButton;
 
-                    width: feedActionsGroup.showEditRemove ? buttonSize : 0;
                     height: buttonSize;
                     radius: 0;
                     borderColor: "transparent";
-                    visible: feedActionsGroup.showEditRemove;
+                    clip: true;
 
                     lightImageURL: "images/symbol_pencil.svg";
                     darkImageURL: "images/symbol_dark_pencil.svg";
@@ -412,21 +436,18 @@ Item {
 
                 Rectangle {
                     id: editRemoveDivider;
-                    width: feedActionsGroup.showEditRemove ? 1 : 0;
                     height: parent.height * 0.6;
                     anchors.verticalCenter: parent.verticalCenter;
                     color: style.color.sidebarButtonBorder;
-                    visible: feedActionsGroup.showEditRemove;
                 }
 
                 SidebarButton {
                     id: removeButton;
 
-                    width: feedActionsGroup.showEditRemove ? buttonSize : 0;
                     height: buttonSize;
                     radius: 0;
                     borderColor: "transparent";
-                    visible: feedActionsGroup.showEditRemove;
+                    clip: true;
 
                     lightImageURL: "images/minus_dark.png";
                     darkImageURL: "images/minus.png";

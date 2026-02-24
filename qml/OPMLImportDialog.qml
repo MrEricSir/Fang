@@ -217,6 +217,7 @@ Dialog {
         DialogButton {
             id: addButton;
 
+            isPrimary: true;
             text: "Add Selected"
             onClicked: {
                 parentClose();

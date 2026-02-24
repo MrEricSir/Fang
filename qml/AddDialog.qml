@@ -112,6 +112,7 @@ Dialog {
         DialogButton {
             id: continueButton;
 
+            isPrimary: true;
             text: "Continue";
             onClicked: {
                 validator.check();
@@ -127,6 +128,7 @@ Dialog {
         DialogButton {
             id: addButton;
 
+            isPrimary: true;
             text: validator.feedCount > 1 ? "Add Selected Feeds" : "Add Feed";
             onClicked: {
                 validator.addFeeds();
