@@ -126,12 +126,12 @@ RearrangeableDelegate {
 
                 color: index == feedListView.currentIndex ?
                            style.color.sidebarSelected : "transparent";
-                radius: 5 * style.scale;
+                radius: style.defaultRadius;
 
                 anchors.fill: parent;
                 anchors.topMargin: style.defaultMarin;
-                anchors.leftMargin: 6 * style.scale;
-                anchors.rightMargin: 6 * style.scale + (rectangle2.contentOverflows ? sidebarScrollBar.width : 0);
+                anchors.leftMargin: style.defaultMarin;
+                anchors.rightMargin: style.defaultMarin + (rectangle2.contentOverflows ? sidebarScrollBar.width : 0);
                 Behavior on anchors.rightMargin {
                     PropertyAnimation {
                         easing.type: Easing.InOutQuad;
