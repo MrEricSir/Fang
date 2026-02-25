@@ -251,9 +251,20 @@ function updateCSS()
               // Clear the current styles.
               clearBodyClasses();
 
-              // Add 'em!
-              for (let i = 0; i < data.length; i++) {
-                  addBodyClass(data[i]);
+              // Apply classes.
+              var classes = data.classes || data;
+              for (let i = 0; i < classes.length; i++) {
+                  addBodyClass(classes[i]);
+              }
+
+              // Apply accent color.
+              if (data.accent) {
+                  applyAccentColor(data.accent);
+              }
+
+              // Apply system font.
+              if (data.font) {
+                  applySystemFont(data.font);
               }
           });
 }

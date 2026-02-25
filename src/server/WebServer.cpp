@@ -1,7 +1,10 @@
 #include "WebServer.h"
 
 #include <QDesktopServices>
+#include <QFont>
+#include <QGuiApplication>
 #include <QJsonDocument>
+#include <QPalette>
 #include <QUrl>
 
 #include "../FangApp.h"
@@ -257,7 +260,18 @@ QString WebServer::getCSS()
         classes << "bookmarksDisabled";
     }
 
-    return QString::fromUtf8(QJsonDocument::fromVariant(classes).toJson());
+    // Set up color scheme from system colors to match QML.
+    QVariantMap result;
+    result.insert("classes", classes);
+
+    QPalette palette = QGuiApplication::palette();
+    QColor accent = palette.accent().color();
+    result.insert("accent", accent.name());  // e.g. "#007aff"
+
+    QFont systemFont = QGuiApplication::font();
+    result.insert("font", systemFont.family());  // e.g. ".AppleSystemUIFont"
+
+    return QString::fromUtf8(QJsonDocument::fromVariant(result).toJson());
 }
 
 QString WebServer::performSearch(const QString& query, const QString& scope, qint64 scopeId)

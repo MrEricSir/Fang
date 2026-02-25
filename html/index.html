@@ -171,6 +171,9 @@ body.bookmarksDisabled > #newsView > .newsItemStyle#topBookmark {
     margin-bottom: 0.2em;
 }
 
+/* Text selection uses the system accent color. */
+::selection { background: var(--accent, #007AFF); color: white; }
+
 a { text-decoration: none; }
 
 a:hover { text-decoration: underline; }
@@ -219,11 +222,11 @@ body.LIGHT {
     color: black;
 }
 
-body.LIGHT > #newsView a { color: #00c; }
-body.LIGHT > #newsView a:visited { color: #a33; }
-body.LIGHT > #newsView a:hover, body.LIGHT a:active { color: #04f; }
+body.LIGHT > #newsView a { color: var(--accent, #00c); }
+body.LIGHT > #newsView a:visited { color: var(--accent, #00c); }
+body.LIGHT > #newsView a:hover, body.LIGHT a:active { color: var(--accent-hover, #04f); }
 body.LIGHT > #newsView > .newsItemStyle > h1 > a:hover,
-  body.LIGHT > #newsView > .newsItemStyle > h1 > a:active { border-bottom-color: #00f; }
+  body.LIGHT > #newsView > .newsItemStyle > h1 > a:active { border-bottom-color: var(--accent, #00f); }
 
 body.LIGHT > #newsView > .newsItemStyle > .siteTitle, body.LIGHT > #newsView > .newsItemStyle > .dateDiv > .date { color: #777; }
 body.LIGHT > #newsView > .newsItemStyle > .divider { background-color: #ccc; }
@@ -250,11 +253,11 @@ body.DARK {
     color: white;
 }
 
-body.DARK a { color: #6af; }
-body.DARK a:visited { color: #6af; }
-body.DARK a:hover, body.DARK a:active { color: #f10; }
+body.DARK a { color: var(--accent-light, #6af); }
+body.DARK a:visited { color: var(--accent-light, #6af); }
+body.DARK a:hover, body.DARK a:active { color: var(--accent-hover, #f10); }
 body.DARK > #newsView > .newsItemStyle > h1 > a:hover,
-  body.DARK > #newsView > .newsItemStyle > h1 > a:active { border-bottom-color: #f10; }
+  body.DARK > #newsView > .newsItemStyle > h1 > a:active { border-bottom-color: var(--accent-hover, #f10); }
 
 body.DARK > #newsView > .newsItemStyle > .siteTitle, body.DARK > .newsItemStyle > .dateDiv > .date { color: #ccc; }
 body.DARK > #newsView > .newsItemStyle > .divider { background-color: #888; }
@@ -277,10 +280,7 @@ body.DARK > #newsView > .newsItemStyle > .dateDiv > .pinned { background-image: 
 
 /**** Platforms ****/
 
-body.MAC { font-family: "Lucida Grande", Helvetica, sans-serif !important; }
-body.WIN { font-family: "Segoe UI", Arial, sans-serif !important; }
-body.LINUX { font-family: "Geneva", Arial, sans-serif !important; }
-body.ANDROID { font-family: "Roboto", Arial, sans-serif !important; }
+body { font-family: var(--system-font, sans-serif) !important; }
 
 body.ANDROID #keyboard { display:none; }
 

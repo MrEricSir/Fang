@@ -142,8 +142,11 @@ void FangApp::init()
 
     qCInfo(logApp) << "Image formats: " << QImageReader::supportedImageFormats();
 
-    // Set font options.
-    systemFont.setKerning(true);
+    // Let the native text engine handle kerning and hinting.
+    // On macOS, this defers to Core Text for proper San Francisco tracking.
+#ifdef Q_OS_MAC
+    systemFont.setHintingPreference(QFont::PreferNoHinting);
+#endif
 
     // Setup our QML.
     engine->rootContext()->setContextProperty("feedListModel", &feedList); // list of feeds
