@@ -177,7 +177,8 @@ Item {
         property color sidebar: sysPalette.window;
         property color sidebarToolbar: Qt.darker(sysPalette.window, 1.05);
         property color sidebarRightLine: "#ccc";
-        property color sidebarSelected: sysPalette.highlight;
+        property color sidebarSelected: platform === "WIN" ? sysPalette.mid :
+                                                             sysPalette.highlight;
         property color sidebarSelectedText: sysPalette.highlightedText;
         property color sidebarText: sysPalette.windowText;
 
