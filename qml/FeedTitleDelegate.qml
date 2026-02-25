@@ -112,11 +112,11 @@ RearrangeableDelegate {
         Item {
             width: {
                 if (isFolder) {
-                    return sidebarFeedList.width - height;
+                    return feedTitleDelegate.width - height;
                 } else if (parentFolder > -1) {
-                    return sidebarFeedList.width - folderIndent;
+                    return feedTitleDelegate.width - folderIndent;
                 } else {
-                    return sidebarFeedList.width;
+                    return feedTitleDelegate.width;
                 }
             }
             height: feedTitleDelegate.height;
@@ -131,8 +131,9 @@ RearrangeableDelegate {
                 anchors.fill: parent;
                 anchors.topMargin: style.defaultMarin;
                 anchors.leftMargin: 6 * style.scale;
-                anchors.rightMargin: 6 * style.scale + scrollView.effectiveScrollBarWidth;
-                Behavior on anchors.rightMargin { PropertyAnimation {
+                anchors.rightMargin: 6 * style.scale + (rectangle2.contentOverflows ? sidebarScrollBar.width : 0);
+                Behavior on anchors.rightMargin {
+                    PropertyAnimation {
                         easing.type: Easing.InOutQuad;
                         duration: 250;
                     }

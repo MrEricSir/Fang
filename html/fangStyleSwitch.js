@@ -63,3 +63,12 @@ function applySystemFont(fontFamily) {
 
     document.body.style.setProperty('--system-font', '"' + fontFamily + '", sans-serif');
 }
+
+// Sets the scrollbar color (used on Windows/Linux via ::-webkit-scrollbar CSS).
+function applyScrollbarColor(hex) {
+    if (!hex) {
+        return;
+    }
+
+    document.body.style.setProperty('--scrollbar-color', hex);
+}

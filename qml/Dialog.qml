@@ -269,6 +269,7 @@ FangScreen {
                 anchors.left: parent.left
                 anchors.leftMargin: isSplashScreen ? 0 : 15 * style.scale
                 anchors.right: parent.right
+                anchors.rightMargin: isSplashScreen ? 0 : 4 * style.scale
 
                 contentWidth: width
                 contentHeight: container.childrenRect.height
@@ -276,7 +277,7 @@ FangScreen {
                 boundsBehavior: Flickable.StopAtBounds
                 clip: true
 
-                ScrollBar.vertical: ScrollBar {
+                ScrollBar.vertical: FangScrollBar {
                     policy: contentFlickable.contentHeight > contentFlickable.height
                             ? ScrollBar.AsNeeded : ScrollBar.AlwaysOff
                 }

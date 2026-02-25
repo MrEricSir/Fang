@@ -271,6 +271,10 @@ QString WebServer::getCSS()
     QFont systemFont = QGuiApplication::font();
     result.insert("font", systemFont.family());  // e.g. ".AppleSystemUIFont"
 
+    // Scrollbar color matching Style.qml values.
+    QString currentStyle = app->getSettings()->getCurrentStyle();
+    result.insert("scrollbar", currentStyle == "DARK" ? "#ddd" : "#999");
+
     return QString::fromUtf8(QJsonDocument::fromVariant(result).toJson());
 }
 

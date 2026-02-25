@@ -25,7 +25,7 @@
         <file>FangScreen.qml</file>
         <file>OPMLImportDialog.qml</file>
         <file>CheckBox.qml</file>
-        <file>FangScrollView.qml</file>
+        <file>FangScrollBar.qml</file>
         <file>FangIcon.qml</file>
         <file>SplashScreenDialog.qml</file>
         <file>FangWebView.qml</file>

@@ -37,6 +37,7 @@ Item {
     readonly property var listView: feedListView;
     readonly property bool feedsExist: feedListModel.count > 1; // (There's always 1 item -- all news.)
 
+
     // This is called by RearrangeableDelegate when the user creates a new folder.  It
     // expects the folder's database ID to be returned.
     function insertFolder(firstItemIndex) {
@@ -187,145 +188,117 @@ Item {
                 width: 1 * style.scale;
             }
             
-            // Covers the scrollbar briefly while the selection highlight
-            // animates to make room, preventing visual overlap.
-            Rectangle {
-                id: scrollBarCover;
-                anchors.right: sidebarRightLine.left;
+            // Whether the feed list overflows and needs a scrollbar.
+            readonly property bool contentOverflows: feedListView.contentHeight > feedListView.height
+
+            ListView {
+                id: feedListView;
                 anchors.top: parent.top;
                 anchors.bottom: parent.bottom;
-                width: scrollView.effectiveScrollBarWidth;
-                color: style.color.sidebar;
-                visible: scrollBarCoverTimer.running;
-                z: 10;
-            }
+                anchors.left: parent.left;
+                anchors.right: sidebarRightLine.left;
+                clip: true;
 
-            Timer {
-                id: scrollBarCoverTimer;
-                interval: 260;
-            }
+                visible: feedsExist;
+                interactive: contentHeight > height;
 
-            Connections {
-                target: scrollView;
-                function onEffectiveScrollBarWidthChanged() {
-                    if (scrollView.effectiveScrollBarWidth > 0) {
-                        scrollBarCoverTimer.restart();
+                ScrollBar.vertical: FangScrollBar {
+                    id: sidebarScrollBar;
+                    rightPadding: 4 * style.scale;
+                }
+
+                delegate: FeedTitleDelegate {
+                    id: titleDelegate;
+
+                    readonly property var thisFeed: index >= 0 ? feedListView.model.rowAs(index) : null;
+
+                    ListView.onIsCurrentItemChanged: {
+                        if (ListView.isCurrentItem) {
+                            sidebar.feedSelected();
+                            feedListView.model.selectedIndex = feedListView.currentIndex;
+                        }
+                    }
+
+                    numStationary: sidebar.specialFeedCount;
+
+                    onClicked: {
+                        sidebar.feedClicked();
+                    }
+
+                    onJumpToBookmark: {
+                        sidebar.feedDoubleClicked();
+                    }
+
+                    onOrderChanged: {
+                        sidebar.orderChanged();
+                    }
+
+                    onSearchRequested: (query) => {
+                        sidebar.searchRequested(query);
+                    }
+
+                    onSearchCleared: {
+                        sidebar.searchCleared();
+                    }
+
+                    ContextMenu.menu: isSpecialFeed ? specialFeedMenu : feedMenu;
+
+                    Menu {
+                        id: specialFeedMenu;
+                        popupType: Popup.Native;
+
+                        MenuItem {
+                            text: "Refresh";
+                            onTriggered: refreshFeedClicked(thisFeed);
+                        }
+
+                        MenuItem {
+                            text: unreadCount !== 0 ? "Mark all as read" : "Mark all as unread";
+                            onTriggered: unreadCount !== 0 ? markAllAsReadClicked(thisFeed) : markAllAsUnreadClicked(thisFeed);
+                        }
+                    }
+
+                    Menu {
+                        id: feedMenu;
+                        popupType: Popup.Native;
+
+                        MenuItem {
+                            text: "Refresh";
+                            onTriggered: refreshFeedClicked(thisFeed);
+                        }
+
+                        MenuItem {
+                            text: unreadCount !== 0 ? "Mark all as read" : "Mark all as unread";
+                            onTriggered: unreadCount !== 0 ? markAllAsReadClicked(thisFeed) : markAllAsUnreadClicked(thisFeed);
+                        }
+
+                        MenuItem {
+                            text: "Edit";
+                            onTriggered: openDialog("EditDialog.qml", thisFeed);
+                        }
+
+                        MenuItem {
+                            text: "Remove";
+                            onTriggered: openDialog("RemoveDialog.qml", thisFeed);
+                        }
                     }
                 }
-            }
 
-            FangScrollView {
-                id: scrollView;
-                anchors.fill: parent;
-                
-                ListView {
-                    id: feedListView;
-                    anchors.fill: parent;
+                model: feedListModel;
 
-                    // Don't show this unless there's something in the list.
-                    visible: feedsExist;
-                    
-                    // Only scroll if there's a need.
-                    interactive: height < childrenRect.height;
-                    
-                    delegate: FeedTitleDelegate {
-                        id: titleDelegate;
+                Connections {
+                    target: feedListModel;
 
-                        // Represents this current feed when its index is valid (not being removed, etc.)
-                        readonly property var thisFeed: index >= 0 ? feedListView.model.rowAs(index) : null;
-                        
-                        // This sets the selected item in the C++ layer.
-                        ListView.onIsCurrentItemChanged: {
-                            if (ListView.isCurrentItem) {
-                                //console.log("Item selected: ", feedListView.currentIndex)
-                                sidebar.feedSelected();
-                                feedListView.model.selectedIndex = feedListView.currentIndex;
-                            }
-                        }
-
-                        // Special feeds won't let themselves get dragged around.
-                        numStationary: sidebar.specialFeedCount;
-                        
-                        onClicked: {
-                            sidebar.feedClicked();
-                        }
-                        
-                        onJumpToBookmark: {
-                            sidebar.feedDoubleClicked();
-                        }
-                        
-                        onOrderChanged: {
-                            sidebar.orderChanged();
-                        }
-
-                        onSearchRequested: (query) => {
-                            sidebar.searchRequested(query);
-                        }
-
-                        onSearchCleared: {
-                            sidebar.searchCleared();
-                        }
-
-                        ContextMenu.menu: isSpecialFeed ? specialFeedMenu : feedMenu;
-
-                        Menu {
-                            id: specialFeedMenu;
-                            popupType: Popup.Native;
-
-                            MenuItem {
-                                text: "Refresh";
-                                onTriggered: refreshFeedClicked(thisFeed);
-                            }
-
-                            MenuItem {
-                                text: unreadCount !== 0 ? "Mark all as read" : "Mark all as unread";
-                                onTriggered: unreadCount !== 0 ? markAllAsReadClicked(thisFeed) : markAllAsUnreadClicked(thisFeed);
-                            }
-                        }
-
-                        Menu {
-                            id: feedMenu;
-                            popupType: Popup.Native;
-
-                            MenuItem {
-                                text: "Refresh";
-                                onTriggered: refreshFeedClicked(thisFeed);
-                            }
-
-                            MenuItem {
-                                text: unreadCount !== 0 ? "Mark all as read" : "Mark all as unread";
-                                onTriggered: unreadCount !== 0 ? markAllAsReadClicked(thisFeed) : markAllAsUnreadClicked(thisFeed);
-                            }
-
-                            MenuItem {
-                                text: "Edit";
-                                onTriggered: openDialog("EditDialog.qml", thisFeed);
-                            }
-
-                            MenuItem {
-                                text: "Remove";
-                                onTriggered: openDialog("RemoveDialog.qml", thisFeed);
-                            }
+                    function onSelectedIndexChanged(selectedIndex) {
+                        console.log("selected index:", feedListModel.selectedIndex);
+                        if (selectedIndex !== feedListView.currentIndex) {
+                            feedListView.currentIndex = selectedIndex;
                         }
                     }
-                    
-                    model: feedListModel;
-                    
-                    Connections {
-                        target: feedListModel;
-                        
-                        // This allows C++ to set the selected item.
-                        function onSelectedIndexChanged(selectedIndex) {
-                            console.log("selected index:", feedListModel.selectedIndex);
-                            if (selectedIndex !== feedListView.currentIndex) {
-                                feedListView.currentIndex = selectedIndex;
-                            }
-                        }
-                    }
-                    
-                    displaced: Transition {
-                        NumberAnimation { properties: "x,y"; duration: 50 }
-                    }
+                }
+
+                displaced: Transition {
+                    NumberAnimation { properties: "x,y"; duration: 50 }
                 }
             }
         }

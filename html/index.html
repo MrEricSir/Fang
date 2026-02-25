@@ -282,6 +282,19 @@ body.DARK > #newsView > .newsItemStyle > .dateDiv > .pinned { background-image: 
 
 body { font-family: var(--system-font, sans-serif) !important; }
 
+/* Scrollbar design for Windows and Linux to match QML sidebar. Not needed for MacOS. */
+body.WIN::-webkit-scrollbar,
+body.LINUX::-webkit-scrollbar { width: 6px; }
+
+body.WIN::-webkit-scrollbar-track,
+body.LINUX::-webkit-scrollbar-track { background: transparent; }
+
+body.WIN::-webkit-scrollbar-thumb,
+body.LINUX::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-color, #999);
+    border-radius: 3px;
+}
+
 body.ANDROID #keyboard { display:none; }
 
 /**** Font size ****/

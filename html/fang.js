@@ -266,6 +266,11 @@ function updateCSS()
               if (data.font) {
                   applySystemFont(data.font);
               }
+
+              // Apply scrollbar color.
+              if (data.scrollbar) {
+                  applyScrollbarColor(data.scrollbar);
+              }
           });
 }
 
