@@ -242,9 +242,36 @@ Window {
         }
     }
 
-    // Native menu bar (macOS system menu bar, Windows/Linux window menu bar).
+    // Keyboard shortcuts for Windows and Linux. See the MenuBar for MacOS implementation.
+    Shortcut {
+        sequences: [StandardKey.Quit]
+        enabled: platform !== "MAC"
+        onActivated: Qt.quit()
+    }
+    Shortcut {
+        sequence: "Ctrl+Shift+F"
+        enabled: platform !== "MAC"
+        onActivated: sidebar.toggleSearch()
+    }
+    Shortcut {
+        sequence: "Ctrl+,"
+        enabled: platform !== "MAC"
+        onActivated: openDialog("SettingsDialog.qml")
+    }
+    Shortcut {
+        sequence: "Ctrl+N"
+        enabled: platform !== "MAC"
+        onActivated: openDialog("AddDialog.qml")
+    }
+    Shortcut {
+        sequence: "Ctrl+R"
+        enabled: platform !== "MAC"
+        onActivated: news.refreshCurrentFeed()
+    }
+
+    // MacOS menu bar; also handles keyboard shortcuts.
     MenuBar {
-        // App menu — macOS auto-moves About, Settings, and Quit here.
+        // Main app menu
         Menu {
             title: qsTr("Fang")
 
