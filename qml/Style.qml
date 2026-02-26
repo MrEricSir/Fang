@@ -177,9 +177,15 @@ Item {
         property color sidebar: sysPalette.window;
         property color sidebarToolbar: Qt.darker(sysPalette.window, 1.05);
         property color sidebarRightLine: "#ccc";
-        property color sidebarSelected: platform === "WIN" ? sysPalette.mid :
-                                                             sysPalette.highlight;
-        property color sidebarSelectedText: sysPalette.highlightedText;
+        property color sidebarSelected: {
+            if (platform === "MAC" && !windowActive) return sysPalette.mid;
+            if (platform === "WIN") return sysPalette.mid;
+            return sysPalette.highlight;
+        }
+        property color sidebarSelectedText: {
+            if (platform === "MAC" && !windowActive) return sysPalette.windowText;
+            return sysPalette.highlightedText;
+        }
         property color sidebarText: sysPalette.windowText;
 
         property color sidebarButton: "transparent";
@@ -225,10 +231,16 @@ Item {
         property color sidebar: sysPalette.window;
         property color sidebarToolbar: Qt.lighter(sysPalette.window, 1.1);
         property color sidebarRightLine: "#666";
-        property color sidebarSelected: platform === "MAC" ? Qt.lighter(sysPalette.light, 1.5) :
-                                                             sysPalette.highlight;
-        property color sidebarSelectedText: platform === "MAC" ? Qt.lighter(sysPalette.accent, 1.3) :
-                                                                 sysPalette.highlight;
+        property color sidebarSelected: {
+            if (platform === "MAC" && !windowActive) return sysPalette.mid;
+            if (platform === "MAC") return Qt.lighter(sysPalette.light, 1.5);
+            return sysPalette.highlight;
+        }
+        property color sidebarSelectedText: {
+            if (platform === "MAC" && !windowActive) return sysPalette.windowText;
+            if (platform === "MAC") return Qt.lighter(sysPalette.accent, 1.3);
+            return sysPalette.highlight;
+        }
         property color sidebarText: sysPalette.windowText;
 
         property color sidebarButton: "transparent";
