@@ -1,5 +1,5 @@
 import QtQuick
-import QtQuick.Controls
+import QtQuick.Controls.Basic
 
 /**
  * Custom-themed scrollbar, thin and transient to match most modern OSes.
@@ -14,9 +14,7 @@ ScrollBar {
         implicitWidth: 6 * style.scale;
         implicitHeight: 100;
         radius: width / 2;
-        color: Qt.rgba(style.color.dialogText.r,
-                       style.color.dialogText.g,
-                       style.color.dialogText.b, 0.4);
+        color: style.color.scrollbar;
         opacity: (!style.transientScrollbars || fangScrollBar.active) ? 1.0 : 0;
 
         Behavior on opacity {
