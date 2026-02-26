@@ -8,6 +8,7 @@ ScrollBar {
     id: fangScrollBar;
 
     policy: style.transientScrollbars ? ScrollBar.AsNeeded : ScrollBar.AlwaysOn;
+    property color backgroundColor: "transparent";
 
     contentItem: Rectangle {
         implicitWidth: 6 * style.scale;
@@ -27,6 +28,6 @@ ScrollBar {
 
     background: Rectangle {
         implicitWidth: 6 * style.scale;
-        color: "transparent";
+        color: backgroundColor;
     }
 }

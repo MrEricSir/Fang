@@ -278,8 +278,7 @@ FangScreen {
                 clip: true
 
                 ScrollBar.vertical: FangScrollBar {
-                    policy: contentFlickable.contentHeight > contentFlickable.height
-                            ? ScrollBar.AsNeeded : ScrollBar.AlwaysOff
+                    backgroundColor: style.color.dialogBackground;
                 }
 
                 Item {
