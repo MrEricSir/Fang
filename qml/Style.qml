@@ -225,8 +225,10 @@ Item {
         property color sidebar: sysPalette.window;
         property color sidebarToolbar: Qt.lighter(sysPalette.window, 1.1);
         property color sidebarRightLine: "#666";
-        property color sidebarSelected: sysPalette.highlight;
-        property color sidebarSelectedText: sysPalette.highlightedText;
+        property color sidebarSelected: platform === "MAC" ? Qt.lighter(sysPalette.light, 1.5) :
+                                                             sysPalette.highlight;
+        property color sidebarSelectedText: platform === "MAC" ? Qt.lighter(sysPalette.accent, 1.3) :
+                                                                 sysPalette.highlight;
         property color sidebarText: sysPalette.windowText;
 
         property color sidebarButton: "transparent";
