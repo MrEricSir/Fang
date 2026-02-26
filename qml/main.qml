@@ -179,6 +179,8 @@ Window {
     
     // Called when a dialog is closed.
     function onDialogClosed(dialog) {
+        var wasSplashScreen = dialog.isSplashScreen;
+
         // Remove the entry.
         openDialogs.splice(openDialogs.indexOf(dialog), 1);
         delete dialog;
@@ -187,6 +189,11 @@ Window {
         if (openDialogs.length === 0) {
             news.newsFocus = true;
             news.grabFocus();
+
+            // Show help dialog for new users after splash screen.
+            if (wasSplashScreen && !sidebar.feedsExist) {
+                openDialog("HelpDialog.qml");
+            }
         }
     }
 
@@ -362,7 +369,7 @@ Window {
 
             MenuItem {
                 text: qsTr("Fang Help")
-                onTriggered: news.showWelcome()
+                onTriggered: openDialog("HelpDialog.qml")
             }
         }
     }
@@ -468,7 +475,7 @@ Window {
                 onFeedClicked: news.showNews();
                 onFeedDoubleClicked: news.jumpToBookmark();
                 onOrderChanged: news.orderChanged();
-                onHelpClicked: news.showWelcome();
+                onHelpClicked: openDialog("HelpDialog.qml");
                 onRefreshFeedClicked: (feed) => { news.refreshFeed(feed); }
                 onRefreshCurrentFeedClicked: news.refreshCurrentFeed();
                 onMarkAllAsUnreadClicked: (feed) => { news.markAllAsUnread(feed); }

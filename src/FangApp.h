@@ -237,10 +237,6 @@ public slots:
      */
     void showNews();
 
-    /*!
-        \brief Show the welcome/help view.
-     */
-    void showWelcome();
 
     /*!
         \brief Performs a global search and switches to the search results feed.

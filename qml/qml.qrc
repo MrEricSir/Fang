@@ -34,5 +34,8 @@
         <file>+mobile/FangSplitView.qml</file>
         <file>DialogGroup.qml</file>
         <file>UpdateDialog.qml</file>
+        <file>HelpDialog.qml</file>
+        <file>KeyboardShortcut.qml</file>
+        <file>ShortcutRow.qml</file>
     </qresource>
 </RCC>

@@ -51,14 +51,14 @@ Dialog {
         
         horizontalAlignment: Text.AlignHCenter;
     }
+
+    DialogSpacer {}
     
     DialogText {
-        text: "\nCopyright 2013-2026 Eric Gregory";
+        text: "\u00A9 Copyright 2013-2026 Eric Gregory";
         textColor: style.color.fadedText;
         horizontalAlignment: Text.AlignHCenter;
     }
-    
-    DialogSpacer {}
     
     DialogGroup {
         width: parent.width;

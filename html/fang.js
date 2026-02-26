@@ -14,7 +14,7 @@ let newsContainerSelector = 'body>#newsView>.newsContainer:not(#model)';
 // Current mode
 let currentMode = "newsView";
 
-// View state: welcome, feed, or search.
+// View state: feed or search.
 // If we're in search mode, also tracks the search query for display purposes.
 let viewState = {
     type: 'feed',
@@ -128,8 +128,6 @@ function processMessage(message)
         updateCSS();
     } else if ('showNews' === command) {
        setMode('newsView');
-    } else if ('showWelcome' === command) {
-       setMode('welcome');
     }
 }
 
@@ -186,39 +184,34 @@ function requestNews(mode)
     .then((response) => response.json())
     .then((data) => {
               console.log("load news data:", data);
-              if (data.showWelcome === true) {
-                  setMode('welcome');
-                  viewState = { type: 'welcome', searchQuery: null };
-              } else {
-                  setMode('newsView');
+              setMode('newsView');
 
-                  if ('initial' === data.mode) {
-                      // If we're in search state with no results, ignore empty feed loads.
-                      // This prevents the "no results" message from being cleared.
-                      const isEmpty = !data.news || data.news.length === 0;
-                      if (viewState.type === 'search' && isEmpty) {
-                          console.log("Ignoring empty load while in search state");
-                          return;
-                      }
-
-                      // Switching to feed view
-                      viewState = { type: 'feed', searchQuery: null };
-
-                      // Redo the view.
-                      clearNews();
+              if ('initial' === data.mode) {
+                  // If we're in search state with no results, ignore empty feed loads.
+                  // This prevents the "no results" message from being cleared.
+                  const isEmpty = !data.news || data.news.length === 0;
+                  if (viewState.type === 'search' && isEmpty) {
+                      console.log("Ignoring empty load while in search state");
+                      return;
                   }
 
-                  // Append or prepend?
-                  let toAppend = 'prepend' !== data.mode;
+                  // Switching to feed view
+                  viewState = { type: 'feed', searchQuery: null };
 
-                  // Add all our news! Pass searchQuery for highlighting if present.
-                  appendNews(toAppend, data.firstNewsID, data.news, data.searchQuery);
+                  // Redo the view.
+                  clearNews();
+              }
 
-                  // If we have a new bookmark, draw it and jump there.
-                  if (data.bookmark) {
-                      drawBookmark(data.bookmark);
-                      jumpToBookmark();
-                  }
+              // Append or prepend?
+              let toAppend = 'prepend' !== data.mode;
+
+              // Add all our news! Pass searchQuery for highlighting if present.
+              appendNews(toAppend, data.firstNewsID, data.news, data.searchQuery);
+
+              // If we have a new bookmark, draw it and jump there.
+              if (data.bookmark) {
+                  drawBookmark(data.bookmark);
+                  jumpToBookmark();
               }
           })
     .finally(() => {
@@ -275,8 +268,7 @@ function updateCSS()
 }
 
 /**
-  * Switches between the news and welcome modes.
-  * Valid modes: 'newsView', 'welcome'
+  * Switches to the news view mode.
   */
 function setMode(mode)
 {
@@ -287,15 +279,9 @@ function setMode(mode)
     console.log("setMode: ", mode);
     currentMode = mode;
 
-    // Switch out the HTML
     if ('newsView' == currentMode) {
-        $('#welcome').hide();
         $('#newsView').show();
         jumpToBookmark();
-    } else if ('welcome' == currentMode) {
-        $('#newsView').hide();
-        $('#welcome').show();
-        $(document).scrollTop(0); // Scroll back up
     }
 }
 
@@ -409,13 +395,6 @@ function initEventDelegation()
         }
     });
 
-    // Also take care of links in welcome section and other areas
-    document.addEventListener('click', function(event) {
-        const link = event.target.closest('a');
-        if (link && !link.closest('#newsView')) {
-            handleLinkClick(event);
-        }
-    });
 }
 
 /**

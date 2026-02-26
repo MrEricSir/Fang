@@ -76,8 +76,6 @@ public slots:
     // Show the news view.
     void showNews();
 
-    // Show the welcome/help view.
-    void showWelcome();
 
     // Show the search feed (adds to list and selects it).
     void showSearchFeed();

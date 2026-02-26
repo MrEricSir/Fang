@@ -91,10 +91,6 @@ void NewsFeedInteractor::showNews()
     FangApp::instance()->showNews();
 }
 
-void NewsFeedInteractor::showWelcome()
-{
-    FangApp::instance()->showWelcome();
-}
 
 void NewsFeedInteractor::showSearchFeed()
 {

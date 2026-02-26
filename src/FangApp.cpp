@@ -749,10 +749,6 @@ void FangApp::showNews()
     webSocketServer.showNews();
 }
 
-void FangApp::showWelcome()
-{
-    webSocketServer.showWelcome();
-}
 
 void FangApp::pinnedNewsWatcher()
 {

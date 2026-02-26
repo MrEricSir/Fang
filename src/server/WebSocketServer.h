@@ -56,10 +56,6 @@ public slots:
      */
     void showNews();
 
-    /*!
-        \brief Show the welcome/help view.
-     */
-    void showWelcome();
 
 private slots:
     void onNewConnection();

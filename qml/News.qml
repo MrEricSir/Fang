@@ -49,10 +49,6 @@ Item {
         newsFeedInteractor.showNews();
     }
     
-    // Switch to the welcome/help screen.
-    function showWelcome() {
-        newsFeedInteractor.showWelcome();
-    }
 
     // Perform a search.
     // scope: "global" (default), "feed", or "folder"

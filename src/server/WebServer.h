@@ -51,11 +51,8 @@ private:
 
     void addNewsItem(NewsItem *item, QVariantList *newsList);
 
-    // Indicates that we should show the welcome screen.
-    QString loadWelcome();
-
-    // Puts together the return object for loadNews() and loadWelcome().
-    QString buildDocument(const QVariantList& newsList, bool showWelcome,
+    // Puts together the return object for loadNews().
+    QString buildDocument(const QVariantList& newsList,
                           QVariantMap extras = QVariantMap());
 
     QString getCSS();
