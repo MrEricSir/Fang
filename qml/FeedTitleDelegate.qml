@@ -1,4 +1,5 @@
 import QtQuick
+import QtQuick.Effects
 import RearrangeableTreeView
 
 RearrangeableDelegate {
@@ -108,7 +109,7 @@ RearrangeableDelegate {
     Row {
         id: row1;
          anchors.left: opener.right;
-        
+
         Item {
             width: {
                 if (isFolder) {
@@ -120,7 +121,7 @@ RearrangeableDelegate {
                 }
             }
             height: feedTitleDelegate.height;
-            
+
             Rectangle {
                 id: rowBackground;
 
@@ -138,14 +139,14 @@ RearrangeableDelegate {
                         duration: 250;
                     }
                 }
-                
+
                 Item {
                     id: feedIconCol
-                    
+
                     // No icon for all news or folders.
                     width: isSpecialFeed || isFolder ? 0 : (35 * style.scale);
                     visible: !(isSpecialFeed || isFolder);
-                    
+
                     anchors.left: parent.left;
                     anchors.top: parent.top;
                     anchors.bottom: parent.bottom;
@@ -161,16 +162,32 @@ RearrangeableDelegate {
 
                         opacity: 1;
 
+                        // Mask shape for rounded icon corners.
+                        Rectangle {
+                            id: iconMask;
+                            anchors.fill: parent;
+                            radius: 5 * style.scale;
+                            layer.enabled: true;
+                            //visible: false;
+                            color: style.color.sidebar;
+                        }
+
+                        // Feed icon with rounded corners (iOS-style).
                         Image {
                             id: feedIcon;
 
                             source: imageURL;
-
-                            // Only display when there is something loaded.
                             visible: status === Image.Ready;
 
                             anchors.fill: parent;
+                            fillMode: Image.PreserveAspectCrop;
                             asynchronous: true;
+
+                            layer.enabled: true;
+                            layer.effect: MultiEffect {
+                                maskEnabled: true;
+                                maskSource: iconMask;
+                            }
                         }
 
                         Image {
@@ -184,6 +201,8 @@ RearrangeableDelegate {
                             anchors.fill: parent;
                             asynchronous: true;
                         }
+
+
 
                         Image {
                             id: errorIcon;
@@ -228,16 +247,16 @@ RearrangeableDelegate {
                             easing.type: Easing.OutQuad;
                         }
                     }
-                    
+
                     FangIcon {
                         id: feedBusySpinner;
-                        
+
                         state: "spinner";
                         visible: true;
                         opacity: 0;
-                        
+
                         anchors.verticalCenter: parent.verticalCenter;
-                        
+
                         width: 23 * style.scale;
                         height: 23 * style.scale;
 
@@ -271,7 +290,7 @@ RearrangeableDelegate {
                         }
                     }
                 }
-                
+
                 Item {
                     id: feedTitleCol;
 
@@ -393,7 +412,7 @@ RearrangeableDelegate {
                     }
 
                 }
-                
+
                 Item {
                     id: feedCountCol;
 
