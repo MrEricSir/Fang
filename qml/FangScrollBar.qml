@@ -7,7 +7,7 @@ import QtQuick.Controls
 ScrollBar {
     id: fangScrollBar;
 
-    policy: ScrollBar.AsNeeded;
+    policy: style.transientScrollbars ? ScrollBar.AsNeeded : ScrollBar.AlwaysOn;
 
     contentItem: Rectangle {
         implicitWidth: 6 * style.scale;
@@ -16,7 +16,7 @@ ScrollBar {
         color: Qt.rgba(style.color.dialogText.r,
                        style.color.dialogText.g,
                        style.color.dialogText.b, 0.4);
-        opacity: fangScrollBar.active ? 1.0 : 0;
+        opacity: (!style.transientScrollbars || fangScrollBar.active) ? 1.0 : 0;
 
         Behavior on opacity {
             NumberAnimation {

@@ -11,9 +11,10 @@ Item {
     readonly property double scale: (platform === "ANDROID") ? 1.5 : 1.0;
     readonly property alias colorSchemeLight: colorSchemeLight;
     readonly property alias colorSchemeDark: colorSchemeDark;
-    readonly property double defaultRadius: (platform === "MAC " ? 4 : 2) * scale;
+    readonly property double defaultRadius: (platform === "MAC" ? 4 : 2) * scale;
     readonly property double defaultMarin: 5 * scale;
     readonly property bool windowActive: Window.window ? Window.window.active : true;
+    readonly property bool transientScrollbars: platform === "MAC";
 
     SystemPalette {
         id: sysPalette;
