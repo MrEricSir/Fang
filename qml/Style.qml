@@ -232,16 +232,24 @@ Item {
         property color sidebarToolbar: Qt.lighter(sysPalette.window, 1.1);
         property color sidebarRightLine: "#666";
         property color sidebarSelected: {
-            if (platform === "MAC" && !windowActive) return sysPalette.mid;
-            if (platform === "MAC") return Qt.lighter(sysPalette.light, 1.5);
+            if (platform === "MAC") {
+                return windowActive ? Qt.lighter(sysPalette.light, 1.5) : sysPalette.mid;
+            }
             return sysPalette.highlight;
         }
         property color sidebarSelectedText: {
-            if (platform === "MAC" && !windowActive) return sysPalette.windowText;
-            if (platform === "MAC") return Qt.lighter(sysPalette.accent, 1.3);
+            if (platform === "MAC") {
+                return windowActive ? Qt.lighter(sysPalette.accent, 1.3) : sysPalette.dark;
+            }
             return sysPalette.highlight;
         }
-        property color sidebarText: sysPalette.windowText;
+        property color sidebarText: {
+            if (platform === "MAC" && !windowActive) {
+                return "#999";
+            }
+
+            return sysPalette.windowText;
+        }
 
         property color sidebarButton: "transparent";
         property color sidebarButtonBorder: Qt.rgba(1, 1, 1, 0.2);
