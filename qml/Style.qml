@@ -241,7 +241,7 @@ Item {
             if (platform === "MAC") {
                 return windowActive ? Qt.lighter(sysPalette.accent, 1.3) : sysPalette.dark;
             }
-            return sysPalette.highlight;
+            return sysPalette.windowText;
         }
         property color sidebarText: {
             if (platform === "MAC" && !windowActive) {
