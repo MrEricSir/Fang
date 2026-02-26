@@ -201,7 +201,7 @@ Item {
     QtObject {
         id: colorSchemeDark;
 
-        property color scrollbar: "#999";
+        property color scrollbar: platform === "MAC" ? "#999" : "#ccc";
 
         property color background: "black";
         property color blockerBackground: Qt.rgba(0, 0, 0, 0.4);
