@@ -8,6 +8,9 @@
 
 class FangSettings;
 
+/*!
+    \brief The WinWindowHelper class renders our custom titlebar on Windows.
+ */
 class WinWindowHelper : public FangObject, public QAbstractNativeEventFilter
 {
     Q_OBJECT

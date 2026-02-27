@@ -35,6 +35,15 @@ Item {
     readonly property var listView: feedListView;
     readonly property bool feedsExist: feedListModel.count > 1; // (There's always 1 item -- all news.)
 
+    // Guard to prevent clicks from passing "through" the context menu.
+    property bool menuClickGuard: false;
+    Timer {
+        id: menuGuardTimer;
+        interval: 200;
+        onTriggered: sidebar.menuClickGuard = false;
+    }
+
+
 
     // This is called by RearrangeableDelegate when the user creates a new folder.  It
     // expects the folder's database ID to be returned.
@@ -199,6 +208,7 @@ Item {
                     }
 
                     numStationary: sidebar.specialFeedCount;
+                    acceptMouseEvents: !sidebar.menuClickGuard;
 
                     onClicked: {
                         sidebar.feedClicked();
@@ -221,10 +231,12 @@ Item {
 
                     Menu {
                         id: searchFeedMenu;
-                        popupType: Popup.Native;
+                        popupType: Popup.Window;
+                        onAboutToShow: sidebar.menuClickGuard = true;
+                        onClosed: menuGuardTimer.restart();
 
                         MenuItem {
-                            text: "Edit Search...";
+                            text: "Edit Search";
                             onTriggered: {
                                 var dialog = openDialog("SearchDialog.qml");
                                 dialog.initialQuery = newsFeedInteractor.getSearchQuery();
@@ -239,7 +251,9 @@ Item {
 
                     Menu {
                         id: specialFeedMenu;
-                        popupType: Popup.Native;
+                        popupType: Popup.Window;
+                        onAboutToShow: sidebar.menuClickGuard = true;
+                        onClosed: menuGuardTimer.restart();
 
                         MenuItem {
                             text: "Refresh";
@@ -254,7 +268,9 @@ Item {
 
                     Menu {
                         id: feedMenu;
-                        popupType: Popup.Native;
+                        popupType: Popup.Window;
+                        onAboutToShow: sidebar.menuClickGuard = true;
+                        onClosed: menuGuardTimer.restart();
 
                         MenuItem {
                             text: "Refresh";
