@@ -46,9 +46,6 @@ private:
     // scopeId: feed_id or folder_id when scope is "feed" or "folder"
     QString performSearch(const QString& query, const QString& scope = "global", qint64 scopeId = -1);
 
-    // Clears the current search.
-    QString clearSearch();
-
     void addNewsItem(NewsItem *item, QVariantList *newsList);
 
     // Puts together the return object for loadNews().

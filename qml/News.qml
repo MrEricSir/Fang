@@ -57,11 +57,6 @@ Item {
         newsView.performSearch(query, scope, scopeId);
     }
 
-    // Clear the current search.
-    function clearSearch() {
-        newsView.clearSearch();
-    }
-    
     // This is a workaround for a bug on Winows; see the comment
     // in main.qml where this is called for more information.
     function close() {

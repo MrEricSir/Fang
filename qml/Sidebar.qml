@@ -22,8 +22,6 @@ Item {
     signal orderChanged();
     signal maximizeToggle();
     signal searchButtonClicked();
-    signal searchRequested(string query);
-    signal searchCleared();
 
     // Set this to the number of special feeds at the top so I can treat them with
     // the care and respect that they deserve.
@@ -42,21 +40,6 @@ Item {
     // expects the folder's database ID to be returned.
     function insertFolder(firstItemIndex) {
         return newsFeedInteractor.insertFolder(firstItemIndex);
-    }
-
-    // Toggles the search feed open/closed.
-    function toggleSearch() {
-        if (searchButton.isSearchActive) {
-            // Close search: Close the special feed and switch to All News.
-            newsFeedInteractor.closeSearchFeed();
-            feedListView.currentIndex = 0;
-        } else {
-            // Open search: Add and select the special feed.
-            newsFeedInteractor.showSearchFeed();
-            Qt.callLater(function() {
-                feedListView.currentIndex = sidebar.specialFeedCount - 1;
-            });
-        }
     }
 
     SidebarToolbar {
@@ -103,11 +86,7 @@ Item {
             lightImageURL: "images/symbol_search.svg";
             darkImageURL: "images/symbol_dark_search.svg";
 
-            // Show toggled icon if search is open.
-            property bool isSearchActive: feedListView.model.selected && feedListView.model.selected.isSearchFeed();
-            toggled: isSearchActive;
-
-            onClicked: sidebar.toggleSearch();
+            onClicked: sidebar.searchButtonClicked();
         }
 
         // Help + Settings grouped in a pill.
@@ -233,15 +212,30 @@ Item {
                         sidebar.orderChanged();
                     }
 
-                    onSearchRequested: (query) => {
-                        sidebar.searchRequested(query);
+                    ContextMenu.menu: {
+                        if (isSearchFeed) return searchFeedMenu;
+                        if (uid === -1) return null; // Pinned feed — no context menu
+                        if (isSpecialFeed) return specialFeedMenu;
+                        return feedMenu;
                     }
 
-                    onSearchCleared: {
-                        sidebar.searchCleared();
-                    }
+                    Menu {
+                        id: searchFeedMenu;
+                        popupType: Popup.Native;
 
-                    ContextMenu.menu: isSpecialFeed ? specialFeedMenu : feedMenu;
+                        MenuItem {
+                            text: "Edit Search...";
+                            onTriggered: {
+                                var dialog = openDialog("SearchDialog.qml");
+                                dialog.initialQuery = newsFeedInteractor.getSearchQuery();
+                            }
+                        }
+
+                        MenuItem {
+                            text: "Close";
+                            onTriggered: newsFeedInteractor.closeSearchFeed();
+                        }
+                    }
 
                     Menu {
                         id: specialFeedMenu;

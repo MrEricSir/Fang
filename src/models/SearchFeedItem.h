@@ -10,9 +10,7 @@
 /*!
     \brief A pseudo-feed containing search results.
 
-    Unlike other special feeds (AllNews, Pinned), the search feed is not
-    shown in the sidebar. It's created on-demand when a search is performed
-    and displays results in the main news view.
+    Created to display search results.
 
     Search results are relevance-ordered using FTS5's BM25 ranking, with
     matching terms highlighted using <mark> tags.
@@ -53,7 +51,7 @@ public:
     /*!
         \return The current search query.
      */
-    QString getSearchQuery() const { return searchQuery; }
+    Q_INVOKABLE QString getSearchQuery() const { return searchQuery; }
 
     /*!
         \return True if a search query is set.

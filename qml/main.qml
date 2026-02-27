@@ -258,7 +258,7 @@ Window {
     Shortcut {
         sequence: "Ctrl+Shift+F"
         enabled: platform !== "MAC"
-        onActivated: sidebar.toggleSearch()
+        onActivated: openDialog("SearchDialog.qml")
     }
     Shortcut {
         sequence: "Ctrl+,"
@@ -332,7 +332,7 @@ Window {
             MenuItem {
                 text: qsTr("Search...")
                 shortcut: "Ctrl+Shift+F"
-                onTriggered: sidebar.toggleSearch()
+                onTriggered: openDialog("SearchDialog.qml")
             }
 
             MenuSeparator {}
@@ -486,9 +486,7 @@ Window {
                 onRemoveClicked: openDialog("RemoveDialog.qml", listView.model.selected);
                 onEditClicked: openDialog("EditDialog.qml", listView.model.selected);
 
-                onSearchButtonClicked: newsFeedInteractor.showSearchFeed();
-                onSearchRequested: (query) => { news.performSearch(query); }
-                onSearchCleared: news.clearSearch();
+                onSearchButtonClicked: openDialog("SearchDialog.qml");
 
                 onMaximizeToggle: {
                     if (isDesktop) {

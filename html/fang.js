@@ -187,19 +187,20 @@ function requestNews(mode)
               setMode('newsView');
 
               if ('initial' === data.mode) {
-                  // If we're in search state with no results, ignore empty feed loads.
-                  // This prevents the "no results" message from being cleared.
-                  const isEmpty = !data.news || data.news.length === 0;
-                  if (viewState.type === 'search' && isEmpty) {
-                      console.log("Ignoring empty load while in search state");
-                      return;
-                  }
-
-                  // Switching to feed view
-                  viewState = { type: 'feed', searchQuery: null };
-
                   // Redo the view.
                   clearNews();
+
+                  // Search results are in the response's searchQuery.
+                  if (data.searchQuery) {
+                      viewState = { type: 'search', searchQuery: data.searchQuery };
+                      if (data.news && data.news.length > 0) {
+                          showSearchHeader(data.searchQuery);
+                      } else {
+                          showNoSearchResults(data.searchQuery);
+                      }
+                  } else {
+                      viewState = { type: 'feed', searchQuery: null };
+                  }
               }
 
               // Append or prepend?
@@ -593,7 +594,11 @@ function clearNews()
 {
     $(newsContainerSelector).remove();
 
-    // Remove the "no results" message.
+    // Remove search elements.
+    const searchHeader = document.getElementById('searchHeader');
+    if (searchHeader) {
+        searchHeader.remove();
+    }
     const noResults = document.getElementById('noSearchResults');
     if (noResults) {
         noResults.remove();
@@ -639,10 +644,9 @@ function performSearch(query, scope = 'global', scopeId = -1)
         clearNews();
 
         if (data.news && data.news.length > 0) {
-            // Splice in our search results.
+            showSearchHeader(query);
             appendNews(true, data.firstNewsID, data.news, data.searchQuery || query);
         } else {
-            // Search returned no results.
             showNoSearchResults(query);
         }
     })
@@ -651,41 +655,37 @@ function performSearch(query, scope = 'global', scopeId = -1)
     });
 }
 
+
 /**
-  * Clears the current search and returns to All News.
+  * Header at top of search.
+  * TODO: Improve styling.
+  * @param {string} query Search query string.
   */
-function clearSearch()
+function showSearchHeader(query)
 {
-    console.log("clearSearch");
+    const newsView = document.getElementById('newsView');
+    if (!newsView) {
+        return;
+    }
 
-    // Reset to feed state.
-    viewState = { type: 'feed', searchQuery: null };
+    // Remove any existing header.
+    const existing = document.getElementById('searchHeader');
+    if (existing) {
+        existing.remove();
+    }
 
-    clearPrefetch();
+    const header = document.createElement('div');
+    header.id = 'searchHeader';
+    header.className = 'searchHeader';
+    header.innerHTML = `Search results for "<strong>${escapeHtml(query)}</strong>"`;
 
-    apiGetRequest('clear_search')
-    .then((response) => response.json())
-    .then((data) => {
-        console.log("clear search response:", data);
-
-        // Switch to news view and display results
-        setMode('newsView');
-        clearNews();
-
-        // Load the returned news.
-        if (data.news && data.news.length > 0) {
-            appendNews(true, data.firstNewsID, data.news);
-        }
-
-        // Restore bookmark if present.
-        if (data.bookmark) {
-            drawBookmark(data.bookmark);
-            jumpToBookmark();
-        }
-    })
-    .catch((error) => {
-        console.log("Clear search request failed:", error);
-    });
+    // Insert at the top of newsView, after topBookmark.
+    const topBookmark = document.getElementById('topBookmark');
+    if (topBookmark && topBookmark.nextSibling) {
+        newsView.insertBefore(header, topBookmark.nextSibling);
+    } else {
+        newsView.appendChild(header);
+    }
 }
 
 /**

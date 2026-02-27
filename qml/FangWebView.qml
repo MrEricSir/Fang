@@ -23,10 +23,6 @@ WebEngineView {
         runJavaScript("performSearch('" + escapedQuery + "', '" + scopeArg + "', " + scopeIdArg + ")");
     }
 
-    function clearSearch() {
-        runJavaScript("clearSearch()");
-    }
-
     ///// END API /////
 
     state: "news";

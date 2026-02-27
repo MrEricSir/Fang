@@ -257,25 +257,14 @@ public slots:
                                    qint64 scopeId);
 
     /*!
-        \return The search feed (may be nullptr if never searched).
-     */
-    SearchFeedItem* getSearchFeed() { return searchFeed; }
-
-    /*!
-        \brief Shows the search feed, creating it if necessary.
-        This adds the search feed to the feed list and selects it.
-     */
-    void showSearchFeed();
-
-    /*!
-        \brief Closes the search feed and removes it from the feed list.
+        \brief Closes the search feed and selects All News.
      */
     void closeSearchFeed();
 
     /*!
-        \brief Clears the current search and returns to the previous feed.
+        \return The search feed (may be nullptr if never searched).
      */
-    void clearSearch();
+    SearchFeedItem* getSearchFeed() { return searchFeed; }
 
 private slots:
     /*!

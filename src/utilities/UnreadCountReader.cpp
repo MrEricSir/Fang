@@ -18,6 +18,10 @@ void UnreadCountReader::update(QSqlDatabase db, FeedItem *feed)
             feed->setUnreadCount(forPinned(db));
             break;
 
+        case FEED_ID_SEARCH:
+            // Nothing to do, search doesn't support read/unread or bookmarks.
+            break;
+
         default:
             FANG_UNREACHABLE("UnreadCountReader: Invalid special feed type");
             break;

@@ -93,10 +93,6 @@ WebServer::WebServer(FangApp* appInstance, FangObject *parent) :
         return performSearch(query, scope, scopeId);
     });
 
-    server.route("/api/clear_search", this, [this] {
-        qCDebug(logServer) << "Clear search API called";
-        return clearSearch();
-    });
 }
 
 QString WebServer::getConfig()
@@ -297,11 +293,4 @@ QString WebServer::performSearch(const QString& query, const QString& scope, qin
     return loadNews(LoadNewsOperation::Initial);
 }
 
-QString WebServer::clearSearch()
-{
-    app->clearSearch();
-
-    // Return success and load the all news feed.
-    return loadNews(LoadNewsOperation::Initial);
-}
 

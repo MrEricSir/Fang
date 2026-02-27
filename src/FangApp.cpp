@@ -585,11 +585,6 @@ void FangApp::setCurrentFeed(FeedItem *feed, bool reloadIfSameFeed)
         pinnedNewsWatcher(); // If we were on pinned items, it can be removed now.
     }
 
-    // Close the search feed if we're on it and a different feed is selected.
-    if (previousFeed == searchFeed && feed != searchFeed && isSearchFeedVisible) {
-        closeSearchFeed();
-    }
-
     // Signal that we've changed feeds.
     emit currentFeedChanged();
 }
@@ -875,6 +870,23 @@ void FangApp::markAllAsUnread(FeedItem* feed)
     markAllAsReadOrUnread(feed, false);
 }
 
+void FangApp::closeSearchFeed()
+{
+    if (!isSearchFeedVisible || !searchFeed) {
+        return;
+    }
+
+    // Switch to All News first.
+    if (currentFeed == searchFeed) {
+        feedList.setSelected(allNews);
+    }
+
+    // Remove from sidebar.
+    isSearchFeedVisible = false;
+    feedList.removeItem(searchFeed);
+    emit specialFeedCountChanged();
+}
+
 SearchFeedItem* FangApp::performSearch(const QString& query)
 {
     return performSearch(query, SearchFeedItem::Scope::Global, -1);
@@ -913,76 +925,34 @@ SearchFeedItem* FangApp::performSearch(const QString& query,
         return reloadOp.getReloadedItems();
     });
 
-    // Switch to the search feed and load initial results.
-    setCurrentFeed(searchFeed, true);
-
-    return searchFeed;
-}
-
-void FangApp::showSearchFeed()
-{
-    qCDebug(logApp) << "showSearchFeed: Showing search feed";
-
-    // Create search feed if it doesn't exist.
-    if (searchFeed == nullptr) {
-        searchFeed = new SearchFeedItem(&feedList);
-        feedIdMap.insert(searchFeed->getDbID(), searchFeed);
-        connectFeed(searchFeed);
-    }
-
-    // Add to feed list if not already present.
+    // Show the search feed in the sidebar if not already visible.
     if (!isSearchFeedVisible) {
         isSearchFeedVisible = true;
 
         // Insert after other special feeds.
-        qsizetype insertIndex = specialFeedCount() - 1;  // -1 because we just set isSearchFeedVisible
+        qsizetype insertIndex = specialFeedCount() - 1;
         feedList.insertRow(insertIndex, searchFeed);
 
         emit specialFeedCountChanged();
     }
 
-    // Clear any previous search state for a fresh start.
-    searchFeed->setSearchQuery("");
-    searchFeed->clearNews();
+    // Switch to the search feed without emitting currentFeedChanged.
+    // The JS search API call handles the display; emitting currentFeedChanged
+    // would trigger a redundant requestNews('initial') that races with the
+    // search API response.
+    if (currentFeed != nullptr && currentFeed != searchFeed) {
+        currentFeed->clearNews();
+    }
 
-    // Note: QML handles selection via feedListView.currentIndex
+    if (currentFeed == pinnedNews) {
+        pinnedNewsWatcher();
+    }
+
+    currentFeed = searchFeed;
+
+    // Select the search feed in the sidebar.
+    feedList.setSelected(searchFeed);
+
+    return searchFeed;
 }
 
-void FangApp::closeSearchFeed()
-{
-    if (searchFeed == nullptr || !isSearchFeedVisible) {
-        return;
-    }
-
-    qCDebug(logApp) << "closeSearchFeed: Removing search feed from list";
-
-    // Remove from feed list.
-    QModelIndex idx = feedList.indexFromItem(searchFeed);
-    if (idx.isValid()) {
-        feedList.removeRow(idx.row());
-    }
-    isSearchFeedVisible = false;
-
-    // Clear the search query and results.
-    searchFeed->setSearchQuery("");
-    searchFeed->clearNews();
-
-    emit specialFeedCountChanged();
-}
-
-void FangApp::clearSearch()
-{
-    if (searchFeed == nullptr) {
-        return;
-    }
-
-    qCDebug(logApp) << "clearSearch: Clearing search results";
-
-    // Clear the search query and results.
-    searchFeed->setSearchQuery("");
-
-    // If currently viewing search results, switch back to all news.
-    if (currentFeed == searchFeed) {
-        setCurrentFeed(allNews);
-    }
-}

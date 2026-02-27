@@ -10,31 +10,24 @@ RearrangeableDelegate {
     }
 
     signal jumpToBookmark();
-    signal searchRequested(string query);
-    signal searchCleared();
 
     onClicked: (mouse) => {
         if (mouse.button === Qt.LeftButton) {
             if (isFolder && opener.width > 0 && mouse.x < titleDelegate.x + opener.width) {
                toggleFolder();
-            } else if (!isSearchFeed) {
-               // Don't change selection for search feed - let the input handle clicks
+            } else {
                feedListView.currentIndex = index;
             }
         }
     }
 
     onDoubleClicked: (mouse) => {
-        // Don't trigger jump to bookmark for search feed
-        if (feedListView.currentIndex == index && !isSearchFeed) {
+        if (feedListView.currentIndex == index) {
             feedTitleDelegate.jumpToBookmark();
         }
     }
 
-    dragEnabled: !isSpecialFeed && !isSearchFeed;
-
-    // Search feed needs to receive mouse events for text input
-    acceptMouseEvents: !isSearchFeed;
+    dragEnabled: !isSpecialFeed;
 
     // Folders are always visible, but their children are not.
     visible: isFolder ? true : (parentFolder == -1 || folderOpen ? true : false);
@@ -143,9 +136,9 @@ RearrangeableDelegate {
                 Item {
                     id: feedIconCol
 
-                    // No icon for all news or folders.
-                    width: isSpecialFeed || isFolder ? 0 : (35 * style.scale);
-                    visible: !(isSpecialFeed || isFolder);
+                    // No icon for all news or folders, but search feed gets the search icon.
+                    width: (isSpecialFeed && !isSearchFeed) || isFolder ? 0 : (35 * style.scale);
+                    visible: !((isSpecialFeed && !isSearchFeed) || isFolder);
 
                     anchors.left: parent.left;
                     anchors.top: parent.top;
@@ -195,8 +188,11 @@ RearrangeableDelegate {
 
                             visible: !feedIcon.visible;
 
-                            source: (fangSettings.currentStyle === "LIGHT" ? "images/symbol_rss.svg"
-                                                            : "images/symbol_dark_rss.svg");
+                            source: isSearchFeed
+                                    ? (fangSettings.currentStyle === "LIGHT" ? "images/symbol_search.svg"
+                                                                             : "images/symbol_dark_search.svg")
+                                    : (fangSettings.currentStyle === "LIGHT" ? "images/symbol_rss.svg"
+                                                                             : "images/symbol_dark_rss.svg");
 
                             anchors.fill: parent;
                             asynchronous: true;
@@ -308,7 +304,6 @@ RearrangeableDelegate {
                     Text {
                         id: feedTitle;
 
-                        visible: !isSearchFeed;
                         text: title;
 
                         width: parent.width;
@@ -321,103 +316,10 @@ RearrangeableDelegate {
                         elide: Text.ElideRight;
                     }
 
-                    // Search box.
-                    Row {
-                        id: searchInputRow;
-                        visible: isSearchFeed;
-                        anchors.verticalCenter: parent.verticalCenter;
-                        anchors.left: parent.left;
-                        anchors.right: parent.right;
-                        spacing: 4 * style.scale;
-
-                        // Search icon
-                        Image {
-                            id: searchIcon;
-                            source: fangSettings.currentStyle === "LIGHT"
-                                    ? "images/symbol_search.svg"
-                                    : "images/symbol_dark_search.svg";
-                            width: 16 * style.scale;
-                            height: 16 * style.scale;
-                            anchors.verticalCenter: parent.verticalCenter;
-                            sourceSize.width: width;
-                            sourceSize.height: height;
-                        }
-
-                        // Search text input.
-                        Rectangle {
-                            id: searchInputBg;
-                            width: parent.width - searchIcon.width - parent.spacing;
-                            height: 24 * style.scale;
-                            anchors.verticalCenter: parent.verticalCenter;
-                            color: style.color.textEntryBackground;
-                            border.color: style.color.textEntryBorder;
-                            border.width: 2 * style.scale;
-                            radius: style.defaultRadius;
-
-                            TextInput {
-                                id: searchInput;
-                                anchors.fill: parent;
-                                anchors.margins: 4 * style.scale;
-                                verticalAlignment: TextInput.AlignVCenter;
-                                font: style.font.standard;
-                                color: style.color.textEntryText;
-                                selectByMouse: true;
-                                clip: true;
-
-                                // Placeholder text
-                                Text {
-                                    anchors.fill: parent;
-                                    verticalAlignment: Text.AlignVCenter;
-                                    text: "Search news...";
-                                    color: style.color.textEntryHint;
-                                    font: style.font.standard;
-                                    visible: !searchInput.text && !searchInput.activeFocus;
-                                }
-
-                                // Focus when search feed becomes selected
-                                Component.onCompleted: {
-                                    if (isSearchFeed && feedListView.currentIndex === index) {
-                                        forceActiveFocus();
-                                    }
-                                }
-
-                                // Watch for when this item becomes selected
-                                Connections {
-                                    target: feedListView;
-                                    function onCurrentIndexChanged() {
-                                        if (isSearchFeed && feedListView.currentIndex === index) {
-                                            searchInput.forceActiveFocus();
-                                        }
-                                    }
-                                }
-
-                                Keys.onReturnPressed: {
-                                    if (text.trim() !== "") {
-                                        feedTitleDelegate.searchRequested(text.trim());
-                                    }
-                                }
-
-                                Keys.onEnterPressed: {
-                                    if (text.trim() !== "") {
-                                        feedTitleDelegate.searchRequested(text.trim());
-                                    }
-                                }
-
-                                Keys.onEscapePressed: {
-                                    text = "";
-                                    feedTitleDelegate.searchCleared();
-                                }
-                            }
-                        }
-                    }
-
                 }
 
                 Item {
                     id: feedCountCol;
-
-                    // Hide for search feed
-                    visible: !isSearchFeed;
 
                     states: [
                         State { name: "allread"; },
@@ -486,52 +388,6 @@ RearrangeableDelegate {
                             elide: Text.ElideRight;
                             color: style.color.badgeText;
                         }
-                    }
-                }
-
-                // Search clear button.
-                Item {
-                    id: searchClearCol;
-
-                    visible: isSearchFeed && searchInput.text !== "";
-
-                    anchors.right: parent.right;
-                    // anchors.top: parent.top;
-                    // anchors.bottom: parent.bottom;
-                    anchors.verticalCenter: parent.verticalCenter;
-                    //anchors.horizontalCenter: parent.horizontalCenter;
-                    anchors.rightMargin: 7;
-
-                    width: 20 * style.scale;
-                    height: parent.height;
-
-                    Rectangle {
-                        id: clearSearchButton;
-                        width: 20 * style.scale;
-                        height: 20 * style.scale;
-                        anchors.verticalCenter: parent.verticalCenter;
-                        color: "transparent";
-
-                        Image {
-                            anchors.verticalCenter: parent.verticalCenter;
-                            anchors.right: parent.right;
-                            width: 12 * style.scale;
-                            height: 12 * style.scale;
-                            source: fangSettings.currentStyle === "LIGHT"
-                                    ? "images/symbol_close.svg"
-                                    : "images/symbol_dark_close.svg";
-                            sourceSize.width: width;
-                            sourceSize.height: height;
-
-                            MouseArea {
-                                anchors.fill: parent;
-                                onClicked: {
-                                    searchInput.text = "";
-                                    searchInput.forceActiveFocus();
-                                }
-                            }
-                        }
-
                     }
                 }
             }

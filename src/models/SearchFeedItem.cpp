@@ -20,12 +20,7 @@ void SearchFeedItem::setSearchQuery(const QString& query)
     // Clear any existing results when starting a new search.
     clearNews();
 
-    // Update title to show what we're searching for.
-    if (!searchQuery.isEmpty()) {
-        setTitle("Search: " + searchQuery);
-    } else {
-        setTitle("Search Results");
-    }
+    setTitle("Search Results");
 }
 
 bool SearchFeedItem::canBookmark(qint64 bookmarkID, bool allowBackward)
