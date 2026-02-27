@@ -17,8 +17,11 @@ Basic.TextField {
 
     background: Rectangle {
         color: style.color.textEntryBackground;
-        border.color: style.color.textEntryBorder;
-        border.width: 1 * style.scale;
+        radius: platform === "MAC" ? 6 * style.scale : style.defaultRadius;
+        border.color: textEntry.activeFocus
+                      ? style.color.textEntryFocusBorder
+                      : style.color.textEntryBorder;
+        border.width: textEntry.activeFocus ? 2 * style.scale : 1 * style.scale;
     }
 
     topPadding: 6  * style.scale;
@@ -26,6 +29,7 @@ Basic.TextField {
 
     ContextMenu.menu: Menu {
         id: contextMenu;
+        popupType: Popup.Native;
 
         MenuItem {
             text: "Cut";

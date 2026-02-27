@@ -20,7 +20,7 @@
 #include "models/FangSettings.h"
 #include "parser/RawFeed.h"
 #include "FangObject.h"
-#include "notifications/NotificationBase.h"
+#include "notifications/Notification.h"
 #include "db/DBSettings.h"
 #include "server/WebServer.h"
 #include "server/WebSocketServer.h"
@@ -237,10 +237,6 @@ public slots:
      */
     void showNews();
 
-    /*!
-        \brief Show the welcome/help view.
-     */
-    void showWelcome();
 
     /*!
         \brief Performs a global search and switches to the search results feed.
@@ -261,25 +257,14 @@ public slots:
                                    qint64 scopeId);
 
     /*!
-        \return The search feed (may be nullptr if never searched).
-     */
-    SearchFeedItem* getSearchFeed() { return searchFeed; }
-
-    /*!
-        \brief Shows the search feed, creating it if necessary.
-        This adds the search feed to the feed list and selects it.
-     */
-    void showSearchFeed();
-
-    /*!
-        \brief Closes the search feed and removes it from the feed list.
+        \brief Closes the search feed and selects All News.
      */
     void closeSearchFeed();
 
     /*!
-        \brief Clears the current search and returns to the previous feed.
+        \return The search feed (may be nullptr if never searched).
      */
-    void clearSearch();
+    SearchFeedItem* getSearchFeed() { return searchFeed; }
 
 private slots:
     /*!
@@ -356,7 +341,7 @@ private:
     QTimer *updateTimer;
     QMap<qint64, FeedItem*> feedIdMap;
     QQuickWindow* window;
-    NotificationBase* notifications;
+    Notification* notifications;
     WebSocketServer webSocketServer;
     WebServer* webServer;
     UpdateChecker updateChecker;

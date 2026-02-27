@@ -46,16 +46,10 @@ private:
     // scopeId: feed_id or folder_id when scope is "feed" or "folder"
     QString performSearch(const QString& query, const QString& scope = "global", qint64 scopeId = -1);
 
-    // Clears the current search.
-    QString clearSearch();
-
     void addNewsItem(NewsItem *item, QVariantList *newsList);
 
-    // Indicates that we should show the welcome screen.
-    QString loadWelcome();
-
-    // Puts together the return object for loadNews() and loadWelcome().
-    QString buildDocument(const QVariantList& newsList, bool showWelcome,
+    // Puts together the return object for loadNews().
+    QString buildDocument(const QVariantList& newsList,
                           QVariantMap extras = QVariantMap());
 
     QString getCSS();

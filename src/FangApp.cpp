@@ -26,11 +26,14 @@
 #include "operations/ReloadNewsOperation.h"
 #include "src/models/NewsList.h"
 
-#if defined(Q_OS_MAC)
-    #include "notifications/NotificationMac.h"
-#elif defined(Q_OS_WIN)
-    #include "notifications/NotificationWindows.h"
+#ifdef Q_OS_MAC
+#include "platform/MacWindowHelper.h"
 #endif
+
+#ifdef Q_OS_WIN
+#include "platform/WinWindowHelper.h"
+#endif
+
 
 FangApp* FangApp::_instance = nullptr;
 
@@ -143,8 +146,11 @@ void FangApp::init()
 
     qCInfo(logApp) << "Image formats: " << QImageReader::supportedImageFormats();
 
-    // Set font options.
-    systemFont.setKerning(true);
+    // Let the native text engine handle kerning and hinting.
+    // On macOS, this defers to Core Text for proper San Francisco tracking.
+#ifdef Q_OS_MAC
+    systemFont.setHintingPreference(QFont::PreferNoHinting);
+#endif
 
     // Setup our QML.
     engine->rootContext()->setContextProperty("feedListModel", &feedList); // list of feeds
@@ -161,6 +167,12 @@ void FangApp::init()
     bool isDebugBuild = false;
 #endif // QT_DEBUG
     engine->rootContext()->setContextProperty("isDebugBuild", isDebugBuild); // let QML know if we're a debug build or not
+
+#ifdef Q_OS_WIN
+    // Pre-register as null so QML bindings don't get ReferenceErrors
+    // before onObjectCreated replaces it with the real instance.
+    engine->rootContext()->setContextProperty("winTitleBar", QVariant::fromValue<QObject*>(nullptr));
+#endif
     qCInfo(logApp) << "Is debug build: " << isDebugBuild;
     
     // Load feed list.
@@ -482,6 +494,10 @@ void FangApp::onObjectCreated(QObject* object, const QUrl& url)
     // Save our window.
     window = qobject_cast<QQuickWindow*>(object);
 
+#ifdef Q_OS_MAC
+    configureTransparentTitleBar(window);
+#endif
+
     // Locate settings.
     fangSettings = object->findChild<FangSettings*>("fangSettings");
 
@@ -491,6 +507,11 @@ void FangApp::onObjectCreated(QObject* object, const QUrl& url)
     // Init settings.
     fangSettings->init(&dbSettings);
 
+#ifdef Q_OS_WIN
+    auto winTitleBar = new WinWindowHelper(window, fangSettings, this);
+    engine->rootContext()->setContextProperty("winTitleBar", winTitleBar);
+#endif
+
     // Init WebSocket server.
     webSocketServer.init(fangSettings);
     
@@ -498,13 +519,9 @@ void FangApp::onObjectCreated(QObject* object, const QUrl& url)
     AllNewsFeedItem* allNews = qobject_cast<AllNewsFeedItem*>(feedList.row(0));
     
     // Notifications, activate!
-#if defined(Q_OS_MAC)
-    notifications = new NotificationMac(fangSettings, &feedList,
-                                        allNews, window, this);
-#elif defined(Q_OS_WIN)
-    notifications = new NotificationWindows(fangSettings, &feedList,
-                                            allNews, window, this);
-#endif
+    notifications = new Notification(fangSettings, &feedList,
+                                     allNews, window, this);
+    notifications->init();
     
     // Setup the feed refresh timer.
     setRefreshTimer();
@@ -581,11 +598,6 @@ void FangApp::setCurrentFeed(FeedItem *feed, bool reloadIfSameFeed)
 
     if (previousFeed == pinnedNews) {
         pinnedNewsWatcher(); // If we were on pinned items, it can be removed now.
-    }
-
-    // Close the search feed if we're on it and a different feed is selected.
-    if (previousFeed == searchFeed && feed != searchFeed && isSearchFeedVisible) {
-        closeSearchFeed();
     }
 
     // Signal that we've changed feeds.
@@ -747,10 +759,6 @@ void FangApp::showNews()
     webSocketServer.showNews();
 }
 
-void FangApp::showWelcome()
-{
-    webSocketServer.showWelcome();
-}
 
 void FangApp::pinnedNewsWatcher()
 {
@@ -774,10 +782,11 @@ void FangApp::markAllAsReadOrUnread(FeedItem *feed, bool read)
     MarkAllReadOrUnreadOperation markReadOp(&manager, feed, read);
     manager.run(&markReadOp);
 
-    // Update UI to bookmark last item in list.
-    // NOTE: May lead to bugs if the last news item is not loaded into newsList
-    currentFeed->setBookmark(currentFeed->getNewsList()->last()->getDbID());
-    webSocketServer.drawBookmark(currentFeed->getBookmarkID());
+    // If this is the current feed, update the UI to bookmark last item in list.
+    if (feed == currentFeed) {
+        currentFeed->setBookmark(currentFeed->getNewsList()->last()->getDbID());
+        webSocketServer.drawBookmark(currentFeed->getBookmarkID());
+    }
 }
 
 void FangApp::setRefreshTimer()
@@ -877,6 +886,23 @@ void FangApp::markAllAsUnread(FeedItem* feed)
     markAllAsReadOrUnread(feed, false);
 }
 
+void FangApp::closeSearchFeed()
+{
+    if (!isSearchFeedVisible || !searchFeed) {
+        return;
+    }
+
+    // Switch to All News first.
+    if (currentFeed == searchFeed) {
+        feedList.setSelected(allNews);
+    }
+
+    // Remove from sidebar.
+    isSearchFeedVisible = false;
+    feedList.removeItem(searchFeed);
+    emit specialFeedCountChanged();
+}
+
 SearchFeedItem* FangApp::performSearch(const QString& query)
 {
     return performSearch(query, SearchFeedItem::Scope::Global, -1);
@@ -915,76 +941,34 @@ SearchFeedItem* FangApp::performSearch(const QString& query,
         return reloadOp.getReloadedItems();
     });
 
-    // Switch to the search feed and load initial results.
-    setCurrentFeed(searchFeed, true);
-
-    return searchFeed;
-}
-
-void FangApp::showSearchFeed()
-{
-    qCDebug(logApp) << "showSearchFeed: Showing search feed";
-
-    // Create search feed if it doesn't exist.
-    if (searchFeed == nullptr) {
-        searchFeed = new SearchFeedItem(&feedList);
-        feedIdMap.insert(searchFeed->getDbID(), searchFeed);
-        connectFeed(searchFeed);
-    }
-
-    // Add to feed list if not already present.
+    // Show the search feed in the sidebar if not already visible.
     if (!isSearchFeedVisible) {
         isSearchFeedVisible = true;
 
         // Insert after other special feeds.
-        qsizetype insertIndex = specialFeedCount() - 1;  // -1 because we just set isSearchFeedVisible
+        qsizetype insertIndex = specialFeedCount() - 1;
         feedList.insertRow(insertIndex, searchFeed);
 
         emit specialFeedCountChanged();
     }
 
-    // Clear any previous search state for a fresh start.
-    searchFeed->setSearchQuery("");
-    searchFeed->clearNews();
+    // Switch to the search feed without emitting currentFeedChanged.
+    // The JS search API call handles the display; emitting currentFeedChanged
+    // would trigger a redundant requestNews('initial') that races with the
+    // search API response.
+    if (currentFeed != nullptr && currentFeed != searchFeed) {
+        currentFeed->clearNews();
+    }
 
-    // Note: QML handles selection via feedListView.currentIndex
+    if (currentFeed == pinnedNews) {
+        pinnedNewsWatcher();
+    }
+
+    currentFeed = searchFeed;
+
+    // Select the search feed in the sidebar.
+    feedList.setSelected(searchFeed);
+
+    return searchFeed;
 }
 
-void FangApp::closeSearchFeed()
-{
-    if (searchFeed == nullptr || !isSearchFeedVisible) {
-        return;
-    }
-
-    qCDebug(logApp) << "closeSearchFeed: Removing search feed from list";
-
-    // Remove from feed list.
-    QModelIndex idx = feedList.indexFromItem(searchFeed);
-    if (idx.isValid()) {
-        feedList.removeRow(idx.row());
-    }
-    isSearchFeedVisible = false;
-
-    // Clear the search query and results.
-    searchFeed->setSearchQuery("");
-    searchFeed->clearNews();
-
-    emit specialFeedCountChanged();
-}
-
-void FangApp::clearSearch()
-{
-    if (searchFeed == nullptr) {
-        return;
-    }
-
-    qCDebug(logApp) << "clearSearch: Clearing search results";
-
-    // Clear the search query and results.
-    searchFeed->setSearchQuery("");
-
-    // If currently viewing search results, switch back to all news.
-    if (currentFeed == searchFeed) {
-        setCurrentFeed(allNews);
-    }
-}

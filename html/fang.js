@@ -14,7 +14,7 @@ let newsContainerSelector = 'body>#newsView>.newsContainer:not(#model)';
 // Current mode
 let currentMode = "newsView";
 
-// View state: welcome, feed, or search.
+// View state: feed or search.
 // If we're in search mode, also tracks the search query for display purposes.
 let viewState = {
     type: 'feed',
@@ -128,8 +128,6 @@ function processMessage(message)
         updateCSS();
     } else if ('showNews' === command) {
        setMode('newsView');
-    } else if ('showWelcome' === command) {
-       setMode('welcome');
     }
 }
 
@@ -186,39 +184,35 @@ function requestNews(mode)
     .then((response) => response.json())
     .then((data) => {
               console.log("load news data:", data);
-              if (data.showWelcome === true) {
-                  setMode('welcome');
-                  viewState = { type: 'welcome', searchQuery: null };
-              } else {
-                  setMode('newsView');
+              setMode('newsView');
 
-                  if ('initial' === data.mode) {
-                      // If we're in search state with no results, ignore empty feed loads.
-                      // This prevents the "no results" message from being cleared.
-                      const isEmpty = !data.news || data.news.length === 0;
-                      if (viewState.type === 'search' && isEmpty) {
-                          console.log("Ignoring empty load while in search state");
-                          return;
+              if ('initial' === data.mode) {
+                  // Redo the view.
+                  clearNews();
+
+                  // Search results are in the response's searchQuery.
+                  if (data.searchQuery) {
+                      viewState = { type: 'search', searchQuery: data.searchQuery };
+                      if (data.news && data.news.length > 0) {
+                          showSearchHeader(data.searchQuery);
+                      } else {
+                          showNoSearchResults(data.searchQuery);
                       }
-
-                      // Switching to feed view
+                  } else {
                       viewState = { type: 'feed', searchQuery: null };
-
-                      // Redo the view.
-                      clearNews();
                   }
+              }
 
-                  // Append or prepend?
-                  let toAppend = 'prepend' !== data.mode;
+              // Append or prepend?
+              let toAppend = 'prepend' !== data.mode;
 
-                  // Add all our news! Pass searchQuery for highlighting if present.
-                  appendNews(toAppend, data.firstNewsID, data.news, data.searchQuery);
+              // Add all our news! Pass searchQuery for highlighting if present.
+              appendNews(toAppend, data.firstNewsID, data.news, data.searchQuery);
 
-                  // If we have a new bookmark, draw it and jump there.
-                  if (data.bookmark) {
-                      drawBookmark(data.bookmark);
-                      jumpToBookmark();
-                  }
+              // If we have a new bookmark, draw it and jump there.
+              if (data.bookmark) {
+                  drawBookmark(data.bookmark);
+                  jumpToBookmark();
               }
           })
     .finally(() => {
@@ -251,16 +245,31 @@ function updateCSS()
               // Clear the current styles.
               clearBodyClasses();
 
-              // Add 'em!
-              for (let i = 0; i < data.length; i++) {
-                  addBodyClass(data[i]);
+              // Apply classes.
+              var classes = data.classes || data;
+              for (let i = 0; i < classes.length; i++) {
+                  addBodyClass(classes[i]);
+              }
+
+              // Apply accent color.
+              if (data.accent) {
+                  applyAccentColor(data.accent);
+              }
+
+              // Apply system font.
+              if (data.font) {
+                  applySystemFont(data.font);
+              }
+
+              // Apply scrollbar color.
+              if (data.scrollbar) {
+                  applyScrollbarColor(data.scrollbar);
               }
           });
 }
 
 /**
-  * Switches between the news and welcome modes.
-  * Valid modes: 'newsView', 'welcome'
+  * Switches to the news view mode.
   */
 function setMode(mode)
 {
@@ -271,15 +280,9 @@ function setMode(mode)
     console.log("setMode: ", mode);
     currentMode = mode;
 
-    // Switch out the HTML
     if ('newsView' == currentMode) {
-        $('#welcome').hide();
         $('#newsView').show();
         jumpToBookmark();
-    } else if ('welcome' == currentMode) {
-        $('#newsView').hide();
-        $('#welcome').show();
-        $(document).scrollTop(0); // Scroll back up
     }
 }
 
@@ -393,13 +396,6 @@ function initEventDelegation()
         }
     });
 
-    // Also take care of links in welcome section and other areas
-    document.addEventListener('click', function(event) {
-        const link = event.target.closest('a');
-        if (link && !link.closest('#newsView')) {
-            handleLinkClick(event);
-        }
-    });
 }
 
 /**
@@ -598,7 +594,11 @@ function clearNews()
 {
     $(newsContainerSelector).remove();
 
-    // Remove the "no results" message.
+    // Remove search elements.
+    const searchHeader = document.getElementById('searchHeader');
+    if (searchHeader) {
+        searchHeader.remove();
+    }
     const noResults = document.getElementById('noSearchResults');
     if (noResults) {
         noResults.remove();
@@ -644,10 +644,9 @@ function performSearch(query, scope = 'global', scopeId = -1)
         clearNews();
 
         if (data.news && data.news.length > 0) {
-            // Splice in our search results.
+            showSearchHeader(query);
             appendNews(true, data.firstNewsID, data.news, data.searchQuery || query);
         } else {
-            // Search returned no results.
             showNoSearchResults(query);
         }
     })
@@ -656,41 +655,37 @@ function performSearch(query, scope = 'global', scopeId = -1)
     });
 }
 
+
 /**
-  * Clears the current search and returns to All News.
+  * Header at top of search.
+  * TODO: Improve styling.
+  * @param {string} query Search query string.
   */
-function clearSearch()
+function showSearchHeader(query)
 {
-    console.log("clearSearch");
+    const newsView = document.getElementById('newsView');
+    if (!newsView) {
+        return;
+    }
 
-    // Reset to feed state.
-    viewState = { type: 'feed', searchQuery: null };
+    // Remove any existing header.
+    const existing = document.getElementById('searchHeader');
+    if (existing) {
+        existing.remove();
+    }
 
-    clearPrefetch();
+    const header = document.createElement('div');
+    header.id = 'searchHeader';
+    header.className = 'searchHeader';
+    header.innerHTML = `Search results for "<strong>${escapeHtml(query)}</strong>"`;
 
-    apiGetRequest('clear_search')
-    .then((response) => response.json())
-    .then((data) => {
-        console.log("clear search response:", data);
-
-        // Switch to news view and display results
-        setMode('newsView');
-        clearNews();
-
-        // Load the returned news.
-        if (data.news && data.news.length > 0) {
-            appendNews(true, data.firstNewsID, data.news);
-        }
-
-        // Restore bookmark if present.
-        if (data.bookmark) {
-            drawBookmark(data.bookmark);
-            jumpToBookmark();
-        }
-    })
-    .catch((error) => {
-        console.log("Clear search request failed:", error);
-    });
+    // Insert at the top of newsView, after topBookmark.
+    const topBookmark = document.getElementById('topBookmark');
+    if (topBookmark && topBookmark.nextSibling) {
+        newsView.insertBefore(header, topBookmark.nextSibling);
+    } else {
+        newsView.appendChild(header);
+    }
 }
 
 /**
@@ -714,7 +709,7 @@ function showNoSearchResults(query)
     noResults.id = 'noSearchResults';
     noResults.className = 'noSearchResults';
     noResults.innerHTML = `
-        <div class="noResultsIcon">&#128269;</div>
+        <div class="noResultsIcon"><img src="qrc:///qml/images/symbol_search.svg" width="48" height="48"></div>
         <div class="noResultsText">No results for search: "<strong>${escapeHtml(query)}</strong>"</div>
     `;
 

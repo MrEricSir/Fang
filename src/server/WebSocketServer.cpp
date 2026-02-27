@@ -158,7 +158,3 @@ void WebSocketServer::showNews()
     sendCommand("showNews", "");
 }
 
-void WebSocketServer::showWelcome()
-{
-    sendCommand("showWelcome", "");
-}

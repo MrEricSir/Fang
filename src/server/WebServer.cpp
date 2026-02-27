@@ -1,7 +1,10 @@
 #include "WebServer.h"
 
 #include <QDesktopServices>
+#include <QFont>
+#include <QGuiApplication>
 #include <QJsonDocument>
+#include <QPalette>
 #include <QUrl>
 
 #include "../FangApp.h"
@@ -70,12 +73,7 @@ WebServer::WebServer(FangApp* appInstance, FangObject *parent) :
     });
 
     server.route("/api/load/<arg>", this, [this] (QString mode) {
-        // Show news, or welcome screen if there's no feeds.
-        if (app->feedCount() <= 1) {
-            return loadWelcome();
-        } else {
-            return loadNews(LoadNewsOperation::stringToMode(mode));
-        }
+        return loadNews(LoadNewsOperation::stringToMode(mode));
     });
 
     server.route("/api/css", this, [this] {
@@ -95,10 +93,6 @@ WebServer::WebServer(FangApp* appInstance, FangObject *parent) :
         return performSearch(query, scope, scopeId);
     });
 
-    server.route("/api/clear_search", this, [this] {
-        qCDebug(logServer) << "Clear search API called";
-        return clearSearch();
-    });
 }
 
 QString WebServer::getConfig()
@@ -194,7 +188,7 @@ QString WebServer::loadNews(LoadNewsOperation::LoadMode mode)
     }
 
     // Add our news list and convert to a JSON string.
-    return buildDocument(newsList, false, extras);
+    return buildDocument(newsList, extras);
 }
 
 void WebServer::addNewsItem(NewsItem *item, QVariantList *newsList)
@@ -230,16 +224,9 @@ void WebServer::addNewsItem(NewsItem *item, QVariantList *newsList)
     *newsList << itemMap;
 }
 
-QString WebServer::loadWelcome()
-{
-    QVariantList newsList;
-    return buildDocument(newsList, true);
-}
-
-QString WebServer::buildDocument(const QVariantList &newsList, bool showWelcome, QVariantMap extras)
+QString WebServer::buildDocument(const QVariantList &newsList, QVariantMap extras)
 {
     QVariantMap document;
-    document.insert("showWelcome", showWelcome);
     document.insert("news", newsList);
     document.insert(extras);
     return QString::fromUtf8(QJsonDocument::fromVariant(document).toJson());
@@ -257,7 +244,22 @@ QString WebServer::getCSS()
         classes << "bookmarksDisabled";
     }
 
-    return QString::fromUtf8(QJsonDocument::fromVariant(classes).toJson());
+    // Set up color scheme from system colors to match QML.
+    QVariantMap result;
+    result.insert("classes", classes);
+
+    QPalette palette = QGuiApplication::palette();
+    QColor accent = palette.accent().color();
+    result.insert("accent", accent.name());  // e.g. "#007aff"
+
+    QFont systemFont = QGuiApplication::font();
+    result.insert("font", systemFont.family());  // e.g. ".AppleSystemUIFont"
+
+    // Scrollbar color matching Style.qml values.
+    QString currentStyle = app->getSettings()->getCurrentStyle();
+    result.insert("scrollbar", currentStyle == "DARK" ? "#ddd" : "#999");
+
+    return QString::fromUtf8(QJsonDocument::fromVariant(result).toJson());
 }
 
 QString WebServer::performSearch(const QString& query, const QString& scope, qint64 scopeId)
@@ -291,11 +293,4 @@ QString WebServer::performSearch(const QString& query, const QString& scope, qin
     return loadNews(LoadNewsOperation::Initial);
 }
 
-QString WebServer::clearSearch()
-{
-    app->clearSearch();
-
-    // Return success and load the all news feed.
-    return loadNews(LoadNewsOperation::Initial);
-}
 

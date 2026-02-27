@@ -18,6 +18,14 @@ void FangSettings::init(DBSettingsInterface *dbSettings)
     // System default color scheme.
     styleHints = QGuiApplication::styleHints();
     connect(styleHints, &QStyleHints::colorSchemeChanged, this, &FangSettings::onSystemColorSchemeChanged);
+
+    // Manually apply the color scheme if not set to the system default.
+    QString style = getStyle();
+    if (style == "LIGHT") {
+        styleHints->setColorScheme(Qt::ColorScheme::Light);
+    } else if (style == "DARK") {
+        styleHints->setColorScheme(Qt::ColorScheme::Dark);
+    }
 }
 
 QString FangSettings::getStringSetting(const QString& name, const QString& defaultValue)
@@ -97,8 +105,19 @@ void FangSettings::setStyle(QString s)
     if (s == getStyle()) {
         return; // Nothing to do!
     }
-    
+
     setStringSetting("style", s);
+
+    // Set the color scheme.
+    if (s == "LIGHT") {
+        QGuiApplication::styleHints()->setColorScheme(Qt::ColorScheme::Light);
+    } else if (s == "DARK") {
+        QGuiApplication::styleHints()->setColorScheme(Qt::ColorScheme::Dark);
+    } else {
+        // This clears the override and goes with the OS default.
+        QGuiApplication::styleHints()->setColorScheme(Qt::ColorScheme::Unknown);
+    }
+
     emit styleChanged(s);
     emit currentStyleChanged(getCurrentStyle());
 }

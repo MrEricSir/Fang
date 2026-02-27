@@ -230,6 +230,8 @@ Dialog {
             onClicked: opml.exportFile();
         }
     }
+
+    DialogSpacer {}
     
     DialogGroup {
         width: parent.width;
@@ -242,10 +244,6 @@ Dialog {
                 aboutDialog.onDialogClosed.connect(settingsDialog.forceFocus);
             }
         }
-    }
-    
-    DialogGroup {
-        width: parent.width;
 
         DialogButton {
             id: closeButton;

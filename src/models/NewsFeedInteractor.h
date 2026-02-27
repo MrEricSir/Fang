@@ -76,14 +76,11 @@ public slots:
     // Show the news view.
     void showNews();
 
-    // Show the welcome/help view.
-    void showWelcome();
-
-    // Show the search feed (adds to list and selects it).
-    void showSearchFeed();
-
-    // Close the search feed and return to all news.
+    // Closes the search feed and selects All News.
     void closeSearchFeed();
+
+    // Returns the current search query, or empty string if none.
+    QString getSearchQuery();
 
 private:
     // Op man!

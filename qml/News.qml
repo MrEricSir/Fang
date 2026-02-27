@@ -49,10 +49,6 @@ Item {
         newsFeedInteractor.showNews();
     }
     
-    // Switch to the welcome/help screen.
-    function showWelcome() {
-        newsFeedInteractor.showWelcome();
-    }
 
     // Perform a search.
     // scope: "global" (default), "feed", or "folder"
@@ -61,17 +57,15 @@ Item {
         newsView.performSearch(query, scope, scopeId);
     }
 
-    // Clear the current search.
-    function clearSearch() {
-        newsView.clearSearch();
-    }
-    
     // This is a workaround for a bug on Winows; see the comment
     // in main.qml where this is called for more information.
     function close() {
         newsView.close();
     }
     
+    // Extra top padding for Windows custom title bar (caption buttons).
+    property int titleBarInset: 0;
+
     // Don't propagate key events while dialogs are up.
     property bool newsFocus: true;
 
@@ -80,10 +74,17 @@ Item {
         newsView.forceActiveFocus();
     }
     
+    Style {
+        id: style;
+    }
+
     Item {
         id: newsMargin;
-        
+
         anchors.fill: parent;
+        anchors.topMargin: titleBarInset + style.defaultMarin * 2;
+        anchors.bottomMargin: style.defaultMarin * 2;
+        anchors.rightMargin: style.defaultMarin;
         
         // The "interactor" is what talks to the C++ layer.
         NewsFeedInteractor {

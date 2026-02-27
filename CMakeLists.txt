@@ -47,6 +47,7 @@ find_package(Qt6 REQUIRED COMPONENTS
     Qml
     Quick
     QuickControls2
+    QuickEffects
     Widgets
     Network
     Sql
@@ -142,7 +143,7 @@ qt_add_executable(Fang WIN32
     src/network/FangQQmlNetworkAccessManagerFactory.cpp
     src/network/NetworkRetryPolicy.cpp
     src/network/BatchDownloadCore.cpp
-    src/notifications/NotificationBase.cpp
+    src/notifications/Notification.cpp
     src/operations/SetPinOperation.cpp
     src/models/PinnedFeedItem.cpp
     src/models/SearchFeedItem.cpp
@@ -220,7 +221,7 @@ qt_add_executable(Fang WIN32
     src/network/NetworkRetryPolicy.h
     src/network/NetworkDownloadCore.h
     src/network/BatchDownloadCore.h
-    src/notifications/NotificationBase.h
+    src/notifications/Notification.h
 
     src/operations/SetPinOperation.h
     src/models/PinnedFeedItem.h
@@ -276,6 +277,7 @@ target_link_libraries(Fang PRIVATE
     Qt6::Svg
     Qt6::WebSockets
     Qt6::HttpServer
+    Qt6::QuickEffects
     rearrangeabletreeview
     rearrangeabletreeviewplugin
 )
@@ -307,17 +309,15 @@ target_precompile_headers(Fang PRIVATE
 
 # Platform: macOS
 if(APPLE)
+    enable_language(OBJCXX)
+
     target_sources(Fang PRIVATE
-        src/notifications/NotificationMac.h
-        src/notifications/NotificationMac.mm
         icons/mac.icns
+        src/platform/MacWindowHelper.mm
+        src/platform/MacWindowHelper.h
     )
 
-    # Exclude Objective-C++ files from PCH (incompatible)
-    set_source_files_properties(src/notifications/NotificationMac.mm
-        PROPERTIES SKIP_PRECOMPILE_HEADERS ON
-    )
-
+    target_link_libraries(Fang PRIVATE "-framework Cocoa")
     target_link_options(Fang PRIVATE -Wl,-dead_strip)
 
     # Configure macOS bundle
@@ -342,10 +342,11 @@ endif()
 # Platform: Windows
 if(WIN32)
     target_sources(Fang PRIVATE
-        src/notifications/NotificationWindows.h
-        src/notifications/NotificationWindows.cpp
         win32.rc
+        src/platform/WinWindowHelper.cpp
+        src/platform/WinWindowHelper.h
     )
+    target_link_libraries(Fang PRIVATE dwmapi)
 endif()
 
 # Platform: Android

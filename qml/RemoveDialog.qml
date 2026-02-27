@@ -22,6 +22,7 @@ Dialog {
         DialogButton {
             id: removeButton;
 
+            isPrimary: true;
             text: "Remove Feed";
             onClicked: {
                 // Remove a specific feed.
@@ -38,10 +39,6 @@ Dialog {
                 id: newsFeedInteractor;
             }
         }
-    }
-    
-    DialogGroup {
-        width: parent.width;
 
         DialogButton {
             id: cancelButton;

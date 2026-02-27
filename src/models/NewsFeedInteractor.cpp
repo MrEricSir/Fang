@@ -91,17 +91,16 @@ void NewsFeedInteractor::showNews()
     FangApp::instance()->showNews();
 }
 
-void NewsFeedInteractor::showWelcome()
-{
-    FangApp::instance()->showWelcome();
-}
-
-void NewsFeedInteractor::showSearchFeed()
-{
-    FangApp::instance()->showSearchFeed();
-}
-
 void NewsFeedInteractor::closeSearchFeed()
 {
     FangApp::instance()->closeSearchFeed();
+}
+
+QString NewsFeedInteractor::getSearchQuery()
+{
+    SearchFeedItem* searchFeed = FangApp::instance()->getSearchFeed();
+    if (searchFeed) {
+        return searchFeed->getSearchQuery();
+    }
+    return QString();
 }

@@ -8,12 +8,12 @@ Dialog {
     
     Image {
         source: "qrc:/qml/images/fang_logo_color.svg";
-        
-        // 20% margins, for a decent size.
-        x: parent.width * 0.2;
-        width: parent.width - (parent.width * 0.4);
-        fillMode: Image.PreserveAspectCrop;
-        
+
+        // 60% of parent width, centered.
+        width: parent.width * 0.6;
+        anchors.horizontalCenter: parent.horizontalCenter;
+        fillMode: Image.PreserveAspectFit;
+
         // Make SVGs render real good like.
         sourceSize.width: width;
         sourceSize.height: height;
@@ -31,30 +31,34 @@ Dialog {
     }
     
     DialogText {
-        text: "<a href='http://www.getfang.com'>Visit our website</a>";
+        text: "<a href='http://www.getfang.com'>Website</a> | " +
+              "<a href='https://github.com/MrEricSir/Fang'>GitHub</a>";
         horizontalAlignment: Text.AlignHCenter;
     }
-    
-    DialogSpacer {}
+
+    DialogText {
+        text: "Credits";
+        horizontalAlignment: Text.AlignHCenter;
+        font: style.font.title;
+    }
     
     DialogText {
-        text: "Credits:\n\n" +
-              "Software & design\n" +
+        text: "Software & design\n" +
               "Eric Gregory\n\n" +
               "Logo\n" +
-              "Studyou Design";
+              "Studyou Design\n\n" +
+              "Made in San Francisco, California.";
         
         horizontalAlignment: Text.AlignHCenter;
     }
-    
+
     DialogSpacer {}
     
     DialogText {
-        text: "Copyright 2013-2026 Eric Gregory.  All rights reserved.\n\n" +
-              "Made in San Francisco, California.";
+        text: "\u00A9 Copyright 2013-2026 Eric Gregory";
+        textColor: style.color.fadedText;
+        horizontalAlignment: Text.AlignHCenter;
     }
-    
-    DialogSpacer {}
     
     DialogGroup {
         width: parent.width;
@@ -62,7 +66,7 @@ Dialog {
         DialogButton {
             id: dismissButton;
 
-            text: "Dismiss";
+            text: "Close";
             onClicked: close();
         }
     }

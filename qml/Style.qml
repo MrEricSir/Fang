@@ -1,4 +1,5 @@
 import QtQuick
+import QtQuick.Window
 import Fang 1.0
 
 /**
@@ -10,9 +11,15 @@ Item {
     readonly property double scale: (platform === "ANDROID") ? 1.5 : 1.0;
     readonly property alias colorSchemeLight: colorSchemeLight;
     readonly property alias colorSchemeDark: colorSchemeDark;
-    readonly property double defaultRadius: 4 * scale;
+    readonly property double defaultRadius: (platform === "MAC" ? 4 : 2) * scale;
     readonly property double defaultMarin: 5 * scale;
+    readonly property bool windowActive: Window.window ? Window.window.active : true;
+    readonly property bool transientScrollbars: platform === "MAC";
 
+    SystemPalette {
+        id: sysPalette;
+        colorGroup: windowActive ? SystemPalette.Active : SystemPalette.Inactive;
+    }
 
     function getPlatformFont() {
         switch(platform) {
@@ -143,7 +150,7 @@ Item {
         property color scrollbar: "#999";
         
         property color background: "white";
-        property color blockerBackground: "black";
+        property color blockerBackground: Qt.rgba(0, 0, 0, 0.3);
         
         property color dialogBackground: "white";
         property color dialogText: "black";
@@ -156,66 +163,101 @@ Item {
         property color dialogButtonTextDisabled: "#999";
         property color dialogButtonPressed: Qt.darker(colorSchemeLight.dialogButtonHover, 1.5);
         property color dialogButtonDisabled: "#ffffff"; // Update in SettingsDialog manually!
-        property color dialogButtonBorder: "transparent";
-        
+        property color dialogButtonBorder: sysPalette.mid;
+        property color dialogButtonPrimary: sysPalette.accent;
+        property color dialogButtonPrimaryHover: Qt.darker(sysPalette.accent, 1.1);
+        property color dialogButtonPrimaryPressed: Qt.darker(sysPalette.accent, 1.3);
+        property color dialogButtonPrimaryText: "white";
+
         property color textEntryBackground: "white";
         property color textEntryText: "black";
         property color textEntryBorder: dialogButton;
+        property color textEntryFocusBorder: sysPalette.accent;
         property color textEntryHint: sidebarRightLine;
         
-        property color sidebar: "#efefef";
-        property color sidebarToolbar: "#535353";
+        property color sidebar: sysPalette.window;
+        property color sidebarToolbar: Qt.darker(sysPalette.window, 1.05);
         property color sidebarRightLine: "#ccc";
-        property color sidebarSelected: "white";
-        property color sidebarSelectedText: "black";
-        
-        property color sidebarButton: "#777";
-        property color sidebarButtonBorder: sidebarButton;
-        property color sidebarButtonHover: "#aaa";
-        property color sidebarButtonPressed: "white"
-        
-        property color badge: sidebarButton;
+        property color sidebarSelected: {
+            if (platform === "MAC" && !windowActive) return sysPalette.mid;
+            if (platform === "WIN") return sysPalette.mid;
+            return sysPalette.highlight;
+        }
+        property color sidebarSelectedText: {
+            if (platform === "MAC" && !windowActive) return sysPalette.windowText;
+            return sysPalette.highlightedText;
+        }
+        property color sidebarText: sysPalette.windowText;
+
+        property color sidebarButton: "transparent";
+        property color sidebarButtonBorder: Qt.rgba(0, 0, 0, 0.15);
+        property color sidebarButtonHover: Qt.rgba(0, 0, 0, 0.06);
+        property color sidebarButtonPressed: Qt.rgba(0, 0, 0, 0.12);
+
+        property color badge: platform === "WIN" ? "#0078D4" : sysPalette.accent;
         property color badgeText: "white";
     }
-    
+
     QtObject {
         id: colorSchemeDark;
-        
-        property color scrollbar: "#ddd";
-        
+
+        property color scrollbar: platform === "MAC" ? "#999" : "#ccc";
+
         property color background: "black";
-        property color blockerBackground: "#999";
-        
+        property color blockerBackground: Qt.rgba(0, 0, 0, 0.4);
+
         property color dialogBackground: "black";
         property color dialogText: "white";
-        
+
         property color fadedText: "#999";
-        
+
         property color dialogButton: "#555";
         property color dialogButtonHover: "#454545";
         property color dialogButtonText: "white";
         property color dialogButtonTextDisabled: "#666";
         property color dialogButtonPressed: Qt.lighter(colorSchemeDark.dialogButtonHover, 1.5);
         property color dialogButtonDisabled: Qt.darker(colorSchemeDark.dialogButton, 1.5);
-        property color dialogButtonBorder: "transparent"
-        
+        property color dialogButtonBorder: sysPalette.placeholderText;
+        property color dialogButtonPrimary: sysPalette.accent;
+        property color dialogButtonPrimaryHover: Qt.lighter(sysPalette.accent, 1.15);
+        property color dialogButtonPrimaryPressed: Qt.lighter(sysPalette.accent, 1.3);
+        property color dialogButtonPrimaryText: "white";
+
         property color textEntryBackground: "black";
         property color textEntryText: "white";
         property color textEntryBorder: dialogButton;
+        property color textEntryFocusBorder: sysPalette.accent;
         property color textEntryHint: sidebarRightLine;
 
-        property color sidebar: "black";
-        property color sidebarToolbar: "#333";
+        property color sidebar: sysPalette.window;
+        property color sidebarToolbar: Qt.lighter(sysPalette.window, 1.1);
         property color sidebarRightLine: "#666";
-        property color sidebarSelected: "#444";
-        property color sidebarSelectedText: "white";
-        
-        property color sidebarButton: "#777";
-        property color sidebarButtonBorder: sidebarButton;
-        property color sidebarButtonHover: "#555";
-        property color sidebarButtonPressed: "#333";
-        
-        property color badge: sidebarButton;
-        property color badgeText: "black";
+        property color sidebarSelected: {
+            if (platform === "MAC") {
+                return windowActive ? Qt.lighter(sysPalette.light, 1.5) : sysPalette.mid;
+            }
+            return sysPalette.highlight;
+        }
+        property color sidebarSelectedText: {
+            if (platform === "MAC") {
+                return windowActive ? Qt.lighter(sysPalette.accent, 1.3) : sysPalette.dark;
+            }
+            return sysPalette.windowText;
+        }
+        property color sidebarText: {
+            if (platform === "MAC" && !windowActive) {
+                return "#999";
+            }
+
+            return sysPalette.windowText;
+        }
+
+        property color sidebarButton: "transparent";
+        property color sidebarButtonBorder: Qt.rgba(1, 1, 1, 0.2);
+        property color sidebarButtonHover: Qt.rgba(1, 1, 1, 0.06);
+        property color sidebarButtonPressed: Qt.rgba(1, 1, 1, 0.12);
+
+        property color badge: platform === "WIN" ? "#0078D4" : sysPalette.accent;
+        property color badgeText: "white";
     }
 }

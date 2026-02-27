@@ -217,6 +217,7 @@ Dialog {
         DialogButton {
             id: addButton;
 
+            isPrimary: true;
             text: "Add Selected"
             onClicked: {
                 parentClose();
@@ -228,10 +229,6 @@ Dialog {
 
             visible: false; // at first
         }
-    }
-    
-    DialogGroup {
-        width: parent.width;
 
         DialogButton {
             id: cancelButton;

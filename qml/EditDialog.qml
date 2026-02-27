@@ -42,6 +42,7 @@ Dialog {
         DialogButton {
             id: saveEditButton;
 
+            isPrimary: true;
             text: "Save";
             onClicked: {
                 // Save the new title.
@@ -52,10 +53,6 @@ Dialog {
             }
             enabled: !isClosing && feedTitle.text.trim() !== "";
         }
-    }
-    
-    DialogGroup {
-        width: parent.width;
 
         DialogButton {
             id: cancelButton;

@@ -1,71 +1,81 @@
 import QtQuick
+import QtQuick.Effects
 
 /**
  * Represents all top-level screens (main frame, dialogs, etc.)
  */
 Rectangle {
     id: screen;
-    
+
+    // Children go into the content wrapper (underneath the blocker).
+    default property alias content: contentWrapper.data;
+
     // Index of this screen (used for z transitions)
     property double index: 0;
 
     // Special handling for the splash screen dialog.
     property bool isSplashScreen: false;
 
+    // Blur amount (0.0 = none, 1.0 = max). Animated by transitions.
+    property real blurAmount: 0;
+
     // When the fade-in is done.
     signal fadeInComplete();
-    
+
     // Fades the screen out, man.
     function fadeOut() {
         state = "out";
     }
-    
+
     // Whoa fade back in!
     function fadeIn() {
         state = "in";
     }
-    
+
     color: style.color.background;
     width: parent.width;
     height: parent.height;
     z: index;
-    
-    transform: Scale {
-        id: scaleTransform;
-        property real scale: 1.0;
-        
-        xScale: scale;
-        yScale: scale;
-        origin.x: parent.width / 2;
-        origin.y: parent.height / 2;
-    }
-    
+
     states: [
         State { name: "in"; },
         State { name: "out"; }
     ]
-    
+
     // Default state is faded out for splash screen.
     state: isSplashScreen ? "out" : "in";
-    
+
+    Item {
+        id: contentWrapper;
+
+        anchors.fill: parent;
+
+        layer.enabled: screen.blurAmount > 0;
+        layer.effect: MultiEffect {
+            blurEnabled: true
+            blur: screen.blurAmount
+            blurMax: 48
+        }
+    }
+
+    // Dim overlay, drawn on top of (blurred) content.
     Rectangle {
         id: blocker;
-        
+
         anchors.fill: parent;
         color: "transparent";
-        
+
         z: screen.z + 1;
     }
-    
+
     transitions: [
         Transition {
             from: "in";
             to: "out";
             ParallelAnimation {
-                // Fade out
                 ColorAnimation {
                     id: fadeOut;
-                    
+
                     target: blocker;
                     properties: "color";
                     from: "transparent";
@@ -73,13 +83,13 @@ Rectangle {
                     duration: 300;
                     easing.type: Easing.InOutQuad;
                 }
-                PropertyAnimation {
-                    target: scaleTransform;
-                    properties: "scale";
-                    from: 1.0;
-                    to: 0.8;
+                NumberAnimation {
+                    target: screen;
+                    property: "blurAmount";
+                    from: 0;
+                    to: 0.4;
                     duration: 300;
-                    easing.type: Easing.InOutQuad;
+                    easing.type: Easing.OutSine;
                 }
             }
         },
@@ -94,10 +104,9 @@ Rectangle {
             }
 
             ParallelAnimation {
-                // Show the dialog.
                 ColorAnimation {
                     id: fadeIn;
-                    
+
                     target: blocker;
                     properties: "color";
                     to: "transparent";
@@ -105,16 +114,19 @@ Rectangle {
                     duration: 300;
                     easing.type: Easing.InOutQuad;
                 }
-                
-                PropertyAnimation {
-                    target: scaleTransform;
-                    properties: "scale";
-                    to: 1.0;
-                    from: 0.8;
+                NumberAnimation {
+                    target: screen;
+                    property: "blurAmount";
+                    from: 0.4;
+                    to: 0;
                     duration: 300;
-                    easing.type: Easing.InOutQuad;
+                    easing.type: Easing.InSine;
                 }
             }
         }
     ]
+
+    Style {
+        id: style;
+    }
 }

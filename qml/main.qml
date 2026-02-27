@@ -35,19 +35,30 @@ Window {
     // Treat as const
     property int minimumSidebarWidth: (platform === "ANDROID") ? 260 : 230;
     property int minimumNewsWidth: 400;
+
+    // Toggles between maximized and normal window size.
+    function toggleMaximized() {
+        if (!isDesktop) {
+            // Doesn't make sense on mobile.
+            return;
+        }
+
+        if (visibility === Window.Maximized) {
+            showNormal();
+        } else {
+            showMaximized();
+        }
+    }
     
     // Style object.
     Style {
         id: style;
     }
 
-    // Search feed keyboard shortcut (Ctrl/Cmd+Shift+F.)
-    Shortcut {
-        sequence: "Ctrl+Shift+F";
-        onActivated: sidebar.toggleSearch();
-    }
-    
     visible: true;
+
+    // Prevents all-white window from appearing on Windows.
+    flags: platform === "WIN" ? Qt.Window | Qt.FramelessWindowHint : Qt.Window;
 
     // The "interactor" is what talks to the C++ layer.
     NewsFeedInteractor {
@@ -185,6 +196,8 @@ Window {
     
     // Called when a dialog is closed.
     function onDialogClosed(dialog) {
+        var wasSplashScreen = dialog.isSplashScreen;
+
         // Remove the entry.
         openDialogs.splice(openDialogs.indexOf(dialog), 1);
         delete dialog;
@@ -193,6 +206,11 @@ Window {
         if (openDialogs.length === 0) {
             news.newsFocus = true;
             news.grabFocus();
+
+            // Show help dialog for new users after splash screen.
+            if (wasSplashScreen && !sidebar.feedsExist) {
+                openDialog("HelpDialog.qml");
+            }
         }
     }
 
@@ -201,8 +219,41 @@ Window {
         openDialog("SplashScreenDialog.qml");
     }
 
-    // Seen in transitions.
-    color: style.color.blockerBackground;
+    // Windows title bar.
+    Rectangle {
+        id: winTitleBarArea;
+
+        property bool isMaximized: main.visibility === Window.Maximized;
+
+        x: sidebar.width;
+        y: 0;
+        width: parent.width - sidebar.width;
+        height: (platform === "WIN" && winTitleBar)
+                ? (isMaximized ? winTitleBar.captionHeight : winTitleBar.titleBarHeight)
+                : 0;
+        visible: platform === "WIN";
+        color: style.color.background;
+        z: 1000;
+
+        // Drag to move window.
+        MouseArea {
+            anchors.fill: parent;
+            anchors.rightMargin: winTitleBar ? winTitleBar.buttonWidth * 3 : 0;
+            onPressed: main.startSystemMove();
+            onDoubleClicked: toggleMaximized();
+        }
+
+        // Caption buttons (minimize, maximize, close).
+        Loader {
+            active: platform === "WIN";
+            anchors.top: parent.top;
+            anchors.right: parent.right;
+            source: "WinCaptionButtons.qml";
+        }
+    }
+
+    // Window background behind all screens.
+    color: "black";
 
     // Prevent closing when system tray icon is active.
     // Note: This is a valid property according to the docs; ignore the Qt Creator error message.
@@ -244,6 +295,131 @@ Window {
             MenuItem {
                 text: qsTr("Quit");
                 onTriggered: Qt.quit();
+            }
+        }
+    }
+
+    // Keyboard shortcuts for Windows and Linux. See the MenuBar for MacOS implementation.
+    Shortcut {
+        sequences: [StandardKey.Quit]
+        enabled: platform !== "MAC"
+        onActivated: Qt.quit()
+    }
+    Shortcut {
+        sequence: "Ctrl+Shift+F"
+        enabled: platform !== "MAC"
+        onActivated: openDialog("SearchDialog.qml")
+    }
+    Shortcut {
+        sequence: "Ctrl+,"
+        enabled: platform !== "MAC"
+        onActivated: openDialog("SettingsDialog.qml")
+    }
+    Shortcut {
+        sequence: "Ctrl+N"
+        enabled: platform !== "MAC"
+        onActivated: openDialog("AddDialog.qml")
+    }
+    Shortcut {
+        sequence: "Ctrl+R"
+        enabled: platform !== "MAC"
+        onActivated: news.refreshCurrentFeed()
+    }
+
+    // MacOS menu bar; also handles keyboard shortcuts.
+    MenuBar {
+        // Main app menu
+        Menu {
+            title: qsTr("Fang")
+
+            MenuItem {
+                text: qsTr("About Fang")
+                onTriggered: openDialog("AboutDialog.qml")
+            }
+
+            MenuSeparator {}
+
+            MenuItem {
+                text: qsTr("Settings...")
+                shortcut: "Ctrl+,"
+                onTriggered: openDialog("SettingsDialog.qml")
+            }
+
+            MenuSeparator {}
+
+            MenuItem {
+                text: qsTr("Quit Fang")
+                shortcut: StandardKey.Quit
+                onTriggered: Qt.quit()
+            }
+        }
+
+        Menu {
+            title: qsTr("Edit")
+
+            MenuItem {
+                text: qsTr("Cut")
+                shortcut: StandardKey.Cut
+            }
+            MenuItem {
+                text: qsTr("Copy")
+                shortcut: StandardKey.Copy
+            }
+            MenuItem {
+                text: qsTr("Paste")
+                shortcut: StandardKey.Paste
+            }
+            MenuSeparator {}
+            MenuItem {
+                text: qsTr("Select All")
+                shortcut: StandardKey.SelectAll
+            }
+        }
+
+        Menu {
+            title: qsTr("Feeds")
+
+            MenuItem {
+                text: qsTr("Search...")
+                shortcut: "Ctrl+Shift+F"
+                onTriggered: openDialog("SearchDialog.qml")
+            }
+
+            MenuSeparator {}
+
+            MenuItem {
+                text: qsTr("Add Feed...")
+                shortcut: "Ctrl+N"
+                onTriggered: openDialog("AddDialog.qml")
+            }
+            MenuItem {
+                text: qsTr("Edit Feed...")
+                enabled: sidebar.listView.model.selected
+                         && !sidebar.listView.model.selected.isSpecialFeed()
+                onTriggered: openDialog("EditDialog.qml", sidebar.listView.model.selected)
+            }
+            MenuItem {
+                text: qsTr("Remove Feed...")
+                enabled: sidebar.listView.model.selected
+                         && !sidebar.listView.model.selected.isSpecialFeed()
+                onTriggered: openDialog("RemoveDialog.qml", sidebar.listView.model.selected)
+            }
+
+            MenuSeparator {}
+
+            MenuItem {
+                text: qsTr("Refresh")
+                shortcut: "Ctrl+R"
+                onTriggered: news.refreshCurrentFeed()
+            }
+        }
+
+        Menu {
+            title: qsTr("Help")
+
+            MenuItem {
+                text: qsTr("Fang Help")
+                onTriggered: openDialog("HelpDialog.qml")
             }
         }
     }
@@ -349,7 +525,7 @@ Window {
                 onFeedClicked: news.showNews();
                 onFeedDoubleClicked: news.jumpToBookmark();
                 onOrderChanged: news.orderChanged();
-                onHelpClicked: news.showWelcome();
+                onHelpClicked: openDialog("HelpDialog.qml");
                 onRefreshFeedClicked: (feed) => { news.refreshFeed(feed); }
                 onRefreshCurrentFeedClicked: news.refreshCurrentFeed();
                 onMarkAllAsUnreadClicked: (feed) => { news.markAllAsUnread(feed); }
@@ -360,19 +536,9 @@ Window {
                 onRemoveClicked: openDialog("RemoveDialog.qml", listView.model.selected);
                 onEditClicked: openDialog("EditDialog.qml", listView.model.selected);
 
-                onSearchButtonClicked: newsFeedInteractor.showSearchFeed();
-                onSearchRequested: (query) => { news.performSearch(query); }
-                onSearchCleared: news.clearSearch();
+                onSearchButtonClicked: openDialog("SearchDialog.qml");
 
-                onMaximizeToggle: {
-                    if (isDesktop) {
-                        if (visibility === Window.Maximized) {
-                            showNormal();
-                        } else {
-                            showMaximized();
-                        }
-                    }
-                }
+                onMaximizeToggle: toggleMaximized();
             }
 
             News {
@@ -382,6 +548,7 @@ Window {
                 SplitView.fillHeight: true;
                 SplitView.minimumWidth: minimumNewsWidth;
 
+                titleBarInset: winTitleBarArea.height;
                 newsFocus: true // set by dialog system
 /*
                 Item {
