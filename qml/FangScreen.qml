@@ -45,7 +45,6 @@ Rectangle {
     // Default state is faded out for splash screen.
     state: isSplashScreen ? "out" : "in";
 
-    // Content wrapper — holds all child content and receives the blur effect.
     Item {
         id: contentWrapper;
 

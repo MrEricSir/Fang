@@ -57,6 +57,9 @@ Window {
 
     visible: true;
 
+    // Prevents all-white window from appearing on Windows.
+    flags: platform === "WIN" ? Qt.Window | Qt.FramelessWindowHint : Qt.Window;
+
     // The "interactor" is what talks to the C++ layer.
     NewsFeedInteractor {
         id: newsFeedInteractor;

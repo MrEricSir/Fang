@@ -223,14 +223,21 @@ Item {
                     }
 
                     ContextMenu.menu: {
-                        if (isSearchFeed) return searchFeedMenu;
-                        if (uid === -1) return null; // Pinned feed — no context menu
-                        if (isSpecialFeed) return specialFeedMenu;
+                        // TODO: There has to be a less hacky-way to do determine feed type.
+                        if (isSearchFeed) {
+                            return searchContextMenu;
+                        } else if (uid === -1) {
+                            // No context menu on pinned feed.
+                            return null;
+                        } else if (isSpecialFeed) {
+                            return allNewsContextMenu;
+                        }
+
                         return feedMenu;
                     }
 
                     Menu {
-                        id: searchFeedMenu;
+                        id: searchContextMenu;
                         popupType: Popup.Window;
                         onAboutToShow: sidebar.menuClickGuard = true;
                         onClosed: menuGuardTimer.restart();
@@ -250,7 +257,7 @@ Item {
                     }
 
                     Menu {
-                        id: specialFeedMenu;
+                        id: allNewsContextMenu;
                         popupType: Popup.Window;
                         onAboutToShow: sidebar.menuClickGuard = true;
                         onClosed: menuGuardTimer.restart();

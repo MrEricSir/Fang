@@ -22,6 +22,14 @@ WinWindowHelper::WinWindowHelper(QQuickWindow* window, FangSettings* settings, F
     // Install the event filter.
     QApplication::instance()->installNativeEventFilter(this);
 
+    // Restore window styles that Qt::FramelessWindowHint strips.
+    // WS_THICKFRAME  — resize handles and Aero Snap
+    // WS_MINIMIZEBOX — minimize from taskbar
+    // WS_MAXIMIZEBOX — maximize / Aero Snap layouts
+    LONG style = GetWindowLong(hwnd, GWL_STYLE);
+    style |= WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX;
+    SetWindowLong(hwnd, GWL_STYLE, style);
+
     // Minimal frame extension so DWM keeps the window shadow.
     MARGINS margins = {0, 0, 1, 0};
     DwmExtendFrameIntoClientArea(hwnd, &margins);
@@ -101,6 +109,12 @@ bool WinWindowHelper::nativeEventFilter(const QByteArray& eventType, void* messa
         return false;
 
     switch (msg->message) {
+
+    // ── Suppress the default white background erase ─────────────────────
+    case WM_ERASEBKGND: {
+        *result = 1;
+        return true;
+    }
 
     // ── Remove the default title bar ────────────────────────────────────
     case WM_NCCALCSIZE: {

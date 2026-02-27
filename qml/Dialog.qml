@@ -177,11 +177,11 @@ FangScreen {
             }
         ]
 
-        // Background click area — dismiss dialog when clicking outside the card.
+        // Background click area dismisses dialog when clicking outside pf ot/
         MouseArea {
             anchors.fill: parent
 
-            // Capture scroll events and such from propagating to WebKit.
+            // Capture scroll events and such from propagating to WebView.
             hoverEnabled: true
             preventStealing: true
             onWheel: {}
@@ -242,7 +242,7 @@ FangScreen {
                 anchors.rightMargin: 15 * style.scale
             }
 
-            // Separator line below title — fades in when content is scrolled.
+            // Separator line below title.
             Rectangle {
                 id: titleSeparator
 
@@ -279,6 +279,7 @@ FangScreen {
 
                 ScrollBar.vertical: FangScrollBar {
                     backgroundColor: style.color.dialogBackground;
+                    visible: !isSplashScreen; // No scrollbar on the splash screen.
                 }
 
                 Item {
