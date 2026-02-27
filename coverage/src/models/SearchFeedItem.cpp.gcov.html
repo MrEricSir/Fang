@@ -31,13 +31,13 @@
             <td class="headerValue">coverage.info.cleaned</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntryMed">78.9&nbsp;%</td>
-            <td class="headerCovTableEntry">19</td>
-            <td class="headerCovTableEntry">15</td>
+            <td class="headerCovTableEntryMed">76.5&nbsp;%</td>
+            <td class="headerCovTableEntry">17</td>
+            <td class="headerCovTableEntry">13</td>
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-02-23 07:55:25</td>
+            <td class="headerValue">2026-02-27 22:32:41</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryLo">60.0&nbsp;%</td>
@@ -82,28 +82,23 @@
 <span id="L20"><span class="lineNum">      20</span>              :     // Clear any existing results when starting a new search.</span>
 <span id="L21"><span class="lineNum">      21</span> <span class="tlaGNC">           8 :     clearNews();</span></span>
 <span id="L22"><span class="lineNum">      22</span>              : </span>
-<span id="L23"><span class="lineNum">      23</span>              :     // Update title to show what we're searching for.</span>
-<span id="L24"><span class="lineNum">      24</span> <span class="tlaGNC">           8 :     if (!searchQuery.isEmpty()) {</span></span>
-<span id="L25"><span class="lineNum">      25</span> <span class="tlaGNC">           7 :         setTitle(&quot;Search: &quot; + searchQuery);</span></span>
-<span id="L26"><span class="lineNum">      26</span>              :     } else {</span>
-<span id="L27"><span class="lineNum">      27</span> <span class="tlaGNC">           1 :         setTitle(&quot;Search Results&quot;);</span></span>
-<span id="L28"><span class="lineNum">      28</span>              :     }</span>
-<span id="L29"><span class="lineNum">      29</span> <span class="tlaGNC">           8 : }</span></span>
+<span id="L23"><span class="lineNum">      23</span> <span class="tlaGNC">           8 :     setTitle(&quot;Search Results&quot;);</span></span>
+<span id="L24"><span class="lineNum">      24</span> <span class="tlaGNC">           8 : }</span></span>
+<span id="L25"><span class="lineNum">      25</span>              : </span>
+<span id="L26"><span class="lineNum">      26</span> <span class="tlaUNC tlaBgUNC">           0 : bool SearchFeedItem::canBookmark(qint64 bookmarkID, bool allowBackward)</span></span>
+<span id="L27"><span class="lineNum">      27</span>              : {</span>
+<span id="L28"><span class="lineNum">      28</span>              :     Q_UNUSED(bookmarkID);</span>
+<span id="L29"><span class="lineNum">      29</span>              :     Q_UNUSED(allowBackward);</span>
 <span id="L30"><span class="lineNum">      30</span>              : </span>
-<span id="L31"><span class="lineNum">      31</span> <span class="tlaUNC tlaBgUNC">           0 : bool SearchFeedItem::canBookmark(qint64 bookmarkID, bool allowBackward)</span></span>
-<span id="L32"><span class="lineNum">      32</span>              : {</span>
-<span id="L33"><span class="lineNum">      33</span>              :     Q_UNUSED(bookmarkID);</span>
-<span id="L34"><span class="lineNum">      34</span>              :     Q_UNUSED(allowBackward);</span>
+<span id="L31"><span class="lineNum">      31</span>              :     // Search results are relevance-ordered, not chronological.</span>
+<span id="L32"><span class="lineNum">      32</span>              :     // Bookmarking doesn't make sense in this context.</span>
+<span id="L33"><span class="lineNum">      33</span> <span class="tlaUNC">           0 :     return false;</span></span>
+<span id="L34"><span class="lineNum">      34</span>              : }</span>
 <span id="L35"><span class="lineNum">      35</span>              : </span>
-<span id="L36"><span class="lineNum">      36</span>              :     // Search results are relevance-ordered, not chronological.</span>
-<span id="L37"><span class="lineNum">      37</span>              :     // Bookmarking doesn't make sense in this context.</span>
+<span id="L36"><span class="lineNum">      36</span> <span class="tlaUNC">           0 : bool SearchFeedItem::bookmarksEnabled() const</span></span>
+<span id="L37"><span class="lineNum">      37</span>              : {</span>
 <span id="L38"><span class="lineNum">      38</span> <span class="tlaUNC">           0 :     return false;</span></span>
 <span id="L39"><span class="lineNum">      39</span>              : }</span>
-<span id="L40"><span class="lineNum">      40</span>              : </span>
-<span id="L41"><span class="lineNum">      41</span> <span class="tlaUNC">           0 : bool SearchFeedItem::bookmarksEnabled() const</span></span>
-<span id="L42"><span class="lineNum">      42</span>              : {</span>
-<span id="L43"><span class="lineNum">      43</span> <span class="tlaUNC">           0 :     return false;</span></span>
-<span id="L44"><span class="lineNum">      44</span>              : }</span>
         </pre>
               </td>
             </tr>
