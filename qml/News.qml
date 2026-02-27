@@ -71,10 +71,17 @@ Item {
         newsView.forceActiveFocus();
     }
     
+    Style {
+        id: style;
+    }
+
     Item {
         id: newsMargin;
-        
+
         anchors.fill: parent;
+        anchors.topMargin: style.defaultMarin * 2;
+        anchors.bottomMargin: style.defaultMarin * 2;
+        anchors.rightMargin: style.defaultMarin;
         
         // The "interactor" is what talks to the C++ layer.
         NewsFeedInteractor {
