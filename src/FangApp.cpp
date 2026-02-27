@@ -30,6 +30,10 @@
 #include "platform/MacWindowHelper.h"
 #endif
 
+#ifdef Q_OS_WIN
+#include "platform/WinWindowHelper.h"
+#endif
+
 
 FangApp* FangApp::_instance = nullptr;
 
@@ -163,6 +167,12 @@ void FangApp::init()
     bool isDebugBuild = false;
 #endif // QT_DEBUG
     engine->rootContext()->setContextProperty("isDebugBuild", isDebugBuild); // let QML know if we're a debug build or not
+
+#ifdef Q_OS_WIN
+    // Pre-register as null so QML bindings don't get ReferenceErrors
+    // before onObjectCreated replaces it with the real instance.
+    engine->rootContext()->setContextProperty("winTitleBar", QVariant::fromValue<QObject*>(nullptr));
+#endif
     qCInfo(logApp) << "Is debug build: " << isDebugBuild;
     
     // Load feed list.
@@ -497,6 +507,11 @@ void FangApp::onObjectCreated(QObject* object, const QUrl& url)
     // Init settings.
     fangSettings->init(&dbSettings);
 
+#ifdef Q_OS_WIN
+    auto winTitleBar = new WinWindowHelper(window, fangSettings, this);
+    engine->rootContext()->setContextProperty("winTitleBar", winTitleBar);
+#endif
+
     // Init WebSocket server.
     webSocketServer.init(fangSettings);
     
@@ -767,10 +782,11 @@ void FangApp::markAllAsReadOrUnread(FeedItem *feed, bool read)
     MarkAllReadOrUnreadOperation markReadOp(&manager, feed, read);
     manager.run(&markReadOp);
 
-    // Update UI to bookmark last item in list.
-    // NOTE: May lead to bugs if the last news item is not loaded into newsList
-    currentFeed->setBookmark(currentFeed->getNewsList()->last()->getDbID());
-    webSocketServer.drawBookmark(currentFeed->getBookmarkID());
+    // If this is the current feed, update the UI to bookmark last item in list.
+    if (feed == currentFeed) {
+        currentFeed->setBookmark(currentFeed->getNewsList()->last()->getDbID());
+        webSocketServer.drawBookmark(currentFeed->getBookmarkID());
+    }
 }
 
 void FangApp::setRefreshTimer()

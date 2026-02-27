@@ -35,6 +35,20 @@ Window {
     // Treat as const
     property int minimumSidebarWidth: (platform === "ANDROID") ? 260 : 230;
     property int minimumNewsWidth: 400;
+
+    // Toggles between maximized and normal window size.
+    function toggleMaximized() {
+        if (!isDesktop) {
+            // Doesn't make sense on mobile.
+            return;
+        }
+
+        if (visibility === Window.Maximized) {
+            showNormal();
+        } else {
+            showMaximized();
+        }
+    }
     
     // Style object.
     Style {
@@ -200,6 +214,39 @@ Window {
     // Open the splash screen.
     Component.onCompleted: {
         openDialog("SplashScreenDialog.qml");
+    }
+
+    // Windows title bar.
+    Rectangle {
+        id: winTitleBarArea;
+
+        property bool isMaximized: main.visibility === Window.Maximized;
+
+        x: sidebar.width;
+        y: 0;
+        width: parent.width - sidebar.width;
+        height: (platform === "WIN" && winTitleBar)
+                ? (isMaximized ? winTitleBar.captionHeight : winTitleBar.titleBarHeight)
+                : 0;
+        visible: platform === "WIN";
+        color: style.color.background;
+        z: 1000;
+
+        // Drag to move window.
+        MouseArea {
+            anchors.fill: parent;
+            anchors.rightMargin: winTitleBar ? winTitleBar.buttonWidth * 3 : 0;
+            onPressed: main.startSystemMove();
+            onDoubleClicked: toggleMaximized();
+        }
+
+        // Caption buttons (minimize, maximize, close).
+        Loader {
+            active: platform === "WIN";
+            anchors.top: parent.top;
+            anchors.right: parent.right;
+            source: "WinCaptionButtons.qml";
+        }
     }
 
     // Window background behind all screens.
@@ -488,15 +535,7 @@ Window {
 
                 onSearchButtonClicked: openDialog("SearchDialog.qml");
 
-                onMaximizeToggle: {
-                    if (isDesktop) {
-                        if (visibility === Window.Maximized) {
-                            showNormal();
-                        } else {
-                            showMaximized();
-                        }
-                    }
-                }
+                onMaximizeToggle: toggleMaximized();
             }
 
             News {
@@ -506,6 +545,7 @@ Window {
                 SplitView.fillHeight: true;
                 SplitView.minimumWidth: minimumNewsWidth;
 
+                titleBarInset: winTitleBarArea.height;
                 newsFocus: true // set by dialog system
 /*
                 Item {

@@ -343,7 +343,10 @@ endif()
 if(WIN32)
     target_sources(Fang PRIVATE
         win32.rc
+        src/platform/WinWindowHelper.cpp
+        src/platform/WinWindowHelper.h
     )
+    target_link_libraries(Fang PRIVATE dwmapi)
 endif()
 
 # Platform: Android

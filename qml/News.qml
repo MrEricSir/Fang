@@ -63,6 +63,9 @@ Item {
         newsView.close();
     }
     
+    // Extra top padding for Windows custom title bar (caption buttons).
+    property int titleBarInset: 0;
+
     // Don't propagate key events while dialogs are up.
     property bool newsFocus: true;
 
@@ -79,7 +82,7 @@ Item {
         id: newsMargin;
 
         anchors.fill: parent;
-        anchors.topMargin: style.defaultMarin * 2;
+        anchors.topMargin: titleBarInset + style.defaultMarin * 2;
         anchors.bottomMargin: style.defaultMarin * 2;
         anchors.rightMargin: style.defaultMarin;
         

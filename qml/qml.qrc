@@ -38,5 +38,6 @@
         <file>KeyboardShortcut.qml</file>
         <file>ShortcutRow.qml</file>
         <file>SearchDialog.qml</file>
+        <file>WinCaptionButtons.qml</file>
     </qresource>
 </RCC>
