@@ -134,7 +134,7 @@ RearrangeableDelegate {
                 anchors.fill: parent;
                 anchors.topMargin: style.defaultMarin;
                 anchors.leftMargin: style.defaultMarin;
-                anchors.rightMargin: style.defaultMarin + (innerSidebar.contentOverflows ? sidebarScrollBar.width : 0);
+                anchors.rightMargin: style.defaultMarin + (feedListView.contentOverflows ? sidebarScrollBar.width : 0);
                 Behavior on anchors.rightMargin {
                     PropertyAnimation {
                         easing.type: Easing.InOutQuad;
