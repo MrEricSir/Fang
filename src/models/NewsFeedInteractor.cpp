@@ -104,3 +104,26 @@ QString NewsFeedInteractor::getSearchQuery()
     }
     return QString();
 }
+
+QString NewsFeedInteractor::getSearchScopeType()
+{
+    SearchFeedItem* searchFeed = FangApp::instance()->getSearchFeed();
+    if (searchFeed) {
+        switch (searchFeed->getScope()) {
+        case SearchFeedItem::Scope::Feed:
+            return "feed";
+        case SearchFeedItem::Scope::Folder:
+            return "folder";
+        default:
+            return "global";
+        }
+    }
+
+    return "global";
+}
+
+qint64 NewsFeedInteractor::getSearchScopeId()
+{
+    SearchFeedItem* searchFeed = FangApp::instance()->getSearchFeed();
+    return searchFeed ? searchFeed->getScopeId() : -1;
+}

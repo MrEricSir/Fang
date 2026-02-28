@@ -82,6 +82,12 @@ public slots:
     // Returns the current search query, or empty string if none.
     QString getSearchQuery();
 
+    // Returns the current search scope type ("global", "feed", or "folder").
+    QString getSearchScopeType();
+
+    // Returns the current search scope ID (-1 for global).
+    qint64 getSearchScopeId();
+
 private:
     // Op man!
     OperationManager* manager;

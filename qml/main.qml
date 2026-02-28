@@ -70,6 +70,23 @@ Window {
         objectName: "fangSettings"; // Don't change this!
     }
 
+    // Search history.
+    // Contents of each item:
+    // { query: "...", scopeType: "global"|"feed", scopeId: -1|feedId, feedTitle: "All News"|"Feed Name" }
+    property var searchHistory: []
+
+    function addSearchHistory(query, scopeType, scopeId, feedTitle) {
+        // Remove any duplicate (same query + scopeType + scopeId).
+        var history = searchHistory.filter(function(entry) {
+            return !(entry.query === query && entry.scopeType === scopeType && entry.scopeId === scopeId);
+        });
+        // Prepend new entry.
+        history.unshift({ query: query, scopeType: scopeType, scopeId: scopeId, feedTitle: feedTitle });
+        // Cap at 10.
+        if (history.length > 10) history.length = 10;
+        searchHistory = history;
+    }
+
     // Latest version, will be displayed after UI has settled.
     property string pendingUpdateVersion: "";
 
