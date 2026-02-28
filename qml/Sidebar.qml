@@ -163,7 +163,7 @@ Item {
         anchors.bottom: sidebarControls.top;
         
         Rectangle {
-            id: rectangle2;
+            id: innerSidebar;
             color: style.color.sidebar;
             anchors.fill: parent;
             
@@ -180,7 +180,6 @@ Item {
             // Also controls the width of the FeedTitleDelegate.
             readonly property bool contentOverflows: feedListView.contentHeight > feedListView.height;
 
-
             ListView {
                 id: feedListView;
                 anchors.top: parent.top;
@@ -190,7 +189,7 @@ Item {
                 clip: true;
 
                 visible: feedsExist;
-                interactive: rectangle2.contentOverflows // contentHeight > height;
+                interactive: innerSidebar.contentOverflows;
 
                 ScrollBar.vertical: FangScrollBar {
                     id: sidebarScrollBar;
