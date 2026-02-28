@@ -177,7 +177,9 @@ Item {
             }
             
             // Whether the feed list overflows and needs a scrollbar.
-            readonly property bool contentOverflows: feedListView.contentHeight > feedListView.height
+            // Also controls the width of the FeedTitleDelegate.
+            readonly property bool contentOverflows: feedListView.contentHeight > feedListView.height;
+
 
             ListView {
                 id: feedListView;
@@ -188,7 +190,7 @@ Item {
                 clip: true;
 
                 visible: feedsExist;
-                interactive: contentHeight > height;
+                interactive: rectangle2.contentOverflows // contentHeight > height;
 
                 ScrollBar.vertical: FangScrollBar {
                     id: sidebarScrollBar;
