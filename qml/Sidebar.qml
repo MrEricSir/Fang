@@ -247,6 +247,8 @@ Item {
                             onTriggered: {
                                 var dialog = openDialog("SearchDialog.qml");
                                 dialog.initialQuery = newsFeedInteractor.getSearchQuery();
+                                dialog.initialScopeType = newsFeedInteractor.getSearchScopeType();
+                                dialog.initialScopeId = newsFeedInteractor.getSearchScopeId();
                             }
                         }
 
