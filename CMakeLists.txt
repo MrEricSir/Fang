@@ -82,6 +82,7 @@ add_subdirectory(external/QSimpleStateMachine)
 
 # Add QMLRearrangeableTreeView directory
 add_subdirectory(external/QMLRearrangeableTreeView)
+set(QML_IMPORT_PATH "${CMAKE_BINARY_DIR}/external/QMLRearrangeableTreeView" CACHE STRING "" FORCE)
 
 # Main application target
 qt_add_executable(Fang WIN32

@@ -14,9 +14,18 @@ RearrangeableDelegate {
     onClicked: (mouse) => {
         if (mouse.button === Qt.LeftButton) {
             if (isFolder && opener.width > 0 && mouse.x < titleDelegate.x + opener.width) {
-               toggleFolder();
+                // Open/close folder.
+                toggleFolder();
+            } else if (isSearchFeed && searchCloseCol.visible) {
+                // Check if we should close search feed.
+                let mapped = searchCloseCol.mapFromItem(feedTitleDelegate, mouse.x, mouse.y);
+                if (mapped.x >= -4 && mapped.x <= searchCloseCol.width + 4) {
+                    newsFeedInteractor.closeSearchFeed();
+                    return;
+                }
             } else {
-               feedListView.currentIndex = index;
+                // Select item.
+                feedListView.currentIndex = index;
             }
         }
     }
@@ -125,7 +134,7 @@ RearrangeableDelegate {
                 anchors.fill: parent;
                 anchors.topMargin: style.defaultMarin;
                 anchors.leftMargin: style.defaultMarin;
-                anchors.rightMargin: style.defaultMarin + (rectangle2.contentOverflows ? sidebarScrollBar.width : 0);
+                anchors.rightMargin: style.defaultMarin + (feedListView.contentOverflows ? sidebarScrollBar.width : 0);
                 Behavior on anchors.rightMargin {
                     PropertyAnimation {
                         easing.type: Easing.InOutQuad;
@@ -293,7 +302,7 @@ RearrangeableDelegate {
                     anchors.top: parent.top;
                     anchors.bottom: parent.bottom;
                     anchors.left: feedIconCol.right;
-                    anchors.right: feedCountCol.left;
+                    anchors.right: isSearchFeed ? searchCloseCol.left : feedCountCol.left;
 
                     anchors.rightMargin: 4 * style.scale;
                     anchors.bottomMargin: style.defaultMargin;
@@ -318,8 +327,42 @@ RearrangeableDelegate {
 
                 }
 
+                // Close button for search feeds.
+                Item {
+                    id: searchCloseCol;
+
+                    visible: isSearchFeed;
+
+                    anchors.right: parent.right;
+                    anchors.top: parent.top;
+                    anchors.bottom: parent.bottom;
+                    anchors.rightMargin: 7;
+
+                    width: searchCloseIcon.width;
+                    height: parent.height;
+
+                    Image {
+                        id: searchCloseIcon;
+
+                        source: fangSettings.currentStyle === "LIGHT"
+                                ? "images/symbol_close.svg" : "images/symbol_dark_close.svg";
+                        width: 12 * style.scale;
+                        height: 12 * style.scale;
+                        anchors.verticalCenter: parent.verticalCenter;
+                        asynchronous: true;
+                        opacity: searchCloseHover.hovered ? 1.0 : 0.6;
+                    }
+
+                    HoverHandler {
+                        id: searchCloseHover;
+                    }
+                }
+
+                // Unread count badge (hidden for search feeds).
                 Item {
                     id: feedCountCol;
+
+                    visible: !isSearchFeed;
 
                     states: [
                         State { name: "allread"; },

@@ -163,7 +163,7 @@ Item {
         anchors.bottom: sidebarControls.top;
         
         Rectangle {
-            id: rectangle2;
+            id: innerSidebar;
             color: style.color.sidebar;
             anchors.fill: parent;
             
@@ -175,12 +175,26 @@ Item {
                 anchors.right: parent.right;
                 width: 1 * style.scale;
             }
-            
-            // Whether the feed list overflows and needs a scrollbar.
-            readonly property bool contentOverflows: feedListView.contentHeight > feedListView.height
+
+            // Blocks trackpad wheel events to prevent scrolling when not needed.
+            MouseArea {
+                anchors.fill: feedListView;
+                z: 1;
+                visible: !feedListView.contentOverflows;
+                onWheel: (wheel) => {
+                    wheel.accepted = true;
+                }
+                onPressed: (mouse) => {
+                    mouse.accepted = false;
+                }
+            }
 
             ListView {
                 id: feedListView;
+
+                // Whether the feed list overflows and needs a scrollbar.
+                readonly property bool contentOverflows: contentHeight > height;
+
                 anchors.top: parent.top;
                 anchors.bottom: parent.bottom;
                 anchors.left: parent.left;
@@ -188,11 +202,12 @@ Item {
                 clip: true;
 
                 visible: feedsExist;
-                interactive: contentHeight > height;
+                interactive: contentOverflows;
 
                 ScrollBar.vertical: FangScrollBar {
                     id: sidebarScrollBar;
                     rightPadding: 4 * style.scale;
+                    policy: feedListView.contentOverflows ? ScrollBar.AsNeeded : ScrollBar.AlwaysOff;
                 }
 
                 delegate: FeedTitleDelegate {
