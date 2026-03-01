@@ -26,14 +26,6 @@
 
 Q_DECL_EXPORT int main(int argc, char *argv[])
 {
-    // Only run one Fang at a time, fellas.
-    QSingleInstanceCheck single("FangNewsReader");
-    if (single.isAlreadyRunning()) {
-        qDebug() << "Fang is already running";
-        single.notify();
-        return -1;
-    }
-
     qmlRegisterType<FeedValidator>("Fang", 1, 0, "FeedValidator");
     qmlRegisterType<FangSettings>("Fang", 1, 0, "FangSettings");
     qmlRegisterType<NewsFeedInteractor>("Fang", 1, 0, "NewsFeedInteractor");
@@ -52,6 +44,14 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     app.setApplicationName("Fang");
     app.setApplicationVersion(APP_VERSION);
     app.setWindowIcon(QIcon(":/qml/images/full_icon.png"));
+
+    // Only run one Fang at a time, fellas. Must be run after creating QApplication.
+    QSingleInstanceCheck single("FangNewsReader");
+    if (single.isAlreadyRunning()) {
+        qDebug() << "Fang is already running";
+        single.notify();
+        return -1;
+    }
     
     int ret = 0;
 
