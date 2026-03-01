@@ -255,7 +255,7 @@ Window {
         // Drag to move window.
         MouseArea {
             anchors.fill: parent;
-            anchors.rightMargin: winTitleBar ? winTitleBar.buttonWidth * 3 : 0;
+            anchors.rightMargin: (platform === "WIN" && winTitleBar) ? winTitleBar.buttonWidth * 3 : 0;
             onPressed: main.startSystemMove();
             onDoubleClicked: toggleMaximized();
         }

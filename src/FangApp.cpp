@@ -37,9 +37,9 @@
 
 FangApp* FangApp::_instance = nullptr;
 
-FangApp::FangApp(QApplication *parent, QQmlApplicationEngine* engine, QSingleInstanceCheck* single) :
+FangApp::FangApp(QApplication *parent, QSingleInstanceCheck* single) :
     FangObject(parent),
-    engine(engine),
+    engine(nullptr),
     single(single),
     manager(this),
     feedList(new FeedItem, this),
@@ -67,14 +67,12 @@ FangApp::FangApp(QApplication *parent, QQmlApplicationEngine* engine, QSingleIns
     // Set config for webserver.
     webServer = new WebServer(this, this);
     webServer->setWebsocketPort(webSocketServer.getPort());
-    
+
     // Setup signals.
     connect(parent, &QApplication::aboutToQuit, this, &FangApp::onQuit);
 
-    connect(engine, &QQmlApplicationEngine::objectCreated, this, &FangApp::onObjectCreated);
-
     connect(single, &QSingleInstanceCheck::notified, this, &FangApp::onSecondInstanceStarted);
-    
+
     connect(&feedList, &ListModel::added, this, &FangApp::onFeedAdded);
     connect(&feedList, &ListModel::removed, this, &FangApp::onFeedRemoved);
     connect(&feedList, &ListModel::selectedChanged, this, &FangApp::onFeedSelected);
@@ -139,8 +137,11 @@ void FangApp::initForTesting()
     loadAllFinished = true;
 }
 
-void FangApp::init()
+void FangApp::init(QQmlApplicationEngine* engine)
 {
+    this->engine = engine;
+    connect(engine, &QQmlApplicationEngine::objectCreated, this, &FangApp::onObjectCreated);
+
     qCInfo(logApp) << "FangApp init version: " << APP_VERSION;
     qCInfo(logApp) << "";
 

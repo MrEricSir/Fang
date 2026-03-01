@@ -45,46 +45,53 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     app.setApplicationVersion(APP_VERSION);
     app.setWindowIcon(QIcon(":/qml/images/full_icon.png"));
 
-    // Only run one Fang at a time, fellas.
+    // Only run one Fang at a time, fellas. Must be run after creating QApplication.
     QSingleInstanceCheck single("FangNewsReader");
     if (single.isAlreadyRunning()) {
+        qDebug() << "Fang is already running";
         single.notify();
         return -1;
     }
     
     int ret = 0;
-    QQmlApplicationEngine engine;
-    engine.setNetworkAccessManagerFactory(new FangQQmlNetworkAccessManagerFactory());
-    QQmlFileSelector selector(&engine); // For platform-specific QML files
 
-    // Set QML file selectors.
-    QStringList selectors;
+    // The main startup sequence lives in this code block for easier cleanup.
+    {
+        FangApp fang(&app, &single);
+
+        // Create the QML layer.
+        QQmlApplicationEngine engine;
+        engine.setNetworkAccessManagerFactory(new FangQQmlNetworkAccessManagerFactory());
+        QQmlFileSelector selector(&engine); // For platform-specific QML files
+
+        // Set QML file selectors.
+        QStringList selectors;
 
 #ifndef QT_WEBVIEW_WEBENGINE_BACKEND
-    // Add a selector indicating we need Qt's native WebView
-    selectors << "webview";
+        // Add a selector indicating we need Qt's native WebView
+        selectors << "webview";
 #endif // QT_WEBVIEW_WEBENGINE_BACKEND
 
 #if defined(Q_OS_ANDROID) || defined(Q_OS_IOS)
-    selectors << "mobile";
+        selectors << "mobile";
 #endif
 
-    if (selectors.count()) {
-        selector.setExtraSelectors(selectors);
-    }
-    
-    // Use a code block to ensure FangApp is deleted.
-    {
-        FangApp fang(&app, &engine, &single);
-        fang.init();
+        if (selectors.count()) {
+            selector.setExtraSelectors(selectors);
+        }
 
+        // Init the app.
+        fang.init(&engine);
+
+        // Run the app.
         ret = app.exec();
     }
-    
+
     // Make sure the database is shut down.
     delete DB::instance();
-    
+
+    // Leak check.
     FangObject::printRemainingObjects();
-    
+
     return ret;
 }
