@@ -31,7 +31,7 @@ class FangApp : public FangObject
 {
     Q_OBJECT
 public:
-    explicit FangApp(QApplication *parent, QQmlApplicationEngine* engine, QSingleInstanceCheck* single);
+    explicit FangApp(QApplication *parent, QSingleInstanceCheck* single);
 
     virtual ~FangApp();
 
@@ -50,7 +50,7 @@ protected:
 
 public:
 
-    void init();
+    void init(QQmlApplicationEngine* engine);
     
     /*!
         \brief Returns the feed for a given index in the global feed list.

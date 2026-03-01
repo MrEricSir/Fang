@@ -55,11 +55,14 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     
     int ret = 0;
 
-    // Wrap our application in a code block to (slightly) simplify cleanup,
+    // The main startup sequence lives in this code block for easier cleanup.
     {
-        QQmlApplicationEngine* engine = new QQmlApplicationEngine();
-        engine->setNetworkAccessManagerFactory(new FangQQmlNetworkAccessManagerFactory());
-        QQmlFileSelector selector(engine); // For platform-specific QML files
+        FangApp fang(&app, &single);
+
+        // Create the QML layer.
+        QQmlApplicationEngine engine;
+        engine.setNetworkAccessManagerFactory(new FangQQmlNetworkAccessManagerFactory());
+        QQmlFileSelector selector(&engine); // For platform-specific QML files
 
         // Set QML file selectors.
         QStringList selectors;
@@ -77,15 +80,11 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
             selector.setExtraSelectors(selectors);
         }
 
-        // Init app.
-        FangApp fang(&app, engine, &single);
-        fang.init();
+        // Init the app.
+        fang.init(&engine);
 
-        // Run app.
+        // Run the app.
         ret = app.exec();
-
-        // Delete QML layer.
-        delete engine;
     }
 
     // Make sure the database is shut down.
