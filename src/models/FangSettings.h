@@ -1,6 +1,7 @@
 #ifndef FANGSETTINGS_H
 #define FANGSETTINGS_H
 
+#include <QEvent>
 #include <QQuickItem>
 #include <QString>
 #include <QSettings>
@@ -37,6 +38,8 @@ class FangSettings : public QQuickItem, public SettingsInterface
     
 public:
     explicit FangSettings(QQuickItem *parent = nullptr);
+
+    bool event(QEvent *event) override;
 
     /*!
         \brief The stuff the settings object needs to do its job properly.

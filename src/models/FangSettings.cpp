@@ -1,6 +1,7 @@
 #include "FangSettings.h"
 #include "../utilities/ErrorHandling.h"
 #include <QDebug>
+#include <QPalette>
 
 FangSettings::FangSettings(QQuickItem *parent) :
     QQuickItem(parent),
@@ -79,6 +80,17 @@ void FangSettings::onDBSettingChanged(DBSettingsKey key, QString value)
     }
 }
 
+bool FangSettings::event(QEvent *event)
+{
+    if (event->type() == QEvent::ApplicationPaletteChange) {
+        if (getStyle() == "DEFAULT" &&
+            QGuiApplication::styleHints()->colorScheme() == Qt::ColorScheme::Unknown) {
+            emit currentStyleChanged(getCurrentStyle());
+        }
+    }
+    return QQuickItem::event(event);
+}
+
 void FangSettings::onSystemColorSchemeChanged(Qt::ColorScheme colorScheme)
 {
     if (getStyle() == "DEFAULT") {
@@ -126,8 +138,15 @@ QString FangSettings::getCurrentStyle()
 {
     QString ret = getStyle();
     if (ret == "DEFAULT") {
-        // Attempt to get system color scheme.
-        ret = colorSchemeToString(QGuiApplication::styleHints()->colorScheme());
+        Qt::ColorScheme scheme = QGuiApplication::styleHints()->colorScheme();
+        if (scheme != Qt::ColorScheme::Unknown) {
+            // Convert Qt's color scheme to our string-based color scheme.
+            ret = colorSchemeToString(scheme);
+        } else {
+            // Essentially the same as above, but for older versions of Linux desktops.
+            QColor windowColor = QGuiApplication::palette().color(QPalette::Window);
+            ret = (windowColor.lightnessF() < 0.5) ? "DARK" : "LIGHT";
+        }
     }
 
     return ret;
