@@ -275,7 +275,7 @@ Window {
     // Prevent closing when system tray icon is active.
     // Note: This is a valid property according to the docs; ignore the Qt Creator error message.
     onClosing: (event) => {
-        if (fangSettings.showTrayIcon && platform === "WIN") {
+        if (fangSettings.showTrayIcon && (platform === "WIN" || platform === "LINUX")) {
             event.accepted = false;
             hide();
         }

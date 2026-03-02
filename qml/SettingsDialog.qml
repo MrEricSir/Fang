@@ -52,7 +52,7 @@ Dialog {
     DialogGroup {
         title: "Tray icon";
         width: parent.width;
-        visible: platform === "WIN";
+        visible: platform === "WIN" || platform === "LINUX";
 
         radioGroup: RadioButtonGroup {
             selected: fangSettings.showTrayIcon ? trayIconEnabled : trayIconDisabled;

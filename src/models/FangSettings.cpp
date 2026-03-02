@@ -191,9 +191,6 @@ void FangSettings::setLastSeenVersion(QString s)
 bool FangSettings::getShowTrayIcon()
 {
     bool defaultValue = false;
-#if defined(Q_OS_WIN)
-    defaultValue = true;
-#endif
     return getBoolSetting("showTrayIcon", defaultValue);
 }
 
