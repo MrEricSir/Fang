@@ -347,11 +347,7 @@ void TestFangSettings::testSetLastSeenVersion_sameValueNoSignal()
 
 void TestFangSettings::testGetShowTrayIcon_defaultValue()
 {
-#if defined(Q_OS_WIN)
-    QCOMPARE(settings->getShowTrayIcon(), true);
-#else
     QCOMPARE(settings->getShowTrayIcon(), false);
-#endif
 }
 
 void TestFangSettings::testSetShowTrayIcon_changesValue()
