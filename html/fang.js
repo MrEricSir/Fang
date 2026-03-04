@@ -989,23 +989,31 @@ function isTopAboveScroll(element)
 }
 
 /**
-  * Returns the first visible news item.
+  * Returns the first visible news item via binary search.
   */
 function getFirstVisible()
 {
-    // Go through all the next items.
-    let item = $(newsContainerSelector);
-
-    while (item !== null && item.length) {
-        if (!isAboveScroll(item)) {
-            return item;
-        }
-
-        item = nextNewsContainer(item);
+    let items = $(newsContainerSelector);
+    let count = items.length;
+    if (count === 0) {
+        return $();
     }
 
-    // Just return the last item, then?
-    return getLastNewsContainer();
+    let lo = 0, hi = count - 1;
+    let result = hi;
+
+    while (lo <= hi) {
+        let mid = (lo + hi) >> 1;
+
+        if (isAboveScroll(items.eq(mid))) {
+            lo = mid + 1;
+        } else {
+            result = mid;
+            hi = mid - 1;
+        }
+    }
+
+    return items.eq(result);
 }
 
 /**
@@ -1336,20 +1344,19 @@ $(document).ready(function() {
         //console.log("Bookmark is above scroll! ", bookmarkedItem);
         //console.log("Next available news item is: ", nextItem);
 
+        // Find the last item above the scroll, then set bookmark.
+        let lastAboveScroll = null;
         while (nextItem !== null && nextItem.length >= 1) {
-            // Nothing more to do.
             if (!isAboveScroll(nextItem) && !bookmarkAll) {
-                // console.log("checkBookmark: item not above scroll:", nextItem.attr('id'))
-
                 break;
             }
 
-            // Move the bookmark.
-            // console.log("checkBookmark: set bookmark to ", nextItem.attr('id'));
-            apiGetRequest('set_bookmark', htmlIdToId(nextItem.attr('id')));
-
-            // Continue to next item.
+            lastAboveScroll = nextItem;
             nextItem = nextNewsContainer(nextItem);
+        }
+
+        if (lastAboveScroll !== null) {
+            apiGetRequest('set_bookmark', htmlIdToId(lastAboveScroll.attr('id')));
         }
     }
 
@@ -1433,6 +1440,35 @@ $(document).ready(function() {
     /**
      * Initial setup.
      */
+
+    // Navigation key handler.
+    document.addEventListener('keydown', function(e) {
+        let tag = document.activeElement && document.activeElement.tagName;
+        if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') {
+            return;
+        } else if (currentMode !== 'newsView') {
+            return;
+        }
+
+        switch (e.key) {
+            case 'ArrowLeft':
+                e.preventDefault();
+                jumpNextPrev(false);
+                break;
+            case 'ArrowRight':
+                e.preventDefault();
+                jumpNextPrev(true);
+                break;
+            case 'PageUp':
+                e.preventDefault();
+                window.scrollBy({ top: -window.innerHeight * 0.85, behavior: 'instant' });
+                break;
+            case 'PageDown':
+                e.preventDefault();
+                window.scrollBy({ top: window.innerHeight * 0.85, behavior: 'instant' });
+                break;
+        }
+    });
 
     // Use passive scroll event listener instead of polling
     window.addEventListener('scroll', onScroll, { passive: true });
