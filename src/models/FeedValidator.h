@@ -22,6 +22,7 @@ class FeedValidator : public QQuickItem
     Q_PROPERTY(QVariantList discoveredFeeds READ discoveredFeeds NOTIFY discoveredFeedsChanged)
     Q_PROPERTY(int feedCount READ feedCount NOTIFY feedCountChanged)
     Q_PROPERTY(int feedsToAddCount READ feedsToAddCount NOTIFY feedsToAddCountChanged)
+    Q_PROPERTY(bool hasPodcastFeed READ hasPodcastFeed NOTIFY discoveredFeedsChanged)
     
 public:
     explicit FeedValidator(QQuickItem *parent = nullptr);
@@ -32,6 +33,7 @@ public:
     QVariantList discoveredFeeds();
     int feedCount();
     int feedsToAddCount();
+    bool hasPodcastFeed();
     void setUrl(QString url);
 
 public slots:
@@ -65,6 +67,7 @@ protected:
         QString url;
         QString title;
         bool selected;
+        bool isPodcast;
         int discoveryIndex;  // Index in FeedDiscovery's list
     };
 

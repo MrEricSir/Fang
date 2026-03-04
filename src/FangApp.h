@@ -8,6 +8,7 @@
 #include <QQuickView>
 #include <QTimer>
 #include <QMap>
+#include <QEvent>
 
 #include <QSingleInstanceCheck/QSingleInstanceCheck.h>
 
@@ -50,7 +51,11 @@ protected:
 
 public:
 
+    bool eventFilter(QObject* obj, QEvent* event) override;
+
     void init(QQmlApplicationEngine* engine);
+
+    void setPendingFeedUrl(const QString& url);
     
     /*!
         \brief Returns the feed for a given index in the global feed list.
@@ -93,6 +98,8 @@ signals:
     void specialFeedCountChanged();
 
 public slots:
+    void openFeedUrl(const QString& url);
+
     inline int feedCount() { return feedList.rowCount(); }
 
     /*!
@@ -356,6 +363,8 @@ private:
     bool isSearchFeedVisible;
 
     FeedItem* lastFeedSelected;
+
+    QString pendingFeedUrl;
 };
 
 #endif // FANGAPP_H

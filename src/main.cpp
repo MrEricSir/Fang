@@ -45,11 +45,25 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     app.setApplicationVersion(APP_VERSION);
     app.setWindowIcon(QIcon(":/qml/images/full_icon.png"));
 
+    // Gets feed URL from command-line arguments. Intended for opening feeds on Windows and Linux
+    QString pendingFeedUrl;
+    for (int i = 1; i < argc; ++i) {
+        QString arg = QString::fromLocal8Bit(argv[i]);
+        if (arg.startsWith("feed://") || arg.startsWith("feeds://") || arg.startsWith("feed:")) {
+            pendingFeedUrl = arg;
+            break;
+        }
+    }
+
     // Only run one Fang at a time, fellas. Must be run after creating QApplication.
     QSingleInstanceCheck single("FangNewsReader");
     if (single.isAlreadyRunning()) {
         qDebug() << "Fang is already running";
-        single.notify();
+        if (!pendingFeedUrl.isEmpty()) {
+            single.notify(QStringList{pendingFeedUrl});
+        } else {
+            single.notify();
+        }
         return -1;
     }
     
@@ -58,6 +72,10 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     // The main startup sequence lives in this code block for easier cleanup.
     {
         FangApp fang(&app, &single);
+
+        if (!pendingFeedUrl.isEmpty()) {
+            fang.setPendingFeedUrl(pendingFeedUrl);
+        }
 
         // Create the QML layer.
         QQmlApplicationEngine engine;

@@ -31,6 +31,7 @@ QVariantList FeedValidator::discoveredFeeds()
         feedMap["url"] = info.url;
         feedMap["title"] = info.title;
         feedMap["selected"] = info.selected;
+        feedMap["isPodcast"] = info.isPodcast;
         feedMap["index"] = i;
         result.append(feedMap);
     }
@@ -51,6 +52,14 @@ int FeedValidator::feedsToAddCount()
         }
     }
     return count;
+}
+
+bool FeedValidator::hasPodcastFeed()
+{
+    for (const FeedInfo& f : _feeds) {
+        if (f.isPodcast) return true;
+    }
+    return false;
 }
 
 void FeedValidator::setFeedSelected(int index, bool selected)
@@ -122,6 +131,7 @@ void FeedValidator::onFeedDiscoveryDone(FeedDiscovery* discovery)
                 info.url = df.url.toString();
                 info.title = df.feed->title.isEmpty() ? df.url.toString() : df.feed->title;
                 info.selected = (i == 0);  // Only the first one is selected by default.
+                info.isPodcast = df.feed->isPodcast;
                 info.discoveryIndex = i;
                 _feeds.append(info);
             }

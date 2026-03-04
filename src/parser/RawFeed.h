@@ -23,7 +23,9 @@ public:
     QUrl imageURL;
     
     QList<RawNews*> items;
-    
+
+    bool isPodcast = false;
+
     // For debuggin' and stuff.
     QString toString();
 };

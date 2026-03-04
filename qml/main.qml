@@ -36,6 +36,14 @@ Window {
     property int minimumSidebarWidth: (platform === "ANDROID") ? 260 : 230;
     property int minimumNewsWidth: 400;
 
+    // Opens the Add Feed dialog with a feed URL.
+    function openAddDialogWithUrl(feedUrl) {
+        var dialog = openDialog("AddDialog.qml");
+        if (dialog) {
+            dialog.initialUrl = feedUrl;
+        }
+    }
+
     // Toggles between maximized and normal window size.
     function toggleMaximized() {
         if (!isDesktop) {
