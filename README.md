@@ -28,7 +28,12 @@ The binaries are provided as a convenience only but require extra steps to run o
 1. Download `Fang-macOS-DMG` from the [Releases page](https://github.com/MrEricSir/Fang/releases)
 2. Double-click the DMG file
 3. Drag Fang.app to the Applications folder
-4. In the Applications folder, control-click Fang.app. Select Open from the menu, then Open from the warning dialog.
+4. Depending on your MacOS version you will need to do one of the following:
+   - Tahoe or above: From the command line, run the following command:
+     ```bash
+     xattr -d com.apple.quarantine /Applications/Fang.app/
+     ```
+   - Older versions: In the Applications folder, control-click Fang.app. Select Open from the menu, then Open from the warning dialog.
 
 ### Windows
 
