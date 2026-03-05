@@ -3,6 +3,7 @@
 #include "utilities/FangLogging.h"
 #include <QElapsedTimer>
 #include <QImageReader>
+#include <QFileOpenEvent>
 
 #include "utilities/ErrorHandling.h"
 
@@ -71,7 +72,21 @@ FangApp::FangApp(QApplication *parent, QSingleInstanceCheck* single) :
     // Setup signals.
     connect(parent, &QApplication::aboutToQuit, this, &FangApp::onQuit);
 
-    connect(single, &QSingleInstanceCheck::notified, this, &FangApp::onSecondInstanceStarted);
+    // Listen for notifications from other Fang instances.
+    connect(single, &QSingleInstanceCheck::notified, this, [this](const QStringList& args) {
+        for (const QString& arg : args) {
+            // If we got a feed URL, attempt to open it.
+            if (arg.startsWith("feed://") || arg.startsWith("feeds://") || arg.startsWith("feed:")) {
+                openFeedUrl(arg);
+                return;
+            }
+        }
+        // No feed URL.
+        onSecondInstanceStarted();
+    });
+
+    // Listen for macOS QFileOpenEvent on the QApplication.
+    parent->installEventFilter(this);
 
     connect(&feedList, &ListModel::added, this, &FangApp::onFeedAdded);
     connect(&feedList, &ListModel::removed, this, &FangApp::onFeedRemoved);
@@ -538,6 +553,15 @@ void FangApp::onObjectCreated(QObject* object, const QUrl& url)
 
     // Start the update checker (checks immediately and then every 24 hours)
     updateChecker.start();
+
+    // Process any pending feed URL (from command-line or QFileOpenEvent).
+    if (!pendingFeedUrl.isEmpty()) {
+        QString url = pendingFeedUrl;
+        pendingFeedUrl.clear();
+        QTimer::singleShot(500, this, [this, url]() {
+            openFeedUrl(url);
+        });
+    }
 }
 
 void FangApp::onSecondInstanceStarted()
@@ -971,5 +995,52 @@ SearchFeedItem* FangApp::performSearch(const QString& query,
     feedList.setSelected(searchFeed);
 
     return searchFeed;
+}
+
+bool FangApp::eventFilter(QObject* obj, QEvent* event)
+{
+    if (event->type() == QEvent::FileOpen) {
+        QFileOpenEvent* fileOpenEvent = static_cast<QFileOpenEvent*>(event);
+        QString url = fileOpenEvent->url().toString();
+        if (url.startsWith("feed://") || url.startsWith("feeds://") || url.startsWith("feed:")) {
+            openFeedUrl(url);
+            return true;
+        }
+    }
+    return FangObject::eventFilter(obj, event);
+}
+
+void FangApp::setPendingFeedUrl(const QString& url)
+{
+    pendingFeedUrl = url;
+}
+
+void FangApp::openFeedUrl(const QString& url)
+{
+    // Normalize: feed://example.com -> http://example.com
+    //            feeds://example.com -> https://example.com
+    //            feed:http://example.com -> http://example.com
+    //            feed:https://example.com -> https://example.com
+    QString normalized = url;
+    if (normalized.startsWith("feed://")) {
+        normalized = "http://" + normalized.mid(7);
+    } else if (normalized.startsWith("feeds://")) {
+        normalized = "https://" + normalized.mid(8);
+    } else if (normalized.startsWith("feed:")) {
+        normalized = normalized.mid(5);
+    }
+
+    if (!window) {
+        // Save URL for later, the window isn't open yet.
+        pendingFeedUrl = normalized;
+        return;
+    }
+
+    // Focus the app window.
+    onSecondInstanceStarted();
+
+    // Open the Add Feed dialog with the URL pre-populated.
+    QMetaObject::invokeMethod(window, "openAddDialogWithUrl",
+                              Q_ARG(QVariant, normalized));
 }
 

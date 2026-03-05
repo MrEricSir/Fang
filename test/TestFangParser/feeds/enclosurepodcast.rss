@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Enclosure Podcast</title>
+    <link>http://example.com/podcast</link>
+    <description>A podcast detected by audio enclosures only</description>
+    <item>
+      <title>Episode 1: Pilot</title>
+      <link>http://example.com/podcast/ep1</link>
+      <guid>http://example.com/podcast/ep1</guid>
+      <pubDate>Mon, 01 Jan 2024 12:00:00 +0000</pubDate>
+      <enclosure url="http://example.com/podcast/ep1.mp3" length="12345678" type="audio/mpeg" />
+    </item>
+    <item>
+      <title>Episode 2: The Sequel</title>
+      <link>http://example.com/podcast/ep2</link>
+      <guid>http://example.com/podcast/ep2</guid>
+      <pubDate>Mon, 08 Jan 2024 12:00:00 +0000</pubDate>
+      <enclosure url="http://example.com/podcast/ep2.mp3" length="23456789" type="audio/mpeg" />
+    </item>
+  </channel>
+</rss>

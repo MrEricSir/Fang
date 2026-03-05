@@ -4,7 +4,9 @@ import Fang 1.0
 // The dialog for adding a feed!
 Dialog {
     id: addDialog;
-    
+
+    property string initialUrl: "";
+
     title: "Add a Feed";
     
     onDialogOpened: {
@@ -106,6 +108,12 @@ Dialog {
         width: parent.width;
     }
     
+    DialogText {
+        visible: validator.hasPodcastFeed;
+        text: "This appears to be a podcast feed. Fang is designed for news — audio content won't play.";
+        color: style.color.fadedText;
+    }
+
     DialogGroup {
         width: parent.width;
 
@@ -150,6 +158,17 @@ Dialog {
         validator.destroy();
     }
     
+    onInitialUrlChanged: {
+        if (initialUrl !== "") {
+            textURL.text = initialUrl;
+            validator.check();
+            addDialog.state = "validating";
+            validationStatus.state = "spinner";
+            validationStatus.text = "Checking feed...";
+            validationStatus.visible = true;
+        }
+    }
+
     // Magic beans that validate & add feeds (see C++ layer.)
     FeedValidator {
         id: validator;

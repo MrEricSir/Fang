@@ -38,5 +38,9 @@ coverage_html/
 
 # IDE artifacts
 .qt/
+.qtcreator/
 .vscode/
 .idea/
+
+# Tool artifacts
+compile_commands.json

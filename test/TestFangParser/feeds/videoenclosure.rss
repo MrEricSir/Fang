@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Video Feed</title>
+    <link>http://example.com/videos</link>
+    <description>A feed with video enclosures only</description>
+    <item>
+      <title>Video 1</title>
+      <link>http://example.com/videos/1</link>
+      <guid>http://example.com/videos/1</guid>
+      <pubDate>Mon, 01 Jan 2024 12:00:00 +0000</pubDate>
+      <enclosure url="http://example.com/videos/1.mp4" length="99999999" type="video/mp4" />
+    </item>
+  </channel>
+</rss>

@@ -17,6 +17,7 @@ public:
         QString url;
         QString title;
         bool selected;
+        bool isPodcast;
         int discoveryIndex;
     };
 
@@ -41,6 +42,13 @@ public:
         return count;
     }
 
+    bool hasPodcastFeed() const {
+        for (const FeedInfo& f : _feeds) {
+            if (f.isPodcast) return true;
+        }
+        return false;
+    }
+
     QVariantList discoveredFeeds() const {
         QVariantList result;
         for (int i = 0; i < _feeds.count(); i++) {
@@ -49,6 +57,7 @@ public:
             feedMap["url"] = info.url;
             feedMap["title"] = info.title;
             feedMap["selected"] = info.selected;
+            feedMap["isPodcast"] = info.isPodcast;
             feedMap["index"] = i;
             result.append(feedMap);
         }
@@ -70,11 +79,12 @@ public:
     }
 
     // Test helper
-    void addTestFeed(const QString& url, const QString& title, bool selected, int discoveryIndex = 0) {
+    void addTestFeed(const QString& url, const QString& title, bool selected, int discoveryIndex = 0, bool isPodcast = false) {
         FeedInfo info;
         info.url = url;
         info.title = title;
         info.selected = selected;
+        info.isPodcast = isPodcast;
         info.discoveryIndex = discoveryIndex;
         _feeds.append(info);
         emit feedCountChanged();
@@ -114,6 +124,10 @@ private slots:
     void testDiscoveredFeedsEmpty();
     void testDiscoveredFeedsMultiple();
     void testDiscoveredFeedsStructure();
+    void testHasPodcastFeedNone();
+    void testHasPodcastFeedOne();
+    void testHasPodcastFeedMixed();
+    void testDiscoveredFeedsIncludesPodcast();
 
 private:
     SimpleFeedValidator* validator;
@@ -135,6 +149,7 @@ void TestFeedValidatorSimple::testInitialState()
     QCOMPARE(validator->url(), QString(""));
     QCOMPARE(validator->feedCount(), 0);
     QCOMPARE(validator->feedsToAddCount(), 0);
+    QCOMPARE(validator->hasPodcastFeed(), false);
     QCOMPARE(validator->discoveredFeeds().count(), 0);
 }
 
@@ -280,6 +295,7 @@ void TestFeedValidatorSimple::testDiscoveredFeedsStructure()
     QCOMPARE(feed1["url"].toString(), QString("http://example.com/feed1"));
     QCOMPARE(feed1["title"].toString(), QString("Feed 1"));
     QCOMPARE(feed1["selected"].toBool(), true);
+    QCOMPARE(feed1["isPodcast"].toBool(), false);
     QCOMPARE(feed1["index"].toInt(), 0);
 
     // Verify second feed
@@ -287,7 +303,48 @@ void TestFeedValidatorSimple::testDiscoveredFeedsStructure()
     QCOMPARE(feed2["url"].toString(), QString("http://example.com/feed2"));
     QCOMPARE(feed2["title"].toString(), QString("Feed 2"));
     QCOMPARE(feed2["selected"].toBool(), false);
+    QCOMPARE(feed2["isPodcast"].toBool(), false);
     QCOMPARE(feed2["index"].toInt(), 1);
+}
+
+void TestFeedValidatorSimple::testHasPodcastFeedNone()
+{
+    validator->addTestFeed("http://example.com/feed1", "Feed 1", true, 0, false);
+    validator->addTestFeed("http://example.com/feed2", "Feed 2", true, 1, false);
+
+    QCOMPARE(validator->hasPodcastFeed(), false);
+}
+
+void TestFeedValidatorSimple::testHasPodcastFeedOne()
+{
+    validator->addTestFeed("http://example.com/podcast", "My Podcast", true, 0, true);
+
+    QCOMPARE(validator->hasPodcastFeed(), true);
+}
+
+void TestFeedValidatorSimple::testHasPodcastFeedMixed()
+{
+    validator->addTestFeed("http://example.com/feed1", "News Feed", true, 0, false);
+    validator->addTestFeed("http://example.com/podcast", "My Podcast", true, 1, true);
+    validator->addTestFeed("http://example.com/feed2", "Tech Feed", false, 2, false);
+
+    // Should be true because at least one feed is a podcast
+    QCOMPARE(validator->hasPodcastFeed(), true);
+}
+
+void TestFeedValidatorSimple::testDiscoveredFeedsIncludesPodcast()
+{
+    validator->addTestFeed("http://example.com/feed", "News", true, 0, false);
+    validator->addTestFeed("http://example.com/podcast", "Podcast", true, 1, true);
+
+    QVariantList feeds = validator->discoveredFeeds();
+    QCOMPARE(feeds.count(), 2);
+
+    QVariantMap feed1 = feeds[0].toMap();
+    QCOMPARE(feed1["isPodcast"].toBool(), false);
+
+    QVariantMap feed2 = feeds[1].toMap();
+    QCOMPARE(feed2["isPodcast"].toBool(), true);
 }
 
 QTEST_MAIN(TestFeedValidatorSimple)

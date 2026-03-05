@@ -125,6 +125,7 @@ private:
     QString date;
     QString author;
     bool hasType;
+    bool hasPodcastSignals;
     bool inAtomXHTML;
     QString guid;
     QString id;

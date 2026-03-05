@@ -22,5 +22,17 @@
     <string>@FULL_VERSION@</string>
     <key>CFBundleShortVersionString</key>
     <string>@FULL_VERSION@</string>
+    <key>CFBundleURLTypes</key>
+    <array>
+        <dict>
+            <key>CFBundleURLName</key>
+            <string>RSS Feed URL</string>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <string>feed</string>
+                <string>feeds</string>
+            </array>
+        </dict>
+    </array>
 </dict>
 </plist>

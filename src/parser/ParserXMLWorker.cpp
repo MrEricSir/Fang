@@ -113,7 +113,20 @@ void ParserXMLWorker::elementStart()
     currentTag = tagName;
     currentPrefix = xml.prefix().toString().toLower();
     hasType = xml.attributes().hasAttribute("type");
-    
+
+    // Podcast detection: itunes namespace is the strongest signal.
+    if (currentPrefix == "itunes") {
+        hasPodcastSignals = true;
+    }
+
+    // Podcast detection: audio enclosures.
+    if (currentTag == "enclosure") {
+        QString type = xml.attributes().value("type").toString().toLower();
+        if (type.startsWith("audio/")) {
+            hasPodcastSignals = true;
+        }
+    }
+
     if (currentTag == "link" && urlHref.isEmpty() && xml.attributes().hasAttribute("href")) {
         // Used by atom feeds to grab the first link.
         urlHref = xml.attributes().value("href").toString();
@@ -196,8 +209,9 @@ void ParserXMLWorker::elementEnd()
         
         
         feed->items.append(currentItem);
+        feed->isPodcast = feed->isPodcast || hasPodcastSignals;
         currentItem = nullptr;
-        
+
         // Clear all strings.
         title = "";
         urlHref = "";
@@ -305,6 +319,7 @@ void ParserXMLWorker::resetParserVars()
     guid = "";
     id = "";
     hasType = false;
+    hasPodcastSignals = false;
     inAtomXHTML = false;
     tagStack.clear();
 }
@@ -315,6 +330,7 @@ void ParserXMLWorker::saveSummary()
     feed->title = title;
     feed->subtitle = subtitle;
     feed->siteURL = urlData.isEmpty() ? QUrl(urlHref) : QUrl(urlData);
+    feed->isPodcast = hasPodcastSignals;
 
     // Clear all local strings.
     title = "";
