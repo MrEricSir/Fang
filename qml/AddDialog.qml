@@ -158,7 +158,7 @@ Dialog {
         validator.destroy();
     }
     
-    Component.onCompleted: {
+    onInitialUrlChanged: {
         if (initialUrl !== "") {
             textURL.text = initialUrl;
             validator.check();
