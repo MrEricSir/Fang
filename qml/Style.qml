@@ -187,7 +187,13 @@ Item {
             if (platform === "MAC" && !windowActive) return sysPalette.windowText;
             return sysPalette.highlightedText;
         }
-        property color sidebarText: sysPalette.windowText;
+        property color sidebarText: {
+            if (!windowActive) {
+                return Qt.rgba(sysPalette.windowText.r, sysPalette.windowText.g, sysPalette.windowText.b, 0.5);
+            }
+
+            sysPalette.windowText;
+        }
 
         property color sidebarButton: "transparent";
         property color sidebarButtonBorder: Qt.rgba(0, 0, 0, 0.15);
@@ -245,8 +251,8 @@ Item {
             return sysPalette.windowText;
         }
         property color sidebarText: {
-            if (platform === "MAC" && !windowActive) {
-                return "#999";
+            if (!windowActive) {
+                return Qt.rgba(sysPalette.windowText.r, sysPalette.windowText.g, sysPalette.windowText.b, 0.5);
             }
 
             return sysPalette.windowText;

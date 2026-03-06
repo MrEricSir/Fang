@@ -75,6 +75,7 @@ Item {
             anchors.leftMargin: 5 * style.scale;
             height: 28 * style.scale;
             asynchronous: true;
+            opacity: style.windowActive ? 1.0 : 0.6;
 
             // Hack to make SVGs render with anti-aliasing
             sourceSize.width: width;
