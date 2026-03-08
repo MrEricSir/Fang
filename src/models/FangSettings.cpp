@@ -1,8 +1,19 @@
 #include "FangSettings.h"
 #include "../utilities/ErrorHandling.h"
 #include <QAutoStart.h>
+#include <QCoreApplication>
 #include <QDebug>
 #include <QPalette>
+
+#ifdef Q_OS_WIN
+#include <QSettings>
+#endif
+
+#ifdef Q_OS_LINUX
+#include <QFile>
+#include <QStandardPaths>
+#include <QTextStream>
+#endif
 
 FangSettings::FangSettings(QQuickItem *parent) :
     QQuickItem(parent),
@@ -236,5 +247,37 @@ void FangSettings::setStartAtLogin(bool b)
     }
 
     QAutoStart::Get().setEnabled(b);
+
+    // Append --minimized so the app starts hidden in the system tray.
+    if (b) {
+#ifdef Q_OS_WIN
+        QSettings reg("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run",
+                       QSettings::NativeFormat);
+        QString appPath = QCoreApplication::applicationFilePath();
+        appPath.replace('/', '\\');
+        reg.setValue(QCoreApplication::applicationName(),
+                     "\"" + appPath + "\" --minimized");
+        reg.sync();
+#endif
+
+#ifdef Q_OS_LINUX
+        QString configDir = QStandardPaths::writableLocation(
+            QStandardPaths::GenericConfigLocation);
+        QString desktopPath = configDir + "/autostart/"
+            + QCoreApplication::organizationDomain() + "."
+            + QCoreApplication::applicationName() + ".desktop";
+
+        QFile file(desktopPath);
+        if (file.open(QIODevice::ReadWrite | QIODevice::Text)) {
+            QString content = QTextStream(&file).readAll();
+            content.replace(
+                "Exec=" + QCoreApplication::applicationFilePath(),
+                "Exec=" + QCoreApplication::applicationFilePath() + " --minimized");
+            file.resize(0);
+            QTextStream(&file) << content;
+        }
+#endif
+    }
+
     emit startAtLoginChanged(b);
 }

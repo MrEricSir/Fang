@@ -177,6 +177,10 @@ void FangApp::init(QQmlApplicationEngine* engine)
     engine->rootContext()->setContextProperty("localServerPort", webServer->port()); // Port the server is listening on
     engine->rootContext()->setContextProperty("nativeFont", systemFont);
 
+    // Start hidden when launched at login via --minimized flag.
+    bool startMinimized = QCoreApplication::arguments().contains("--minimized");
+    engine->rootContext()->setContextProperty("startMinimized", startMinimized);
+
 #ifdef QT_DEBUG
     bool isDebugBuild = true;
 #else

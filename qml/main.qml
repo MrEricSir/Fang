@@ -16,7 +16,15 @@ Window {
     // True once the page load has hit 100%
     property alias isWebPageLoaded: news.isWebPageLoaded;
 
+    // Set once at startup; cleared after initial show so it doesn't
+    // interfere with subsequent show/hide via the tray icon.
+    property bool startedHidden: startMinimized
+
     visibility: {
+        if (startedHidden) {
+            return Window.Hidden;
+        }
+
         if (platform == "ANDROID") {
             return Window.Maximized;
         }
@@ -301,6 +309,7 @@ Window {
                 // Show context menu.
                 contextMenu.open();
             } else {
+                main.startedHidden = false;
                 main.show();
                 main.raise();
                 main.requestActivate();
