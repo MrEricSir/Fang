@@ -32,6 +32,7 @@ target_compile_definitions(tst_fangsettings PRIVATE
 
 # Link Qt modules
 target_link_libraries(tst_fangsettings PRIVATE
+    QAutoStart
     Qt6::Test
     Qt6::Quick
     Qt6::Gui

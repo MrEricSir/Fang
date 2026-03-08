@@ -80,6 +80,9 @@ add_subdirectory(external/QSingleInstanceCheck)
 # Add QSimpleStateMachine directory
 add_subdirectory(external/QSimpleStateMachine)
 
+# Add QAutoStart directory
+add_subdirectory(external/QAutoStart)
+
 # Add QMLRearrangeableTreeView directory
 add_subdirectory(external/QMLRearrangeableTreeView)
 set(QML_IMPORT_PATH "${CMAKE_BINARY_DIR}/external/QMLRearrangeableTreeView" CACHE STRING "" FORCE)
@@ -252,6 +255,7 @@ qt_add_executable(Fang WIN32
 # Include directories
 target_include_directories(Fang PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/external/QAutoStart/src
 )
 
 # Compile definitions
@@ -279,6 +283,7 @@ target_link_libraries(Fang PRIVATE
     Qt6::WebSockets
     Qt6::HttpServer
     Qt6::QuickEffects
+    QAutoStart
     rearrangeabletreeview
     rearrangeabletreeviewplugin
 )

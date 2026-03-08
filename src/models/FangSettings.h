@@ -35,7 +35,10 @@ class FangSettings : public QQuickItem, public SettingsInterface
 
     // (Windows only) Display tray icon.
     Q_PROPERTY(bool showTrayIcon READ getShowTrayIcon WRITE setShowTrayIcon NOTIFY showTrayIconChanged)
-    
+
+    // (Windows/Linux only) Start at login.
+    Q_PROPERTY(bool startAtLogin READ getStartAtLogin WRITE setStartAtLogin NOTIFY startAtLoginChanged)
+
 public:
     explicit FangSettings(QQuickItem *parent = nullptr);
 
@@ -66,7 +69,10 @@ public:
 
     bool getShowTrayIcon();
     void setShowTrayIcon(bool b);
-    
+
+    bool getStartAtLogin();
+    void setStartAtLogin(bool b);
+
 signals:
     void styleChanged(QString);
     void currentStyleChanged(QString);
@@ -75,6 +81,7 @@ signals:
     void refreshChanged(QString);
     void lastSeenVersionChanged(QString);
     void showTrayIconChanged(bool);
+    void startAtLoginChanged(bool);
 
     /*!
         \brief Emitted when a newer version of Fang is available.

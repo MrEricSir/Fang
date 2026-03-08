@@ -1,5 +1,6 @@
 #include "FangSettings.h"
 #include "../utilities/ErrorHandling.h"
+#include <QAutoStart.h>
 #include <QDebug>
 #include <QPalette>
 
@@ -221,4 +222,19 @@ void FangSettings::setShowTrayIcon(bool b)
 
     setBoolSetting("showTrayIcon", b);
     emit showTrayIconChanged(b);
+}
+
+bool FangSettings::getStartAtLogin()
+{
+    return QAutoStart::Get().isEnabled();
+}
+
+void FangSettings::setStartAtLogin(bool b)
+{
+    if (b == getStartAtLogin()) {
+        return; // Nothing to do!
+    }
+
+    QAutoStart::Get().setEnabled(b);
+    emit startAtLoginChanged(b);
 }

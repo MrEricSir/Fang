@@ -7,3 +7,6 @@
 [submodule "external/QMLRearrangeableTreeView"]
 	path = external/QMLRearrangeableTreeView
 	url = https://github.com/MrEricSir/QMLRearrangeableTreeView.git
+[submodule "external/QAutoStart"]
+	path = external/QAutoStart
+	url = https://github.com/MrEricSir/QAutoStart.git

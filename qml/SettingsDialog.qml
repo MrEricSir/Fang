@@ -69,7 +69,34 @@ Dialog {
             id: trayIconDisabled;
 
             text: "Disabled";
-            onIsToggled: fangSettings.showTrayIcon = false;
+            onIsToggled: {
+                fangSettings.showTrayIcon = false;
+                fangSettings.startAtLogin = false;
+            }
+        }
+    }
+
+    DialogGroup {
+        title: "Start at login";
+        width: parent.width;
+        visible: (platform === "WIN" || platform === "LINUX") && fangSettings.showTrayIcon;
+
+        radioGroup: RadioButtonGroup {
+            selected: fangSettings.startAtLogin ? startAtLoginEnabled : startAtLoginDisabled;
+        }
+
+        DialogRadioButton {
+            id: startAtLoginEnabled;
+
+            text: "Enabled";
+            onIsToggled: fangSettings.startAtLogin = true;
+        }
+
+        DialogRadioButton {
+            id: startAtLoginDisabled;
+
+            text: "Disabled";
+            onIsToggled: fangSettings.startAtLogin = false;
         }
     }
 
