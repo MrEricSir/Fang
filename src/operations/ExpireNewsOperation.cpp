@@ -2,6 +2,7 @@
 
 #include "../models/FeedItem.h"
 #include "../models/NewsItem.h"
+#include "../utilities/SearchIndexHelper.h"
 
 ExpireNewsOperation::ExpireNewsOperation(OperationManager *parent, ListModel *feedList, QDateTime olderThan, qint32 saveLast) :
     DBOperation(parent),
@@ -27,6 +28,25 @@ void ExpireNewsOperation::execute()
                 continue;
             }
 
+            QSqlQuery selectIds(db());
+            selectIds.prepare("SELECT id FROM NewsItemTable WHERE feed_id = :feed_id AND NOT pinned "
+                              "AND id < ( SELECT bookmark_id FROM FeedItemTable WHERE id = :feed_id2 LIMIT 1 ) "
+                              "AND timestamp < :olderThan AND id NOT IN "
+                              "( SELECT id FROM NewsItemTable WHERE feed_id = :feed_id3 ORDER BY timestamp DESC LIMIT :saveLast )");
+            selectIds.bindValue(":feed_id", feed->getDbID());
+            selectIds.bindValue(":feed_id2", feed->getDbID());
+            selectIds.bindValue(":olderThan", olderThan.toMSecsSinceEpoch());
+            selectIds.bindValue(":feed_id3", feed->getDbID());
+            selectIds.bindValue(":saveLast", saveLast);
+
+            // Collect IDs to delete.
+            QList<qint64> expiredIds;
+            if (selectIds.exec()) {
+                while (selectIds.next()) {
+                    expiredIds.append(selectIds.value("id").toLongLong());
+                }
+            }
+
             QSqlQuery query(db());
             query.prepare("DELETE FROM NewsItemTable WHERE feed_id = :feed_id AND NOT pinned "
                           "AND id < ( SELECT bookmark_id FROM FeedItemTable WHERE id = :feed_id2 LIMIT 1 ) "
@@ -47,6 +67,7 @@ void ExpireNewsOperation::execute()
 
             if (query.numRowsAffected() > 0) {
                 performVacuum = true;
+                SearchIndexHelper::removeNewsItems(expiredIds); // Update platform search.
             }
         }
 

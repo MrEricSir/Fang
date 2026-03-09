@@ -6,6 +6,10 @@
 #include <QFileOpenEvent>
 
 #include "utilities/ErrorHandling.h"
+#include "utilities/SearchIndexHelper.h"
+#include "db/DB.h"
+
+#include <QSearchableIndex.h>
 
 #include "operations/UpdateFeedOperation.h"
 #include "operations/LoadAllFeedsOperation.h"
@@ -87,6 +91,32 @@ FangApp::FangApp(QApplication *parent, QSingleInstanceCheck* single) :
 
     // Listen for macOS QFileOpenEvent on the QApplication.
     parent->installEventFilter(this);
+
+    // Activation from desktop search.
+    auto *searchIndex = QSearchableIndex::Get();
+    qCDebug(logApp) << "Search index supported:" << searchIndex->isSupported();
+    connect(searchIndex, &QSearchableIndex::indexingSucceeded, this, [](int count) {
+        qCDebug(logApp) << "Search index: indexed" << count << "items";
+    });
+    connect(searchIndex, &QSearchableIndex::errorOccurred, this, [](const QString &msg) {
+        qCWarning(logApp) << "Search index error:" << msg;
+    });
+    connect(searchIndex, &QSearchableIndex::activated, this, [this](const QString &identifier) {
+        focusApp();
+        if (identifier.startsWith("feed-")) {
+            qint64 feedId = identifier.mid(5).toLongLong();
+            FeedItem* feed = feedForId(feedId);
+            if (feed) setCurrentFeed(feed);
+        } else if (identifier.startsWith("news-")) {
+            qint64 newsId = identifier.mid(5).toLongLong();
+            QSqlQuery query(DB::instance()->db());
+            query.prepare("SELECT title FROM NewsItemTable WHERE id = :id");
+            query.bindValue(":id", newsId);
+            if (query.exec() && query.next()) {
+                performSearch(query.value("title").toString());
+            }
+        }
+    });
 
     connect(&feedList, &ListModel::added, this, &FangApp::onFeedAdded);
     connect(&feedList, &ListModel::removed, this, &FangApp::onFeedRemoved);
@@ -322,6 +352,9 @@ void FangApp::onLoadAllFinished()
     
     // Load our QML.
     engine->load(QUrl("qrc:///qml/main.qml"));
+
+    // Index all feeds for platform search.
+    SearchIndexHelper::indexAllFeeds(&feedList);
 
     // Refresh all our feeds to check for the latest and greatest news.
     refreshAllFeeds();

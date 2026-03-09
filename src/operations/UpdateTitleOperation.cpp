@@ -1,5 +1,6 @@
 #include "UpdateTitleOperation.h"
 #include "../models/AllNewsFeedItem.h"
+#include "../utilities/SearchIndexHelper.h"
 #include <QDebug>
 
 UpdateTitleOperation::UpdateTitleOperation(OperationManager *parent, FeedItem* feed) :
@@ -23,7 +24,9 @@ void UpdateTitleOperation::execute()
     
     if (!query.exec()) {
         reportSQLError(query, "Unable to set title.");
-        
+
         return;
     }
+
+    SearchIndexHelper::indexFeed(feed);
 }

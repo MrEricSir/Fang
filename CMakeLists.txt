@@ -83,6 +83,9 @@ add_subdirectory(external/QSimpleStateMachine)
 # Add QAutoStart directory
 add_subdirectory(external/QAutoStart)
 
+# Add QSearchable directory
+add_subdirectory(external/QSearchable)
+
 # Add QMLRearrangeableTreeView directory
 add_subdirectory(external/QMLRearrangeableTreeView)
 set(QML_IMPORT_PATH "${CMAKE_BINARY_DIR}/external/QMLRearrangeableTreeView" CACHE STRING "" FORCE)
@@ -138,6 +141,7 @@ qt_add_executable(Fang WIN32
     src/parser/OPMLParser.cpp
     src/utilities/FeedDiscovery.cpp
     src/utilities/UpdateChecker.cpp
+    src/utilities/SearchIndexHelper.cpp
     src/models/OPMLInteractor.cpp
     src/utilities/OPMLExport.cpp
     src/utilities/BatchFeedDiscovery.cpp
@@ -211,6 +215,7 @@ qt_add_executable(Fang WIN32
     src/utilities/HTMLSanitizer.h
     src/operations/LoadAllNewsOperation.h
     src/utilities/UnreadCountReader.h
+    src/utilities/SearchIndexHelper.h
     src/operations/UpdateOrdinalsOperation.h
     src/utilities/NetworkUtilities.h
     src/parser/OPMLParser.h
@@ -272,6 +277,7 @@ target_link_libraries(Fang PRIVATE
     TidyLib
     QSingleInstanceCheck
     QSimpleStateMachine::QSimpleStateMachine
+    QSearchable::QSearchable
     Qt6::Core
     Qt6::Qml
     Qt6::Quick
@@ -342,6 +348,12 @@ if(APPLE)
 
     set_source_files_properties(icons/mac.icns PROPERTIES
         MACOSX_PACKAGE_LOCATION "Resources"
+    )
+
+    # Ad-hoc code signing for development builds.
+    add_custom_command(TARGET Fang POST_BUILD
+        COMMAND codesign --sign - --force --deep "$<TARGET_BUNDLE_DIR:Fang>"
+        COMMENT "Ad-hoc code signing Fang.app"
     )
 endif()
 

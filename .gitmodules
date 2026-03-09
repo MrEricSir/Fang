@@ -10,3 +10,6 @@
 [submodule "external/QAutoStart"]
 	path = external/QAutoStart
 	url = https://github.com/MrEricSir/QAutoStart.git
+[submodule "external/QSearchable"]
+	path = external/QSearchable
+	url = https://github.com/MrEricSir/QSearchable.git

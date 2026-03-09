@@ -1,6 +1,7 @@
 #include "AddFeedOperation.h"
 #include "../utilities/Utilities.h"
 #include "../utilities/FangLogging.h"
+#include "../utilities/SearchIndexHelper.h"
 
 AddFeedOperation::AddFeedOperation(OperationManager *parent, ListModel *feedList,
                                    const QString userURL, QString title) :
@@ -109,5 +110,6 @@ void AddFeedOperation::commitRawFeed() {
     
     // Finally, add item to the model and signal completion.
     feedList->appendRow(item);
+    SearchIndexHelper::indexFeed(item);
     emit finished(this);
 }
