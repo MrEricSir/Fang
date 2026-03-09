@@ -222,7 +222,7 @@ void UpdateFeedOperation::onRewriterFinished()
     
     db().commit(); // Done with db!
 
-    // Index new articles for platform search (e.g. Spotlight).
+    // Index new articles for platform search.
     SearchIndexHelper::indexNewsItems(newsList, feed);
 
     // Clear any previous error flag since update succeeded.
