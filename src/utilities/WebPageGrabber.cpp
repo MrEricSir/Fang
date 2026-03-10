@@ -131,7 +131,7 @@ QString *WebPageGrabber::loadInternal(const QString& htmlString, bool handleRefr
     }
 
     QString result;
-    qCDebug(logWebPage) << "TidyLib rc:" << rc << "output.bp:" << (output.bp != nullptr);
+    // qCDebug(logWebPage) << "TidyLib rc:" << rc << "output.bp:" << (output.bp != nullptr);
 
     if (rc >= 0 && output.bp) {
         result = QString::fromUtf8(reinterpret_cast<const char*>(output.bp));

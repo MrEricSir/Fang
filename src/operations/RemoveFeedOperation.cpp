@@ -3,6 +3,7 @@
 #include <QThread>
 
 #include "../utilities/UnreadCountReader.h"
+#include "../utilities/SearchIndexHelper.h"
 #include "../utilities/FangLogging.h"
 #include "../models/FolderFeedItem.h"
 #include "../FangApp.h"
@@ -28,6 +29,9 @@ void RemoveFeedOperation::execute()
     bool isFolder = feed->isFolder();
     qint64 dbID = feed->getDbID();
     qint64 parentFolderID = feed->getParentFolderID();
+
+    // Remove feed and its news from the platform search index.
+    SearchIndexHelper::removeFeed(dbID);
 
     // Delete the feed.
     db().transaction();

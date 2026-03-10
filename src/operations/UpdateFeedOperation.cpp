@@ -5,6 +5,7 @@
 #include "UpdateFeedURLOperation.h"
 #include "../models/AllNewsFeedItem.h"
 #include "../utilities/UnreadCountReader.h"
+#include "../utilities/SearchIndexHelper.h"
 #include "../utilities/ErrorHandling.h"
 #include "../utilities/FangLogging.h"
 #include "../FangApp.h"
@@ -220,6 +221,9 @@ void UpdateFeedOperation::onRewriterFinished()
     }
     
     db().commit(); // Done with db!
+
+    // Index new articles for platform search.
+    SearchIndexHelper::indexNewsItems(newsList, feed);
 
     // Clear any previous error flag since update succeeded.
     feed->setErrorFlag(false);
