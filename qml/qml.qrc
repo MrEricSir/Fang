@@ -27,6 +27,7 @@
         <file>CheckBox.qml</file>
         <file>FangScrollBar.qml</file>
         <file>FangIcon.qml</file>
+        <file>FeedIcon.qml</file>
         <file>SplashScreenDialog.qml</file>
         <file>FangWebView.qml</file>
         <file>+webview/FangWebView.qml</file>

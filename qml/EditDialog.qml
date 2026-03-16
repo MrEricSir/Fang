@@ -15,18 +15,34 @@ Dialog {
 
     DialogStatus {
         id: validationStatus;
-        
+
         state: "help";
-        text: "Edit a feed";
+        text: "Rename";
     }
-    
-    TextEntry {
-        id: feedTitle;
-        
-        placeholderText: "Feed title";
-        
-        onAccepted: saveEditButton.click();
+
+    Row {
         width: parent.width;
+        spacing: 8 * style.scale;
+
+        Style {
+            id: style;
+        }
+
+        FeedIcon {
+            visible: feed && !feed.isFolder();
+            source: feed ? feed.getImageURL() : "";
+            anchors.verticalCenter: parent.verticalCenter;
+        }
+
+        TextEntry {
+            id: feedTitle;
+
+            placeholderText: "Feed title";
+
+            onAccepted: saveEditButton.click();
+            width: parent.width - (feed && !feed.isFolder()
+                ? (24 * style.scale + parent.spacing) : 0);
+        }
     }
 
     DialogText {

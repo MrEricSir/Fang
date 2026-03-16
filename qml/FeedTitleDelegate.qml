@@ -164,44 +164,23 @@ RearrangeableDelegate {
 
                         opacity: 1;
 
-                        // Mask shape for rounded icon corners.
-                        Rectangle {
-                            id: iconMask;
-                            anchors.fill: parent;
-                            radius: 5 * style.scale;
-                            layer.enabled: true;
-                            //visible: false;
-                            color: style.color.sidebar;
-                        }
-
-                        // Feed icon with rounded corners (iOS-style).
-                        Image {
-                            id: feedIcon;
+                        FeedIcon {
+                            id: feedIconImage;
 
                             source: imageURL;
-                            visible: status === Image.Ready;
-
+                            showFallback: !isSearchFeed;
                             anchors.fill: parent;
-                            fillMode: Image.PreserveAspectCrop;
-                            asynchronous: true;
-
-                            layer.enabled: true;
-                            layer.effect: MultiEffect {
-                                maskEnabled: true;
-                                maskSource: iconMask;
-                            }
                         }
 
+                        // Search feeds use a different fallback icon.
                         Image {
-                            id: defaultFeedIcon;
+                            id: searchFeedIcon;
 
-                            visible: !feedIcon.visible;
+                            visible: isSearchFeed && !feedIconImage.imageLoaded;
 
-                            source: isSearchFeed
-                                    ? (fangSettings.currentStyle === "LIGHT" ? "images/symbol_search.svg"
-                                                                             : "images/symbol_dark_search.svg")
-                                    : (fangSettings.currentStyle === "LIGHT" ? "images/symbol_rss.svg"
-                                                                             : "images/symbol_dark_rss.svg");
+                            source: fangSettings.currentStyle === "LIGHT"
+                                    ? "images/symbol_search.svg"
+                                    : "images/symbol_dark_search.svg";
 
                             anchors.fill: parent;
                             asynchronous: true;

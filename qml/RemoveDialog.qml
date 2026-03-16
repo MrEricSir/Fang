@@ -8,12 +8,34 @@ Dialog {
     title: "Remove a Feed";
     
     property var feed;
-    
+
     DialogStatus {
         id: validationStatus;
-        
+
         state: "help";
         text: "Are you sure you want to remove this feed?";
+    }
+    
+    Row {
+        visible: feed && !feed.isFolder();
+        spacing: 8 * style.scale;
+
+        Style {
+            id: style;
+        }
+
+        FeedIcon {
+            source: feed ? feed.getImageURL() : "";
+            anchors.verticalCenter: parent.verticalCenter;
+        }
+
+        Text {
+            text: feed ? feed.getTitle() : "";
+            font: style.font.standard;
+            color: style.color.dialogText;
+            elide: Text.ElideRight;
+            anchors.verticalCenter: parent.verticalCenter;
+        }
     }
     
     DialogGroup {
