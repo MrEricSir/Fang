@@ -157,8 +157,12 @@ void FangApp::init(QQmlApplicationEngine* engine)
     this->engine = engine;
     connect(engine, &QQmlApplicationEngine::objectCreated, this, &FangApp::onObjectCreated);
 
-    qCInfo(logApp) << "FangApp init version: " << APP_VERSION;
-    qCInfo(logApp) << "";
+    qCInfo(logApp) << "\n\n"
+                   << "========================================\n"
+                   << "Fang\n"
+                   << "Version:" << APP_VERSION << "\n"
+                   << "Commit:" << GIT_COMMIT_HASH << "\n"
+                   << "========================================";
 
     qCInfo(logApp) << "Image formats: " << QImageReader::supportedImageFormats();
 

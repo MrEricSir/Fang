@@ -2,6 +2,10 @@
 #define FANGLOGGING_H
 
 #include <QLoggingCategory>
+#include <QString>
+
+void initFileLogging(const QString &logDirOverride = {});
+void shutdownFileLogging();
 
 /*!
     \brief Logging categories for different subsystems.

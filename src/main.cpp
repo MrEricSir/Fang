@@ -9,6 +9,7 @@
 #include <QDebug>
 
 #include "FangApp.h"
+#include "utilities/FangLogging.h"
 
 #include "models/FeedValidator.h"
 #include "models/FangSettings.h"
@@ -44,6 +45,8 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     app.setApplicationName("Fang");
     app.setApplicationVersion(APP_VERSION);
     app.setWindowIcon(QIcon(":/qml/images/full_icon.png"));
+
+    initFileLogging();
 
     // Gets feed URL from command-line arguments. Intended for opening feeds on Windows and Linux
     QString pendingFeedUrl;

@@ -71,6 +71,15 @@ endif()
 
 file(WRITE "${CMAKE_CURRENT_SOURCE_DIR}/APP_VERSION" "${APP_VERSION}")
 
+# Get git commit hash for build identification
+execute_process(
+    COMMAND git rev-parse --short HEAD
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    OUTPUT_VARIABLE GIT_COMMIT_HASH
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+    ERROR_QUIET
+)
+
 # Add TidyLib subdirectory
 add_subdirectory(external/tidylib)
 
@@ -262,6 +271,7 @@ target_include_directories(Fang PRIVATE
 target_compile_definitions(Fang PRIVATE
     BUILD_NUMBER="${BUILD_NUMBER}"
     APP_VERSION="${APP_VERSION}"
+    GIT_COMMIT_HASH="${GIT_COMMIT_HASH}"
 )
 
 # Enable warnings as errors

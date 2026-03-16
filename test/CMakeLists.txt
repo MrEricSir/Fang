@@ -46,3 +46,6 @@ add_subdirectory(TestWebServer)
 
 # Network tests
 add_subdirectory(TestNetworkRetryPolicy)
+
+# Utility tests
+add_subdirectory(TestFileLogging)
