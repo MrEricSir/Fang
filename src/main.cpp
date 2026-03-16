@@ -12,7 +12,6 @@
 #include "utilities/FangLogging.h"
 
 #include "models/FeedValidator.h"
-#include "models/FangSettings.h"
 #include "models/NewsFeedInteractor.h"
 #include "models/ListModel.h"
 #include "models/OPMLInteractor.h"
@@ -28,7 +27,6 @@
 Q_DECL_EXPORT int main(int argc, char *argv[])
 {
     qmlRegisterType<FeedValidator>("Fang", 1, 0, "FeedValidator");
-    qmlRegisterType<FangSettings>("Fang", 1, 0, "FangSettings");
     qmlRegisterType<NewsFeedInteractor>("Fang", 1, 0, "NewsFeedInteractor");
     qmlRegisterType<ListItem>("Fang", 1, 0, "ListItem");
     qmlRegisterType<OPMLInteractor>("Fang", 1, 0, "OPMLInteractor");

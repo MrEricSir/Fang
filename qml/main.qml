@@ -81,11 +81,6 @@ Window {
         id: newsFeedInteractor;
     }
     
-    FangSettings {
-        id: fangSettings;
-        objectName: "fangSettings"; // Don't change this!
-    }
-
     // Search history.
     // Contents of each item:
     // { query: "...", scopeType: "global"|"feed", scopeId: -1|feedId, feedTitle: "All News"|"Feed Name" }

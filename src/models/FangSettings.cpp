@@ -3,6 +3,7 @@
 #include <QAutoStart.h>
 #include <QCoreApplication>
 #include <QDebug>
+#include <QGuiApplication>
 #include <QPalette>
 
 #ifdef Q_OS_WIN
@@ -15,8 +16,8 @@
 #include <QTextStream>
 #endif
 
-FangSettings::FangSettings(QQuickItem *parent) :
-    QQuickItem(parent),
+FangSettings::FangSettings(FangObject *parent) :
+    FangObject(parent),
     dbSettings(nullptr),
     styleHints(nullptr)
 {
@@ -100,7 +101,7 @@ bool FangSettings::event(QEvent *event)
             emit currentStyleChanged(getCurrentStyle());
         }
     }
-    return QQuickItem::event(event);
+    return QObject::event(event);
 }
 
 void FangSettings::onSystemColorSchemeChanged(Qt::ColorScheme colorScheme)

@@ -272,6 +272,7 @@ target_compile_definitions(Fang PRIVATE
     BUILD_NUMBER="${BUILD_NUMBER}"
     APP_VERSION="${APP_VERSION}"
     GIT_COMMIT_HASH="${GIT_COMMIT_HASH}"
+    FANG_SOURCE_QML_PATH="${CMAKE_SOURCE_DIR}/qml"
 )
 
 # Enable warnings as errors

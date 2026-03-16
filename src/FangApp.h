@@ -207,7 +207,7 @@ public slots:
     /*!
         \return The settings object, or null if the app hasn't initialized yet.
      */
-    FangSettings* getSettings() { return fangSettings; }
+    FangSettings* getSettings() { return &fangSettings; }
 
     /*!
         \return String representing the platform.
@@ -343,7 +343,7 @@ private:
     ListModel *importList;
     FeedItem* currentFeed;
     bool loadAllFinished;
-    FangSettings *fangSettings;
+    FangSettings fangSettings;
     DBSettings dbSettings;
     QTimer *updateTimer;
     QMap<qint64, FeedItem*> feedIdMap;

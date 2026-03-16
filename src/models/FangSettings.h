@@ -2,15 +2,15 @@
 #define FANGSETTINGS_H
 
 #include <QEvent>
-#include <QQuickItem>
 #include <QString>
 #include <QSettings>
 #include <QStyleHints>
 
+#include "../FangObject.h"
 #include "../db/DBSettingsInterface.h"
 #include "../utilities/SettingsInterface.h"
 
-class FangSettings : public QQuickItem, public SettingsInterface
+class FangSettings : public FangObject, public SettingsInterface
 {
     Q_OBJECT
     Q_DISABLE_COPY(FangSettings)
@@ -40,7 +40,7 @@ class FangSettings : public QQuickItem, public SettingsInterface
     Q_PROPERTY(bool startAtLogin READ getStartAtLogin WRITE setStartAtLogin NOTIFY startAtLoginChanged)
 
 public:
-    explicit FangSettings(QQuickItem *parent = nullptr);
+    explicit FangSettings(FangObject *parent = nullptr);
 
     bool event(QEvent *event) override;
 

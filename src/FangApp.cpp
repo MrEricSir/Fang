@@ -1,6 +1,7 @@
 #include "FangApp.h"
 
 #include "utilities/FangLogging.h"
+#include <QDir>
 #include <QElapsedTimer>
 #include <QImageReader>
 #include <QFileOpenEvent>
@@ -47,7 +48,6 @@ FangApp::FangApp(QApplication *parent, QSingleInstanceCheck* single) :
     importList(new ListModel(new FeedItem, this)),
     currentFeed(nullptr),
     loadAllFinished(false),
-    fangSettings(nullptr),
     dbSettings(&manager),
     updateTimer(new QTimer(this)),
     window(nullptr),
@@ -110,7 +110,6 @@ FangApp::FangApp(QObject *parent) :
     importList(new ListModel(new FeedItem, this)),
     currentFeed(nullptr),
     loadAllFinished(false),
-    fangSettings(nullptr),
     dbSettings(&manager),
     updateTimer(nullptr),
     window(nullptr),
@@ -180,6 +179,10 @@ void FangApp::init(QQmlApplicationEngine* engine)
     engine->rootContext()->setContextProperty("fangVersion", APP_VERSION);
     engine->rootContext()->setContextProperty("localServerPort", webServer->port()); // Port the server is listening on
     engine->rootContext()->setContextProperty("nativeFont", systemFont);
+
+    // Init settings and expose to QML.
+    fangSettings.init(&dbSettings);
+    engine->rootContext()->setContextProperty("fangSettings", &fangSettings);
 
     // Start hidden when launched at login via --minimized flag.
     bool startMinimized = QCoreApplication::arguments().contains("--minimized");
@@ -328,8 +331,21 @@ void FangApp::onLoadAllFinished()
     // This has to be manually invoked the first time.
     pinnedNewsWatcher();
     
-    // Load our QML.
-    engine->load(QUrl("qrc:///qml/main.qml"));
+    // Load our QML. We use three strategies in descending order:
+    // 1. FANG_QML_PATH env var override.
+    // 2. Source directory (for dev machines.)
+    // 3. QRC file (for packaged binaries.)
+    QString qmlPath = qEnvironmentVariable("FANG_QML_PATH");
+    if (qmlPath.isEmpty() && QDir(FANG_SOURCE_QML_PATH).exists()) {
+        qmlPath = FANG_SOURCE_QML_PATH;
+    }
+
+    if (!qmlPath.isEmpty()) {
+        qCInfo(logApp) << "Loading QML from filesystem:" << qmlPath;
+        engine->load(QUrl::fromLocalFile(qmlPath + "/main.qml"));
+    } else {
+        engine->load(QUrl("qrc:///qml/main.qml"));
+    }
 
     // Refresh all our feeds to check for the latest and greatest news.
     refreshAllFeeds();
@@ -522,28 +538,19 @@ void FangApp::onObjectCreated(QObject* object, const QUrl& url)
     configureTransparentTitleBar(window);
 #endif
 
-    // Locate settings.
-    fangSettings = object->findChild<FangSettings*>("fangSettings");
-
-    // Do a sanity check.
-    FANG_REQUIRE_VOID(fangSettings != nullptr);
-
-    // Init settings.
-    fangSettings->init(&dbSettings);
-
 #ifdef Q_OS_WIN
-    auto winTitleBar = new WinWindowHelper(window, fangSettings, this);
+    auto winTitleBar = new WinWindowHelper(window, &fangSettings, this);
     engine->rootContext()->setContextProperty("winTitleBar", winTitleBar);
 #endif
 
     // Init WebSocket server.
-    webSocketServer.init(fangSettings);
+    webSocketServer.init(&fangSettings);
     
     // Grab the All News item.
     AllNewsFeedItem* allNews = qobject_cast<AllNewsFeedItem*>(feedList.row(0));
     
     // Notifications, activate!
-    notifications = new Notification(fangSettings, &feedList,
+    notifications = new Notification(&fangSettings, &feedList,
                                      allNews, window, this);
     notifications->init();
     
@@ -553,11 +560,11 @@ void FangApp::onObjectCreated(QObject* object, const QUrl& url)
     updateTimer->start();
 
     // Maybe the user wants to change how often we refresh the feeds?  Let 'em.
-    connect(fangSettings, &FangSettings::refreshChanged, this, &FangApp::setRefreshTimer);
+    connect(&fangSettings, &FangSettings::refreshChanged, this, &FangApp::setRefreshTimer);
 
     // Send update signal to QML via FangSettings. (Kind of an awkward fit.)
     connect(&updateChecker, &UpdateChecker::updateAvailable,
-            fangSettings, &FangSettings::updateAvailable);
+            &fangSettings, &FangSettings::updateAvailable);
 
     // Start the update checker (checks immediately and then every 24 hours)
     updateChecker.start();
@@ -825,7 +832,7 @@ void FangApp::markAllAsReadOrUnread(FeedItem *feed, bool read)
 void FangApp::setRefreshTimer()
 {
     int minutes = 10;
-    QString refresh = fangSettings->getRefresh();
+    QString refresh = fangSettings.getRefresh();
     if (refresh == "1MIN") {
         minutes = 1;
     } else if (refresh == "10MIN") {
