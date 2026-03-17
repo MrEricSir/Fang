@@ -143,6 +143,15 @@ Current categories:
 * `fang.favicon`
 * `fang.webpage`
 
+### QML Hot Reload
+
+In debug builds Fang will attempt to load QML files directly from disk rather than through the `qrc` system. Changes to the QML can be picked up by reloading the UI with the following keyboard shortcut:
+
+- Windows/Linux: <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>R</kbd>
+- Mac: <kbd>Cmd</kbd> + <kbd>Shift</kbd> + <kbd>R</kbd>
+
+Similar to reloading a web page, the current UI state will be lost upon reload.
+
 ### WebEngine Debugging
 
 To debug the Javascript and HTML, you'll need to set a debugging port and set it as an environment variable. For example, we'll use `9999` as our port.
