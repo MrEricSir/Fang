@@ -1,9 +1,7 @@
 #include <QApplication>
-#include <QQmlApplicationEngine>
 #include <QFile>
 #include <QDateTime>
 #include <QStringList>
-#include <QQmlFileSelector>
 #include <QIcon>
 #include <QProcessEnvironment>
 #include <QDebug>
@@ -15,8 +13,6 @@
 #include "models/NewsFeedInteractor.h"
 #include "models/ListModel.h"
 #include "models/OPMLInteractor.h"
-
-#include "network/FangQQmlNetworkAccessManagerFactory.h"
 
 #include "db/DB.h"
 
@@ -78,29 +74,8 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
             fang.setPendingFeedUrl(pendingFeedUrl);
         }
 
-        // Create the QML layer.
-        QQmlApplicationEngine engine;
-        engine.setNetworkAccessManagerFactory(new FangQQmlNetworkAccessManagerFactory());
-        QQmlFileSelector selector(&engine); // For platform-specific QML files
-
-        // Set QML file selectors.
-        QStringList selectors;
-
-#ifndef QT_WEBVIEW_WEBENGINE_BACKEND
-        // Add a selector indicating we need Qt's native WebView
-        selectors << "webview";
-#endif // QT_WEBVIEW_WEBENGINE_BACKEND
-
-#if defined(Q_OS_ANDROID) || defined(Q_OS_IOS)
-        selectors << "mobile";
-#endif
-
-        if (selectors.count()) {
-            selector.setExtraSelectors(selectors);
-        }
-
-        // Init the app.
-        fang.init(&engine);
+        // Init the app (creates engine, loads feeds, loads QML).
+        fang.init();
 
         // Run the app.
         ret = app.exec();

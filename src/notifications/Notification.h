@@ -1,8 +1,6 @@
 #ifndef NOTIFICATION_H
 #define NOTIFICATION_H
 
-#include <QQuickWindow>
-
 #include "../FangObject.h"
 #include "../models/FangSettings.h"
 #include "../models/ListModel.h"
@@ -23,7 +21,6 @@ public:
     explicit Notification(FangSettings *fangSettings,
                           ListModel *feedList,
                           AllNewsFeedItem *allNews,
-                          QQuickWindow* window,
                           FangObject *parent = nullptr);
 
     /*!
@@ -52,7 +49,6 @@ protected:
     FangSettings *fangSettings;
     ListModel *feedList;
     AllNewsFeedItem *allNews;
-    QQuickWindow* window;
 
     quint32 lastUnreadCount;
 };

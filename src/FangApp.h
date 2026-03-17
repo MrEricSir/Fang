@@ -53,7 +53,7 @@ public:
 
     bool eventFilter(QObject* obj, QEvent* event) override;
 
-    void init(QQmlApplicationEngine* engine);
+    void init();
 
     void setPendingFeedUrl(const QString& url);
     
@@ -99,6 +99,7 @@ signals:
 
 public slots:
     void openFeedUrl(const QString& url);
+    void reloadQml();
 
     inline int feedCount() { return feedList.rowCount(); }
 
@@ -333,7 +334,14 @@ private slots:
 
     // Updates the feed refresh timer.
     void setRefreshTimer();
-    
+
+    /*!
+        \brief Creates and configures a fresh QQmlApplicationEngine.
+        Sets up the NAM factory, file selectors, context properties,
+        and the objectCreated signal connection.
+     */
+    void setupEngine();
+
 private:
     static FangApp* _instance;
     QQmlApplicationEngine* engine;
@@ -365,6 +373,8 @@ private:
     FeedItem* lastFeedSelected;
 
     QString pendingFeedUrl;
+
+    QUrl qmlUrl;
 };
 
 #endif // FANGAPP_H

@@ -5,8 +5,11 @@
 #include <QElapsedTimer>
 #include <QImageReader>
 #include <QFileOpenEvent>
+#include <QKeyEvent>
+#include <QQmlFileSelector>
 
 #include "utilities/ErrorHandling.h"
+#include "network/FangQQmlNetworkAccessManagerFactory.h"
 
 #include "operations/UpdateFeedOperation.h"
 #include "operations/LoadAllFeedsOperation.h"
@@ -51,6 +54,7 @@ FangApp::FangApp(QApplication *parent, QSingleInstanceCheck* single) :
     dbSettings(&manager),
     updateTimer(new QTimer(this)),
     window(nullptr),
+    notifications(nullptr),
     allNews(nullptr),
     pinnedNews(nullptr),
     searchFeed(nullptr),
@@ -95,6 +99,10 @@ FangApp::FangApp(QApplication *parent, QSingleInstanceCheck* single) :
 
 FangApp::~FangApp()
 {
+    // Delete the engine first so it doesn't try to access members (settings, etc.)
+    delete engine;
+    engine = nullptr;
+
     // Prevent signals on shutdown.
     disconnect(&feedList, &ListModel::added, this, &FangApp::onFeedAdded);
     disconnect(&feedList, &ListModel::removed, this, &FangApp::onFeedRemoved);
@@ -113,6 +121,7 @@ FangApp::FangApp(QObject *parent) :
     dbSettings(&manager),
     updateTimer(nullptr),
     window(nullptr),
+    notifications(nullptr),
     webServer(nullptr),
     allNews(nullptr),
     pinnedNews(nullptr),
@@ -151,11 +160,8 @@ void FangApp::initForTesting()
     loadAllFinished = true;
 }
 
-void FangApp::init(QQmlApplicationEngine* engine)
+void FangApp::init()
 {
-    this->engine = engine;
-    connect(engine, &QQmlApplicationEngine::objectCreated, this, &FangApp::onObjectCreated);
-
     qCInfo(logApp) << "\n\n"
                    << "========================================\n"
                    << "Fang\n"
@@ -171,41 +177,69 @@ void FangApp::init(QQmlApplicationEngine* engine)
     systemFont.setHintingPreference(QFont::PreferNoHinting);
 #endif
 
-    // Setup our QML.
-    engine->rootContext()->setContextProperty("feedListModel", &feedList); // list of feeds
-    engine->rootContext()->setContextProperty("importListModel", importList); // list of feeds to be batch imported
-    engine->rootContext()->setContextProperty("platform", getPlatform()); // platform string ID
-    engine->rootContext()->setContextProperty("isDesktop", isDesktop()); // whether we're on desktop (vs mobile etc.)
-    engine->rootContext()->setContextProperty("fangVersion", APP_VERSION);
-    engine->rootContext()->setContextProperty("localServerPort", webServer->port()); // Port the server is listening on
-    engine->rootContext()->setContextProperty("nativeFont", systemFont);
-
-    // Init settings and expose to QML.
+    // Init settings before engine creation (QML may read them on load).
     fangSettings.init(&dbSettings);
-    engine->rootContext()->setContextProperty("fangSettings", &fangSettings);
 
-    // Start hidden when launched at login via --minimized flag.
-    bool startMinimized = QCoreApplication::arguments().contains("--minimized");
-    engine->rootContext()->setContextProperty("startMinimized", startMinimized);
+    // Create and configure the QML engine.
+    setupEngine();
+
+    // On initial launch, start hidden if --minimized flag is present.
+    if (QCoreApplication::arguments().contains("--minimized")) {
+        engine->rootContext()->setContextProperty("startMinimized", true);
+    }
 
 #ifdef QT_DEBUG
-    bool isDebugBuild = true;
+    qCInfo(logApp) << "Is debug build: true";
 #else
-    bool isDebugBuild = false;
-#endif // QT_DEBUG
-    engine->rootContext()->setContextProperty("isDebugBuild", isDebugBuild); // let QML know if we're a debug build or not
-
-#ifdef Q_OS_WIN
-    // Pre-register as null so QML bindings don't get ReferenceErrors
-    // before onObjectCreated replaces it with the real instance.
-    engine->rootContext()->setContextProperty("winTitleBar", QVariant::fromValue<QObject*>(nullptr));
+    qCInfo(logApp) << "Is debug build: false";
 #endif
-    qCInfo(logApp) << "Is debug build: " << isDebugBuild;
-    
+
     // Load feed list.
     LoadAllFeedsOperation loadAllOp(&manager, &feedList);
     manager.run(&loadAllOp);
     onLoadAllFinished();
+}
+
+void FangApp::setupEngine()
+{
+    engine = new QQmlApplicationEngine(this);
+    engine->setNetworkAccessManagerFactory(new FangQQmlNetworkAccessManagerFactory());
+
+    // File selectors for platform-specific QML variants.
+    auto* selector = new QQmlFileSelector(engine);
+    QStringList selectors;
+#ifndef QT_WEBVIEW_WEBENGINE_BACKEND
+    selectors << "webview";
+#endif
+#if defined(Q_OS_ANDROID) || defined(Q_OS_IOS)
+    selectors << "mobile";
+#endif
+    if (selectors.count()) {
+        selector->setExtraSelectors(selectors);
+    }
+
+    connect(engine, &QQmlApplicationEngine::objectCreated, this, &FangApp::onObjectCreated);
+
+    // Expose models and settings to QML.
+    engine->rootContext()->setContextProperty("feedListModel", &feedList);
+    engine->rootContext()->setContextProperty("importListModel", importList);
+    engine->rootContext()->setContextProperty("platform", getPlatform());
+    engine->rootContext()->setContextProperty("isDesktop", isDesktop());
+    engine->rootContext()->setContextProperty("fangVersion", APP_VERSION);
+    engine->rootContext()->setContextProperty("localServerPort", webServer->port());
+    engine->rootContext()->setContextProperty("nativeFont", systemFont);
+    engine->rootContext()->setContextProperty("fangSettings", &fangSettings);
+    engine->rootContext()->setContextProperty("startMinimized", false);
+
+#ifdef QT_DEBUG
+    engine->rootContext()->setContextProperty("isDebugBuild", true);
+#else
+    engine->rootContext()->setContextProperty("isDebugBuild", false);
+#endif
+
+#ifdef Q_OS_WIN
+    engine->rootContext()->setContextProperty("winTitleBar", QVariant::fromValue<QObject*>(nullptr));
+#endif
 }
 
 FeedItem* FangApp::getFeed(qsizetype index)
@@ -342,9 +376,41 @@ void FangApp::onLoadAllFinished()
 
     if (!qmlPath.isEmpty()) {
         qCInfo(logApp) << "Loading QML from filesystem:" << qmlPath;
-        engine->load(QUrl::fromLocalFile(qmlPath + "/main.qml"));
+        qmlUrl = QUrl::fromLocalFile(qmlPath + "/main.qml");
     } else {
-        engine->load(QUrl("qrc:///qml/main.qml"));
+        qmlUrl = QUrl("qrc:///qml/main.qml");
+    }
+    engine->load(qmlUrl);
+
+    // Notifications, activate!
+    notifications = new Notification(&fangSettings, &feedList, allNews, this);
+    notifications->init();
+
+    // Init WebSocket server.
+    webSocketServer.init(&fangSettings);
+
+    // Setup the feed refresh timer.
+    setRefreshTimer();
+    connect(updateTimer, &QTimer::timeout, this, &FangApp::refreshAllFeeds);
+    updateTimer->start();
+
+    // Maybe the user wants to change how often we refresh the feeds?  Let 'em.
+    connect(&fangSettings, &FangSettings::refreshChanged, this, &FangApp::setRefreshTimer);
+
+    // Send update signal to QML via FangSettings. (Kind of an awkward fit.)
+    connect(&updateChecker, &UpdateChecker::updateAvailable,
+            &fangSettings, &FangSettings::updateAvailable);
+
+    // Start the update checker (checks immediately and then every 24 hours)
+    updateChecker.start();
+
+    // Process any pending feed URL (from command-line or QFileOpenEvent).
+    if (!pendingFeedUrl.isEmpty()) {
+        QString feedUrl = pendingFeedUrl;
+        pendingFeedUrl.clear();
+        QTimer::singleShot(500, this, [this, feedUrl]() {
+            openFeedUrl(feedUrl);
+        });
     }
 
     // Refresh all our feeds to check for the latest and greatest news.
@@ -530,7 +596,7 @@ void FangApp::removeAndDelete(bool fromStart, qsizetype numberToRemove)
 void FangApp::onObjectCreated(QObject* object, const QUrl& url)
 {
     Q_UNUSED(url);
-    
+
     // Save our window.
     window = qobject_cast<QQuickWindow*>(object);
 
@@ -539,43 +605,15 @@ void FangApp::onObjectCreated(QObject* object, const QUrl& url)
 #endif
 
 #ifdef Q_OS_WIN
+    // TODO: delete old WinWindowHelper on reload to avoid leak.
     auto winTitleBar = new WinWindowHelper(window, &fangSettings, this);
     engine->rootContext()->setContextProperty("winTitleBar", winTitleBar);
 #endif
 
-    // Init WebSocket server.
-    webSocketServer.init(&fangSettings);
-    
-    // Grab the All News item.
-    AllNewsFeedItem* allNews = qobject_cast<AllNewsFeedItem*>(feedList.row(0));
-    
-    // Notifications, activate!
-    notifications = new Notification(&fangSettings, &feedList,
-                                     allNews, window, this);
-    notifications->init();
-    
-    // Setup the feed refresh timer.
-    setRefreshTimer();
-    connect(updateTimer, &QTimer::timeout, this, &FangApp::refreshAllFeeds);
-    updateTimer->start();
-
-    // Maybe the user wants to change how often we refresh the feeds?  Let 'em.
-    connect(&fangSettings, &FangSettings::refreshChanged, this, &FangApp::setRefreshTimer);
-
-    // Send update signal to QML via FangSettings. (Kind of an awkward fit.)
-    connect(&updateChecker, &UpdateChecker::updateAvailable,
-            &fangSettings, &FangSettings::updateAvailable);
-
-    // Start the update checker (checks immediately and then every 24 hours)
-    updateChecker.start();
-
-    // Process any pending feed URL (from command-line or QFileOpenEvent).
-    if (!pendingFeedUrl.isEmpty()) {
-        QString url = pendingFeedUrl;
-        pendingFeedUrl.clear();
-        QTimer::singleShot(500, this, [this, url]() {
-            openFeedUrl(url);
-        });
+    // Install event filter on window for hot reload shortcut (filesystem QML only).
+    if (qmlUrl.scheme() != "qrc") {
+        qCInfo(logApp) << "QML hot reload enabled (Ctrl/Cmd+Shift+r to reload QML from disk)";
+        window->installEventFilter(this);
     }
 }
 
@@ -1014,6 +1052,16 @@ SearchFeedItem* FangApp::performSearch(const QString& query,
 
 bool FangApp::eventFilter(QObject* obj, QEvent* event)
 {
+    if (event->type() == QEvent::KeyPress) {
+        QKeyEvent* keyEvent = static_cast<QKeyEvent*>(event);
+
+        // QML hot reload.
+        if (QKeySequence(keyEvent->keyCombination()) == QKeySequence("Ctrl+Shift+R")) {
+            reloadQml();
+            return true;
+        }
+    }
+
     if (event->type() == QEvent::FileOpen) {
         QFileOpenEvent* fileOpenEvent = static_cast<QFileOpenEvent*>(event);
         QString url = fileOpenEvent->url().toString();
@@ -1023,6 +1071,33 @@ bool FangApp::eventFilter(QObject* obj, QEvent* event)
         }
     }
     return FangObject::eventFilter(obj, event);
+}
+
+void FangApp::reloadQml()
+{
+    if (qmlUrl.scheme() == "qrc") {
+        return;
+    }
+
+    QTimer::singleShot(0, this, [this]() {
+        qCInfo(logApp) << "Reloading QML...";
+
+        delete notifications;
+        notifications = nullptr;
+        window = nullptr;
+
+        // Destroy the engine entirely to clear all caches, including
+        // V4 compilation units that clearComponentCache() doesn't touch.
+        delete engine;
+
+        // Build a fresh engine with all context properties.
+        setupEngine();
+        engine->load(qmlUrl);
+
+        // Recreate notifications after reload.
+        notifications = new Notification(&fangSettings, &feedList, allNews, this);
+        notifications->init();
+    });
 }
 
 void FangApp::setPendingFeedUrl(const QString& url)

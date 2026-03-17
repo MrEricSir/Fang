@@ -5,13 +5,11 @@
 Notification::Notification(FangSettings *fangSettings,
                            ListModel *feedList,
                            AllNewsFeedItem *allNews,
-                           QQuickWindow* window,
                            FangObject *parent) :
     FangObject(parent),
     fangSettings(fangSettings),
     feedList(feedList),
-    allNews(allNews),
-    window(window)
+    allNews(allNews)
 {
 }
 

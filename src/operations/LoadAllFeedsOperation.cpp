@@ -37,7 +37,7 @@ void LoadAllFeedsOperation::execute()
                         query.value("ordinal").toInt(),
                         query.value("title").toString(),
                         query.value("folder_open").toBool(),
-                        nullptr
+                        feedList
                         );
         } else {
             item = new FeedItem(
@@ -54,7 +54,7 @@ void LoadAllFeedsOperation::execute()
                         QDateTime::fromMSecsSinceEpoch(query.value("lastIconUpdate").toLongLong()),
                         query.value("parent_folder").toULongLong(),
                         query.value("folder_open").toBool(),
-                        nullptr
+                        feedList
                         );
         }
 
