@@ -391,7 +391,7 @@ void TestSearchOperation::testVirtualDispatchFromLoadNewsPointer()
         operationManager, searchFeed, LoadNewsOperation::Initial,
         "dispatch", SearchNewsOperation::Scope::Global);
 
-    // Call execute through LoadNewsOperation* — must dispatch to SearchNewsOperation::execute().
+    // Call execute through LoadNewsOperation*. Must dispatch to SearchNewsOperation::execute().
     loader->execute();
 
     // If virtual dispatch works, we get search results.

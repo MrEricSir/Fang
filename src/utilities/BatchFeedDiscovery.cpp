@@ -52,8 +52,8 @@ void BatchFeedDiscovery::onFeedDiscoveryFinished(FeedDiscovery* discovery)
             // That's all, folks!
             emit done();
         }
-        
-        delete discovery;
+
+        discovery->deleteLater();
         return;
     }
     

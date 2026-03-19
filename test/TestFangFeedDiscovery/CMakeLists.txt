@@ -6,6 +6,7 @@ qt_add_executable(tst_testfangfeeddiscovery
     ${CMAKE_SOURCE_DIR}/test/MockNewsParser.h
     ${CMAKE_SOURCE_DIR}/test/MockWebPageGrabber.h
     ${CMAKE_SOURCE_DIR}/test/MockBatchNewsParser.h
+    ${CMAKE_SOURCE_DIR}/test/MockGoogleNewsSitemapSynthesizer.h
     # FeedDiscovery (not in FangTestLib to avoid duplicate MOC symbols for QSimpleStateMachine)
     ${CMAKE_SOURCE_DIR}/src/utilities/FeedDiscovery.cpp
     ${CMAKE_SOURCE_DIR}/src/utilities/FeedDiscovery.h

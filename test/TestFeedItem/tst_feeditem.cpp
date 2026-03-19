@@ -99,6 +99,7 @@ FeedItem* TestFeedItem::createTestFeed()
         QDateTime::currentDateTime(),               // lastIconUpdate
         -1,                                         // parentFolder
         true,                                       // folderOpen
+        FeedTypeRSS,
         this
     );
 }
@@ -143,6 +144,7 @@ void TestFeedItem::testParameterizedConstructor()
         iconUpdate,                                 // lastIconUpdate
         10,                                         // parentFolder
         false,                                      // folderOpen
+        FeedTypeRSS,
         this
     );
 
@@ -584,21 +586,21 @@ void TestFeedItem::testIsSpecialFeed()
     // Normal feed (positive ID)
     FeedItem* normalFeed = new FeedItem(1, 0, "Normal", "", QDateTime::currentDateTime(), 60,
                                         QUrl(), QUrl(), "", QUrl(), QDateTime::currentDateTime(),
-                                        -1, true, this);
+                                        -1, true, FeedTypeRSS, this);
     QVERIFY(!normalFeed->isSpecialFeed());
     delete normalFeed;
 
     // AllNews feed (negative ID)
     FeedItem* allNewsFeed = new FeedItem(FEED_ID_ALLNEWS, 0, "All News", "", QDateTime::currentDateTime(), 60,
                                          QUrl(), QUrl(), "", QUrl(), QDateTime::currentDateTime(),
-                                         -1, true, this);
+                                         -1, true, FeedTypeRSS, this);
     QVERIFY(allNewsFeed->isSpecialFeed());
     delete allNewsFeed;
 
     // Pinned feed (negative ID)
     FeedItem* pinnedFeed = new FeedItem(FEED_ID_PINNED, 0, "Pinned", "", QDateTime::currentDateTime(), 60,
                                         QUrl(), QUrl(), "", QUrl(), QDateTime::currentDateTime(),
-                                        -1, true, this);
+                                        -1, true, FeedTypeRSS, this);
     QVERIFY(pinnedFeed->isSpecialFeed());
     delete pinnedFeed;
 }
@@ -607,13 +609,13 @@ void TestFeedItem::testOrdinalComparison()
 {
     FeedItem* feed1 = new FeedItem(1, 5, "Feed 1", "", QDateTime::currentDateTime(), 60,
                                    QUrl(), QUrl(), "", QUrl(), QDateTime::currentDateTime(),
-                                   -1, true, this);
+                                   -1, true, FeedTypeRSS, this);
     FeedItem* feed2 = new FeedItem(2, 10, "Feed 2", "", QDateTime::currentDateTime(), 60,
                                    QUrl(), QUrl(), "", QUrl(), QDateTime::currentDateTime(),
-                                   -1, true, this);
+                                   -1, true, FeedTypeRSS, this);
     FeedItem* feed3 = new FeedItem(3, 3, "Feed 3", "", QDateTime::currentDateTime(), 60,
                                    QUrl(), QUrl(), "", QUrl(), QDateTime::currentDateTime(),
-                                   -1, true, this);
+                                   -1, true, FeedTypeRSS, this);
 
     // Test ordinal-based comparison
     QVERIFY(*feed1 < *feed2);    // 5 < 10

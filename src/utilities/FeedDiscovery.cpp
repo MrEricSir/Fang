@@ -1,5 +1,6 @@
 #include "FeedDiscovery.h"
 #include "FangLogging.h"
+#include "PageMetadataExtractor.h"
 #include <QXmlStreamReader>
 #include <QSet>
 #include <algorithm>
@@ -13,12 +14,15 @@ FeedDiscovery::FeedDiscovery(QObject *parent,
                            ParserInterface* firstParser,
                            ParserInterface* secondParser,
                            WebPageGrabber* pageGrabber,
-                           BatchNewsParser* feedParser) :
+                           BatchNewsParser* feedParser,
+                           GoogleNewsSitemapSynthesizer* sitemapSynthesizer) :
     FangObject(parent),
     machine(),
     _error(false),
     _errorString(""),
-    _feedResult(nullptr)
+    _feedResult(nullptr),
+    _probingCommonPaths(false),
+    newsSitemapSynthesizer(sitemapSynthesizer)
 {
     // Handle secondParser: no longer used, but we need to clean it up if provided
     if (secondParser) {
@@ -42,6 +46,9 @@ FeedDiscovery::FeedDiscovery(QObject *parent,
     if (this->feedParser && !this->feedParser->parent()) {
         this->feedParser->setParent(this);
     }
+    if (newsSitemapSynthesizer && !newsSitemapSynthesizer->parent()) {
+        newsSitemapSynthesizer->setParent(this);
+    }
 
     // Set up our state machine.
     machine.addStateChange(CHECK_FEED, TRY_FEED, [this]() { onTryFeed(); });
@@ -49,8 +56,18 @@ FeedDiscovery::FeedDiscovery(QObject *parent,
     machine.addStateChange(TRY_FEED, WEB_GRABBER, [this]() { onWebGrabber(); });
     machine.addStateChange(WEB_GRABBER, VALIDATE_FEEDS, [this]() { onValidateFeeds(); });
     machine.addStateChange(VALIDATE_FEEDS, FEED_FOUND, [this]() { onFeedFound(); });
+    machine.addStateChange(WEB_GRABBER, TRY_COMMON_PATHS, [this]() { onTryCommonPaths(); });
+    machine.addStateChange(VALIDATE_FEEDS, TRY_COMMON_PATHS, [this]() { onTryCommonPaths(); });
+    machine.addStateChange(TRY_COMMON_PATHS, FEED_FOUND, [this]() { onFeedFound(); });
+    machine.addStateChange(TRY_COMMON_PATHS, TRY_GOOGLE_NEWS_SITEMAP, [this]() { onTryGoogleNewsSitemap(); });
+    machine.addStateChange(TRY_GOOGLE_NEWS_SITEMAP, FEED_FOUND, [this]() { onFeedFound(); });
 
     machine.addStateChange(-1, FEED_ERROR, [this]() { onError(); }); // All errors.
+
+    // Overall discovery timeout.
+    timeoutTimer.setSingleShot(true);
+    timeoutTimer.setInterval(30000);
+    connect(&timeoutTimer, &QTimer::timeout, this, &FeedDiscovery::onTimeout);
 
     // Parser signals.
     connect(parserFirstTry, &ParserInterface::done, this, &FeedDiscovery::onFirstParseDone);
@@ -70,6 +87,7 @@ void FeedDiscovery::checkFeed(QString sURL)
     // Reset state
     _error = false;
     _errorString = "";
+    _probingCommonPaths = false;
     _discoveredFeeds.clear();
     _sortedFeedURLs.clear();
     machine.start(CHECK_FEED);
@@ -96,6 +114,7 @@ void FeedDiscovery::checkFeed(QString sURL)
     // Okay, we have a potential URL! Let's check it.
     _feedURL = url;
     machine.setState(TRY_FEED);
+    timeoutTimer.start();
 }
 
 void FeedDiscovery::onTryFeed()
@@ -105,6 +124,7 @@ void FeedDiscovery::onTryFeed()
 
 void FeedDiscovery::onFeedFound()
 {
+    timeoutTimer.stop();
     FANG_CHECK(!_error, "FeedDiscovery::onFeedFound called with _error set");
     FANG_CHECK(!_feedURL.isEmpty(), "FeedDiscovery::onFeedFound called with empty _feedURL");
 
@@ -118,10 +138,16 @@ void FeedDiscovery::onWebGrabber()
 
 void FeedDiscovery::onError()
 {
+    timeoutTimer.stop();
     FANG_CHECK(_error, "FeedDiscovery::onError called without _error set");
     FANG_CHECK(!_errorString.isEmpty(), "FeedDiscovery::onError called with empty _errorString");
 
     emit done(this);
+}
+
+void FeedDiscovery::onTimeout()
+{
+    reportError("Feed discovery timed out");
 }
 
 void FeedDiscovery::onFirstParseDone()
@@ -134,11 +160,18 @@ void FeedDiscovery::onFirstParseDone()
         _feedURL = parserFirstTry->getURL();
         _feedResult = parserFirstTry->getFeed();
 
+        // Reject empty feeds - a feed that parses OK but has no items is useless.
+        if (!_feedResult || _feedResult->items.isEmpty()) {
+            qCDebug(logUtility) << "Feed parsed OK but has no items, trying web grabber";
+            machine.setState(WEB_GRABBER);
+            break;
+        }
+
         // Add to discovered feeds list
         DiscoveredFeed discovered;
         discovered.url = _feedURL;
         discovered.feed = _feedResult;
-        discovered.title = _feedResult ? _feedResult->title : _feedURL.toString();
+        discovered.title = _feedResult->title.isEmpty() ? _feedURL.toString() : _feedResult->title;
         discovered.validated = true;
         _discoveredFeeds.clear();
         _discoveredFeeds.append(discovered);
@@ -168,9 +201,10 @@ void FeedDiscovery::onPageGrabberReady(WebPageGrabber* grabber, QString* documen
 {
     Q_UNUSED(grabber);
 
-    // If we didn't get a document, bail here.
+    // If we didn't get a document, try common paths before giving up.
     if (!document || document->isEmpty()) {
-        reportError("No page found");
+        qCDebug(logUtility) << "No page found, trying common paths";
+        machine.setState(TRY_COMMON_PATHS);
         return;
     }
 
@@ -179,8 +213,9 @@ void FeedDiscovery::onPageGrabberReady(WebPageGrabber* grabber, QString* documen
     qCDebug(logUtility) << "Parsed" << feedURLs.count() << "feed URLs from HTML";
 
     if (feedURLs.isEmpty()) {
-        qCDebug(logUtility) << "No feeds found in HTML!";
-        reportError("No feed found");
+        qCDebug(logUtility) << "No feeds found in HTML, trying common paths";
+        _pageXHTML = *document;
+        machine.setState(TRY_COMMON_PATHS);
         return;
     }
 
@@ -256,6 +291,12 @@ QList<QString> FeedDiscovery::parseFeedsFromXHTML(const QString& document)
                         continue;
                     }
 
+                    // Strip trailing slash from feed paths. Some servers (e.g. cbsnews.com)
+                    // return 404 for trailing-slash feed URLs but 200 without.
+                    if (url.endsWith("/") && !url.endsWith("://")) {
+                        url.chop(1);
+                    }
+
                     feedsFound << url;
                 }
             }
@@ -287,10 +328,10 @@ void FeedDiscovery::onFeedParserReady()
         QUrl feedURL = it.key();
         ParserInterface::ParseResult result = it.value();
 
-        // Only include successfully parsed feeds
+        // Only include successfully parsed feeds that have items.
         if (result == ParserInterface::OK) {
             RawFeed* feed = feedParser->getFeed(feedURL);
-            if (feed) {
+            if (feed && !feed->items.isEmpty()) {
                 DiscoveredFeed discovered;
                 discovered.url = feedURL;
                 discovered.feed = feed;  // Feed is owned by feedParser
@@ -302,17 +343,123 @@ void FeedDiscovery::onFeedParserReady()
         }
     }
 
-    // Check if we found any valid feeds
+    // Check if we found any valid feeds.
     if (_discoveredFeeds.isEmpty()) {
-        reportError("No valid feeds found");
+        if (_probingCommonPaths) {
+            // Common paths didn't turn up anything.
+            qCDebug(logUtility) << "No valid feeds at common paths, trying sitemap";
+            _probingCommonPaths = false;
+            machine.setState(TRY_GOOGLE_NEWS_SITEMAP);
+        } else {
+            // Validation of HTML-discovered feeds failed.
+            qCDebug(logUtility) << "No valid feeds found, trying common paths";
+            machine.setState(TRY_COMMON_PATHS);
+        }
         return;
     }
+
+    _probingCommonPaths = false;
 
     // Set the first valid feed as the primary one (for backward compatibility)
     _feedURL = _discoveredFeeds.first().url;
     _feedResult = _discoveredFeeds.first().feed;
 
     // Emit done signal
+    machine.setState(FEED_FOUND);
+}
+
+QStringList FeedDiscovery::commonFeedPaths()
+{
+    return {
+        "/feed",
+        "/rss",
+        "/feed.xml",
+        "/rss.xml",
+        "/rss2.0.xml",
+        "/atom.xml",
+        "/index.xml",
+        "/blog/feed"
+    };
+}
+
+void FeedDiscovery::onTryCommonPaths()
+{
+    QUrl rootUrl;
+    rootUrl.setScheme(_feedURL.scheme());
+    rootUrl.setHost(_feedURL.host());
+    if (_feedURL.port() != -1) {
+        rootUrl.setPort(_feedURL.port());
+    }
+
+    QList<QUrl> probeURLs;
+    for (const QString& path : commonFeedPaths()) {
+        QUrl probeUrl = rootUrl;
+        probeUrl.setPath(path);
+        probeURLs.append(probeUrl);
+    }
+
+    qCDebug(logUtility) << "Probing" << probeURLs.count() << "common feed paths";
+    _probingCommonPaths = true;
+    feedParser->parse(probeURLs);
+}
+
+void FeedDiscovery::onTryGoogleNewsSitemap()
+{
+    // Extract site title from the already-fetched XHTML (if available).
+    // The page content may be a redirect or error page, so validate the title.
+    QString siteTitle;
+    if (!_pageXHTML.isEmpty()) {
+        PageMetadata meta = PageMetadataExtractor::extract(_pageXHTML);
+        // Reject titles that look like HTTP status messages.
+        if (!meta.title.isEmpty()
+            && !meta.title.contains("Moved", Qt::CaseInsensitive)
+            && !meta.title.contains("Forbidden", Qt::CaseInsensitive)
+            && !meta.title.contains("Not Found", Qt::CaseInsensitive)
+            && !meta.title.contains("Error", Qt::CaseInsensitive)) {
+            siteTitle = meta.title;
+        }
+    }
+    if (siteTitle.isEmpty()) {
+        siteTitle = _feedURL.host();
+    }
+
+    qCDebug(logUtility) << "FeedDiscovery: trying sitemap for" << _feedURL
+                        << "with title" << siteTitle;
+
+    if (!newsSitemapSynthesizer) {
+        newsSitemapSynthesizer = new GoogleNewsSitemapSynthesizer(this);
+    }
+    connect(newsSitemapSynthesizer, &GoogleNewsSitemapSynthesizer::done,
+            this, &FeedDiscovery::onNewsSitemapDone, Qt::UniqueConnection);
+    newsSitemapSynthesizer->synthesize(_feedURL, siteTitle);
+}
+
+void FeedDiscovery::onNewsSitemapDone()
+{
+    if (newsSitemapSynthesizer->hasError()) {
+        reportError(newsSitemapSynthesizer->errorString());
+        return;
+    }
+
+    RawFeed* synthFeed = newsSitemapSynthesizer->result();
+    if (!synthFeed || synthFeed->items.isEmpty()) {
+        reportError("No feed found");
+        return;
+    }
+
+    // Set the primary feed result.
+    _feedURL = synthFeed->url;
+    _feedResult = synthFeed;
+
+    // Add to discovered feeds list.
+    DiscoveredFeed discovered;
+    discovered.url = synthFeed->url;
+    discovered.feed = synthFeed;
+    discovered.title = synthFeed->title;
+    discovered.validated = true;
+    _discoveredFeeds.clear();
+    _discoveredFeeds.append(discovered);
+
     machine.setState(FEED_FOUND);
 }
 

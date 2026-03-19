@@ -42,21 +42,30 @@ void BatchNewsParser::onParserDone()
         return;
     }
 
-    QUrl url = parser->getURL();
-    if (parsers.count(url) == 0) {
-        qCWarning(logParser) << "BatchNewsParser: URL returned but not found:" << url;
+    // Find the original request URL by matching the parser pointer, since
+    // parser->getURL() may differ from the request URL after redirects.
+    QUrl requestUrl;
+    for (auto it = parsers.cbegin(); it != parsers.cend(); ++it) {
+        if (it->second.get() == parser) {
+            requestUrl = it->first;
+            break;
+        }
+    }
+
+    if (requestUrl.isEmpty()) {
+        qCWarning(logParser) << "BatchNewsParser: parser finished but not found in map:" << parser->getURL();
         return;
     }
 
-    // Store result in our map.
-    results[url] = parser->getResult();
+    // Store result under the original request URL.
+    results[requestUrl] = parser->getResult();
 
     // Store feed if parser succeeded.
     if (parser->getResult() == ParserInterface::OK) {
         RawFeed* feed = parser->getFeed();
         if (feed) {
             // Store reference to the feed (owned by the parser)
-            feeds[url] = feed;
+            feeds[requestUrl] = feed;
         }
     }
 

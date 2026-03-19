@@ -110,7 +110,7 @@ Dialog {
     
     DialogText {
         visible: validator.hasPodcastFeed;
-        text: "This appears to be a podcast feed. Fang is designed for news — audio content won't play.";
+        text: "This appears to be a podcast feed. Fang is designed for news -- audio content won't play.";
         color: style.color.fadedText;
     }
 

@@ -116,6 +116,7 @@ qt_add_executable(Fang WIN32
     src/operations/UpdateFeedURLOperation.cpp
     src/parser/RawFeed.cpp
     src/parser/RawNews.cpp
+    src/parser/SitemapParser.cpp
     src/FangApp.cpp
     src/operations/OperationManager.cpp
     src/operations/UpdateFeedOperation.cpp
@@ -146,6 +147,8 @@ qt_add_executable(Fang WIN32
     src/utilities/NetworkUtilities.cpp
     src/parser/OPMLParser.cpp
     src/utilities/FeedDiscovery.cpp
+    src/utilities/PageMetadataExtractor.cpp
+    src/utilities/GoogleNewsSitemapSynthesizer.cpp
     src/utilities/UpdateChecker.cpp
     src/models/OPMLInteractor.cpp
     src/utilities/OPMLExport.cpp
@@ -194,6 +197,7 @@ qt_add_executable(Fang WIN32
     src/operations/UpdateFeedURLOperation.h
     src/parser/RawFeed.h
     src/parser/RawNews.h
+    src/parser/SitemapParser.h
     src/FangApp.h
     src/operations/OperationManager.h
     src/operations/UpdateFeedOperation.h
@@ -224,6 +228,8 @@ qt_add_executable(Fang WIN32
     src/utilities/NetworkUtilities.h
     src/parser/OPMLParser.h
     src/utilities/FeedDiscovery.h
+    src/utilities/PageMetadataExtractor.h
+    src/utilities/GoogleNewsSitemapSynthesizer.h
     src/models/OPMLInteractor.h
     src/utilities/OPMLExport.h
     src/utilities/BatchFeedDiscovery.h

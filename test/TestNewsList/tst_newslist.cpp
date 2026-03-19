@@ -127,7 +127,7 @@ FeedItem* TestNewsList::createTestFeed()
         1, 0, "Test Feed", "", QDateTime::currentDateTime(), 60,
         QUrl("http://example.com/feed.xml"), QUrl("http://example.com"),
         "http://example.com/feed.xml", QUrl(), QDateTime::currentDateTime(),
-        -1, true, this
+        -1, true, FeedTypeRSS, this
     );
 }
 

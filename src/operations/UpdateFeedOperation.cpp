@@ -16,7 +16,8 @@ UpdateFeedOperation::UpdateFeedOperation(OperationManager *parent, FeedItem *fee
     rawFeed(rawFeed),
     rewriter(),
     timestamp(),
-    useCache(useCache)
+    useCache(useCache),
+    newsSitemapSynthesizer(nullptr)
 {
     connect(&parser, &NewsParser::done, this, &UpdateFeedOperation::onFeedFinished);
     connect(&rewriter, &RawFeedRewriter::finished, this, &UpdateFeedOperation::onRewriterFinished);
@@ -56,7 +57,15 @@ void UpdateFeedOperation::execute()
     timestamp = QDateTime::currentDateTime();
     
     
-    if (rawFeed == nullptr) {
+    if (feed->getFeedType() == FeedTypeGoogleNewsSitemap) {
+        // Google News sitemap feeds use the synthesizer *busts out a keytar* to simulate
+        // feeds based on sitemap XML data.
+        newsSitemapSynthesizer = new GoogleNewsSitemapSynthesizer(this);
+        connect(newsSitemapSynthesizer, &GoogleNewsSitemapSynthesizer::done,
+                this, &UpdateFeedOperation::onNewsSitemapRefreshDone);
+        newsSitemapSynthesizer->synthesize(feed->getURL(), feed->getTitle(),
+                                       feed->getLastUpdated());
+    } else if (rawFeed == nullptr) {
         // Send network request.
         parser.parse(feed->getURL(), useCache);
     } else {
@@ -225,6 +234,24 @@ void UpdateFeedOperation::onRewriterFinished()
     feed->setErrorFlag(false);
 
     emit finished(this);
+}
+
+void UpdateFeedOperation::onNewsSitemapRefreshDone()
+{
+    FANG_BACKGROUND_CHECK;
+
+    if (newsSitemapSynthesizer->hasError()) {
+        qCDebug(logOperation) << "UpdateFeedOperation: Google News sitemap refresh error:"
+                              << newsSitemapSynthesizer->errorString();
+        feed->setErrorFlag(true);
+        feed->setIsUpdating(false);
+        emit finished(this);
+        return;
+    }
+
+    // Use our the synthesized feed as though it were an RSS/Atom feed.
+    rawFeed = newsSitemapSynthesizer->result();
+    onFeedFinished();
 }
 
 void UpdateFeedOperation::onDiscoveryDone(FeedDiscovery* feedDiscovery)

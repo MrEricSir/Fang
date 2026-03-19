@@ -22,9 +22,10 @@ QNetworkReply* FangNetworkAccessManager::createRequest(QNetworkAccessManager::Op
     req.setAttribute(QNetworkRequest::CacheLoadControlAttribute,
                           QNetworkRequest::PreferNetwork);
 
-    // We have to pretend to be Firefox in order for some stupid servers to speak with us.
+    // Mimic Chromium to avoid servers that block non-browser User-Agents.
+    // Qt WebEngine is Chromium-based, so this is honest enough.
     req.setHeader(QNetworkRequest::UserAgentHeader,
-                      "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:27.0) Gecko/20100101 Firefox/27.0");
+                      "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36");
 
     // Required for blogs.gnome.org.
     req.setRawHeader("Accept",

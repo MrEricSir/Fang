@@ -80,8 +80,8 @@ void AddFeedOperation::commitRawFeed() {
     // Insert feed.
     QSqlQuery query(db());
     query.prepare("INSERT INTO FeedItemTable (title, subtitle, lastUpdated, minutesToUpdate, "
-                  "url, siteURL, user_url, ordinal) VALUES (:title, :subtitle, :lastUpdated, "
-                  ":minutesToUpdate, :url, :siteURL, :user_url, :ordinal)");
+                  "url, siteURL, user_url, ordinal, feed_type) VALUES (:title, :subtitle, :lastUpdated, "
+                  ":minutesToUpdate, :url, :siteURL, :user_url, :ordinal, :feed_type)");
     query.bindValue(":title", !title.isEmpty() ? title : rawFeed->title);
     query.bindValue(":subtitle", rawFeed->subtitle);
     query.bindValue(":lastUpdated", rawFeed->lastUpdated.toMSecsSinceEpoch());
@@ -90,6 +90,7 @@ void AddFeedOperation::commitRawFeed() {
     query.bindValue(":siteURL", rawFeed->siteURL);
     query.bindValue(":user_url", userURL);
     query.bindValue(":ordinal", ordinal);
+    query.bindValue(":feed_type", static_cast<int>(rawFeed->feedType));
 
     if (!query.exec()) {
         reportSQLError(query, "Could not add feed");

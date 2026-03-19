@@ -22,6 +22,8 @@ enum SpecialFeedID {
     FEED_ID_PINNED = -1
 };
 
+enum FeedType { FeedTypeRSS = 0, FeedTypeGoogleNewsSitemap = 1 };
+
 class FeedItem : public ListItem, DBObject
 {
     Q_OBJECT
@@ -68,6 +70,7 @@ public:
             const QDateTime& lastIconUpdate,
             qint64 parentFolder = -1,
             bool folderOpen = true,
+            FeedType feedType = FeedTypeRSS,
             QObject *parent = nullptr);
     
     virtual ~FeedItem();
@@ -111,6 +114,7 @@ public slots:
     virtual inline qint64 getDbID() const { return _id; }
     inline bool isSpecialFeed() const { return _id < 0; }
     inline bool isSearchFeed() const { return _id == FEED_ID_SEARCH; }
+    inline FeedType getFeedType() const { return _feedType; }
     
     void setImageURL(const QUrl& url);
     
@@ -267,6 +271,7 @@ private:
     qint64 firstNewsID;
     qint64 _parentFolder;
     bool _folderOpen;
+    FeedType _feedType;
 };
 
 #endif // FEEDITEM_H

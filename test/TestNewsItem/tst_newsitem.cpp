@@ -67,6 +67,7 @@ FeedItem* TestNewsItem::createTestFeed()
         QDateTime::currentDateTime(),               // lastIconUpdate
         -1,                                         // parentFolder
         true,                                       // folderOpen
+        FeedTypeRSS,
         this
     );
 }

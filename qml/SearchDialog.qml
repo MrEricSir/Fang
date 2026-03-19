@@ -114,7 +114,7 @@ Dialog {
             onAccepted: doSearch();
         }
 
-        // Dropdown arrow — only visible when there's history.
+        // Dropdown arrow, only visible when there's history.
         Text {
             id: historyDropdownButton;
             visible: main.searchHistory.length > 0;

@@ -3,6 +3,17 @@
 #include "../utilities/ErrorHandling.h"
 #include "../utilities/FangLogging.h"
 
+// Some feeds (e.g. excelsior.com.mx) double-escape CDATA markers, producing
+// literal "<![CDATA[...]]>" text instead of actual CDATA sections. Strip them.
+static QString stripEscapedCDATA(const QString& text)
+{
+    QString trimmed = text.trimmed();
+    if (trimmed.startsWith("<![CDATA[") && trimmed.endsWith("]]>")) {
+        return trimmed.mid(9, trimmed.length() - 12).trimmed();
+    }
+    return text;
+}
+
 ParserXMLWorker::ParserXMLWorker(QObject *parent) :
     FangObject(parent), feed(nullptr), currentItem(nullptr), isValid(false), inAtomXHTML(false)
 {
@@ -194,9 +205,9 @@ void ParserXMLWorker::elementEnd()
 
         // Item space.
         currentItem->author = author;
-        currentItem->title = title;
-        currentItem->description = subtitle;
-        currentItem->content = content;
+        currentItem->title = stripEscapedCDATA(title);
+        currentItem->description = stripEscapedCDATA(subtitle);
+        currentItem->content = stripEscapedCDATA(content);
         currentItem->url = urlData.isEmpty() ? QUrl(urlHref) : QUrl(urlData);
         currentItem->timestamp = dateFromFeedString(timestamp);
         currentItem->guid = myGuid;

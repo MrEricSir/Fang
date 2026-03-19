@@ -19,6 +19,11 @@ add_library(FangTestLib STATIC
     ${CMAKE_SOURCE_DIR}/src/parser/RawNews.cpp
     ${CMAKE_SOURCE_DIR}/src/parser/BatchNewsParser.cpp
 
+    # Sitemap support
+    ${CMAKE_SOURCE_DIR}/src/parser/SitemapParser.cpp
+    ${CMAKE_SOURCE_DIR}/src/utilities/PageMetadataExtractor.cpp
+    ${CMAKE_SOURCE_DIR}/src/utilities/GoogleNewsSitemapSynthesizer.cpp
+
     # Utilities (used by multiple tests)
     ${CMAKE_SOURCE_DIR}/src/network/NetworkDownloadCore.cpp
     ${CMAKE_SOURCE_DIR}/src/utilities/NetworkUtilities.cpp
