@@ -43,6 +43,7 @@ set(CMAKE_AUTOUIC ON)
 
 # Find Qt6 modules
 find_package(Qt6 REQUIRED COMPONENTS
+    Concurrent
     Core
     Qml
     Quick
@@ -289,6 +290,7 @@ target_link_libraries(Fang PRIVATE
     TidyLib
     QSingleInstanceCheck
     QSimpleStateMachine::QSimpleStateMachine
+    Qt6::Concurrent
     Qt6::Core
     Qt6::Qml
     Qt6::Quick

@@ -1,4 +1,5 @@
 #include "ParserXMLWorker.h"
+#include <QMap>
 #include <QtCore/qtimezone.h>
 #include "../utilities/ErrorHandling.h"
 #include "../utilities/FangLogging.h"
@@ -275,7 +276,8 @@ void ParserXMLWorker::elementContents()
             urlData += xml.text().toString();
         } else if (currentTag == "description" || currentTag == "summary") {
             subtitle += xml.text().toString();
-        } else if (currentTag == "name") {
+        } else if (currentTag == "name"
+                   || (currentTag == "creator" && currentPrefix == "dc")) {
             author += xml.text().toString();
         } else if (currentTag == "pubdate") {
             pubdate += xml.text().toString();
@@ -440,10 +442,7 @@ QDateTime ParserXMLWorker::dateFromFeedString(const QString& _timestamp)
     }
     
     // Check if there's a time-based adjustment and/or timezone.
-    // For now we only look for time identifiers in the format of -hhmm or +hhmm
-    //
-    // TODO: Three-letter time zones. (TLAs like GMT, PST, etc.)
-    //
+    // First try numeric offsets in the format of -hhmm, +hhmm, -hh:mm, or +hh:mm.
     int lastPlus = timestamp.lastIndexOf("+");
     int lastMinus = timestamp.lastIndexOf("-");
     if (lastPlus > 3 || lastMinus > 3) {
@@ -451,7 +450,7 @@ QDateTime ParserXMLWorker::dateFromFeedString(const QString& _timestamp)
         int signPos = lastPlus > 3 ? lastPlus : lastMinus;
         QString sAdjustment = timestamp.right(timestamp.length() - signPos);
         sAdjustment = sAdjustment.trimmed();
-        
+
         // Check for an hour/minute adjustment, in the format of -hhmm or +hhmm
         // OR in the format of -hh:mm or +hh:mm
         if ((sAdjustment.length() == 5 || sAdjustment.length() == 6) &&
@@ -461,23 +460,40 @@ QDateTime ParserXMLWorker::dateFromFeedString(const QString& _timestamp)
             bool isNum = false;
             int hours = 0;
             int minutes = 0;
-            
+
             QString sNumber = sAdjustment.right(containsCol ? 5 : 4); // Skip + or -
             // YES!  We've got an adjustment!
             hours = sNumber.left(2).toInt(&isNum);
-            if (isNum)
+            if (isNum) {
                 minutes = sNumber.right(2).toInt(&isNum);
-            
+            }
+
             // Looks like we're good!
             if (isNum) {
                 // Condense down to minutes.
                 minutes += (hours * 60);
                 adjustment = sAdjustment.startsWith("-") ? minutes : -minutes;
-                
+
                 // Add in our adjustment if we need it.
                 ret = ret.addSecs(adjustment * 60 /* seconds */);
             }
         }
+    }
+
+    // Three-letter timezone abbreviations (UTC offset in minutes).
+    static const QMap<QString, int> tzOffsets = {
+        {"GMT",    0}, {"UTC",    0},
+        {"EST", -300}, {"EDT", -240},
+        {"CST", -360}, {"CDT", -300},
+        {"MST", -420}, {"MDT", -360},
+        {"PST", -480}, {"PDT", -420}
+    };
+
+    // Check if the timestamp ends with a known abbreviation.
+    QString lastWord = timestamp.section(' ', -1).trimmed().toUpper();
+    if (tzOffsets.contains(lastWord)) {
+        int offsetMinutes = tzOffsets.value(lastWord);
+        ret = ret.addSecs(-offsetMinutes * 60);
     }
     
     // All times are (supposedly) in UTC.

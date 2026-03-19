@@ -2,6 +2,7 @@
 #define IMAGEGRABBER_H
 
 #include <QObject>
+#include <QFutureWatcher>
 #include <QImage>
 #include <QList>
 #include <QUrl>
@@ -64,6 +65,7 @@ private slots:
 private:
     BatchDownloadCore* batchDownloader;
     QMap<QUrl, ImageData> results;
+    QFutureWatcher<void> processWatcher;
 };
 
 #endif // IMAGEGRABBER_H

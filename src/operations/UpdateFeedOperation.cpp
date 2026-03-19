@@ -1,6 +1,7 @@
 #include "UpdateFeedOperation.h"
 #include <QtAlgorithms>
 #include <QDateTime>
+#include <QSet>
 
 #include "UpdateFeedURLOperation.h"
 #include "../models/AllNewsFeedItem.h"
@@ -165,12 +166,52 @@ void UpdateFeedOperation::onFeedFinished()
         return;
     }
     
-    // Add all new items to our list.
+    // Collect candidate GUIDs so we can skip items already in the DB.
+    QStringList candidateGuids;
+    for (int i = newIndex; i < rawFeed->items.size(); i++) {
+        candidateGuids.append(rawFeed->items.at(i)->guid);
+    }
+
+    // Query existing GUIDs for this feed in one batch.
+    QSet<QString> existingGuids;
+    {
+        QSqlQuery guidQuery(db());
+        // SQLite supports up to 999 bound parameters, but using IN with
+        // a built string is simpler for a variable-length list.
+        QString placeholders;
+        for (int i = 0; i < candidateGuids.size(); i++) {
+            if (i > 0) {
+                placeholders += ",";
+            }
+            placeholders += "?";
+        }
+        guidQuery.prepare(QString("SELECT guid FROM NewsItemTable WHERE feed_id = ? AND guid IN (%1)")
+                          .arg(placeholders));
+        guidQuery.addBindValue(feed->getDbID());
+        for (const QString& g : candidateGuids) {
+            guidQuery.addBindValue(g);
+        }
+        if (guidQuery.exec()) {
+            while (guidQuery.next()) {
+                existingGuids.insert(guidQuery.value(0).toString());
+            }
+        }
+    }
+
+    // Add new items, skipping any whose GUID already exists for this feed.
     newsList.clear();
     for (int i = newIndex; i < rawFeed->items.size(); i++) {
-        newsList.append(rawFeed->items.at(i));
+        if (!existingGuids.contains(rawFeed->items.at(i)->guid)) {
+            newsList.append(rawFeed->items.at(i));
+        }
     }
-    
+
+    if (newsList.isEmpty()) {
+        feed->setErrorFlag(false);
+        emit finished(this);
+        return;
+    }
+
     // Start the rewriter!  (See the next method below.)
     rewriter.rewrite(&newsList);
 }

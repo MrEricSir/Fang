@@ -176,17 +176,21 @@ QString HTMLSanitizer::sanitize(const QString &document, QSet<QUrl> &imageURLs)
 
                         if (widthOK && heightOK) {
                             if (width < 3 || height < 3) {
-                                // Delete tiny images.
+                                // Delete tiny images (tracking pixels).
                                 idsToDelete << intToID(currentId);
                             } else {
-                                // Resize image if needed.
+                                // Write HTML dimensions as fallback for when fetch fails.
                                 int newWidth, newHeight;
                                 imageResize(width, height, &newWidth, &newHeight);
                                 writer.writeAttribute(S_WIDTH, QString::number(newWidth));
                                 writer.writeAttribute(S_HEIGHT, QString::number(newHeight));
                             }
-                        } else {
-                            // Dammit, we're gonna have to fetch this image!
+                        }
+
+                        // Always fetch images to get actual dimensions and enable
+                        // base64 embedding. HTML attributes can be wrong (e.g. NJ.com
+                        // sets original width with resizer target height).
+                        if (!idsToDelete.contains(intToID(currentId))) {
                             imageURLs << imgSrc;
                         }
                     }
@@ -322,25 +326,24 @@ QString HTMLSanitizer::finalize(const QString &html, const QMap<QUrl, ImageData>
                     int width = 0;
                     int height = 0;
 
-                    // We got an image.
-                    if (xml.attributes().hasAttribute(S_WIDTH) &&
-                            xml.attributes().hasAttribute(S_HEIGHT)) {
-                        // Already have attributes?  Cool.
-                        width = xml.attributes().value(S_WIDTH).toInt();
-                        height = xml.attributes().value(S_HEIGHT).toInt();
-                    } else {
-                        ImageData imageData = imageResults.value(url);
-                        if (imageData.isValid()) {
-                            // Resize that baby, yeah!
-                            imageResize(imageData.image.width(), imageData.image.height(), &width, &height);
+                    // Prefer actual fetched image dimensions over HTML attributes,
+                    // since HTML attributes can be wrong (e.g. NJ.com mixes original
+                    // width with resizer target height).
+                    ImageData imageData = imageResults.value(url);
+                    if (imageData.isValid()) {
+                        imageResize(imageData.image.width(), imageData.image.height(), &width, &height);
 
-                            // Embed image as base64 data URI for offline viewing.
-                            // Returns empty if image is too large to embed.
-                            QString dataUri = imageToDataUri(imageData);
-                            if (!dataUri.isEmpty()) {
-                                srcToUse = dataUri;
-                            }
+                        // Embed image as base64 data URI for offline viewing.
+                        QString dataUri = imageToDataUri(imageData);
+                        if (!dataUri.isEmpty()) {
+                            srcToUse = dataUri;
                         }
+                    } else if (xml.attributes().hasAttribute(S_WIDTH) &&
+                               xml.attributes().hasAttribute(S_HEIGHT)) {
+                        // Fallback to HTML attributes if fetch failed.
+                        int htmlWidth = xml.attributes().value(S_WIDTH).toInt();
+                        int htmlHeight = xml.attributes().value(S_HEIGHT).toInt();
+                        imageResize(htmlWidth, htmlHeight, &width, &height);
                     }
 
                     if (width > 2 && height > 2) {

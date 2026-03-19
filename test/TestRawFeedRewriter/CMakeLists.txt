@@ -40,6 +40,7 @@ target_compile_definitions(tst_testrawfeedrewritertest PRIVATE
 # Link TidyLib and Qt modules
 target_link_libraries(tst_testrawfeedrewritertest PRIVATE
     TidyLib
+    Qt6::Concurrent
     Qt6::Test
     Qt6::Network
     Qt6::Gui

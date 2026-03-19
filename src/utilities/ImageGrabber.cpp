@@ -2,6 +2,7 @@
 #include "../network/BatchDownloadCore.h"
 
 #include <QMimeDatabase>
+#include <QtConcurrent>
 
 ImageGrabber::ImageGrabber(QObject *parent, QNetworkAccessManager* networkManager) :
     FangObject(parent),
@@ -9,6 +10,8 @@ ImageGrabber::ImageGrabber(QObject *parent, QNetworkAccessManager* networkManage
 {
     connect(batchDownloader, &BatchDownloadCore::finished,
             this, &ImageGrabber::onBatchFinished);
+    connect(&processWatcher, &QFutureWatcher<void>::finished,
+            this, &ImageGrabber::finished);
 }
 
 void ImageGrabber::fetchUrl(const QUrl &url)
@@ -26,31 +29,39 @@ void ImageGrabber::fetchUrls(const QList<QUrl> &urls)
 
 void ImageGrabber::onBatchFinished()
 {
-    // Convert batch results to results in ImageData format.
+    // Capture batch results on the main thread, then process on a background
+    // thread to avoid blocking the UI during image decoding and MIME detection.
     QMap<QUrl, BatchDownloadResult> batchResults = batchDownloader->results();
 
-    for (auto it = batchResults.constBegin(); it != batchResults.constEnd(); ++it) {
-        const QUrl& url = it.key();
-        const BatchDownloadResult& batchResult = it.value();
-
-        ImageData imageData;
-
-        if (batchResult.success && !batchResult.data.isEmpty()) {
-            QImage image = QImage::fromData(batchResult.data);
-
-            if (!image.isNull()) {
-                imageData.image = image;
-                imageData.rawData = batchResult.data;
-
-                // Detect MIME type from the raw data.
-                QMimeDatabase mimeDb;
-                QMimeType mimeType = mimeDb.mimeTypeForData(batchResult.data);
-                imageData.mimeType = mimeType.name();
-            }
-        }
-
-        results.insert(url, imageData);
+    // Fast path: no images to process.
+    if (batchResults.isEmpty()) {
+        emit finished();
+        return;
     }
 
-    emit finished();
+    auto future = QtConcurrent::run([this, batchResults]() {
+        QMimeDatabase mimeDb;
+
+        for (auto it = batchResults.constBegin(); it != batchResults.constEnd(); ++it) {
+            const QUrl& url = it.key();
+            const BatchDownloadResult& batchResult = it.value();
+
+            ImageData imageData;
+
+            if (batchResult.success && !batchResult.data.isEmpty()) {
+                QImage image = QImage::fromData(batchResult.data);
+
+                if (!image.isNull()) {
+                    imageData.image = image;
+                    imageData.rawData = batchResult.data;
+
+                    QMimeType mimeType = mimeDb.mimeTypeForData(batchResult.data);
+                    imageData.mimeType = mimeType.name();
+                }
+            }
+
+            results.insert(url, imageData);
+        }
+    });
+    processWatcher.setFuture(future);
 }

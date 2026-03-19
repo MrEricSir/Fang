@@ -45,6 +45,7 @@ target_include_directories(FangTestLib PUBLIC
 # Link required libraries
 target_link_libraries(FangTestLib PUBLIC
     TidyLib
+    Qt6::Concurrent
     Qt6::Core
     Qt6::Network
     Qt6::Gui

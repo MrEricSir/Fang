@@ -153,6 +153,15 @@ body.bookmarksDisabled > #newsView > .newsItemStyle#topBookmark {
     text-overflow: ellipsis-word;
 }
 
+.newsItemStyle > .author {
+    font-style: italic;
+    margin-bottom: 0.3em;
+}
+
+.newsItemStyle > .author:empty {
+    display: none;
+}
+
 .newsItemStyle > .timestamp {
     display: none;
 }
@@ -229,6 +238,7 @@ body.LIGHT > #newsView > .newsItemStyle > h1 > a:hover,
   body.LIGHT > #newsView > .newsItemStyle > h1 > a:active { border-bottom-color: var(--accent, #00f); }
 
 body.LIGHT > #newsView > .newsItemStyle > .siteTitle, body.LIGHT > #newsView > .newsItemStyle > .dateDiv > .date { color: #777; }
+body.LIGHT > #newsView > .newsItemStyle > .author { color: #777; }
 body.LIGHT > #newsView > .newsItemStyle > .divider { background-color: #ccc; }
 body.LIGHT > #newsView > .newsItemStyle > h1, body.LIGHT > #newsView > .newsItemStyle > h1 > a { color: black; }
 
@@ -260,6 +270,7 @@ body.DARK > #newsView > .newsItemStyle > h1 > a:hover,
   body.DARK > #newsView > .newsItemStyle > h1 > a:active { border-bottom-color: var(--accent-hover, #f10); }
 
 body.DARK > #newsView > .newsItemStyle > .siteTitle, body.DARK > .newsItemStyle > .dateDiv > .date { color: #ccc; }
+body.DARK > #newsView > .newsItemStyle > .author { color: #ccc; }
 body.DARK > #newsView > .newsItemStyle > .divider { background-color: #888; }
 body.DARK > #newsView > .newsItemStyle > h1, body.DARK > .newsItemStyle > h1 a { color: white; }
 
@@ -455,6 +466,7 @@ body.css-loading {
         <div class="divider"></div>
         <div class="siteTitle"></div><div class="dateDiv"><span class="date"></span><div class="pin"></div></div>
         <div class="divider"></div>
+        <div class="author"></div>
         <span class="timestamp"></span>
         <div class="content"></div>
 

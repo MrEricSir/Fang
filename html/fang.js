@@ -473,6 +473,11 @@ function appendNews(append, firstNewsID, newsList, searchQuery = null)
             dateEl.innerHTML = formatDateSimply(newsItem['timestamp']);
         }
 
+        const authorEl = item.querySelector('.author');
+        if (authorEl) {
+            authorEl.textContent = newsItem['author'] || '';
+        }
+
         // Set pin
         if (newsItem['pinned']) {
             const pinEl = item.querySelector('.pin');

@@ -212,6 +212,7 @@ void WebServer::addNewsItem(NewsItem *item, QVariantList *newsList)
     itemMap["url"] = item->getURL().toString();
     itemMap["feedTitle"] = feedTitle;
     itemMap["timestamp"] = item->getTimestamp().toMSecsSinceEpoch();
+    itemMap["author"] = item->getAuthor();
     itemMap["content"] = item->getContent() != "" ? item->getContent() : item->getSummary();
     itemMap["pinned"] = item->getPinned();
 

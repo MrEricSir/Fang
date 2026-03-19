@@ -121,11 +121,18 @@ void TestRawFeedRewriterTest::testCase1_data()
                               << "<img src=\"[BASE64_IMAGE]\""
                                  " width=\"400\" height=\"533\" align=\"left\"/>";
 
-    // Image size WITHOUT rewriter.
+    // Image size with HTML attributes — actual dimensions are fetched and preferred.
     QTest::newRow("Image test 3") << "<img src=\"https://www.mrericsir.com/blog/wp-content/uploads/IMG_9016-768x1024.jpeg\" align=\"left\""
                                      " width=\"400\" height=\"533\"/>"
-                              << "<img src=\"https://www.mrericsir.com/blog/wp-content/uploads/IMG_9016-768x1024.jpeg\""
+                              << "<img src=\"[BASE64_IMAGE]\""
                                  " width=\"400\" height=\"533\" align=\"left\"/>";
+
+    // NJ.com-style: HTML attributes have original width (768) with resizer target height (1200).
+    // The actual image is 768x1024. Fetched dimensions should override the wrong HTML attributes.
+    QTest::newRow("NJ.com smooshed image") << "<img src=\"https://www.mrericsir.com/blog/wp-content/uploads/IMG_9016-768x1024.jpeg\""
+                                              " width=\"768\" height=\"1200\"/>"
+                                           << "<img src=\"[BASE64_IMAGE]\""
+                                              " width=\"400\" height=\"533\" align=\"left\"/>";
 
     // Embedded Vine video.
     QTest::newRow("Vine") << "<iframe class=\"vine-embed\" src=\""
@@ -168,9 +175,9 @@ void TestRawFeedRewriterTest::testCase1_data()
                                   "too much into it.  Either way.</p><p>Spotted this wheatpaste during the Cinco de Mayo "
                                   "festival on Valencia.</p>"
                                << "<p><a href=\"https://www.flickr.com/photos/mrericsir/17161096410\">"
-                                 "<img src=\"https://c4.staticflickr.com/8/7684/17161096410_55dcb799a3.jpg\" width=\"400\" height=\"300\" align=\"left\"/>"
+                                 "<img src=\"[BASE64_IMAGE]\" width=\"400\" height=\"300\" align=\"left\"/>"
                                  "</a></p><p>Grump Cat wearing a bicycle helmet? I have no idea. "
-                                 "Perhaps it’s a statement about bicycle helmet laws, or maybe I’m reading "
+                                 "Perhaps it\u2019s a statement about bicycle helmet laws, or maybe I\u2019m reading "
                                  "too much into it. Either way.</p><p>Spotted this wheatpaste during the Cinco de Mayo "
                                  "festival on Valencia.</p>";
 
@@ -188,8 +195,8 @@ void TestRawFeedRewriterTest::testCase1_data()
                                         "<p><em>Combining San Francisco history, art, literature, cycling, and urban exploration,  “Bikes to Books” began as an bike ride homage to the 1988 street-naming project spearheaded by City Lights founder and former San Francisco Poet Laureate, Lawrence Ferlinghetti, in which twelve San Francisco streets were renamed for famous artists and authors who had once made San Francisco their home. The 7.1 mile tour, which takes between two and three hours to complete, is admittedly not for the faint of heart nor gear—these streets were not chosen for their proximity to bike lanes, and there is plenty of traffic to dodge, hills to climb, one-way streets, and even a set of stairs. But it’s a diverting and unique way to celebrate both the literary and the adventurous spirit of San Francisco. First published in 2013 in the San Francisco Bay Guardian, and later in partnership with City Lights Books, the physical map can be found in many of San Francisco’s finest book emporiums, and is appropriate for use as a navigational tool, a history lesson, and a unique work of art in its own right.</em></p>\n"
                                         "<p><em><a href=\"http://burritojustice.com/bikes-to-books-map/\" rel=\"nofollow\">http://burritojustice.com/bikes-to-books-map/</a></em></p><br />  <a rel=\"nofollow\" href=\"http://feeds.wordpress.com/1.0/gocomments/burritojustice.wordpress.com/10603/\"><img alt=\"\" border=\"0\" src=\"http://feeds.wordpress.com/1.0/comments/burritojustice.wordpress.com/10603/\" /></a> <img alt=\"\" border=\"0\" src=\"http://pixel.wp.com/b.gif?host=burritojustice.com&#038;blog=4823503&#038;post=10603&#038;subd=burritojustice&#038;ref=&#038;feed=1\" width=\"1\" height=\"1\" />\n"
                                      << "<p>Come ride the Bikes to Books tour with us on Saturday, May 30! Both the foldable maps and <a href=\"http://burritojustice.com/2015/03/08/bike-to-books-poster-bigger-stronger-faster/\"> our new posters</a> will be available for sale.</p>"
-                                        "<p>It’s a surprisingly easy ride, and you can have an IPA at the end.</p>"
-                                        "<p><a href=\"https://burritojustice.files.wordpress.com/2013/10/bikes-to-books-map-crop.jpg\"><img src=\"https://burritojustice.files.wordpress.com/2013/10/bikes-to-books-map-crop.jpg?w=600&amp;h=867\" width=\"400\" height=\"578\" align=\"left\"/><img src=\"https://burritojustice.files.wordpress.com/2015/03/bikes-to-books-timeline-crop.png?w=600&amp;h=635\" width=\"400\" height=\"423\" align=\"left\"/></a></p>"
+                                        "<p>It\u2019s a surprisingly easy ride, and you can have an IPA at the end.</p>"
+                                        "<p><a href=\"https://burritojustice.files.wordpress.com/2013/10/bikes-to-books-map-crop.jpg\"><img src=\"[BASE64_IMAGE]\" width=\"400\" height=\"577\" align=\"left\"/><img src=\"[BASE64_IMAGE]\" width=\"400\" height=\"422\" align=\"left\"/></a></p>"
                                         "<p><strong><em>Bikes to Books Annual Springtime Ride!</em></strong></p>"
                                         "<p><em><b>Saturday, May 30, 1:00 p.m. – 4:00 p.m.</b></em></p>"
                                         "<p><em><b>Meet at 12:45 p.m. at Jack London Street, at South Park in San Francisco</b></em></p>"
