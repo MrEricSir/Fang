@@ -141,21 +141,24 @@ body.bookmarksDisabled > #newsView > .newsItemStyle#topBookmark {
 }
 
 .newsItemStyle > .siteTitle {
-    width: 50%;
-    display: inline-block;
-    text-overflow: ellipsis-word;
+    text-transform: uppercase;
+    font-size: 0.75em;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.2em;
+}
+
+.newsItemStyle > .siteTitle:empty {
+    display: none;
 }
 
 .newsItemStyle > .dateDiv {
-    width: 50%;
-    display: inline-block;
+    float: right;
     text-align: right;
     text-overflow: ellipsis-word;
 }
 
 .newsItemStyle > .author {
-    font-style: italic;
-    margin-bottom: 0.3em;
+    text-overflow: ellipsis-word;
 }
 
 .newsItemStyle > .author:empty {
@@ -172,6 +175,7 @@ body.bookmarksDisabled > #newsView > .newsItemStyle#topBookmark {
     margin: 0;
     margin-bottom: 0.3em;
     margin-top: 0.3em;
+    clear: both;
 }
 
 .newsItemStyle > h1 {
@@ -238,7 +242,7 @@ body.LIGHT > #newsView > .newsItemStyle > h1 > a:hover,
   body.LIGHT > #newsView > .newsItemStyle > h1 > a:active { border-bottom-color: var(--accent, #00f); }
 
 body.LIGHT > #newsView > .newsItemStyle > .siteTitle, body.LIGHT > #newsView > .newsItemStyle > .dateDiv > .date { color: #777; }
-body.LIGHT > #newsView > .newsItemStyle > .author { color: #777; }
+body.LIGHT > #newsView > .newsItemStyle > .author { color: #777; font-style: italic; }
 body.LIGHT > #newsView > .newsItemStyle > .divider { background-color: #ccc; }
 body.LIGHT > #newsView > .newsItemStyle > h1, body.LIGHT > #newsView > .newsItemStyle > h1 > a { color: black; }
 
@@ -270,7 +274,7 @@ body.DARK > #newsView > .newsItemStyle > h1 > a:hover,
   body.DARK > #newsView > .newsItemStyle > h1 > a:active { border-bottom-color: var(--accent-hover, #f10); }
 
 body.DARK > #newsView > .newsItemStyle > .siteTitle, body.DARK > .newsItemStyle > .dateDiv > .date { color: #ccc; }
-body.DARK > #newsView > .newsItemStyle > .author { color: #ccc; }
+body.DARK > #newsView > .newsItemStyle > .author { color: #ccc; font-style: italic; }
 body.DARK > #newsView > .newsItemStyle > .divider { background-color: #888; }
 body.DARK > #newsView > .newsItemStyle > h1, body.DARK > .newsItemStyle > h1 a { color: white; }
 
@@ -462,11 +466,11 @@ body.css-loading {
     </div>
 
     <div class="newsContainer newsItemStyle" id="model">
+        <div class="siteTitle"></div>
         <h1><a href="" class="link"></a></h1>
         <div class="divider"></div>
-        <div class="siteTitle"></div><div class="dateDiv"><span class="date"></span><div class="pin"></div></div>
+        <div class="dateDiv"><span class="date"></span><div class="pin"></div></div><div class="author"></div>
         <div class="divider"></div>
-        <div class="author"></div>
         <span class="timestamp"></span>
         <div class="content"></div>
 

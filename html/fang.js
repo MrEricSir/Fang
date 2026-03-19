@@ -475,7 +475,8 @@ function appendNews(append, firstNewsID, newsList, searchQuery = null)
 
         const authorEl = item.querySelector('.author');
         if (authorEl) {
-            authorEl.textContent = newsItem['author'] || '';
+            const author = newsItem['author'] || '';
+            authorEl.textContent = author ? 'by ' + author : '';
         }
 
         // Set pin
