@@ -86,10 +86,15 @@ private slots:
 
     // Robots.txt parsing tests
     void testRobotsTxtParsing();
+    void testRobotsTxtAutoDiscovery();
 
     // Sitemap integration tests (injectable synthesizer)
     void testSitemapSuccessIntegration();
     void testSitemapErrorIntegration();
+
+    // Full flow integration tests for specific sites
+    void testESPNFullFlow();
+    void testCommonPathFallbackFlow();
 
     // Deduplication tests
     void testDeduplicateRepetitiveTitles();
@@ -233,6 +238,23 @@ void TestFangFeedDiscovery::testCase1_data()
 
     // Mostly Javascript, no feed links.
     QTest::newRow("SFGate") << "sfgate.com" << true << "" << "";
+
+    // JS-heavy SPA with no RSS/Atom links.
+    QTest::newRow("ESPN") << "espn.com" << false << "" << "";
+
+    // Hearst CMS, same as SFGate — no RSS links in HTML.
+    QTest::newRow("SF Chronicle") << "sfchronicle.com" << false << "" << "";
+
+    // WordPress site with RSS feed.
+    QTest::newRow("Times of San Diego") << "timesofsandiego.com" << true
+                                        << "https://timesofsandiego.com/feed" << "";
+
+    // SoCast CMS, no RSS links in HTML.
+    QTest::newRow("1077 The Bone") << "1077thebone.com" << false << "" << "";
+
+    // Captcha/JS challenge page — no feeds in HTML.
+    QTest::newRow("NJ.com") << "nj.com" << false << "" << "";
+    QTest::newRow("Syracuse.com") << "syracuse.com" << false << "" << "";
 }
 
 // Test that URLs without scheme get fixed up
@@ -1481,10 +1503,13 @@ void TestFangFeedDiscovery::testRobotsTxtParsing()
 
     QList<QUrl> results = GoogleNewsSitemapSynthesizer::parseRobotsSitemaps(robotsTxt, baseUrl);
 
-    // Only sitemaps with "news" in the URL should be returned.
-    QCOMPARE(results.size(), 2);
+    // News sitemaps first, then generic sitemaps.
+    QCOMPARE(results.size(), 5);
     QCOMPARE(results[0], QUrl("https://www.bloomberg.com/sitemaps/news/index.xml"));
     QCOMPARE(results[1], QUrl("https://www.bloomberg.com/sitemaps/news/latest.xml"));
+    QCOMPARE(results[2], QUrl("https://www.bloomberg.com/sitemaps/collections/index.xml"));
+    QCOMPARE(results[3], QUrl("https://www.bloomberg.com/sitemaps/media/video/index.xml"));
+    QCOMPARE(results[4], QUrl("https://www.bloomberg.com/billionaires/sitemap.xml"));
 
     // AP News style
     QString apRobots =
@@ -1495,8 +1520,13 @@ void TestFangFeedDiscovery::testRobotsTxtParsing()
 
     QList<QUrl> apResults = GoogleNewsSitemapSynthesizer::parseRobotsSitemaps(
         apRobots, QUrl("https://apnews.com"));
-    QCOMPARE(apResults.size(), 1);
+    QCOMPARE(apResults.size(), 4);
+    // News-specific first.
     QCOMPARE(apResults[0], QUrl("https://apnews.com/news-sitemap-content.xml"));
+    // Then generic sitemaps.
+    QCOMPARE(apResults[1], QUrl("https://apnews.com/ap-sitemap.xml"));
+    QCOMPARE(apResults[2], QUrl("https://apnews.com/hubs-sitemap-content.xml"));
+    QCOMPARE(apResults[3], QUrl("https://apnews.com/video-sitemap.xml"));
 
     // USA Today style
     QString usatRobots =
@@ -1507,10 +1537,13 @@ void TestFangFeedDiscovery::testRobotsTxtParsing()
 
     QList<QUrl> usatResults = GoogleNewsSitemapSynthesizer::parseRobotsSitemaps(
         usatRobots, QUrl("https://www.usatoday.com"));
-    QCOMPARE(usatResults.size(), 3);
+    QCOMPARE(usatResults.size(), 4);
+    // News-specific first.
     QCOMPARE(usatResults[0], QUrl("https://www.usatoday.com/news-sitemap.xml"));
     QCOMPARE(usatResults[1], QUrl("https://www.usatoday.com/money/blueprint/sitemap-news.xml"));
     QCOMPARE(usatResults[2], QUrl("https://www.usatoday.com/online-betting/news-sitemap.xml"));
+    // Then generic.
+    QCOMPARE(usatResults[3], QUrl("https://www.usatoday.com/web-sitemap-index.xml"));
 
     // Empty robots.txt
     QList<QUrl> emptyResults = GoogleNewsSitemapSynthesizer::parseRobotsSitemaps(
@@ -1531,6 +1564,217 @@ void TestFangFeedDiscovery::testRobotsTxtParsing()
         wwwSitemaps, QUrl("https://reuters.com"));
     QCOMPARE(wwwResults.size(), 1);
     QCOMPARE(wwwResults[0], QUrl("https://www.reuters.com/arc/outboundfeeds/news-sitemap/1"));
+
+    // ESPN style: only a generic /sitemap.xml in robots.txt (no "news" in path).
+    // Should still be returned (after news-specific ones, which there are none of).
+    QString espnRobots =
+        "Sitemap: https://www.espn.com/sitemap.xml\n";
+    QList<QUrl> espnResults = GoogleNewsSitemapSynthesizer::parseRobotsSitemaps(
+        espnRobots, QUrl("https://www.espn.com"));
+    QCOMPARE(espnResults.size(), 1);
+    QCOMPARE(espnResults[0], QUrl("https://www.espn.com/sitemap.xml"));
+}
+
+// Test robots.txt auto-discovery: generic sitemaps are returned as lower-priority
+// candidates so that sitemap indexes (like ESPN's /sitemap.xml) can be crawled
+// to discover news sub-sitemaps.
+void TestFangFeedDiscovery::testRobotsTxtAutoDiscovery()
+{
+    // NJ.com (Advance Local): has both news-specific and generic sitemaps.
+    // News-specific should come first.
+    QString njRobots =
+        "Sitemap: https://www.nj.com/arc/outboundfeeds/rss-latest/?outputType=xml\n"
+        "Sitemap: https://www.nj.com/arc/outboundfeeds/sitemap-index/?outputType=xml\n"
+        "Sitemap: https://www.nj.com/arc/outboundfeeds/news-sitemap-index/?outputType=xml\n"
+        "Sitemap: https://www.nj.com/arc/outboundfeeds/sitemap-index-by-day/\n"
+        "Sitemap: https://www.nj.com/arc/outboundfeeds/evg_updates/\n"
+        "Sitemap: https://www.nj.com/arc/outboundfeeds/google-news-feed/\n";
+
+    QList<QUrl> njResults = GoogleNewsSitemapSynthesizer::parseRobotsSitemaps(
+        njRobots, QUrl("https://www.nj.com"));
+    // "news" appears in news-sitemap-index and google-news-feed.
+    QVERIFY(njResults.size() == 6);
+    // News-specific first.
+    QCOMPARE(njResults[0], QUrl("https://www.nj.com/arc/outboundfeeds/news-sitemap-index/?outputType=xml"));
+    QCOMPARE(njResults[1], QUrl("https://www.nj.com/arc/outboundfeeds/google-news-feed/"));
+    // Then generic.
+    QCOMPARE(njResults[2], QUrl("https://www.nj.com/arc/outboundfeeds/rss-latest/?outputType=xml"));
+    QCOMPARE(njResults[3], QUrl("https://www.nj.com/arc/outboundfeeds/sitemap-index/?outputType=xml"));
+    QCOMPARE(njResults[4], QUrl("https://www.nj.com/arc/outboundfeeds/sitemap-index-by-day/"));
+    QCOMPARE(njResults[5], QUrl("https://www.nj.com/arc/outboundfeeds/evg_updates/"));
+
+    // Syracuse.com: same Advance Local pattern.
+    QString syracuseRobots =
+        "Sitemap: https://www.syracuse.com/arc/outboundfeeds/rss-latest/?outputType=xml\n"
+        "Sitemap: https://www.syracuse.com/arc/outboundfeeds/sitemap-index/?outputType=xml\n"
+        "Sitemap: https://www.syracuse.com/arc/outboundfeeds/news-sitemap-index/?outputType=xml\n"
+        "Sitemap: https://www.syracuse.com/arc/outboundfeeds/sitemap-index-by-day/\n"
+        "Sitemap: https://www.syracuse.com/arc/outboundfeeds/evg_updates/\n"
+        "Sitemap: https://www.syracuse.com/arc/outboundfeeds/google-news-feed/\n";
+
+    QList<QUrl> syracuseResults = GoogleNewsSitemapSynthesizer::parseRobotsSitemaps(
+        syracuseRobots, QUrl("https://www.syracuse.com"));
+    QCOMPARE(syracuseResults.size(), 6);
+    // News-specific first.
+    QCOMPARE(syracuseResults[0], QUrl("https://www.syracuse.com/arc/outboundfeeds/news-sitemap-index/?outputType=xml"));
+    QCOMPARE(syracuseResults[1], QUrl("https://www.syracuse.com/arc/outboundfeeds/google-news-feed/"));
+
+    // SF Chronicle (Hearst): has sitemap_news.xml (news-specific) and generic sitemaps.
+    QString sfcRobots =
+        "Sitemap: https://www.sfchronicle.com/sitemap.xml\n"
+        "Sitemap: https://www.sfchronicle.com/sitemap_news.xml\n"
+        "Sitemap: https://www.sfchronicle.com/projects/sitemap_projects.xml\n"
+        "Sitemap: https://www.sfchronicle.com/video-sitemap-index.xml\n";
+
+    QList<QUrl> sfcResults = GoogleNewsSitemapSynthesizer::parseRobotsSitemaps(
+        sfcRobots, QUrl("https://www.sfchronicle.com"));
+    QCOMPARE(sfcResults.size(), 4);
+    // News-specific first: sitemap_news.xml has "news" in path.
+    QCOMPARE(sfcResults[0], QUrl("https://www.sfchronicle.com/sitemap_news.xml"));
+    // Then generic sitemaps.
+    QCOMPARE(sfcResults[1], QUrl("https://www.sfchronicle.com/sitemap.xml"));
+    QCOMPARE(sfcResults[2], QUrl("https://www.sfchronicle.com/projects/sitemap_projects.xml"));
+    QCOMPARE(sfcResults[3], QUrl("https://www.sfchronicle.com/video-sitemap-index.xml"));
+
+    // 1077thebone.com: only a generic /sitemap.xml.
+    QString boneRobots =
+        "Sitemap: https://www.1077thebone.com/sitemap.xml\n";
+    QList<QUrl> boneResults = GoogleNewsSitemapSynthesizer::parseRobotsSitemaps(
+        boneRobots, QUrl("https://www.1077thebone.com"));
+    QCOMPARE(boneResults.size(), 1);
+    QCOMPARE(boneResults[0], QUrl("https://www.1077thebone.com/sitemap.xml"));
+}
+
+// =====================================================================
+// Full flow integration tests for specific sites
+// =====================================================================
+
+// ESPN: No RSS in HTML -> common paths fail -> sitemap discovery via
+// robots.txt generic /sitemap.xml -> sitemap index -> news sub-sitemap.
+void TestFangFeedDiscovery::testESPNFullFlow()
+{
+    // Load the actual ESPN HTML.
+    QString projectPath = PROJECT_PATH;
+    QFile file(projectPath + "/feeds/espn.com");
+    QVERIFY2(file.open(QFile::ReadOnly | QFile::Text), "Could not open ESPN HTML file");
+
+    QByteArray rawHtml = file.readAll();
+    file.close();
+
+    // Process through WebPageGrabber.
+    WebPageGrabber webGrabber;
+    QString* processedHtml = webGrabber.load(rawHtml);
+    QVERIFY2(processedHtml != nullptr, "WebPageGrabber failed to process ESPN HTML");
+    QString htmlContent = *processedHtml;
+
+    // Verify no RSS/Atom links in ESPN's HTML.
+    FeedDiscovery fdCheck;
+    QList<QString> feedURLs = fdCheck.parseFeedsFromXHTML(htmlContent);
+    QVERIFY2(feedURLs.isEmpty(), "ESPN HTML unexpectedly contains RSS/Atom links");
+
+    // Set up mocks for the full flow.
+    MockNewsParser* firstParser = new MockNewsParser();
+    MockWebPageGrabber* pageGrabber = new MockWebPageGrabber();
+    MockBatchNewsParser* feedParser = new MockBatchNewsParser();
+    MockGoogleNewsSitemapSynthesizer* sitemapSynth = new MockGoogleNewsSitemapSynthesizer();
+
+    firstParser->setResult(ParserInterface::PARSE_ERROR);
+
+    static QString persistentHtmlESPN = htmlContent;
+    pageGrabber->setMockDocument(&persistentHtmlESPN);
+
+    // No common paths configured -> all will fail with default NETWORK_ERROR.
+
+    // Configure mock synthesizer to return a feed (simulating the
+    // robots.txt -> sitemap.xml -> sitemap index -> googlenewssitemap chain).
+    RawFeed* espnFeed = new RawFeed(sitemapSynth);
+    espnFeed->feedType = RawFeed::GoogleNewsSitemap;
+    espnFeed->title = "ESPN";
+    espnFeed->url = QUrl("https://www.espn.com/googlenewssitemap");
+
+    RawNews* item1 = new RawNews(espnFeed);
+    item1->title = "LeBron James 6 dunks key Lakers 7th straight win";
+    item1->url = QUrl("https://www.espn.com/nba/story/_/id/48246814");
+    espnFeed->items.append(item1);
+
+    RawNews* item2 = new RawNews(espnFeed);
+    item2->title = "Morocco cannot claim Senegal AFCON title";
+    item2->url = QUrl("https://www.espn.com/espn/story/_/id/48246762");
+    espnFeed->items.append(item2);
+
+    sitemapSynth->setResult(espnFeed);
+
+    FeedDiscovery fd(nullptr, firstParser, new MockNewsParser(), pageGrabber, feedParser, sitemapSynth);
+    QSignalSpy spy(&fd, &FeedDiscovery::done);
+
+    fd.checkFeed("https://www.espn.com");
+
+    QVERIFY(spy.wait(5000));
+    QCOMPARE(spy.count(), 1);
+
+    QVERIFY2(!fd.error(), qPrintable("ESPN discovery failed: " + fd.errorString()));
+    QCOMPARE(fd.feedURL(), QUrl("https://www.espn.com/googlenewssitemap"));
+    QVERIFY(fd.feedResult() != nullptr);
+    QCOMPARE(fd.feedResult()->items.size(), 2);
+    QCOMPARE(fd.feedResult()->title, QString("ESPN"));
+
+    QCOMPARE(fd.feedCount(), 1);
+    QVERIFY(fd.discoveredFeeds().first().validated);
+}
+
+// 1077thebone.com: No RSS in HTML -> common path /feed returns valid feed.
+void TestFangFeedDiscovery::testCommonPathFallbackFlow()
+{
+    // Load the actual HTML.
+    QString projectPath = PROJECT_PATH;
+    QFile file(projectPath + "/feeds/1077thebone.com");
+    QVERIFY2(file.open(QFile::ReadOnly | QFile::Text), "Could not open 1077thebone HTML file");
+
+    QByteArray rawHtml = file.readAll();
+    file.close();
+
+    WebPageGrabber webGrabber;
+    QString* processedHtml = webGrabber.load(rawHtml);
+    QVERIFY2(processedHtml != nullptr, "WebPageGrabber failed to process 1077thebone HTML");
+    QString htmlContent = *processedHtml;
+
+    // Verify no RSS/Atom links in 1077thebone's HTML.
+    FeedDiscovery fdCheck;
+    QList<QString> feedURLs = fdCheck.parseFeedsFromXHTML(htmlContent);
+    QVERIFY2(feedURLs.isEmpty(), "1077thebone HTML unexpectedly contains RSS/Atom links");
+
+    // Set up mocks.
+    MockNewsParser* firstParser = new MockNewsParser();
+    MockWebPageGrabber* pageGrabber = new MockWebPageGrabber();
+    MockBatchNewsParser* feedParser = new MockBatchNewsParser();
+
+    firstParser->setResult(ParserInterface::PARSE_ERROR);
+
+    static QString persistentHtmlBone = htmlContent;
+    pageGrabber->setMockDocument(&persistentHtmlBone);
+
+    // Common path /feed returns a valid feed.
+    RawFeed* boneFeed = new RawFeed();
+    boneFeed->title = "107.7 The Bone";
+    boneFeed->url = QUrl("https://www.1077thebone.com/feed");
+    RawNews* item = new RawNews(boneFeed);
+    item->title = "Rock News Roundup";
+    item->url = QUrl("https://www.1077thebone.com/rock-news-roundup");
+    boneFeed->items.append(item);
+    feedParser->addResponse(QUrl("https://www.1077thebone.com/feed"), ParserInterface::OK, boneFeed);
+
+    FeedDiscovery fd(nullptr, firstParser, new MockNewsParser(), pageGrabber, feedParser);
+    QSignalSpy spy(&fd, &FeedDiscovery::done);
+
+    fd.checkFeed("https://www.1077thebone.com");
+
+    QVERIFY(spy.wait(5000));
+    QCOMPARE(spy.count(), 1);
+
+    QVERIFY2(!fd.error(), qPrintable("1077thebone discovery failed: " + fd.errorString()));
+    QCOMPARE(fd.feedURL(), QUrl("https://www.1077thebone.com/feed"));
+    QVERIFY(fd.feedResult() != nullptr);
+    QCOMPARE(fd.feedResult()->title, QString("107.7 The Bone"));
 }
 
 // =====================================================================

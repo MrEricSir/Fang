@@ -89,6 +89,7 @@ QList<QUrl> GoogleNewsSitemapSynthesizer::parseRobotsSitemaps(const QString& rob
                                                          const QUrl& siteBaseUrl)
 {
     QList<QUrl> newsSitemaps;
+    QList<QUrl> genericSitemaps;
     QStringList lines = robotsTxt.split('\n');
 
     for (const QString& line : lines) {
@@ -96,13 +97,19 @@ QList<QUrl> GoogleNewsSitemapSynthesizer::parseRobotsSitemaps(const QString& rob
         if (trimmed.startsWith("Sitemap:", Qt::CaseInsensitive)) {
             QString urlStr = trimmed.mid(8).trimmed();
             QUrl url(urlStr);
-            if (url.isValid() && stripWww(url.host()) == stripWww(siteBaseUrl.host())
-                && url.path().contains("news", Qt::CaseInsensitive)) {
-                newsSitemaps.append(url);
+            if (url.isValid() && stripWww(url.host()) == stripWww(siteBaseUrl.host())) {
+                if (url.path().contains("news", Qt::CaseInsensitive)) {
+                    newsSitemaps.append(url);
+                } else {
+                    genericSitemaps.append(url);
+                }
             }
         }
     }
 
+    // News-specific sitemaps first, then generic ones (which may be sitemap
+    // indexes that reference a news sitemap, e.g. ESPN's /sitemap.xml).
+    newsSitemaps.append(genericSitemaps);
     return newsSitemaps;
 }
 
