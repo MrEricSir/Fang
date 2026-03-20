@@ -49,3 +49,4 @@ add_subdirectory(TestNetworkRetryPolicy)
 
 # Utility tests
 add_subdirectory(TestFileLogging)
+add_subdirectory(TestImageCache)

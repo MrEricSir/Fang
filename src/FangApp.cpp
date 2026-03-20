@@ -9,6 +9,7 @@
 #include <QQmlFileSelector>
 
 #include "utilities/ErrorHandling.h"
+#include "utilities/ImageCache.h"
 #include "network/FangQQmlNetworkAccessManagerFactory.h"
 
 #include "operations/UpdateFeedOperation.h"
@@ -634,7 +635,7 @@ void FangApp::onSecondInstanceStarted()
 
 void FangApp::onQuit()
 {
-    // By default, cull items older than 3 months, save for the last 25.
+    // Cull items older than the configured cache length, save for the last 25.
     // (If read and unpinned, of course.)
     QDateTime olderThan = DBSettingsCacheLengthToDateTime(dbSettings.get(CACHE_LENGTH));
     qint32 saveLast = 25;
@@ -642,6 +643,9 @@ void FangApp::onQuit()
     // Clean up DB before we exit.
     ExpireNewsOperation expireOp(&manager, &feedList, olderThan, saveLast);
     manager.run(&expireOp);
+
+    // Delete expired images from cache.
+    ImageCache::evictOlderThan(olderThan);
 }
 
 void FangApp::setCurrentFeed(FeedItem *feed, bool reloadIfSameFeed)

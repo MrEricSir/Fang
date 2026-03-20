@@ -29,6 +29,7 @@ add_library(FangTestLib STATIC
     ${CMAKE_SOURCE_DIR}/src/utilities/NetworkUtilities.cpp
     ${CMAKE_SOURCE_DIR}/src/utilities/WebPageGrabber.cpp
     ${CMAKE_SOURCE_DIR}/src/utilities/ImageGrabber.cpp
+    ${CMAKE_SOURCE_DIR}/src/utilities/ImageCache.cpp
     # NOTE: FeedDiscovery is NOT included here because it uses QSimpleStateMachine
     # Tests that need FeedDiscovery should compile it directly to avoid duplicate MOC symbols
 )

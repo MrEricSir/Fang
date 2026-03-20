@@ -1,6 +1,7 @@
 #ifndef IMAGECACHE_H
 #define IMAGECACHE_H
 
+#include <QDateTime>
 #include <QString>
 #include <QUrl>
 
@@ -28,6 +29,13 @@ public:
         \return Web path like "/images/a1b2c3d4.jpeg", or empty string on failure.
      */
     static QString saveImage(const QUrl& url, const ImageData& imageData);
+
+    /*!
+        \brief Deletes cached image files older than the given cutoff date.
+        \param cutoff Files with modification time before this are deleted.
+        \return Number of files deleted.
+     */
+    static int evictOlderThan(const QDateTime& cutoff);
 
 private:
     static QString hashUrl(const QUrl& url);

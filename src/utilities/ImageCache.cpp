@@ -1,8 +1,10 @@
 #include "ImageCache.h"
+#include "FangLogging.h"
 
 #include <QCryptographicHash>
 #include <QDir>
 #include <QFile>
+#include <QFileInfo>
 #include <QStandardPaths>
 
 QString ImageCache::cacheDir()
@@ -37,6 +39,30 @@ QString ImageCache::saveImage(const QUrl& url, const ImageData& imageData)
     file.close();
 
     return "/images/" + filename;
+}
+
+int ImageCache::evictOlderThan(const QDateTime& cutoff)
+{
+    QDir dir(cacheDir());
+    if (!dir.exists()) {
+        return 0;
+    }
+
+    int deleted = 0;
+    QFileInfoList files = dir.entryInfoList(QDir::Files);
+    for (const QFileInfo& info : files) {
+        if (info.lastModified() < cutoff) {
+            if (QFile::remove(info.absoluteFilePath())) {
+                deleted++;
+            }
+        }
+    }
+
+    if (deleted > 0) {
+        qCInfo(logUtility) << "Image cache: evicted" << deleted << "expired files";
+    }
+
+    return deleted;
 }
 
 QString ImageCache::hashUrl(const QUrl& url)
