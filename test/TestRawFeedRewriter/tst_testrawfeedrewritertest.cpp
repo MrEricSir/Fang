@@ -29,11 +29,16 @@ TestRawFeedRewriterTest::TestRawFeedRewriterTest()
 
 QString TestRawFeedRewriterTest::normalizeImageSrc(const QString& html)
 {
-    // Replace base64 data URIs with a placeholder for comparison.
-    // This allows us to verify structure without matching exact image data.
     QString normalized = html;
+    // Legacy base64 data URIs.
     QRegularExpression dataUriRegex("src=\"data:image/[^;]+;base64,[^\"]+\"");
     normalized.replace(dataUriRegex, "src=\"[BASE64_IMAGE]\"");
+    // Cached image paths.
+    QRegularExpression cachedImageRegex("src=\"/images/[^\"]+\"");
+    normalized.replace(cachedImageRegex, "src=\"[BASE64_IMAGE]\"");
+    // Strip data-original-src attributes.
+    QRegularExpression originalSrcRegex(" data-original-src=\"[^\"]*\"");
+    normalized.replace(originalSrcRegex, "");
     return normalized;
 }
 

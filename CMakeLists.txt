@@ -142,6 +142,7 @@ qt_add_executable(Fang WIN32
     src/models/FangSettings.cpp
     src/utilities/RawFeedRewriter.cpp
     src/utilities/HTMLSanitizer.cpp
+    src/utilities/ImageCache.cpp
     src/operations/LoadAllNewsOperation.cpp
     src/utilities/UnreadCountReader.cpp
     src/operations/UpdateOrdinalsOperation.cpp
@@ -223,6 +224,7 @@ qt_add_executable(Fang WIN32
     src/models/FangSettings.h
     src/utilities/RawFeedRewriter.h
     src/utilities/HTMLSanitizer.h
+    src/utilities/ImageCache.h
     src/operations/LoadAllNewsOperation.h
     src/utilities/UnreadCountReader.h
     src/operations/UpdateOrdinalsOperation.h

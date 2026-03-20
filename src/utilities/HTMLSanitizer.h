@@ -103,7 +103,6 @@ private:
     QString intToID(int id);
     void removeNewlinesBothSides(QString& str);
     void imageResize(int width, int height, int* newWidth, int* newHeight);
-    QString imageToDataUri(const ImageData& imageData);
     void postProcessDocString(QString& docString);
 };
 

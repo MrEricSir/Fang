@@ -1187,6 +1187,16 @@ $(document).ready(function() {
     // Setup event delegation (replaces per-item event handlers).
     initEventDelegation();
 
+    // Image fallback: if a cached image fails to load, try the original URL.
+    document.addEventListener('error', function(event) {
+        if (event.target.tagName === 'IMG') {
+            var originalSrc = event.target.getAttribute('data-original-src');
+            if (originalSrc && event.target.getAttribute('src') !== originalSrc) {
+                event.target.src = originalSrc;
+            }
+        }
+    }, true);
+
     // Wait for CSS to load before loading news to avoid visual flash/glitch.
     updateCSS()
     .then(() => {

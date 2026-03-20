@@ -63,7 +63,7 @@ void RawFeedRewriter::onSanitizeFinished()
 void RawFeedRewriter::onImageGrabberFinished()
 {
     // Run finalization on a background thread to avoid blocking the UI
-    // during XML parsing and base64 image encoding.
+    // during XML parsing and image caching.
     auto future = QtConcurrent::run([this]() {
         finalizeAll();
     });

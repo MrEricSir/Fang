@@ -15,11 +15,11 @@ class BatchDownloadCore;
 class QNetworkAccessManager;
 
 /*!
-    \brief ImageData stores downloaded image data for offline embedding.
+    \brief ImageData stores downloaded image data for offline viewing.
  */
 struct ImageData {
     QImage image;       // Decoded image
-    QByteArray rawData; // Original bytes (for base64 encoding)
+    QByteArray rawData; // Original bytes (saved to disk cache)
     QString mimeType;   // MIME type (jpeg vs png, etc.)
 
     inline bool isValid() const { return !image.isNull() && !rawData.isEmpty(); }

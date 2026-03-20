@@ -11,6 +11,7 @@
 #include "../models/SearchFeedItem.h"
 #include "../utilities/ErrorHandling.h"
 #include "../utilities/FangLogging.h"
+#include "../utilities/ImageCache.h"
 #include "../utilities/NetworkUtilities.h"
 
 WebServer::WebServer(FangApp* appInstance, FangObject *parent) :
@@ -34,6 +35,10 @@ WebServer::WebServer(FangApp* appInstance, FangObject *parent) :
     server.route("/html/<arg>", this, [] (QString path) {
         // Assume the files is in our QRC and attempt to load it.
         return QHttpServerResponse::fromFile(":/html/" + path);
+    });
+
+    server.route("/images/<arg>", this, [] (QString filename) {
+        return QHttpServerResponse::fromFile(ImageCache::cacheDir() + "/" + filename);
     });
 
     server.route("/api/open_link", QHttpServerRequest::Method::Post, this, [] (const QHttpServerRequest &request) {

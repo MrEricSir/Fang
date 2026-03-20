@@ -5,16 +5,11 @@
 #include <QXmlStreamWriter>
 #include <QStack>
 
+#include "ImageCache.h"
 #include "NetworkUtilities.h"
 
 // Image width max.
 #define MAX_ELEMENT_WIDTH 400
-
-// Maximum image size (in bytes) to embed as base64.
-// Images larger than this will keep their original URL.
-// 1MB is a reasonable limit that covers most article images while avoiding
-// excessive database bloat from very large images.
-#define MAX_EMBED_IMAGE_SIZE (1024 * 1024)
 
 // Strings.
 #define S_WIDTH "width"
@@ -195,7 +190,7 @@ QString HTMLSanitizer::sanitize(const QString &document, QSet<QUrl> &imageURLs)
                         }
 
                         // Always fetch images to get actual dimensions and enable
-                        // base64 embedding. HTML attributes can be wrong (e.g. NJ.com
+                        // image caching. HTML attributes can be wrong (e.g. NJ.com
                         // sets original width with resizer target height).
                         if (!idsToDelete.contains(intToID(currentId))) {
                             imageURLs << imgSrc;
@@ -347,10 +342,10 @@ QString HTMLSanitizer::finalize(const QString &html, const QMap<QUrl, ImageData>
                     if (imageData.isValid()) {
                         imageResize(imageData.image.width(), imageData.image.height(), &width, &height);
 
-                        // Embed image as base64 data URI for offline viewing.
-                        QString dataUri = imageToDataUri(imageData);
-                        if (!dataUri.isEmpty()) {
-                            srcToUse = dataUri;
+                        // Cache image to disk for offline viewing.
+                        QString cachedPath = ImageCache::saveImage(url, imageData);
+                        if (!cachedPath.isEmpty()) {
+                            srcToUse = cachedPath;
                         }
                     } else if (xml.attributes().hasAttribute(S_WIDTH) &&
                                xml.attributes().hasAttribute(S_HEIGHT)) {
@@ -366,6 +361,11 @@ QString HTMLSanitizer::finalize(const QString &html, const QMap<QUrl, ImageData>
                         writer.writeAttribute(S_SRC, srcToUse);
                         writer.writeAttribute(S_WIDTH, QString::number(width));
                         writer.writeAttribute(S_HEIGHT, QString::number(height));
+
+                        // Preserve the original URL for re-fetching if cache is deleted.
+                        if (srcToUse != url) {
+                            writer.writeAttribute("data-original-src", url);
+                        }
 
                         lastTag = tagName;
                     } else {
@@ -500,13 +500,3 @@ QString HTMLSanitizer::textToHtml(const QString& input)
     return output;
 }
 
-QString HTMLSanitizer::imageToDataUri(const ImageData& imageData)
-{
-    // Don't embed if invalid or too large.
-    if (!imageData.isValid() || imageData.rawData.size() > MAX_EMBED_IMAGE_SIZE) {
-        return "";
-    }
-
-    // Use the original image data and MIME type to preserve format.
-    return "data:" + imageData.mimeType + ";base64," + QString::fromLatin1(imageData.rawData.toBase64());
-}
