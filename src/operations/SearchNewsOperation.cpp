@@ -84,7 +84,8 @@ QString SearchNewsOperation::appendNewQueryString()
            "  N.id, N.feed_id, N.guid, N.author, N.timestamp, N.url, N.pinned, "
            "  highlight(NewsItemFTS, 0, '<mark>', '</mark>') AS title, "
            "  N.summary, "
-           "  N.content "
+           "  N.content, "
+           "  N.media_image_url "
            "FROM NewsItemTable N "
            "JOIN NewsItemFTS F ON N.id = F.rowid ";
 
@@ -153,7 +154,8 @@ void SearchNewsOperation::queryToNewsListWithHighlights(QSqlQuery& query, QList<
             content,                              // Already highlighted
             QDateTime::fromMSecsSinceEpoch(query.value("timestamp").toLongLong()),
             query.value("url").toString(),
-            query.value("pinned").toInt() != 0
+            query.value("pinned").toInt() != 0,
+            query.value("media_image_url").toString()
         );
 
         list->append(newsItem);

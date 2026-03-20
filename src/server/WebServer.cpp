@@ -221,6 +221,13 @@ void WebServer::addNewsItem(NewsItem *item, QVariantList *newsList)
     itemMap["content"] = item->getContent() != "" ? item->getContent() : item->getSummary();
     itemMap["pinned"] = item->getPinned();
 
+    // Only send media image when content has no images of its own.
+    QString displayContent = itemMap["content"].toString();
+    if (!item->getMediaImageURL().isEmpty() &&
+        !displayContent.contains("<img", Qt::CaseInsensitive)) {
+        itemMap["mediaImage"] = item->getMediaImageURL();
+    }
+
     // Replace empty titles with "no subject"
     if (itemMap["title"].toString().trimmed().isEmpty()) {
         itemMap["title"] = "<i>[ No Subject ]</i>";

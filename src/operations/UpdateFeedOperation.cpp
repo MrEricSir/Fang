@@ -235,8 +235,8 @@ void UpdateFeedOperation::onRewriterFinished()
     for (RawNews* rawNews : newsList) {
         QSqlQuery query(db());
         query.prepare("INSERT INTO NewsItemTable (feed_id, guid, title, author, summary, content, "
-                      "timestamp, url) VALUES (:feed_id, :guid, :title, :author, :summary, :content, "
-                      ":timestamp, :url)");
+                      "timestamp, url, media_image_url) VALUES (:feed_id, :guid, :title, :author, :summary, :content, "
+                      ":timestamp, :url, :media_image_url)");
         query.bindValue(":feed_id", feed->getDbID());
         query.bindValue(":guid", rawNews->guid);
         query.bindValue(":title", rawNews->title);
@@ -245,6 +245,7 @@ void UpdateFeedOperation::onRewriterFinished()
         query.bindValue(":content", rawNews->content);
         query.bindValue(":timestamp", rawNews->timestamp.toMSecsSinceEpoch());
         query.bindValue(":url", rawNews->url);
+        query.bindValue(":media_image_url", rawNews->mediaImageURL);
         
         if (!query.exec()) {
             reportSQLError(query, "Unable to add news item.");

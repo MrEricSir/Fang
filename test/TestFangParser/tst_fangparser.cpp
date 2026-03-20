@@ -696,13 +696,17 @@ void TestFangParser::testMediaImage()
     QVERIFY2(feed != nullptr, "Feed was null");
     QVERIFY2(!feed->items.isEmpty(), "Feed has no items");
 
-    QString content = feed->items.first()->content;
+    RawNews* firstItem = feed->items.first();
     if (shouldInject) {
-        QVERIFY2(content.contains("<img src=\""), "Expected injected <img> tag in content");
-        QVERIFY2(content.contains(expectedFragment), qPrintable("Expected fragment: " + expectedFragment));
+        QVERIFY2(!firstItem->mediaImageURL.isEmpty(), "Expected mediaImageURL to be set");
+        QVERIFY2(firstItem->mediaImageURL.contains(expectedFragment),
+                 qPrintable("Expected fragment: " + expectedFragment));
+        // Content should NOT have injected <img> from media tags.
+        QVERIFY2(!firstItem->content.startsWith("<img src=\""),
+                 "Media image should not be injected into content");
     } else {
-        // Content should NOT start with an injected <img> from media tags.
-        QVERIFY2(!content.startsWith("<img src=\""), "Should not have injected media image");
+        QVERIFY2(firstItem->mediaImageURL.isEmpty(),
+                 "Should not have mediaImageURL when content has images");
     }
 }
 

@@ -25,7 +25,8 @@ public:
     QDateTime timestamp;
     QUrl url;
     QString guid; // id, guid, or link URL
-    
+    QString mediaImageURL; // media:thumbnail or media:content URL (cached path after rewrite)
+
     // For convenience.
     qint64 dbId;
     

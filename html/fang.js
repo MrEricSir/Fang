@@ -456,6 +456,14 @@ function appendNews(append, firstNewsID, newsList, searchQuery = null)
         if (contentEl) {
             // Highlight search results.
             contentEl.innerHTML = searchQuery ? highlightHtml(newsItem['content'], searchQuery) : newsItem['content'];
+
+            // Show media image only when content has no images.
+            if (newsItem['mediaImage']) {
+                var img = document.createElement('img');
+                img.src = newsItem['mediaImage'];
+                img.className = 'mediaImage';
+                contentEl.insertBefore(img, contentEl.firstChild);
+            }
         }
 
         const siteTitleEl = item.querySelector('.siteTitle');

@@ -232,10 +232,7 @@ void ParserXMLWorker::elementEnd()
         currentItem->description = stripEscapedCDATA(subtitle);
         currentItem->content = stripEscapedCDATA(content);
 
-        // Inject media image if content doesn't already contain one.
-        if (!mediaImageURL.isEmpty() && !currentItem->content.contains("<img", Qt::CaseInsensitive)) {
-            currentItem->content = "<img src=\"" + mediaImageURL + "\"/>" + currentItem->content;
-        }
+        currentItem->mediaImageURL = mediaImageURL;
 
         currentItem->url = urlData.isEmpty() ? QUrl(urlHref) : QUrl(urlData);
         currentItem->timestamp = dateFromFeedString(timestamp);

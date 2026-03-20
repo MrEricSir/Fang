@@ -13,13 +13,15 @@ NewsItem::NewsItem(QObject *parent) :
     content(""),
     timestamp(),
     url(),
-    pinned(false)
+    pinned(false),
+    mediaImageURL("")
 {
 }
 
 NewsItem::NewsItem(FeedItem* feed, qint64 id, qint64 feedId, const QString &title,
                    const QString &author, const QString &summary, const QString &content,
-                   const QDateTime &timestamp, const QUrl &url, bool pinned) :
+                   const QDateTime &timestamp, const QUrl &url, bool pinned,
+                   const QString &mediaImageURL) :
     FangObject(feed),
     feed(feed),
     _id(id),
@@ -30,7 +32,8 @@ NewsItem::NewsItem(FeedItem* feed, qint64 id, qint64 feedId, const QString &titl
     content(content),
     timestamp(timestamp),
     url(url),
-    pinned(pinned)
+    pinned(pinned),
+    mediaImageURL(mediaImageURL)
 {
 }
 

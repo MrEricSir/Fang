@@ -3,6 +3,8 @@
 #include <QDebug>
 #include <QtConcurrent>
 
+#include "ImageCache.h"
+
 RawFeedRewriter::RawFeedRewriter(QObject *parent) :
     FangObject(parent),
     newsList(nullptr),
@@ -37,6 +39,11 @@ void RawFeedRewriter::rewrite(QList<RawNews *> *newsList)
             if (!news->description.isEmpty()) {
                 news->description = sanitizer.sanitize(news->description, imageURLs);
                 allImageURLs.unite(imageURLs);
+            }
+
+            // Include media image URLs for downloading and caching.
+            if (!news->mediaImageURL.isEmpty()) {
+                allImageURLs.insert(QUrl(news->mediaImageURL));
             }
         }
 
@@ -81,6 +88,17 @@ void RawFeedRewriter::finalizeAll()
 
         if (!news->description.isEmpty()) {
             news->description = sanitizer.finalize(news->description, imageResults);
+        }
+
+        // Cache media image and store cached path.
+        if (!news->mediaImageURL.isEmpty()) {
+            QUrl mediaUrl(news->mediaImageURL);
+            if (imageResults.contains(mediaUrl)) {
+                QString cachedPath = ImageCache::saveImage(mediaUrl, imageResults.value(mediaUrl));
+                news->mediaImageURL = cachedPath;
+            } else {
+                news->mediaImageURL = "";
+            }
         }
     }
 }

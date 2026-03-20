@@ -60,9 +60,10 @@ void LoadNewsOperation::queryToNewsList(QSqlQuery& query, QList<NewsItem*>* list
                     query.value("author").toString(),
                     query.value("summary").toString(),
                     query.value("content").toString(),
-                    QDateTime::fromMSecsSinceEpoch(query.value("timestamp").toLongLong()), 
+                    QDateTime::fromMSecsSinceEpoch(query.value("timestamp").toLongLong()),
                     query.value("url").toString(),
-                    (bool) query.value("pinned").toInt()
+                    (bool) query.value("pinned").toInt(),
+                    query.value("media_image_url").toString()
                     );
         
         // Add to our list.

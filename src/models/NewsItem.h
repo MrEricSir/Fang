@@ -31,7 +31,8 @@ public:
             const QString& content,
             const QDateTime& timestamp,
             const QUrl& url,
-            bool pinned);
+            bool pinned,
+            const QString& mediaImageURL = "");
     
     virtual ~NewsItem() {}
     
@@ -53,6 +54,7 @@ public:
     virtual inline qint64 getDbID() const { return _id; }
     inline bool getPinned() const { return pinned; }
     inline void setPinned(bool p) { pinned = p; }
+    inline QString getMediaImageURL() const { return mediaImageURL; }
    
   private:
     FeedItem* feed;
@@ -65,6 +67,7 @@ public:
     QDateTime timestamp;
     QUrl url;
     bool pinned;
+    QString mediaImageURL;
 };
 
 #endif // NEWSITEM_H
