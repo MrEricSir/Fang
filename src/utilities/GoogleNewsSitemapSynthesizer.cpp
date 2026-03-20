@@ -429,13 +429,20 @@ void GoogleNewsSitemapSynthesizer::buildRawFeed()
         auto* item = new RawNews(_result);
         item->guid = entry.url.toString();
         item->title = entry.newsTitle;
-        item->description = QString("");
-        item->content = QString("");
         item->url = entry.url;
         item->author = QString("");
         item->timestamp = entry.publicationDate.isValid()
             ? entry.publicationDate
             : (entry.lastmod.isValid() ? entry.lastmod : QDateTime::currentDateTime());
+
+        // Embed the sitemap thumbnail image in the content so it flows
+        // through the normal HTML sanitizer and image pipeline.
+        if (entry.imageUrl.isValid()) {
+            item->content = "<img src=\"" + entry.imageUrl.toString() + "\"/>";
+        } else {
+            item->content = QString("");
+        }
+        item->description = QString("");
 
         _result->items.append(item);
     }

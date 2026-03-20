@@ -1363,10 +1363,12 @@ void TestFangFeedDiscovery::testSitemapParserUSAToday()
     QCOMPARE(first.publicationName, QString("USA TODAY"));
     QCOMPARE(first.language, QString("en"));
     QVERIFY(first.publicationDate.isValid());
+    QCOMPARE(first.imageUrl, QUrl("https://www.gannett-cdn.com/image.jpg"));
 
     const SitemapEntry& second = entries[1];
     QCOMPARE(second.newsTitle, QString("What happens to Cesar Chavez's legacy?"));
     QCOMPARE(second.publicationName, QString("USA TODAY"));
+    QVERIFY(!second.imageUrl.isValid()); // No image in second entry
 }
 
 void TestFangFeedDiscovery::testSitemapParserBloomberg()

@@ -91,6 +91,10 @@ void SitemapParser::parseUrlSet(QXmlStreamReader& xml)
                                || (localName == "name"
                                    && xml.namespaceUri().toString().contains("sitemap-news"))) {
                         entry.publicationName = xml.readElementText().trimmed();
+                    } else if (qualifiedName == "image:loc"
+                               || (localName == "loc"
+                                   && xml.namespaceUri().toString().contains("sitemap-image"))) {
+                        entry.imageUrl = QUrl(xml.readElementText().trimmed());
                     }
                 }
             }

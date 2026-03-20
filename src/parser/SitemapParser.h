@@ -15,6 +15,7 @@ struct SitemapEntry {
     QDateTime publicationDate; // from <news:publication_date>, may be invalid
     QString language;          // from <news:language>, e.g. "en", "eng"
     QString publicationName;   // from <news:name>, e.g. "Associated Press"
+    QUrl imageUrl;             // from <image:loc>, may be empty
 };
 
 struct SubSitemap {
