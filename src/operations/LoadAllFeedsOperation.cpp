@@ -57,6 +57,8 @@ void LoadAllFeedsOperation::execute()
                         static_cast<FeedType>(query.value("feed_type").toInt()),
                         feedList
                         );
+            item->setEtag(query.value("etag").toString());
+            item->setLastModified(query.value("last_modified").toString());
         }
 
         tempFeedItemList.append(item);

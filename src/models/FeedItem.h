@@ -115,6 +115,10 @@ public slots:
     inline bool isSpecialFeed() const { return _id < 0; }
     inline bool isSearchFeed() const { return _id == FEED_ID_SEARCH; }
     inline FeedType getFeedType() const { return _feedType; }
+    inline QString getEtag() const { return etag; }
+    inline QString getLastModified() const { return lastModified; }
+    void setEtag(const QString& value);
+    void setLastModified(const QString& value);
     
     void setImageURL(const QUrl& url);
     
@@ -272,6 +276,8 @@ private:
     qint64 _parentFolder;
     bool _folderOpen;
     FeedType _feedType;
+    QString etag;
+    QString lastModified;
 };
 
 #endif // FEEDITEM_H

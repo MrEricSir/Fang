@@ -129,6 +129,8 @@ private:
     bool inAtomXHTML;
     QString guid;
     QString id;
+    QString mediaImageURL;
+    int mediaImageWidth;
     QStack<QString> tagStack;
     //
 };

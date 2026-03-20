@@ -67,8 +67,8 @@ void UpdateFeedOperation::execute()
         newsSitemapSynthesizer->synthesize(feed->getURL(), feed->getTitle(),
                                        feed->getLastUpdated());
     } else if (rawFeed == nullptr) {
-        // Send network request.
-        parser.parse(feed->getURL(), useCache);
+        // Send network request with conditional headers if available.
+        parser.parse(feed->getURL(), useCache, feed->getEtag(), feed->getLastModified());
     } else {
         onFeedFinished();
     }
@@ -77,6 +77,14 @@ void UpdateFeedOperation::execute()
 void UpdateFeedOperation::onFeedFinished()
 {
     FANG_BACKGROUND_CHECK;
+
+    // 304 Not Modified: Fed hasn't changed, nothing to do.
+    if (parser.getResult() == ParserInterface::NOT_MODIFIED) {
+        feed->setErrorFlag(false);
+        feed->setIsUpdating(false);
+        emit finished(this);
+        return;
+    }
 
     // Try feed rediscovery if needed. This will update the URL and refresh.
     if (parser.getResult() == ParserInterface::NETWORK_ERROR &&
@@ -258,10 +266,26 @@ void UpdateFeedOperation::onRewriterFinished()
     if (!query.exec()) {
         reportSQLError(query, "Unable to update the feed's timestamp.");
         db().rollback();
-        
+
         return;
     }
-    
+
+    // Save ETag and Last-Modified response headers for conditional refresh.
+    {
+        QSqlQuery etagQuery(db());
+        etagQuery.prepare("UPDATE FeedItemTable SET etag = :etag, last_modified = :last_modified WHERE id = :feed_id");
+        etagQuery.bindValue(":etag", parser.responseEtag());
+        etagQuery.bindValue(":last_modified", parser.responseLastModified());
+        etagQuery.bindValue(":feed_id", feed->getDbID());
+        if (!etagQuery.exec()) {
+            reportSQLError(etagQuery, "Unable to update ETag/Last-Modified.");
+            db().rollback();
+            return;
+        }
+        feed->setEtag(parser.responseEtag());
+        feed->setLastModified(parser.responseLastModified());
+    }
+
     // Update unread count, All News's unread count, and folder (if applicable);
     UnreadCountReader::update(db(), feed);
     UnreadCountReader::update(db(), FangApp::instance()->getAllNewsFeed());
@@ -319,7 +343,7 @@ void UpdateFeedOperation::onDiscoveryDone(FeedDiscovery* feedDiscovery)
     UpdateFeedURLOperation updateURLOp(getOperationManager(), feed, discovery.feedURL());
     getOperationManager()->run(&updateURLOp);
 
-    // Send network request with the updated URL.
+    // Send network request with the updated URL and conditional headers.
     qCDebug(logOperation) << "Finished updating feed URL, updating feed " << feed->getURL();
-    parser.parse(feed->getURL(), useCache);
+    parser.parse(feed->getURL(), useCache, feed->getEtag(), feed->getLastModified());
 }

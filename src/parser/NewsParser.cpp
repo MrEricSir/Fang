@@ -38,25 +38,37 @@ NewsParser::~NewsParser()
     delete currentReply;
 }
 
-void NewsParser::parse(const QUrl& url, bool noParseIfCached)
+void NewsParser::parse(const QUrl& url, bool noParseIfCached,
+                       const QString& ifNoneMatch, const QString& ifModifiedSince)
 {
     // Reset redirect counter.
     redirectAttempts = 0;
 
-    parseInternal(url, noParseIfCached);
+    parseInternal(url, noParseIfCached, ifNoneMatch, ifModifiedSince);
 }
 
-void NewsParser::parseInternal(const QUrl& url, bool noParseIfCached)
+void NewsParser::parseInternal(const QUrl& url, bool noParseIfCached,
+                               const QString& ifNoneMatch, const QString& ifModifiedSince)
 {
     initParse(url);
 
     this->noParseIfCached = noParseIfCached;
+    this->condIfNoneMatch = ifNoneMatch;
+    this->condIfModifiedSince = ifModifiedSince;
 
     // in with the new
     QNetworkRequest request(url);
 
     // Sets a 30 second timeout in case the connection is lost or screwy.
     request.setTransferTimeout(30000);
+
+    // Conditional request headers for ETag/Last-Modified support.
+    if (!ifNoneMatch.isEmpty()) {
+        request.setRawHeader("If-None-Match", ifNoneMatch.toUtf8());
+    }
+    if (!ifModifiedSince.isEmpty()) {
+        request.setRawHeader("If-Modified-Since", ifModifiedSince.toUtf8());
+    }
 
     if (currentReply) {
         currentReply->disconnect(this);
@@ -107,6 +119,18 @@ void NewsParser::error(QNetworkReply::NetworkError ne)
 void NewsParser::readyRead()
 {
     int statusCode = currentReply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+
+    // 304 Not Modified: Content hasn't changed, nothing to do.
+    if (statusCode == 304) {
+        currentReply->disconnect(this);
+        currentReply->deleteLater();
+        currentReply = nullptr;
+
+        result = NewsParser::NOT_MODIFIED;
+        emit done();
+        return;
+    }
+
     if (statusCode >= 200 && statusCode < 300) {
         QByteArray data = currentReply->readAll();
         emit triggerAddXML(data);
@@ -115,6 +139,14 @@ void NewsParser::readyRead()
 
 void NewsParser::metaDataChanged()
 {
+    // Capture ETag and Last-Modified response headers.
+    if (currentReply->hasRawHeader("ETag")) {
+        respEtag = QString::fromUtf8(currentReply->rawHeader("ETag"));
+    }
+    if (currentReply->hasRawHeader("Last-Modified")) {
+        respLastModified = QString::fromUtf8(currentReply->rawHeader("Last-Modified"));
+    }
+
     QUrl redirectionTarget = currentReply->attribute(
                 QNetworkRequest::RedirectionTargetAttribute).toUrl();
 
@@ -135,9 +167,10 @@ void NewsParser::metaDataChanged()
         qCDebug(logParser) << "Redirect:" << redirectionTarget.toString();
         redirectAttempts++;
         redirectReply = currentReply;
+        // Don't send conditional headers on redirect -- the new URL may be different.
         parseInternal(redirectionTarget, noParseIfCached);
     }
-    
+
     if (currentReply->attribute(
                 QNetworkRequest::SourceIsFromCacheAttribute).isValid()) {
         if (currentReply->attribute(
@@ -212,5 +245,7 @@ void NewsParser::initParse(const QUrl& url)
     result = NewsParser::IN_PROGRESS;
     networkError = QNetworkReply::NetworkError::NoError;
     finalFeedURL = url;
+    respEtag = QString();
+    respLastModified = QString();
     emit triggerDocStart();
 }

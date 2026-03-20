@@ -1,0 +1,2 @@
+ALTER TABLE FeedItemTable ADD COLUMN etag TEXT DEFAULT '';
+ALTER TABLE FeedItemTable ADD COLUMN last_modified TEXT DEFAULT '';

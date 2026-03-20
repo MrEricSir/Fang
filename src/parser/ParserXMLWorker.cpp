@@ -139,6 +139,28 @@ void ParserXMLWorker::elementStart()
         }
     }
 
+    // Media RSS image extraction (media:thumbnail and media:content).
+    if (currentItem != nullptr && currentPrefix == "media") {
+        if (currentTag == "thumbnail") {
+            QString url = xml.attributes().value("url").toString();
+            int width = xml.attributes().value("width").toString().toInt();
+            if (!url.isEmpty() && (mediaImageURL.isEmpty() || width > mediaImageWidth)) {
+                mediaImageURL = url;
+                mediaImageWidth = width;
+            }
+        } else if (currentTag == "content") {
+            QString type = xml.attributes().value("type").toString().toLower();
+            if (type.startsWith("image/")) {
+                QString url = xml.attributes().value("url").toString();
+                int width = xml.attributes().value("width").toString().toInt();
+                if (!url.isEmpty() && (mediaImageURL.isEmpty() || width > mediaImageWidth)) {
+                    mediaImageURL = url;
+                    mediaImageWidth = width;
+                }
+            }
+        }
+    }
+
     if (currentTag == "link" && urlHref.isEmpty() && xml.attributes().hasAttribute("href")) {
         // Used by atom feeds to grab the first link.
         urlHref = xml.attributes().value("href").toString();
@@ -209,6 +231,12 @@ void ParserXMLWorker::elementEnd()
         currentItem->title = stripEscapedCDATA(title);
         currentItem->description = stripEscapedCDATA(subtitle);
         currentItem->content = stripEscapedCDATA(content);
+
+        // Inject media image if content doesn't already contain one.
+        if (!mediaImageURL.isEmpty() && !currentItem->content.contains("<img", Qt::CaseInsensitive)) {
+            currentItem->content = "<img src=\"" + mediaImageURL + "\"/>" + currentItem->content;
+        }
+
         currentItem->url = urlData.isEmpty() ? QUrl(urlHref) : QUrl(urlData);
         currentItem->timestamp = dateFromFeedString(timestamp);
         currentItem->guid = myGuid;
@@ -238,6 +266,8 @@ void ParserXMLWorker::elementEnd()
         content = "";
         guid = "";
         id = "";
+        mediaImageURL = "";
+        mediaImageWidth = 0;
     } else if (tagName == "content" || tagName == "summary") {
         // Just accept that this is the end of one of these:
         // <contents type="xhtml">
@@ -331,6 +361,8 @@ void ParserXMLWorker::resetParserVars()
     author = "";
     guid = "";
     id = "";
+    mediaImageURL = "";
+    mediaImageWidth = 0;
     hasType = false;
     hasPodcastSignals = false;
     inAtomXHTML = false;
@@ -358,6 +390,8 @@ void ParserXMLWorker::saveSummary()
     content = "";
     guid = "";
     id = "";
+    mediaImageURL = "";
+    mediaImageWidth = 0;
 }
 
 

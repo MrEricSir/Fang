@@ -20,6 +20,10 @@ private slots:
     void parseTest();
     void parseTest_data();
 
+    // Media RSS image extraction
+    void testMediaImage();
+    void testMediaImage_data();
+
     // dc:creator author extraction
     void testDcCreatorAuthor();
     void testDcCreatorAuthor_data();
@@ -663,6 +667,65 @@ void TestFangParser::parseTest_data()
         << ""
         << QDateTime::currentDateTime()
         << false;
+}
+
+// =====================================================================
+// Media RSS image extraction tests
+// =====================================================================
+
+void TestFangParser::testMediaImage()
+{
+    QFETCH(QString, filename);
+    QFETCH(QString, expectedFragment);
+    QFETCH(bool, shouldInject);
+
+    NewsParser parser(this);
+    QSignalSpy spy(&parser, &NewsParser::done);
+
+    QString projectPath = PROJECT_PATH;
+    QString fullFilename = projectPath + "/feeds/" + filename;
+    QVERIFY2(QFile::exists(fullFilename), "Feed file does not exist");
+
+    parser.parseFile(fullFilename);
+    if (!spy.count()) {
+        spy.wait(10000);
+    }
+    QCOMPARE(spy.count(), 1);
+
+    RawFeed* feed = parser.getFeed();
+    QVERIFY2(feed != nullptr, "Feed was null");
+    QVERIFY2(!feed->items.isEmpty(), "Feed has no items");
+
+    QString content = feed->items.first()->content;
+    if (shouldInject) {
+        QVERIFY2(content.contains("<img src=\""), "Expected injected <img> tag in content");
+        QVERIFY2(content.contains(expectedFragment), qPrintable("Expected fragment: " + expectedFragment));
+    } else {
+        // Content should NOT start with an injected <img> from media tags.
+        QVERIFY2(!content.startsWith("<img src=\""), "Should not have injected media image");
+    }
+}
+
+void TestFangParser::testMediaImage_data()
+{
+    QTest::addColumn<QString>("filename");
+    QTest::addColumn<QString>("expectedFragment");
+    QTest::addColumn<bool>("shouldInject");
+
+    // BBC has two media:thumbnail tags (66px and 144px); we pick the wider one.
+    QTest::newRow("BBC") << "bbc.co.uk.rss" << "_73173552_73173504.jpg" << true;
+
+    // Fark has a single media:thumbnail with no width attribute.
+    QTest::newRow("Fark") << "fark.com.rss" << "sad.gif" << true;
+
+    // Mirror has media:content (615px, image/jpeg) > media:thumbnail (96px).
+    QTest::newRow("Mirror") << "mirror.co.uk.rss" << "s615/Arturo-Licata" << true;
+
+    // Donga has media:content with type=image/jpg.
+    QTest::newRow("Donga") << "donga.com.rss" << "61275241.1.thumb.jpg" << true;
+
+    // MakeUseOf: media:content has no image type; content already has <img>.
+    QTest::newRow("MakeUseOf") << "makeuseof.rss" << "" << false;
 }
 
 // =====================================================================

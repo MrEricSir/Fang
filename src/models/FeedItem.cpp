@@ -26,7 +26,9 @@ FeedItem::FeedItem(QObject *parent) :
     firstNewsID(-1),
     _parentFolder(-1),
     _folderOpen(true),
-    _feedType(FeedTypeRSS)
+    _feedType(FeedTypeRSS),
+    etag(),
+    lastModified()
 {
 }
 
@@ -57,7 +59,9 @@ FeedItem::FeedItem(qint64 id, const qint32 ordinal, const QString &title, const 
     firstNewsID(-1),
     _parentFolder(parentFolder),
     _folderOpen(folderOpen),
-    _feedType(feedType)
+    _feedType(feedType),
+    etag(),
+    lastModified()
 {
 }
 
@@ -318,4 +322,14 @@ void FeedItem::setURL(QUrl url)
 bool FeedItem::bookmarksEnabled() const
 {
     return true;
+}
+
+void FeedItem::setEtag(const QString& value)
+{
+    etag = value;
+}
+
+void FeedItem::setLastModified(const QString& value)
+{
+    lastModified = value;
 }
