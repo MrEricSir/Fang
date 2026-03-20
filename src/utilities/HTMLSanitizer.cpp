@@ -366,7 +366,6 @@ QString HTMLSanitizer::finalize(const QString &html, const QMap<QUrl, ImageData>
                         writer.writeAttribute(S_SRC, srcToUse);
                         writer.writeAttribute(S_WIDTH, QString::number(width));
                         writer.writeAttribute(S_HEIGHT, QString::number(height));
-                        writer.writeAttribute("align", "left"); // Always left-align.
 
                         lastTag = tagName;
                     } else {
