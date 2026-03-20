@@ -121,7 +121,7 @@ void TestRawFeedRewriterTest::testCase1_data()
                               << "<img src=\"[BASE64_IMAGE]\""
                                  " width=\"400\" height=\"533\" align=\"left\"/>";
 
-    // Image size with HTML attributes — actual dimensions are fetched and preferred.
+    // Image size with HTML attributes. Actual dimensions are fetched and preferred.
     QTest::newRow("Image test 3") << "<img src=\"https://www.mrericsir.com/blog/wp-content/uploads/IMG_9016-768x1024.jpeg\" align=\"left\""
                                      " width=\"400\" height=\"533\"/>"
                               << "<img src=\"[BASE64_IMAGE]\""

@@ -242,7 +242,7 @@ void TestFangFeedDiscovery::testCase1_data()
     // JS-heavy SPA with no RSS/Atom links.
     QTest::newRow("ESPN") << "espn.com" << false << "" << "";
 
-    // Hearst CMS, same as SFGate — no RSS links in HTML.
+    // Hearst CMS, same as SFGate, no RSS links in HTML.
     QTest::newRow("SF Chronicle") << "sfchronicle.com" << false << "" << "";
 
     // WordPress site with RSS feed.
@@ -252,7 +252,7 @@ void TestFangFeedDiscovery::testCase1_data()
     // SoCast CMS, no RSS links in HTML.
     QTest::newRow("1077 The Bone") << "1077thebone.com" << false << "" << "";
 
-    // Captcha/JS challenge page — no feeds in HTML.
+    // Captcha/JS challenge page, no feeds in HTML.
     QTest::newRow("NJ.com") << "nj.com" << false << "" << "";
     QTest::newRow("Syracuse.com") << "syracuse.com" << false << "" << "";
 }
@@ -578,7 +578,7 @@ void TestFangFeedDiscovery::testRelativeURLThatStaysRelative()
     // "Invalid URL" path. But we should still get an error since the mock isn't configured.
     // This test mainly exists to ensure we don't crash on edge-case URLs.
     QVERIFY(fd.error());
-    // Accept any error message — the URL may be rejected immediately or fail downstream
+    // Accept any error message: the URL may be rejected immediately or fail downstream
     QVERIFY(!fd.errorString().isEmpty());
 }
 
