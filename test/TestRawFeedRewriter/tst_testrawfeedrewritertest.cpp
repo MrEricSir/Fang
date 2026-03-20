@@ -88,7 +88,19 @@ void TestRawFeedRewriterTest::testCase1_data()
     QTest::newRow("Anchor") << "<a href=\"http://www.google.com\">link</a>" << "<a href=\"http://www.google.com\">link</a>";
 
     // Newlines need to work within a pre tag.
-    QTest::newRow("Pre tag") << "<pre>hello\n\nhi</pre>" << "<pre> hello\n\nhi </pre>";
+    QTest::newRow("Pre tag") << "<pre>hello\n\nhi</pre>" << "<pre>\nhello\n\nhi\n</pre>";
+
+    // Newlines inside pre with nested code tags (e.g. syntax-highlighted code).
+    QTest::newRow("Pre with code") << "<pre><code>line1\nline2\nline3</code></pre>"
+                                   << "<pre><code>line1\nline2\nline3</code></pre>";
+
+    // Syntax-highlighted code with spans inside pre>code (The Daily WTF pattern).
+    QTest::newRow("Pre with spans") << "<pre><code><span class=\"k\">if</span> (x) {\n    y();\n}</code></pre>"
+                                    << "<pre><code><span>if</span> (x) {\n    y();\n}</code></pre>";
+
+    // Pre preserves newlines, but regular tags outside pre still collapse them.
+    QTest::newRow("Pre and normal") << "<pre>code\nhere</pre><p>normal text</p>"
+                                    << "<pre>\ncode\nhere\n</pre><p>normal text</p>";
 
     // Kill line breaks at the end.
     QTest::newRow("Line breaks") << "<p>Bunch of line breaks after last paragraph</p><br><br><br>"

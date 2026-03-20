@@ -123,6 +123,9 @@ QString HTMLSanitizer::sanitize(const QString &document, QSet<QUrl> &imageURLs)
     // Was the last node text?
     bool lastWasText = false;
 
+    // Track nesting depth inside <pre> to preserve whitespace.
+    int preDepth = 0;
+
     while (!xml.atEnd()) {
         // Grab the next thingie.
         xml.readNext();
@@ -156,6 +159,10 @@ QString HTMLSanitizer::sanitize(const QString &document, QSet<QUrl> &imageURLs)
 
                     // Push it.
                     stack.push(DOMNode(tagName, currentId));
+
+                    if (tagName == "pre") {
+                        preDepth++;
+                    }
 
                     // Anchor tags.
                     if (tagName == "a" && xml.attributes().hasAttribute(S_HREF)) {
@@ -210,6 +217,10 @@ QString HTMLSanitizer::sanitize(const QString &document, QSet<QUrl> &imageURLs)
                 // Pop our node and investigate.
                 DOMNode dom = stack.pop();
 
+                if (tagName == "pre") {
+                    preDepth--;
+                }
+
                 // If it's a container and we didn't write any text, then delete this tag in the
                 // second pass.
                 if (containerTags.contains(tagName) && dom.nonEmptyTextCount == 0 && dom.numChildren == 0) {
@@ -231,19 +242,21 @@ QString HTMLSanitizer::sanitize(const QString &document, QSet<QUrl> &imageURLs)
 
             // Don't allow pure empty tags, though a single space is ok.
             if (!isEmpty || text == " ") {
-                bool addSpaceStart = text.startsWith('\n');
-                bool addSpaceEnd = text.endsWith('\n');
+                if (preDepth == 0) {
+                    bool addSpaceStart = text.startsWith('\n');
+                    bool addSpaceEnd = text.endsWith('\n');
 
-                // Text can start or end with a newline -- delete 'em.
-                removeNewlinesBothSides(text);
+                    // Text can start or end with a newline -- delete 'em.
+                    removeNewlinesBothSides(text);
 
-                 // Add back extra spaces so text doesn'truntogether.
-                if (addSpaceStart) {
-                    text = ' ' + text;
-                }
+                    // Add back extra spaces so text doesn'truntogether.
+                    if (addSpaceStart) {
+                        text = ' ' + text;
+                    }
 
-                if (addSpaceEnd) {
-                    text = text + ' ';
+                    if (addSpaceEnd) {
+                        text = text + ' ';
+                    }
                 }
 
                 // Write the text!
@@ -304,6 +317,7 @@ QString HTMLSanitizer::finalize(const QString &html, const QMap<QUrl, ImageData>
     QXmlStreamWriter writer(&output);
     writer.setAutoFormatting(false);
     int skip = 0; // Skip stack.
+    int preDepth = 0; // Track nesting depth inside <pre> to preserve whitespace.
     QString lastTag = "";
 
     while (!xml.atEnd()) {
@@ -368,6 +382,10 @@ QString HTMLSanitizer::finalize(const QString &html, const QMap<QUrl, ImageData>
                         }
                     }
 
+                    if (tagName == "pre") {
+                        preDepth++;
+                    }
+
                     lastTag = tagName;
                 }
             } else {
@@ -376,6 +394,9 @@ QString HTMLSanitizer::finalize(const QString &html, const QMap<QUrl, ImageData>
         } else if (xml.isEndElement()) {
             // End
             if (0 == skip) {
+                if (xml.name().toString().toLower() == "pre") {
+                    preDepth--;
+                }
                 writer.writeEndElement();
             } else {
                 skip--;
@@ -383,8 +404,8 @@ QString HTMLSanitizer::finalize(const QString &html, const QMap<QUrl, ImageData>
         } else if (xml.isCharacters() && 0 == skip) {
             // Text
             QString text = xml.text().toString();
-            if (lastTag != "pre" && lastTag != "code") {
-                // This happens due to some kind of auto-formatting glitch.
+            if (preDepth == 0) {
+                // Outside preformatted blocks, collapse newlines to spaces.
                 text.replace("\n", " ");
             }
 
