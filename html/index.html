@@ -178,17 +178,21 @@ body.bookmarksDisabled > #newsView > .newsItemStyle#topBookmark {
     display: none;
 }
 
-.newsItemStyle > .dateDiv {
+.newsItemStyle > .metaRow {
+    overflow: hidden;
+}
+
+.newsItemStyle > .metaRow > .dateDiv {
     float: right;
     text-align: right;
     text-overflow: ellipsis-word;
 }
 
-.newsItemStyle > .author {
+.newsItemStyle > .metaRow > .author {
     text-overflow: ellipsis-word;
 }
 
-.newsItemStyle > .author:empty {
+.newsItemStyle > .metaRow > .author:empty {
     display: none;
 }
 
@@ -243,7 +247,7 @@ body > #newsView > #bottom {
 }
 
 
-body > #newsView > .newsItemStyle > .dateDiv > .pin {
+body > #newsView > .newsItemStyle > .metaRow > .dateDiv > .pin {
     background-size: contain;
     background-repeat: no-repeat;
     margin-left: 5px;
@@ -269,8 +273,8 @@ body.LIGHT > #newsView > .newsItemStyle > h1 > a:hover,
   body.LIGHT > #newsView > .newsItemStyle > h1 > a:active { border-bottom-color: var(--accent, #00f); }
 
 body.LIGHT .newsItemStyle > .content pre { background-color: #f5f5f5; }
-body.LIGHT > #newsView > .newsItemStyle > .siteTitle, body.LIGHT > #newsView > .newsItemStyle > .dateDiv > .date { color: #777; }
-body.LIGHT > #newsView > .newsItemStyle > .author { color: #777; font-style: italic; }
+body.LIGHT > #newsView > .newsItemStyle > .siteTitle, body.LIGHT > #newsView > .newsItemStyle > .metaRow > .dateDiv > .date { color: #777; }
+body.LIGHT > #newsView > .newsItemStyle > .metaRow > .author { color: #777; font-style: italic; }
 body.LIGHT > #newsView > .newsItemStyle > .divider { background-color: #ccc; }
 body.LIGHT > #newsView > .newsItemStyle > h1, body.LIGHT > #newsView > .newsItemStyle > h1 > a { color: black; }
 
@@ -284,9 +288,9 @@ body.LIGHT > #newsView > .newsItemStyle:not(.bookmarked) > .bookmark > .stripe >
 body.LIGHT > #newsView > .newsItemStyle:not(.bookmarked) > .bookmark > .stripe > .stripe_mid { background-image: url('qrc:///qml/images/bookmark_hover_mid.svg'); }
 body.LIGHT > #newsView > .newsItemStyle:not(.bookmarked) > .bookmark > .stripe > .stripe_right { background-image: url('qrc:///qml/images/bookmark_hover_right.svg'); }
 
-body.LIGHT > #newsView > .newsItemStyle > .dateDiv > .pin { background-image: url('qrc:///qml/images/pin_dim.svg'); }
-body.LIGHT > #newsView > .newsItemStyle:not(.pinned) > .dateDiv > .pin:hover { background-image: url('qrc:///qml/images/pin_dim_dark.svg'); }
-body.LIGHT > #newsView > .newsItemStyle > .dateDiv > .pinned { background-image: url('qrc:///qml/images/pin_selected.svg'); }
+body.LIGHT > #newsView > .newsItemStyle > .metaRow > .dateDiv > .pin { background-image: url('qrc:///qml/images/pin_dim.svg'); }
+body.LIGHT > #newsView > .newsItemStyle:not(.pinned) > .metaRow > .dateDiv > .pin:hover { background-image: url('qrc:///qml/images/pin_dim_dark.svg'); }
+body.LIGHT > #newsView > .newsItemStyle > .metaRow > .dateDiv > .pinned { background-image: url('qrc:///qml/images/pin_selected.svg'); }
 
 /**** Dark theme ****/
 
@@ -302,8 +306,8 @@ body.DARK > #newsView > .newsItemStyle > h1 > a:hover,
   body.DARK > #newsView > .newsItemStyle > h1 > a:active { border-bottom-color: var(--accent-hover, #f10); }
 
 body.DARK .newsItemStyle > .content pre { background-color: #1a1a1a; }
-body.DARK > #newsView > .newsItemStyle > .siteTitle, body.DARK > .newsItemStyle > .dateDiv > .date { color: #ccc; }
-body.DARK > #newsView > .newsItemStyle > .author { color: #ccc; font-style: italic; }
+body.DARK > #newsView > .newsItemStyle > .siteTitle, body.DARK > .newsItemStyle > .metaRow > .dateDiv > .date { color: #ccc; }
+body.DARK > #newsView > .newsItemStyle > .metaRow > .author { color: #ccc; font-style: italic; }
 body.DARK > #newsView > .newsItemStyle > .divider { background-color: #888; }
 body.DARK > #newsView > .newsItemStyle > h1, body.DARK > .newsItemStyle > h1 a { color: white; }
 
@@ -317,9 +321,9 @@ body.DARK > #newsView > .newsItemStyle:not(.bookmarked) > .bookmark > .stripe > 
 body.DARK > #newsView > .newsItemStyle:not(.bookmarked) > .bookmark > .stripe > .stripe_mid { background-image: url('qrc:///qml/images/bookmark_dark_hover_mid.svg'); }
 body.DARK > #newsView > .newsItemStyle:not(.bookmarked) > .bookmark > .stripe > .stripe_right { background-image: url('qrc:///qml/images/bookmark_dark_hover_right.svg'); }
 
-body.DARK > #newsView > .newsItemStyle > .dateDiv > .pin { background-image: url('qrc:///qml/images/pin_dim_dark.svg'); }
-body.DARK > #newsView > .newsItemStyle:not(.pinned) > .dateDiv > .pin:hover { background-image: url('qrc:///qml/images/pin_dim.svg'); }
-body.DARK > #newsView > .newsItemStyle > .dateDiv > .pinned { background-image: url('qrc:///qml/images/pin_selected_dark.svg'); }
+body.DARK > #newsView > .newsItemStyle > .metaRow > .dateDiv > .pin { background-image: url('qrc:///qml/images/pin_dim_dark.svg'); }
+body.DARK > #newsView > .newsItemStyle:not(.pinned) > .metaRow > .dateDiv > .pin:hover { background-image: url('qrc:///qml/images/pin_dim.svg'); }
+body.DARK > #newsView > .newsItemStyle > .metaRow > .dateDiv > .pinned { background-image: url('qrc:///qml/images/pin_selected_dark.svg'); }
 
 
 /**** Platforms ****/
@@ -498,7 +502,7 @@ body.css-loading {
         <div class="siteTitle"></div>
         <h1><a href="" class="link"></a></h1>
         <div class="divider"></div>
-        <div class="dateDiv"><span class="date"></span><div class="pin"></div></div><div class="author"></div>
+        <div class="metaRow"><div class="dateDiv"><span class="date"></span><div class="pin"></div></div><div class="author"></div></div>
         <div class="divider"></div>
         <span class="timestamp"></span>
         <div class="content"></div>
