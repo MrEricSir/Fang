@@ -207,11 +207,68 @@ void UpdateFeedOperation::onFeedFinished()
     }
 
     // Add new items, skipping any whose GUID already exists for this feed.
-    newsList.clear();
+    // Secondary dedup: when a GUID contains '#', the fragment suffix may vary
+    // across republications of the same article (e.g. BBC). In that case, fall
+    // back to URL comparison to catch duplicates.
+    QSet<QString> existingURLs;
+    QSet<QString> seenURLs;
+    bool needURLDedup = false;
+
+    // First pass: collect candidates and check if any have '#' in their GUID.
+    QList<RawNews*> candidates;
     for (int i = newIndex; i < rawFeed->items.size(); i++) {
-        if (!existingGuids.contains(rawFeed->items.at(i)->guid)) {
-            newsList.append(rawFeed->items.at(i));
+        RawNews* item = rawFeed->items.at(i);
+        if (!existingGuids.contains(item->guid)) {
+            candidates.append(item);
+            if (item->guid.contains('#')) {
+                needURLDedup = true;
+            }
         }
+    }
+
+    // If any candidate has a '#' GUID, query existing URLs for this feed.
+    if (needURLDedup && !candidates.isEmpty()) {
+        QStringList candidateURLs;
+        for (RawNews* item : candidates) {
+            if (item->guid.contains('#')) {
+                candidateURLs.append(item->url.toString());
+            }
+        }
+
+        if (!candidateURLs.isEmpty()) {
+            QSqlQuery urlQuery(db());
+            QString urlPlaceholders;
+            for (int i = 0; i < candidateURLs.size(); i++) {
+                if (i > 0) {
+                    urlPlaceholders += ",";
+                }
+                urlPlaceholders += "?";
+            }
+            urlQuery.prepare(QString("SELECT url FROM NewsItemTable WHERE feed_id = ? AND url IN (%1)")
+                             .arg(urlPlaceholders));
+            urlQuery.addBindValue(feed->getDbID());
+            for (const QString& u : candidateURLs) {
+                urlQuery.addBindValue(u);
+            }
+            if (urlQuery.exec()) {
+                while (urlQuery.next()) {
+                    existingURLs.insert(urlQuery.value(0).toString());
+                }
+            }
+        }
+    }
+
+    // Second pass: build final list, skipping URL duplicates for '#' GUIDs.
+    newsList.clear();
+    for (RawNews* item : candidates) {
+        if (item->guid.contains('#')) {
+            QString urlStr = item->url.toString();
+            if (existingURLs.contains(urlStr) || seenURLs.contains(urlStr)) {
+                continue;
+            }
+            seenURLs.insert(urlStr);
+        }
+        newsList.append(item);
     }
 
     if (newsList.isEmpty()) {
