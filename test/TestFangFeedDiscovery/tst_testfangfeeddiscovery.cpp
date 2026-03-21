@@ -261,7 +261,10 @@ void TestFangFeedDiscovery::testCase1_data()
 void TestFangFeedDiscovery::testURLWithoutScheme()
 {
     MockNewsParser* mockParser = new MockNewsParser();
-    FeedDiscovery fd(nullptr, mockParser);
+    MockGoogleNewsSitemapSynthesizer* sitemapSynth = new MockGoogleNewsSitemapSynthesizer();
+    sitemapSynth->setError("No feed found");
+
+    FeedDiscovery fd(nullptr, mockParser, new MockNewsParser(), new MockWebPageGrabber(), new MockBatchNewsParser(), sitemapSynth);
 
     // This should not error - it gets scheme added
     fd.checkFeed("example.com");
@@ -570,7 +573,10 @@ void TestFangFeedDiscovery::testRelativeURLThatStaysRelative()
     MockNewsParser* firstParser = new MockNewsParser();
     firstParser->setResult(ParserInterface::PARSE_ERROR);  // Set a valid result in case URL gets fixed up
 
-    FeedDiscovery fd(nullptr, firstParser, new MockNewsParser(), new MockWebPageGrabber(), new MockBatchNewsParser());
+    MockGoogleNewsSitemapSynthesizer* sitemapSynth = new MockGoogleNewsSitemapSynthesizer();
+    sitemapSynth->setError("No feed found");
+
+    FeedDiscovery fd(nullptr, firstParser, new MockNewsParser(), new MockWebPageGrabber(), new MockBatchNewsParser(), sitemapSynth);
     QSignalSpy spy(&fd, &FeedDiscovery::done);
 
     // Try a path-only URL that NetworkUtilities::urlFixup might not handle
