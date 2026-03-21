@@ -371,7 +371,10 @@ void TestFangFeedDiscovery::testFirstParseAllErrors()
     // Set grabber to return error (nullptr document)
     grabber->setError(true);
 
-    FeedDiscovery fd(nullptr, parser, new MockNewsParser(), grabber, new MockBatchNewsParser());
+    MockGoogleNewsSitemapSynthesizer* sitemapSynth = new MockGoogleNewsSitemapSynthesizer();
+    sitemapSynth->setError("No feed found");
+
+    FeedDiscovery fd(nullptr, parser, new MockNewsParser(), grabber, new MockBatchNewsParser(), sitemapSynth);
     QSignalSpy spy(&fd, &FeedDiscovery::done);
 
     // Start discovery - should fail first parse, try web grabber, then error
@@ -394,7 +397,10 @@ void TestFangFeedDiscovery::testPageGrabberNullDocument()
     firstParser->setResult(ParserInterface::NETWORK_ERROR);
     grabber->setError(true); // Returns nullptr document
 
-    FeedDiscovery fd(nullptr, firstParser, new MockNewsParser(), grabber, new MockBatchNewsParser());
+    MockGoogleNewsSitemapSynthesizer* sitemapSynth = new MockGoogleNewsSitemapSynthesizer();
+    sitemapSynth->setError("No feed found");
+
+    FeedDiscovery fd(nullptr, firstParser, new MockNewsParser(), grabber, new MockBatchNewsParser(), sitemapSynth);
     QSignalSpy spy(&fd, &FeedDiscovery::done);
 
     fd.checkFeed("http://example.com");
@@ -417,7 +423,10 @@ void TestFangFeedDiscovery::testPageGrabberNoFeedFound()
     static QString mockPage = "<html><head><title>No feeds here</title></head><body></body></html>";
     grabber->setMockDocument(&mockPage);
 
-    FeedDiscovery fd(nullptr, firstParser, new MockNewsParser(), grabber, new MockBatchNewsParser());
+    MockGoogleNewsSitemapSynthesizer* sitemapSynth = new MockGoogleNewsSitemapSynthesizer();
+    sitemapSynth->setError("No feed found");
+
+    FeedDiscovery fd(nullptr, firstParser, new MockNewsParser(), grabber, new MockBatchNewsParser(), sitemapSynth);
     QSignalSpy spy(&fd, &FeedDiscovery::done);
 
     fd.checkFeed("http://example.com");
@@ -608,7 +617,10 @@ void TestFangFeedDiscovery::testAllFeedsFailValidation()
     feedParser->addResponse(QUrl("http://example.com/feed1.xml"), ParserInterface::NETWORK_ERROR);
     feedParser->addResponse(QUrl("http://example.com/feed2.xml"), ParserInterface::PARSE_ERROR);
 
-    FeedDiscovery fd(nullptr, firstParser, new MockNewsParser(), pageGrabber, feedParser);
+    MockGoogleNewsSitemapSynthesizer* sitemapSynth = new MockGoogleNewsSitemapSynthesizer();
+    sitemapSynth->setError("No feed found");
+
+    FeedDiscovery fd(nullptr, firstParser, new MockNewsParser(), pageGrabber, feedParser, sitemapSynth);
     QSignalSpy spy(&fd, &FeedDiscovery::done);
 
     fd.checkFeed("http://example.com");
@@ -640,7 +652,10 @@ void TestFangFeedDiscovery::testEmptyDirectFeedRejected()
     // Web grabber returns an error (no page)
     grabber->setError(true);
 
-    FeedDiscovery fd(nullptr, firstParser, new MockNewsParser(), grabber, new MockBatchNewsParser());
+    MockGoogleNewsSitemapSynthesizer* sitemapSynth = new MockGoogleNewsSitemapSynthesizer();
+    sitemapSynth->setError("No feed found");
+
+    FeedDiscovery fd(nullptr, firstParser, new MockNewsParser(), grabber, new MockBatchNewsParser(), sitemapSynth);
     QSignalSpy spy(&fd, &FeedDiscovery::done);
 
     fd.checkFeed("http://example.com/feed.xml");
@@ -679,7 +694,10 @@ void TestFangFeedDiscovery::testEmptyValidatedFeedsRejected()
     emptyFeed->url = QUrl("http://example.com/feed.xml");
     feedParser->addResponse(QUrl("http://example.com/feed.xml"), ParserInterface::OK, emptyFeed);
 
-    FeedDiscovery fd(nullptr, firstParser, new MockNewsParser(), pageGrabber, feedParser);
+    MockGoogleNewsSitemapSynthesizer* sitemapSynth = new MockGoogleNewsSitemapSynthesizer();
+    sitemapSynth->setError("No feed found");
+
+    FeedDiscovery fd(nullptr, firstParser, new MockNewsParser(), pageGrabber, feedParser, sitemapSynth);
     QSignalSpy spy(&fd, &FeedDiscovery::done);
 
     fd.checkFeed("http://example.com");
@@ -883,7 +901,10 @@ void TestFangFeedDiscovery::testCommonPathAllFail()
 
     // Don't configure any responses -- all common paths will get NETWORK_ERROR by default
 
-    FeedDiscovery fd(nullptr, firstParser, new MockNewsParser(), pageGrabber, feedParser);
+    MockGoogleNewsSitemapSynthesizer* sitemapSynth = new MockGoogleNewsSitemapSynthesizer();
+    sitemapSynth->setError("No feed found");
+
+    FeedDiscovery fd(nullptr, firstParser, new MockNewsParser(), pageGrabber, feedParser, sitemapSynth);
     QSignalSpy spy(&fd, &FeedDiscovery::done);
 
     fd.checkFeed("http://example.com");

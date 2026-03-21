@@ -4,7 +4,6 @@
 #include <QFileInfo>
 #include <QImage>
 #include <QBuffer>
-#include <QProcess>
 #include <QThread>
 #include <QStandardPaths>
 
@@ -216,6 +215,9 @@ void TestImageCache::testSaveImageInvalidData()
 
 void TestImageCache::testSaveImageWriteFailure()
 {
+#ifdef Q_OS_WIN
+    QSKIP("Directory read-only permissions don't prevent file creation on Windows NTFS");
+#endif
     // Create a read-only directory to force a write failure.
     QString readOnlyDir = testCacheDir + "/readonly_cache";
     QDir().mkpath(readOnlyDir);
@@ -308,8 +310,12 @@ void TestImageCache::testEvictMixedAges()
         f.close();
     }
 
-    // Backdate the old file's modification time.
-    QProcess::execute("touch", {"-t", "202001010000", oldFile});
+    // Backdate the old file's modification time using Qt API (cross-platform).
+    QFile oldFileHandle(oldFile);
+    QVERIFY(oldFileHandle.open(QIODevice::ReadWrite));
+    QDateTime oldDate(QDate(2020, 1, 1), QTime(0, 0, 0));
+    QVERIFY(oldFileHandle.setFileTime(oldDate, QFileDevice::FileModificationTime));
+    oldFileHandle.close();
 
     // Create a "new" file via saveImage.
     ImageData data = createImageData("image/png");
