@@ -1,6 +1,8 @@
 # TestFangParser test executable
 qt_add_executable(tst_fangparser
     tst_fangparser.cpp
+    ${CMAKE_SOURCE_DIR}/test/MockNetworkAccessManager.cpp
+    ${CMAKE_SOURCE_DIR}/test/MockNetworkAccessManager.h
     # Shared sources from main project
     ${CMAKE_SOURCE_DIR}/src/parser/NewsParser.cpp
     ${CMAKE_SOURCE_DIR}/src/parser/ParserInterface.cpp
@@ -21,9 +23,10 @@ qt_add_executable(tst_fangparser
     ${CMAKE_SOURCE_DIR}/src/utilities/FangLogging.h
 )
 
-# Include directories for FangLogging.h
+# Include directories
 target_include_directories(tst_fangparser PRIVATE
     ${CMAKE_SOURCE_DIR}/src/utilities
+    ${CMAKE_SOURCE_DIR}/test
 )
 
 # Compile definitions for test data paths

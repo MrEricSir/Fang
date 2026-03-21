@@ -10,15 +10,16 @@
 NewsParser::NewsParser(QObject *parent) :
     ParserInterface(parent),
     feed(nullptr), result(OK), networkError(QNetworkReply::NetworkError::NoError),
+    activeManager(&manager),
     currentReply(nullptr), redirectReply(nullptr),
     fromCache(false), noParseIfCached(false),
     redirectAttempts(0),
     permanentRedirect(false)
 {
     // Connex0r teh siganls.
-    connect(&manager, &FangNetworkAccessManager::finished,
+    connect(activeManager, &QNetworkAccessManager::finished,
             this, &NewsParser::netFinished);
-    
+
     // Setup the worker object.
     ParserXMLWorker* worker = new ParserXMLWorker();
     worker->moveToThread(&workerThread);
@@ -27,7 +28,30 @@ NewsParser::NewsParser(QObject *parent) :
     connect(this, &NewsParser::triggerDocEnd, worker, &ParserXMLWorker::documentEnd);
     connect(this, &NewsParser::triggerAddXML, worker, &ParserXMLWorker::addXML);
     connect(worker, &ParserXMLWorker::done, this, &NewsParser::workerDone);
-    
+
+    workerThread.start();
+}
+
+NewsParser::NewsParser(QNetworkAccessManager* networkManager, QObject *parent) :
+    ParserInterface(parent),
+    feed(nullptr), result(OK), networkError(QNetworkReply::NetworkError::NoError),
+    activeManager(networkManager ? networkManager : &manager),
+    currentReply(nullptr), redirectReply(nullptr),
+    fromCache(false), noParseIfCached(false),
+    redirectAttempts(0),
+    permanentRedirect(false)
+{
+    connect(activeManager, &QNetworkAccessManager::finished,
+            this, &NewsParser::netFinished);
+
+    ParserXMLWorker* worker = new ParserXMLWorker();
+    worker->moveToThread(&workerThread);
+    connect(&workerThread, &QThread::finished, worker, &QObject::deleteLater);
+    connect(this, &NewsParser::triggerDocStart, worker, &ParserXMLWorker::documentStart);
+    connect(this, &NewsParser::triggerDocEnd, worker, &ParserXMLWorker::documentEnd);
+    connect(this, &NewsParser::triggerAddXML, worker, &ParserXMLWorker::addXML);
+    connect(worker, &ParserXMLWorker::done, this, &NewsParser::workerDone);
+
     workerThread.start();
 }
 
@@ -77,7 +101,7 @@ void NewsParser::parseInternal(const QUrl& url, bool noParseIfCached,
         currentReply->deleteLater();
     }
 
-    currentReply = manager.get(request);
+    currentReply = activeManager->get(request);
     connect(currentReply, &QNetworkReply::readyRead, this, &NewsParser::readyRead);
     connect(currentReply, &QNetworkReply::metaDataChanged, this, &NewsParser::metaDataChanged);
     connect(currentReply, &QNetworkReply::errorOccurred, this, &NewsParser::error);

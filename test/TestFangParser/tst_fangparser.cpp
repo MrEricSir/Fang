@@ -5,6 +5,7 @@
 #include <QNetworkAccessManager>
 
 #include "../../src/parser/NewsParser.h"
+#include "../MockNetworkAccessManager.h"
 
 /**
  * @brief Tests a number of RSS feeds I've saved from around the web.  
@@ -30,6 +31,13 @@ private slots:
 
     // Three-letter timezone parsing
     void testTimezoneAbbreviations();
+
+    // Permanent redirect detection
+    void testPermanentRedirect301();
+    void testPermanentRedirect308();
+    void testTemporaryRedirect302();
+    void testTemporaryRedirect307();
+    void testNoRedirect();
 };
 
 TestFangParser::TestFangParser()
@@ -897,6 +905,130 @@ void TestFangParser::testTimezoneAbbreviations()
     QVERIFY2(edtTime.isValid(), "EDT timestamp should be valid");
     QCOMPARE(edtTime.time().hour(), 14);
     QCOMPARE(edtTime.time().minute(), 30);
+}
+
+// =====================================================================
+// Permanent redirect detection tests
+// =====================================================================
+
+static QByteArray simpleRSSFeed()
+{
+    return R"(<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+<channel>
+<title>Test Feed</title>
+<link>http://example.com</link>
+<item>
+<title>Test Article</title>
+<link>http://example.com/1</link>
+<guid>test-1</guid>
+<pubDate>Thu, 19 Mar 2026 12:00:00 GMT</pubDate>
+</item>
+</channel>
+</rss>)";
+}
+
+void TestFangParser::testPermanentRedirect301()
+{
+    MockNetworkAccessManager mockManager;
+    QUrl originalUrl("http://example.com/old-feed");
+    QUrl finalUrl("http://example.com/new-feed");
+
+    mockManager.addRedirect(originalUrl, finalUrl, 301);
+    mockManager.addResponse(finalUrl, simpleRSSFeed());
+
+    NewsParser parser(&mockManager, this);
+    QSignalSpy spy(&parser, &NewsParser::done);
+
+    parser.parse(originalUrl);
+    if (!spy.count()) {
+        spy.wait(10000);
+    }
+    QCOMPARE(spy.count(), 1);
+    QVERIFY(parser.wasPermanentRedirect());
+    QCOMPARE(parser.getURL(), finalUrl);
+}
+
+void TestFangParser::testPermanentRedirect308()
+{
+    MockNetworkAccessManager mockManager;
+    QUrl originalUrl("http://example.com/old-feed");
+    QUrl finalUrl("http://example.com/new-feed");
+
+    mockManager.addRedirect(originalUrl, finalUrl, 308);
+    mockManager.addResponse(finalUrl, simpleRSSFeed());
+
+    NewsParser parser(&mockManager, this);
+    QSignalSpy spy(&parser, &NewsParser::done);
+
+    parser.parse(originalUrl);
+    if (!spy.count()) {
+        spy.wait(10000);
+    }
+    QCOMPARE(spy.count(), 1);
+    QVERIFY(parser.wasPermanentRedirect());
+    QCOMPARE(parser.getURL(), finalUrl);
+}
+
+void TestFangParser::testTemporaryRedirect302()
+{
+    MockNetworkAccessManager mockManager;
+    QUrl originalUrl("http://example.com/old-feed");
+    QUrl finalUrl("http://example.com/new-feed");
+
+    mockManager.addRedirect(originalUrl, finalUrl, 302);
+    mockManager.addResponse(finalUrl, simpleRSSFeed());
+
+    NewsParser parser(&mockManager, this);
+    QSignalSpy spy(&parser, &NewsParser::done);
+
+    parser.parse(originalUrl);
+    if (!spy.count()) {
+        spy.wait(10000);
+    }
+    QCOMPARE(spy.count(), 1);
+    QVERIFY(!parser.wasPermanentRedirect());
+    QCOMPARE(parser.getURL(), finalUrl);
+}
+
+void TestFangParser::testTemporaryRedirect307()
+{
+    MockNetworkAccessManager mockManager;
+    QUrl originalUrl("http://example.com/old-feed");
+    QUrl finalUrl("http://example.com/new-feed");
+
+    mockManager.addRedirect(originalUrl, finalUrl, 307);
+    mockManager.addResponse(finalUrl, simpleRSSFeed());
+
+    NewsParser parser(&mockManager, this);
+    QSignalSpy spy(&parser, &NewsParser::done);
+
+    parser.parse(originalUrl);
+    if (!spy.count()) {
+        spy.wait(10000);
+    }
+    QCOMPARE(spy.count(), 1);
+    QVERIFY(!parser.wasPermanentRedirect());
+    QCOMPARE(parser.getURL(), finalUrl);
+}
+
+void TestFangParser::testNoRedirect()
+{
+    MockNetworkAccessManager mockManager;
+    QUrl feedUrl("http://example.com/feed");
+
+    mockManager.addResponse(feedUrl, simpleRSSFeed());
+
+    NewsParser parser(&mockManager, this);
+    QSignalSpy spy(&parser, &NewsParser::done);
+
+    parser.parse(feedUrl);
+    if (!spy.count()) {
+        spy.wait(10000);
+    }
+    QCOMPARE(spy.count(), 1);
+    QVERIFY(!parser.wasPermanentRedirect());
+    QCOMPARE(parser.getURL(), feedUrl);
 }
 
 QTEST_MAIN(TestFangParser)

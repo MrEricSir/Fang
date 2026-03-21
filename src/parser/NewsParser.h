@@ -22,6 +22,7 @@ class NewsParser : public ParserInterface
     
 public:
     explicit NewsParser(QObject *parent = nullptr);
+    explicit NewsParser(QNetworkAccessManager* networkManager, QObject *parent = nullptr);
     virtual ~NewsParser();
     
 public slots:
@@ -74,6 +75,7 @@ private:
     QNetworkReply::NetworkError networkError;
     
     FangNetworkAccessManager manager;
+    QNetworkAccessManager* activeManager;
     QNetworkReply *currentReply;
     QUrl finalFeedURL;
     QNetworkReply *redirectReply;
