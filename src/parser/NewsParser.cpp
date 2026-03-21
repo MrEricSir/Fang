@@ -12,7 +12,8 @@ NewsParser::NewsParser(QObject *parent) :
     feed(nullptr), result(OK), networkError(QNetworkReply::NetworkError::NoError),
     currentReply(nullptr), redirectReply(nullptr),
     fromCache(false), noParseIfCached(false),
-    redirectAttempts(0)
+    redirectAttempts(0),
+    permanentRedirect(false)
 {
     // Connex0r teh siganls.
     connect(&manager, &FangNetworkAccessManager::finished,
@@ -43,6 +44,7 @@ void NewsParser::parse(const QUrl& url, bool noParseIfCached,
 {
     // Reset redirect counter.
     redirectAttempts = 0;
+    permanentRedirect = false;
 
     parseInternal(url, noParseIfCached, ifNoneMatch, ifModifiedSince);
 }
@@ -162,6 +164,11 @@ void NewsParser::metaDataChanged()
             networkError = QNetworkReply::TooManyRedirectsError;
             emit done();
             return;
+        }
+
+        int statusCode = currentReply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+        if (statusCode == 301 || statusCode == 308) {
+            permanentRedirect = true;
         }
 
         qCDebug(logParser) << "Redirect:" << redirectionTarget.toString();

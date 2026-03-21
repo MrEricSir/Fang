@@ -40,6 +40,7 @@ public slots:
     virtual bool isFromCache() { return fromCache; } // Override
     virtual QString responseEtag() { return respEtag; }
     virtual QString responseLastModified() { return respLastModified; }
+    bool wasPermanentRedirect() const { return permanentRedirect; }
     
     // These are used internally.
 signals:
@@ -86,6 +87,7 @@ private:
     QString respLastModified;
 
     int redirectAttempts;
+    bool permanentRedirect;
 
     QThread workerThread;
 };

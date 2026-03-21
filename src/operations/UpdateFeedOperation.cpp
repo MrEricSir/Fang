@@ -78,7 +78,7 @@ void UpdateFeedOperation::onFeedFinished()
 {
     FANG_BACKGROUND_CHECK;
 
-    // 304 Not Modified: Fed hasn't changed, nothing to do.
+    // 304 Not Modified: Feed hasn't changed, nothing to do.
     if (parser.getResult() == ParserInterface::NOT_MODIFIED) {
         feed->setErrorFlag(false);
         feed->setIsUpdating(false);
@@ -344,6 +344,26 @@ void UpdateFeedOperation::onRewriterFinished()
         feed->setLastModified(parser.responseLastModified());
     }
 
+    // Persist final URL if the feed redirected to a new location.
+    {
+        QUrl finalURL = parser.getURL();
+        if (finalURL.isValid() && !finalURL.isEmpty() && finalURL != feed->getURL()
+            && parser.wasPermanentRedirect()) {
+            QSqlQuery urlQuery(db());
+            urlQuery.prepare("UPDATE FeedItemTable SET url = :url WHERE id = :feed_id");
+            urlQuery.bindValue(":url", finalURL);
+            urlQuery.bindValue(":feed_id", feed->getDbID());
+            if (!urlQuery.exec()) {
+                reportSQLError(urlQuery, "Unable to update feed URL after redirect.");
+                db().rollback();
+                return;
+            }
+            qCDebug(logOperation) << "UpdateFeedOperation: Feed URL redirected from"
+                                  << feed->getURL() << "to" << finalURL;
+            feed->setURL(finalURL);
+        }
+    }
+
     // Update unread count, All News's unread count, and folder (if applicable);
     UnreadCountReader::update(db(), feed);
     UnreadCountReader::update(db(), FangApp::instance()->getAllNewsFeed());
@@ -372,7 +392,7 @@ void UpdateFeedOperation::onNewsSitemapRefreshDone()
         return;
     }
 
-    // Use our the synthesized feed as though it were an RSS/Atom feed.
+    // Use our synthesized feed as though it were an RSS/Atom feed.
     rawFeed = newsSitemapSynthesizer->result();
     onFeedFinished();
 }
