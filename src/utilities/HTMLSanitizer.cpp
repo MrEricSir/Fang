@@ -329,9 +329,15 @@ QString HTMLSanitizer::finalize(const QString &html, const QMap<QUrl, ImageData>
                     QString srcToUse = url;
                     bool keepImage = false;
 
+                    int width = 0;
+                    int height = 0;
+
                     ImageData imageData = imageResults.value(url);
                     if (imageData.isValid()) {
-                        if (imageData.image.width() > 2 && imageData.image.height() > 2) {
+                        width = imageData.image.width();
+                        height = imageData.image.height();
+
+                        if (width > 2 && height > 2) {
                             QString cachedPath = ImageCache::saveImage(url, imageData);
                             if (!cachedPath.isEmpty()) {
                                 srcToUse = cachedPath;
@@ -342,6 +348,8 @@ QString HTMLSanitizer::finalize(const QString &html, const QMap<QUrl, ImageData>
                                xml.attributes().hasAttribute(S_HEIGHT)) {
                         // Fetch failed but image has known good dimensions from
                         // sanitize() - keep it with the original URL.
+                        width = xml.attributes().value(S_WIDTH).toInt();
+                        height = xml.attributes().value(S_HEIGHT).toInt();
                         keepImage = true;
                     }
                     // else: fetch failed and no known dimensions - skip.
@@ -350,6 +358,10 @@ QString HTMLSanitizer::finalize(const QString &html, const QMap<QUrl, ImageData>
                     if (keepImage) {
                         writer.writeStartElement(tagName);
                         writer.writeAttribute(S_SRC, srcToUse);
+                        if (width > 0 && height > 0) {
+                            writer.writeAttribute(S_WIDTH, QString::number(width));
+                            writer.writeAttribute(S_HEIGHT, QString::number(height));
+                        }
                         if (srcToUse != url) {
                             writer.writeAttribute("data-original-src", url);
                         }

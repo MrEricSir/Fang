@@ -123,26 +123,32 @@ void TestRawFeedRewriterTest::testCase1_data()
                                  "http://i.imgur.com/ohnlAzj.png\">Share on Facebook</a>"
                               << "<p>hi</p>";
 
-    // Image size rewriter (and reducer.)
-    // Images that are successfully downloaded are embedded as base64 data URIs for offline viewing.
+    // Image caching and dimension passthrough.
+    // Images that are successfully downloaded are cached for offline viewing.
+    // Original dimensions are written to the HTML for browser aspect-ratio layout;
+    // CSS handles the max-width cap.
     QTest::newRow("Image test") << "<img src=\"https://www.mrericsir.com/blog/wp-content/uploads/IMG_9016-768x1024.jpeg\">"
-                              << "<img src=\"[CACHED_IMAGE]\"/>";
+                              << "<img src=\"[CACHED_IMAGE]\""
+                                 " width=\"768\" height=\"1024\"/>";
 
-    // Image size rewriter (and reducer) with STYLE.
+    // Image with STYLE attribute (ignored; fetched dimensions used).
     QTest::newRow("Image test 2") << "<img src=\"https://www.mrericsir.com/blog/wp-content/uploads/IMG_9016-768x1024.jpeg\" style=\""
                                  "width: 500px;\">"
-                              << "<img src=\"[CACHED_IMAGE]\"/>";
+                              << "<img src=\"[CACHED_IMAGE]\""
+                                 " width=\"768\" height=\"1024\"/>";
 
-    // Image size with HTML attributes. Actual dimensions are fetched and preferred.
+    // Image with HTML attributes. Actual fetched dimensions are preferred.
     QTest::newRow("Image test 3") << "<img src=\"https://www.mrericsir.com/blog/wp-content/uploads/IMG_9016-768x1024.jpeg\" align=\"left\""
                                      " width=\"400\" height=\"533\"/>"
-                              << "<img src=\"[CACHED_IMAGE]\"/>";
+                              << "<img src=\"[CACHED_IMAGE]\""
+                                 " width=\"768\" height=\"1024\"/>";
 
     // NJ.com-style: HTML attributes have original width (768) with resizer target height (1200).
     // The actual image is 768x1024. Fetched dimensions should override the wrong HTML attributes.
     QTest::newRow("NJ.com smooshed image") << "<img src=\"https://www.mrericsir.com/blog/wp-content/uploads/IMG_9016-768x1024.jpeg\""
                                               " width=\"768\" height=\"1200\"/>"
-                                           << "<img src=\"[CACHED_IMAGE]\"/>";
+                                           << "<img src=\"[CACHED_IMAGE]\""
+                                              " width=\"768\" height=\"1024\"/>";
 
     // Embedded Vine video.
     QTest::newRow("Vine") << "<iframe class=\"vine-embed\" src=\""
@@ -162,7 +168,7 @@ void TestRawFeedRewriterTest::testCase1_data()
                                     "rail interface with Los Angeles County? Give your input at an upcoming "
                                     "meeting or via email. Image via CAHSRA</p></div></p>"
                                  << "<div><a href=\"http://la.streetsblog.org/wp-content/uploads/2014/08/hsr-Edited.jpg\">"
-                                    "<img src=\"http://i.imgur.com/523Qeov.jpg\"/>"
+                                    "<img src=\"http://i.imgur.com/523Qeov.jpg\" width=\"576\" height=\"267\"/>"
                                     "</a><p>How should California\u2019s high speed rail interface with "
                                     "Los Angeles County? Give your input at an upcoming meeting or via email. "
                                     "Image via CAHSRA</p></div>";
@@ -185,7 +191,7 @@ void TestRawFeedRewriterTest::testCase1_data()
                                   "too much into it.  Either way.</p><p>Spotted this wheatpaste during the Cinco de Mayo "
                                   "festival on Valencia.</p>"
                                << "<p><a href=\"https://www.flickr.com/photos/mrericsir/17161096410\">"
-                                 "<img src=\"[CACHED_IMAGE]\"/>"
+                                 "<img src=\"[CACHED_IMAGE]\" width=\"500\" height=\"375\"/>"
                                  "</a></p><p>Grump Cat wearing a bicycle helmet? I have no idea. "
                                  "Perhaps it\u2019s a statement about bicycle helmet laws, or maybe I\u2019m reading "
                                  "too much into it. Either way.</p><p>Spotted this wheatpaste during the Cinco de Mayo "
@@ -206,7 +212,7 @@ void TestRawFeedRewriterTest::testCase1_data()
                                         "<p><em><a href=\"http://burritojustice.com/bikes-to-books-map/\" rel=\"nofollow\">http://burritojustice.com/bikes-to-books-map/</a></em></p><br />  <a rel=\"nofollow\" href=\"http://feeds.wordpress.com/1.0/gocomments/burritojustice.wordpress.com/10603/\"><img alt=\"\" border=\"0\" src=\"http://feeds.wordpress.com/1.0/comments/burritojustice.wordpress.com/10603/\" /></a> <img alt=\"\" border=\"0\" src=\"http://pixel.wp.com/b.gif?host=burritojustice.com&#038;blog=4823503&#038;post=10603&#038;subd=burritojustice&#038;ref=&#038;feed=1\" width=\"1\" height=\"1\" />\n"
                                      << "<p>Come ride the Bikes to Books tour with us on Saturday, May 30! Both the foldable maps and <a href=\"http://burritojustice.com/2015/03/08/bike-to-books-poster-bigger-stronger-faster/\"> our new posters</a> will be available for sale.</p>"
                                         "<p>It\u2019s a surprisingly easy ride, and you can have an IPA at the end.</p>"
-                                        "<p><a href=\"https://burritojustice.files.wordpress.com/2013/10/bikes-to-books-map-crop.jpg\"><img src=\"[CACHED_IMAGE]\"/><img src=\"[CACHED_IMAGE]\"/></a></p>"
+                                        "<p><a href=\"https://burritojustice.files.wordpress.com/2013/10/bikes-to-books-map-crop.jpg\"><img src=\"[CACHED_IMAGE]\" width=\"600\" height=\"866\"/><img src=\"[CACHED_IMAGE]\" width=\"600\" height=\"634\"/></a></p>"
                                         "<p><strong><em>Bikes to Books Annual Springtime Ride!</em></strong></p>"
                                         "<p><em><b>Saturday, May 30, 1:00 p.m. – 4:00 p.m.</b></em></p>"
                                         "<p><em><b>Meet at 12:45 p.m. at Jack London Street, at South Park in San Francisco</b></em></p>"
