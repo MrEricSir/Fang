@@ -174,8 +174,17 @@ QString HTMLSanitizer::sanitize(const QString &document, QSet<QUrl> &imageURLs)
                         int width = sWidth.toInt(&widthOK);
                         int height = sHeight.toInt(&heightOK);
 
-                        if (widthOK && heightOK && (width < 3 || height < 3)) {
-                            idsToDelete << intToID(currentId);
+                        if (widthOK && heightOK) {
+                            if (width < 3 || height < 3) {
+                                // Delete tiny images (tracking pixels).
+                                idsToDelete << intToID(currentId);
+                            } else {
+                                // Pass dimensions as metadata for finalize() to use
+                                // when the image fetch fails and we need to verify
+                                // this isn't a tracking pixel.
+                                writer.writeAttribute(S_WIDTH, sWidth);
+                                writer.writeAttribute(S_HEIGHT, sHeight);
+                            }
                         }
 
                         // Fetch images for caching and dimension verification.
@@ -329,11 +338,14 @@ QString HTMLSanitizer::finalize(const QString &html, const QMap<QUrl, ImageData>
                             }
                             keepImage = true;
                         }
-                    } else {
-                        // Fetch failed, keep image with original URL.
-                        // Tracking pixels with known dimensions were already removed in sanitize()
+                    } else if (xml.attributes().hasAttribute(S_WIDTH) &&
+                               xml.attributes().hasAttribute(S_HEIGHT)) {
+                        // Fetch failed but image has known good dimensions from
+                        // sanitize() - keep it with the original URL.
                         keepImage = true;
                     }
+                    // else: fetch failed and no known dimensions - skip.
+                    // Could be a tracking pixel we can't verify.
 
                     if (keepImage) {
                         writer.writeStartElement(tagName);
