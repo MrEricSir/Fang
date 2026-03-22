@@ -8,9 +8,6 @@
 #include "ImageCache.h"
 #include "NetworkUtilities.h"
 
-// Image width max.
-#define MAX_ELEMENT_WIDTH 400
-
 // Strings.
 #define S_WIDTH "width"
 #define S_HEIGHT "height"
@@ -166,9 +163,10 @@ QString HTMLSanitizer::sanitize(const QString &document, QSet<QUrl> &imageURLs)
 
                     // Image tags.
                     if (tagName == S_IMG && xml.attributes().hasAttribute(S_SRC)) {
-                        QString imgSrc =  NetworkUtilities::urlFixup(xml.attributes().value(S_SRC).toString());
+                        QString imgSrc = NetworkUtilities::urlFixup(xml.attributes().value(S_SRC).toString());
                         writer.writeAttribute(S_SRC, imgSrc);
 
+                        // Check for tracking pixels using HTML dimensions.
                         QString sWidth = xml.attributes().value(S_WIDTH).toString();
                         QString sHeight = xml.attributes().value(S_HEIGHT).toString();
 
@@ -176,22 +174,11 @@ QString HTMLSanitizer::sanitize(const QString &document, QSet<QUrl> &imageURLs)
                         int width = sWidth.toInt(&widthOK);
                         int height = sHeight.toInt(&heightOK);
 
-                        if (widthOK && heightOK) {
-                            if (width < 3 || height < 3) {
-                                // Delete tiny images (tracking pixels).
-                                idsToDelete << intToID(currentId);
-                            } else {
-                                // Write HTML dimensions as fallback for when fetch fails.
-                                int newWidth, newHeight;
-                                imageResize(width, height, &newWidth, &newHeight);
-                                writer.writeAttribute(S_WIDTH, QString::number(newWidth));
-                                writer.writeAttribute(S_HEIGHT, QString::number(newHeight));
-                            }
+                        if (widthOK && heightOK && (width < 3 || height < 3)) {
+                            idsToDelete << intToID(currentId);
                         }
 
-                        // Always fetch images to get actual dimensions and enable
-                        // image caching. HTML attributes can be wrong (e.g. NJ.com
-                        // sets original width with resizer target height).
+                        // Fetch images for caching and dimension verification.
                         if (!idsToDelete.contains(intToID(currentId))) {
                             imageURLs << imgSrc;
                         }
@@ -330,46 +317,32 @@ QString HTMLSanitizer::finalize(const QString &html, const QMap<QUrl, ImageData>
                     skip = 1;
                 } else if (tagName == S_IMG) {
                     QString url = xml.attributes().value(S_SRC).toString();
-                    QString srcToUse = url; // Default to original URL.
+                    QString srcToUse = url;
+                    bool keepImage = false;
 
-                    int width = 0;
-                    int height = 0;
-
-                    // Prefer actual fetched image dimensions over HTML attributes,
-                    // since HTML attributes can be wrong (e.g. NJ.com mixes original
-                    // width with resizer target height).
                     ImageData imageData = imageResults.value(url);
                     if (imageData.isValid()) {
-                        imageResize(imageData.image.width(), imageData.image.height(), &width, &height);
-
-                        // Cache image to disk for offline viewing.
-                        QString cachedPath = ImageCache::saveImage(url, imageData);
-                        if (!cachedPath.isEmpty()) {
-                            srcToUse = cachedPath;
+                        if (imageData.image.width() > 2 && imageData.image.height() > 2) {
+                            QString cachedPath = ImageCache::saveImage(url, imageData);
+                            if (!cachedPath.isEmpty()) {
+                                srcToUse = cachedPath;
+                            }
+                            keepImage = true;
                         }
-                    } else if (xml.attributes().hasAttribute(S_WIDTH) &&
-                               xml.attributes().hasAttribute(S_HEIGHT)) {
-                        // Fallback to HTML attributes if fetch failed.
-                        int htmlWidth = xml.attributes().value(S_WIDTH).toInt();
-                        int htmlHeight = xml.attributes().value(S_HEIGHT).toInt();
-                        imageResize(htmlWidth, htmlHeight, &width, &height);
+                    } else {
+                        // Fetch failed, keep image with original URL.
+                        // Tracking pixels with known dimensions were already removed in sanitize()
+                        keepImage = true;
                     }
 
-                    if (width > 2 && height > 2) {
-                        // Okay, we got a good image and it's not a tracking pixel. Satisfaction!
+                    if (keepImage) {
                         writer.writeStartElement(tagName);
                         writer.writeAttribute(S_SRC, srcToUse);
-                        writer.writeAttribute(S_WIDTH, QString::number(width));
-                        writer.writeAttribute(S_HEIGHT, QString::number(height));
-
-                        // Preserve the original URL for re-fetching if cache is deleted.
                         if (srcToUse != url) {
                             writer.writeAttribute("data-original-src", url);
                         }
-
                         lastTag = tagName;
                     } else {
-                        // Bad image! Skip!
                         skip = 1;
                     }
                 } else {
@@ -450,18 +423,6 @@ void HTMLSanitizer::postProcessDocString(QString &docString)
 
     // This happens.
     docString = docString.trimmed();
-}
-
-void HTMLSanitizer::imageResize(int width, int height, int *newWidth, int *newHeight)
-{
-    *newWidth = width;
-    *newHeight = height;
-
-    if (width >= MAX_ELEMENT_WIDTH) {
-        // Scale down the image.
-        *newWidth = MAX_ELEMENT_WIDTH;
-        *newHeight = (double) height / (double) width * (double) MAX_ELEMENT_WIDTH;
-    }
 }
 
 void HTMLSanitizer::removeNewlinesBothSides(QString &docString)

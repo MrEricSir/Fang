@@ -102,7 +102,6 @@ private:
     bool isHTMLEmpty(const QString& html);
     QString intToID(int id);
     void removeNewlinesBothSides(QString& str);
-    void imageResize(int width, int height, int* newWidth, int* newHeight);
     void postProcessDocString(QString& docString);
 };
 
