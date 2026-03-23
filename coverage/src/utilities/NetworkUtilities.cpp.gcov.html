@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-03-17 10:38:58</td>
+            <td class="headerValue">2026-03-23 09:47:31</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryLo">33.3&nbsp;%</td>
@@ -101,23 +101,23 @@
 <span id="L39"><span class="lineNum">      39</span>              : </span>
 <span id="L40"><span class="lineNum">      40</span> <span class="tlaUNC">           0 : void NetworkUtilities::fakeBrowserHeaders(QNetworkRequest* request)</span></span>
 <span id="L41"><span class="lineNum">      41</span>              : {</span>
-<span id="L42"><span class="lineNum">      42</span>              :     // We have to pretend to be Firefox in order for some stupid servers to speak with us.</span>
+<span id="L42"><span class="lineNum">      42</span>              :     // Mimic Chromium to avoid servers that block non-browser User-Agents.</span>
 <span id="L43"><span class="lineNum">      43</span> <span class="tlaUNC">           0 :     request-&gt;setHeader(QNetworkRequest::UserAgentHeader,</span></span>
-<span id="L44"><span class="lineNum">      44</span>              :                       &quot;Mozilla/5.0 (Windows NT 6.1; WOW64; rv:27.0) Gecko/20100101 Firefox/27.0&quot;);</span>
+<span id="L44"><span class="lineNum">      44</span>              :                       &quot;Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36&quot;);</span>
 <span id="L45"><span class="lineNum">      45</span>              :     </span>
 <span id="L46"><span class="lineNum">      46</span>              :     // Required for blogs.gnome.org.</span>
 <span id="L47"><span class="lineNum">      47</span> <span class="tlaUNC">           0 :     request-&gt;setRawHeader(&quot;Accept&quot;,</span></span>
 <span id="L48"><span class="lineNum">      48</span>              :                           &quot;text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8&quot;);</span>
 <span id="L49"><span class="lineNum">      49</span> <span class="tlaUNC">           0 : }</span></span>
 <span id="L50"><span class="lineNum">      50</span>              : </span>
-<span id="L51"><span class="lineNum">      51</span> <span class="tlaGNC tlaBgGNC">          48 : QString NetworkUtilities::urlFixup(const QString &amp;url, QUrl baseURL)</span></span>
+<span id="L51"><span class="lineNum">      51</span> <span class="tlaGNC tlaBgGNC">          60 : QString NetworkUtilities::urlFixup(const QString &amp;url, QUrl baseURL)</span></span>
 <span id="L52"><span class="lineNum">      52</span>              : {</span>
 <span id="L53"><span class="lineNum">      53</span>              : </span>
-<span id="L54"><span class="lineNum">      54</span> <span class="tlaGNC">          48 :     QUrl qURL(url);</span></span>
+<span id="L54"><span class="lineNum">      54</span> <span class="tlaGNC">          60 :     QUrl qURL(url);</span></span>
 <span id="L55"><span class="lineNum">      55</span>              : </span>
 <span id="L56"><span class="lineNum">      56</span>              :     // If the URL is valid and not relative, there's nothing more to do.</span>
-<span id="L57"><span class="lineNum">      57</span> <span class="tlaGNC">          48 :     if (!qURL.isRelative() &amp;&amp; qURL.isValid()) {</span></span>
-<span id="L58"><span class="lineNum">      58</span> <span class="tlaGNC">          38 :         return url;</span></span>
+<span id="L57"><span class="lineNum">      57</span> <span class="tlaGNC">          60 :     if (!qURL.isRelative() &amp;&amp; qURL.isValid()) {</span></span>
+<span id="L58"><span class="lineNum">      58</span> <span class="tlaGNC">          50 :         return url;</span></span>
 <span id="L59"><span class="lineNum">      59</span>              :     }</span>
 <span id="L60"><span class="lineNum">      60</span>              : </span>
 <span id="L61"><span class="lineNum">      61</span>              :     // If the URL is relative, try prepending the base URL.</span>
@@ -155,7 +155,7 @@
 <span id="L93"><span class="lineNum">      93</span>              : </span>
 <span id="L94"><span class="lineNum">      94</span>              :     // Hopefully it's correct!</span>
 <span id="L95"><span class="lineNum">      95</span> <span class="tlaUNC tlaBgUNC">           0 :     return url;</span></span>
-<span id="L96"><span class="lineNum">      96</span> <span class="tlaGNC tlaBgGNC">          48 : }</span></span>
+<span id="L96"><span class="lineNum">      96</span> <span class="tlaGNC tlaBgGNC">          60 : }</span></span>
         </pre>
               </td>
             </tr>

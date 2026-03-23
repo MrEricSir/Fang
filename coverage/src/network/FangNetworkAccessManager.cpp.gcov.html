@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-03-17 10:38:58</td>
+            <td class="headerValue">2026-03-23 09:47:31</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -65,35 +65,36 @@
 <span id="L3"><span class="lineNum">       3</span>              : #include &lt;QNetworkDiskCache&gt;</span>
 <span id="L4"><span class="lineNum">       4</span>              : #include &lt;QStandardPaths&gt;</span>
 <span id="L5"><span class="lineNum">       5</span>              : </span>
-<span id="L6"><span class="lineNum">       6</span> <span class="tlaGNC tlaBgGNC">         219 : FangNetworkAccessManager::FangNetworkAccessManager(QObject *parent) :</span></span>
-<span id="L7"><span class="lineNum">       7</span> <span class="tlaGNC">         219 :     QNetworkAccessManager(parent)</span></span>
+<span id="L6"><span class="lineNum">       6</span> <span class="tlaGNC tlaBgGNC">         281 : FangNetworkAccessManager::FangNetworkAccessManager(QObject *parent) :</span></span>
+<span id="L7"><span class="lineNum">       7</span> <span class="tlaGNC">         281 :     QNetworkAccessManager(parent)</span></span>
 <span id="L8"><span class="lineNum">       8</span>              : {</span>
-<span id="L9"><span class="lineNum">       9</span> <span class="tlaGNC">         219 :     QNetworkDiskCache* diskCache = new QNetworkDiskCache(this);</span></span>
-<span id="L10"><span class="lineNum">      10</span> <span class="tlaGNC">         219 :     QString cacheDir = QStandardPaths::writableLocation(QStandardPaths::CacheLocation);</span></span>
-<span id="L11"><span class="lineNum">      11</span> <span class="tlaGNC">         219 :     diskCache-&gt;setCacheDirectory(cacheDir);</span></span>
-<span id="L12"><span class="lineNum">      12</span> <span class="tlaGNC">         219 :     if (!cacheDir.isEmpty()) {</span></span>
-<span id="L13"><span class="lineNum">      13</span> <span class="tlaGNC">         219 :         setCache(diskCache);</span></span>
+<span id="L9"><span class="lineNum">       9</span> <span class="tlaGNC">         281 :     QNetworkDiskCache* diskCache = new QNetworkDiskCache(this);</span></span>
+<span id="L10"><span class="lineNum">      10</span> <span class="tlaGNC">         281 :     QString cacheDir = QStandardPaths::writableLocation(QStandardPaths::CacheLocation);</span></span>
+<span id="L11"><span class="lineNum">      11</span> <span class="tlaGNC">         281 :     diskCache-&gt;setCacheDirectory(cacheDir);</span></span>
+<span id="L12"><span class="lineNum">      12</span> <span class="tlaGNC">         281 :     if (!cacheDir.isEmpty()) {</span></span>
+<span id="L13"><span class="lineNum">      13</span> <span class="tlaGNC">         281 :         setCache(diskCache);</span></span>
 <span id="L14"><span class="lineNum">      14</span>              :     }</span>
-<span id="L15"><span class="lineNum">      15</span> <span class="tlaGNC">         219 : }</span></span>
+<span id="L15"><span class="lineNum">      15</span> <span class="tlaGNC">         281 : }</span></span>
 <span id="L16"><span class="lineNum">      16</span>              : </span>
-<span id="L17"><span class="lineNum">      17</span> <span class="tlaGNC">           4 : QNetworkReply* FangNetworkAccessManager::createRequest(QNetworkAccessManager::Operation op, const QNetworkRequest&amp; request, QIODevice* outgoingData)</span></span>
+<span id="L17"><span class="lineNum">      17</span> <span class="tlaGNC">          12 : QNetworkReply* FangNetworkAccessManager::createRequest(QNetworkAccessManager::Operation op, const QNetworkRequest&amp; request, QIODevice* outgoingData)</span></span>
 <span id="L18"><span class="lineNum">      18</span>              : {</span>
-<span id="L19"><span class="lineNum">      19</span> <span class="tlaGNC">           4 :     QNetworkRequest&amp; req = const_cast&lt;QNetworkRequest&amp;&gt;(request);</span></span>
+<span id="L19"><span class="lineNum">      19</span> <span class="tlaGNC">          12 :     QNetworkRequest&amp; req = const_cast&lt;QNetworkRequest&amp;&gt;(request);</span></span>
 <span id="L20"><span class="lineNum">      20</span>              : </span>
 <span id="L21"><span class="lineNum">      21</span>              :     // This SHOULD be the default, but just in case.</span>
-<span id="L22"><span class="lineNum">      22</span> <span class="tlaGNC">           4 :     req.setAttribute(QNetworkRequest::CacheLoadControlAttribute,</span></span>
+<span id="L22"><span class="lineNum">      22</span> <span class="tlaGNC">          12 :     req.setAttribute(QNetworkRequest::CacheLoadControlAttribute,</span></span>
 <span id="L23"><span class="lineNum">      23</span>              :                           QNetworkRequest::PreferNetwork);</span>
 <span id="L24"><span class="lineNum">      24</span>              : </span>
-<span id="L25"><span class="lineNum">      25</span>              :     // We have to pretend to be Firefox in order for some stupid servers to speak with us.</span>
-<span id="L26"><span class="lineNum">      26</span> <span class="tlaGNC">           4 :     req.setHeader(QNetworkRequest::UserAgentHeader,</span></span>
-<span id="L27"><span class="lineNum">      27</span>              :                       &quot;Mozilla/5.0 (Windows NT 6.1; WOW64; rv:27.0) Gecko/20100101 Firefox/27.0&quot;);</span>
-<span id="L28"><span class="lineNum">      28</span>              : </span>
-<span id="L29"><span class="lineNum">      29</span>              :     // Required for blogs.gnome.org.</span>
-<span id="L30"><span class="lineNum">      30</span> <span class="tlaGNC">           4 :     req.setRawHeader(&quot;Accept&quot;,</span></span>
-<span id="L31"><span class="lineNum">      31</span>              :                          &quot;text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8&quot;);</span>
-<span id="L32"><span class="lineNum">      32</span>              : </span>
-<span id="L33"><span class="lineNum">      33</span> <span class="tlaGNC">           4 :     return QNetworkAccessManager::createRequest(op, req, outgoingData);</span></span>
-<span id="L34"><span class="lineNum">      34</span>              : }</span>
+<span id="L25"><span class="lineNum">      25</span>              :     // Mimic Chromium to avoid servers that block non-browser User-Agents.</span>
+<span id="L26"><span class="lineNum">      26</span>              :     // Qt WebEngine is Chromium-based, so this is honest enough.</span>
+<span id="L27"><span class="lineNum">      27</span> <span class="tlaGNC">          12 :     req.setHeader(QNetworkRequest::UserAgentHeader,</span></span>
+<span id="L28"><span class="lineNum">      28</span>              :                       &quot;Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36&quot;);</span>
+<span id="L29"><span class="lineNum">      29</span>              : </span>
+<span id="L30"><span class="lineNum">      30</span>              :     // Required for blogs.gnome.org.</span>
+<span id="L31"><span class="lineNum">      31</span> <span class="tlaGNC">          12 :     req.setRawHeader(&quot;Accept&quot;,</span></span>
+<span id="L32"><span class="lineNum">      32</span>              :                          &quot;text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8&quot;);</span>
+<span id="L33"><span class="lineNum">      33</span>              : </span>
+<span id="L34"><span class="lineNum">      34</span> <span class="tlaGNC">          12 :     return QNetworkAccessManager::createRequest(op, req, outgoingData);</span></span>
+<span id="L35"><span class="lineNum">      35</span>              : }</span>
         </pre>
               </td>
             </tr>

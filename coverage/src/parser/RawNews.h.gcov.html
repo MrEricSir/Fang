@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-03-17 10:38:58</td>
+            <td class="headerValue">2026-03-23 09:47:31</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -78,7 +78,7 @@
 <span id="L16"><span class="lineNum">      16</span>              : public:</span>
 <span id="L17"><span class="lineNum">      17</span>              :     explicit RawNews(QObject *parent = nullptr);</span>
 <span id="L18"><span class="lineNum">      18</span>              :     </span>
-<span id="L19"><span class="lineNum">      19</span> <span class="tlaGNC tlaBgGNC">        3877 :     virtual ~RawNews() {}</span></span>
+<span id="L19"><span class="lineNum">      19</span> <span class="tlaGNC tlaBgGNC">        4511 :     virtual ~RawNews() {}</span></span>
 <span id="L20"><span class="lineNum">      20</span>              :     </span>
 <span id="L21"><span class="lineNum">      21</span>              :     QString title;</span>
 <span id="L22"><span class="lineNum">      22</span>              :     QString author;</span>
@@ -87,18 +87,19 @@
 <span id="L25"><span class="lineNum">      25</span>              :     QDateTime timestamp;</span>
 <span id="L26"><span class="lineNum">      26</span>              :     QUrl url;</span>
 <span id="L27"><span class="lineNum">      27</span>              :     QString guid; // id, guid, or link URL</span>
-<span id="L28"><span class="lineNum">      28</span>              :     </span>
-<span id="L29"><span class="lineNum">      29</span>              :     // For convenience.</span>
-<span id="L30"><span class="lineNum">      30</span>              :     qint64 dbId;</span>
-<span id="L31"><span class="lineNum">      31</span>              :     </span>
-<span id="L32"><span class="lineNum">      32</span>              :     // Sorting</span>
-<span id="L33"><span class="lineNum">      33</span>              :     bool operator&lt;(const RawNews&amp; right);</span>
-<span id="L34"><span class="lineNum">      34</span>              :     static bool LessThan(const RawNews* left, const RawNews* right);</span>
-<span id="L35"><span class="lineNum">      35</span>              :     static bool GreaterThan(const RawNews* left, const RawNews* right);</span>
-<span id="L36"><span class="lineNum">      36</span>              :     </span>
-<span id="L37"><span class="lineNum">      37</span>              : };</span>
-<span id="L38"><span class="lineNum">      38</span>              : </span>
-<span id="L39"><span class="lineNum">      39</span>              : #endif // RAWNEWS_H</span>
+<span id="L28"><span class="lineNum">      28</span>              :     QString mediaImageURL; // media:thumbnail or media:content URL (cached path after rewrite)</span>
+<span id="L29"><span class="lineNum">      29</span>              : </span>
+<span id="L30"><span class="lineNum">      30</span>              :     // For convenience.</span>
+<span id="L31"><span class="lineNum">      31</span>              :     qint64 dbId;</span>
+<span id="L32"><span class="lineNum">      32</span>              :     </span>
+<span id="L33"><span class="lineNum">      33</span>              :     // Sorting</span>
+<span id="L34"><span class="lineNum">      34</span>              :     bool operator&lt;(const RawNews&amp; right);</span>
+<span id="L35"><span class="lineNum">      35</span>              :     static bool LessThan(const RawNews* left, const RawNews* right);</span>
+<span id="L36"><span class="lineNum">      36</span>              :     static bool GreaterThan(const RawNews* left, const RawNews* right);</span>
+<span id="L37"><span class="lineNum">      37</span>              :     </span>
+<span id="L38"><span class="lineNum">      38</span>              : };</span>
+<span id="L39"><span class="lineNum">      39</span>              : </span>
+<span id="L40"><span class="lineNum">      40</span>              : #endif // RAWNEWS_H</span>
         </pre>
               </td>
             </tr>
