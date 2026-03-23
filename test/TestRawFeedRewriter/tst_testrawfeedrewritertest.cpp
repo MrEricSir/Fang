@@ -3,8 +3,11 @@
 #include <QCoreApplication>
 #include <QSignalSpy>
 #include <QRegularExpression>
+#include <QBuffer>
+#include <QImage>
 
 #include "../../src/utilities/RawFeedRewriter.h"
+#include "../../src/utilities/HTMLSanitizer.h"
 
 class TestRawFeedRewriterTest : public QObject
 {
@@ -18,9 +21,20 @@ private:
     // Replaces cached image paths with a placeholder so we can compare structure.
     static QString normalizeImageSrc(const QString& html);
 
+    // Create an ImageData with a solid-color image of the given dimensions.
+    static ImageData createImageData(int width, int height);
+
 private slots:
     void testCase1();
     void testCase1_data();
+
+    void testFinalizeUseFetchedDimensions();
+    void testFinalizeFilterTrackingPixel();
+    void testFinalizeFilterTrackingPixelBoundary();
+    void testFinalizeKeepSmallImage();
+    void testFinalizeFilterOneTinyDimension();
+    void testFinalizeFetchFailedWithDimensions();
+    void testFinalizeFetchFailedNoDimensions();
 };
 
 TestRawFeedRewriterTest::TestRawFeedRewriterTest()
@@ -65,8 +79,7 @@ void TestRawFeedRewriterTest::testCase1()
     
     QCOMPARE(spy.count(), 1);
 
-    // Normalize both strings to handle base64 embedded images.
-    // Images that are successfully downloaded are now embedded as data URIs.
+    // Normalize both strings to handle cached images.
     QString normalizedOutput = normalizeImageSrc(news.description);
     QString normalizedExpected = normalizeImageSrc(output);
 
@@ -298,6 +311,170 @@ void TestRawFeedRewriterTest::testCase1_data()
                                      "</p>"
                                      "<h2><em><a href=\"http://missionlocal.org/calendar-14/\">Events in the Mission Today</a></em></h2>"
                                      "<h2><em><a href=\"http://missionlocal.org/newcomers/\">The Essential Mission Guide</a></em></h2>";
+}
+
+ImageData TestRawFeedRewriterTest::createImageData(int width, int height)
+{
+    ImageData data;
+    data.image = QImage(width, height, QImage::Format_RGB32);
+    data.image.fill(Qt::red);
+
+    QByteArray ba;
+    QBuffer buffer(&ba);
+    buffer.open(QIODevice::WriteOnly);
+    data.image.save(&buffer, "PNG");
+    data.rawData = ba;
+    data.mimeType = "image/png";
+    return data;
+}
+
+// Test that finalize() uses actual fetched dimensions, not HTML attributes.
+void TestRawFeedRewriterTest::testFinalizeUseFetchedDimensions()
+{
+    HTMLSanitizer sanitizer;
+
+    // Simulate sanitize() output: an img tag with HTML dimensions as metadata.
+    QString sanitized = "<?xml version=\"1.0\"?>"
+                        "<html id=\"FangID_1\"><body id=\"FangID_2\">"
+                        "<img id=\"FangID_3\" src=\"http://example.com/photo.jpg\""
+                        " width=\"200\" height=\"100\"/>"
+                        "</body></html>";
+
+    // Provide a fetched image with different dimensions.
+    QMap<QUrl, ImageData> results;
+    results[QUrl("http://example.com/photo.jpg")] = createImageData(800, 600);
+
+    QString output = sanitizer.finalize(sanitized, results);
+
+    // Should use fetched dimensions (800x600), not HTML (200x100).
+    QVERIFY(output.contains("width=\"800\""));
+    QVERIFY(output.contains("height=\"600\""));
+    QVERIFY(!output.contains("width=\"200\""));
+}
+
+// Test that finalize() filters tracking pixels detected by fetched dimensions.
+void TestRawFeedRewriterTest::testFinalizeFilterTrackingPixel()
+{
+    HTMLSanitizer sanitizer;
+
+    QString sanitized = "<?xml version=\"1.0\"?>"
+                        "<html id=\"FangID_1\"><body id=\"FangID_2\">"
+                        "<p id=\"FangID_3\">text</p>"
+                        "<img id=\"FangID_4\" src=\"http://example.com/pixel.gif\"/>"
+                        "</body></html>";
+
+    // Fetched image is 1x1 - a tracking pixel.
+    QMap<QUrl, ImageData> results;
+    results[QUrl("http://example.com/pixel.gif")] = createImageData(1, 1);
+
+    QString output = sanitizer.finalize(sanitized, results);
+
+    QVERIFY(!output.contains("pixel.gif"));
+    QVERIFY(output.contains("text"));
+}
+
+// Test that a 2x2 image is filtered (boundary case - must be > 2 to keep).
+void TestRawFeedRewriterTest::testFinalizeFilterTrackingPixelBoundary()
+{
+    HTMLSanitizer sanitizer;
+
+    QString sanitized = "<?xml version=\"1.0\"?>"
+                        "<html id=\"FangID_1\"><body id=\"FangID_2\">"
+                        "<p id=\"FangID_3\">text</p>"
+                        "<img id=\"FangID_4\" src=\"http://example.com/tiny.gif\"/>"
+                        "</body></html>";
+
+    QMap<QUrl, ImageData> results;
+    results[QUrl("http://example.com/tiny.gif")] = createImageData(2, 2);
+
+    QString output = sanitizer.finalize(sanitized, results);
+
+    QVERIFY(!output.contains("tiny.gif"));
+    QVERIFY(output.contains("text"));
+}
+
+// Test that a 3x3 image is kept (boundary case - smallest non-tracking-pixel).
+void TestRawFeedRewriterTest::testFinalizeKeepSmallImage()
+{
+    HTMLSanitizer sanitizer;
+
+    QString sanitized = "<?xml version=\"1.0\"?>"
+                        "<html id=\"FangID_1\"><body id=\"FangID_2\">"
+                        "<img id=\"FangID_3\" src=\"http://example.com/small.png\"/>"
+                        "</body></html>";
+
+    QMap<QUrl, ImageData> results;
+    results[QUrl("http://example.com/small.png")] = createImageData(3, 3);
+
+    QString output = sanitizer.finalize(sanitized, results);
+
+    QVERIFY(output.contains("width=\"3\""));
+    QVERIFY(output.contains("height=\"3\""));
+}
+
+// Test that one tiny dimension is enough to filter (e.g. 1x1000 spacer gif).
+void TestRawFeedRewriterTest::testFinalizeFilterOneTinyDimension()
+{
+    HTMLSanitizer sanitizer;
+
+    QString sanitized = "<?xml version=\"1.0\"?>"
+                        "<html id=\"FangID_1\"><body id=\"FangID_2\">"
+                        "<p id=\"FangID_3\">text</p>"
+                        "<img id=\"FangID_4\" src=\"http://example.com/spacer.gif\"/>"
+                        "</body></html>";
+
+    QMap<QUrl, ImageData> results;
+    results[QUrl("http://example.com/spacer.gif")] = createImageData(1, 1000);
+
+    QString output = sanitizer.finalize(sanitized, results);
+
+    QVERIFY(!output.contains("spacer.gif"));
+    QVERIFY(output.contains("text"));
+}
+
+// Test that finalize() keeps images with HTML dimensions when fetch fails.
+void TestRawFeedRewriterTest::testFinalizeFetchFailedWithDimensions()
+{
+    HTMLSanitizer sanitizer;
+
+    // Image has width/height metadata from sanitize() (known good dimensions).
+    QString sanitized = "<?xml version=\"1.0\"?>"
+                        "<html id=\"FangID_1\"><body id=\"FangID_2\">"
+                        "<img id=\"FangID_3\" src=\"http://example.com/photo.jpg\""
+                        " width=\"640\" height=\"480\"/>"
+                        "</body></html>";
+
+    // Empty results - fetch failed.
+    QMap<QUrl, ImageData> results;
+
+    QString output = sanitizer.finalize(sanitized, results);
+
+    // Should keep the image with HTML dimensions.
+    QVERIFY(output.contains("photo.jpg"));
+    QVERIFY(output.contains("width=\"640\""));
+    QVERIFY(output.contains("height=\"480\""));
+}
+
+// Test that finalize() skips images with no dimensions when fetch fails.
+void TestRawFeedRewriterTest::testFinalizeFetchFailedNoDimensions()
+{
+    HTMLSanitizer sanitizer;
+
+    // Image has no width/height metadata - could be a tracking pixel.
+    QString sanitized = "<?xml version=\"1.0\"?>"
+                        "<html id=\"FangID_1\"><body id=\"FangID_2\">"
+                        "<p id=\"FangID_3\">text</p>"
+                        "<img id=\"FangID_4\" src=\"http://example.com/mystery.gif\"/>"
+                        "</body></html>";
+
+    // Empty results - fetch failed.
+    QMap<QUrl, ImageData> results;
+
+    QString output = sanitizer.finalize(sanitized, results);
+
+    // Should skip the image - can't verify it's not a tracking pixel.
+    QVERIFY(!output.contains("mystery.gif"));
+    QVERIFY(output.contains("text"));
 }
 
 QTEST_MAIN(TestRawFeedRewriterTest)
