@@ -8,6 +8,7 @@
 
 #include "../../src/utilities/RawFeedRewriter.h"
 #include "../../src/utilities/HTMLSanitizer.h"
+#include "../MockNetworkAccessManager.h"
 
 class TestRawFeedRewriterTest : public QObject
 {
@@ -23,6 +24,9 @@ private:
 
     // Create an ImageData with a solid-color image of the given dimensions.
     static ImageData createImageData(int width, int height);
+
+    // Create raw PNG bytes at the given dimensions (for mock network responses).
+    static QByteArray createTestPNGData(int width, int height);
 
 private slots:
     void testCase1();
@@ -53,28 +57,49 @@ QString TestRawFeedRewriterTest::normalizeImageSrc(const QString& html)
     return normalized;
 }
 
+QByteArray TestRawFeedRewriterTest::createTestPNGData(int width, int height)
+{
+    QImage image(width, height, QImage::Format_RGB32);
+    image.fill(Qt::red);
+    QByteArray ba;
+    QBuffer buffer(&ba);
+    buffer.open(QIODevice::WriteOnly);
+    image.save(&buffer, "PNG");
+    return ba;
+}
+
 void TestRawFeedRewriterTest::testCase1()
 {
-    // NOTE: In order to achieve consistent results, the QT_HASH_SEED environment variable MUST
-    // be set to 1
-
     QFETCH(QString, input);
     QFETCH(QString, output);
-    
+
+    // Mock network: return synthetic images for known URLs so tests don't hit the internet.
+    MockNetworkAccessManager mockManager;
+    mockManager.addResponse(QUrl("https://www.mrericsir.com/blog/wp-content/uploads/IMG_9016-768x1024.jpeg"),
+                            createTestPNGData(768, 1024));
+    mockManager.addResponse(QUrl("https://c4.staticflickr.com/8/7684/17161096410_55dcb799a3.jpg"),
+                            createTestPNGData(500, 375));
+    mockManager.addResponse(QUrl("https://burritojustice.files.wordpress.com/2013/10/bikes-to-books-map-crop.jpg?w=600&h=867"),
+                            createTestPNGData(600, 866));
+    mockManager.addResponse(QUrl("https://burritojustice.files.wordpress.com/2015/03/bikes-to-books-timeline-crop.png?w=600&h=635"),
+                            createTestPNGData(600, 634));
+    // imgur is expected to fail — the Streetsblog test verifies HTML-dimension fallback.
+    mockManager.addErrorResponse(QUrl("http://i.imgur.com/523Qeov.jpg"),
+                                 QNetworkReply::ContentNotFoundError);
+
     // Setup our "fake" raw news list.
     RawNews news;
     news.description = input;
     QList<RawNews*> newsList;
     newsList.append(&news);
-    
+
     // Send it to the rewriter.
-    RawFeedRewriter rewriter;
+    RawFeedRewriter rewriter(nullptr, &mockManager);
     QSignalSpy spy(&rewriter, &RawFeedRewriter::finished);
     rewriter.rewrite(&newsList);
-    
+
     if (!spy.count()) {
-        // If the signal hasn't fired yet it's because there's images to be downloaded.
-        QVERIFY(spy.wait());  // default: up to 5 seconds
+        QVERIFY(spy.wait(5000));
     }
     
     QCOMPARE(spy.count(), 1);

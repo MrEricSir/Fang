@@ -28,7 +28,8 @@ class RawFeedRewriter : public FangObject
 {
     Q_OBJECT
 public:
-    explicit RawFeedRewriter(QObject *parent = nullptr);
+    explicit RawFeedRewriter(QObject *parent = nullptr,
+                             QNetworkAccessManager* networkManager = nullptr);
 
 
 signals:

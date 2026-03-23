@@ -1,6 +1,9 @@
 # TestRawFeedRewriter test executable (uses TidyLib)
 qt_add_executable(tst_testrawfeedrewritertest
     tst_testrawfeedrewritertest.cpp
+    # Mock objects for testing
+    ${CMAKE_SOURCE_DIR}/test/MockNetworkAccessManager.cpp
+    ${CMAKE_SOURCE_DIR}/test/MockNetworkAccessManager.h
     # Shared sources from main project
     ${CMAKE_SOURCE_DIR}/src/utilities/RawFeedRewriter.cpp
     ${CMAKE_SOURCE_DIR}/src/utilities/HTMLSanitizer.cpp

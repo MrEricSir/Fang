@@ -5,11 +5,11 @@
 
 #include "ImageCache.h"
 
-RawFeedRewriter::RawFeedRewriter(QObject *parent) :
+RawFeedRewriter::RawFeedRewriter(QObject *parent, QNetworkAccessManager* networkManager) :
     FangObject(parent),
     newsList(nullptr),
     sanitizer(),
-    imageGrabber()
+    imageGrabber(nullptr, networkManager)
 {
     connect(&imageGrabber, &ImageGrabber::finished, this, &RawFeedRewriter::onImageGrabberFinished);
     connect(&sanitizeWatcher, &QFutureWatcher<QSet<QUrl>>::finished, this, &RawFeedRewriter::onSanitizeFinished);
