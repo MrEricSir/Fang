@@ -11,7 +11,7 @@ class RawFeed : public FangObject
     Q_OBJECT
 
 public:
-    enum FeedType { RSS = 0, GoogleNewsSitemap = 1 };
+    enum FeedType { RSS = 0, GoogleNewsSitemap = 1, JSONFeed = 2 };
 
     explicit RawFeed(QObject *parent = nullptr);
     virtual ~RawFeed();

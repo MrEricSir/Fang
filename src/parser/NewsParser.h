@@ -9,6 +9,7 @@
 
 #include "../network/FangNetworkAccessManager.h"
 #include "ParserInterface.h"
+#include "JSONFeedParser.h"
 
 // Max number of HTTP redirects to prevent looping.
 #define MAX_PARSER_REDIRECTS 10
@@ -90,6 +91,8 @@ private:
 
     int redirectAttempts;
     bool permanentRedirect;
+
+    QByteArray rawData;
 
     QThread workerThread;
 };

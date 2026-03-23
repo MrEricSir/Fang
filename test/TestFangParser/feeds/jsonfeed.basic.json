@@ -1,0 +1,51 @@
+{
+    "version": "https://jsonfeed.org/version/1.1",
+    "title": "JSON Feed Example",
+    "home_page_url": "https://example.org/",
+    "feed_url": "https://example.org/feed.json",
+    "description": "A sample JSON Feed",
+    "icon": "https://example.org/icon.png",
+    "favicon": "https://example.org/favicon.ico",
+    "authors": [
+        {
+            "name": "John Doe",
+            "url": "https://example.org/"
+        }
+    ],
+    "items": [
+        {
+            "id": "item-1",
+            "url": "https://example.org/article-1",
+            "title": "First Article",
+            "content_html": "<p>This is the <strong>first</strong> article.</p>",
+            "content_text": "This is the first article.",
+            "summary": "A brief summary of the first article.",
+            "date_published": "2026-03-20T10:00:00Z",
+            "image": "https://example.org/images/article1.jpg",
+            "authors": [
+                {
+                    "name": "Alice Smith"
+                }
+            ]
+        },
+        {
+            "id": "item-2",
+            "url": "https://example.org/article-2",
+            "title": "Second Article",
+            "content_html": "<p>This is the second article.</p>",
+            "date_published": "2026-03-19T14:30:00+05:00",
+            "authors": [
+                {
+                    "name": "Bob Jones"
+                }
+            ]
+        },
+        {
+            "id": "item-3",
+            "url": "https://example.org/article-3",
+            "title": "Third Article",
+            "content_text": "Plain text only for this article.",
+            "date_published": "2026-03-18T08:00:00Z"
+        }
+    ]
+}

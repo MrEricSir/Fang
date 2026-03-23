@@ -1,0 +1,27 @@
+{
+    "version": "https://jsonfeed.org/version/1",
+    "title": "Legacy v1 Feed",
+    "home_page_url": "https://legacy.example.org/",
+    "items": [
+        {
+            "id": "legacy-1",
+            "url": "https://legacy.example.org/post-1",
+            "title": "Legacy Post",
+            "content_html": "<p>A post from a v1 feed.</p>",
+            "date_published": "2026-01-15T12:00:00Z",
+            "author": {
+                "name": "Legacy Author"
+            }
+        },
+        {
+            "id": "legacy-2",
+            "url": "https://legacy.example.org/post-2",
+            "title": "Another Legacy Post",
+            "content_text": "Text-only legacy post.",
+            "date_published": "2026-01-14T09:00:00Z",
+            "author": {
+                "name": "Another Author"
+            }
+        }
+    ]
+}

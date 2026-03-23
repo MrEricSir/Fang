@@ -157,6 +157,7 @@ qt_add_executable(Fang WIN32
     src/utilities/BatchFeedDiscovery.cpp
     src/FangObject.cpp
     src/parser/ParserXMLWorker.cpp
+    src/parser/JSONFeedParser.cpp
     src/network/FangNetworkAccessManager.cpp
     src/network/FangQQmlNetworkAccessManagerFactory.cpp
     src/network/NetworkRetryPolicy.cpp
@@ -238,6 +239,7 @@ qt_add_executable(Fang WIN32
     src/utilities/BatchFeedDiscovery.h
     src/FangObject.h
     src/parser/ParserXMLWorker.h
+    src/parser/JSONFeedParser.h
     src/network/FangNetworkAccessManager.h
     src/network/FangQQmlNetworkAccessManagerFactory.h
     src/network/NetworkRetryPolicy.h

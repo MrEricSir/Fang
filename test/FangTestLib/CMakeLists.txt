@@ -15,6 +15,7 @@ add_library(FangTestLib STATIC
     ${CMAKE_SOURCE_DIR}/src/parser/ParserInterface.cpp
     ${CMAKE_SOURCE_DIR}/src/parser/ParserXMLWorker.cpp
     ${CMAKE_SOURCE_DIR}/src/parser/NewsParser.cpp
+    ${CMAKE_SOURCE_DIR}/src/parser/JSONFeedParser.cpp
     ${CMAKE_SOURCE_DIR}/src/parser/RawFeed.cpp
     ${CMAKE_SOURCE_DIR}/src/parser/RawNews.cpp
     ${CMAKE_SOURCE_DIR}/src/parser/BatchNewsParser.cpp

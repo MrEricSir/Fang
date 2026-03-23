@@ -96,6 +96,9 @@ private slots:
     void testESPNFullFlow();
     void testCommonPathFallbackFlow();
 
+    // JSON Feed link detection
+    void testJSONFeedLinkDetection();
+
     // Deduplication tests
     void testDeduplicateRepetitiveTitles();
     void testDeduplicateNoRepetition();
@@ -2017,6 +2020,36 @@ void TestFangFeedDiscovery::testDeduplicateSmallList()
 
     // 3 == threshold of 3, so NOT deduped
     QCOMPARE(result.size(), 3);
+}
+
+// =====================================================================
+// JSON Feed link detection
+// =====================================================================
+
+void TestFangFeedDiscovery::testJSONFeedLinkDetection()
+{
+    // HTML page with a JSON Feed link tag.
+    QString html = R"(<!DOCTYPE html>
+<html>
+<head>
+<title>Test Site</title>
+<link rel="alternate" type="application/feed+json" title="JSON Feed" href="https://example.org/feed.json" />
+<link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://example.org/feed.xml" />
+</head>
+<body><p>Hello</p></body>
+</html>)";
+
+    WebPageGrabber grabber;
+    QString* xmlDoc = grabber.load(html.toUtf8());
+    QVERIFY(xmlDoc != nullptr);
+
+    FeedDiscovery fd;
+    QList<QString> feedURLs = fd.parseFeedsFromXHTML(*xmlDoc);
+
+    QVERIFY2(feedURLs.contains("https://example.org/feed.json"),
+             "JSON Feed URL not found");
+    QVERIFY2(feedURLs.contains("https://example.org/feed.xml"),
+             "RSS Feed URL not found");
 }
 
 QTEST_MAIN(TestFangFeedDiscovery)

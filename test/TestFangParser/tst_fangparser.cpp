@@ -5,6 +5,8 @@
 #include <QNetworkAccessManager>
 
 #include "../../src/parser/NewsParser.h"
+#include "../../src/parser/JSONFeedParser.h"
+#include "../../src/parser/RawFeed.h"
 #include "../MockNetworkAccessManager.h"
 
 /**
@@ -31,6 +33,12 @@ private slots:
 
     // Three-letter timezone parsing
     void testTimezoneAbbreviations();
+
+    // JSON Feed tests
+    void testJSONFeedContentMapping();
+    void testJSONFeedAuthors();
+    void testJSONFeedMediaImage();
+    void testJSONFeedFeedType();
 
     // Permanent redirect detection
     void testPermanentRedirect301();
@@ -667,6 +675,33 @@ void TestFangParser::parseTest_data()
         << QDateTime::fromString("01 Jan 2024 12:00:00", dtf)
         << false;
 
+    QTest::newRow("JSON Feed Basic") << "jsonfeed.basic.json" << "JSON Feed Example"
+        << "https://example.org/"
+        << 3
+        << "First Article"
+        << "https://example.org/article-1"
+        << "item-1"
+        << QDateTime::fromString("20 Mar 2026 10:00:00", dtf)
+        << false;
+
+    QTest::newRow("JSON Feed Minimal") << "jsonfeed.minimal.json" << "Minimal Feed"
+        << ""
+        << 1
+        << ""
+        << ""
+        << "only-item"
+        << QDateTime::fromString("01 Mar 2026 00:00:00", dtf)
+        << false;
+
+    QTest::newRow("JSON Feed v1") << "jsonfeed.v1.json" << "Legacy v1 Feed"
+        << "https://legacy.example.org/"
+        << 2
+        << "Legacy Post"
+        << "https://legacy.example.org/post-1"
+        << "legacy-1"
+        << QDateTime::fromString("15 Jan 2026 12:00:00", dtf)
+        << false;
+
     QTest::newRow("EmptyFeed") << "emptyfeed.rss" << "Empty Feed"
         << "https://www.google.com/"
         << 0
@@ -1061,6 +1096,105 @@ void TestFangParser::testNoRedirect()
     QCOMPARE(spy.count(), 1);
     QVERIFY(!parser.wasPermanentRedirect());
     QCOMPARE(parser.getURL(), feedUrl);
+}
+
+// =====================================================================
+// JSON Feed tests
+// =====================================================================
+
+void TestFangParser::testJSONFeedContentMapping()
+{
+    // Verify content_html takes priority over content_text.
+    NewsParser parser(this);
+    QSignalSpy spy(&parser, &NewsParser::done);
+
+    QString projectPath = PROJECT_PATH;
+    parser.parseFile(projectPath + "/feeds/jsonfeed.basic.json");
+    if (!spy.count()) {
+        spy.wait(10000);
+    }
+    QCOMPARE(spy.count(), 1);
+
+    RawFeed* feed = parser.getFeed();
+    QVERIFY(feed != nullptr);
+    QVERIFY(feed->items.size() >= 3);
+
+    // First item has both content_html and content_text - html should win.
+    QCOMPARE(feed->items[0]->content, "<p>This is the <strong>first</strong> article.</p>");
+    QCOMPARE(feed->items[0]->description, "A brief summary of the first article.");
+
+    // Third item has content_text only - should become content.
+    QCOMPARE(feed->items[2]->content, "Plain text only for this article.");
+    // description should also be set from content_text when no summary.
+    QCOMPARE(feed->items[2]->description, "Plain text only for this article.");
+}
+
+void TestFangParser::testJSONFeedAuthors()
+{
+    NewsParser parserV11(this);
+    QSignalSpy spyV11(&parserV11, &NewsParser::done);
+    QString projectPath = PROJECT_PATH;
+
+    // v1.1 uses "authors" array.
+    parserV11.parseFile(projectPath + "/feeds/jsonfeed.basic.json");
+    if (!spyV11.count()) {
+        spyV11.wait(10000);
+    }
+    QCOMPARE(spyV11.count(), 1);
+
+    RawFeed* feedV11 = parserV11.getFeed();
+    QVERIFY(feedV11 != nullptr);
+    QCOMPARE(feedV11->items[0]->author, "Alice Smith");
+
+    // v1.0 uses "author" object.
+    NewsParser parserV1(this);
+    QSignalSpy spyV1(&parserV1, &NewsParser::done);
+    parserV1.parseFile(projectPath + "/feeds/jsonfeed.v1.json");
+    if (!spyV1.count()) {
+        spyV1.wait(10000);
+    }
+    QCOMPARE(spyV1.count(), 1);
+
+    RawFeed* feedV1 = parserV1.getFeed();
+    QVERIFY(feedV1 != nullptr);
+    QCOMPARE(feedV1->items[0]->author, "Legacy Author");
+}
+
+void TestFangParser::testJSONFeedMediaImage()
+{
+    NewsParser parser(this);
+    QSignalSpy spy(&parser, &NewsParser::done);
+    QString projectPath = PROJECT_PATH;
+
+    parser.parseFile(projectPath + "/feeds/jsonfeed.basic.json");
+    if (!spy.count()) {
+        spy.wait(10000);
+    }
+    QCOMPARE(spy.count(), 1);
+
+    RawFeed* feed = parser.getFeed();
+    QVERIFY(feed != nullptr);
+    QCOMPARE(feed->items[0]->mediaImageURL, "https://example.org/images/article1.jpg");
+
+    // Second item has no image.
+    QVERIFY(feed->items[1]->mediaImageURL.isEmpty());
+}
+
+void TestFangParser::testJSONFeedFeedType()
+{
+    NewsParser parser(this);
+    QSignalSpy spy(&parser, &NewsParser::done);
+    QString projectPath = PROJECT_PATH;
+
+    parser.parseFile(projectPath + "/feeds/jsonfeed.basic.json");
+    if (!spy.count()) {
+        spy.wait(10000);
+    }
+    QCOMPARE(spy.count(), 1);
+
+    RawFeed* feed = parser.getFeed();
+    QVERIFY(feed != nullptr);
+    QCOMPARE(feed->feedType, RawFeed::JSONFeed);
 }
 
 QTEST_MAIN(TestFangParser)

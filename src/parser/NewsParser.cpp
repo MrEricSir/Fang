@@ -125,6 +125,7 @@ void NewsParser::parseFile(const QString &filename)
     }
 
     QByteArray data = file.readAll();
+    rawData = data;
     emit triggerAddXML(data);
     emit triggerDocEnd();
 }
@@ -159,6 +160,7 @@ void NewsParser::readyRead()
 
     if (statusCode >= 200 && statusCode < 300) {
         QByteArray data = currentReply->readAll();
+        rawData.append(data);
         emit triggerAddXML(data);
     }
 }
@@ -266,7 +268,19 @@ void NewsParser::workerDone(RawFeed* rawFeed)
         }
     }
     
-    // What we found must not have been an RSS/Atom feed.
+    // XML parse failed so try JSON Feed instead.
+    if (!rawData.isEmpty()) {
+        RawFeed* jsonFeed = JSONFeedParser::parse(rawData);
+        if (jsonFeed && (jsonFeed->items.size() > 0 || !jsonFeed->title.isEmpty())) {
+            feed = jsonFeed;
+            feed->url = finalFeedURL;
+            result = NewsParser::OK;
+            emit done();
+            return;
+        }
+        delete jsonFeed;
+    }
+
     result = NewsParser::PARSE_ERROR;
     emit done();
 }
@@ -278,5 +292,6 @@ void NewsParser::initParse(const QUrl& url)
     finalFeedURL = url;
     respEtag = QString();
     respLastModified = QString();
+    rawData.clear();
     emit triggerDocStart();
 }

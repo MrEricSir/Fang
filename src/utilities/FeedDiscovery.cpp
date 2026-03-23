@@ -282,7 +282,8 @@ QList<QString> FeedDiscovery::parseFeedsFromXHTML(const QString& document)
                     attributes.value("", S_REL).toString().toLower() == "alternate" &&
                     attributes.hasAttribute(S_TYPE) &&
                     (attributes.value("", S_TYPE).toString().toLower() == "application/rss+xml" ||
-                     attributes.value("", S_TYPE).toString().toLower() == "application/atom+xml")) {
+                     attributes.value("", S_TYPE).toString().toLower() == "application/atom+xml" ||
+                     attributes.value("", S_TYPE).toString().toLower() == "application/feed+json")) {
                     // Run some checks and then add our feed if it seems reasonable to do so.
                     QString url = attributes.value("", S_HREF).toString();
 
@@ -374,6 +375,7 @@ QStringList FeedDiscovery::commonFeedPaths()
         "/feed",
         "/rss",
         "/feed.xml",
+        "/feed.json",
         "/rss.xml",
         "/rss2.0.xml",
         "/atom.xml",

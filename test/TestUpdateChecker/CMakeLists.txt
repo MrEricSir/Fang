@@ -11,6 +11,8 @@ qt_add_executable(tst_updatechecker
     ${CMAKE_SOURCE_DIR}/src/utilities/SettingsInterface.h
     ${CMAKE_SOURCE_DIR}/src/parser/NewsParser.cpp
     ${CMAKE_SOURCE_DIR}/src/parser/NewsParser.h
+    ${CMAKE_SOURCE_DIR}/src/parser/JSONFeedParser.cpp
+    ${CMAKE_SOURCE_DIR}/src/parser/JSONFeedParser.h
     ${CMAKE_SOURCE_DIR}/src/parser/ParserInterface.cpp
     ${CMAKE_SOURCE_DIR}/src/parser/ParserInterface.h
     ${CMAKE_SOURCE_DIR}/src/parser/ParserXMLWorker.cpp
