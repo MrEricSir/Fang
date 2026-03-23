@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd">
+<channel>
+<title><![CDATA[Whitepaper]]></title>
+<description><![CDATA[Whitepaper is a newsletter about design, technology, and culture.]]></description>
+<link>https://www.whitepaper.mx</link>
+<generator>Substack</generator>
+<lastBuildDate>Mon, 23 Mar 2026 08:00:00 GMT</lastBuildDate>
+<itunes:owner>
+<itunes:email><![CDATA[hello@whitepaper.mx]]></itunes:email>
+<itunes:name><![CDATA[Whitepaper]]></itunes:name>
+</itunes:owner>
+<itunes:author><![CDATA[Whitepaper]]></itunes:author>
+<itunes:block><![CDATA[Yes]]></itunes:block>
+<item>
+<title><![CDATA[The State of Design Tools in 2026]]></title>
+<description><![CDATA[A look at how design tools have evolved.]]></description>
+<link>https://www.whitepaper.mx/p/the-state-of-design-tools</link>
+<guid isPermaLink="false">https://www.whitepaper.mx/p/the-state-of-design-tools</guid>
+<dc:creator><![CDATA[Whitepaper]]></dc:creator>
+<pubDate>Fri, 21 Mar 2026 14:00:00 GMT</pubDate>
+<enclosure url="https://substackcdn.com/image/example3.png" length="0" type="image/png"/>
+</item>
+</channel>
+</rss>

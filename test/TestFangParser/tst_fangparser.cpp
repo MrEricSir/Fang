@@ -675,6 +675,38 @@ void TestFangParser::parseTest_data()
         << ""
         << QDateTime::currentDateTime()
         << false;
+
+    // Real podcast: itunes:category at channel level, itunes:duration/episodeType in items,
+    // and audio/mpeg enclosures.
+    QTest::newRow("This American Life") << "thisamericanlife.rss" << "This American Life"
+        << "https://www.thisamericanlife.org"
+        << 2
+        << "883: Call Your Parents"
+        << "https://www.thisamericanlife.org/call-your-parents"
+        << "46124 at https://www.thisamericanlife.org"
+        << QDateTime::fromString("22 Mar 2026 22:00:00", dtf)
+        << true;
+
+    // Substack blog (not a podcast): has itunes:owner/author/block at channel level
+    // but no podcast-specific itunes elements. Enclosures are image/jpeg.
+    QTest::newRow("N Judah Substack") << "njudah.substack.rss" << "N Judah Chronicles+"
+        << "https://njudah.substack.com"
+        << 2
+        << "Photo Post: An Afternoon at the Antiquarian Book Fair"
+        << "https://njudah.substack.com/p/photo-post-an-afternoon-at-the-antiquarian"
+        << "https://njudah.substack.com/p/photo-post-an-afternoon-at-the-antiquarian"
+        << QDateTime::fromString("03 Mar 2026 00:46:03", dtf)
+        << false;
+
+    // Another Substack blog (not a podcast): same itunes metadata pattern.
+    QTest::newRow("Whitepaper Substack") << "whitepaper.substack.rss" << "Whitepaper"
+        << "https://www.whitepaper.mx"
+        << 1
+        << "The State of Design Tools in 2026"
+        << "https://www.whitepaper.mx/p/the-state-of-design-tools"
+        << "https://www.whitepaper.mx/p/the-state-of-design-tools"
+        << QDateTime::fromString("21 Mar 2026 14:00:00", dtf)
+        << false;
 }
 
 // =====================================================================

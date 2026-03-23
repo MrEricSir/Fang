@@ -110,8 +110,8 @@ Dialog {
     
     DialogText {
         visible: validator.hasPodcastFeed;
-        text: "This appears to be a podcast feed. Fang is designed for news -- audio content won't play.";
-        color: style.color.fadedText;
+        text: "This appears to be a podcast feed. Fang is not designed for playing audio content.";
+        textColor: style.color.fadedText;
     }
 
     DialogGroup {

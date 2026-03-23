@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd">
+<channel>
+ <title>This American Life</title>
+ <link>https://www.thisamericanlife.org</link>
+ <description>Each week we choose a theme. Then anything can happen.</description>
+ <language>en</language>
+ <itunes:author>This American Life</itunes:author>
+ <itunes:explicit>false</itunes:explicit>
+ <itunes:owner>
+  <itunes:email>web@thislife.org</itunes:email>
+ </itunes:owner>
+ <itunes:category text="Society &amp; Culture" />
+ <itunes:category text="Arts" />
+ <itunes:image href="https://thisamericanlife.org/sites/all/themes/thislife/img/tal-logo-3000x3000.png" />
+<item>
+ <title>883: Call Your Parents</title>
+ <link>https://www.thisamericanlife.org/call-your-parents</link>
+ <description>In the early days of the radio show, Ira did a series of interviews with his parents that completely changed his relationship with them.</description>
+ <pubDate>Sun, 22 Mar 2026 18:00:00 -0400</pubDate>
+ <guid isPermaLink="false">46124 at https://www.thisamericanlife.org</guid>
+ <itunes:episodeType>full</itunes:episodeType>
+ <itunes:episode>883</itunes:episode>
+ <itunes:title>Call Your Parents</itunes:title>
+ <itunes:author>This American Life</itunes:author>
+ <itunes:explicit>false</itunes:explicit>
+ <itunes:duration>01:00:19</itunes:duration>
+ <enclosure url="https://example.com/tal-883.mp3" type="audio/mpeg" />
+</item>
+<item>
+ <title>882: New Boss</title>
+ <link>https://www.thisamericanlife.org/new-boss</link>
+ <description>Stories of people adjusting to someone new being in charge.</description>
+ <pubDate>Sun, 15 Mar 2026 18:00:00 -0400</pubDate>
+ <guid isPermaLink="false">46100 at https://www.thisamericanlife.org</guid>
+ <itunes:episodeType>full</itunes:episodeType>
+ <itunes:episode>882</itunes:episode>
+ <itunes:duration>00:58:42</itunes:duration>
+ <enclosure url="https://example.com/tal-882.mp3" type="audio/mpeg" />
+</item>
+</channel>
+</rss>

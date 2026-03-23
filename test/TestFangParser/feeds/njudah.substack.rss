@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd">
+<channel>
+<title><![CDATA[N Judah Chronicles+]]></title>
+<description><![CDATA[I write about San Francisco urban life and Muni.]]></description>
+<link>https://njudah.substack.com</link>
+<generator>Substack</generator>
+<lastBuildDate>Mon, 23 Mar 2026 09:10:04 GMT</lastBuildDate>
+<itunes:owner>
+<itunes:email><![CDATA[njudah@substack.com]]></itunes:email>
+<itunes:name><![CDATA[Greg Dewar]]></itunes:name>
+</itunes:owner>
+<itunes:author><![CDATA[Greg Dewar]]></itunes:author>
+<itunes:block><![CDATA[Yes]]></itunes:block>
+<item>
+<title><![CDATA[Photo Post: An Afternoon at the Antiquarian Book Fair]]></title>
+<description><![CDATA[Recently, I had a chance to attend the annual Antiquarian Book Fair.]]></description>
+<link>https://njudah.substack.com/p/photo-post-an-afternoon-at-the-antiquarian</link>
+<guid isPermaLink="false">https://njudah.substack.com/p/photo-post-an-afternoon-at-the-antiquarian</guid>
+<dc:creator><![CDATA[Greg Dewar]]></dc:creator>
+<pubDate>Tue, 03 Mar 2026 00:46:03 GMT</pubDate>
+<enclosure url="https://substackcdn.com/image/example.jpeg" length="0" type="image/jpeg"/>
+</item>
+<item>
+<title><![CDATA[Muni Mondays: Route Changes Coming Soon]]></title>
+<description><![CDATA[A roundup of upcoming Muni service changes.]]></description>
+<link>https://njudah.substack.com/p/muni-mondays-route-changes</link>
+<guid isPermaLink="false">https://njudah.substack.com/p/muni-mondays-route-changes</guid>
+<dc:creator><![CDATA[Greg Dewar]]></dc:creator>
+<pubDate>Mon, 24 Feb 2026 17:00:00 GMT</pubDate>
+<enclosure url="https://substackcdn.com/image/example2.jpeg" length="0" type="image/jpeg"/>
+</item>
+</channel>
+</rss>

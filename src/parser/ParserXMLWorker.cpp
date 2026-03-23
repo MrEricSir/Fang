@@ -126,9 +126,15 @@ void ParserXMLWorker::elementStart()
     currentPrefix = xml.prefix().toString().toLower();
     hasType = xml.attributes().hasAttribute("type");
 
-    // Podcast detection: itunes namespace is the strongest signal.
+    // Podcast detection: only flag itunes elements that are specific to actual
+    // podcast feeds. Many non-podcast feeds (e.g. Substack blogs) include generic
+    // itunes metadata like itunes:owner, itunes:author, and itunes:block.
     if (currentPrefix == "itunes") {
-        hasPodcastSignals = true;
+        if (currentTag == "duration" || currentTag == "episode"
+                || currentTag == "episodetype" || currentTag == "season"
+                || currentTag == "explicit" || currentTag == "category") {
+            hasPodcastSignals = true;
+        }
     }
 
     // Podcast detection: audio enclosures.
