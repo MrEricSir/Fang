@@ -3,8 +3,11 @@
 #include <QCoreApplication>
 #include <QSignalSpy>
 #include <QRegularExpression>
+#include <QBuffer>
+#include <QImage>
 
 #include "../../src/utilities/RawFeedRewriter.h"
+#include "../../src/utilities/HTMLSanitizer.h"
 
 class TestRawFeedRewriterTest : public QObject
 {
@@ -15,12 +18,23 @@ public:
 
 private:
     // Normalize image src attributes for comparison.
-    // Replaces base64 data URIs with a placeholder so we can compare structure.
+    // Replaces cached image paths with a placeholder so we can compare structure.
     static QString normalizeImageSrc(const QString& html);
+
+    // Create an ImageData with a solid-color image of the given dimensions.
+    static ImageData createImageData(int width, int height);
 
 private slots:
     void testCase1();
     void testCase1_data();
+
+    void testFinalizeUseFetchedDimensions();
+    void testFinalizeFilterTrackingPixel();
+    void testFinalizeFilterTrackingPixelBoundary();
+    void testFinalizeKeepSmallImage();
+    void testFinalizeFilterOneTinyDimension();
+    void testFinalizeFetchFailedWithDimensions();
+    void testFinalizeFetchFailedNoDimensions();
 };
 
 TestRawFeedRewriterTest::TestRawFeedRewriterTest()
@@ -29,11 +43,13 @@ TestRawFeedRewriterTest::TestRawFeedRewriterTest()
 
 QString TestRawFeedRewriterTest::normalizeImageSrc(const QString& html)
 {
-    // Replace base64 data URIs with a placeholder for comparison.
-    // This allows us to verify structure without matching exact image data.
     QString normalized = html;
-    QRegularExpression dataUriRegex("src=\"data:image/[^;]+;base64,[^\"]+\"");
-    normalized.replace(dataUriRegex, "src=\"[BASE64_IMAGE]\"");
+    // Cached image paths.
+    QRegularExpression cachedImageRegex("src=\"/images/[^\"]+\"");
+    normalized.replace(cachedImageRegex, "src=\"[CACHED_IMAGE]\"");
+    // Strip data-original-src attributes.
+    QRegularExpression originalSrcRegex(" data-original-src=\"[^\"]*\"");
+    normalized.replace(originalSrcRegex, "");
     return normalized;
 }
 
@@ -63,8 +79,7 @@ void TestRawFeedRewriterTest::testCase1()
     
     QCOMPARE(spy.count(), 1);
 
-    // Normalize both strings to handle base64 embedded images.
-    // Images that are successfully downloaded are now embedded as data URIs.
+    // Normalize both strings to handle cached images.
     QString normalizedOutput = normalizeImageSrc(news.description);
     QString normalizedExpected = normalizeImageSrc(output);
 
@@ -88,7 +103,19 @@ void TestRawFeedRewriterTest::testCase1_data()
     QTest::newRow("Anchor") << "<a href=\"http://www.google.com\">link</a>" << "<a href=\"http://www.google.com\">link</a>";
 
     // Newlines need to work within a pre tag.
-    QTest::newRow("Pre tag") << "<pre>hello\n\nhi</pre>" << "<pre> hello\n\nhi </pre>";
+    QTest::newRow("Pre tag") << "<pre>hello\n\nhi</pre>" << "<pre>\nhello\n\nhi\n</pre>";
+
+    // Newlines inside pre with nested code tags (e.g. syntax-highlighted code).
+    QTest::newRow("Pre with code") << "<pre><code>line1\nline2\nline3</code></pre>"
+                                   << "<pre><code>line1\nline2\nline3</code></pre>";
+
+    // Syntax-highlighted code with spans inside pre>code (The Daily WTF pattern).
+    QTest::newRow("Pre with spans") << "<pre><code><span class=\"k\">if</span> (x) {\n    y();\n}</code></pre>"
+                                    << "<pre><code><span>if</span> (x) {\n    y();\n}</code></pre>";
+
+    // Pre preserves newlines, but regular tags outside pre still collapse them.
+    QTest::newRow("Pre and normal") << "<pre>code\nhere</pre><p>normal text</p>"
+                                    << "<pre>\ncode\nhere\n</pre><p>normal text</p>";
 
     // Kill line breaks at the end.
     QTest::newRow("Line breaks") << "<p>Bunch of line breaks after last paragraph</p><br><br><br>"
@@ -109,23 +136,32 @@ void TestRawFeedRewriterTest::testCase1_data()
                                  "http://i.imgur.com/ohnlAzj.png\">Share on Facebook</a>"
                               << "<p>hi</p>";
 
-    // Image size rewriter (and reducer.)
-    // Images that are successfully downloaded are embedded as base64 data URIs for offline viewing.
+    // Image caching and dimension passthrough.
+    // Images that are successfully downloaded are cached for offline viewing.
+    // Original dimensions are written to the HTML for browser aspect-ratio layout;
+    // CSS handles the max-width cap.
     QTest::newRow("Image test") << "<img src=\"https://www.mrericsir.com/blog/wp-content/uploads/IMG_9016-768x1024.jpeg\">"
-                              << "<img src=\"[BASE64_IMAGE]\""
-                                 " width=\"400\" height=\"533\" align=\"left\"/>";
+                              << "<img src=\"[CACHED_IMAGE]\""
+                                 " width=\"768\" height=\"1024\"/>";
 
-    // Image size rewriter (and reducer) with STYLE.
+    // Image with STYLE attribute (ignored; fetched dimensions used).
     QTest::newRow("Image test 2") << "<img src=\"https://www.mrericsir.com/blog/wp-content/uploads/IMG_9016-768x1024.jpeg\" style=\""
                                  "width: 500px;\">"
-                              << "<img src=\"[BASE64_IMAGE]\""
-                                 " width=\"400\" height=\"533\" align=\"left\"/>";
+                              << "<img src=\"[CACHED_IMAGE]\""
+                                 " width=\"768\" height=\"1024\"/>";
 
-    // Image size WITHOUT rewriter.
+    // Image with HTML attributes. Actual fetched dimensions are preferred.
     QTest::newRow("Image test 3") << "<img src=\"https://www.mrericsir.com/blog/wp-content/uploads/IMG_9016-768x1024.jpeg\" align=\"left\""
                                      " width=\"400\" height=\"533\"/>"
-                              << "<img src=\"https://www.mrericsir.com/blog/wp-content/uploads/IMG_9016-768x1024.jpeg\""
-                                 " width=\"400\" height=\"533\" align=\"left\"/>";
+                              << "<img src=\"[CACHED_IMAGE]\""
+                                 " width=\"768\" height=\"1024\"/>";
+
+    // NJ.com-style: HTML attributes have original width (768) with resizer target height (1200).
+    // The actual image is 768x1024. Fetched dimensions should override the wrong HTML attributes.
+    QTest::newRow("NJ.com smooshed image") << "<img src=\"https://www.mrericsir.com/blog/wp-content/uploads/IMG_9016-768x1024.jpeg\""
+                                              " width=\"768\" height=\"1200\"/>"
+                                           << "<img src=\"[CACHED_IMAGE]\""
+                                              " width=\"768\" height=\"1024\"/>";
 
     // Embedded Vine video.
     QTest::newRow("Vine") << "<iframe class=\"vine-embed\" src=\""
@@ -145,8 +181,8 @@ void TestRawFeedRewriterTest::testCase1_data()
                                     "rail interface with Los Angeles County? Give your input at an upcoming "
                                     "meeting or via email. Image via CAHSRA</p></div></p>"
                                  << "<div><a href=\"http://la.streetsblog.org/wp-content/uploads/2014/08/hsr-Edited.jpg\">"
-                                    "<img src=\"http://i.imgur.com/523Qeov.jpg\" width=\"400\" height=\"185\" "
-                                    "align=\"left\"/></a><p>How should California’s high speed rail interface with "
+                                    "<img src=\"http://i.imgur.com/523Qeov.jpg\" width=\"576\" height=\"267\"/>"
+                                    "</a><p>How should California\u2019s high speed rail interface with "
                                     "Los Angeles County? Give your input at an upcoming meeting or via email. "
                                     "Image via CAHSRA</p></div>";
 
@@ -168,9 +204,9 @@ void TestRawFeedRewriterTest::testCase1_data()
                                   "too much into it.  Either way.</p><p>Spotted this wheatpaste during the Cinco de Mayo "
                                   "festival on Valencia.</p>"
                                << "<p><a href=\"https://www.flickr.com/photos/mrericsir/17161096410\">"
-                                 "<img src=\"https://c4.staticflickr.com/8/7684/17161096410_55dcb799a3.jpg\" width=\"400\" height=\"300\" align=\"left\"/>"
+                                 "<img src=\"[CACHED_IMAGE]\" width=\"500\" height=\"375\"/>"
                                  "</a></p><p>Grump Cat wearing a bicycle helmet? I have no idea. "
-                                 "Perhaps it’s a statement about bicycle helmet laws, or maybe I’m reading "
+                                 "Perhaps it\u2019s a statement about bicycle helmet laws, or maybe I\u2019m reading "
                                  "too much into it. Either way.</p><p>Spotted this wheatpaste during the Cinco de Mayo "
                                  "festival on Valencia.</p>";
 
@@ -188,8 +224,8 @@ void TestRawFeedRewriterTest::testCase1_data()
                                         "<p><em>Combining San Francisco history, art, literature, cycling, and urban exploration,  “Bikes to Books” began as an bike ride homage to the 1988 street-naming project spearheaded by City Lights founder and former San Francisco Poet Laureate, Lawrence Ferlinghetti, in which twelve San Francisco streets were renamed for famous artists and authors who had once made San Francisco their home. The 7.1 mile tour, which takes between two and three hours to complete, is admittedly not for the faint of heart nor gear—these streets were not chosen for their proximity to bike lanes, and there is plenty of traffic to dodge, hills to climb, one-way streets, and even a set of stairs. But it’s a diverting and unique way to celebrate both the literary and the adventurous spirit of San Francisco. First published in 2013 in the San Francisco Bay Guardian, and later in partnership with City Lights Books, the physical map can be found in many of San Francisco’s finest book emporiums, and is appropriate for use as a navigational tool, a history lesson, and a unique work of art in its own right.</em></p>\n"
                                         "<p><em><a href=\"http://burritojustice.com/bikes-to-books-map/\" rel=\"nofollow\">http://burritojustice.com/bikes-to-books-map/</a></em></p><br />  <a rel=\"nofollow\" href=\"http://feeds.wordpress.com/1.0/gocomments/burritojustice.wordpress.com/10603/\"><img alt=\"\" border=\"0\" src=\"http://feeds.wordpress.com/1.0/comments/burritojustice.wordpress.com/10603/\" /></a> <img alt=\"\" border=\"0\" src=\"http://pixel.wp.com/b.gif?host=burritojustice.com&#038;blog=4823503&#038;post=10603&#038;subd=burritojustice&#038;ref=&#038;feed=1\" width=\"1\" height=\"1\" />\n"
                                      << "<p>Come ride the Bikes to Books tour with us on Saturday, May 30! Both the foldable maps and <a href=\"http://burritojustice.com/2015/03/08/bike-to-books-poster-bigger-stronger-faster/\"> our new posters</a> will be available for sale.</p>"
-                                        "<p>It’s a surprisingly easy ride, and you can have an IPA at the end.</p>"
-                                        "<p><a href=\"https://burritojustice.files.wordpress.com/2013/10/bikes-to-books-map-crop.jpg\"><img src=\"https://burritojustice.files.wordpress.com/2013/10/bikes-to-books-map-crop.jpg?w=600&amp;h=867\" width=\"400\" height=\"578\" align=\"left\"/><img src=\"https://burritojustice.files.wordpress.com/2015/03/bikes-to-books-timeline-crop.png?w=600&amp;h=635\" width=\"400\" height=\"423\" align=\"left\"/></a></p>"
+                                        "<p>It\u2019s a surprisingly easy ride, and you can have an IPA at the end.</p>"
+                                        "<p><a href=\"https://burritojustice.files.wordpress.com/2013/10/bikes-to-books-map-crop.jpg\"><img src=\"[CACHED_IMAGE]\" width=\"600\" height=\"866\"/><img src=\"[CACHED_IMAGE]\" width=\"600\" height=\"634\"/></a></p>"
                                         "<p><strong><em>Bikes to Books Annual Springtime Ride!</em></strong></p>"
                                         "<p><em><b>Saturday, May 30, 1:00 p.m. – 4:00 p.m.</b></em></p>"
                                         "<p><em><b>Meet at 12:45 p.m. at Jack London Street, at South Park in San Francisco</b></em></p>"
@@ -275,6 +311,170 @@ void TestRawFeedRewriterTest::testCase1_data()
                                      "</p>"
                                      "<h2><em><a href=\"http://missionlocal.org/calendar-14/\">Events in the Mission Today</a></em></h2>"
                                      "<h2><em><a href=\"http://missionlocal.org/newcomers/\">The Essential Mission Guide</a></em></h2>";
+}
+
+ImageData TestRawFeedRewriterTest::createImageData(int width, int height)
+{
+    ImageData data;
+    data.image = QImage(width, height, QImage::Format_RGB32);
+    data.image.fill(Qt::red);
+
+    QByteArray ba;
+    QBuffer buffer(&ba);
+    buffer.open(QIODevice::WriteOnly);
+    data.image.save(&buffer, "PNG");
+    data.rawData = ba;
+    data.mimeType = "image/png";
+    return data;
+}
+
+// Test that finalize() uses actual fetched dimensions, not HTML attributes.
+void TestRawFeedRewriterTest::testFinalizeUseFetchedDimensions()
+{
+    HTMLSanitizer sanitizer;
+
+    // Simulate sanitize() output: an img tag with HTML dimensions as metadata.
+    QString sanitized = "<?xml version=\"1.0\"?>"
+                        "<html id=\"FangID_1\"><body id=\"FangID_2\">"
+                        "<img id=\"FangID_3\" src=\"http://example.com/photo.jpg\""
+                        " width=\"200\" height=\"100\"/>"
+                        "</body></html>";
+
+    // Provide a fetched image with different dimensions.
+    QMap<QUrl, ImageData> results;
+    results[QUrl("http://example.com/photo.jpg")] = createImageData(800, 600);
+
+    QString output = sanitizer.finalize(sanitized, results);
+
+    // Should use fetched dimensions (800x600), not HTML (200x100).
+    QVERIFY(output.contains("width=\"800\""));
+    QVERIFY(output.contains("height=\"600\""));
+    QVERIFY(!output.contains("width=\"200\""));
+}
+
+// Test that finalize() filters tracking pixels detected by fetched dimensions.
+void TestRawFeedRewriterTest::testFinalizeFilterTrackingPixel()
+{
+    HTMLSanitizer sanitizer;
+
+    QString sanitized = "<?xml version=\"1.0\"?>"
+                        "<html id=\"FangID_1\"><body id=\"FangID_2\">"
+                        "<p id=\"FangID_3\">text</p>"
+                        "<img id=\"FangID_4\" src=\"http://example.com/pixel.gif\"/>"
+                        "</body></html>";
+
+    // Fetched image is 1x1 - a tracking pixel.
+    QMap<QUrl, ImageData> results;
+    results[QUrl("http://example.com/pixel.gif")] = createImageData(1, 1);
+
+    QString output = sanitizer.finalize(sanitized, results);
+
+    QVERIFY(!output.contains("pixel.gif"));
+    QVERIFY(output.contains("text"));
+}
+
+// Test that a 2x2 image is filtered (boundary case - must be > 2 to keep).
+void TestRawFeedRewriterTest::testFinalizeFilterTrackingPixelBoundary()
+{
+    HTMLSanitizer sanitizer;
+
+    QString sanitized = "<?xml version=\"1.0\"?>"
+                        "<html id=\"FangID_1\"><body id=\"FangID_2\">"
+                        "<p id=\"FangID_3\">text</p>"
+                        "<img id=\"FangID_4\" src=\"http://example.com/tiny.gif\"/>"
+                        "</body></html>";
+
+    QMap<QUrl, ImageData> results;
+    results[QUrl("http://example.com/tiny.gif")] = createImageData(2, 2);
+
+    QString output = sanitizer.finalize(sanitized, results);
+
+    QVERIFY(!output.contains("tiny.gif"));
+    QVERIFY(output.contains("text"));
+}
+
+// Test that a 3x3 image is kept (boundary case - smallest non-tracking-pixel).
+void TestRawFeedRewriterTest::testFinalizeKeepSmallImage()
+{
+    HTMLSanitizer sanitizer;
+
+    QString sanitized = "<?xml version=\"1.0\"?>"
+                        "<html id=\"FangID_1\"><body id=\"FangID_2\">"
+                        "<img id=\"FangID_3\" src=\"http://example.com/small.png\"/>"
+                        "</body></html>";
+
+    QMap<QUrl, ImageData> results;
+    results[QUrl("http://example.com/small.png")] = createImageData(3, 3);
+
+    QString output = sanitizer.finalize(sanitized, results);
+
+    QVERIFY(output.contains("width=\"3\""));
+    QVERIFY(output.contains("height=\"3\""));
+}
+
+// Test that one tiny dimension is enough to filter (e.g. 1x1000 spacer gif).
+void TestRawFeedRewriterTest::testFinalizeFilterOneTinyDimension()
+{
+    HTMLSanitizer sanitizer;
+
+    QString sanitized = "<?xml version=\"1.0\"?>"
+                        "<html id=\"FangID_1\"><body id=\"FangID_2\">"
+                        "<p id=\"FangID_3\">text</p>"
+                        "<img id=\"FangID_4\" src=\"http://example.com/spacer.gif\"/>"
+                        "</body></html>";
+
+    QMap<QUrl, ImageData> results;
+    results[QUrl("http://example.com/spacer.gif")] = createImageData(1, 1000);
+
+    QString output = sanitizer.finalize(sanitized, results);
+
+    QVERIFY(!output.contains("spacer.gif"));
+    QVERIFY(output.contains("text"));
+}
+
+// Test that finalize() keeps images with HTML dimensions when fetch fails.
+void TestRawFeedRewriterTest::testFinalizeFetchFailedWithDimensions()
+{
+    HTMLSanitizer sanitizer;
+
+    // Image has width/height metadata from sanitize() (known good dimensions).
+    QString sanitized = "<?xml version=\"1.0\"?>"
+                        "<html id=\"FangID_1\"><body id=\"FangID_2\">"
+                        "<img id=\"FangID_3\" src=\"http://example.com/photo.jpg\""
+                        " width=\"640\" height=\"480\"/>"
+                        "</body></html>";
+
+    // Empty results - fetch failed.
+    QMap<QUrl, ImageData> results;
+
+    QString output = sanitizer.finalize(sanitized, results);
+
+    // Should keep the image with HTML dimensions.
+    QVERIFY(output.contains("photo.jpg"));
+    QVERIFY(output.contains("width=\"640\""));
+    QVERIFY(output.contains("height=\"480\""));
+}
+
+// Test that finalize() skips images with no dimensions when fetch fails.
+void TestRawFeedRewriterTest::testFinalizeFetchFailedNoDimensions()
+{
+    HTMLSanitizer sanitizer;
+
+    // Image has no width/height metadata - could be a tracking pixel.
+    QString sanitized = "<?xml version=\"1.0\"?>"
+                        "<html id=\"FangID_1\"><body id=\"FangID_2\">"
+                        "<p id=\"FangID_3\">text</p>"
+                        "<img id=\"FangID_4\" src=\"http://example.com/mystery.gif\"/>"
+                        "</body></html>";
+
+    // Empty results - fetch failed.
+    QMap<QUrl, ImageData> results;
+
+    QString output = sanitizer.finalize(sanitized, results);
+
+    // Should skip the image - can't verify it's not a tracking pixel.
+    QVERIFY(!output.contains("mystery.gif"));
+    QVERIFY(output.contains("text"));
 }
 
 QTEST_MAIN(TestRawFeedRewriterTest)

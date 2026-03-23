@@ -1,6 +1,7 @@
 #include "UpdateFeedOperation.h"
 #include <QtAlgorithms>
 #include <QDateTime>
+#include <QSet>
 
 #include "UpdateFeedURLOperation.h"
 #include "../models/AllNewsFeedItem.h"
@@ -16,7 +17,8 @@ UpdateFeedOperation::UpdateFeedOperation(OperationManager *parent, FeedItem *fee
     rawFeed(rawFeed),
     rewriter(),
     timestamp(),
-    useCache(useCache)
+    useCache(useCache),
+    newsSitemapSynthesizer(nullptr)
 {
     connect(&parser, &NewsParser::done, this, &UpdateFeedOperation::onFeedFinished);
     connect(&rewriter, &RawFeedRewriter::finished, this, &UpdateFeedOperation::onRewriterFinished);
@@ -56,9 +58,17 @@ void UpdateFeedOperation::execute()
     timestamp = QDateTime::currentDateTime();
     
     
-    if (rawFeed == nullptr) {
-        // Send network request.
-        parser.parse(feed->getURL(), useCache);
+    if (feed->getFeedType() == FeedTypeGoogleNewsSitemap) {
+        // Google News sitemap feeds use the synthesizer *busts out a keytar* to simulate
+        // feeds based on sitemap XML data.
+        newsSitemapSynthesizer = new GoogleNewsSitemapSynthesizer(this);
+        connect(newsSitemapSynthesizer, &GoogleNewsSitemapSynthesizer::done,
+                this, &UpdateFeedOperation::onNewsSitemapRefreshDone);
+        newsSitemapSynthesizer->synthesize(feed->getURL(), feed->getTitle(),
+                                       feed->getLastUpdated());
+    } else if (rawFeed == nullptr) {
+        // Send network request with conditional headers if available.
+        parser.parse(feed->getURL(), useCache, feed->getEtag(), feed->getLastModified());
     } else {
         onFeedFinished();
     }
@@ -67,6 +77,14 @@ void UpdateFeedOperation::execute()
 void UpdateFeedOperation::onFeedFinished()
 {
     FANG_BACKGROUND_CHECK;
+
+    // 304 Not Modified: Feed hasn't changed, nothing to do.
+    if (parser.getResult() == ParserInterface::NOT_MODIFIED) {
+        feed->setErrorFlag(false);
+        feed->setIsUpdating(false);
+        emit finished(this);
+        return;
+    }
 
     // Try feed rediscovery if needed. This will update the URL and refresh.
     if (parser.getResult() == ParserInterface::NETWORK_ERROR &&
@@ -156,12 +174,109 @@ void UpdateFeedOperation::onFeedFinished()
         return;
     }
     
-    // Add all new items to our list.
-    newsList.clear();
+    // Collect candidate GUIDs so we can skip items already in the DB.
+    QStringList candidateGuids;
     for (int i = newIndex; i < rawFeed->items.size(); i++) {
-        newsList.append(rawFeed->items.at(i));
+        candidateGuids.append(rawFeed->items.at(i)->guid);
     }
-    
+
+    // Query existing GUIDs for this feed in one batch.
+    QSet<QString> existingGuids;
+    {
+        QSqlQuery guidQuery(db());
+        // SQLite supports up to 999 bound parameters, but using IN with
+        // a built string is simpler for a variable-length list.
+        QString placeholders;
+        for (int i = 0; i < candidateGuids.size(); i++) {
+            if (i > 0) {
+                placeholders += ",";
+            }
+            placeholders += "?";
+        }
+        guidQuery.prepare(QString("SELECT guid FROM NewsItemTable WHERE feed_id = ? AND guid IN (%1)")
+                          .arg(placeholders));
+        guidQuery.addBindValue(feed->getDbID());
+        for (const QString& g : candidateGuids) {
+            guidQuery.addBindValue(g);
+        }
+        if (guidQuery.exec()) {
+            while (guidQuery.next()) {
+                existingGuids.insert(guidQuery.value(0).toString());
+            }
+        }
+    }
+
+    // Add new items, skipping any whose GUID already exists for this feed.
+    // Secondary dedup: when a GUID contains '#', the fragment suffix may vary
+    // across republications of the same article (e.g. BBC). In that case, fall
+    // back to URL comparison to catch duplicates.
+    QSet<QString> existingURLs;
+    QSet<QString> seenURLs;
+    bool needURLDedup = false;
+
+    // First pass: collect candidates and check if any have '#' in their GUID.
+    QList<RawNews*> candidates;
+    for (int i = newIndex; i < rawFeed->items.size(); i++) {
+        RawNews* item = rawFeed->items.at(i);
+        if (!existingGuids.contains(item->guid)) {
+            candidates.append(item);
+            if (item->guid.contains('#')) {
+                needURLDedup = true;
+            }
+        }
+    }
+
+    // If any candidate has a '#' GUID, query existing URLs for this feed.
+    if (needURLDedup && !candidates.isEmpty()) {
+        QStringList candidateURLs;
+        for (RawNews* item : candidates) {
+            if (item->guid.contains('#')) {
+                candidateURLs.append(item->url.toString());
+            }
+        }
+
+        if (!candidateURLs.isEmpty()) {
+            QSqlQuery urlQuery(db());
+            QString urlPlaceholders;
+            for (int i = 0; i < candidateURLs.size(); i++) {
+                if (i > 0) {
+                    urlPlaceholders += ",";
+                }
+                urlPlaceholders += "?";
+            }
+            urlQuery.prepare(QString("SELECT url FROM NewsItemTable WHERE feed_id = ? AND url IN (%1)")
+                             .arg(urlPlaceholders));
+            urlQuery.addBindValue(feed->getDbID());
+            for (const QString& u : candidateURLs) {
+                urlQuery.addBindValue(u);
+            }
+            if (urlQuery.exec()) {
+                while (urlQuery.next()) {
+                    existingURLs.insert(urlQuery.value(0).toString());
+                }
+            }
+        }
+    }
+
+    // Second pass: build final list, skipping URL duplicates for '#' GUIDs.
+    newsList.clear();
+    for (RawNews* item : candidates) {
+        if (item->guid.contains('#')) {
+            QString urlStr = item->url.toString();
+            if (existingURLs.contains(urlStr) || seenURLs.contains(urlStr)) {
+                continue;
+            }
+            seenURLs.insert(urlStr);
+        }
+        newsList.append(item);
+    }
+
+    if (newsList.isEmpty()) {
+        feed->setErrorFlag(false);
+        emit finished(this);
+        return;
+    }
+
     // Start the rewriter!  (See the next method below.)
     rewriter.rewrite(&newsList);
 }
@@ -177,8 +292,8 @@ void UpdateFeedOperation::onRewriterFinished()
     for (RawNews* rawNews : newsList) {
         QSqlQuery query(db());
         query.prepare("INSERT INTO NewsItemTable (feed_id, guid, title, author, summary, content, "
-                      "timestamp, url) VALUES (:feed_id, :guid, :title, :author, :summary, :content, "
-                      ":timestamp, :url)");
+                      "timestamp, url, media_image_url) VALUES (:feed_id, :guid, :title, :author, :summary, :content, "
+                      ":timestamp, :url, :media_image_url)");
         query.bindValue(":feed_id", feed->getDbID());
         query.bindValue(":guid", rawNews->guid);
         query.bindValue(":title", rawNews->title);
@@ -187,6 +302,7 @@ void UpdateFeedOperation::onRewriterFinished()
         query.bindValue(":content", rawNews->content);
         query.bindValue(":timestamp", rawNews->timestamp.toMSecsSinceEpoch());
         query.bindValue(":url", rawNews->url);
+        query.bindValue(":media_image_url", rawNews->mediaImageURL);
         
         if (!query.exec()) {
             reportSQLError(query, "Unable to add news item.");
@@ -208,10 +324,46 @@ void UpdateFeedOperation::onRewriterFinished()
     if (!query.exec()) {
         reportSQLError(query, "Unable to update the feed's timestamp.");
         db().rollback();
-        
+
         return;
     }
-    
+
+    // Save ETag and Last-Modified response headers for conditional refresh.
+    {
+        QSqlQuery etagQuery(db());
+        etagQuery.prepare("UPDATE FeedItemTable SET etag = :etag, last_modified = :last_modified WHERE id = :feed_id");
+        etagQuery.bindValue(":etag", parser.responseEtag());
+        etagQuery.bindValue(":last_modified", parser.responseLastModified());
+        etagQuery.bindValue(":feed_id", feed->getDbID());
+        if (!etagQuery.exec()) {
+            reportSQLError(etagQuery, "Unable to update ETag/Last-Modified.");
+            db().rollback();
+            return;
+        }
+        feed->setEtag(parser.responseEtag());
+        feed->setLastModified(parser.responseLastModified());
+    }
+
+    // Persist final URL if the feed redirected to a new location.
+    {
+        QUrl finalURL = parser.getURL();
+        if (finalURL.isValid() && !finalURL.isEmpty() && finalURL != feed->getURL()
+            && parser.wasPermanentRedirect()) {
+            QSqlQuery urlQuery(db());
+            urlQuery.prepare("UPDATE FeedItemTable SET url = :url WHERE id = :feed_id");
+            urlQuery.bindValue(":url", finalURL);
+            urlQuery.bindValue(":feed_id", feed->getDbID());
+            if (!urlQuery.exec()) {
+                reportSQLError(urlQuery, "Unable to update feed URL after redirect.");
+                db().rollback();
+                return;
+            }
+            qCDebug(logOperation) << "UpdateFeedOperation: Feed URL redirected from"
+                                  << feed->getURL() << "to" << finalURL;
+            feed->setURL(finalURL);
+        }
+    }
+
     // Update unread count, All News's unread count, and folder (if applicable);
     UnreadCountReader::update(db(), feed);
     UnreadCountReader::update(db(), FangApp::instance()->getAllNewsFeed());
@@ -225,6 +377,24 @@ void UpdateFeedOperation::onRewriterFinished()
     feed->setErrorFlag(false);
 
     emit finished(this);
+}
+
+void UpdateFeedOperation::onNewsSitemapRefreshDone()
+{
+    FANG_BACKGROUND_CHECK;
+
+    if (newsSitemapSynthesizer->hasError()) {
+        qCDebug(logOperation) << "UpdateFeedOperation: Google News sitemap refresh error:"
+                              << newsSitemapSynthesizer->errorString();
+        feed->setErrorFlag(true);
+        feed->setIsUpdating(false);
+        emit finished(this);
+        return;
+    }
+
+    // Use our synthesized feed as though it were an RSS/Atom feed.
+    rawFeed = newsSitemapSynthesizer->result();
+    onFeedFinished();
 }
 
 void UpdateFeedOperation::onDiscoveryDone(FeedDiscovery* feedDiscovery)
@@ -251,7 +421,7 @@ void UpdateFeedOperation::onDiscoveryDone(FeedDiscovery* feedDiscovery)
     UpdateFeedURLOperation updateURLOp(getOperationManager(), feed, discovery.feedURL());
     getOperationManager()->run(&updateURLOp);
 
-    // Send network request with the updated URL.
+    // Send network request with the updated URL and conditional headers.
     qCDebug(logOperation) << "Finished updating feed URL, updating feed " << feed->getURL();
-    parser.parse(feed->getURL(), useCache);
+    parser.parse(feed->getURL(), useCache, feed->getEtag(), feed->getLastModified());
 }

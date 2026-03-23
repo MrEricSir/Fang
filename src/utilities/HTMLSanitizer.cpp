@@ -5,16 +5,8 @@
 #include <QXmlStreamWriter>
 #include <QStack>
 
+#include "ImageCache.h"
 #include "NetworkUtilities.h"
-
-// Image width max.
-#define MAX_ELEMENT_WIDTH 400
-
-// Maximum image size (in bytes) to embed as base64.
-// Images larger than this will keep their original URL.
-// 1MB is a reasonable limit that covers most article images while avoiding
-// excessive database bloat from very large images.
-#define MAX_EMBED_IMAGE_SIZE (1024 * 1024)
 
 // Strings.
 #define S_WIDTH "width"
@@ -123,6 +115,9 @@ QString HTMLSanitizer::sanitize(const QString &document, QSet<QUrl> &imageURLs)
     // Was the last node text?
     bool lastWasText = false;
 
+    // Track nesting depth inside <pre> to preserve whitespace.
+    int preDepth = 0;
+
     while (!xml.atEnd()) {
         // Grab the next thingie.
         xml.readNext();
@@ -157,6 +152,10 @@ QString HTMLSanitizer::sanitize(const QString &document, QSet<QUrl> &imageURLs)
                     // Push it.
                     stack.push(DOMNode(tagName, currentId));
 
+                    if (tagName == "pre") {
+                        preDepth++;
+                    }
+
                     // Anchor tags.
                     if (tagName == "a" && xml.attributes().hasAttribute(S_HREF)) {
                         writer.writeAttribute(S_HREF, xml.attributes().value(S_HREF).toString());
@@ -164,9 +163,10 @@ QString HTMLSanitizer::sanitize(const QString &document, QSet<QUrl> &imageURLs)
 
                     // Image tags.
                     if (tagName == S_IMG && xml.attributes().hasAttribute(S_SRC)) {
-                        QString imgSrc =  NetworkUtilities::urlFixup(xml.attributes().value(S_SRC).toString());
+                        QString imgSrc = NetworkUtilities::urlFixup(xml.attributes().value(S_SRC).toString());
                         writer.writeAttribute(S_SRC, imgSrc);
 
+                        // Check for tracking pixels using HTML dimensions.
                         QString sWidth = xml.attributes().value(S_WIDTH).toString();
                         QString sHeight = xml.attributes().value(S_HEIGHT).toString();
 
@@ -176,17 +176,19 @@ QString HTMLSanitizer::sanitize(const QString &document, QSet<QUrl> &imageURLs)
 
                         if (widthOK && heightOK) {
                             if (width < 3 || height < 3) {
-                                // Delete tiny images.
+                                // Delete tiny images (tracking pixels).
                                 idsToDelete << intToID(currentId);
                             } else {
-                                // Resize image if needed.
-                                int newWidth, newHeight;
-                                imageResize(width, height, &newWidth, &newHeight);
-                                writer.writeAttribute(S_WIDTH, QString::number(newWidth));
-                                writer.writeAttribute(S_HEIGHT, QString::number(newHeight));
+                                // Pass dimensions as metadata for finalize() to use
+                                // when the image fetch fails and we need to verify
+                                // this isn't a tracking pixel.
+                                writer.writeAttribute(S_WIDTH, sWidth);
+                                writer.writeAttribute(S_HEIGHT, sHeight);
                             }
-                        } else {
-                            // Dammit, we're gonna have to fetch this image!
+                        }
+
+                        // Fetch images for caching and dimension verification.
+                        if (!idsToDelete.contains(intToID(currentId))) {
                             imageURLs << imgSrc;
                         }
                     }
@@ -205,6 +207,10 @@ QString HTMLSanitizer::sanitize(const QString &document, QSet<QUrl> &imageURLs)
 
                 // Pop our node and investigate.
                 DOMNode dom = stack.pop();
+
+                if (tagName == "pre") {
+                    preDepth--;
+                }
 
                 // If it's a container and we didn't write any text, then delete this tag in the
                 // second pass.
@@ -227,19 +233,21 @@ QString HTMLSanitizer::sanitize(const QString &document, QSet<QUrl> &imageURLs)
 
             // Don't allow pure empty tags, though a single space is ok.
             if (!isEmpty || text == " ") {
-                bool addSpaceStart = text.startsWith('\n');
-                bool addSpaceEnd = text.endsWith('\n');
+                if (preDepth == 0) {
+                    bool addSpaceStart = text.startsWith('\n');
+                    bool addSpaceEnd = text.endsWith('\n');
 
-                // Text can start or end with a newline -- delete 'em.
-                removeNewlinesBothSides(text);
+                    // Text can start or end with a newline -- delete 'em.
+                    removeNewlinesBothSides(text);
 
-                 // Add back extra spaces so text doesn'truntogether.
-                if (addSpaceStart) {
-                    text = ' ' + text;
-                }
+                    // Add back extra spaces so text doesn'truntogether.
+                    if (addSpaceStart) {
+                        text = ' ' + text;
+                    }
 
-                if (addSpaceEnd) {
-                    text = text + ' ';
+                    if (addSpaceEnd) {
+                        text = text + ' ';
+                    }
                 }
 
                 // Write the text!
@@ -300,6 +308,7 @@ QString HTMLSanitizer::finalize(const QString &html, const QMap<QUrl, ImageData>
     QXmlStreamWriter writer(&output);
     writer.setAutoFormatting(false);
     int skip = 0; // Skip stack.
+    int preDepth = 0; // Track nesting depth inside <pre> to preserve whitespace.
     QString lastTag = "";
 
     while (!xml.atEnd()) {
@@ -317,43 +326,47 @@ QString HTMLSanitizer::finalize(const QString &html, const QMap<QUrl, ImageData>
                     skip = 1;
                 } else if (tagName == S_IMG) {
                     QString url = xml.attributes().value(S_SRC).toString();
-                    QString srcToUse = url; // Default to original URL.
+                    QString srcToUse = url;
+                    bool keepImage = false;
 
                     int width = 0;
                     int height = 0;
 
-                    // We got an image.
-                    if (xml.attributes().hasAttribute(S_WIDTH) &&
-                            xml.attributes().hasAttribute(S_HEIGHT)) {
-                        // Already have attributes?  Cool.
+                    ImageData imageData = imageResults.value(url);
+                    if (imageData.isValid()) {
+                        width = imageData.image.width();
+                        height = imageData.image.height();
+
+                        if (width > 2 && height > 2) {
+                            QString cachedPath = ImageCache::saveImage(url, imageData);
+                            if (!cachedPath.isEmpty()) {
+                                srcToUse = cachedPath;
+                            }
+                            keepImage = true;
+                        }
+                    } else if (xml.attributes().hasAttribute(S_WIDTH) &&
+                               xml.attributes().hasAttribute(S_HEIGHT)) {
+                        // Fetch failed but image has known good dimensions from
+                        // sanitize() - keep it with the original URL.
                         width = xml.attributes().value(S_WIDTH).toInt();
                         height = xml.attributes().value(S_HEIGHT).toInt();
-                    } else {
-                        ImageData imageData = imageResults.value(url);
-                        if (imageData.isValid()) {
-                            // Resize that baby, yeah!
-                            imageResize(imageData.image.width(), imageData.image.height(), &width, &height);
-
-                            // Embed image as base64 data URI for offline viewing.
-                            // Returns empty if image is too large to embed.
-                            QString dataUri = imageToDataUri(imageData);
-                            if (!dataUri.isEmpty()) {
-                                srcToUse = dataUri;
-                            }
-                        }
+                        keepImage = true;
                     }
+                    // else: fetch failed and no known dimensions - skip.
+                    // Could be a tracking pixel we can't verify.
 
-                    if (width > 2 && height > 2) {
-                        // Okay, we got a good image and it's not a tracking pixel. Satisfaction!
+                    if (keepImage) {
                         writer.writeStartElement(tagName);
                         writer.writeAttribute(S_SRC, srcToUse);
-                        writer.writeAttribute(S_WIDTH, QString::number(width));
-                        writer.writeAttribute(S_HEIGHT, QString::number(height));
-                        writer.writeAttribute("align", "left"); // Always left-align.
-
+                        if (width > 0 && height > 0) {
+                            writer.writeAttribute(S_WIDTH, QString::number(width));
+                            writer.writeAttribute(S_HEIGHT, QString::number(height));
+                        }
+                        if (srcToUse != url) {
+                            writer.writeAttribute("data-original-src", url);
+                        }
                         lastTag = tagName;
                     } else {
-                        // Bad image! Skip!
                         skip = 1;
                     }
                 } else {
@@ -365,6 +378,10 @@ QString HTMLSanitizer::finalize(const QString &html, const QMap<QUrl, ImageData>
                         }
                     }
 
+                    if (tagName == "pre") {
+                        preDepth++;
+                    }
+
                     lastTag = tagName;
                 }
             } else {
@@ -373,6 +390,9 @@ QString HTMLSanitizer::finalize(const QString &html, const QMap<QUrl, ImageData>
         } else if (xml.isEndElement()) {
             // End
             if (0 == skip) {
+                if (xml.name().toString().toLower() == "pre") {
+                    preDepth--;
+                }
                 writer.writeEndElement();
             } else {
                 skip--;
@@ -380,8 +400,8 @@ QString HTMLSanitizer::finalize(const QString &html, const QMap<QUrl, ImageData>
         } else if (xml.isCharacters() && 0 == skip) {
             // Text
             QString text = xml.text().toString();
-            if (lastTag != "pre" && lastTag != "code") {
-                // This happens due to some kind of auto-formatting glitch.
+            if (preDepth == 0) {
+                // Outside preformatted blocks, collapse newlines to spaces.
                 text.replace("\n", " ");
             }
 
@@ -429,18 +449,6 @@ void HTMLSanitizer::postProcessDocString(QString &docString)
     docString = docString.trimmed();
 }
 
-void HTMLSanitizer::imageResize(int width, int height, int *newWidth, int *newHeight)
-{
-    *newWidth = width;
-    *newHeight = height;
-
-    if (width >= MAX_ELEMENT_WIDTH) {
-        // Scale down the image.
-        *newWidth = MAX_ELEMENT_WIDTH;
-        *newHeight = (double) height / (double) width * (double) MAX_ELEMENT_WIDTH;
-    }
-}
-
 void HTMLSanitizer::removeNewlinesBothSides(QString &docString)
 {
     while (docString.startsWith("\n")) {
@@ -477,13 +485,3 @@ QString HTMLSanitizer::textToHtml(const QString& input)
     return output;
 }
 
-QString HTMLSanitizer::imageToDataUri(const ImageData& imageData)
-{
-    // Don't embed if invalid or too large.
-    if (!imageData.isValid() || imageData.rawData.size() > MAX_EMBED_IMAGE_SIZE) {
-        return "";
-    }
-
-    // Use the original image data and MIME type to preserve format.
-    return "data:" + imageData.mimeType + ";base64," + QString::fromLatin1(imageData.rawData.toBase64());
-}

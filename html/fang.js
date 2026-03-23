@@ -456,6 +456,14 @@ function appendNews(append, firstNewsID, newsList, searchQuery = null)
         if (contentEl) {
             // Highlight search results.
             contentEl.innerHTML = searchQuery ? highlightHtml(newsItem['content'], searchQuery) : newsItem['content'];
+
+            // Show media image only when content has no images.
+            if (newsItem['mediaImage']) {
+                var img = document.createElement('img');
+                img.src = newsItem['mediaImage'];
+                img.className = 'mediaImage';
+                contentEl.insertBefore(img, contentEl.firstChild);
+            }
         }
 
         const siteTitleEl = item.querySelector('.siteTitle');
@@ -471,6 +479,12 @@ function appendNews(append, firstNewsID, newsList, searchQuery = null)
         const dateEl = item.querySelector('.date');
         if (dateEl) {
             dateEl.innerHTML = formatDateSimply(newsItem['timestamp']);
+        }
+
+        const authorEl = item.querySelector('.author');
+        if (authorEl) {
+            const author = newsItem['author'] || '';
+            authorEl.textContent = author ? 'by ' + author : '';
         }
 
         // Set pin
@@ -1180,6 +1194,16 @@ $(document).ready(function() {
 
     // Setup event delegation (replaces per-item event handlers).
     initEventDelegation();
+
+    // Image fallback: if a cached image fails to load, try the original URL.
+    document.addEventListener('error', function(event) {
+        if (event.target.tagName === 'IMG') {
+            var originalSrc = event.target.getAttribute('data-original-src');
+            if (originalSrc && event.target.getAttribute('src') !== originalSrc) {
+                event.target.src = originalSrc;
+            }
+        }
+    }, true);
 
     // Wait for CSS to load before loading news to avoid visual flash/glitch.
     updateCSS()

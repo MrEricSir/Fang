@@ -124,7 +124,8 @@ void TestSearchOperation::createSchema()
         "  content TEXT NOT NULL DEFAULT '',"
         "  timestamp INTEGER DEFAULT 0,"
         "  url TEXT NOT NULL DEFAULT '',"
-        "  pinned INTEGER DEFAULT 0"
+        "  pinned INTEGER DEFAULT 0,"
+        "  media_image_url TEXT DEFAULT ''"
         ")"
     );
     QVERIFY2(success, qPrintable(query.lastError().text()));
@@ -391,7 +392,7 @@ void TestSearchOperation::testVirtualDispatchFromLoadNewsPointer()
         operationManager, searchFeed, LoadNewsOperation::Initial,
         "dispatch", SearchNewsOperation::Scope::Global);
 
-    // Call execute through LoadNewsOperation* — must dispatch to SearchNewsOperation::execute().
+    // Call execute through LoadNewsOperation*. Must dispatch to SearchNewsOperation::execute().
     loader->execute();
 
     // If virtual dispatch works, we get search results.

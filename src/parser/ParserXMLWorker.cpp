@@ -1,7 +1,19 @@
 #include "ParserXMLWorker.h"
+#include <QMap>
 #include <QtCore/qtimezone.h>
 #include "../utilities/ErrorHandling.h"
 #include "../utilities/FangLogging.h"
+
+// Some feeds (e.g. excelsior.com.mx) double-escape CDATA markers, producing
+// literal "<![CDATA[...]]>" text instead of actual CDATA sections. Strip them.
+static QString stripEscapedCDATA(const QString& text)
+{
+    QString trimmed = text.trimmed();
+    if (trimmed.startsWith("<![CDATA[") && trimmed.endsWith("]]>")) {
+        return trimmed.mid(9, trimmed.length() - 12).trimmed();
+    }
+    return text;
+}
 
 ParserXMLWorker::ParserXMLWorker(QObject *parent) :
     FangObject(parent), feed(nullptr), currentItem(nullptr), isValid(false), inAtomXHTML(false)
@@ -127,6 +139,28 @@ void ParserXMLWorker::elementStart()
         }
     }
 
+    // Media RSS image extraction (media:thumbnail and media:content).
+    if (currentItem != nullptr && currentPrefix == "media") {
+        if (currentTag == "thumbnail") {
+            QString url = xml.attributes().value("url").toString();
+            int width = xml.attributes().value("width").toString().toInt();
+            if (!url.isEmpty() && (mediaImageURL.isEmpty() || width > mediaImageWidth)) {
+                mediaImageURL = url;
+                mediaImageWidth = width;
+            }
+        } else if (currentTag == "content") {
+            QString type = xml.attributes().value("type").toString().toLower();
+            if (type.startsWith("image/")) {
+                QString url = xml.attributes().value("url").toString();
+                int width = xml.attributes().value("width").toString().toInt();
+                if (!url.isEmpty() && (mediaImageURL.isEmpty() || width > mediaImageWidth)) {
+                    mediaImageURL = url;
+                    mediaImageWidth = width;
+                }
+            }
+        }
+    }
+
     if (currentTag == "link" && urlHref.isEmpty() && xml.attributes().hasAttribute("href")) {
         // Used by atom feeds to grab the first link.
         urlHref = xml.attributes().value("href").toString();
@@ -194,9 +228,12 @@ void ParserXMLWorker::elementEnd()
 
         // Item space.
         currentItem->author = author;
-        currentItem->title = title;
-        currentItem->description = subtitle;
-        currentItem->content = content;
+        currentItem->title = stripEscapedCDATA(title);
+        currentItem->description = stripEscapedCDATA(subtitle);
+        currentItem->content = stripEscapedCDATA(content);
+
+        currentItem->mediaImageURL = mediaImageURL;
+
         currentItem->url = urlData.isEmpty() ? QUrl(urlHref) : QUrl(urlData);
         currentItem->timestamp = dateFromFeedString(timestamp);
         currentItem->guid = myGuid;
@@ -226,6 +263,8 @@ void ParserXMLWorker::elementEnd()
         content = "";
         guid = "";
         id = "";
+        mediaImageURL = "";
+        mediaImageWidth = 0;
     } else if (tagName == "content" || tagName == "summary") {
         // Just accept that this is the end of one of these:
         // <contents type="xhtml">
@@ -264,7 +303,8 @@ void ParserXMLWorker::elementContents()
             urlData += xml.text().toString();
         } else if (currentTag == "description" || currentTag == "summary") {
             subtitle += xml.text().toString();
-        } else if (currentTag == "name") {
+        } else if (currentTag == "name"
+                   || (currentTag == "creator" && currentPrefix == "dc")) {
             author += xml.text().toString();
         } else if (currentTag == "pubdate") {
             pubdate += xml.text().toString();
@@ -318,6 +358,8 @@ void ParserXMLWorker::resetParserVars()
     author = "";
     guid = "";
     id = "";
+    mediaImageURL = "";
+    mediaImageWidth = 0;
     hasType = false;
     hasPodcastSignals = false;
     inAtomXHTML = false;
@@ -345,6 +387,8 @@ void ParserXMLWorker::saveSummary()
     content = "";
     guid = "";
     id = "";
+    mediaImageURL = "";
+    mediaImageWidth = 0;
 }
 
 
@@ -429,10 +473,7 @@ QDateTime ParserXMLWorker::dateFromFeedString(const QString& _timestamp)
     }
     
     // Check if there's a time-based adjustment and/or timezone.
-    // For now we only look for time identifiers in the format of -hhmm or +hhmm
-    //
-    // TODO: Three-letter time zones. (TLAs like GMT, PST, etc.)
-    //
+    // First try numeric offsets in the format of -hhmm, +hhmm, -hh:mm, or +hh:mm.
     int lastPlus = timestamp.lastIndexOf("+");
     int lastMinus = timestamp.lastIndexOf("-");
     if (lastPlus > 3 || lastMinus > 3) {
@@ -440,7 +481,7 @@ QDateTime ParserXMLWorker::dateFromFeedString(const QString& _timestamp)
         int signPos = lastPlus > 3 ? lastPlus : lastMinus;
         QString sAdjustment = timestamp.right(timestamp.length() - signPos);
         sAdjustment = sAdjustment.trimmed();
-        
+
         // Check for an hour/minute adjustment, in the format of -hhmm or +hhmm
         // OR in the format of -hh:mm or +hh:mm
         if ((sAdjustment.length() == 5 || sAdjustment.length() == 6) &&
@@ -450,23 +491,40 @@ QDateTime ParserXMLWorker::dateFromFeedString(const QString& _timestamp)
             bool isNum = false;
             int hours = 0;
             int minutes = 0;
-            
+
             QString sNumber = sAdjustment.right(containsCol ? 5 : 4); // Skip + or -
             // YES!  We've got an adjustment!
             hours = sNumber.left(2).toInt(&isNum);
-            if (isNum)
+            if (isNum) {
                 minutes = sNumber.right(2).toInt(&isNum);
-            
+            }
+
             // Looks like we're good!
             if (isNum) {
                 // Condense down to minutes.
                 minutes += (hours * 60);
                 adjustment = sAdjustment.startsWith("-") ? minutes : -minutes;
-                
+
                 // Add in our adjustment if we need it.
                 ret = ret.addSecs(adjustment * 60 /* seconds */);
             }
         }
+    }
+
+    // Three-letter timezone abbreviations (UTC offset in minutes).
+    static const QMap<QString, int> tzOffsets = {
+        {"GMT",    0}, {"UTC",    0},
+        {"EST", -300}, {"EDT", -240},
+        {"CST", -360}, {"CDT", -300},
+        {"MST", -420}, {"MDT", -360},
+        {"PST", -480}, {"PDT", -420}
+    };
+
+    // Check if the timestamp ends with a known abbreviation.
+    QString lastWord = timestamp.section(' ', -1).trimmed().toUpper();
+    if (tzOffsets.contains(lastWord)) {
+        int offsetMinutes = tzOffsets.value(lastWord);
+        ret = ret.addSecs(-offsetMinutes * 60);
     }
     
     // All times are (supposedly) in UTC.

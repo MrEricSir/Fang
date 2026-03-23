@@ -10,6 +10,11 @@ Utilities::Utilities()
 
 FeedItem *Utilities::feedItemFromRaw(const RawFeed *raw, qint64 dbId, const QString& userURL, QObject* parent)
 {
+    FeedType feedType = FeedTypeRSS;
+    if (raw->feedType == RawFeed::GoogleNewsSitemap) {
+        feedType = FeedTypeGoogleNewsSitemap;
+    }
+
     return new FeedItem(dbId,
                         0,
                         raw->title,
@@ -23,6 +28,7 @@ FeedItem *Utilities::feedItemFromRaw(const RawFeed *raw, qint64 dbId, const QStr
                         QDateTime(),
                         -1,
                         true,
+                        feedType,
                         parent
                         );
 }

@@ -16,7 +16,7 @@ class ParserInterface : public FangObject
     Q_OBJECT
     
 public:
-    enum ParseResult { OK, NETWORK_ERROR, FILE_ERROR, PARSE_ERROR, EMPTY_DOCUMENT, IN_PROGRESS };
+    enum ParseResult { OK, NETWORK_ERROR, FILE_ERROR, PARSE_ERROR, EMPTY_DOCUMENT, IN_PROGRESS, NOT_MODIFIED };
     Q_ENUM(ParseResult)
     
     explicit ParserInterface(QObject *parent = nullptr);
@@ -34,14 +34,20 @@ public slots:
         \param noParseIfCached   If true, this won't bother with the
                                  parse if the content was cached.
      */
-    virtual void parse(const QUrl& url, bool noParseIfCached = false) =0;
-    
+    virtual void parse(const QUrl& url, bool noParseIfCached = false,
+                       const QString& ifNoneMatch = QString(),
+                       const QString& ifModifiedSince = QString()) =0;
+
     virtual ParserInterface::ParseResult getResult() =0;
     virtual RawFeed* getFeed() =0;
     virtual QUrl getURL() =0;
-    
+
     // Whether or not the response was cached.
     virtual bool isFromCache() =0;
+
+    // Conditional request response headers.
+    virtual QString responseEtag() { return QString(); }
+    virtual QString responseLastModified() { return QString(); }
     
 };
 

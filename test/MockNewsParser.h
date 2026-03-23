@@ -31,7 +31,9 @@ public:
     void reset();
 
     // ParserInterface implementation
-    virtual void parse(const QUrl& url, bool noParseIfCached = false) override;
+    virtual void parse(const QUrl& url, bool noParseIfCached = false,
+                       const QString& ifNoneMatch = QString(),
+                       const QString& ifModifiedSince = QString()) override;
     virtual ParseResult getResult() override;
     virtual RawFeed* getFeed() override;
     virtual QUrl getURL() override;

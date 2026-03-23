@@ -12,9 +12,11 @@ qt_add_executable(tst_testrawfeedrewritertest
     ${CMAKE_SOURCE_DIR}/src/utilities/WebPageGrabber.cpp
     ${CMAKE_SOURCE_DIR}/src/network/NetworkDownloadCore.cpp
     ${CMAKE_SOURCE_DIR}/src/network/BatchDownloadCore.cpp
+    ${CMAKE_SOURCE_DIR}/src/utilities/ImageCache.cpp
     ${CMAKE_SOURCE_DIR}/src/utilities/NetworkUtilities.cpp
     ${CMAKE_SOURCE_DIR}/src/utilities/FangLogging.cpp
     # Include corresponding headers for AUTOMOC
+    ${CMAKE_SOURCE_DIR}/src/utilities/ImageCache.h
     ${CMAKE_SOURCE_DIR}/src/utilities/RawFeedRewriter.h
     ${CMAKE_SOURCE_DIR}/src/utilities/HTMLSanitizer.h
     ${CMAKE_SOURCE_DIR}/src/utilities/ImageGrabber.h
@@ -40,6 +42,7 @@ target_compile_definitions(tst_testrawfeedrewritertest PRIVATE
 # Link TidyLib and Qt modules
 target_link_libraries(tst_testrawfeedrewritertest PRIVATE
     TidyLib
+    Qt6::Concurrent
     Qt6::Test
     Qt6::Network
     Qt6::Gui

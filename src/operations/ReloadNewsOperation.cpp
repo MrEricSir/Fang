@@ -26,7 +26,7 @@ void ReloadNewsOperation::execute()
     }
 
     QString queryString = QString(
-        "SELECT id, feed_id, title, author, summary, content, timestamp, url, pinned "
+        "SELECT id, feed_id, title, author, summary, content, timestamp, url, pinned, media_image_url "
         "FROM NewsItemTable "
         "WHERE id IN (%1) "
         "ORDER BY timestamp ASC, id ASC"
@@ -57,7 +57,8 @@ void ReloadNewsOperation::execute()
             query.value("content").toString(),
             QDateTime::fromMSecsSinceEpoch(query.value("timestamp").toLongLong()),
             query.value("url").toString(),
-            query.value("pinned").toBool()
+            query.value("pinned").toBool(),
+            query.value("media_image_url").toString()
         );
 
         reloadedItems.append(newsItem);

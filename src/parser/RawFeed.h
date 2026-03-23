@@ -9,11 +9,15 @@
 class RawFeed : public FangObject
 {
     Q_OBJECT
-    
+
 public:
+    enum FeedType { RSS = 0, GoogleNewsSitemap = 1 };
+
     explicit RawFeed(QObject *parent = nullptr);
     virtual ~RawFeed();
-    
+
+    FeedType feedType = RSS;
+
     QString title;
     QString subtitle;
     QUrl url;

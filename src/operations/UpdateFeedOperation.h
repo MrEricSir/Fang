@@ -9,6 +9,7 @@
 #include "../parser/NewsParser.h"
 #include "../models/FeedItem.h"
 #include "../utilities/FeedDiscovery.h"
+#include "../utilities/GoogleNewsSitemapSynthesizer.h"
 
 /*!
     \brief Updates a feed.
@@ -57,7 +58,12 @@ private slots:
         \brief onDiscoveryDone
      */
     void onDiscoveryDone(FeedDiscovery* feedDiscovery);
-    
+
+    /*!
+        \brief Called when sitemap refresh completes.
+     */
+    void onNewsSitemapRefreshDone();
+
 private:
     NewsParser parser;
     FeedItem *feed;
@@ -67,6 +73,7 @@ private:
     QDateTime timestamp;
     bool useCache;
     FeedDiscovery discovery;
+    GoogleNewsSitemapSynthesizer* newsSitemapSynthesizer;
 };
 
 #endif // UPDATEFEEDOPERATION_H

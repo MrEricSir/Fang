@@ -275,7 +275,7 @@ FeedItem* TestUpdateOrdinalsOperation::createTestFeed(qint64 id, int ordinal, co
     FeedItem* feed = new FeedItem(
         id, ordinal, title, "", QDateTime::currentDateTime(), 60,
         QUrl(), QUrl(), "", QUrl(), QDateTime::currentDateTime(),
-        parentFolder, true, this
+        parentFolder, true, FeedTypeRSS, this
     );
     return feed;
 }
@@ -572,7 +572,7 @@ void TestUpdateOrdinalsOperation::testSpecialFeedsIgnored()
     FeedItem* allNews = new FeedItem(
         FEED_ID_ALLNEWS, 0, "All News", "", QDateTime::currentDateTime(), 60,
         QUrl(), QUrl(), "", QUrl(), QDateTime::currentDateTime(),
-        -1, true, this
+        -1, true, FeedTypeRSS, this
     );
     feedList->appendRow(allNews);
     feedList->appendRow(createTestFeed(feedId, 1, "Feed"));

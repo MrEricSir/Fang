@@ -25,15 +25,18 @@ FeedItem::FeedItem(QObject *parent) :
     lastIconUpdate(),
     firstNewsID(-1),
     _parentFolder(-1),
-    _folderOpen(true)
-    
+    _folderOpen(true),
+    _feedType(FeedTypeRSS),
+    etag(),
+    lastModified()
 {
 }
 
 FeedItem::FeedItem(qint64 id, const qint32 ordinal, const QString &title, const QString &subtitle,
                    const QDateTime &lastUpdated, quint32 minutesToUpdate, const QUrl &url,
                    const QUrl& siteURL, const QString& userURL, const QUrl &imageURL,
-                   const QDateTime& lastIconUpdate, qint64 parentFolder, bool folderOpen, QObject* parent) :
+                   const QDateTime& lastIconUpdate, qint64 parentFolder, bool folderOpen,
+                   FeedType feedType, QObject* parent) :
     ListItem(parent),
     _id(id),
     ordinal(ordinal),
@@ -55,7 +58,10 @@ FeedItem::FeedItem(qint64 id, const qint32 ordinal, const QString &title, const 
     lastIconUpdate(lastIconUpdate),
     firstNewsID(-1),
     _parentFolder(parentFolder),
-    _folderOpen(folderOpen)
+    _folderOpen(folderOpen),
+    _feedType(feedType),
+    etag(),
+    lastModified()
 {
 }
 
@@ -316,4 +322,14 @@ void FeedItem::setURL(QUrl url)
 bool FeedItem::bookmarksEnabled() const
 {
     return true;
+}
+
+void FeedItem::setEtag(const QString& value)
+{
+    etag = value;
+}
+
+void FeedItem::setLastModified(const QString& value)
+{
+    lastModified = value;
 }

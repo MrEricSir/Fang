@@ -7,6 +7,9 @@
         <file>sql/5.sql</file>
         <file>sql/6.sql</file>
         <file>sql/7.sql</file>
+        <file>sql/8.sql</file>
+        <file>sql/9.sql</file>
+        <file>sql/10.sql</file>
     </qresource>
     <qresource prefix="/icons">
         <file>icons/icon_circle.svg</file>

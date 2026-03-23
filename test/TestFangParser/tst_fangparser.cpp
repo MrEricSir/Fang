@@ -1,9 +1,11 @@
 #include <QString>
+#include <QTemporaryFile>
 #include <QTest>
 #include <QSignalSpy>
 #include <QNetworkAccessManager>
 
 #include "../../src/parser/NewsParser.h"
+#include "../MockNetworkAccessManager.h"
 
 /**
  * @brief Tests a number of RSS feeds I've saved from around the web.  
@@ -18,6 +20,24 @@ public:
 private slots:
     void parseTest();
     void parseTest_data();
+
+    // Media RSS image extraction
+    void testMediaImage();
+    void testMediaImage_data();
+
+    // dc:creator author extraction
+    void testDcCreatorAuthor();
+    void testDcCreatorAuthor_data();
+
+    // Three-letter timezone parsing
+    void testTimezoneAbbreviations();
+
+    // Permanent redirect detection
+    void testPermanentRedirect301();
+    void testPermanentRedirect308();
+    void testTemporaryRedirect302();
+    void testTemporaryRedirect307();
+    void testNoRedirect();
 };
 
 TestFangParser::TestFangParser()
@@ -149,9 +169,9 @@ void TestFangParser::parseTest_data()
         << "Oldest known Holocaust survivor and subject of Oscar-nominated documentary dies at age 110 [Sad]"
         << "http://www.fark.com/comments/8153957"
         << "http://www.fark.com/comments/8153957"
-        << QDateTime::fromString("23 Feb 2014 20:15:11", dtf)
+        << QDateTime::fromString("24 Feb 2014 01:15:11", dtf)
         << false;
-    
+
     QTest::newRow("Laughing Squid") << "laughingsquid.com.rss" << "Laughing Squid"
         << "http://laughingsquid.com"
         << 20
@@ -428,9 +448,9 @@ void TestFangParser::parseTest_data()
         << "The Stars Come Out For the Oscars Red Carpet!"
         << "http://www.popsugar.com/Celebrities-Oscars-Red-Carpet-2014-Pictures-34170716"
         << "34170716"
-        << QDateTime::fromString("02 Mar 2014 15:07:31", dtf)
+        << QDateTime::fromString("02 Mar 2014 23:07:31", dtf)
         << false;
-    
+
     QTest::newRow("Mashable") << "mashable.com.rss" << "Mashable"
         << "http://mashable.com/stories/?utm_campaign=Mash-Prod-RSS-Feedburner-All-Partial&utm_cid=Mash-Prod-RSS-Feedburner-All-Partial&utm_medium=feed&utm_source=rss"
         << 30
@@ -455,9 +475,9 @@ void TestFangParser::parseTest_data()
         << "Lisa Z.'s Review of Score! Bar and Lounge - San Francisco (5/5) on Yelp"
         << "http://www.yelp.com/biz/score-bar-and-lounge-san-francisco?hrid=PNUmsy71RbWtCOq3sNKsDg"
         << "http://www.yelp.com/biz/score-bar-and-lounge-san-francisco?hrid=PNUmsy71RbWtCOq3sNKsDg"
-        << QDateTime::fromString("04 Jul 2014 21:36:06", dtf)
+        << QDateTime::fromString("05 Jul 2014 05:36:06", dtf)
         << false;
-    
+
     QTest::newRow("Hoodline") << "hoodline.atom" << "Hoodline"
         << "http://hoodline.com/"
         << 25
@@ -590,7 +610,7 @@ void TestFangParser::parseTest_data()
         << "Two Hostages Killed in Rescue Bid in Yemen"
         << "http://online.wsj.com/articles/american-hostage-luke-somers-killed-in-rescue-attempt-1417862298?mod=fox_australian"
         << "SB10470281195569164720004580320502041250636"
-        << QDateTime::fromString("06 Dec 2014 13:04:22", dtf)
+        << QDateTime::fromString("06 Dec 2014 18:04:22", dtf)
         << false;
 
     QTest::newRow("Recode") << "recode.atom" << "Re/code"
@@ -655,6 +675,360 @@ void TestFangParser::parseTest_data()
         << ""
         << QDateTime::currentDateTime()
         << false;
+}
+
+// =====================================================================
+// Media RSS image extraction tests
+// =====================================================================
+
+void TestFangParser::testMediaImage()
+{
+    QFETCH(QString, filename);
+    QFETCH(QString, expectedFragment);
+    QFETCH(bool, shouldInject);
+
+    NewsParser parser(this);
+    QSignalSpy spy(&parser, &NewsParser::done);
+
+    QString projectPath = PROJECT_PATH;
+    QString fullFilename = projectPath + "/feeds/" + filename;
+    QVERIFY2(QFile::exists(fullFilename), "Feed file does not exist");
+
+    parser.parseFile(fullFilename);
+    if (!spy.count()) {
+        spy.wait(10000);
+    }
+    QCOMPARE(spy.count(), 1);
+
+    RawFeed* feed = parser.getFeed();
+    QVERIFY2(feed != nullptr, "Feed was null");
+    QVERIFY2(!feed->items.isEmpty(), "Feed has no items");
+
+    RawNews* firstItem = feed->items.first();
+    if (shouldInject) {
+        QVERIFY2(!firstItem->mediaImageURL.isEmpty(), "Expected mediaImageURL to be set");
+        QVERIFY2(firstItem->mediaImageURL.contains(expectedFragment),
+                 qPrintable("Expected fragment: " + expectedFragment));
+        // Content should NOT have injected <img> from media tags.
+        QVERIFY2(!firstItem->content.startsWith("<img src=\""),
+                 "Media image should not be injected into content");
+    } else {
+        QVERIFY2(firstItem->mediaImageURL.isEmpty(),
+                 "Should not have mediaImageURL when content has images");
+    }
+}
+
+void TestFangParser::testMediaImage_data()
+{
+    QTest::addColumn<QString>("filename");
+    QTest::addColumn<QString>("expectedFragment");
+    QTest::addColumn<bool>("shouldInject");
+
+    // BBC has two media:thumbnail tags (66px and 144px); we pick the wider one.
+    QTest::newRow("BBC") << "bbc.co.uk.rss" << "_73173552_73173504.jpg" << true;
+
+    // Fark has a single media:thumbnail with no width attribute.
+    QTest::newRow("Fark") << "fark.com.rss" << "sad.gif" << true;
+
+    // Mirror has media:content (615px, image/jpeg) > media:thumbnail (96px).
+    QTest::newRow("Mirror") << "mirror.co.uk.rss" << "s615/Arturo-Licata" << true;
+
+    // Donga has media:content with type=image/jpg.
+    QTest::newRow("Donga") << "donga.com.rss" << "61275241.1.thumb.jpg" << true;
+
+    // MakeUseOf: media:content has no image type; content already has <img>.
+    QTest::newRow("MakeUseOf") << "makeuseof.rss" << "" << false;
+}
+
+// =====================================================================
+// dc:creator author extraction tests
+// =====================================================================
+
+void TestFangParser::testDcCreatorAuthor()
+{
+    QFETCH(QString, filename);
+    QFETCH(QString, expectedAuthor);
+
+    NewsParser parser(this);
+    QSignalSpy spy(&parser, &NewsParser::done);
+
+    QString projectPath = PROJECT_PATH;
+    QString fullFilename = projectPath + "/feeds/" + filename;
+    QVERIFY2(QFile::exists(fullFilename), "Feed file does not exist");
+
+    parser.parseFile(fullFilename);
+    if (!spy.count()) {
+        spy.wait(10000);
+    }
+    QCOMPARE(spy.count(), 1);
+
+    RawFeed* feed = parser.getFeed();
+    QVERIFY2(feed != nullptr, "Feed was null");
+    QVERIFY2(!feed->items.isEmpty(), "Feed has no items");
+
+    QCOMPARE(feed->items.first()->author, expectedAuthor);
+}
+
+void TestFangParser::testDcCreatorAuthor_data()
+{
+    QTest::addColumn<QString>("filename");
+    QTest::addColumn<QString>("expectedAuthor");
+
+    // WordPress feed with dc:creator as CDATA.
+    QTest::newRow("Laughing Squid") << "laughingsquid.com.rss" << "Rollin Bishop";
+
+    // WordPress feed with dc:creator as plain text.
+    QTest::newRow("MrEricSir") << "mrericsir.com.rss" << "MrEricSir";
+
+    // Feed with dc:creator in standard RSS.
+    QTest::newRow("Mashable") << "mashable.com.rss" << "Amanda Wills";
+
+    // Feed with <name> in Atom (existing mechanism, should still work).
+    QTest::newRow("xkcd Atom") << "xkcd.atom" << "";
+}
+
+// =====================================================================
+// Three-letter timezone parsing tests
+// =====================================================================
+
+void TestFangParser::testTimezoneAbbreviations()
+{
+    // Access dateFromFeedString via a ParserXMLWorker instance. The method is
+    // public static, so we just need an instance to call it on.
+    // Actually, dateFromFeedString is a static public method, but it's declared
+    // as a member. Let's parse minimal feeds with specific timezone strings.
+
+    // Feed with PST timezone
+    QString pstFeed = R"(<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+<channel>
+<title>PST Test</title>
+<link>http://example.com</link>
+<item>
+<title>PST Article</title>
+<link>http://example.com/1</link>
+<guid>pst-1</guid>
+<pubDate>Wed, 19 Mar 2026 10:30:00 PST</pubDate>
+</item>
+</channel>
+</rss>)";
+
+    // Feed with EST timezone
+    QString estFeed = R"(<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+<channel>
+<title>EST Test</title>
+<link>http://example.com</link>
+<item>
+<title>EST Article</title>
+<link>http://example.com/2</link>
+<guid>est-1</guid>
+<pubDate>Wed, 19 Mar 2026 10:30:00 EST</pubDate>
+</item>
+</channel>
+</rss>)";
+
+    // Feed with GMT timezone (same as UTC)
+    QString gmtFeed = R"(<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+<channel>
+<title>GMT Test</title>
+<link>http://example.com</link>
+<item>
+<title>GMT Article</title>
+<link>http://example.com/3</link>
+<guid>gmt-1</guid>
+<pubDate>Wed, 19 Mar 2026 10:30:00 GMT</pubDate>
+</item>
+</channel>
+</rss>)";
+
+    // Feed with EDT timezone
+    QString edtFeed = R"(<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+<channel>
+<title>EDT Test</title>
+<link>http://example.com</link>
+<item>
+<title>EDT Article</title>
+<link>http://example.com/4</link>
+<guid>edt-1</guid>
+<pubDate>Wed, 19 Mar 2026 10:30:00 EDT</pubDate>
+</item>
+</channel>
+</rss>)";
+
+    // Helper: write feed to temp file, parse, and return first item timestamp.
+    auto parseFeedTimestamp = [this](const QString& feedXml) -> QDateTime {
+        QTemporaryFile tempFile;
+        tempFile.setAutoRemove(true);
+        if (!tempFile.open()) {
+            return QDateTime();
+        }
+        tempFile.write(feedXml.toUtf8());
+        tempFile.close();
+
+        NewsParser parser(this);
+        QSignalSpy spy(&parser, &NewsParser::done);
+        parser.parseFile(tempFile.fileName());
+        if (!spy.count()) {
+            spy.wait(10000);
+        }
+
+        RawFeed* feed = parser.getFeed();
+        if (!feed || feed->items.isEmpty()) {
+            return QDateTime();
+        }
+        return feed->items.first()->timestamp;
+    };
+
+    // PST = UTC-8, so 10:30 PST = 18:30 UTC
+    QDateTime pstTime = parseFeedTimestamp(pstFeed);
+    QVERIFY2(pstTime.isValid(), "PST timestamp should be valid");
+    QCOMPARE(pstTime.time().hour(), 18);
+    QCOMPARE(pstTime.time().minute(), 30);
+
+    // EST = UTC-5, so 10:30 EST = 15:30 UTC
+    QDateTime estTime = parseFeedTimestamp(estFeed);
+    QVERIFY2(estTime.isValid(), "EST timestamp should be valid");
+    QCOMPARE(estTime.time().hour(), 15);
+    QCOMPARE(estTime.time().minute(), 30);
+
+    // GMT = UTC+0, so 10:30 GMT = 10:30 UTC
+    QDateTime gmtTime = parseFeedTimestamp(gmtFeed);
+    QVERIFY2(gmtTime.isValid(), "GMT timestamp should be valid");
+    QCOMPARE(gmtTime.time().hour(), 10);
+    QCOMPARE(gmtTime.time().minute(), 30);
+
+    // EDT = UTC-4, so 10:30 EDT = 14:30 UTC
+    QDateTime edtTime = parseFeedTimestamp(edtFeed);
+    QVERIFY2(edtTime.isValid(), "EDT timestamp should be valid");
+    QCOMPARE(edtTime.time().hour(), 14);
+    QCOMPARE(edtTime.time().minute(), 30);
+}
+
+// =====================================================================
+// Permanent redirect detection tests
+// =====================================================================
+
+static QByteArray simpleRSSFeed()
+{
+    return R"(<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+<channel>
+<title>Test Feed</title>
+<link>http://example.com</link>
+<item>
+<title>Test Article</title>
+<link>http://example.com/1</link>
+<guid>test-1</guid>
+<pubDate>Thu, 19 Mar 2026 12:00:00 GMT</pubDate>
+</item>
+</channel>
+</rss>)";
+}
+
+void TestFangParser::testPermanentRedirect301()
+{
+    MockNetworkAccessManager mockManager;
+    QUrl originalUrl("http://example.com/old-feed");
+    QUrl finalUrl("http://example.com/new-feed");
+
+    mockManager.addRedirect(originalUrl, finalUrl, 301);
+    mockManager.addResponse(finalUrl, simpleRSSFeed());
+
+    NewsParser parser(&mockManager, this);
+    QSignalSpy spy(&parser, &NewsParser::done);
+
+    parser.parse(originalUrl);
+    if (!spy.count()) {
+        spy.wait(10000);
+    }
+    QCOMPARE(spy.count(), 1);
+    QVERIFY(parser.wasPermanentRedirect());
+    QCOMPARE(parser.getURL(), finalUrl);
+}
+
+void TestFangParser::testPermanentRedirect308()
+{
+    MockNetworkAccessManager mockManager;
+    QUrl originalUrl("http://example.com/old-feed");
+    QUrl finalUrl("http://example.com/new-feed");
+
+    mockManager.addRedirect(originalUrl, finalUrl, 308);
+    mockManager.addResponse(finalUrl, simpleRSSFeed());
+
+    NewsParser parser(&mockManager, this);
+    QSignalSpy spy(&parser, &NewsParser::done);
+
+    parser.parse(originalUrl);
+    if (!spy.count()) {
+        spy.wait(10000);
+    }
+    QCOMPARE(spy.count(), 1);
+    QVERIFY(parser.wasPermanentRedirect());
+    QCOMPARE(parser.getURL(), finalUrl);
+}
+
+void TestFangParser::testTemporaryRedirect302()
+{
+    MockNetworkAccessManager mockManager;
+    QUrl originalUrl("http://example.com/old-feed");
+    QUrl finalUrl("http://example.com/new-feed");
+
+    mockManager.addRedirect(originalUrl, finalUrl, 302);
+    mockManager.addResponse(finalUrl, simpleRSSFeed());
+
+    NewsParser parser(&mockManager, this);
+    QSignalSpy spy(&parser, &NewsParser::done);
+
+    parser.parse(originalUrl);
+    if (!spy.count()) {
+        spy.wait(10000);
+    }
+    QCOMPARE(spy.count(), 1);
+    QVERIFY(!parser.wasPermanentRedirect());
+    QCOMPARE(parser.getURL(), finalUrl);
+}
+
+void TestFangParser::testTemporaryRedirect307()
+{
+    MockNetworkAccessManager mockManager;
+    QUrl originalUrl("http://example.com/old-feed");
+    QUrl finalUrl("http://example.com/new-feed");
+
+    mockManager.addRedirect(originalUrl, finalUrl, 307);
+    mockManager.addResponse(finalUrl, simpleRSSFeed());
+
+    NewsParser parser(&mockManager, this);
+    QSignalSpy spy(&parser, &NewsParser::done);
+
+    parser.parse(originalUrl);
+    if (!spy.count()) {
+        spy.wait(10000);
+    }
+    QCOMPARE(spy.count(), 1);
+    QVERIFY(!parser.wasPermanentRedirect());
+    QCOMPARE(parser.getURL(), finalUrl);
+}
+
+void TestFangParser::testNoRedirect()
+{
+    MockNetworkAccessManager mockManager;
+    QUrl feedUrl("http://example.com/feed");
+
+    mockManager.addResponse(feedUrl, simpleRSSFeed());
+
+    NewsParser parser(&mockManager, this);
+    QSignalSpy spy(&parser, &NewsParser::done);
+
+    parser.parse(feedUrl);
+    if (!spy.count()) {
+        spy.wait(10000);
+    }
+    QCOMPARE(spy.count(), 1);
+    QVERIFY(!parser.wasPermanentRedirect());
+    QCOMPARE(parser.getURL(), feedUrl);
 }
 
 QTEST_MAIN(TestFangParser)

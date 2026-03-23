@@ -42,6 +42,12 @@ qt_add_executable(tst_testbatchfeeddiscovery
     ${CMAKE_SOURCE_DIR}/src/parser/RawFeed.h
     ${CMAKE_SOURCE_DIR}/src/parser/RawNews.cpp
     ${CMAKE_SOURCE_DIR}/src/parser/RawNews.h
+    ${CMAKE_SOURCE_DIR}/src/parser/SitemapParser.cpp
+    ${CMAKE_SOURCE_DIR}/src/parser/SitemapParser.h
+    ${CMAKE_SOURCE_DIR}/src/utilities/GoogleNewsSitemapSynthesizer.cpp
+    ${CMAKE_SOURCE_DIR}/src/utilities/GoogleNewsSitemapSynthesizer.h
+    ${CMAKE_SOURCE_DIR}/src/utilities/PageMetadataExtractor.cpp
+    ${CMAKE_SOURCE_DIR}/src/utilities/PageMetadataExtractor.h
     ${CMAKE_SOURCE_DIR}/src/FangObject.cpp
     ${CMAKE_SOURCE_DIR}/src/FangObject.h
     ${CMAKE_SOURCE_DIR}/src/network/FangNetworkAccessManager.cpp

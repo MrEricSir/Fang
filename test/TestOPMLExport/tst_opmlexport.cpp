@@ -151,7 +151,7 @@ void TestOPMLExport::testExportSingleFeed()
     // Add placeholder at index 0 (reserved for "All News" special feed)
     FeedItem* placeholder = new FeedItem(
         FEED_ID_ALLNEWS, -1, "All News", "", QDateTime::currentDateTime(), 60,
-        QUrl(), QUrl(), "", QUrl(), QDateTime::currentDateTime(), -1, true, model
+        QUrl(), QUrl(), "", QUrl(), QDateTime::currentDateTime(), -1, true, FeedTypeRSS, model
     );
     model->appendRow(placeholder);
 
@@ -170,6 +170,7 @@ void TestOPMLExport::testExportSingleFeed()
         QDateTime::currentDateTime(),               // lastIconUpdate
         -1,                                         // parentFolder
         true,                                       // folderOpen
+        FeedTypeRSS,
         model
     );
 
@@ -209,7 +210,7 @@ void TestOPMLExport::testExportMultipleFeeds()
     // Add placeholder at index 0
     FeedItem* placeholder = new FeedItem(
         FEED_ID_ALLNEWS, -1, "All News", "", QDateTime::currentDateTime(), 60,
-        QUrl(), QUrl(), "", QUrl(), QDateTime::currentDateTime(), -1, true, model
+        QUrl(), QUrl(), "", QUrl(), QDateTime::currentDateTime(), -1, true, FeedTypeRSS, model
     );
     model->appendRow(placeholder);
 
@@ -229,6 +230,7 @@ void TestOPMLExport::testExportMultipleFeeds()
             QDateTime::currentDateTime(),
             -1,
             true,
+            FeedTypeRSS,
             model
         );
         model->appendRow(feed);
@@ -276,7 +278,7 @@ void TestOPMLExport::testExportWithSpecialCharacters()
     // Add placeholder at index 0
     FeedItem* placeholder = new FeedItem(
         FEED_ID_ALLNEWS, -1, "All News", "", QDateTime::currentDateTime(), 60,
-        QUrl(), QUrl(), "", QUrl(), QDateTime::currentDateTime(), -1, true, model
+        QUrl(), QUrl(), "", QUrl(), QDateTime::currentDateTime(), -1, true, FeedTypeRSS, model
     );
     model->appendRow(placeholder);
 
@@ -295,6 +297,7 @@ void TestOPMLExport::testExportWithSpecialCharacters()
         QDateTime::currentDateTime(),
         -1,
         true,
+        FeedTypeRSS,
         model
     );
 
@@ -331,7 +334,7 @@ void TestOPMLExport::testExportWithoutSiteURL()
     // Add placeholder at index 0
     FeedItem* placeholder = new FeedItem(
         FEED_ID_ALLNEWS, -1, "All News", "", QDateTime::currentDateTime(), 60,
-        QUrl(), QUrl(), "", QUrl(), QDateTime::currentDateTime(), -1, true, model
+        QUrl(), QUrl(), "", QUrl(), QDateTime::currentDateTime(), -1, true, FeedTypeRSS, model
     );
     model->appendRow(placeholder);
 
@@ -350,6 +353,7 @@ void TestOPMLExport::testExportWithoutSiteURL()
         QDateTime::currentDateTime(),
         -1,
         true,
+        FeedTypeRSS,
         model
     );
 
@@ -388,7 +392,7 @@ void TestOPMLExport::testValidXMLStructure()
         1, 0, "Test", "", QDateTime::currentDateTime(), 60,
         QUrl("http://example.com/feed.xml"), QUrl("http://example.com"),
         "http://example.com/feed.xml", QUrl(), QDateTime::currentDateTime(),
-        -1, true, model
+        -1, true, FeedTypeRSS, model
     );
     model->appendRow(feed);
 

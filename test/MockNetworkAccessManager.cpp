@@ -4,7 +4,7 @@
 
 MockNetworkReply::MockNetworkReply(const QByteArray& data, const QNetworkRequest& request, QObject* parent,
                                    bool isError, QNetworkReply::NetworkError errorCode,
-                                   int delayMs, const QUrl& redirectUrl)
+                                   int delayMs, const QUrl& redirectUrl, int httpStatusCode)
     : QNetworkReply(parent)
     , aborted(false)
 {
@@ -32,6 +32,9 @@ MockNetworkReply::MockNetworkReply(const QByteArray& data, const QNetworkRequest
     // Set redirect URL if provided
     if (redirectUrl.isValid()) {
         setAttribute(QNetworkRequest::RedirectionTargetAttribute, redirectUrl);
+        if (httpStatusCode != 0) {
+            setAttribute(QNetworkRequest::HttpStatusCodeAttribute, httpStatusCode);
+        }
     }
 
     setOpenMode(QIODevice::ReadOnly);
@@ -44,7 +47,7 @@ MockNetworkReply::MockNetworkReply(const QByteArray& data, const QNetworkRequest
 // Backwards-compatible constructor that creates a QNetworkRequest from QUrl
 MockNetworkReply::MockNetworkReply(const QByteArray& data, const QUrl& url, QObject* parent,
                                    bool isError, QNetworkReply::NetworkError errorCode,
-                                   int delayMs, const QUrl& redirectUrl)
+                                   int delayMs, const QUrl& redirectUrl, int httpStatusCode)
     : QNetworkReply(parent)
     , aborted(false)
 {
@@ -71,6 +74,9 @@ MockNetworkReply::MockNetworkReply(const QByteArray& data, const QUrl& url, QObj
     // Set redirect URL if provided
     if (redirectUrl.isValid()) {
         setAttribute(QNetworkRequest::RedirectionTargetAttribute, redirectUrl);
+        if (httpStatusCode != 0) {
+            setAttribute(QNetworkRequest::HttpStatusCodeAttribute, httpStatusCode);
+        }
     }
 
     setOpenMode(QIODevice::ReadOnly);
@@ -91,7 +97,15 @@ void MockNetworkReply::abort()
 void MockNetworkReply::emitFinished()
 {
     if (!aborted) {
-        // Emit progress signal first if enabled (simulates download completing)
+        // Simulate the real QNetworkReply signal sequence:
+        // 1. metaDataChanged (headers available)
+        // 2. readyRead (if data available)
+        // 3. downloadProgress
+        // 4. finished
+        emit metaDataChanged();
+        if (buffer.bytesAvailable() > 0) {
+            emit readyRead();
+        }
         emitProgress();
         emit finished();
     }
@@ -167,11 +181,13 @@ void MockNetworkAccessManager::setFailureCount(int count, QNetworkReply::Network
     failuresRemaining = count;
 }
 
-void MockNetworkAccessManager::addRedirect(const QUrl& fromUrl, const QUrl& toUrl)
+void MockNetworkAccessManager::addRedirect(const QUrl& fromUrl, const QUrl& toUrl, int httpStatusCode)
 {
     QString key = fromUrl.toString();
     redirects[key] = toUrl;
-    qCDebug(logMock) << "MockNetworkAccessManager: Added redirect from" << key << "to" << toUrl.toString();
+    redirectStatusCodes[key] = httpStatusCode;
+    qCDebug(logMock) << "MockNetworkAccessManager: Added redirect from" << key << "to" << toUrl.toString()
+                     << "with status" << httpStatusCode;
 }
 
 void MockNetworkAccessManager::addErrorResponse(const QUrl& url, QNetworkReply::NetworkError errorCode)
@@ -224,21 +240,24 @@ QNetworkReply* MockNetworkAccessManager::createRequest(Operation op, const QNetw
 
     // Check for redirect
     QUrl redirectUrl;
+    int redirectCode = 0;
     if (redirects.contains(key)) {
         redirectUrl = redirects[key];
-        qCDebug(logMock) << "MockNetworkAccessManager: Redirecting" << key << "to" << redirectUrl.toString();
+        redirectCode = redirectStatusCodes.value(key, 301);
+        qCDebug(logMock) << "MockNetworkAccessManager: Redirecting" << key << "to" << redirectUrl.toString()
+                         << "with status" << redirectCode;
     }
 
     if (responses.contains(key)) {
         qCDebug(logMock) << "MockNetworkAccessManager: Returning mock response for" << key;
         return new MockNetworkReply(responses[key], request, this, false,
-                                    QNetworkReply::NoError, responseDelayMs, redirectUrl);
+                                    QNetworkReply::NoError, responseDelayMs, redirectUrl, redirectCode);
     }
 
     // If we have a redirect but no response, return empty body with redirect
     if (redirectUrl.isValid()) {
         return new MockNetworkReply(QByteArray(), request, this, false,
-                                    QNetworkReply::NoError, responseDelayMs, redirectUrl);
+                                    QNetworkReply::NoError, responseDelayMs, redirectUrl, redirectCode);
     }
 
     qWarning() << "MockNetworkAccessManager: No mock response for" << key;

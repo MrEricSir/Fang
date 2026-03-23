@@ -11,6 +11,7 @@
 #include "../models/SearchFeedItem.h"
 #include "../utilities/ErrorHandling.h"
 #include "../utilities/FangLogging.h"
+#include "../utilities/ImageCache.h"
 #include "../utilities/NetworkUtilities.h"
 
 WebServer::WebServer(FangApp* appInstance, FangObject *parent) :
@@ -34,6 +35,10 @@ WebServer::WebServer(FangApp* appInstance, FangObject *parent) :
     server.route("/html/<arg>", this, [] (QString path) {
         // Assume the files is in our QRC and attempt to load it.
         return QHttpServerResponse::fromFile(":/html/" + path);
+    });
+
+    server.route("/images/<arg>", this, [] (QString filename) {
+        return QHttpServerResponse::fromFile(ImageCache::cacheDir() + "/" + filename);
     });
 
     server.route("/api/open_link", QHttpServerRequest::Method::Post, this, [] (const QHttpServerRequest &request) {
@@ -212,8 +217,16 @@ void WebServer::addNewsItem(NewsItem *item, QVariantList *newsList)
     itemMap["url"] = item->getURL().toString();
     itemMap["feedTitle"] = feedTitle;
     itemMap["timestamp"] = item->getTimestamp().toMSecsSinceEpoch();
+    itemMap["author"] = item->getAuthor();
     itemMap["content"] = item->getContent() != "" ? item->getContent() : item->getSummary();
     itemMap["pinned"] = item->getPinned();
+
+    // Only send media image when content has no images of its own.
+    QString displayContent = itemMap["content"].toString();
+    if (!item->getMediaImageURL().isEmpty() &&
+        !displayContent.contains("<img", Qt::CaseInsensitive)) {
+        itemMap["mediaImage"] = item->getMediaImageURL();
+    }
 
     // Replace empty titles with "no subject"
     if (itemMap["title"].toString().trimmed().isEmpty()) {

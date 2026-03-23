@@ -22,10 +22,13 @@ class NewsParser : public ParserInterface
     
 public:
     explicit NewsParser(QObject *parent = nullptr);
+    explicit NewsParser(QNetworkAccessManager* networkManager, QObject *parent = nullptr);
     virtual ~NewsParser();
     
 public slots:
-    virtual void parse(const QUrl& url, bool noParseIfCached = false); // Override.
+    virtual void parse(const QUrl& url, bool noParseIfCached = false,
+                       const QString& ifNoneMatch = QString(),
+                       const QString& ifModifiedSince = QString()); // Override.
     
     // For testing purposes.
     void parseFile(const QString& filename);
@@ -36,6 +39,9 @@ public slots:
     virtual inline QUrl getURL() { return finalFeedURL; } // Override.
     
     virtual bool isFromCache() { return fromCache; } // Override
+    virtual QString responseEtag() { return respEtag; }
+    virtual QString responseLastModified() { return respLastModified; }
+    bool wasPermanentRedirect() const { return permanentRedirect; }
     
     // These are used internally.
 signals:
@@ -60,13 +66,16 @@ protected slots:
     
 private:
     void initParse(const QUrl& url = QUrl("")); // called prior to parse.
-    void parseInternal(const QUrl& url, bool noParseIfCached); // used for redirects.
+    void parseInternal(const QUrl& url, bool noParseIfCached,
+                       const QString& ifNoneMatch = QString(),
+                       const QString& ifModifiedSince = QString()); // used for redirects.
     
     RawFeed* feed;
     ParseResult result;
     QNetworkReply::NetworkError networkError;
     
     FangNetworkAccessManager manager;
+    QNetworkAccessManager* activeManager;
     QNetworkReply *currentReply;
     QUrl finalFeedURL;
     QNetworkReply *redirectReply;
@@ -74,7 +83,13 @@ private:
     bool fromCache;
     bool noParseIfCached;
 
+    QString condIfNoneMatch;
+    QString condIfModifiedSince;
+    QString respEtag;
+    QString respLastModified;
+
     int redirectAttempts;
+    bool permanentRedirect;
 
     QThread workerThread;
 };

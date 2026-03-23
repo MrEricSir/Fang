@@ -19,11 +19,17 @@ add_library(FangTestLib STATIC
     ${CMAKE_SOURCE_DIR}/src/parser/RawNews.cpp
     ${CMAKE_SOURCE_DIR}/src/parser/BatchNewsParser.cpp
 
+    # Sitemap support
+    ${CMAKE_SOURCE_DIR}/src/parser/SitemapParser.cpp
+    ${CMAKE_SOURCE_DIR}/src/utilities/PageMetadataExtractor.cpp
+    ${CMAKE_SOURCE_DIR}/src/utilities/GoogleNewsSitemapSynthesizer.cpp
+
     # Utilities (used by multiple tests)
     ${CMAKE_SOURCE_DIR}/src/network/NetworkDownloadCore.cpp
     ${CMAKE_SOURCE_DIR}/src/utilities/NetworkUtilities.cpp
     ${CMAKE_SOURCE_DIR}/src/utilities/WebPageGrabber.cpp
     ${CMAKE_SOURCE_DIR}/src/utilities/ImageGrabber.cpp
+    ${CMAKE_SOURCE_DIR}/src/utilities/ImageCache.cpp
     # NOTE: FeedDiscovery is NOT included here because it uses QSimpleStateMachine
     # Tests that need FeedDiscovery should compile it directly to avoid duplicate MOC symbols
 )
@@ -40,6 +46,7 @@ target_include_directories(FangTestLib PUBLIC
 # Link required libraries
 target_link_libraries(FangTestLib PUBLIC
     TidyLib
+    Qt6::Concurrent
     Qt6::Core
     Qt6::Network
     Qt6::Gui

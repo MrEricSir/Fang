@@ -2,7 +2,10 @@
 #define RAWFEEDIMAGESIZEREWRITER_H
 
 #include <QObject>
+#include <QFutureWatcher>
 #include <QList>
+#include <QSet>
+#include <QUrl>
 
 #include "../parser/RawNews.h"
 #include "../FangObject.h"
@@ -45,6 +48,7 @@ public slots:
 
 private slots:
     void onImageGrabberFinished();
+    void onSanitizeFinished();
 
 private:
     void finalizeAll();
@@ -52,6 +56,8 @@ private:
     QList<RawNews*>* newsList;
     HTMLSanitizer sanitizer;
     ImageGrabber imageGrabber;
+    QFutureWatcher<QSet<QUrl>> sanitizeWatcher;
+    QFutureWatcher<void> finalizeWatcher;
 };
 
 #endif // RAWFEEDIMAGESIZEREWRITER_H

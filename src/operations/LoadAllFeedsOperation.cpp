@@ -54,8 +54,11 @@ void LoadAllFeedsOperation::execute()
                         QDateTime::fromMSecsSinceEpoch(query.value("lastIconUpdate").toLongLong()),
                         query.value("parent_folder").toULongLong(),
                         query.value("folder_open").toBool(),
+                        static_cast<FeedType>(query.value("feed_type").toInt()),
                         feedList
                         );
+            item->setEtag(query.value("etag").toString());
+            item->setLastModified(query.value("last_modified").toString());
         }
 
         tempFeedItemList.append(item);

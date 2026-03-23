@@ -6,6 +6,7 @@
 #include "../../src/utilities/BatchFeedDiscovery.h"
 #include "../../src/models/ListModel.h"
 #include "../../src/models/FeedItem.h"
+#include "../../src/parser/RawNews.h"
 #include "../MockNewsParser.h"
 #include "../MockWebPageGrabber.h"
 #include "../MockBatchNewsParser.h"
@@ -36,9 +37,13 @@ public:
         if (results && !results->isEmpty()) {
             bool shouldSucceed = results->dequeue();
             if (shouldSucceed) {
-                // Configure for success
+                // Configure for success. Note that feed must have at least one item.
                 RawFeed* feed = new RawFeed();  // No parent - MockNewsParser owns it
                 feed->url = QUrl("http://example.com/feed.xml");
+                RawNews* item = new RawNews(feed);
+                item->title = "Test Item";
+                item->url = QUrl("http://example.com/article");
+                feed->items.append(item);
                 parser->setResult(ParserInterface::OK);
                 parser->setFeed(feed);
                 parser->setURL(QUrl("http://example.com/feed.xml"));

@@ -29,14 +29,16 @@ public:
                      bool isError = false,
                      QNetworkReply::NetworkError errorCode = QNetworkReply::ContentNotFoundError,
                      int delayMs = 0,
-                     const QUrl& redirectUrl = QUrl());
+                     const QUrl& redirectUrl = QUrl(),
+                     int httpStatusCode = 0);
 
     // Backwards-compatible constructor taking QUrl (creates minimal QNetworkRequest internally)
     MockNetworkReply(const QByteArray& data, const QUrl& url, QObject* parent = nullptr,
                      bool isError = false,
                      QNetworkReply::NetworkError errorCode = QNetworkReply::ContentNotFoundError,
                      int delayMs = 0,
-                     const QUrl& redirectUrl = QUrl());
+                     const QUrl& redirectUrl = QUrl(),
+                     int httpStatusCode = 0);
 
     void abort() override;
     qint64 bytesAvailable() const override;
@@ -108,7 +110,7 @@ public:
      * @param fromUrl The URL that will trigger the redirect
      * @param toUrl The URL to redirect to
      */
-    void addRedirect(const QUrl& fromUrl, const QUrl& toUrl);
+    void addRedirect(const QUrl& fromUrl, const QUrl& toUrl, int httpStatusCode = 301);
 
     /**
      * @brief Add a URL-specific error response
@@ -136,6 +138,7 @@ protected:
 private:
     QMap<QString, QByteArray> responses;
     QMap<QString, QUrl> redirects;
+    QMap<QString, int> redirectStatusCodes;
     QMap<QString, QNetworkReply::NetworkError> urlErrors;
     QNetworkReply::NetworkError nextError;
     int failuresRemaining;

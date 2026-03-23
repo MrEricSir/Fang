@@ -47,9 +47,12 @@ void MockNewsParser::reset()
     romCache = false;
 }
 
-void MockNewsParser::parse(const QUrl& url, bool noParseIfCached)
+void MockNewsParser::parse(const QUrl& url, bool noParseIfCached,
+                           const QString& ifNoneMatch, const QString& ifModifiedSince)
 {
     Q_UNUSED(noParseIfCached);
+    Q_UNUSED(ifNoneMatch);
+    Q_UNUSED(ifModifiedSince);
 
     // If URL wasn't pre-configured, use the one passed in
     if (this->url.isEmpty()) {
