@@ -9,7 +9,7 @@
 
 #include "../models/ListModel.h"
 #include "../models/FeedItem.h"
-#include "../parser/NewsParser.h"
+#include "../parser/FeedFetcher.h"
 
 class AddFeedOperation : public AsyncOperation
 {
@@ -41,7 +41,7 @@ private:
     QString userURL;
     const RawFeed* rawFeed;
     
-    NewsParser parser;
+    FeedFetcher parser;
     
     QString title;
     

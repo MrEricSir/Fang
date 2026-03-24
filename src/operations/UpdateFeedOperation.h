@@ -6,10 +6,10 @@
 #include <QDateTime>
 
 #include "../utilities/RawFeedRewriter.h"
-#include "../parser/NewsParser.h"
+#include "../parser/FeedFetcher.h"
 #include "../models/FeedItem.h"
 #include "../utilities/FeedDiscovery.h"
-#include "../utilities/GoogleNewsSitemapSynthesizer.h"
+#include "../utilities/NewsSitemapSynthesizer.h"
 
 /*!
     \brief Updates a feed.
@@ -65,7 +65,7 @@ private slots:
     void onNewsSitemapRefreshDone();
 
 private:
-    NewsParser parser;
+    FeedFetcher parser;
     FeedItem *feed;
     RawFeed* rawFeed;
     RawFeedRewriter rewriter;
@@ -73,7 +73,7 @@ private:
     QDateTime timestamp;
     bool useCache;
     FeedDiscovery discovery;
-    GoogleNewsSitemapSynthesizer* newsSitemapSynthesizer;
+    NewsSitemapSynthesizer* newsSitemapSynthesizer;
 };
 
 #endif // UPDATEFEEDOPERATION_H

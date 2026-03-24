@@ -1,5 +1,5 @@
-#ifndef PARSER_H
-#define PARSER_H
+#ifndef FEEDFETCHER_H
+#define FEEDFETCHER_H
 
 #include <QObject>
 
@@ -8,7 +8,7 @@
 #include <QThread>
 
 #include "../network/FangNetworkAccessManager.h"
-#include "ParserInterface.h"
+#include "FeedSource.h"
 
 // Max number of HTTP redirects to prevent looping.
 #define MAX_PARSER_REDIRECTS 10
@@ -16,14 +16,14 @@
 /*!
     PaRSSes RSS/Atom feeds into RawFeed/RawNews objects.
  */
-class NewsParser : public ParserInterface
+class FeedFetcher : public FeedSource
 {
     Q_OBJECT
     
 public:
-    explicit NewsParser(QObject *parent = nullptr);
-    explicit NewsParser(QNetworkAccessManager* networkManager, QObject *parent = nullptr);
-    virtual ~NewsParser();
+    explicit FeedFetcher(QObject *parent = nullptr);
+    explicit FeedFetcher(QNetworkAccessManager* networkManager, QObject *parent = nullptr);
+    virtual ~FeedFetcher();
     
 public slots:
     virtual void parse(const QUrl& url, bool noParseIfCached = false,
@@ -45,15 +45,9 @@ public slots:
     
     // These are used internally.
 signals:
-    
-    // Call this prior to adding XML.
-    void triggerDocStart();
-    
-    // Call this when you're done adding XML.
-    void triggerDocEnd();
-    
-    // Add a chunk of feed data to parse.
-    void triggerAddData(QByteArray data);
+
+    // Send buffered data to the worker thread for parsing.
+    void triggerParse(QByteArray data);
     
 protected slots:
     void readyRead();
@@ -91,7 +85,8 @@ private:
     int redirectAttempts;
     bool permanentRedirect;
 
+    QByteArray rawData;
     QThread workerThread;
 };
 
-#endif // PARSER_H
+#endif // FEEDFETCHER_H

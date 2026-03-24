@@ -3,10 +3,9 @@
 
 #include <QObject>
 
-#include "../FangObject.h"
 #include "RawNews.h"
 
-class RawFeed : public FangObject
+class RawFeed : public QObject
 {
     Q_OBJECT
 

@@ -6,16 +6,15 @@
 #include <algorithm>
 #include "NetworkUtilities.h"
 #include "ErrorHandling.h"
-#include "../parser/NewsParser.h"
-#include "../parser/BatchNewsParser.h"
+#include "../parser/FeedFetcher.h"
+#include "../parser/BatchFeedFetcher.h"
 #include "WebPageGrabber.h"
 
 FeedDiscovery::FeedDiscovery(QObject *parent,
-                           ParserInterface* firstParser,
-                           ParserInterface* secondParser,
+                           FeedSource* firstParser,
                            WebPageGrabber* pageGrabber,
-                           BatchNewsParser* feedParser,
-                           GoogleNewsSitemapSynthesizer* sitemapSynthesizer) :
+                           BatchFeedFetcher* feedParser,
+                           NewsSitemapSynthesizer* sitemapSynthesizer) :
     FangObject(parent),
     machine(),
     _error(false),
@@ -24,17 +23,10 @@ FeedDiscovery::FeedDiscovery(QObject *parent,
     _probingCommonPaths(false),
     newsSitemapSynthesizer(sitemapSynthesizer)
 {
-    // Handle secondParser: no longer used, but we need to clean it up if provided
-    if (secondParser) {
-        if (!secondParser->parent()) {
-            secondParser->setParent(this);  // Take ownership so it gets cleaned up
-        }
-    }
-
     // Create default implementations if not provided (with this as parent for auto-cleanup)
-    parserFirstTry = firstParser ? firstParser : new NewsParser(this);
+    parserFirstTry = firstParser ? firstParser : new FeedFetcher(this);
     this->pageGrabber = pageGrabber ? pageGrabber : new WebPageGrabber(this);
-    this->feedParser = feedParser ? feedParser : new BatchNewsParser(this);
+    this->feedParser = feedParser ? feedParser : new BatchFeedFetcher(this);
 
     // Take ownership of injected dependencies by setting parent
     if (parserFirstTry && !parserFirstTry->parent()) {
@@ -59,8 +51,8 @@ FeedDiscovery::FeedDiscovery(QObject *parent,
     machine.addStateChange(WEB_GRABBER, TRY_COMMON_PATHS, [this]() { onTryCommonPaths(); });
     machine.addStateChange(VALIDATE_FEEDS, TRY_COMMON_PATHS, [this]() { onTryCommonPaths(); });
     machine.addStateChange(TRY_COMMON_PATHS, FEED_FOUND, [this]() { onFeedFound(); });
-    machine.addStateChange(TRY_COMMON_PATHS, TRY_GOOGLE_NEWS_SITEMAP, [this]() { onTryGoogleNewsSitemap(); });
-    machine.addStateChange(TRY_GOOGLE_NEWS_SITEMAP, FEED_FOUND, [this]() { onFeedFound(); });
+    machine.addStateChange(TRY_COMMON_PATHS, TRY_NEWS_SITEMAP, [this]() { onTryNewsSitemap(); });
+    machine.addStateChange(TRY_NEWS_SITEMAP, FEED_FOUND, [this]() { onFeedFound(); });
 
     machine.addStateChange(-1, FEED_ERROR, [this]() { onError(); }); // All errors.
 
@@ -70,11 +62,11 @@ FeedDiscovery::FeedDiscovery(QObject *parent,
     connect(&timeoutTimer, &QTimer::timeout, this, &FeedDiscovery::onTimeout);
 
     // Parser signals.
-    connect(parserFirstTry, &ParserInterface::done, this, &FeedDiscovery::onFirstParseDone);
+    connect(parserFirstTry, &FeedSource::done, this, &FeedDiscovery::onFirstParseDone);
 
     // Web page grabber signals.
     connect(this->pageGrabber, &WebPageGrabber::ready, this, &FeedDiscovery::onPageGrabberReady);
-    connect(this->feedParser, &BatchNewsParser::ready, this, &FeedDiscovery::onFeedParserReady);
+    connect(this->feedParser, &BatchFeedFetcher::ready, this, &FeedDiscovery::onFeedParserReady);
 }
 
 FeedDiscovery::~FeedDiscovery()
@@ -154,7 +146,7 @@ void FeedDiscovery::onFirstParseDone()
 {
     int res = parserFirstTry->getResult();
     switch (res) {
-    case ParserInterface::OK:
+    case FeedSource::OK:
     {
         // User directly entered a feed URL! Add it to discovered feeds
         _feedURL = parserFirstTry->getURL();
@@ -180,15 +172,15 @@ void FeedDiscovery::onFirstParseDone()
         break;
     }
 
-    case ParserInterface::NETWORK_ERROR:
-    case ParserInterface::FILE_ERROR:
-    case ParserInterface::EMPTY_DOCUMENT:
-    case ParserInterface::PARSE_ERROR:
+    case FeedSource::NETWORK_ERROR:
+    case FeedSource::FILE_ERROR:
+    case FeedSource::EMPTY_DOCUMENT:
+    case FeedSource::PARSE_ERROR:
         // Not a feed, probably HTML. Continue to the web grabber stage.
         machine.setState(WEB_GRABBER);
         break;
 
-    case ParserInterface::IN_PROGRESS:
+    case FeedSource::IN_PROGRESS:
     default:
         FANG_UNREACHABLE("Unexpected parser result in onFirstParseDone");
         // Treat as error and continue to web grabber
@@ -324,13 +316,13 @@ void FeedDiscovery::onFeedParserReady()
     // Process all parsed feeds
     _discoveredFeeds.clear();
 
-    QMap<QUrl, ParserInterface::ParseResult> results = feedParser->getResults();
+    QMap<QUrl, FeedSource::ParseResult> results = feedParser->getResults();
     for (auto it = results.constBegin(); it != results.constEnd(); ++it) {
         QUrl feedURL = it.key();
-        ParserInterface::ParseResult result = it.value();
+        FeedSource::ParseResult result = it.value();
 
         // Only include successfully parsed feeds that have items.
-        if (result == ParserInterface::OK) {
+        if (result == FeedSource::OK) {
             RawFeed* feed = feedParser->getFeed(feedURL);
             if (feed && !feed->items.isEmpty()) {
                 DiscoveredFeed discovered;
@@ -350,7 +342,7 @@ void FeedDiscovery::onFeedParserReady()
             // Common paths didn't turn up anything.
             qCDebug(logUtility) << "No valid feeds at common paths, trying sitemap";
             _probingCommonPaths = false;
-            machine.setState(TRY_GOOGLE_NEWS_SITEMAP);
+            machine.setState(TRY_NEWS_SITEMAP);
         } else {
             // Validation of HTML-discovered feeds failed.
             qCDebug(logUtility) << "No valid feeds found, trying common paths";
@@ -405,7 +397,7 @@ void FeedDiscovery::onTryCommonPaths()
     feedParser->parse(probeURLs);
 }
 
-void FeedDiscovery::onTryGoogleNewsSitemap()
+void FeedDiscovery::onTryNewsSitemap()
 {
     // Extract site title from the already-fetched XHTML (if available).
     // The page content may be a redirect or error page, so validate the title.
@@ -429,9 +421,9 @@ void FeedDiscovery::onTryGoogleNewsSitemap()
                         << "with title" << siteTitle;
 
     if (!newsSitemapSynthesizer) {
-        newsSitemapSynthesizer = new GoogleNewsSitemapSynthesizer(this);
+        newsSitemapSynthesizer = new NewsSitemapSynthesizer(this);
     }
-    connect(newsSitemapSynthesizer, &GoogleNewsSitemapSynthesizer::done,
+    connect(newsSitemapSynthesizer, &NewsSitemapSynthesizer::done,
             this, &FeedDiscovery::onNewsSitemapDone, Qt::UniqueConnection);
     newsSitemapSynthesizer->synthesize(_feedURL, siteTitle);
 }

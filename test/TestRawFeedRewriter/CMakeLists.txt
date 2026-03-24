@@ -9,7 +9,6 @@ qt_add_executable(tst_testrawfeedrewritertest
     ${CMAKE_SOURCE_DIR}/src/utilities/HTMLSanitizer.cpp
     ${CMAKE_SOURCE_DIR}/src/utilities/ImageGrabber.cpp
     ${CMAKE_SOURCE_DIR}/src/FangObject.cpp
-    ${CMAKE_SOURCE_DIR}/src/parser/RawNews.cpp
     ${CMAKE_SOURCE_DIR}/src/network/FangNetworkAccessManager.cpp
     ${CMAKE_SOURCE_DIR}/src/network/NetworkRetryPolicy.cpp
     ${CMAKE_SOURCE_DIR}/src/utilities/WebPageGrabber.cpp
@@ -24,7 +23,6 @@ qt_add_executable(tst_testrawfeedrewritertest
     ${CMAKE_SOURCE_DIR}/src/utilities/HTMLSanitizer.h
     ${CMAKE_SOURCE_DIR}/src/utilities/ImageGrabber.h
     ${CMAKE_SOURCE_DIR}/src/FangObject.h
-    ${CMAKE_SOURCE_DIR}/src/parser/RawNews.h
     ${CMAKE_SOURCE_DIR}/src/network/FangNetworkAccessManager.h
     ${CMAKE_SOURCE_DIR}/src/network/NetworkRetryPolicy.h
     ${CMAKE_SOURCE_DIR}/src/utilities/WebPageGrabber.h
@@ -44,6 +42,7 @@ target_compile_definitions(tst_testrawfeedrewritertest PRIVATE
 
 # Link TidyLib and Qt modules
 target_link_libraries(tst_testrawfeedrewritertest PRIVATE
+    FangFeedParser
     TidyLib
     Qt6::Concurrent
     Qt6::Test

@@ -4,25 +4,15 @@ qt_add_executable(tst_fangparser
     ${CMAKE_SOURCE_DIR}/test/MockNetworkAccessManager.cpp
     ${CMAKE_SOURCE_DIR}/test/MockNetworkAccessManager.h
     # Shared sources from main project
-    ${CMAKE_SOURCE_DIR}/src/parser/NewsParser.cpp
-    ${CMAKE_SOURCE_DIR}/src/parser/ParserInterface.cpp
-    ${CMAKE_SOURCE_DIR}/src/parser/RawFeed.cpp
-    ${CMAKE_SOURCE_DIR}/src/parser/RawNews.cpp
+    ${CMAKE_SOURCE_DIR}/src/parser/FeedFetcher.cpp
+    ${CMAKE_SOURCE_DIR}/src/parser/FeedSource.cpp
     ${CMAKE_SOURCE_DIR}/src/FangObject.cpp
-    ${CMAKE_SOURCE_DIR}/src/parser/ParserXMLWorker.cpp
-    ${CMAKE_SOURCE_DIR}/src/parser/JSONFeedParser.cpp
-    ${CMAKE_SOURCE_DIR}/src/parser/FeedParserRouter.cpp
     ${CMAKE_SOURCE_DIR}/src/network/FangNetworkAccessManager.cpp
     ${CMAKE_SOURCE_DIR}/src/utilities/FangLogging.cpp
     # Include corresponding headers for AUTOMOC
-    ${CMAKE_SOURCE_DIR}/src/parser/NewsParser.h
-    ${CMAKE_SOURCE_DIR}/src/parser/ParserInterface.h
-    ${CMAKE_SOURCE_DIR}/src/parser/RawFeed.h
-    ${CMAKE_SOURCE_DIR}/src/parser/RawNews.h
+    ${CMAKE_SOURCE_DIR}/src/parser/FeedFetcher.h
+    ${CMAKE_SOURCE_DIR}/src/parser/FeedSource.h
     ${CMAKE_SOURCE_DIR}/src/FangObject.h
-    ${CMAKE_SOURCE_DIR}/src/parser/ParserXMLWorker.h
-    ${CMAKE_SOURCE_DIR}/src/parser/JSONFeedParser.h
-    ${CMAKE_SOURCE_DIR}/src/parser/FeedParserRouter.h
     ${CMAKE_SOURCE_DIR}/src/network/FangNetworkAccessManager.h
     ${CMAKE_SOURCE_DIR}/src/utilities/FangLogging.h
 )
@@ -41,6 +31,7 @@ target_compile_definitions(tst_fangparser PRIVATE
 
 # Link Qt Test and Network modules
 target_link_libraries(tst_fangparser PRIVATE
+    FangFeedParser
     Qt6::Test
     Qt6::Network
 )

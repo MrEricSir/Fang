@@ -97,6 +97,9 @@ add_subdirectory(external/QAutoStart)
 add_subdirectory(external/QMLRearrangeableTreeView)
 set(QML_IMPORT_PATH "${CMAKE_BINARY_DIR}/external/QMLRearrangeableTreeView" CACHE STRING "" FORCE)
 
+# Add FangFeedParser library
+add_subdirectory(src/parser)
+
 # Main application target
 qt_add_executable(Fang WIN32
     # Sources
@@ -115,9 +118,6 @@ qt_add_executable(Fang WIN32
     src/operations/LoadNewsOperation.cpp
     src/operations/MarkAllReadOrUnreadOperation.cpp
     src/operations/UpdateFeedURLOperation.cpp
-    src/parser/RawFeed.cpp
-    src/parser/RawNews.cpp
-    src/parser/SitemapParser.cpp
     src/FangApp.cpp
     src/operations/OperationManager.cpp
     src/operations/UpdateFeedOperation.cpp
@@ -138,7 +138,7 @@ qt_add_executable(Fang WIN32
     src/models/AllNewsFeedItem.cpp
     src/utilities/ImageGrabber.cpp
     src/operations/UpdateTitleOperation.cpp
-    src/parser/ParserInterface.cpp
+    src/parser/FeedSource.cpp
     src/models/FangSettings.cpp
     src/utilities/RawFeedRewriter.cpp
     src/utilities/HTMLSanitizer.cpp
@@ -150,15 +150,12 @@ qt_add_executable(Fang WIN32
     src/parser/OPMLParser.cpp
     src/utilities/FeedDiscovery.cpp
     src/utilities/PageMetadataExtractor.cpp
-    src/utilities/GoogleNewsSitemapSynthesizer.cpp
+    src/utilities/NewsSitemapSynthesizer.cpp
     src/utilities/UpdateChecker.cpp
     src/models/OPMLInteractor.cpp
     src/utilities/OPMLExport.cpp
     src/utilities/BatchFeedDiscovery.cpp
     src/FangObject.cpp
-    src/parser/ParserXMLWorker.cpp
-    src/parser/JSONFeedParser.cpp
-    src/parser/FeedParserRouter.cpp
     src/network/FangNetworkAccessManager.cpp
     src/network/FangQQmlNetworkAccessManagerFactory.cpp
     src/network/NetworkRetryPolicy.cpp
@@ -176,9 +173,9 @@ qt_add_executable(Fang WIN32
     src/db/DBSettings.cpp
     src/db/DBSettingsInterface.cpp
     src/operations/GetAllDBSettingsOperation.cpp
-    src/parser/BatchNewsParser.h
-    src/parser/BatchNewsParser.cpp
-    src/parser/NewsParser.cpp
+    src/parser/BatchFeedFetcher.h
+    src/parser/BatchFeedFetcher.cpp
+    src/parser/FeedFetcher.cpp
     src/network/NetworkDownloadCore.cpp
     src/server/WebSocketServer.cpp
     src/server/WebServer.cpp
@@ -199,9 +196,6 @@ qt_add_executable(Fang WIN32
     src/operations/LoadNewsOperation.h
     src/operations/MarkAllReadOrUnreadOperation.h
     src/operations/UpdateFeedURLOperation.h
-    src/parser/RawFeed.h
-    src/parser/RawNews.h
-    src/parser/SitemapParser.h
     src/FangApp.h
     src/operations/OperationManager.h
     src/operations/UpdateFeedOperation.h
@@ -222,7 +216,7 @@ qt_add_executable(Fang WIN32
     src/models/AllNewsFeedItem.h
     src/utilities/ImageGrabber.h
     src/operations/UpdateTitleOperation.h
-    src/parser/ParserInterface.h
+    src/parser/FeedSource.h
     src/models/FangSettings.h
     src/utilities/RawFeedRewriter.h
     src/utilities/HTMLSanitizer.h
@@ -234,14 +228,11 @@ qt_add_executable(Fang WIN32
     src/parser/OPMLParser.h
     src/utilities/FeedDiscovery.h
     src/utilities/PageMetadataExtractor.h
-    src/utilities/GoogleNewsSitemapSynthesizer.h
+    src/utilities/NewsSitemapSynthesizer.h
     src/models/OPMLInteractor.h
     src/utilities/OPMLExport.h
     src/utilities/BatchFeedDiscovery.h
     src/FangObject.h
-    src/parser/ParserXMLWorker.h
-    src/parser/JSONFeedParser.h
-    src/parser/FeedParserRouter.h
     src/network/FangNetworkAccessManager.h
     src/network/FangQQmlNetworkAccessManagerFactory.h
     src/network/NetworkRetryPolicy.h
@@ -262,8 +253,8 @@ qt_add_executable(Fang WIN32
     src/db/DBSettingsInterface.h
     src/operations/GetAllDBSettingsOperation.h
     src/db/DBSettingsKey.h
-    src/parser/BatchNewsParser.h
-    src/parser/NewsParser.h
+    src/parser/BatchFeedFetcher.h
+    src/parser/FeedFetcher.h
     src/server/WebSocketServer.h
     src/server/WebServer.h
 
@@ -293,6 +284,7 @@ set_property(TARGET Fang PROPERTY COMPILE_WARNING_AS_ERROR ON)
 
 # Link libraries
 target_link_libraries(Fang PRIVATE
+    FangFeedParser
     TidyLib
     QSingleInstanceCheck
     QSimpleStateMachine::QSimpleStateMachine

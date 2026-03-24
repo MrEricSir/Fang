@@ -1,25 +1,25 @@
-#ifndef MOCKNEWSPARSER_H
-#define MOCKNEWSPARSER_H
+#ifndef MOCKFEEDSOURCE_H
+#define MOCKFEEDSOURCE_H
 
 #include <QObject>
 #include <QTimer>
 #include <QUrl>
-#include "../src/parser/ParserInterface.h"
+#include "../src/parser/FeedSource.h"
 #include "../src/parser/RawFeed.h"
 
 /**
- * @brief Mock version of ParserInterface
+ * @brief Mock version of FeedSource
  *
  * Allows pre-configuring the parse result, feed data, and URL to test code that depends
- * on NewsParser without network access.
+ * on FeedSource without network access.
  */
-class MockNewsParser : public ParserInterface
+class MockFeedSource : public FeedSource
 {
     Q_OBJECT
 
 public:
-    explicit MockNewsParser(QObject *parent = nullptr);
-    virtual ~MockNewsParser() override;
+    explicit MockFeedSource(QObject *parent = nullptr);
+    virtual ~MockFeedSource() override;
 
     // Mock behavior
     void setResult(ParseResult result);
@@ -30,7 +30,7 @@ public:
     // Reset state
     void reset();
 
-    // ParserInterface implementation
+    // FeedSource implementation
     virtual void parse(const QUrl& url, bool noParseIfCached = false,
                        const QString& ifNoneMatch = QString(),
                        const QString& ifModifiedSince = QString()) override;
@@ -46,4 +46,4 @@ private:
     bool romCache;
 };
 
-#endif // MOCKNEWSPARSER_H
+#endif // MOCKFEEDSOURCE_H

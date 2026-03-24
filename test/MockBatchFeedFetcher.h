@@ -1,25 +1,25 @@
-#ifndef MOCKBATCHNEWSPARSER_H
-#define MOCKBATCHNEWSPARSER_H
+#ifndef MOCKBATCHFEEDFETCHER_H
+#define MOCKBATCHFEEDFETCHER_H
 
-#include "../src/parser/BatchNewsParser.h"
+#include "../src/parser/BatchFeedFetcher.h"
 #include "../src/parser/RawFeed.h"
 #include <QTimer>
 #include <QMap>
 
 /**
- * @brief Mock BatchNewsParser for testing without making actual network requests
+ * @brief Mock BatchFeedFetcher for testing without making actual network requests
  */
-class MockBatchNewsParser : public BatchNewsParser
+class MockBatchFeedFetcher : public BatchFeedFetcher
 {
     Q_OBJECT
 
 public:
-    explicit MockBatchNewsParser(QObject* parent = nullptr)
-        : BatchNewsParser(parent)
+    explicit MockBatchFeedFetcher(QObject* parent = nullptr)
+        : BatchFeedFetcher(parent)
     {
     }
 
-    void addResponse(const QUrl& url, ParserInterface::ParseResult result, RawFeed* feed = nullptr)
+    void addResponse(const QUrl& url, FeedSource::ParseResult result, RawFeed* feed = nullptr)
     {
         mockResults[url] = result;
         if (feed) {
@@ -37,15 +37,15 @@ public:
                 cachedResults[url] = mockResults[url];
             } else {
                 // Default to network error if not configured
-                cachedResults[url] = ParserInterface::NETWORK_ERROR;
+                cachedResults[url] = FeedSource::NETWORK_ERROR;
             }
         }
 
         // Emit ready signal asynchronously to simulate real behavior
-        QTimer::singleShot(0, this, &MockBatchNewsParser::ready);
+        QTimer::singleShot(0, this, &MockBatchFeedFetcher::ready);
     }
 
-    QMap<QUrl, ParserInterface::ParseResult> getResults() override
+    QMap<QUrl, FeedSource::ParseResult> getResults() override
     {
         return cachedResults;
     }
@@ -56,9 +56,9 @@ public:
     }
 
 private:
-    QMap<QUrl, ParserInterface::ParseResult> mockResults;
+    QMap<QUrl, FeedSource::ParseResult> mockResults;
     QMap<QUrl, RawFeed*> mockFeeds;
-    QMap<QUrl, ParserInterface::ParseResult> cachedResults;
+    QMap<QUrl, FeedSource::ParseResult> cachedResults;
 };
 
-#endif // MOCKBATCHNEWSPARSER_H
+#endif // MOCKBATCHFEEDFETCHER_H

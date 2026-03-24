@@ -4,7 +4,7 @@
 #include <QSignalSpy>
 #include <QNetworkAccessManager>
 
-#include "../../src/parser/NewsParser.h"
+#include "../../src/parser/FeedFetcher.h"
 #include "../../src/parser/RawFeed.h"
 #include "../MockNetworkAccessManager.h"
 
@@ -63,9 +63,9 @@ void TestFangParser::parseTest()
     QFETCH(QDateTime, firstNewsTimestamp);
     QFETCH(bool, isPodcast);
     
-    NewsParser parser(this);
+    FeedFetcher parser(this);
     
-    QSignalSpy spy(&parser, &NewsParser::done);
+    QSignalSpy spy(&parser, &FeedFetcher::done);
 
     QString projectPath = PROJECT_PATH;
     QString fullFilename = projectPath + "/feeds/" + filename;
@@ -753,8 +753,8 @@ void TestFangParser::testMediaImage()
     QFETCH(QString, expectedFragment);
     QFETCH(bool, shouldInject);
 
-    NewsParser parser(this);
-    QSignalSpy spy(&parser, &NewsParser::done);
+    FeedFetcher parser(this);
+    QSignalSpy spy(&parser, &FeedFetcher::done);
 
     QString projectPath = PROJECT_PATH;
     QString fullFilename = projectPath + "/feeds/" + filename;
@@ -815,8 +815,8 @@ void TestFangParser::testDcCreatorAuthor()
     QFETCH(QString, filename);
     QFETCH(QString, expectedAuthor);
 
-    NewsParser parser(this);
-    QSignalSpy spy(&parser, &NewsParser::done);
+    FeedFetcher parser(this);
+    QSignalSpy spy(&parser, &FeedFetcher::done);
 
     QString projectPath = PROJECT_PATH;
     QString fullFilename = projectPath + "/feeds/" + filename;
@@ -859,10 +859,8 @@ void TestFangParser::testDcCreatorAuthor_data()
 
 void TestFangParser::testTimezoneAbbreviations()
 {
-    // Access dateFromFeedString via a ParserXMLWorker instance. The method is
-    // public static, so we just need an instance to call it on.
-    // Actually, dateFromFeedString is a static public method, but it's declared
-    // as a member. Let's parse minimal feeds with specific timezone strings.
+    // dateFromFeedString is private, so we test timezone parsing indirectly
+    // by parsing minimal feeds with specific timezone strings.
 
     // Feed with PST timezone
     QString pstFeed = R"(<?xml version="1.0" encoding="UTF-8"?>
@@ -934,8 +932,8 @@ void TestFangParser::testTimezoneAbbreviations()
         tempFile.write(feedXml.toUtf8());
         tempFile.close();
 
-        NewsParser parser(this);
-        QSignalSpy spy(&parser, &NewsParser::done);
+        FeedFetcher parser(this);
+        QSignalSpy spy(&parser, &FeedFetcher::done);
         parser.parseFile(tempFile.fileName());
         if (!spy.count()) {
             spy.wait(10000);
@@ -1003,8 +1001,8 @@ void TestFangParser::testPermanentRedirect301()
     mockManager.addRedirect(originalUrl, finalUrl, 301);
     mockManager.addResponse(finalUrl, simpleRSSFeed());
 
-    NewsParser parser(&mockManager, this);
-    QSignalSpy spy(&parser, &NewsParser::done);
+    FeedFetcher parser(&mockManager, this);
+    QSignalSpy spy(&parser, &FeedFetcher::done);
 
     parser.parse(originalUrl);
     if (!spy.count()) {
@@ -1024,8 +1022,8 @@ void TestFangParser::testPermanentRedirect308()
     mockManager.addRedirect(originalUrl, finalUrl, 308);
     mockManager.addResponse(finalUrl, simpleRSSFeed());
 
-    NewsParser parser(&mockManager, this);
-    QSignalSpy spy(&parser, &NewsParser::done);
+    FeedFetcher parser(&mockManager, this);
+    QSignalSpy spy(&parser, &FeedFetcher::done);
 
     parser.parse(originalUrl);
     if (!spy.count()) {
@@ -1045,8 +1043,8 @@ void TestFangParser::testTemporaryRedirect302()
     mockManager.addRedirect(originalUrl, finalUrl, 302);
     mockManager.addResponse(finalUrl, simpleRSSFeed());
 
-    NewsParser parser(&mockManager, this);
-    QSignalSpy spy(&parser, &NewsParser::done);
+    FeedFetcher parser(&mockManager, this);
+    QSignalSpy spy(&parser, &FeedFetcher::done);
 
     parser.parse(originalUrl);
     if (!spy.count()) {
@@ -1066,8 +1064,8 @@ void TestFangParser::testTemporaryRedirect307()
     mockManager.addRedirect(originalUrl, finalUrl, 307);
     mockManager.addResponse(finalUrl, simpleRSSFeed());
 
-    NewsParser parser(&mockManager, this);
-    QSignalSpy spy(&parser, &NewsParser::done);
+    FeedFetcher parser(&mockManager, this);
+    QSignalSpy spy(&parser, &FeedFetcher::done);
 
     parser.parse(originalUrl);
     if (!spy.count()) {
@@ -1085,8 +1083,8 @@ void TestFangParser::testNoRedirect()
 
     mockManager.addResponse(feedUrl, simpleRSSFeed());
 
-    NewsParser parser(&mockManager, this);
-    QSignalSpy spy(&parser, &NewsParser::done);
+    FeedFetcher parser(&mockManager, this);
+    QSignalSpy spy(&parser, &FeedFetcher::done);
 
     parser.parse(feedUrl);
     if (!spy.count()) {
@@ -1104,8 +1102,8 @@ void TestFangParser::testNoRedirect()
 void TestFangParser::testJSONFeedContentMapping()
 {
     // Verify content_html takes priority over content_text.
-    NewsParser parser(this);
-    QSignalSpy spy(&parser, &NewsParser::done);
+    FeedFetcher parser(this);
+    QSignalSpy spy(&parser, &FeedFetcher::done);
 
     QString projectPath = PROJECT_PATH;
     parser.parseFile(projectPath + "/feeds/jsonfeed.basic.json");
@@ -1130,8 +1128,8 @@ void TestFangParser::testJSONFeedContentMapping()
 
 void TestFangParser::testJSONFeedAuthors()
 {
-    NewsParser parserV11(this);
-    QSignalSpy spyV11(&parserV11, &NewsParser::done);
+    FeedFetcher parserV11(this);
+    QSignalSpy spyV11(&parserV11, &FeedFetcher::done);
     QString projectPath = PROJECT_PATH;
 
     // v1.1 uses "authors" array.
@@ -1146,8 +1144,8 @@ void TestFangParser::testJSONFeedAuthors()
     QCOMPARE(feedV11->items[0]->author, "Alice Smith");
 
     // v1.0 uses "author" object.
-    NewsParser parserV1(this);
-    QSignalSpy spyV1(&parserV1, &NewsParser::done);
+    FeedFetcher parserV1(this);
+    QSignalSpy spyV1(&parserV1, &FeedFetcher::done);
     parserV1.parseFile(projectPath + "/feeds/jsonfeed.v1.json");
     if (!spyV1.count()) {
         spyV1.wait(10000);
@@ -1161,8 +1159,8 @@ void TestFangParser::testJSONFeedAuthors()
 
 void TestFangParser::testJSONFeedMediaImage()
 {
-    NewsParser parser(this);
-    QSignalSpy spy(&parser, &NewsParser::done);
+    FeedFetcher parser(this);
+    QSignalSpy spy(&parser, &FeedFetcher::done);
     QString projectPath = PROJECT_PATH;
 
     parser.parseFile(projectPath + "/feeds/jsonfeed.basic.json");
@@ -1181,8 +1179,8 @@ void TestFangParser::testJSONFeedMediaImage()
 
 void TestFangParser::testJSONFeedFeedType()
 {
-    NewsParser parser(this);
-    QSignalSpy spy(&parser, &NewsParser::done);
+    FeedFetcher parser(this);
+    QSignalSpy spy(&parser, &FeedFetcher::done);
     QString projectPath = PROJECT_PATH;
 
     parser.parseFile(projectPath + "/feeds/jsonfeed.basic.json");

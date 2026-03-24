@@ -2,11 +2,10 @@
 
 #include <QXmlStreamReader>
 
-#include "../utilities/FangLogging.h"
+#include "FeedParserLogging.h"
 
-SitemapParser::SitemapParser(QObject* parent)
-    : FangObject(parent)
-    , _hasNewsEntries(false)
+SitemapParser::SitemapParser()
+    : _hasNewsEntries(false)
 {
 }
 
@@ -17,7 +16,21 @@ SitemapParser::SitemapType SitemapParser::parse(const QString& xml)
     _hasNewsEntries = false;
 
     QXmlStreamReader reader(xml);
+    return parseImpl(reader);
+}
 
+SitemapParser::SitemapType SitemapParser::parse(const QByteArray& data)
+{
+    _entries.clear();
+    _subSitemaps.clear();
+    _hasNewsEntries = false;
+
+    QXmlStreamReader reader(data);
+    return parseImpl(reader);
+}
+
+SitemapParser::SitemapType SitemapParser::parseImpl(QXmlStreamReader& reader)
+{
     // Find the root element.
     while (!reader.atEnd()) {
         reader.readNext();
@@ -30,13 +43,13 @@ SitemapParser::SitemapType SitemapParser::parse(const QString& xml)
                 parseSitemapIndex(reader);
                 return SitemapIndex;
             } else {
-                qCDebug(logParser) << "SitemapParser: unexpected root element:" << root;
+                qCDebug(logFeedParser) << "SitemapParser: unexpected root element:" << root;
                 return Invalid;
             }
         }
     }
 
-    qCDebug(logParser) << "SitemapParser: no root element found";
+    qCDebug(logFeedParser) << "SitemapParser: no root element found";
     return Invalid;
 }
 
@@ -108,7 +121,7 @@ void SitemapParser::parseUrlSet(QXmlStreamReader& xml)
         }
     }
 
-    qCDebug(logParser) << "SitemapParser: parsed" << _entries.size() << "URL entries"
+    qCDebug(logFeedParser) << "SitemapParser: parsed" << _entries.size() << "URL entries"
                         << (_hasNewsEntries ? "(with news extensions)" : "(no news extensions)");
 }
 
@@ -146,5 +159,5 @@ void SitemapParser::parseSitemapIndex(QXmlStreamReader& xml)
         }
     }
 
-    qCDebug(logParser) << "SitemapParser: parsed" << _subSitemaps.size() << "sub-sitemaps";
+    qCDebug(logFeedParser) << "SitemapParser: parsed" << _subSitemaps.size() << "sub-sitemaps";
 }

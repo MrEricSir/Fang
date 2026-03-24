@@ -1,5 +1,5 @@
-#ifndef GOOGLENEWSSITEMAPSYNTHESIZER_H
-#define GOOGLENEWSSITEMAPSYNTHESIZER_H
+#ifndef NEWSSITEMAPSYNTHESIZER_H
+#define NEWSSITEMAPSYNTHESIZER_H
 
 #include <QDateTime>
 #include <QList>
@@ -11,12 +11,12 @@
 #include "../parser/SitemapParser.h"
 #include "../network/NetworkDownloadCore.h"
 
-class GoogleNewsSitemapSynthesizer : public FangObject
+class NewsSitemapSynthesizer : public FangObject
 {
     Q_OBJECT
 public:
-    explicit GoogleNewsSitemapSynthesizer(QObject* parent = nullptr);
-    virtual ~GoogleNewsSitemapSynthesizer();
+    explicit NewsSitemapSynthesizer(QObject* parent = nullptr);
+    virtual ~NewsSitemapSynthesizer();
 
     /*!
         \brief For initial discovery (FeedDiscovery). Probes news sitemap URLs.
@@ -42,14 +42,12 @@ signals:
     void done();
 
 private slots:
-    void onRobotsTxtDownloaded(const QUrl& url, const QByteArray& data);
-    void onRobotsTxtDownloadError(const QUrl& url, const QString& errorString);
-    void onCandidateDownloaded(const QUrl& url, const QByteArray& data);
-    void onCandidateDownloadError(const QUrl& url, const QString& errorString);
-    void onSubSitemapDownloaded(const QUrl& url, const QByteArray& data);
-    void onSubSitemapDownloadError(const QUrl& url, const QString& errorString);
+    void onDownloadFinished(const QUrl& url, const QByteArray& data);
+    void onDownloadError(const QUrl& url, const QString& errorString);
 
 private:
+    enum State { IDLE, FETCHING_ROBOTS_TXT, FETCHING_CANDIDATE, FETCHING_SUB_SITEMAP };
+
     static const int MAX_ENTRIES = 30;
 
     void reportError(const QString& error);
@@ -60,6 +58,16 @@ private:
     void processParsedEntries(const QList<SitemapEntry>& entries, const QUrl& sourceUrl);
     void buildRawFeed();
     static QString normalizeLanguage(const QString& lang);
+
+    void handleRobotsTxtResponse(const QUrl& url, const QByteArray& data);
+    void handleRobotsTxtError(const QUrl& url, const QString& errorString);
+    void handleCandidateResponse(const QUrl& url, const QByteArray& data);
+    void handleCandidateError(const QUrl& url, const QString& errorString);
+    void handleSubSitemapResponse(const QUrl& url, const QByteArray& data);
+    void handleSubSitemapError(const QUrl& url, const QString& errorString);
+
+    void filterByLanguage(QList<SitemapEntry>& entries);
+    bool filterBySinceDate(QList<SitemapEntry>& entries);
 
 protected:
     void setResultState(RawFeed* result, bool hasError, const QString& errorString);
@@ -82,6 +90,7 @@ private:
     bool isRefresh;
 
     // State
+    State state;
     bool _hasError;
     QString _errorString;
     RawFeed* _result;
@@ -100,4 +109,4 @@ private:
     QUrl feedSourceUrl; // The actual sitemap URL that provided the entries
 };
 
-#endif // GOOGLENEWSSITEMAPSYNTHESIZER_H
+#endif // NEWSSITEMAPSYNTHESIZER_H

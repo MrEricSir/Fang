@@ -11,7 +11,7 @@ AddFeedOperation::AddFeedOperation(OperationManager *parent, ListModel *feedList
     parser(),
     title(title)
 {
-    QObject::connect(&parser, &NewsParser::done, this, &AddFeedOperation::onFeedFinished);
+    QObject::connect(&parser, &FeedFetcher::done, this, &AddFeedOperation::onFeedFinished);
 }
 
 AddFeedOperation::AddFeedOperation(OperationManager *parent, ListModel *feedList, const QString userURL,

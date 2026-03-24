@@ -1,20 +1,20 @@
-#ifndef MOCKGOOGLENEWSSITEMAPSYNTHESIZER_H
-#define MOCKGOOGLENEWSSITEMAPSYNTHESIZER_H
+#ifndef MOCKNEWSSITEMAPSYNTHESIZER_H
+#define MOCKNEWSSITEMAPSYNTHESIZER_H
 
 #include <QTimer>
-#include "../src/utilities/GoogleNewsSitemapSynthesizer.h"
+#include "../src/utilities/NewsSitemapSynthesizer.h"
 
 /**
- * @brief Mock GoogleNewsSitemapSynthesizer for testing without network requests.
- * Follows the same pattern as MockWebPageGrabber and MockBatchNewsParser.
+ * @brief Mock NewsSitemapSynthesizer for testing without network requests.
+ * Follows the same pattern as MockWebPageGrabber and MockBatchFeedFetcher.
  */
-class MockGoogleNewsSitemapSynthesizer : public GoogleNewsSitemapSynthesizer
+class MockNewsSitemapSynthesizer : public NewsSitemapSynthesizer
 {
     Q_OBJECT
 
 public:
-    explicit MockGoogleNewsSitemapSynthesizer(QObject* parent = nullptr)
-        : GoogleNewsSitemapSynthesizer(parent)
+    explicit MockNewsSitemapSynthesizer(QObject* parent = nullptr)
+        : NewsSitemapSynthesizer(parent)
     {
     }
 
@@ -40,7 +40,7 @@ public:
     {
         Q_UNUSED(siteUrl);
         Q_UNUSED(siteTitle);
-        QTimer::singleShot(0, this, &GoogleNewsSitemapSynthesizer::done);
+        QTimer::singleShot(0, this, &NewsSitemapSynthesizer::done);
     }
 
     void synthesize(const QUrl& sitemapUrl, const QString& feedTitle,
@@ -49,8 +49,8 @@ public:
         Q_UNUSED(sitemapUrl);
         Q_UNUSED(feedTitle);
         Q_UNUSED(since);
-        QTimer::singleShot(0, this, &GoogleNewsSitemapSynthesizer::done);
+        QTimer::singleShot(0, this, &NewsSitemapSynthesizer::done);
     }
 };
 
-#endif // MOCKGOOGLENEWSSITEMAPSYNTHESIZER_H
+#endif // MOCKNEWSSITEMAPSYNTHESIZER_H

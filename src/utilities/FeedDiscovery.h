@@ -10,11 +10,11 @@
 
 #include <QSimpleStateMachine/QSimpleStateMachine.h>
 
-#include "../parser/ParserInterface.h"
+#include "../parser/FeedSource.h"
 #include "../parser/RawFeed.h"
-#include "../parser/BatchNewsParser.h"
+#include "../parser/BatchFeedFetcher.h"
 #include "../utilities/WebPageGrabber.h"
-#include "../utilities/GoogleNewsSitemapSynthesizer.h"
+#include "../utilities/NewsSitemapSynthesizer.h"
 #include "../FangObject.h"
 
 /*!
@@ -39,7 +39,7 @@
     TRY_COMMON_PATHS
         |  \- FEED_FOUND
         |
-    TRY_GOOGLE_NEWS_SITEMAP
+    TRY_NEWS_SITEMAP
         |  \- FEED_FOUND
         |  \- FEED_ERROR
  */
@@ -55,7 +55,7 @@ private:
         WEB_GRABBER,
         VALIDATE_FEEDS,      // Bulk feed validation
         TRY_COMMON_PATHS,    // Probe well-known RSS paths (/feed, /rss, etc.)
-        TRY_GOOGLE_NEWS_SITEMAP, // Google News sitemap-based feed synthesis
+        TRY_NEWS_SITEMAP, // News sitemap-based feed synthesis
         FEED_FOUND,
         FEED_ERROR
     };
@@ -75,11 +75,10 @@ public:
     };
 
     explicit FeedDiscovery(QObject *parent = nullptr,
-                          ParserInterface* firstParser = nullptr,
-                          ParserInterface* secondParser = nullptr,
+                          FeedSource* firstParser = nullptr,
                           WebPageGrabber* pageGrabber = nullptr,
-                          BatchNewsParser* feedParser = nullptr,
-                          GoogleNewsSitemapSynthesizer* sitemapSynthesizer = nullptr);
+                          BatchFeedFetcher* feedParser = nullptr,
+                          NewsSitemapSynthesizer* sitemapSynthesizer = nullptr);
     virtual ~FeedDiscovery();
 
     /*!
@@ -145,7 +144,7 @@ private slots:
     void onWebGrabber();
     void onValidateFeeds();    // Bulk feed validation
     void onTryCommonPaths();   // Probe well-known RSS paths
-    void onTryGoogleNewsSitemap(); // Google News sitemap-based feed synthesis
+    void onTryNewsSitemap(); // News sitemap-based feed synthesis
     void onError();
 
     // Parser/BulkParser slots:
@@ -155,16 +154,16 @@ private slots:
     // WebPageGrabber slots:
     void onPageGrabberReady(WebPageGrabber* grabber, QString* document);
 
-    // GoogleNewsSitemapSynthesizer slots:
+    // NewsSitemapSynthesizer slots:
     void onNewsSitemapDone();
 
     // Timeout slot:
     void onTimeout();
 
 protected:
-    ParserInterface* parserFirstTry;
+    FeedSource* parserFirstTry;
     WebPageGrabber* pageGrabber;            // For fetching HTML pages
-    BatchNewsParser* feedParser;            // For bulk feed parsing
+    BatchFeedFetcher* feedParser;            // For bulk feed parsing
 
 private:
     // Common RSS/Atom paths to probe when no feeds are found in HTML.
@@ -189,7 +188,7 @@ private:
     bool _probingCommonPaths;
 
     // Sitemap state
-    GoogleNewsSitemapSynthesizer* newsSitemapSynthesizer;
+    NewsSitemapSynthesizer* newsSitemapSynthesizer;
     QString _pageXHTML;  // Stored XHTML from web grabber for sitemap fallback
 
     // Overall discovery timeout

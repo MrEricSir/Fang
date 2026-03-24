@@ -7,9 +7,9 @@
 #include "../../src/models/ListModel.h"
 #include "../../src/models/FeedItem.h"
 #include "../../src/parser/RawNews.h"
-#include "../MockNewsParser.h"
+#include "../MockFeedSource.h"
 #include "../MockWebPageGrabber.h"
-#include "../MockBatchNewsParser.h"
+#include "../MockBatchFeedFetcher.h"
 
 /**
  * @brief Mocks FeedDiscovery that uses pre-configured results based on call order
@@ -21,12 +21,11 @@ class MockFeedDiscovery : public FeedDiscovery
 public:
     explicit MockFeedDiscovery(QQueue<bool>* results, QObject* parent = nullptr)
         : FeedDiscovery(parent,
-                       new MockNewsParser(),
-                       new MockNewsParser(),
+                       new MockFeedSource(),
                        new MockWebPageGrabber(),
-                       new MockBatchNewsParser()),
+                       new MockBatchFeedFetcher()),
           results(results),
-          parser(qobject_cast<MockNewsParser*>(parserFirstTry))
+          parser(qobject_cast<MockFeedSource*>(parserFirstTry))
     {
         // FeedDiscovery constructor now handles ownership automatically
     }
@@ -38,18 +37,18 @@ public:
             bool shouldSucceed = results->dequeue();
             if (shouldSucceed) {
                 // Configure for success. Note that feed must have at least one item.
-                RawFeed* feed = new RawFeed();  // No parent - MockNewsParser owns it
+                RawFeed* feed = new RawFeed();  // No parent - MockFeedSource owns it
                 feed->url = QUrl("http://example.com/feed.xml");
                 RawNews* item = new RawNews(feed);
                 item->title = "Test Item";
                 item->url = QUrl("http://example.com/article");
                 feed->items.append(item);
-                parser->setResult(ParserInterface::OK);
+                parser->setResult(FeedSource::OK);
                 parser->setFeed(feed);
                 parser->setURL(QUrl("http://example.com/feed.xml"));
             } else {
                 // Configure for failure
-                parser->setResult(ParserInterface::NETWORK_ERROR);
+                parser->setResult(FeedSource::NETWORK_ERROR);
             }
         }
 
@@ -59,7 +58,7 @@ public:
 
 private:
     QQueue<bool>* results;
-    MockNewsParser* parser;
+    MockFeedSource* parser;
 };
 
 /**

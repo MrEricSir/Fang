@@ -1,7 +1,7 @@
 #include "RawNews.h"
 
 RawNews::RawNews(QObject *parent) :
-    FangObject(parent),
+    QObject(parent),
     title(""),
     author(""),
     description(""),

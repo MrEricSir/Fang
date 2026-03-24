@@ -9,11 +9,11 @@
 #include "../../src/utilities/PageMetadataExtractor.h"
 #include "../../src/parser/RawNews.h"
 #include "../../src/parser/SitemapParser.h"
-#include "../../src/utilities/GoogleNewsSitemapSynthesizer.h"
-#include "../MockNewsParser.h"
+#include "../../src/utilities/NewsSitemapSynthesizer.h"
+#include "../MockFeedSource.h"
 #include "../MockWebPageGrabber.h"
-#include "../MockBatchNewsParser.h"
-#include "../MockGoogleNewsSitemapSynthesizer.h"
+#include "../MockBatchFeedFetcher.h"
+#include "../MockNewsSitemapSynthesizer.h"
 
 class TestFangFeedDiscovery : public QObject
 {
@@ -263,11 +263,11 @@ void TestFangFeedDiscovery::testCase1_data()
 // Test that URLs without scheme get fixed up
 void TestFangFeedDiscovery::testURLWithoutScheme()
 {
-    MockNewsParser* mockParser = new MockNewsParser();
-    MockGoogleNewsSitemapSynthesizer* sitemapSynth = new MockGoogleNewsSitemapSynthesizer();
+    MockFeedSource* mockParser = new MockFeedSource();
+    MockNewsSitemapSynthesizer* sitemapSynth = new MockNewsSitemapSynthesizer();
     sitemapSynth->setError("No feed found");
 
-    FeedDiscovery fd(nullptr, mockParser, new MockNewsParser(), new MockWebPageGrabber(), new MockBatchNewsParser(), sitemapSynth);
+    FeedDiscovery fd(nullptr, mockParser, new MockWebPageGrabber(), new MockBatchFeedFetcher(), sitemapSynth);
 
     // This should not error - it gets scheme added
     fd.checkFeed("example.com");
@@ -368,19 +368,19 @@ void TestFangFeedDiscovery::testFirstParseAllErrors()
     // Test NETWORK_ERROR, FILE_ERROR, EMPTY_DOCUMENT, PARSE_ERROR
     // All should transition to WEB_GRABBER state
 
-    MockNewsParser* parser = new MockNewsParser();
+    MockFeedSource* parser = new MockFeedSource();
     MockWebPageGrabber* grabber = new MockWebPageGrabber();
 
     // Set parser to return FILE_ERROR
-    parser->setResult(ParserInterface::FILE_ERROR);
+    parser->setResult(FeedSource::FILE_ERROR);
 
     // Set grabber to return error (nullptr document)
     grabber->setError(true);
 
-    MockGoogleNewsSitemapSynthesizer* sitemapSynth = new MockGoogleNewsSitemapSynthesizer();
+    MockNewsSitemapSynthesizer* sitemapSynth = new MockNewsSitemapSynthesizer();
     sitemapSynth->setError("No feed found");
 
-    FeedDiscovery fd(nullptr, parser, new MockNewsParser(), grabber, new MockBatchNewsParser(), sitemapSynth);
+    FeedDiscovery fd(nullptr, parser, grabber, new MockBatchFeedFetcher(), sitemapSynth);
     QSignalSpy spy(&fd, &FeedDiscovery::done);
 
     // Start discovery - should fail first parse, try web grabber, then error
@@ -397,16 +397,16 @@ void TestFangFeedDiscovery::testFirstParseAllErrors()
 // Test page grabber returning null document
 void TestFangFeedDiscovery::testPageGrabberNullDocument()
 {
-    MockNewsParser* firstParser = new MockNewsParser();
+    MockFeedSource* firstParser = new MockFeedSource();
     MockWebPageGrabber* grabber = new MockWebPageGrabber();
 
-    firstParser->setResult(ParserInterface::NETWORK_ERROR);
+    firstParser->setResult(FeedSource::NETWORK_ERROR);
     grabber->setError(true); // Returns nullptr document
 
-    MockGoogleNewsSitemapSynthesizer* sitemapSynth = new MockGoogleNewsSitemapSynthesizer();
+    MockNewsSitemapSynthesizer* sitemapSynth = new MockNewsSitemapSynthesizer();
     sitemapSynth->setError("No feed found");
 
-    FeedDiscovery fd(nullptr, firstParser, new MockNewsParser(), grabber, new MockBatchNewsParser(), sitemapSynth);
+    FeedDiscovery fd(nullptr, firstParser, grabber, new MockBatchFeedFetcher(), sitemapSynth);
     QSignalSpy spy(&fd, &FeedDiscovery::done);
 
     fd.checkFeed("http://example.com");
@@ -420,19 +420,19 @@ void TestFangFeedDiscovery::testPageGrabberNullDocument()
 // Test page grabber returning page with no feed links (falls through to sitemap, which also fails)
 void TestFangFeedDiscovery::testPageGrabberNoFeedFound()
 {
-    MockNewsParser* firstParser = new MockNewsParser();
+    MockFeedSource* firstParser = new MockFeedSource();
     MockWebPageGrabber* grabber = new MockWebPageGrabber();
 
-    firstParser->setResult(ParserInterface::PARSE_ERROR);
+    firstParser->setResult(FeedSource::PARSE_ERROR);
 
     // Page with no feed links
     static QString mockPage = "<html><head><title>No feeds here</title></head><body></body></html>";
     grabber->setMockDocument(&mockPage);
 
-    MockGoogleNewsSitemapSynthesizer* sitemapSynth = new MockGoogleNewsSitemapSynthesizer();
+    MockNewsSitemapSynthesizer* sitemapSynth = new MockNewsSitemapSynthesizer();
     sitemapSynth->setError("No feed found");
 
-    FeedDiscovery fd(nullptr, firstParser, new MockNewsParser(), grabber, new MockBatchNewsParser(), sitemapSynth);
+    FeedDiscovery fd(nullptr, firstParser, grabber, new MockBatchFeedFetcher(), sitemapSynth);
     QSignalSpy spy(&fd, &FeedDiscovery::done);
 
     fd.checkFeed("http://example.com");
@@ -448,7 +448,7 @@ void TestFangFeedDiscovery::testPageGrabberNoFeedFound()
 // Test full success flow: first parse succeeds
 void TestFangFeedDiscovery::testFullSuccessFlow()
 {
-    MockNewsParser* firstParser = new MockNewsParser();
+    MockFeedSource* firstParser = new MockFeedSource();
     RawFeed* mockFeed = new RawFeed();
     mockFeed->url = QUrl("http://example.com/feed.xml");
     mockFeed->title = "Test Feed";
@@ -459,11 +459,11 @@ void TestFangFeedDiscovery::testFullSuccessFlow()
     item->url = QUrl("http://example.com/article");
     mockFeed->items.append(item);
 
-    firstParser->setResult(ParserInterface::OK);
+    firstParser->setResult(FeedSource::OK);
     firstParser->setFeed(mockFeed);
     firstParser->setURL(QUrl("http://example.com/feed.xml"));
 
-    FeedDiscovery fd(nullptr, firstParser, new MockNewsParser(), new MockWebPageGrabber(), new MockBatchNewsParser());
+    FeedDiscovery fd(nullptr, firstParser, new MockWebPageGrabber(), new MockBatchFeedFetcher());
     QSignalSpy spy(&fd, &FeedDiscovery::done);
 
     fd.checkFeed("http://example.com/feed.xml");
@@ -504,12 +504,12 @@ void TestFangFeedDiscovery::testMercuryNewsFullFlow()
     QString htmlContent = *processedHtml;
 
     // Set up mocks
-    MockNewsParser* firstParser = new MockNewsParser();
+    MockFeedSource* firstParser = new MockFeedSource();
     MockWebPageGrabber* pageGrabber = new MockWebPageGrabber();
-    MockBatchNewsParser* feedParser = new MockBatchNewsParser();
+    MockBatchFeedFetcher* feedParser = new MockBatchFeedFetcher();
 
     // First parse should fail (it's HTML, not a feed)
-    firstParser->setResult(ParserInterface::PARSE_ERROR);
+    firstParser->setResult(FeedSource::PARSE_ERROR);
 
     // Page grabber should return the processed XHTML
     qDebug() << "Setting up page grabber with processed HTML content, length:" << htmlContent.length();
@@ -537,11 +537,11 @@ void TestFangFeedDiscovery::testMercuryNewsFullFlow()
     feed2Item->url = QUrl("https://www.mercurynews.com/business/article1");
     feed2->items.append(feed2Item);
 
-    feedParser->addResponse(QUrl("https://www.mercurynews.com/feed"), ParserInterface::OK, feed1);
-    feedParser->addResponse(QUrl("https://www.mercurynews.com/business/feed"), ParserInterface::OK, feed2);
+    feedParser->addResponse(QUrl("https://www.mercurynews.com/feed"), FeedSource::OK, feed1);
+    feedParser->addResponse(QUrl("https://www.mercurynews.com/business/feed"), FeedSource::OK, feed2);
 
     // Create FeedDiscovery with our mocks
-    FeedDiscovery fd(nullptr, firstParser, new MockNewsParser(), pageGrabber, feedParser);
+    FeedDiscovery fd(nullptr, firstParser, pageGrabber, feedParser);
 
     QSignalSpy spy(&fd, &FeedDiscovery::done);
 
@@ -573,13 +573,13 @@ void TestFangFeedDiscovery::testMercuryNewsFullFlow()
 // Test that a truly relative URL (one that urlFixup doesn't fix) gets rejected
 void TestFangFeedDiscovery::testRelativeURLThatStaysRelative()
 {
-    MockNewsParser* firstParser = new MockNewsParser();
-    firstParser->setResult(ParserInterface::PARSE_ERROR);  // Set a valid result in case URL gets fixed up
+    MockFeedSource* firstParser = new MockFeedSource();
+    firstParser->setResult(FeedSource::PARSE_ERROR);  // Set a valid result in case URL gets fixed up
 
-    MockGoogleNewsSitemapSynthesizer* sitemapSynth = new MockGoogleNewsSitemapSynthesizer();
+    MockNewsSitemapSynthesizer* sitemapSynth = new MockNewsSitemapSynthesizer();
     sitemapSynth->setError("No feed found");
 
-    FeedDiscovery fd(nullptr, firstParser, new MockNewsParser(), new MockWebPageGrabber(), new MockBatchNewsParser(), sitemapSynth);
+    FeedDiscovery fd(nullptr, firstParser, new MockWebPageGrabber(), new MockBatchFeedFetcher(), sitemapSynth);
     QSignalSpy spy(&fd, &FeedDiscovery::done);
 
     // Try a path-only URL that NetworkUtilities::urlFixup might not handle
@@ -613,23 +613,23 @@ void TestFangFeedDiscovery::testAllFeedsFailValidation()
         </html>
     )";
 
-    MockNewsParser* firstParser = new MockNewsParser();
+    MockFeedSource* firstParser = new MockFeedSource();
     MockWebPageGrabber* pageGrabber = new MockWebPageGrabber();
-    MockBatchNewsParser* feedParser = new MockBatchNewsParser();
+    MockBatchFeedFetcher* feedParser = new MockBatchFeedFetcher();
 
-    firstParser->setResult(ParserInterface::PARSE_ERROR);
+    firstParser->setResult(FeedSource::PARSE_ERROR);
 
     static QString persistentHtml = html;
     pageGrabber->setMockDocument(&persistentHtml);
 
     // Set both feeds to fail validation
-    feedParser->addResponse(QUrl("http://example.com/feed1.xml"), ParserInterface::NETWORK_ERROR);
-    feedParser->addResponse(QUrl("http://example.com/feed2.xml"), ParserInterface::PARSE_ERROR);
+    feedParser->addResponse(QUrl("http://example.com/feed1.xml"), FeedSource::NETWORK_ERROR);
+    feedParser->addResponse(QUrl("http://example.com/feed2.xml"), FeedSource::PARSE_ERROR);
 
-    MockGoogleNewsSitemapSynthesizer* sitemapSynth = new MockGoogleNewsSitemapSynthesizer();
+    MockNewsSitemapSynthesizer* sitemapSynth = new MockNewsSitemapSynthesizer();
     sitemapSynth->setError("No feed found");
 
-    FeedDiscovery fd(nullptr, firstParser, new MockNewsParser(), pageGrabber, feedParser, sitemapSynth);
+    FeedDiscovery fd(nullptr, firstParser, pageGrabber, feedParser, sitemapSynth);
     QSignalSpy spy(&fd, &FeedDiscovery::done);
 
     fd.checkFeed("http://example.com");
@@ -646,7 +646,7 @@ void TestFangFeedDiscovery::testAllFeedsFailValidation()
 // Test that a directly-parsed feed with no items is rejected and falls through to web grabber
 void TestFangFeedDiscovery::testEmptyDirectFeedRejected()
 {
-    MockNewsParser* firstParser = new MockNewsParser();
+    MockFeedSource* firstParser = new MockFeedSource();
     MockWebPageGrabber* grabber = new MockWebPageGrabber();
 
     // Parser returns OK with a feed that has no items.
@@ -654,17 +654,17 @@ void TestFangFeedDiscovery::testEmptyDirectFeedRejected()
     emptyFeed->url = QUrl("http://example.com/feed.xml");
     emptyFeed->title = "Empty Feed";
 
-    firstParser->setResult(ParserInterface::OK);
+    firstParser->setResult(FeedSource::OK);
     firstParser->setFeed(emptyFeed);
     firstParser->setURL(QUrl("http://example.com/feed.xml"));
 
     // Web grabber returns an error (no page)
     grabber->setError(true);
 
-    MockGoogleNewsSitemapSynthesizer* sitemapSynth = new MockGoogleNewsSitemapSynthesizer();
+    MockNewsSitemapSynthesizer* sitemapSynth = new MockNewsSitemapSynthesizer();
     sitemapSynth->setError("No feed found");
 
-    FeedDiscovery fd(nullptr, firstParser, new MockNewsParser(), grabber, new MockBatchNewsParser(), sitemapSynth);
+    FeedDiscovery fd(nullptr, firstParser, grabber, new MockBatchFeedFetcher(), sitemapSynth);
     QSignalSpy spy(&fd, &FeedDiscovery::done);
 
     fd.checkFeed("http://example.com/feed.xml");
@@ -688,11 +688,11 @@ void TestFangFeedDiscovery::testEmptyValidatedFeedsRejected()
         </html>
     )";
 
-    MockNewsParser* firstParser = new MockNewsParser();
+    MockFeedSource* firstParser = new MockFeedSource();
     MockWebPageGrabber* pageGrabber = new MockWebPageGrabber();
-    MockBatchNewsParser* feedParser = new MockBatchNewsParser();
+    MockBatchFeedFetcher* feedParser = new MockBatchFeedFetcher();
 
-    firstParser->setResult(ParserInterface::PARSE_ERROR);
+    firstParser->setResult(FeedSource::PARSE_ERROR);
 
     static QString persistentHtml2 = html;
     pageGrabber->setMockDocument(&persistentHtml2);
@@ -701,12 +701,12 @@ void TestFangFeedDiscovery::testEmptyValidatedFeedsRejected()
     RawFeed* emptyFeed = new RawFeed();
     emptyFeed->title = "Empty Feed";
     emptyFeed->url = QUrl("http://example.com/feed.xml");
-    feedParser->addResponse(QUrl("http://example.com/feed.xml"), ParserInterface::OK, emptyFeed);
+    feedParser->addResponse(QUrl("http://example.com/feed.xml"), FeedSource::OK, emptyFeed);
 
-    MockGoogleNewsSitemapSynthesizer* sitemapSynth = new MockGoogleNewsSitemapSynthesizer();
+    MockNewsSitemapSynthesizer* sitemapSynth = new MockNewsSitemapSynthesizer();
     sitemapSynth->setError("No feed found");
 
-    FeedDiscovery fd(nullptr, firstParser, new MockNewsParser(), pageGrabber, feedParser, sitemapSynth);
+    FeedDiscovery fd(nullptr, firstParser, pageGrabber, feedParser, sitemapSynth);
     QSignalSpy spy(&fd, &FeedDiscovery::done);
 
     fd.checkFeed("http://example.com");
@@ -731,12 +731,12 @@ void TestFangFeedDiscovery::testRelativeFeedURLResolution()
         </html>
     )";
 
-    MockNewsParser* firstParser = new MockNewsParser();
+    MockFeedSource* firstParser = new MockFeedSource();
     MockWebPageGrabber* pageGrabber = new MockWebPageGrabber();
-    MockBatchNewsParser* feedParser = new MockBatchNewsParser();
+    MockBatchFeedFetcher* feedParser = new MockBatchFeedFetcher();
 
     // First parse fails (it's HTML, not a feed)
-    firstParser->setResult(ParserInterface::PARSE_ERROR);
+    firstParser->setResult(FeedSource::PARSE_ERROR);
 
     // Page grabber returns the HTML with relative feed URL
     static QString persistentHtml = html;
@@ -751,9 +751,9 @@ void TestFangFeedDiscovery::testRelativeFeedURLResolution()
     feedItem->title = "Test Article";
     feedItem->url = QUrl("https://example.com/article");
     feed->items.append(feedItem);
-    feedParser->addResponse(QUrl("https://example.com/feed.xml"), ParserInterface::OK, feed);
+    feedParser->addResponse(QUrl("https://example.com/feed.xml"), FeedSource::OK, feed);
 
-    FeedDiscovery fd(nullptr, firstParser, new MockNewsParser(), pageGrabber, feedParser);
+    FeedDiscovery fd(nullptr, firstParser, pageGrabber, feedParser);
     QSignalSpy spy(&fd, &FeedDiscovery::done);
 
     // Start discovery with a full URL - the relative feed URL should be resolved against this
@@ -786,11 +786,11 @@ void TestFangFeedDiscovery::testProtocolRelativeFeedURL()
         </html>
     )";
 
-    MockNewsParser* firstParser = new MockNewsParser();
+    MockFeedSource* firstParser = new MockFeedSource();
     MockWebPageGrabber* pageGrabber = new MockWebPageGrabber();
-    MockBatchNewsParser* feedParser = new MockBatchNewsParser();
+    MockBatchFeedFetcher* feedParser = new MockBatchFeedFetcher();
 
-    firstParser->setResult(ParserInterface::PARSE_ERROR);
+    firstParser->setResult(FeedSource::PARSE_ERROR);
 
     static QString persistentHtml3 = html;
     pageGrabber->setMockDocument(&persistentHtml3);
@@ -807,9 +807,9 @@ void TestFangFeedDiscovery::testProtocolRelativeFeedURL()
     item->title = "Test Article";
     item->url = QUrl("https://abc7news.com/article");
     feed->items.append(item);
-    feedParser->addResponse(resolvedUrl, ParserInterface::OK, feed);
+    feedParser->addResponse(resolvedUrl, FeedSource::OK, feed);
 
-    FeedDiscovery fd(nullptr, firstParser, new MockNewsParser(), pageGrabber, feedParser);
+    FeedDiscovery fd(nullptr, firstParser, pageGrabber, feedParser);
     QSignalSpy spy(&fd, &FeedDiscovery::done);
 
     fd.checkFeed("https://abc7news.com/");
@@ -861,11 +861,11 @@ void TestFangFeedDiscovery::testCommonPathDiscovery()
     // HTML with no feed links at all
     QString html = "<html><head><title>No feeds</title></head><body></body></html>";
 
-    MockNewsParser* firstParser = new MockNewsParser();
+    MockFeedSource* firstParser = new MockFeedSource();
     MockWebPageGrabber* pageGrabber = new MockWebPageGrabber();
-    MockBatchNewsParser* feedParser = new MockBatchNewsParser();
+    MockBatchFeedFetcher* feedParser = new MockBatchFeedFetcher();
 
-    firstParser->setResult(ParserInterface::PARSE_ERROR);
+    firstParser->setResult(FeedSource::PARSE_ERROR);
 
     static QString persistentHtmlCommon1 = html;
     pageGrabber->setMockDocument(&persistentHtmlCommon1);
@@ -878,9 +878,9 @@ void TestFangFeedDiscovery::testCommonPathDiscovery()
     item->title = "Test Article";
     item->url = QUrl("http://example.com/article");
     feed->items.append(item);
-    feedParser->addResponse(QUrl("http://example.com/feed"), ParserInterface::OK, feed);
+    feedParser->addResponse(QUrl("http://example.com/feed"), FeedSource::OK, feed);
 
-    FeedDiscovery fd(nullptr, firstParser, new MockNewsParser(), pageGrabber, feedParser);
+    FeedDiscovery fd(nullptr, firstParser, pageGrabber, feedParser);
     QSignalSpy spy(&fd, &FeedDiscovery::done);
 
     fd.checkFeed("http://example.com");
@@ -899,21 +899,21 @@ void TestFangFeedDiscovery::testCommonPathAllFail()
 {
     QString html = "<html><head><title>No feeds</title></head><body></body></html>";
 
-    MockNewsParser* firstParser = new MockNewsParser();
+    MockFeedSource* firstParser = new MockFeedSource();
     MockWebPageGrabber* pageGrabber = new MockWebPageGrabber();
-    MockBatchNewsParser* feedParser = new MockBatchNewsParser();
+    MockBatchFeedFetcher* feedParser = new MockBatchFeedFetcher();
 
-    firstParser->setResult(ParserInterface::PARSE_ERROR);
+    firstParser->setResult(FeedSource::PARSE_ERROR);
 
     static QString persistentHtmlCommon2 = html;
     pageGrabber->setMockDocument(&persistentHtmlCommon2);
 
     // Don't configure any responses -- all common paths will get NETWORK_ERROR by default
 
-    MockGoogleNewsSitemapSynthesizer* sitemapSynth = new MockGoogleNewsSitemapSynthesizer();
+    MockNewsSitemapSynthesizer* sitemapSynth = new MockNewsSitemapSynthesizer();
     sitemapSynth->setError("No feed found");
 
-    FeedDiscovery fd(nullptr, firstParser, new MockNewsParser(), pageGrabber, feedParser, sitemapSynth);
+    FeedDiscovery fd(nullptr, firstParser, pageGrabber, feedParser, sitemapSynth);
     QSignalSpy spy(&fd, &FeedDiscovery::done);
 
     fd.checkFeed("http://example.com");
@@ -940,17 +940,17 @@ void TestFangFeedDiscovery::testCommonPathAfterValidationFails()
         </html>
     )";
 
-    MockNewsParser* firstParser = new MockNewsParser();
+    MockFeedSource* firstParser = new MockFeedSource();
     MockWebPageGrabber* pageGrabber = new MockWebPageGrabber();
-    MockBatchNewsParser* feedParser = new MockBatchNewsParser();
+    MockBatchFeedFetcher* feedParser = new MockBatchFeedFetcher();
 
-    firstParser->setResult(ParserInterface::PARSE_ERROR);
+    firstParser->setResult(FeedSource::PARSE_ERROR);
 
     static QString persistentHtmlCommon3 = html;
     pageGrabber->setMockDocument(&persistentHtmlCommon3);
 
     // HTML-discovered feed fails validation
-    feedParser->addResponse(QUrl("http://example.com/broken-feed.xml"), ParserInterface::NETWORK_ERROR);
+    feedParser->addResponse(QUrl("http://example.com/broken-feed.xml"), FeedSource::NETWORK_ERROR);
 
     // Common path /rss returns a valid feed
     RawFeed* feed = new RawFeed();
@@ -960,9 +960,9 @@ void TestFangFeedDiscovery::testCommonPathAfterValidationFails()
     item->title = "Test Article";
     item->url = QUrl("http://example.com/article");
     feed->items.append(item);
-    feedParser->addResponse(QUrl("http://example.com/rss"), ParserInterface::OK, feed);
+    feedParser->addResponse(QUrl("http://example.com/rss"), FeedSource::OK, feed);
 
-    FeedDiscovery fd(nullptr, firstParser, new MockNewsParser(), pageGrabber, feedParser);
+    FeedDiscovery fd(nullptr, firstParser, pageGrabber, feedParser);
     QSignalSpy spy(&fd, &FeedDiscovery::done);
 
     fd.checkFeed("http://example.com");
@@ -989,11 +989,11 @@ void TestFangFeedDiscovery::testCommonPathSkippedWhenFeedsFound()
         </html>
     )";
 
-    MockNewsParser* firstParser = new MockNewsParser();
+    MockFeedSource* firstParser = new MockFeedSource();
     MockWebPageGrabber* pageGrabber = new MockWebPageGrabber();
-    MockBatchNewsParser* feedParser = new MockBatchNewsParser();
+    MockBatchFeedFetcher* feedParser = new MockBatchFeedFetcher();
 
-    firstParser->setResult(ParserInterface::PARSE_ERROR);
+    firstParser->setResult(FeedSource::PARSE_ERROR);
 
     static QString persistentHtmlCommon4 = html;
     pageGrabber->setMockDocument(&persistentHtmlCommon4);
@@ -1006,9 +1006,9 @@ void TestFangFeedDiscovery::testCommonPathSkippedWhenFeedsFound()
     item->title = "Test Article";
     item->url = QUrl("http://example.com/article");
     feed->items.append(item);
-    feedParser->addResponse(QUrl("http://example.com/my-feed.xml"), ParserInterface::OK, feed);
+    feedParser->addResponse(QUrl("http://example.com/my-feed.xml"), FeedSource::OK, feed);
 
-    FeedDiscovery fd(nullptr, firstParser, new MockNewsParser(), pageGrabber, feedParser);
+    FeedDiscovery fd(nullptr, firstParser, pageGrabber, feedParser);
     QSignalSpy spy(&fd, &FeedDiscovery::done);
 
     fd.checkFeed("http://example.com");
@@ -1154,19 +1154,19 @@ void TestFangFeedDiscovery::testSitemapParserInvalid()
 {
     // RSS feed
     SitemapParser parser1;
-    QCOMPARE(parser1.parse("<rss version=\"2.0\"><channel></channel></rss>"), SitemapParser::Invalid);
+    QCOMPARE(parser1.parse(QString("<rss version=\"2.0\"><channel></channel></rss>")), SitemapParser::Invalid);
 
     // HTML
     SitemapParser parser2;
-    QCOMPARE(parser2.parse("<html><head></head><body></body></html>"), SitemapParser::Invalid);
+    QCOMPARE(parser2.parse(QString("<html><head></head><body></body></html>")), SitemapParser::Invalid);
 
     // Empty
     SitemapParser parser3;
-    QCOMPARE(parser3.parse(""), SitemapParser::Invalid);
+    QCOMPARE(parser3.parse(QString("")), SitemapParser::Invalid);
 
     // Garbage
     SitemapParser parser4;
-    QCOMPARE(parser4.parse("not xml at all"), SitemapParser::Invalid);
+    QCOMPARE(parser4.parse(QString("not xml at all")), SitemapParser::Invalid);
 }
 
 // Test sitemap entries without <lastmod> (like bbc.com's main sitemap.xml)
@@ -1459,7 +1459,7 @@ void TestFangFeedDiscovery::testSitemapParserLanguageFiltering()
 {
     // Simulates AP News with mixed English and Spanish entries.
     // The SitemapParser itself doesn't filter, but we verify fields are correct
-    // so GoogleNewsSitemapSynthesizer can filter.
+    // so NewsSitemapSynthesizer can filter.
     QString xml = R"(<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">
@@ -1533,7 +1533,7 @@ void TestFangFeedDiscovery::testRobotsTxtParsing()
         "Sitemap: https://www.bloomberg.com/sitemaps/media/video/index.xml\n"
         "Sitemap: https://www.bloomberg.com/billionaires/sitemap.xml\n";
 
-    QList<QUrl> results = GoogleNewsSitemapSynthesizer::parseRobotsSitemaps(robotsTxt, baseUrl);
+    QList<QUrl> results = NewsSitemapSynthesizer::parseRobotsSitemaps(robotsTxt, baseUrl);
 
     // News sitemaps first, then generic sitemaps.
     QCOMPARE(results.size(), 5);
@@ -1550,7 +1550,7 @@ void TestFangFeedDiscovery::testRobotsTxtParsing()
         "Sitemap: https://apnews.com/hubs-sitemap-content.xml\n"
         "Sitemap: https://apnews.com/video-sitemap.xml\n";
 
-    QList<QUrl> apResults = GoogleNewsSitemapSynthesizer::parseRobotsSitemaps(
+    QList<QUrl> apResults = NewsSitemapSynthesizer::parseRobotsSitemaps(
         apRobots, QUrl("https://apnews.com"));
     QCOMPARE(apResults.size(), 4);
     // News-specific first.
@@ -1567,7 +1567,7 @@ void TestFangFeedDiscovery::testRobotsTxtParsing()
         "Sitemap: https://www.usatoday.com/money/blueprint/sitemap-news.xml\n"
         "Sitemap: https://www.usatoday.com/online-betting/news-sitemap.xml\n";
 
-    QList<QUrl> usatResults = GoogleNewsSitemapSynthesizer::parseRobotsSitemaps(
+    QList<QUrl> usatResults = NewsSitemapSynthesizer::parseRobotsSitemaps(
         usatRobots, QUrl("https://www.usatoday.com"));
     QCOMPARE(usatResults.size(), 4);
     // News-specific first.
@@ -1578,13 +1578,13 @@ void TestFangFeedDiscovery::testRobotsTxtParsing()
     QCOMPARE(usatResults[3], QUrl("https://www.usatoday.com/web-sitemap-index.xml"));
 
     // Empty robots.txt
-    QList<QUrl> emptyResults = GoogleNewsSitemapSynthesizer::parseRobotsSitemaps(
+    QList<QUrl> emptyResults = NewsSitemapSynthesizer::parseRobotsSitemaps(
         "", QUrl("https://example.com"));
     QVERIFY(emptyResults.isEmpty());
 
     // Sitemaps from a different host should be excluded.
     QString crossHost = "Sitemap: https://cdn.otherdomain.com/news-sitemap.xml\n";
-    QList<QUrl> crossResults = GoogleNewsSitemapSynthesizer::parseRobotsSitemaps(
+    QList<QUrl> crossResults = NewsSitemapSynthesizer::parseRobotsSitemaps(
         crossHost, QUrl("https://www.example.com"));
     QVERIFY(crossResults.isEmpty());
 
@@ -1592,7 +1592,7 @@ void TestFangFeedDiscovery::testRobotsTxtParsing()
     // lists sitemaps on www.reuters.com).
     QString wwwSitemaps =
         "Sitemap: https://www.reuters.com/arc/outboundfeeds/news-sitemap/1\n";
-    QList<QUrl> wwwResults = GoogleNewsSitemapSynthesizer::parseRobotsSitemaps(
+    QList<QUrl> wwwResults = NewsSitemapSynthesizer::parseRobotsSitemaps(
         wwwSitemaps, QUrl("https://reuters.com"));
     QCOMPARE(wwwResults.size(), 1);
     QCOMPARE(wwwResults[0], QUrl("https://www.reuters.com/arc/outboundfeeds/news-sitemap/1"));
@@ -1601,7 +1601,7 @@ void TestFangFeedDiscovery::testRobotsTxtParsing()
     // Should still be returned (after news-specific ones, which there are none of).
     QString espnRobots =
         "Sitemap: https://www.espn.com/sitemap.xml\n";
-    QList<QUrl> espnResults = GoogleNewsSitemapSynthesizer::parseRobotsSitemaps(
+    QList<QUrl> espnResults = NewsSitemapSynthesizer::parseRobotsSitemaps(
         espnRobots, QUrl("https://www.espn.com"));
     QCOMPARE(espnResults.size(), 1);
     QCOMPARE(espnResults[0], QUrl("https://www.espn.com/sitemap.xml"));
@@ -1622,7 +1622,7 @@ void TestFangFeedDiscovery::testRobotsTxtAutoDiscovery()
         "Sitemap: https://www.nj.com/arc/outboundfeeds/evg_updates/\n"
         "Sitemap: https://www.nj.com/arc/outboundfeeds/google-news-feed/\n";
 
-    QList<QUrl> njResults = GoogleNewsSitemapSynthesizer::parseRobotsSitemaps(
+    QList<QUrl> njResults = NewsSitemapSynthesizer::parseRobotsSitemaps(
         njRobots, QUrl("https://www.nj.com"));
     // "news" appears in news-sitemap-index and google-news-feed.
     QVERIFY(njResults.size() == 6);
@@ -1644,7 +1644,7 @@ void TestFangFeedDiscovery::testRobotsTxtAutoDiscovery()
         "Sitemap: https://www.syracuse.com/arc/outboundfeeds/evg_updates/\n"
         "Sitemap: https://www.syracuse.com/arc/outboundfeeds/google-news-feed/\n";
 
-    QList<QUrl> syracuseResults = GoogleNewsSitemapSynthesizer::parseRobotsSitemaps(
+    QList<QUrl> syracuseResults = NewsSitemapSynthesizer::parseRobotsSitemaps(
         syracuseRobots, QUrl("https://www.syracuse.com"));
     QCOMPARE(syracuseResults.size(), 6);
     // News-specific first.
@@ -1658,7 +1658,7 @@ void TestFangFeedDiscovery::testRobotsTxtAutoDiscovery()
         "Sitemap: https://www.sfchronicle.com/projects/sitemap_projects.xml\n"
         "Sitemap: https://www.sfchronicle.com/video-sitemap-index.xml\n";
 
-    QList<QUrl> sfcResults = GoogleNewsSitemapSynthesizer::parseRobotsSitemaps(
+    QList<QUrl> sfcResults = NewsSitemapSynthesizer::parseRobotsSitemaps(
         sfcRobots, QUrl("https://www.sfchronicle.com"));
     QCOMPARE(sfcResults.size(), 4);
     // News-specific first: sitemap_news.xml has "news" in path.
@@ -1671,7 +1671,7 @@ void TestFangFeedDiscovery::testRobotsTxtAutoDiscovery()
     // 1077thebone.com: only a generic /sitemap.xml.
     QString boneRobots =
         "Sitemap: https://www.1077thebone.com/sitemap.xml\n";
-    QList<QUrl> boneResults = GoogleNewsSitemapSynthesizer::parseRobotsSitemaps(
+    QList<QUrl> boneResults = NewsSitemapSynthesizer::parseRobotsSitemaps(
         boneRobots, QUrl("https://www.1077thebone.com"));
     QCOMPARE(boneResults.size(), 1);
     QCOMPARE(boneResults[0], QUrl("https://www.1077thebone.com/sitemap.xml"));
@@ -1705,12 +1705,12 @@ void TestFangFeedDiscovery::testESPNFullFlow()
     QVERIFY2(feedURLs.isEmpty(), "ESPN HTML unexpectedly contains RSS/Atom links");
 
     // Set up mocks for the full flow.
-    MockNewsParser* firstParser = new MockNewsParser();
+    MockFeedSource* firstParser = new MockFeedSource();
     MockWebPageGrabber* pageGrabber = new MockWebPageGrabber();
-    MockBatchNewsParser* feedParser = new MockBatchNewsParser();
-    MockGoogleNewsSitemapSynthesizer* sitemapSynth = new MockGoogleNewsSitemapSynthesizer();
+    MockBatchFeedFetcher* feedParser = new MockBatchFeedFetcher();
+    MockNewsSitemapSynthesizer* sitemapSynth = new MockNewsSitemapSynthesizer();
 
-    firstParser->setResult(ParserInterface::PARSE_ERROR);
+    firstParser->setResult(FeedSource::PARSE_ERROR);
 
     static QString persistentHtmlESPN = htmlContent;
     pageGrabber->setMockDocument(&persistentHtmlESPN);
@@ -1736,7 +1736,7 @@ void TestFangFeedDiscovery::testESPNFullFlow()
 
     sitemapSynth->setResult(espnFeed);
 
-    FeedDiscovery fd(nullptr, firstParser, new MockNewsParser(), pageGrabber, feedParser, sitemapSynth);
+    FeedDiscovery fd(nullptr, firstParser, pageGrabber, feedParser, sitemapSynth);
     QSignalSpy spy(&fd, &FeedDiscovery::done);
 
     fd.checkFeed("https://www.espn.com");
@@ -1776,11 +1776,11 @@ void TestFangFeedDiscovery::testCommonPathFallbackFlow()
     QVERIFY2(feedURLs.isEmpty(), "1077thebone HTML unexpectedly contains RSS/Atom links");
 
     // Set up mocks.
-    MockNewsParser* firstParser = new MockNewsParser();
+    MockFeedSource* firstParser = new MockFeedSource();
     MockWebPageGrabber* pageGrabber = new MockWebPageGrabber();
-    MockBatchNewsParser* feedParser = new MockBatchNewsParser();
+    MockBatchFeedFetcher* feedParser = new MockBatchFeedFetcher();
 
-    firstParser->setResult(ParserInterface::PARSE_ERROR);
+    firstParser->setResult(FeedSource::PARSE_ERROR);
 
     static QString persistentHtmlBone = htmlContent;
     pageGrabber->setMockDocument(&persistentHtmlBone);
@@ -1793,9 +1793,9 @@ void TestFangFeedDiscovery::testCommonPathFallbackFlow()
     item->title = "Rock News Roundup";
     item->url = QUrl("https://www.1077thebone.com/rock-news-roundup");
     boneFeed->items.append(item);
-    feedParser->addResponse(QUrl("https://www.1077thebone.com/feed"), ParserInterface::OK, boneFeed);
+    feedParser->addResponse(QUrl("https://www.1077thebone.com/feed"), FeedSource::OK, boneFeed);
 
-    FeedDiscovery fd(nullptr, firstParser, new MockNewsParser(), pageGrabber, feedParser);
+    FeedDiscovery fd(nullptr, firstParser, pageGrabber, feedParser);
     QSignalSpy spy(&fd, &FeedDiscovery::done);
 
     fd.checkFeed("https://www.1077thebone.com");
@@ -1818,12 +1818,12 @@ void TestFangFeedDiscovery::testSitemapSuccessIntegration()
     // Full discovery: parse fails -> HTML has no feeds -> common paths fail ->
     // mock synthesizer returns a feed with 2 items -> FEED_FOUND.
 
-    MockNewsParser* firstParser = new MockNewsParser();
+    MockFeedSource* firstParser = new MockFeedSource();
     MockWebPageGrabber* pageGrabber = new MockWebPageGrabber();
-    MockBatchNewsParser* feedParser = new MockBatchNewsParser();
-    MockGoogleNewsSitemapSynthesizer* sitemapSynth = new MockGoogleNewsSitemapSynthesizer();
+    MockBatchFeedFetcher* feedParser = new MockBatchFeedFetcher();
+    MockNewsSitemapSynthesizer* sitemapSynth = new MockNewsSitemapSynthesizer();
 
-    firstParser->setResult(ParserInterface::PARSE_ERROR);
+    firstParser->setResult(FeedSource::PARSE_ERROR);
 
     static QString persistentHtmlSitemap1 = "<html><head><title>SFGate</title></head><body></body></html>";
     pageGrabber->setMockDocument(&persistentHtmlSitemap1);
@@ -1848,7 +1848,7 @@ void TestFangFeedDiscovery::testSitemapSuccessIntegration()
 
     sitemapSynth->setResult(sitemapFeed);
 
-    FeedDiscovery fd(nullptr, firstParser, new MockNewsParser(), pageGrabber, feedParser, sitemapSynth);
+    FeedDiscovery fd(nullptr, firstParser, pageGrabber, feedParser, sitemapSynth);
     QSignalSpy spy(&fd, &FeedDiscovery::done);
 
     fd.checkFeed("https://www.sfgate.com");
@@ -1873,12 +1873,12 @@ void TestFangFeedDiscovery::testSitemapErrorIntegration()
 {
     // Same flow but mock synthesizer returns an error -> FEED_ERROR.
 
-    MockNewsParser* firstParser = new MockNewsParser();
+    MockFeedSource* firstParser = new MockFeedSource();
     MockWebPageGrabber* pageGrabber = new MockWebPageGrabber();
-    MockBatchNewsParser* feedParser = new MockBatchNewsParser();
-    MockGoogleNewsSitemapSynthesizer* sitemapSynth = new MockGoogleNewsSitemapSynthesizer();
+    MockBatchFeedFetcher* feedParser = new MockBatchFeedFetcher();
+    MockNewsSitemapSynthesizer* sitemapSynth = new MockNewsSitemapSynthesizer();
 
-    firstParser->setResult(ParserInterface::PARSE_ERROR);
+    firstParser->setResult(FeedSource::PARSE_ERROR);
 
     static QString persistentHtmlSitemap2 = "<html><head><title>Broken Site</title></head><body></body></html>";
     pageGrabber->setMockDocument(&persistentHtmlSitemap2);
@@ -1886,7 +1886,7 @@ void TestFangFeedDiscovery::testSitemapErrorIntegration()
     // Configure mock synthesizer to return an error.
     sitemapSynth->setError("No feed found");
 
-    FeedDiscovery fd(nullptr, firstParser, new MockNewsParser(), pageGrabber, feedParser, sitemapSynth);
+    FeedDiscovery fd(nullptr, firstParser, pageGrabber, feedParser, sitemapSynth);
     QSignalSpy spy(&fd, &FeedDiscovery::done);
 
     fd.checkFeed("https://www.brokensite.com");
@@ -1927,7 +1927,7 @@ void TestFangFeedDiscovery::testDeduplicateRepetitiveTitles()
         entries.append(entry);
     }
 
-    QList<SitemapEntry> result = GoogleNewsSitemapSynthesizer::deduplicateRepetitiveTitles(entries);
+    QList<SitemapEntry> result = NewsSitemapSynthesizer::deduplicateRepetitiveTitles(entries);
 
     // 10 lottery -> 1 kept, 5 unique -> 5 kept = 6 total
     QCOMPARE(result.size(), 6);
@@ -1969,7 +1969,7 @@ void TestFangFeedDiscovery::testDeduplicateNoRepetition()
         entries.append(entry);
     }
 
-    QList<SitemapEntry> result = GoogleNewsSitemapSynthesizer::deduplicateRepetitiveTitles(entries);
+    QList<SitemapEntry> result = NewsSitemapSynthesizer::deduplicateRepetitiveTitles(entries);
     QCOMPARE(result.size(), 10);
 }
 
@@ -1993,7 +1993,7 @@ void TestFangFeedDiscovery::testDeduplicateKeepsMostRecent()
         entries.append(entry);
     }
 
-    QList<SitemapEntry> result = GoogleNewsSitemapSynthesizer::deduplicateRepetitiveTitles(
+    QList<SitemapEntry> result = NewsSitemapSynthesizer::deduplicateRepetitiveTitles(
         entries, 4, 3);
 
     // Group of 5 > threshold of 3 -> deduplicated to 1
@@ -2016,7 +2016,7 @@ void TestFangFeedDiscovery::testDeduplicateSmallList()
         entries.append(entry);
     }
 
-    QList<SitemapEntry> result = GoogleNewsSitemapSynthesizer::deduplicateRepetitiveTitles(entries);
+    QList<SitemapEntry> result = NewsSitemapSynthesizer::deduplicateRepetitiveTitles(entries);
 
     // 3 == threshold of 3, so NOT deduped
     QCOMPARE(result.size(), 3);

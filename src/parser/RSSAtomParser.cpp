@@ -1,8 +1,7 @@
-#include "ParserXMLWorker.h"
+#include "RSSAtomParser.h"
 #include <QMap>
 #include <QtCore/qtimezone.h>
-#include "../utilities/ErrorHandling.h"
-#include "../utilities/FangLogging.h"
+#include "FeedParserLogging.h"
 
 // Some feeds (e.g. excelsior.com.mx) double-escape CDATA markers, producing
 // literal "<![CDATA[...]]>" text instead of actual CDATA sections. Strip them.
@@ -15,24 +14,33 @@ static QString stripEscapedCDATA(const QString& text)
     return text;
 }
 
-ParserXMLWorker::ParserXMLWorker(QObject *parent) :
-    FangObject(parent), feed(nullptr), currentItem(nullptr), isValid(false), inAtomXHTML(false)
+RawFeed* RSSAtomParser::parse(const QByteArray& data)
+{
+    RSSAtomParser worker;
+    worker.documentStart();
+    worker.addXML(data);
+    worker.documentEnd();
+    return worker.takeFeed();
+}
+
+RSSAtomParser::RSSAtomParser() :
+    feed(nullptr), currentItem(nullptr), isValid(false), inAtomXHTML(false)
 {
 }
 
-ParserXMLWorker::~ParserXMLWorker()
+RSSAtomParser::~RSSAtomParser()
 {
     delete feed;
 }
 
-RawFeed* ParserXMLWorker::takeFeed()
+RawFeed* RSSAtomParser::takeFeed()
 {
     RawFeed* result = feed;
     feed = nullptr;
     return result;
 }
 
-void ParserXMLWorker::documentStart()
+void RSSAtomParser::documentStart()
 {
     // Make a new feed!  Yay!
     delete feed;
@@ -42,7 +50,7 @@ void ParserXMLWorker::documentStart()
     resetParserVars();
 }
 
-void ParserXMLWorker::documentEnd()
+void RSSAtomParser::documentEnd()
 {
     if (isValid) {
         if (feed->items.size() == 0) {
@@ -50,13 +58,10 @@ void ParserXMLWorker::documentEnd()
             // handles the case where they were no items but we might have a summary.
             saveSummary();
         }
-        emit done(feed);
     }
-    
-    // If it's not valid, we already emitted a signal.
 }
 
-void ParserXMLWorker::addXML(QByteArray data)
+void RSSAtomParser::addXML(QByteArray data)
 {
     if (!isValid) {
         return;
@@ -81,14 +86,13 @@ void ParserXMLWorker::addXML(QByteArray data)
     if (xml.error() && xml.error() != QXmlStreamReader::PrematureEndOfDocumentError &&
             xml.error() != QXmlStreamReader::NotWellFormedError) {
         isValid = false;
-        qCWarning(logParser) << "XML ERROR:" << xml.lineNumber() << ": " << xml.errorString();
-        emit done(nullptr);
+        qCWarning(logFeedParser) << "XML ERROR:" << xml.lineNumber() << ": " << xml.errorString();
     }
     
 }
 
 
-void ParserXMLWorker::elementStart()
+void RSSAtomParser::elementStart()
 {
     QString tagName = xml.name().toString().toLower();
     
@@ -183,7 +187,7 @@ void ParserXMLWorker::elementStart()
     tagStack.push(tagName);
 }
 
-void ParserXMLWorker::elementEnd()
+void RSSAtomParser::elementEnd()
 {
     if (!inAtomXHTML) {
         tagStack.pop(); // Pop our tag stack, we're through with this one!
@@ -195,9 +199,9 @@ void ParserXMLWorker::elementEnd()
         //qDebug() << "End element:" << xml.name().toString();
         if (currentItem == nullptr) {
             // Throw some kinda error, this can't happen.
-            qCDebug(logParser) << "Current item is null!";
-            qCDebug(logParser) << "Current title: " << title;
-            qCDebug(logParser) << "Xml element: " << tagName;
+            qCDebug(logFeedParser) << "Current item is null!";
+            qCDebug(logFeedParser) << "Current title: " << title;
+            qCDebug(logFeedParser) << "Xml element: " << tagName;
         }
         
         // Figure out which date to use.
@@ -228,8 +232,8 @@ void ParserXMLWorker::elementEnd()
 
         // Skip items without a GUID - malformed feed
         if (myGuid.isEmpty()) {
-            qCWarning(logParser) << "ParserXMLWorker: RSS/Atom item missing GUID/URL, skipping item";
-            qCWarning(logParser) << "  Title:" << title;
+            qCWarning(logFeedParser) << "RSSAtomParser: RSS/Atom item missing GUID/URL, skipping item";
+            qCWarning(logFeedParser) << "  Title:" << title;
             delete currentItem;
             currentItem = nullptr;
 
@@ -253,8 +257,8 @@ void ParserXMLWorker::elementEnd()
         
         // Okay, give it up. :(
         if (!currentItem->timestamp.isValid()) {
-            qCDebug(logParser) << "Time string: " << timestamp;
-            qCDebug(logParser) << "invalid date!";
+            qCDebug(logFeedParser) << "Time string: " << timestamp;
+            qCDebug(logFeedParser) << "invalid date!";
         }
         
         
@@ -295,7 +299,7 @@ void ParserXMLWorker::elementEnd()
     }
 }
 
-void ParserXMLWorker::elementContents()
+void RSSAtomParser::elementContents()
 {
     if (inAtomXHTML) {
         // Atom sucks!
@@ -352,7 +356,7 @@ void ParserXMLWorker::elementContents()
     }
 }
 
-void ParserXMLWorker::resetParserVars()
+void RSSAtomParser::resetParserVars()
 {
     xml.clear();
 
@@ -379,7 +383,7 @@ void ParserXMLWorker::resetParserVars()
     tagStack.clear();
 }
 
-void ParserXMLWorker::saveSummary()
+void RSSAtomParser::saveSummary()
 {
     // Global space.
     feed->title = title;
@@ -405,7 +409,7 @@ void ParserXMLWorker::saveSummary()
 }
 
 
-QDateTime ParserXMLWorker::dateFromFeedString(const QString& _timestamp)
+QDateTime RSSAtomParser::dateFromFeedString(const QString& _timestamp)
 {
     QDateTime ret; // Defaults to invalid timestamp.
     
@@ -547,7 +551,7 @@ QDateTime ParserXMLWorker::dateFromFeedString(const QString& _timestamp)
 }
 
 
-void ParserXMLWorker::yearFix(QString& timestamp)
+void RSSAtomParser::yearFix(QString& timestamp)
 {
     // If the timestamp is something like this:
     // Tue, 02 Jul 13 [etc]
@@ -603,7 +607,7 @@ void ParserXMLWorker::yearFix(QString& timestamp)
 }
 
 
-void ParserXMLWorker::shaveWeekdayName(QString& timestamp)
+void RSSAtomParser::shaveWeekdayName(QString& timestamp)
 {
     // NOTE:
     // By the time we've reached this method, the timestamp has
@@ -618,14 +622,14 @@ void ParserXMLWorker::shaveWeekdayName(QString& timestamp)
     timestamp = timestamp.remove(0, comma + 1).trimmed();
 }
 
-void ParserXMLWorker::monthMassager(QString& timestamp)
+void RSSAtomParser::monthMassager(QString& timestamp)
 {
     // Add new ones as they're encountered.
     timestamp = timestamp.replace("Sept ", "Sep ");
 }
 
 
-QString ParserXMLWorker::getTagStackAt(qint32 n)
+QString RSSAtomParser::getTagStackAt(qint32 n)
 {
     // n is from 0..size - 1
     if (tagStack.isEmpty() || (tagStack.size() - 1) < n)

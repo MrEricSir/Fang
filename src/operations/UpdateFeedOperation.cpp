@@ -20,7 +20,7 @@ UpdateFeedOperation::UpdateFeedOperation(OperationManager *parent, FeedItem *fee
     useCache(useCache),
     newsSitemapSynthesizer(nullptr)
 {
-    connect(&parser, &NewsParser::done, this, &UpdateFeedOperation::onFeedFinished);
+    connect(&parser, &FeedFetcher::done, this, &UpdateFeedOperation::onFeedFinished);
     connect(&rewriter, &RawFeedRewriter::finished, this, &UpdateFeedOperation::onRewriterFinished);
     connect(&discovery, &FeedDiscovery::done, this, &UpdateFeedOperation::onDiscoveryDone);
     
@@ -59,10 +59,10 @@ void UpdateFeedOperation::execute()
     
     
     if (feed->getFeedType() == FeedTypeGoogleNewsSitemap) {
-        // Google News sitemap feeds use the synthesizer *busts out a keytar* to simulate
+        // News sitemap feeds use the synthesizer *busts out a keytar* to simulate
         // feeds based on sitemap XML data.
-        newsSitemapSynthesizer = new GoogleNewsSitemapSynthesizer(this);
-        connect(newsSitemapSynthesizer, &GoogleNewsSitemapSynthesizer::done,
+        newsSitemapSynthesizer = new NewsSitemapSynthesizer(this);
+        connect(newsSitemapSynthesizer, &NewsSitemapSynthesizer::done,
                 this, &UpdateFeedOperation::onNewsSitemapRefreshDone);
         newsSitemapSynthesizer->synthesize(feed->getURL(), feed->getTitle(),
                                        feed->getLastUpdated());
@@ -79,7 +79,7 @@ void UpdateFeedOperation::onFeedFinished()
     FANG_BACKGROUND_CHECK;
 
     // 304 Not Modified: Feed hasn't changed, nothing to do.
-    if (parser.getResult() == ParserInterface::NOT_MODIFIED) {
+    if (parser.getResult() == FeedSource::NOT_MODIFIED) {
         feed->setErrorFlag(false);
         feed->setIsUpdating(false);
         emit finished(this);
@@ -87,7 +87,7 @@ void UpdateFeedOperation::onFeedFinished()
     }
 
     // Try feed rediscovery if needed. This will update the URL and refresh.
-    if (parser.getResult() == ParserInterface::NETWORK_ERROR &&
+    if (parser.getResult() == FeedSource::NETWORK_ERROR &&
         parser.getNetworkError() == QNetworkReply::NetworkError::ContentNotFoundError) {
         qCDebug(logOperation) << "UpdateFeedOperation: Feed not found. Attempting to rediscover feed.";
         discovery.checkFeed(feed->getUserURL());
@@ -96,7 +96,7 @@ void UpdateFeedOperation::onFeedFinished()
     }
 
     // Set error flag for network errors (server unreachable, etc.)
-    if (parser.getResult() == ParserInterface::NETWORK_ERROR) {
+    if (parser.getResult() == FeedSource::NETWORK_ERROR) {
         qCDebug(logOperation) << "UpdateFeedOperation: Network error for feed:" << feed->getTitle();
         feed->setErrorFlag(true);
         feed->setIsUpdating(false);
@@ -384,7 +384,7 @@ void UpdateFeedOperation::onNewsSitemapRefreshDone()
     FANG_BACKGROUND_CHECK;
 
     if (newsSitemapSynthesizer->hasError()) {
-        qCDebug(logOperation) << "UpdateFeedOperation: Google News sitemap refresh error:"
+        qCDebug(logOperation) << "UpdateFeedOperation: News sitemap refresh error:"
                               << newsSitemapSynthesizer->errorString();
         feed->setErrorFlag(true);
         feed->setIsUpdating(false);

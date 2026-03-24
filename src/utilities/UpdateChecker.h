@@ -7,7 +7,7 @@
 #include <QSettings>
 
 #include "../FangObject.h"
-#include "../parser/NewsParser.h"
+#include "../parser/FeedFetcher.h"
 #include "SettingsInterface.h"
 
 /*!
@@ -30,7 +30,7 @@ public:
                         If null, uses FangApp::instance()->getSettings().
      */
     explicit UpdateChecker(QObject *parent = nullptr,
-                           ParserInterface* parser = nullptr,
+                           FeedSource* parser = nullptr,
                            SettingsInterface* settings = nullptr);
     inline virtual ~UpdateChecker() = default;
 
@@ -85,7 +85,7 @@ private:
     static const QUrl UPDATE_FEED_URL;
     static const int CHECK_INTERVAL_MS; // 24 hours in milliseconds
 
-    ParserInterface* parser;
+    FeedSource* parser;
     SettingsInterface* settingsInterface;  // Injected or from FangApp
     QTimer timer;
     QString _latestVersion;

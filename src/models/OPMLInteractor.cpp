@@ -154,15 +154,15 @@ void OPMLInteractor::onBatchFeedDiscoveryDone()
 
 QString OPMLInteractor::importErrorString()
 {
-    ParserInterface::ParseResult result = parser.getResult();
+    FeedSource::ParseResult result = parser.getResult();
     switch (result) {
-    case ParserInterface::OK:
+    case FeedSource::OK:
         return "";
-    case ParserInterface::FILE_ERROR:
+    case FeedSource::FILE_ERROR:
         return "Could not access or read file";
-    case ParserInterface::PARSE_ERROR:
+    case FeedSource::PARSE_ERROR:
         return "File is not an OPML feed list";
-    case ParserInterface::EMPTY_DOCUMENT:
+    case FeedSource::EMPTY_DOCUMENT:
         return "OPML file did not contain any feeds";
     default:
         FANG_UNREACHABLE("Unknown OPML parser error code");

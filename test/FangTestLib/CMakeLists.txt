@@ -12,19 +12,13 @@ add_library(FangTestLib STATIC
     ${CMAKE_SOURCE_DIR}/src/network/BatchDownloadCore.cpp
 
     # Parser infrastructure (used by parser/feed tests)
-    ${CMAKE_SOURCE_DIR}/src/parser/ParserInterface.cpp
-    ${CMAKE_SOURCE_DIR}/src/parser/ParserXMLWorker.cpp
-    ${CMAKE_SOURCE_DIR}/src/parser/NewsParser.cpp
-    ${CMAKE_SOURCE_DIR}/src/parser/JSONFeedParser.cpp
-    ${CMAKE_SOURCE_DIR}/src/parser/FeedParserRouter.cpp
-    ${CMAKE_SOURCE_DIR}/src/parser/RawFeed.cpp
-    ${CMAKE_SOURCE_DIR}/src/parser/RawNews.cpp
-    ${CMAKE_SOURCE_DIR}/src/parser/BatchNewsParser.cpp
+    ${CMAKE_SOURCE_DIR}/src/parser/FeedSource.cpp
+    ${CMAKE_SOURCE_DIR}/src/parser/FeedFetcher.cpp
+    ${CMAKE_SOURCE_DIR}/src/parser/BatchFeedFetcher.cpp
 
     # Sitemap support
-    ${CMAKE_SOURCE_DIR}/src/parser/SitemapParser.cpp
     ${CMAKE_SOURCE_DIR}/src/utilities/PageMetadataExtractor.cpp
-    ${CMAKE_SOURCE_DIR}/src/utilities/GoogleNewsSitemapSynthesizer.cpp
+    ${CMAKE_SOURCE_DIR}/src/utilities/NewsSitemapSynthesizer.cpp
 
     # Utilities (used by multiple tests)
     ${CMAKE_SOURCE_DIR}/src/network/NetworkDownloadCore.cpp
@@ -47,6 +41,7 @@ target_include_directories(FangTestLib PUBLIC
 
 # Link required libraries
 target_link_libraries(FangTestLib PUBLIC
+    FangFeedParser
     TidyLib
     Qt6::Concurrent
     Qt6::Core

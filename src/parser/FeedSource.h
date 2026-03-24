@@ -1,5 +1,5 @@
-#ifndef PARSERINTERFACE_H
-#define PARSERINTERFACE_H
+#ifndef FEEDSOURCE_H
+#define FEEDSOURCE_H
 
 #include <QObject>
 #include <QUrl>
@@ -9,23 +9,23 @@
 #include "../FangObject.h"
 
 /*!
-    \brief Interface for RSS/Atom parser.
+    \brief Abstract interface for async feed fetch + parse.
  */
-class ParserInterface : public FangObject
+class FeedSource : public FangObject
 {
     Q_OBJECT
-    
+
 public:
     enum ParseResult { OK, NETWORK_ERROR, FILE_ERROR, PARSE_ERROR, EMPTY_DOCUMENT, IN_PROGRESS, NOT_MODIFIED };
     Q_ENUM(ParseResult)
-    
-    explicit ParserInterface(QObject *parent = nullptr);
-    virtual ~ParserInterface() {}
-    
+
+    explicit FeedSource(QObject *parent = nullptr);
+    virtual ~FeedSource() {}
+
 signals:
     // Call getResult() and getFeed() now, yo!
     void done();
-    
+
 public slots:
 
     /*!
@@ -38,7 +38,7 @@ public slots:
                        const QString& ifNoneMatch = QString(),
                        const QString& ifModifiedSince = QString()) =0;
 
-    virtual ParserInterface::ParseResult getResult() =0;
+    virtual FeedSource::ParseResult getResult() =0;
     virtual RawFeed* getFeed() =0;
     virtual QUrl getURL() =0;
 
@@ -48,7 +48,7 @@ public slots:
     // Conditional request response headers.
     virtual QString responseEtag() { return QString(); }
     virtual QString responseLastModified() { return QString(); }
-    
+
 };
 
-#endif // PARSERINTERFACE_H
+#endif // FEEDSOURCE_H

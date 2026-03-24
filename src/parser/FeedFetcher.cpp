@@ -1,14 +1,29 @@
-#include "NewsParser.h"
+#include "FeedFetcher.h"
 
 #include <QFile>
 #include <QFileInfo>
 
 #include "../utilities/FangLogging.h"
 
-#include "FeedParserRouter.h"
+#include "FeedParser.h"
 
-NewsParser::NewsParser(QObject *parent) :
-    ParserInterface(parent),
+// Thin QObject wrapper so FeedParser::parse() runs on the worker thread.
+class ParseWorker : public QObject
+{
+    Q_OBJECT
+public:
+    using QObject::QObject;
+public slots:
+    void parse(QByteArray data)
+    {
+        emit done(FeedParser::parse(data));
+    }
+signals:
+    void done(RawFeed* feed);
+};
+
+FeedFetcher::FeedFetcher(QObject *parent) :
+    FeedSource(parent),
     feed(nullptr), result(OK), networkError(QNetworkReply::NetworkError::NoError),
     activeManager(&manager),
     currentReply(nullptr), redirectReply(nullptr),
@@ -18,22 +33,20 @@ NewsParser::NewsParser(QObject *parent) :
 {
     // Connex0r teh siganls.
     connect(activeManager, &QNetworkAccessManager::finished,
-            this, &NewsParser::netFinished);
+            this, &FeedFetcher::netFinished);
 
-    // Setup the router object.
-    FeedParserRouter* router = new FeedParserRouter();
-    router->moveToThread(&workerThread);
-    connect(&workerThread, &QThread::finished, router, &QObject::deleteLater);
-    connect(this, &NewsParser::triggerDocStart, router, &FeedParserRouter::documentStart);
-    connect(this, &NewsParser::triggerDocEnd, router, &FeedParserRouter::documentEnd);
-    connect(this, &NewsParser::triggerAddData, router, &FeedParserRouter::addData);
-    connect(router, &FeedParserRouter::done, this, &NewsParser::workerDone);
+    // Setup the worker object on the worker thread.
+    ParseWorker* worker = new ParseWorker();
+    worker->moveToThread(&workerThread);
+    connect(&workerThread, &QThread::finished, worker, &QObject::deleteLater);
+    connect(this, &FeedFetcher::triggerParse, worker, &ParseWorker::parse);
+    connect(worker, &ParseWorker::done, this, &FeedFetcher::workerDone);
 
     workerThread.start();
 }
 
-NewsParser::NewsParser(QNetworkAccessManager* networkManager, QObject *parent) :
-    ParserInterface(parent),
+FeedFetcher::FeedFetcher(QNetworkAccessManager* networkManager, QObject *parent) :
+    FeedSource(parent),
     feed(nullptr), result(OK), networkError(QNetworkReply::NetworkError::NoError),
     activeManager(networkManager ? networkManager : &manager),
     currentReply(nullptr), redirectReply(nullptr),
@@ -42,20 +55,18 @@ NewsParser::NewsParser(QNetworkAccessManager* networkManager, QObject *parent) :
     permanentRedirect(false)
 {
     connect(activeManager, &QNetworkAccessManager::finished,
-            this, &NewsParser::netFinished);
+            this, &FeedFetcher::netFinished);
 
-    FeedParserRouter* router = new FeedParserRouter();
-    router->moveToThread(&workerThread);
-    connect(&workerThread, &QThread::finished, router, &QObject::deleteLater);
-    connect(this, &NewsParser::triggerDocStart, router, &FeedParserRouter::documentStart);
-    connect(this, &NewsParser::triggerDocEnd, router, &FeedParserRouter::documentEnd);
-    connect(this, &NewsParser::triggerAddData, router, &FeedParserRouter::addData);
-    connect(router, &FeedParserRouter::done, this, &NewsParser::workerDone);
+    ParseWorker* worker = new ParseWorker();
+    worker->moveToThread(&workerThread);
+    connect(&workerThread, &QThread::finished, worker, &QObject::deleteLater);
+    connect(this, &FeedFetcher::triggerParse, worker, &ParseWorker::parse);
+    connect(worker, &ParseWorker::done, this, &FeedFetcher::workerDone);
 
     workerThread.start();
 }
 
-NewsParser::~NewsParser()
+FeedFetcher::~FeedFetcher()
 {
     workerThread.quit();
     workerThread.wait();
@@ -63,7 +74,7 @@ NewsParser::~NewsParser()
     delete currentReply;
 }
 
-void NewsParser::parse(const QUrl& url, bool noParseIfCached,
+void FeedFetcher::parse(const QUrl& url, bool noParseIfCached,
                        const QString& ifNoneMatch, const QString& ifModifiedSince)
 {
     // Reset redirect counter.
@@ -73,7 +84,7 @@ void NewsParser::parse(const QUrl& url, bool noParseIfCached,
     parseInternal(url, noParseIfCached, ifNoneMatch, ifModifiedSince);
 }
 
-void NewsParser::parseInternal(const QUrl& url, bool noParseIfCached,
+void FeedFetcher::parseInternal(const QUrl& url, bool noParseIfCached,
                                const QString& ifNoneMatch, const QString& ifModifiedSince)
 {
     initParse(url);
@@ -102,47 +113,46 @@ void NewsParser::parseInternal(const QUrl& url, bool noParseIfCached,
     }
 
     currentReply = activeManager->get(request);
-    connect(currentReply, &QNetworkReply::readyRead, this, &NewsParser::readyRead);
-    connect(currentReply, &QNetworkReply::metaDataChanged, this, &NewsParser::metaDataChanged);
-    connect(currentReply, &QNetworkReply::errorOccurred, this, &NewsParser::error);
+    connect(currentReply, &QNetworkReply::readyRead, this, &FeedFetcher::readyRead);
+    connect(currentReply, &QNetworkReply::metaDataChanged, this, &FeedFetcher::metaDataChanged);
+    connect(currentReply, &QNetworkReply::errorOccurred, this, &FeedFetcher::error);
 }
 
 
-void NewsParser::parseFile(const QString &filename)
+void FeedFetcher::parseFile(const QString &filename)
 {
     initParse();
 
     QFile file(filename);
 
     if (!file.exists()) {
-        qCCritical(logParser) << "NewsParser::parseFile: File does not exist:" << filename;
+        qCCritical(logParser) << "FeedFetcher::parseFile: File does not exist:" << filename;
         return;
     }
 
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        qCCritical(logParser) << "NewsParser::parseFile: Cannot open file:" << filename;
+        qCCritical(logParser) << "FeedFetcher::parseFile: Cannot open file:" << filename;
         return;
     }
 
     QByteArray data = file.readAll();
-    emit triggerAddData(data);
-    emit triggerDocEnd();
+    emit triggerParse(data);
 }
 
-void NewsParser::error(QNetworkReply::NetworkError ne)
+void FeedFetcher::error(QNetworkReply::NetworkError ne)
 {
     Q_UNUSED(ne);
     currentReply->disconnect(this);
     currentReply->deleteLater();
     currentReply = 0;
     
-    result = NewsParser::NETWORK_ERROR;
+    result = FeedFetcher::NETWORK_ERROR;
     networkError = ne;
     emit done();
 }
 
 
-void NewsParser::readyRead()
+void FeedFetcher::readyRead()
 {
     int statusCode = currentReply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
 
@@ -152,18 +162,17 @@ void NewsParser::readyRead()
         currentReply->deleteLater();
         currentReply = nullptr;
 
-        result = NewsParser::NOT_MODIFIED;
+        result = FeedFetcher::NOT_MODIFIED;
         emit done();
         return;
     }
 
     if (statusCode >= 200 && statusCode < 300) {
-        QByteArray data = currentReply->readAll();
-        emit triggerAddData(data);
+        rawData.append(currentReply->readAll());
     }
 }
 
-void NewsParser::metaDataChanged()
+void FeedFetcher::metaDataChanged()
 {
     // Capture ETag and Last-Modified response headers.
     if (currentReply->hasRawHeader("ETag")) {
@@ -179,12 +188,12 @@ void NewsParser::metaDataChanged()
     if (redirectionTarget.isValid()) {
         // Guard against unlimited redirects.
         if (redirectAttempts >= MAX_PARSER_REDIRECTS) {
-            qCDebug(logParser) << "NewsParser: Maximum redirects reached, aborting";
+            qCDebug(logParser) << "FeedFetcher: Maximum redirects reached, aborting";
             currentReply->disconnect(this);
             currentReply->deleteLater();
             currentReply = nullptr;
 
-            result = NewsParser::NETWORK_ERROR;
+            result = FeedFetcher::NETWORK_ERROR;
             networkError = QNetworkReply::TooManyRedirectsError;
             emit done();
             return;
@@ -212,7 +221,7 @@ void NewsParser::metaDataChanged()
                 currentReply->deleteLater();
                 currentReply = 0;
                 
-                result = NewsParser::OK;
+                result = FeedFetcher::OK;
                 emit done();
                 
                 return;
@@ -221,17 +230,17 @@ void NewsParser::metaDataChanged()
     }
 }
 
-NewsParser::ParseResult NewsParser::getResult()
+FeedFetcher::ParseResult FeedFetcher::getResult()
 {
     return result;
 }
 
-RawFeed* NewsParser::getFeed()
+RawFeed* FeedFetcher::getFeed()
 {
-    return result == NewsParser::OK ? feed : nullptr;
+    return result == FeedFetcher::OK ? feed : nullptr;
 }
 
-void NewsParser::netFinished(QNetworkReply *reply)
+void FeedFetcher::netFinished(QNetworkReply *reply)
 {
     if (redirectReply == reply) {
         return; // This was the previous redirect.
@@ -240,13 +249,13 @@ void NewsParser::netFinished(QNetworkReply *reply)
     // Remember this URL.
     finalFeedURL = reply->url();
     
-    // Tell the worker that we're done.
-    emit triggerDocEnd();
+    // Send buffered data to the worker thread for parsing.
+    emit triggerParse(rawData);
 }
 
-void NewsParser::workerDone(RawFeed* rawFeed)
+void FeedFetcher::workerDone(RawFeed* rawFeed)
 {
-    if (result != NewsParser::IN_PROGRESS) {
+    if (result != FeedFetcher::IN_PROGRESS) {
         // Already emitted a finished signal.  Nothing to dooooo.
         return;
     }
@@ -254,20 +263,22 @@ void NewsParser::workerDone(RawFeed* rawFeed)
     if (rawFeed) {
         feed = rawFeed;
         feed->url = finalFeedURL;
-        result = NewsParser::OK;
+        result = FeedFetcher::OK;
     } else {
-        result = NewsParser::PARSE_ERROR;
+        result = FeedFetcher::PARSE_ERROR;
     }
 
     emit done();
 }
 
-void NewsParser::initParse(const QUrl& url)
+void FeedFetcher::initParse(const QUrl& url)
 {
-    result = NewsParser::IN_PROGRESS;
+    result = FeedFetcher::IN_PROGRESS;
     networkError = QNetworkReply::NetworkError::NoError;
     finalFeedURL = url;
     respEtag = QString();
     respLastModified = QString();
-    emit triggerDocStart();
+    rawData.clear();
 }
+
+#include "FeedFetcher.moc"

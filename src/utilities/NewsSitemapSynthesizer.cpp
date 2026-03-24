@@ -1,4 +1,4 @@
-#include "GoogleNewsSitemapSynthesizer.h"
+#include "NewsSitemapSynthesizer.h"
 #include "FangLogging.h"
 
 #include <algorithm>
@@ -12,20 +12,25 @@ static QString stripWww(const QString& host)
     return host;
 }
 
-GoogleNewsSitemapSynthesizer::GoogleNewsSitemapSynthesizer(QObject* parent)
+NewsSitemapSynthesizer::NewsSitemapSynthesizer(QObject* parent)
     : FangObject(parent)
     , isRefresh(false)
+    , state(IDLE)
     , _hasError(false)
     , _result(nullptr)
-    , downloader(nullptr)
+    , downloader(new NetworkDownloadCore({}, this, nullptr))
+{
+    connect(downloader, &NetworkDownloadCore::finished,
+            this, &NewsSitemapSynthesizer::onDownloadFinished);
+    connect(downloader, &NetworkDownloadCore::error,
+            this, &NewsSitemapSynthesizer::onDownloadError);
+}
+
+NewsSitemapSynthesizer::~NewsSitemapSynthesizer()
 {
 }
 
-GoogleNewsSitemapSynthesizer::~GoogleNewsSitemapSynthesizer()
-{
-}
-
-QStringList GoogleNewsSitemapSynthesizer::newsSitemapPaths()
+QStringList NewsSitemapSynthesizer::newsSitemapPaths()
 {
     return {
         "/news-sitemap.xml",
@@ -34,7 +39,7 @@ QStringList GoogleNewsSitemapSynthesizer::newsSitemapPaths()
     };
 }
 
-void GoogleNewsSitemapSynthesizer::synthesize(const QUrl& siteUrl, const QString& siteTitle)
+void NewsSitemapSynthesizer::synthesize(const QUrl& siteUrl, const QString& siteTitle)
 {
     isRefresh = false;
     feedTitle = siteTitle;
@@ -44,13 +49,13 @@ void GoogleNewsSitemapSynthesizer::synthesize(const QUrl& siteUrl, const QString
     siteBaseUrl.setScheme(siteUrl.scheme());
     siteBaseUrl.setHost(siteUrl.host());
 
-    qCDebug(logUtility) << "GoogleNewsSitemapSynthesizer: starting discovery for" << siteBaseUrl;
+    qCDebug(logUtility) << "NewsSitemapSynthesizer: starting discovery for" << siteBaseUrl;
 
     // Start by fetching robots.txt to discover news sitemap URLs.
     fetchRobotsTxt();
 }
 
-void GoogleNewsSitemapSynthesizer::synthesize(const QUrl& sitemapUrl, const QString& feedTitle,
+void NewsSitemapSynthesizer::synthesize(const QUrl& sitemapUrl, const QString& feedTitle,
                                         const QDateTime& since)
 {
     isRefresh = true;
@@ -64,28 +69,24 @@ void GoogleNewsSitemapSynthesizer::synthesize(const QUrl& sitemapUrl, const QStr
     siteBaseUrl.setScheme(sitemapUrl.scheme());
     siteBaseUrl.setHost(sitemapUrl.host());
 
-    qCDebug(logUtility) << "GoogleNewsSitemapSynthesizer: refreshing from" << sitemapUrl
+    qCDebug(logUtility) << "NewsSitemapSynthesizer: refreshing from" << sitemapUrl
                         << "since" << since;
 
     tryNextCandidate();
 }
 
-void GoogleNewsSitemapSynthesizer::fetchRobotsTxt()
+void NewsSitemapSynthesizer::fetchRobotsTxt()
 {
     QUrl robotsUrl = siteBaseUrl;
     robotsUrl.setPath("/robots.txt");
 
-    qCDebug(logUtility) << "GoogleNewsSitemapSynthesizer: fetching" << robotsUrl;
+    qCDebug(logUtility) << "NewsSitemapSynthesizer: fetching" << robotsUrl;
 
-    downloader = new NetworkDownloadCore({}, this, nullptr);
-    connect(downloader, &NetworkDownloadCore::finished,
-            this, &GoogleNewsSitemapSynthesizer::onRobotsTxtDownloaded);
-    connect(downloader, &NetworkDownloadCore::error,
-            this, &GoogleNewsSitemapSynthesizer::onRobotsTxtDownloadError);
+    state = FETCHING_ROBOTS_TXT;
     downloader->download(robotsUrl);
 }
 
-QList<QUrl> GoogleNewsSitemapSynthesizer::parseRobotsSitemaps(const QString& robotsTxt,
+QList<QUrl> NewsSitemapSynthesizer::parseRobotsSitemaps(const QString& robotsTxt,
                                                          const QUrl& siteBaseUrl)
 {
     QList<QUrl> newsSitemaps;
@@ -113,31 +114,65 @@ QList<QUrl> GoogleNewsSitemapSynthesizer::parseRobotsSitemaps(const QString& rob
     return newsSitemaps;
 }
 
-void GoogleNewsSitemapSynthesizer::onRobotsTxtDownloaded(const QUrl& url, const QByteArray& data)
+void NewsSitemapSynthesizer::onDownloadFinished(const QUrl& url, const QByteArray& data)
+{
+    switch (state) {
+    case FETCHING_ROBOTS_TXT:
+        handleRobotsTxtResponse(url, data);
+        break;
+    case FETCHING_CANDIDATE:
+        handleCandidateResponse(url, data);
+        break;
+    case FETCHING_SUB_SITEMAP:
+        handleSubSitemapResponse(url, data);
+        break;
+    case IDLE:
+        break;
+    }
+}
+
+void NewsSitemapSynthesizer::onDownloadError(const QUrl& url, const QString& errorString)
+{
+    switch (state) {
+    case FETCHING_ROBOTS_TXT:
+        handleRobotsTxtError(url, errorString);
+        break;
+    case FETCHING_CANDIDATE:
+        handleCandidateError(url, errorString);
+        break;
+    case FETCHING_SUB_SITEMAP:
+        handleSubSitemapError(url, errorString);
+        break;
+    case IDLE:
+        break;
+    }
+}
+
+void NewsSitemapSynthesizer::handleRobotsTxtResponse(const QUrl& url, const QByteArray& data)
 {
     Q_UNUSED(url);
 
     QString robotsTxt = QString::fromUtf8(data);
     QList<QUrl> robotsSitemaps = parseRobotsSitemaps(robotsTxt, siteBaseUrl);
 
-    qCDebug(logUtility) << "GoogleNewsSitemapSynthesizer: found" << robotsSitemaps.size()
+    qCDebug(logUtility) << "NewsSitemapSynthesizer: found" << robotsSitemaps.size()
                         << "news sitemaps in robots.txt";
 
     buildCandidateUrls(robotsSitemaps);
     tryNextCandidate();
 }
 
-void GoogleNewsSitemapSynthesizer::onRobotsTxtDownloadError(const QUrl& url, const QString& errorString)
+void NewsSitemapSynthesizer::handleRobotsTxtError(const QUrl& url, const QString& errorString)
 {
     Q_UNUSED(url);
-    qCDebug(logUtility) << "GoogleNewsSitemapSynthesizer: robots.txt fetch failed:" << errorString
+    qCDebug(logUtility) << "NewsSitemapSynthesizer: robots.txt fetch failed:" << errorString
                         << ", trying well-known paths";
 
     buildCandidateUrls({});
     tryNextCandidate();
 }
 
-void GoogleNewsSitemapSynthesizer::buildCandidateUrls(const QList<QUrl>& robotsSitemaps)
+void NewsSitemapSynthesizer::buildCandidateUrls(const QList<QUrl>& robotsSitemaps)
 {
     candidateUrls.clear();
 
@@ -156,11 +191,11 @@ void GoogleNewsSitemapSynthesizer::buildCandidateUrls(const QList<QUrl>& robotsS
         }
     }
 
-    qCDebug(logUtility) << "GoogleNewsSitemapSynthesizer: probing" << candidateUrls.size()
+    qCDebug(logUtility) << "NewsSitemapSynthesizer: probing" << candidateUrls.size()
                         << "candidate URLs";
 }
 
-void GoogleNewsSitemapSynthesizer::tryNextCandidate()
+void NewsSitemapSynthesizer::tryNextCandidate()
 {
     if (candidateUrls.isEmpty()) {
         reportError("No feed found");
@@ -168,24 +203,19 @@ void GoogleNewsSitemapSynthesizer::tryNextCandidate()
     }
 
     QUrl url = candidateUrls.takeFirst();
-    qCDebug(logUtility) << "GoogleNewsSitemapSynthesizer: trying" << url;
+    qCDebug(logUtility) << "NewsSitemapSynthesizer: trying" << url;
 
-    downloader = new NetworkDownloadCore({}, this, nullptr);
-    connect(downloader, &NetworkDownloadCore::finished,
-            this, &GoogleNewsSitemapSynthesizer::onCandidateDownloaded);
-    connect(downloader, &NetworkDownloadCore::error,
-            this, &GoogleNewsSitemapSynthesizer::onCandidateDownloadError);
+    state = FETCHING_CANDIDATE;
     downloader->download(url);
 }
 
-void GoogleNewsSitemapSynthesizer::onCandidateDownloaded(const QUrl& url, const QByteArray& data)
+void NewsSitemapSynthesizer::handleCandidateResponse(const QUrl& url, const QByteArray& data)
 {
-    QString xml = QString::fromUtf8(data);
-    SitemapParser parser(this);
-    SitemapParser::SitemapType type = parser.parse(xml);
+    SitemapParser parser;
+    SitemapParser::SitemapType type = parser.parse(data);
 
     if (type == SitemapParser::Invalid) {
-        qCDebug(logUtility) << "GoogleNewsSitemapSynthesizer: invalid XML from" << url
+        qCDebug(logUtility) << "NewsSitemapSynthesizer: invalid XML from" << url
                             << ", trying next candidate";
         tryNextCandidate();
         return;
@@ -197,7 +227,7 @@ void GoogleNewsSitemapSynthesizer::onCandidateDownloaded(const QUrl& url, const 
         accumulatedEntries.clear();
         pendingSubSitemaps = parser.subSitemaps();
         if (pendingSubSitemaps.isEmpty()) {
-            qCDebug(logUtility) << "GoogleNewsSitemapSynthesizer: empty sitemap index from" << url;
+            qCDebug(logUtility) << "NewsSitemapSynthesizer: empty sitemap index from" << url;
             tryNextCandidate();
             return;
         }
@@ -212,16 +242,16 @@ void GoogleNewsSitemapSynthesizer::onCandidateDownloaded(const QUrl& url, const 
                 return aValid && !bValid;
             });
 
-        qCDebug(logUtility) << "GoogleNewsSitemapSynthesizer: sitemap index with"
+        qCDebug(logUtility) << "NewsSitemapSynthesizer: sitemap index with"
                             << pendingSubSitemaps.size() << "sub-sitemaps";
 
         tryNextSubSitemap();
         return;
     }
 
-    // UrlSet - check for Google News entries.
+    // UrlSet - check for news entries.
     if (!parser.hasNewsEntries()) {
-        qCDebug(logUtility) << "GoogleNewsSitemapSynthesizer: urlset without news entries from" << url;
+        qCDebug(logUtility) << "NewsSitemapSynthesizer: urlset without news entries from" << url;
         tryNextCandidate();
         return;
     }
@@ -229,68 +259,63 @@ void GoogleNewsSitemapSynthesizer::onCandidateDownloaded(const QUrl& url, const 
     processParsedEntries(parser.entries(), url);
 }
 
-void GoogleNewsSitemapSynthesizer::onCandidateDownloadError(const QUrl& url, const QString& errorString)
+void NewsSitemapSynthesizer::handleCandidateError(const QUrl& url, const QString& errorString)
 {
-    qCDebug(logUtility) << "GoogleNewsSitemapSynthesizer: download error for" << url
+    qCDebug(logUtility) << "NewsSitemapSynthesizer: download error for" << url
                         << ":" << errorString;
     tryNextCandidate();
 }
 
-void GoogleNewsSitemapSynthesizer::tryNextSubSitemap()
+void NewsSitemapSynthesizer::tryNextSubSitemap()
 {
     if (pendingSubSitemaps.isEmpty()) {
         if (!accumulatedEntries.isEmpty()) {
             // Deduplicate repetitive wire content, then process.
             QList<SitemapEntry> deduped = deduplicateRepetitiveTitles(accumulatedEntries);
-            qCDebug(logUtility) << "GoogleNewsSitemapSynthesizer: accumulated"
+            qCDebug(logUtility) << "NewsSitemapSynthesizer: accumulated"
                                 << accumulatedEntries.size() << "entries from sub-sitemaps,"
                                 << deduped.size() << "after dedup";
             processParsedEntries(deduped, sitemapIndexUrl);
             return;
         }
         // None of the sub-sitemaps had news entries.
-        qCDebug(logUtility) << "GoogleNewsSitemapSynthesizer: no sub-sitemaps with news entries";
+        qCDebug(logUtility) << "NewsSitemapSynthesizer: no sub-sitemaps with news entries";
         tryNextCandidate();
         return;
     }
 
     SubSitemap sub = pendingSubSitemaps.takeFirst();
-    qCDebug(logUtility) << "GoogleNewsSitemapSynthesizer: trying sub-sitemap" << sub.url;
+    qCDebug(logUtility) << "NewsSitemapSynthesizer: trying sub-sitemap" << sub.url;
 
-    downloader = new NetworkDownloadCore({}, this, nullptr);
-    connect(downloader, &NetworkDownloadCore::finished,
-            this, &GoogleNewsSitemapSynthesizer::onSubSitemapDownloaded);
-    connect(downloader, &NetworkDownloadCore::error,
-            this, &GoogleNewsSitemapSynthesizer::onSubSitemapDownloadError);
+    state = FETCHING_SUB_SITEMAP;
     downloader->download(sub.url);
 }
 
-void GoogleNewsSitemapSynthesizer::onSubSitemapDownloaded(const QUrl& url, const QByteArray& data)
+void NewsSitemapSynthesizer::handleSubSitemapResponse(const QUrl& url, const QByteArray& data)
 {
-    QString xml = QString::fromUtf8(data);
-    SitemapParser parser(this);
-    SitemapParser::SitemapType type = parser.parse(xml);
+    SitemapParser parser;
+    SitemapParser::SitemapType type = parser.parse(data);
 
     if (type == SitemapParser::UrlSet && parser.hasNewsEntries()) {
-        qCDebug(logUtility) << "GoogleNewsSitemapSynthesizer: sub-sitemap" << url
+        qCDebug(logUtility) << "NewsSitemapSynthesizer: sub-sitemap" << url
                             << "has" << parser.entries().size() << "news entries, accumulating";
         accumulatedEntries.append(parser.entries());
     } else {
-        qCDebug(logUtility) << "GoogleNewsSitemapSynthesizer: sub-sitemap" << url
+        qCDebug(logUtility) << "NewsSitemapSynthesizer: sub-sitemap" << url
                             << "has no news entries, skipping";
     }
 
     tryNextSubSitemap();
 }
 
-void GoogleNewsSitemapSynthesizer::onSubSitemapDownloadError(const QUrl& url, const QString& errorString)
+void NewsSitemapSynthesizer::handleSubSitemapError(const QUrl& url, const QString& errorString)
 {
-    qCDebug(logUtility) << "GoogleNewsSitemapSynthesizer: sub-sitemap download error for" << url
+    qCDebug(logUtility) << "NewsSitemapSynthesizer: sub-sitemap download error for" << url
                         << ":" << errorString;
     tryNextSubSitemap();
 }
 
-QString GoogleNewsSitemapSynthesizer::normalizeLanguage(const QString& lang)
+QString NewsSitemapSynthesizer::normalizeLanguage(const QString& lang)
 {
     // Normalize ISO 639-3 codes to ISO 639-1. Sites use both:
     // AP News uses "eng"/"spa", BBC uses "en"/"bn"/"hi".
@@ -307,7 +332,60 @@ QString GoogleNewsSitemapSynthesizer::normalizeLanguage(const QString& lang)
     return normalized;
 }
 
-void GoogleNewsSitemapSynthesizer::processParsedEntries(const QList<SitemapEntry>& entries,
+void NewsSitemapSynthesizer::filterByLanguage(QList<SitemapEntry>& entries)
+{
+    QMap<QString, int> langCounts;
+    for (const SitemapEntry& entry : entries) {
+        if (!entry.language.isEmpty()) {
+            langCounts[normalizeLanguage(entry.language)]++;
+        }
+    }
+
+    if (langCounts.isEmpty()) {
+        return;
+    }
+
+    QString majorityLang;
+    int maxCount = 0;
+    for (auto it = langCounts.cbegin(); it != langCounts.cend(); ++it) {
+        if (it.value() > maxCount) {
+            maxCount = it.value();
+            majorityLang = it.key();
+        }
+    }
+
+    QList<SitemapEntry> filtered;
+    for (const SitemapEntry& entry : entries) {
+        if (entry.language.isEmpty()
+            || normalizeLanguage(entry.language) == majorityLang) {
+            filtered.append(entry);
+        }
+    }
+    entries = filtered;
+
+    qCDebug(logUtility) << "NewsSitemapSynthesizer: filtered to language"
+                        << majorityLang << "(" << entries.size() << "entries)";
+}
+
+bool NewsSitemapSynthesizer::filterBySinceDate(QList<SitemapEntry>& entries)
+{
+    if (!isRefresh || !since.isValid()) {
+        return false;
+    }
+
+    QList<SitemapEntry> recent;
+    for (const SitemapEntry& entry : entries) {
+        QDateTime date = entry.publicationDate.isValid()
+            ? entry.publicationDate : entry.lastmod;
+        if (date.isValid() && date > since) {
+            recent.append(entry);
+        }
+    }
+    entries = recent;
+    return true;
+}
+
+void NewsSitemapSynthesizer::processParsedEntries(const QList<SitemapEntry>& entries,
                                                    const QUrl& sourceUrl)
 {
     feedSourceUrl = sourceUrl;
@@ -328,47 +406,16 @@ void GoogleNewsSitemapSynthesizer::processParsedEntries(const QList<SitemapEntry
     // Use the publication name as the feed title if we don't have a better one.
     if (!newsEntries.first().publicationName.isEmpty()) {
         QString pubName = newsEntries.first().publicationName;
-        // Only override generic/empty titles (host names, etc.)
         if (feedTitle.isEmpty() || feedTitle == siteBaseUrl.host()) {
             feedTitle = pubName;
         }
     }
 
-    // Filter by language: find the majority language and keep only matching entries.
-    QMap<QString, int> langCounts;
-    for (const SitemapEntry& entry : newsEntries) {
-        if (!entry.language.isEmpty()) {
-            langCounts[normalizeLanguage(entry.language)]++;
-        }
-    }
-
-    if (!langCounts.isEmpty()) {
-        QString majorityLang;
-        int maxCount = 0;
-        for (auto it = langCounts.cbegin(); it != langCounts.cend(); ++it) {
-            if (it.value() > maxCount) {
-                maxCount = it.value();
-                majorityLang = it.key();
-            }
-        }
-
-        QList<SitemapEntry> filtered;
-        for (const SitemapEntry& entry : newsEntries) {
-            if (entry.language.isEmpty()
-                || normalizeLanguage(entry.language) == majorityLang) {
-                filtered.append(entry);
-            }
-        }
-        newsEntries = filtered;
-
-        qCDebug(logUtility) << "GoogleNewsSitemapSynthesizer: filtered to language"
-                            << majorityLang << "(" << newsEntries.size() << "entries)";
-    }
+    filterByLanguage(newsEntries);
 
     // Sort by publication date descending.
     std::sort(newsEntries.begin(), newsEntries.end(),
         [](const SitemapEntry& a, const SitemapEntry& b) {
-            // Prefer publicationDate, fall back to lastmod.
             QDateTime dateA = a.publicationDate.isValid() ? a.publicationDate : a.lastmod;
             QDateTime dateB = b.publicationDate.isValid() ? b.publicationDate : b.lastmod;
             bool aValid = dateA.isValid();
@@ -379,28 +426,15 @@ void GoogleNewsSitemapSynthesizer::processParsedEntries(const QList<SitemapEntry
             return aValid && !bValid;
         });
 
-    // Filter by since date for refresh.
-    if (isRefresh && since.isValid()) {
-        QList<SitemapEntry> recent;
-        for (const SitemapEntry& entry : newsEntries) {
-            QDateTime date = entry.publicationDate.isValid()
-                ? entry.publicationDate : entry.lastmod;
-            if (date.isValid() && date > since) {
-                recent.append(entry);
-            }
-        }
-
-        if (recent.isEmpty()) {
-            // No new entries since last refresh - emit empty feed.
-            _result = new RawFeed(this);
-            _result->feedType = RawFeed::GoogleNewsSitemap;
-            _result->title = feedTitle;
-            _result->url = feedSourceUrl;
-            emit done();
-            return;
-        }
-
-        newsEntries = recent;
+    if (filterBySinceDate(newsEntries) && newsEntries.isEmpty()) {
+        // No new entries since last refresh - emit empty feed.
+        state = IDLE;
+        _result = new RawFeed(this);
+        _result->feedType = RawFeed::GoogleNewsSitemap;
+        _result->title = feedTitle;
+        _result->url = feedSourceUrl;
+        emit done();
+        return;
     }
 
     // Limit to MAX_ENTRIES.
@@ -410,14 +444,15 @@ void GoogleNewsSitemapSynthesizer::processParsedEntries(const QList<SitemapEntry
 
     feedEntries = newsEntries;
 
-    qCDebug(logUtility) << "GoogleNewsSitemapSynthesizer: selected" << feedEntries.size()
+    qCDebug(logUtility) << "NewsSitemapSynthesizer: selected" << feedEntries.size()
                         << "entries from" << feedSourceUrl;
 
+    state = IDLE;
     buildRawFeed();
     emit done();
 }
 
-void GoogleNewsSitemapSynthesizer::buildRawFeed()
+void NewsSitemapSynthesizer::buildRawFeed()
 {
     _result = new RawFeed(this);
     _result->feedType = RawFeed::GoogleNewsSitemap;
@@ -430,7 +465,6 @@ void GoogleNewsSitemapSynthesizer::buildRawFeed()
         item->guid = entry.url.toString();
         item->title = entry.newsTitle;
         item->url = entry.url;
-        item->author = QString("");
         item->timestamp = entry.publicationDate.isValid()
             ? entry.publicationDate
             : (entry.lastmod.isValid() ? entry.lastmod : QDateTime::currentDateTime());
@@ -439,19 +473,16 @@ void GoogleNewsSitemapSynthesizer::buildRawFeed()
         // through the normal HTML sanitizer and image pipeline.
         if (entry.imageUrl.isValid()) {
             item->content = "<img src=\"" + entry.imageUrl.toString() + "\"/>";
-        } else {
-            item->content = QString("");
         }
-        item->description = QString("");
 
         _result->items.append(item);
     }
 
-    qCDebug(logUtility) << "GoogleNewsSitemapSynthesizer: built feed with"
+    qCDebug(logUtility) << "NewsSitemapSynthesizer: built feed with"
                         << _result->items.size() << "items";
 }
 
-void GoogleNewsSitemapSynthesizer::setResultState(RawFeed* result, bool hasError,
+void NewsSitemapSynthesizer::setResultState(RawFeed* result, bool hasError,
                                                    const QString& errorString)
 {
     _result = result;
@@ -459,7 +490,7 @@ void GoogleNewsSitemapSynthesizer::setResultState(RawFeed* result, bool hasError
     _errorString = errorString;
 }
 
-QList<SitemapEntry> GoogleNewsSitemapSynthesizer::deduplicateRepetitiveTitles(
+QList<SitemapEntry> NewsSitemapSynthesizer::deduplicateRepetitiveTitles(
     const QList<SitemapEntry>& entries, int prefixWordCount, int repetitionThreshold)
 {
     // Group entries by their first N words (lowercased).
@@ -513,10 +544,11 @@ QList<SitemapEntry> GoogleNewsSitemapSynthesizer::deduplicateRepetitiveTitles(
     return result;
 }
 
-void GoogleNewsSitemapSynthesizer::reportError(const QString& error)
+void NewsSitemapSynthesizer::reportError(const QString& error)
 {
+    state = IDLE;
     _hasError = true;
     _errorString = error;
-    qCDebug(logUtility) << "GoogleNewsSitemapSynthesizer error:" << error;
+    qCDebug(logUtility) << "NewsSitemapSynthesizer error:" << error;
     emit done();
 }

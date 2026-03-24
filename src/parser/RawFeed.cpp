@@ -4,7 +4,7 @@
 #include <QDebug>
 
 RawFeed::RawFeed(QObject *parent) :
-    FangObject(parent),
+    QObject(parent),
     title(""),
     subtitle(""),
     url(),

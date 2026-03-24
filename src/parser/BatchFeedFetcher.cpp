@@ -1,12 +1,12 @@
-#include "BatchNewsParser.h"
-#include "NewsParser.h"
+#include "BatchFeedFetcher.h"
+#include "FeedFetcher.h"
 #include "../utilities/FangLogging.h"
 
-BatchNewsParser::BatchNewsParser(QObject *parent)
+BatchFeedFetcher::BatchFeedFetcher(QObject *parent)
     : FangObject{parent}
 {}
 
-void BatchNewsParser::parse(const QList<QUrl> &urls)
+void BatchFeedFetcher::parse(const QList<QUrl> &urls)
 {
     // Clear any existing parsers and results, in case this object is being reused.
     parsers.clear();
@@ -23,22 +23,22 @@ void BatchNewsParser::parse(const QList<QUrl> &urls)
         }
 
         auto parser = createParser();
-        connect(parser.get(), &ParserInterface::done, this, &BatchNewsParser::onParserDone);
+        connect(parser.get(), &FeedSource::done, this, &BatchFeedFetcher::onParserDone);
         parser->parse(url);
         parsers[url] = std::move(parser);
     }
 }
 
-std::unique_ptr<ParserInterface> BatchNewsParser::createParser()
+std::unique_ptr<FeedSource> BatchFeedFetcher::createParser()
 {
-    return std::make_unique<NewsParser>();
+    return std::make_unique<FeedFetcher>();
 }
 
-void BatchNewsParser::onParserDone()
+void BatchFeedFetcher::onParserDone()
 {
-    ParserInterface* parser = qobject_cast<ParserInterface*>(sender());
+    FeedSource* parser = qobject_cast<FeedSource*>(sender());
     if (!parser) {
-        qCWarning(logParser) << "BatchNewsParser: onParserDone called but sender is not a ParserInterface";
+        qCWarning(logParser) << "BatchFeedFetcher: onParserDone called but sender is not a FeedSource";
         return;
     }
 
@@ -53,7 +53,7 @@ void BatchNewsParser::onParserDone()
     }
 
     if (requestUrl.isEmpty()) {
-        qCWarning(logParser) << "BatchNewsParser: parser finished but not found in map:" << parser->getURL();
+        qCWarning(logParser) << "BatchFeedFetcher: parser finished but not found in map:" << parser->getURL();
         return;
     }
 
@@ -61,7 +61,7 @@ void BatchNewsParser::onParserDone()
     results[requestUrl] = parser->getResult();
 
     // Store feed if parser succeeded.
-    if (parser->getResult() == ParserInterface::OK) {
+    if (parser->getResult() == FeedSource::OK) {
         RawFeed* feed = parser->getFeed();
         if (feed) {
             // Store reference to the feed (owned by the parser)
@@ -71,7 +71,7 @@ void BatchNewsParser::onParserDone()
 
     // Check if we're done.
     for (auto it = parsers.cbegin(); it != parsers.cend(); ++it) {
-        if (it->second->getResult() == ParserInterface::IN_PROGRESS) {
+        if (it->second->getResult() == FeedSource::IN_PROGRESS) {
             // Not done yet!
             return;
         }
@@ -81,7 +81,7 @@ void BatchNewsParser::onParserDone()
     emit ready();
 }
 
-RawFeed* BatchNewsParser::getFeed(const QUrl& url)
+RawFeed* BatchFeedFetcher::getFeed(const QUrl& url)
 {
     return feeds.value(url, nullptr);
 }

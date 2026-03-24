@@ -1,8 +1,8 @@
-#include "MockNewsParser.h"
+#include "MockFeedSource.h"
 #include <QTimer>
 
-MockNewsParser::MockNewsParser(QObject *parent)
-    : ParserInterface(parent),
+MockFeedSource::MockFeedSource(QObject *parent)
+    : FeedSource(parent),
       result(IN_PROGRESS),
       feed(nullptr),
       url(),
@@ -10,17 +10,17 @@ MockNewsParser::MockNewsParser(QObject *parent)
 {
 }
 
-MockNewsParser::~MockNewsParser()
+MockFeedSource::~MockFeedSource()
 {
     delete feed;
 }
 
-void MockNewsParser::setResult(ParseResult result)
+void MockFeedSource::setResult(ParseResult result)
 {
     this->result = result;
 }
 
-void MockNewsParser::setFeed(RawFeed* feed)
+void MockFeedSource::setFeed(RawFeed* feed)
 {
     if (this->feed != feed) {
         delete this->feed;
@@ -28,17 +28,17 @@ void MockNewsParser::setFeed(RawFeed* feed)
     this->feed = feed;
 }
 
-void MockNewsParser::setURL(const QUrl& url)
+void MockFeedSource::setURL(const QUrl& url)
 {
     this->url = url;
 }
 
-void MockNewsParser::setFromCache(bool cached)
+void MockFeedSource::setFromCache(bool cached)
 {
     romCache = cached;
 }
 
-void MockNewsParser::reset()
+void MockFeedSource::reset()
 {
     result = OK;
     delete feed;
@@ -47,7 +47,7 @@ void MockNewsParser::reset()
     romCache = false;
 }
 
-void MockNewsParser::parse(const QUrl& url, bool noParseIfCached,
+void MockFeedSource::parse(const QUrl& url, bool noParseIfCached,
                            const QString& ifNoneMatch, const QString& ifModifiedSince)
 {
     Q_UNUSED(noParseIfCached);
@@ -60,25 +60,25 @@ void MockNewsParser::parse(const QUrl& url, bool noParseIfCached,
     }
 
     // Emit done() signal asynchronously to simulate real parser behavior
-    QTimer::singleShot(0, this, &MockNewsParser::done);
+    QTimer::singleShot(0, this, &MockFeedSource::done);
 }
 
-ParserInterface::ParseResult MockNewsParser::getResult()
+FeedSource::ParseResult MockFeedSource::getResult()
 {
     return result;
 }
 
-RawFeed* MockNewsParser::getFeed()
+RawFeed* MockFeedSource::getFeed()
 {
     return feed;
 }
 
-QUrl MockNewsParser::getURL()
+QUrl MockFeedSource::getURL()
 {
     return url;
 }
 
-bool MockNewsParser::isFromCache()
+bool MockFeedSource::isFromCache()
 {
     return romCache;
 }

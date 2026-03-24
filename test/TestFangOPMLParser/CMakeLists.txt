@@ -3,16 +3,12 @@ qt_add_executable(tst_testfangopmlparser
     tst_testfangopmlparser.cpp
     # Shared sources from main project
     ${CMAKE_SOURCE_DIR}/src/parser/OPMLParser.cpp
-    ${CMAKE_SOURCE_DIR}/src/parser/RawFeed.cpp
-    ${CMAKE_SOURCE_DIR}/src/parser/RawNews.cpp
-    ${CMAKE_SOURCE_DIR}/src/parser/ParserInterface.cpp
+    ${CMAKE_SOURCE_DIR}/src/parser/FeedSource.cpp
     ${CMAKE_SOURCE_DIR}/src/FangObject.cpp
     ${CMAKE_SOURCE_DIR}/src/utilities/FangLogging.cpp
     # Include corresponding headers for AUTOMOC
     ${CMAKE_SOURCE_DIR}/src/parser/OPMLParser.h
-    ${CMAKE_SOURCE_DIR}/src/parser/RawFeed.h
-    ${CMAKE_SOURCE_DIR}/src/parser/RawNews.h
-    ${CMAKE_SOURCE_DIR}/src/parser/ParserInterface.h
+    ${CMAKE_SOURCE_DIR}/src/parser/FeedSource.h
     ${CMAKE_SOURCE_DIR}/src/FangObject.h
 )
 
@@ -23,6 +19,7 @@ target_compile_definitions(tst_testfangopmlparser PRIVATE
 
 # Link Qt Test module
 target_link_libraries(tst_testfangopmlparser PRIVATE
+    FangFeedParser
     Qt6::Test
     Qt6::Gui
 )

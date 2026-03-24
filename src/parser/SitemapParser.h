@@ -1,12 +1,13 @@
 #ifndef SITEMAPPARSER_H
 #define SITEMAPPARSER_H
 
+#include <QByteArray>
 #include <QDateTime>
 #include <QList>
 #include <QString>
 #include <QUrl>
 
-#include "../FangObject.h"
+class QXmlStreamReader;
 
 struct SitemapEntry {
     QUrl url;
@@ -23,23 +24,24 @@ struct SubSitemap {
     QDateTime lastmod; // may be invalid
 };
 
-class SitemapParser : public FangObject
+class SitemapParser
 {
-    Q_OBJECT
 public:
     enum SitemapType { UrlSet, SitemapIndex, Invalid };
 
-    explicit SitemapParser(QObject* parent = nullptr);
+    SitemapParser();
 
     SitemapType parse(const QString& xml);
+    SitemapType parse(const QByteArray& data);
 
     QList<SitemapEntry> entries() const { return _entries; }
     QList<SubSitemap> subSitemaps() const { return _subSitemaps; }
     bool hasNewsEntries() const { return _hasNewsEntries; }
 
 private:
-    void parseUrlSet(class QXmlStreamReader& xml);
-    void parseSitemapIndex(class QXmlStreamReader& xml);
+    SitemapType parseImpl(QXmlStreamReader& reader);
+    void parseUrlSet(QXmlStreamReader& xml);
+    void parseSitemapIndex(QXmlStreamReader& xml);
 
     QList<SitemapEntry> _entries;
     QList<SubSitemap> _subSitemaps;
