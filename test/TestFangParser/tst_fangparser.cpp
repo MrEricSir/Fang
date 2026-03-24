@@ -5,7 +5,6 @@
 #include <QNetworkAccessManager>
 
 #include "../../src/parser/NewsParser.h"
-#include "../../src/parser/JSONFeedParser.h"
 #include "../../src/parser/RawFeed.h"
 #include "../MockNetworkAccessManager.h"
 

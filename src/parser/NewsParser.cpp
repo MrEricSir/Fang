@@ -5,7 +5,7 @@
 
 #include "../utilities/FangLogging.h"
 
-#include "ParserXMLWorker.h"
+#include "FeedParserRouter.h"
 
 NewsParser::NewsParser(QObject *parent) :
     ParserInterface(parent),
@@ -20,14 +20,14 @@ NewsParser::NewsParser(QObject *parent) :
     connect(activeManager, &QNetworkAccessManager::finished,
             this, &NewsParser::netFinished);
 
-    // Setup the worker object.
-    ParserXMLWorker* worker = new ParserXMLWorker();
-    worker->moveToThread(&workerThread);
-    connect(&workerThread, &QThread::finished, worker, &QObject::deleteLater);
-    connect(this, &NewsParser::triggerDocStart, worker, &ParserXMLWorker::documentStart);
-    connect(this, &NewsParser::triggerDocEnd, worker, &ParserXMLWorker::documentEnd);
-    connect(this, &NewsParser::triggerAddXML, worker, &ParserXMLWorker::addXML);
-    connect(worker, &ParserXMLWorker::done, this, &NewsParser::workerDone);
+    // Setup the router object.
+    FeedParserRouter* router = new FeedParserRouter();
+    router->moveToThread(&workerThread);
+    connect(&workerThread, &QThread::finished, router, &QObject::deleteLater);
+    connect(this, &NewsParser::triggerDocStart, router, &FeedParserRouter::documentStart);
+    connect(this, &NewsParser::triggerDocEnd, router, &FeedParserRouter::documentEnd);
+    connect(this, &NewsParser::triggerAddData, router, &FeedParserRouter::addData);
+    connect(router, &FeedParserRouter::done, this, &NewsParser::workerDone);
 
     workerThread.start();
 }
@@ -44,13 +44,13 @@ NewsParser::NewsParser(QNetworkAccessManager* networkManager, QObject *parent) :
     connect(activeManager, &QNetworkAccessManager::finished,
             this, &NewsParser::netFinished);
 
-    ParserXMLWorker* worker = new ParserXMLWorker();
-    worker->moveToThread(&workerThread);
-    connect(&workerThread, &QThread::finished, worker, &QObject::deleteLater);
-    connect(this, &NewsParser::triggerDocStart, worker, &ParserXMLWorker::documentStart);
-    connect(this, &NewsParser::triggerDocEnd, worker, &ParserXMLWorker::documentEnd);
-    connect(this, &NewsParser::triggerAddXML, worker, &ParserXMLWorker::addXML);
-    connect(worker, &ParserXMLWorker::done, this, &NewsParser::workerDone);
+    FeedParserRouter* router = new FeedParserRouter();
+    router->moveToThread(&workerThread);
+    connect(&workerThread, &QThread::finished, router, &QObject::deleteLater);
+    connect(this, &NewsParser::triggerDocStart, router, &FeedParserRouter::documentStart);
+    connect(this, &NewsParser::triggerDocEnd, router, &FeedParserRouter::documentEnd);
+    connect(this, &NewsParser::triggerAddData, router, &FeedParserRouter::addData);
+    connect(router, &FeedParserRouter::done, this, &NewsParser::workerDone);
 
     workerThread.start();
 }
@@ -125,8 +125,7 @@ void NewsParser::parseFile(const QString &filename)
     }
 
     QByteArray data = file.readAll();
-    rawData = data;
-    emit triggerAddXML(data);
+    emit triggerAddData(data);
     emit triggerDocEnd();
 }
 
@@ -160,8 +159,7 @@ void NewsParser::readyRead()
 
     if (statusCode >= 200 && statusCode < 300) {
         QByteArray data = currentReply->readAll();
-        rawData.append(data);
-        emit triggerAddXML(data);
+        emit triggerAddData(data);
     }
 }
 
@@ -252,36 +250,15 @@ void NewsParser::workerDone(RawFeed* rawFeed)
         // Already emitted a finished signal.  Nothing to dooooo.
         return;
     }
-    
+
     if (rawFeed) {
         feed = rawFeed;
-
-        // This means we saw... something.  Do a sanity check here to
-        // make sure what we found was an actual feed.
-        if (feed->items.size() > 0 || feed->title != "") {
-            feed->url = finalFeedURL;
-            
-            result = NewsParser::OK;
-            emit done();
-            
-            return; // Early exit on SUCCESS!! (yay)
-        }
-    }
-    
-    // XML parse failed so try JSON Feed instead.
-    if (!rawData.isEmpty()) {
-        RawFeed* jsonFeed = JSONFeedParser::parse(rawData);
-        if (jsonFeed && (jsonFeed->items.size() > 0 || !jsonFeed->title.isEmpty())) {
-            feed = jsonFeed;
-            feed->url = finalFeedURL;
-            result = NewsParser::OK;
-            emit done();
-            return;
-        }
-        delete jsonFeed;
+        feed->url = finalFeedURL;
+        result = NewsParser::OK;
+    } else {
+        result = NewsParser::PARSE_ERROR;
     }
 
-    result = NewsParser::PARSE_ERROR;
     emit done();
 }
 
@@ -292,6 +269,5 @@ void NewsParser::initParse(const QUrl& url)
     finalFeedURL = url;
     respEtag = QString();
     respLastModified = QString();
-    rawData.clear();
     emit triggerDocStart();
 }

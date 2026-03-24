@@ -29,6 +29,8 @@ class ParserXMLWorker : public FangObject
 public:
     explicit ParserXMLWorker(QObject *parent = nullptr);
     virtual ~ParserXMLWorker();
+
+    RawFeed* takeFeed();
     
 signals:
     

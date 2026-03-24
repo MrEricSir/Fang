@@ -25,6 +25,13 @@ ParserXMLWorker::~ParserXMLWorker()
     delete feed;
 }
 
+RawFeed* ParserXMLWorker::takeFeed()
+{
+    RawFeed* result = feed;
+    feed = nullptr;
+    return result;
+}
+
 void ParserXMLWorker::documentStart()
 {
     // Make a new feed!  Yay!

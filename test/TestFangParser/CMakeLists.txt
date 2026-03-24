@@ -11,6 +11,7 @@ qt_add_executable(tst_fangparser
     ${CMAKE_SOURCE_DIR}/src/FangObject.cpp
     ${CMAKE_SOURCE_DIR}/src/parser/ParserXMLWorker.cpp
     ${CMAKE_SOURCE_DIR}/src/parser/JSONFeedParser.cpp
+    ${CMAKE_SOURCE_DIR}/src/parser/FeedParserRouter.cpp
     ${CMAKE_SOURCE_DIR}/src/network/FangNetworkAccessManager.cpp
     ${CMAKE_SOURCE_DIR}/src/utilities/FangLogging.cpp
     # Include corresponding headers for AUTOMOC
@@ -21,6 +22,7 @@ qt_add_executable(tst_fangparser
     ${CMAKE_SOURCE_DIR}/src/FangObject.h
     ${CMAKE_SOURCE_DIR}/src/parser/ParserXMLWorker.h
     ${CMAKE_SOURCE_DIR}/src/parser/JSONFeedParser.h
+    ${CMAKE_SOURCE_DIR}/src/parser/FeedParserRouter.h
     ${CMAKE_SOURCE_DIR}/src/network/FangNetworkAccessManager.h
     ${CMAKE_SOURCE_DIR}/src/utilities/FangLogging.h
 )

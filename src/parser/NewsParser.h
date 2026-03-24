@@ -9,7 +9,6 @@
 
 #include "../network/FangNetworkAccessManager.h"
 #include "ParserInterface.h"
-#include "JSONFeedParser.h"
 
 // Max number of HTTP redirects to prevent looping.
 #define MAX_PARSER_REDIRECTS 10
@@ -53,8 +52,8 @@ signals:
     // Call this when you're done adding XML.
     void triggerDocEnd();
     
-    // Add a blurb of XML to parse.
-    void triggerAddXML(QByteArray data);
+    // Add a chunk of feed data to parse.
+    void triggerAddData(QByteArray data);
     
 protected slots:
     void readyRead();
@@ -91,8 +90,6 @@ private:
 
     int redirectAttempts;
     bool permanentRedirect;
-
-    QByteArray rawData;
 
     QThread workerThread;
 };
