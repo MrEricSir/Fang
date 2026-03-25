@@ -2,6 +2,7 @@
 #include "../network/BatchDownloadCore.h"
 
 #include <QMimeDatabase>
+#include <QSvgRenderer>
 #include <QtConcurrent>
 
 ImageGrabber::ImageGrabber(QObject *parent, QNetworkAccessManager* networkManager) :
@@ -49,14 +50,25 @@ void ImageGrabber::onBatchFinished()
             ImageData imageData;
 
             if (batchResult.success && !batchResult.data.isEmpty()) {
-                QImage image = QImage::fromData(batchResult.data);
+                QMimeType mimeType = mimeDb.mimeTypeForData(batchResult.data);
+                imageData.mimeType = mimeType.name();
 
-                if (!image.isNull()) {
-                    imageData.image = image;
-                    imageData.rawData = batchResult.data;
-
-                    QMimeType mimeType = mimeDb.mimeTypeForData(batchResult.data);
-                    imageData.mimeType = mimeType.name();
+                if (mimeType.name() == "image/svg+xml") {
+                    // Use QSvgRenderer to get the SVG's logical dimensions.
+                    // QImage::fromData() rasterizes SVGs at an arbitrary size
+                    // that doesn't reflect their actual width/height.
+                    QSvgRenderer renderer(batchResult.data);
+                    if (renderer.isValid()) {
+                        QSize size = renderer.defaultSize();
+                        imageData.image = QImage(size, QImage::Format_ARGB32);
+                        imageData.rawData = batchResult.data;
+                    }
+                } else {
+                    QImage image = QImage::fromData(batchResult.data);
+                    if (!image.isNull()) {
+                        imageData.image = image;
+                        imageData.rawData = batchResult.data;
+                    }
                 }
             }
 

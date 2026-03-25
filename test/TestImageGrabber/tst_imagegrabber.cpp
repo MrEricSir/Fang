@@ -22,6 +22,10 @@ private:
     QByteArray createTestJPEG(int width = 1, int height = 1);
     // Helper to create minimal valid GIF data
     QByteArray createTestGIF();
+    // Helper to create SVG data with explicit width/height attributes
+    QByteArray createTestSVG(int width, int height);
+    // Helper to create SVG data with only a viewBox (no width/height attributes)
+    QByteArray createTestSVGViewBoxOnly(int width, int height);
 
 private slots:
     // Constructor tests
@@ -60,6 +64,11 @@ private slots:
     // Edge cases
     void testEmptyURLList();
     void testResultsCleared();
+
+    // SVG dimension tests
+    void testSVGWithExplicitDimensions();
+    void testSVGWithViewBoxOnly();
+    void testSVGMIMETypeDetection();
 
     // HTTP redirect tests
     void testSingleRedirect();
@@ -523,6 +532,85 @@ void TestImageGrabber::testResultsCleared()
     QCOMPARE(grabber.getResults()->size(), 1);
     QVERIFY(grabber.getResults()->contains(url2));
     QVERIFY(!grabber.getResults()->contains(url1));
+}
+
+QByteArray TestImageGrabber::createTestSVG(int width, int height)
+{
+    return QString("<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"%1\" height=\"%2\" viewBox=\"0 0 %1 %2\">"
+                   "<rect width=\"%1\" height=\"%2\" fill=\"red\"/></svg>")
+            .arg(width).arg(height).toUtf8();
+}
+
+QByteArray TestImageGrabber::createTestSVGViewBoxOnly(int width, int height)
+{
+    // No width/height attributes — only a viewBox, like WordPress emoji SVGs.
+    return QString("<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 %1 %2\">"
+                   "<rect width=\"%1\" height=\"%2\" fill=\"red\"/></svg>")
+            .arg(width).arg(height).toUtf8();
+}
+
+void TestImageGrabber::testSVGWithExplicitDimensions()
+{
+    MockNetworkAccessManager mockManager;
+    ImageGrabber grabber(nullptr, &mockManager);
+
+    QByteArray svgData = createTestSVG(200, 100);
+    QUrl testUrl("http://example.com/graphic.svg");
+    mockManager.addResponse(testUrl, svgData);
+
+    QSignalSpy finishedSpy(&grabber, &ImageGrabber::finished);
+    grabber.fetchUrl(testUrl);
+
+    QVERIFY(finishedSpy.wait(1000));
+
+    ImageData data = grabber.getResults()->value(testUrl);
+    QVERIFY(data.isValid());
+    QCOMPARE(data.image.width(), 200);
+    QCOMPARE(data.image.height(), 100);
+    QCOMPARE(data.rawData, svgData);
+}
+
+void TestImageGrabber::testSVGWithViewBoxOnly()
+{
+    // Reproduces the WordPress emoji case: SVG has viewBox="0 0 36 36"
+    // but no explicit width/height attributes. QSvgRenderer::defaultSize()
+    // should return the viewBox dimensions (36x36), not an arbitrary
+    // rasterized size.
+    MockNetworkAccessManager mockManager;
+    ImageGrabber grabber(nullptr, &mockManager);
+
+    QByteArray svgData = createTestSVGViewBoxOnly(36, 36);
+    QUrl testUrl("http://example.com/emoji.svg");
+    mockManager.addResponse(testUrl, svgData);
+
+    QSignalSpy finishedSpy(&grabber, &ImageGrabber::finished);
+    grabber.fetchUrl(testUrl);
+
+    QVERIFY(finishedSpy.wait(1000));
+
+    ImageData data = grabber.getResults()->value(testUrl);
+    QVERIFY(data.isValid());
+    QCOMPARE(data.image.width(), 36);
+    QCOMPARE(data.image.height(), 36);
+}
+
+void TestImageGrabber::testSVGMIMETypeDetection()
+{
+    MockNetworkAccessManager mockManager;
+    ImageGrabber grabber(nullptr, &mockManager);
+
+    QByteArray svgData = createTestSVG(10, 10);
+    QUrl testUrl("http://example.com/icon.svg");
+    mockManager.addResponse(testUrl, svgData);
+
+    QSignalSpy finishedSpy(&grabber, &ImageGrabber::finished);
+    grabber.fetchUrl(testUrl);
+
+    QVERIFY(finishedSpy.wait(1000));
+
+    ImageData data = grabber.getResults()->value(testUrl);
+    QVERIFY(data.isValid());
+    QCOMPARE(data.mimeType, QString("image/svg+xml"));
 }
 
 void TestImageGrabber::testSingleRedirect()
