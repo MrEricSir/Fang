@@ -2,7 +2,7 @@
 #include <QTest>
 #include <QSignalSpy>
 
-#include "../../src/network/NetworkDownloadCore.h"
+#include "NetworkDownloadCore.h"
 #include "../MockNetworkAccessManager.h"
 
 class TestNetworkDownloadCore : public QObject

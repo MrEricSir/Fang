@@ -1,11 +1,13 @@
+#include <memory>
+
 #include <QString>
 #include <QTemporaryFile>
 #include <QTest>
 #include <QSignalSpy>
 #include <QNetworkAccessManager>
 
-#include "../../src/parser/FeedFetcher.h"
-#include "../../src/parser/RawFeed.h"
+#include "FeedFetcher.h"
+#include "RawFeed.h"
 #include "../MockNetworkAccessManager.h"
 
 /**
@@ -86,15 +88,15 @@ void TestFangParser::parseTest()
     // Verify the signal is only emitted once.
     QCOMPARE(spy.count(), 1);
     
-    RawFeed* feed = parser.getFeed();
+    auto feed = parser.getFeed();
     QVERIFY2(feed != nullptr, "Feed was null");
     
     // Check all dates in the feed for validity, as this is a common issue.
-    for (RawNews* newsItem : feed->items) {
+    for (const auto& newsItem : feed->items) {
         QVERIFY2(newsItem->timestamp.isValid(), "Invalid timestamp.");
     }
-    
-    RawNews* firstNews = nullptr;
+
+    std::shared_ptr<RawNews> firstNews;
     
     // All the times are in UTC; it's easier to set that here for the test cases.
     firstNewsTimestamp.setTimeZone(QTimeZone::UTC);
@@ -766,11 +768,11 @@ void TestFangParser::testMediaImage()
     }
     QCOMPARE(spy.count(), 1);
 
-    RawFeed* feed = parser.getFeed();
+    auto feed = parser.getFeed();
     QVERIFY2(feed != nullptr, "Feed was null");
     QVERIFY2(!feed->items.isEmpty(), "Feed has no items");
 
-    RawNews* firstItem = feed->items.first();
+    const auto& firstItem = feed->items.first();
     if (shouldInject) {
         QVERIFY2(!firstItem->mediaImageURL.isEmpty(), "Expected mediaImageURL to be set");
         QVERIFY2(firstItem->mediaImageURL.contains(expectedFragment),
@@ -828,7 +830,7 @@ void TestFangParser::testDcCreatorAuthor()
     }
     QCOMPARE(spy.count(), 1);
 
-    RawFeed* feed = parser.getFeed();
+    auto feed = parser.getFeed();
     QVERIFY2(feed != nullptr, "Feed was null");
     QVERIFY2(!feed->items.isEmpty(), "Feed has no items");
 
@@ -939,7 +941,7 @@ void TestFangParser::testTimezoneAbbreviations()
             spy.wait(10000);
         }
 
-        RawFeed* feed = parser.getFeed();
+        auto feed = parser.getFeed();
         if (!feed || feed->items.isEmpty()) {
             return QDateTime();
         }
@@ -1112,7 +1114,7 @@ void TestFangParser::testJSONFeedContentMapping()
     }
     QCOMPARE(spy.count(), 1);
 
-    RawFeed* feed = parser.getFeed();
+    auto feed = parser.getFeed();
     QVERIFY(feed != nullptr);
     QVERIFY(feed->items.size() >= 3);
 
@@ -1139,7 +1141,7 @@ void TestFangParser::testJSONFeedAuthors()
     }
     QCOMPARE(spyV11.count(), 1);
 
-    RawFeed* feedV11 = parserV11.getFeed();
+    auto feedV11 = parserV11.getFeed();
     QVERIFY(feedV11 != nullptr);
     QCOMPARE(feedV11->items[0]->author, "Alice Smith");
 
@@ -1152,7 +1154,7 @@ void TestFangParser::testJSONFeedAuthors()
     }
     QCOMPARE(spyV1.count(), 1);
 
-    RawFeed* feedV1 = parserV1.getFeed();
+    auto feedV1 = parserV1.getFeed();
     QVERIFY(feedV1 != nullptr);
     QCOMPARE(feedV1->items[0]->author, "Legacy Author");
 }
@@ -1169,7 +1171,7 @@ void TestFangParser::testJSONFeedMediaImage()
     }
     QCOMPARE(spy.count(), 1);
 
-    RawFeed* feed = parser.getFeed();
+    auto feed = parser.getFeed();
     QVERIFY(feed != nullptr);
     QCOMPARE(feed->items[0]->mediaImageURL, "https://example.org/images/article1.jpg");
 
@@ -1189,7 +1191,7 @@ void TestFangParser::testJSONFeedFeedType()
     }
     QCOMPARE(spy.count(), 1);
 
-    RawFeed* feed = parser.getFeed();
+    auto feed = parser.getFeed();
     QVERIFY(feed != nullptr);
     QCOMPARE(feed->feedType, RawFeed::JSONFeed);
 }

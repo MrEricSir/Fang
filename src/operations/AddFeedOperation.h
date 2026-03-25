@@ -9,7 +9,7 @@
 
 #include "../models/ListModel.h"
 #include "../models/FeedItem.h"
-#include "../parser/FeedFetcher.h"
+#include "FeedFetcher.h"
 
 class AddFeedOperation : public AsyncOperation
 {

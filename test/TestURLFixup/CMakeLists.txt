@@ -1,14 +1,11 @@
 # TestURLFixup test executable
 qt_add_executable(tst_urlfixup
     tst_urlfixup.cpp
-    # Shared sources from main project
-    ${CMAKE_SOURCE_DIR}/src/utilities/NetworkUtilities.cpp
-    # Include corresponding headers for AUTOMOC
-    ${CMAKE_SOURCE_DIR}/src/utilities/NetworkUtilities.h
 )
 
-# Link Qt modules
+# Link libraries
 target_link_libraries(tst_urlfixup PRIVATE
+    FangFeedDiscovery
     Qt6::Test
     Qt6::Network
 )

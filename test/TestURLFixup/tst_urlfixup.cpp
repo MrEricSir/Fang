@@ -1,6 +1,6 @@
 #include <QtTest>
 
-#include "../../src/utilities/NetworkUtilities.h"
+#include "NetworkUtilities.h"
 
 
 class TestURLFixup : public QObject

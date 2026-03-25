@@ -1,13 +1,13 @@
 #include "FeedDiscovery.h"
-#include "FangLogging.h"
+#include "FeedDiscoveryLogging.h"
+#include <QSimpleStateMachine/QSimpleStateMachine.h>
 #include "PageMetadataExtractor.h"
 #include <QXmlStreamReader>
 #include <QSet>
 #include <algorithm>
 #include "NetworkUtilities.h"
-#include "ErrorHandling.h"
-#include "../parser/FeedFetcher.h"
-#include "../parser/BatchFeedFetcher.h"
+#include "FeedFetcher.h"
+#include "BatchFeedFetcher.h"
 #include "WebPageGrabber.h"
 
 FeedDiscovery::FeedDiscovery(QObject *parent,
@@ -15,10 +15,10 @@ FeedDiscovery::FeedDiscovery(QObject *parent,
                            WebPageGrabber* pageGrabber,
                            BatchFeedFetcher* feedParser,
                            NewsSitemapSynthesizer* sitemapSynthesizer) :
-    FangObject(parent),
-    machine(),
-    _error(false),
-    _errorString(""),
+    QObject(parent),
+    machine(new QSimpleStateMachine(this)),
+    _error(Error::None),
+    _errorString(),
     _feedResult(nullptr),
     _probingCommonPaths(false),
     newsSitemapSynthesizer(sitemapSynthesizer)
@@ -43,18 +43,18 @@ FeedDiscovery::FeedDiscovery(QObject *parent,
     }
 
     // Set up our state machine.
-    machine.addStateChange(CHECK_FEED, TRY_FEED, [this]() { onTryFeed(); });
-    machine.addStateChange(TRY_FEED, FEED_FOUND, [this]() { onFeedFound(); });
-    machine.addStateChange(TRY_FEED, WEB_GRABBER, [this]() { onWebGrabber(); });
-    machine.addStateChange(WEB_GRABBER, VALIDATE_FEEDS, [this]() { onValidateFeeds(); });
-    machine.addStateChange(VALIDATE_FEEDS, FEED_FOUND, [this]() { onFeedFound(); });
-    machine.addStateChange(WEB_GRABBER, TRY_COMMON_PATHS, [this]() { onTryCommonPaths(); });
-    machine.addStateChange(VALIDATE_FEEDS, TRY_COMMON_PATHS, [this]() { onTryCommonPaths(); });
-    machine.addStateChange(TRY_COMMON_PATHS, FEED_FOUND, [this]() { onFeedFound(); });
-    machine.addStateChange(TRY_COMMON_PATHS, TRY_NEWS_SITEMAP, [this]() { onTryNewsSitemap(); });
-    machine.addStateChange(TRY_NEWS_SITEMAP, FEED_FOUND, [this]() { onFeedFound(); });
+    machine->addStateChange(CHECK_FEED, TRY_FEED, [this]() { onTryFeed(); });
+    machine->addStateChange(TRY_FEED, FEED_FOUND, [this]() { onFeedFound(); });
+    machine->addStateChange(TRY_FEED, WEB_GRABBER, [this]() { onWebGrabber(); });
+    machine->addStateChange(WEB_GRABBER, VALIDATE_FEEDS, [this]() { onValidateFeeds(); });
+    machine->addStateChange(VALIDATE_FEEDS, FEED_FOUND, [this]() { onFeedFound(); });
+    machine->addStateChange(WEB_GRABBER, TRY_COMMON_PATHS, [this]() { onTryCommonPaths(); });
+    machine->addStateChange(VALIDATE_FEEDS, TRY_COMMON_PATHS, [this]() { onTryCommonPaths(); });
+    machine->addStateChange(TRY_COMMON_PATHS, FEED_FOUND, [this]() { onFeedFound(); });
+    machine->addStateChange(TRY_COMMON_PATHS, TRY_NEWS_SITEMAP, [this]() { onTryNewsSitemap(); });
+    machine->addStateChange(TRY_NEWS_SITEMAP, FEED_FOUND, [this]() { onFeedFound(); });
 
-    machine.addStateChange(-1, FEED_ERROR, [this]() { onError(); }); // All errors.
+    machine->addStateChange(-1, FEED_ERROR, [this]() { onError(); }); // All errors.
 
     // Overall discovery timeout.
     timeoutTimer.setSingleShot(true);
@@ -77,12 +77,12 @@ FeedDiscovery::~FeedDiscovery()
 void FeedDiscovery::checkFeed(QString sURL)
 {
     // Reset state
-    _error = false;
-    _errorString = "";
+    _error = Error::None;
+    _errorString.clear();
     _probingCommonPaths = false;
     _discoveredFeeds.clear();
     _sortedFeedURLs.clear();
-    machine.start(CHECK_FEED);
+    machine->start(CHECK_FEED);
 
     QUrl url = NetworkUtilities::urlFixup(sURL);
     
@@ -93,11 +93,11 @@ void FeedDiscovery::checkFeed(QString sURL)
             url.setScheme("http");
         }
         
-        //qCDebug(logUtility) << "Location is adjusted to: " << location;
+        //qCDebug(logFeedDiscovery) << "Location is adjusted to: " << location;
         
         // Final check!  If it's not valid, we'll set an error and bail.
         if (url.isRelative()) {
-            reportError("Invalid URL");
+            reportError(Error::InvalidURL, "Invalid URL");
             
             return;
         }
@@ -105,7 +105,7 @@ void FeedDiscovery::checkFeed(QString sURL)
     
     // Okay, we have a potential URL! Let's check it.
     _feedURL = url;
-    machine.setState(TRY_FEED);
+    machine->setState(TRY_FEED);
     timeoutTimer.start();
 }
 
@@ -117,8 +117,8 @@ void FeedDiscovery::onTryFeed()
 void FeedDiscovery::onFeedFound()
 {
     timeoutTimer.stop();
-    FANG_CHECK(!_error, "FeedDiscovery::onFeedFound called with _error set");
-    FANG_CHECK(!_feedURL.isEmpty(), "FeedDiscovery::onFeedFound called with empty _feedURL");
+    Q_ASSERT(_error == Error::None);
+    Q_ASSERT(!_feedURL.isEmpty());
 
     emit done(this);
 }
@@ -131,60 +131,62 @@ void FeedDiscovery::onWebGrabber()
 void FeedDiscovery::onError()
 {
     timeoutTimer.stop();
-    FANG_CHECK(_error, "FeedDiscovery::onError called without _error set");
-    FANG_CHECK(!_errorString.isEmpty(), "FeedDiscovery::onError called with empty _errorString");
+    Q_ASSERT(_error != Error::None);
+    Q_ASSERT(!_errorString.isEmpty());
 
     emit done(this);
 }
 
 void FeedDiscovery::onTimeout()
 {
-    reportError("Feed discovery timed out");
+    reportError(Error::Timeout, "Feed discovery timed out");
 }
 
 void FeedDiscovery::onFirstParseDone()
 {
-    int res = parserFirstTry->getResult();
+    FeedFetchResult res = parserFirstTry->getResult();
     switch (res) {
-    case FeedSource::OK:
+    case FeedFetchResult::OK:
     {
         // User directly entered a feed URL! Add it to discovered feeds
         _feedURL = parserFirstTry->getURL();
-        _feedResult = parserFirstTry->getFeed();
+        auto parsedFeed = parserFirstTry->getFeed();
+        _feedResult = parsedFeed.get();
 
         // Reject empty feeds - a feed that parses OK but has no items is useless.
         if (!_feedResult || _feedResult->items.isEmpty()) {
-            qCDebug(logUtility) << "Feed parsed OK but has no items, trying web grabber";
-            machine.setState(WEB_GRABBER);
+            qCDebug(logFeedDiscovery) << "Feed parsed OK but has no items, trying web grabber";
+            machine->setState(WEB_GRABBER);
             break;
         }
 
         // Add to discovered feeds list
         DiscoveredFeed discovered;
         discovered.url = _feedURL;
-        discovered.feed = _feedResult;
+        discovered.feed = parsedFeed;
         discovered.title = _feedResult->title.isEmpty() ? _feedURL.toString() : _feedResult->title;
         discovered.validated = true;
         _discoveredFeeds.clear();
         _discoveredFeeds.append(discovered);
 
-        machine.setState(FEED_FOUND);
+        machine->setState(FEED_FOUND);
         break;
     }
 
-    case FeedSource::NETWORK_ERROR:
-    case FeedSource::FILE_ERROR:
-    case FeedSource::EMPTY_DOCUMENT:
-    case FeedSource::PARSE_ERROR:
+    case FeedFetchResult::NetworkError:
+    case FeedFetchResult::FileError:
+    case FeedFetchResult::EmptyDocument:
+    case FeedFetchResult::ParseError:
         // Not a feed, probably HTML. Continue to the web grabber stage.
-        machine.setState(WEB_GRABBER);
+        machine->setState(WEB_GRABBER);
         break;
 
-    case FeedSource::IN_PROGRESS:
+    case FeedFetchResult::InProgress:
     default:
-        FANG_UNREACHABLE("Unexpected parser result in onFirstParseDone");
+        qCCritical(logFeedDiscovery) << "Unexpected parser result in onFirstParseDone";
+        Q_UNREACHABLE();
         // Treat as error and continue to web grabber
-        machine.setState(WEB_GRABBER);
+        machine->setState(WEB_GRABBER);
         break;
     }
 }
@@ -195,23 +197,23 @@ void FeedDiscovery::onPageGrabberReady(WebPageGrabber* grabber, QString* documen
 
     // If we didn't get a document, try common paths before giving up.
     if (!document || document->isEmpty()) {
-        qCDebug(logUtility) << "No page found, trying common paths";
-        machine.setState(TRY_COMMON_PATHS);
+        qCDebug(logFeedDiscovery) << "No page found, trying common paths";
+        machine->setState(TRY_COMMON_PATHS);
         return;
     }
 
     // Parse feed URLs from the HTML document
     QList<QString> feedURLs = parseFeedsFromXHTML(*document);
-    qCDebug(logUtility) << "Parsed" << feedURLs.count() << "feed URLs from HTML";
+    qCDebug(logFeedDiscovery) << "Parsed" << feedURLs.count() << "feed URLs from HTML";
 
     if (feedURLs.isEmpty()) {
-        qCDebug(logUtility) << "No feeds found in HTML, trying common paths";
+        qCDebug(logFeedDiscovery) << "No feeds found in HTML, trying common paths";
         _pageXHTML = *document;
-        machine.setState(TRY_COMMON_PATHS);
+        machine->setState(TRY_COMMON_PATHS);
         return;
     }
 
-    qCDebug(logUtility) << "Total feed URLs found:" << feedURLs.count();
+    qCDebug(logFeedDiscovery) << "Total feed URLs found:" << feedURLs.count();
 
     // Sort by path length (longer paths first = more specific)
     QList<QString> feedURLStrings = feedURLs;
@@ -235,7 +237,7 @@ void FeedDiscovery::onPageGrabberReady(WebPageGrabber* grabber, QString* documen
     }
 
     // Trigger bulk feed validation
-    machine.setState(VALIDATE_FEEDS);
+    machine->setState(VALIDATE_FEEDS);
 }
 
 QList<QString> FeedDiscovery::parseFeedsFromXHTML(const QString& document)
@@ -303,7 +305,7 @@ void FeedDiscovery::onValidateFeeds()
 {
     // Use the sorted feed URLs from onPageGrabberReady
     if (_sortedFeedURLs.isEmpty()) {
-        reportError("No feeds to validate");
+        reportError(Error::NoFeedsFound, "No feeds to validate");
         return;
     }
 
@@ -316,20 +318,19 @@ void FeedDiscovery::onFeedParserReady()
     // Process all parsed feeds
     _discoveredFeeds.clear();
 
-    QMap<QUrl, FeedSource::ParseResult> results = feedParser->getResults();
+    QMap<QUrl, FeedFetchResult> results = feedParser->getResults();
     for (auto it = results.constBegin(); it != results.constEnd(); ++it) {
         QUrl feedURL = it.key();
-        FeedSource::ParseResult result = it.value();
+        FeedFetchResult result = it.value();
 
         // Only include successfully parsed feeds that have items.
-        if (result == FeedSource::OK) {
-            RawFeed* feed = feedParser->getFeed(feedURL);
+        if (result == FeedFetchResult::OK) {
+            auto feed = feedParser->getFeed(feedURL);
             if (feed && !feed->items.isEmpty()) {
                 DiscoveredFeed discovered;
                 discovered.url = feedURL;
-                discovered.feed = feed;  // Feed is owned by feedParser
+                discovered.feed = feed;
                 discovered.title = feed->title.isEmpty() ? feedURL.toString() : feed->title;
-                discovered.content = "";  // Not storing raw content anymore
                 discovered.validated = true;
                 _discoveredFeeds.append(discovered);
             }
@@ -340,13 +341,13 @@ void FeedDiscovery::onFeedParserReady()
     if (_discoveredFeeds.isEmpty()) {
         if (_probingCommonPaths) {
             // Common paths didn't turn up anything.
-            qCDebug(logUtility) << "No valid feeds at common paths, trying sitemap";
+            qCDebug(logFeedDiscovery) << "No valid feeds at common paths, trying sitemap";
             _probingCommonPaths = false;
-            machine.setState(TRY_NEWS_SITEMAP);
+            machine->setState(TRY_NEWS_SITEMAP);
         } else {
             // Validation of HTML-discovered feeds failed.
-            qCDebug(logUtility) << "No valid feeds found, trying common paths";
-            machine.setState(TRY_COMMON_PATHS);
+            qCDebug(logFeedDiscovery) << "No valid feeds found, trying common paths";
+            machine->setState(TRY_COMMON_PATHS);
         }
         return;
     }
@@ -355,10 +356,10 @@ void FeedDiscovery::onFeedParserReady()
 
     // Set the first valid feed as the primary one (for backward compatibility)
     _feedURL = _discoveredFeeds.first().url;
-    _feedResult = _discoveredFeeds.first().feed;
+    _feedResult = _discoveredFeeds.first().feed.get();
 
     // Emit done signal
-    machine.setState(FEED_FOUND);
+    machine->setState(FEED_FOUND);
 }
 
 QStringList FeedDiscovery::commonFeedPaths()
@@ -392,7 +393,7 @@ void FeedDiscovery::onTryCommonPaths()
         probeURLs.append(probeUrl);
     }
 
-    qCDebug(logUtility) << "Probing" << probeURLs.count() << "common feed paths";
+    qCDebug(logFeedDiscovery) << "Probing" << probeURLs.count() << "common feed paths";
     _probingCommonPaths = true;
     feedParser->parse(probeURLs);
 }
@@ -417,7 +418,7 @@ void FeedDiscovery::onTryNewsSitemap()
         siteTitle = _feedURL.host();
     }
 
-    qCDebug(logUtility) << "FeedDiscovery: trying sitemap for" << _feedURL
+    qCDebug(logFeedDiscovery) << "FeedDiscovery: trying sitemap for" << _feedURL
                         << "with title" << siteTitle;
 
     if (!newsSitemapSynthesizer) {
@@ -431,19 +432,19 @@ void FeedDiscovery::onTryNewsSitemap()
 void FeedDiscovery::onNewsSitemapDone()
 {
     if (newsSitemapSynthesizer->hasError()) {
-        reportError(newsSitemapSynthesizer->errorString());
+        reportError(Error::NoFeedsFound, newsSitemapSynthesizer->errorString());
         return;
     }
 
-    RawFeed* synthFeed = newsSitemapSynthesizer->result();
+    auto synthFeed = newsSitemapSynthesizer->result();
     if (!synthFeed || synthFeed->items.isEmpty()) {
-        reportError("No feed found");
+        reportError(Error::NoFeedsFound, "No feed found");
         return;
     }
 
     // Set the primary feed result.
     _feedURL = synthFeed->url;
-    _feedResult = synthFeed;
+    _feedResult = synthFeed.get();
 
     // Add to discovered feeds list.
     DiscoveredFeed discovered;
@@ -454,13 +455,13 @@ void FeedDiscovery::onNewsSitemapDone()
     _discoveredFeeds.clear();
     _discoveredFeeds.append(discovered);
 
-    machine.setState(FEED_FOUND);
+    machine->setState(FEED_FOUND);
 }
 
-void FeedDiscovery::reportError(QString errorString)
+void FeedDiscovery::reportError(Error error, const QString& errorString)
 {
-    _error = true;
+    _error = error;
     _errorString = errorString;
 
-    machine.setState(FEED_ERROR);
+    machine->setState(FEED_ERROR);
 }

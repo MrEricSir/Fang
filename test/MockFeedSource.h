@@ -1,11 +1,13 @@
 #ifndef MOCKFEEDSOURCE_H
 #define MOCKFEEDSOURCE_H
 
+#include <memory>
+
 #include <QObject>
 #include <QTimer>
 #include <QUrl>
-#include "../src/parser/FeedSource.h"
-#include "../src/parser/RawFeed.h"
+#include "FeedSource.h"
+#include "RawFeed.h"
 
 /**
  * @brief Mock version of FeedSource
@@ -22,8 +24,8 @@ public:
     virtual ~MockFeedSource() override;
 
     // Mock behavior
-    void setResult(ParseResult result);
-    void setFeed(RawFeed* feed);  // Takes ownership
+    void setResult(FeedFetchResult result);
+    void setFeed(std::shared_ptr<RawFeed> feed);
     void setURL(const QUrl& url);
     void setFromCache(bool cached);
 
@@ -34,14 +36,14 @@ public:
     virtual void parse(const QUrl& url, bool noParseIfCached = false,
                        const QString& ifNoneMatch = QString(),
                        const QString& ifModifiedSince = QString()) override;
-    virtual ParseResult getResult() override;
-    virtual RawFeed* getFeed() override;
+    virtual FeedFetchResult getResult() override;
+    virtual std::shared_ptr<RawFeed> getFeed() override;
     virtual QUrl getURL() override;
     virtual bool isFromCache() override;
 
 private:
-    ParseResult result;
-    RawFeed* feed;
+    FeedFetchResult result;
+    std::shared_ptr<RawFeed> feed;
     QUrl url;
     bool romCache;
 };

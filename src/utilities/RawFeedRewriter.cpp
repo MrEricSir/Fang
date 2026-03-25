@@ -16,7 +16,7 @@ RawFeedRewriter::RawFeedRewriter(QObject *parent, QNetworkAccessManager* network
     connect(&finalizeWatcher, &QFutureWatcher<void>::finished, this, [this]() { emit finished(); });
 }
 
-void RawFeedRewriter::rewrite(QList<RawNews *> *newsList)
+void RawFeedRewriter::rewrite(QList<std::shared_ptr<RawNews>> *newsList)
 {
     this->newsList = newsList;
 
@@ -28,7 +28,7 @@ void RawFeedRewriter::rewrite(QList<RawNews *> *newsList)
     auto future = QtConcurrent::run([this]() -> QSet<QUrl> {
         QSet<QUrl> allImageURLs;
 
-        for (RawNews* news : *this->newsList) {
+        for (const auto& news : *this->newsList) {
             QSet<QUrl> imageURLs;
 
             if (!news->content.isEmpty()) {
@@ -81,7 +81,7 @@ void RawFeedRewriter::finalizeAll()
 {
     QMap<QUrl, ImageData> imageResults = *imageGrabber.getResults();
 
-    for (RawNews* news : *newsList) {
+    for (const auto& news : *newsList) {
         if (!news->content.isEmpty()) {
             news->content = sanitizer.finalize(news->content, imageResults);
         }

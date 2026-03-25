@@ -5,8 +5,7 @@
 #include <QString>
 #include <QUrl>
 #include <QTimer>
-#include "../FangObject.h"
-#include "../network/NetworkDownloadCore.h"
+#include "NetworkDownloadCore.h"
 
 #define DEFAULT_HANDLE_META_REFRESH true
 #define DEFAULT_TIMEOUT_MS 5000
@@ -17,7 +16,7 @@
 
     Note that this class is not rentrant.
  */
-class WebPageGrabber : public FangObject
+class WebPageGrabber : public QObject
 {
     Q_OBJECT
 public:

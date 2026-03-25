@@ -3,7 +3,7 @@
 #include <QFile>
 #include <QFileInfo>
 
-#include "../utilities/FangLogging.h"
+#include "FeedDiscoveryLogging.h"
 
 #include "FeedParser.h"
 
@@ -19,19 +19,21 @@ public slots:
         emit done(FeedParser::parse(data));
     }
 signals:
-    void done(RawFeed* feed);
+    void done(FeedParseResult result);
 };
+
+static const int feedParseResultMetaType = qRegisterMetaType<FeedParseResult>();
 
 FeedFetcher::FeedFetcher(QObject *parent) :
     FeedSource(parent),
-    feed(nullptr), result(OK), networkError(QNetworkReply::NetworkError::NoError),
+    result(FeedFetchResult::OK), networkError(QNetworkReply::NetworkError::NoError),
     activeManager(&manager),
     currentReply(nullptr), redirectReply(nullptr),
     fromCache(false), noParseIfCached(false),
     redirectAttempts(0),
     permanentRedirect(false)
 {
-    // Connex0r teh siganls.
+    Q_UNUSED(feedParseResultMetaType);
     connect(activeManager, &QNetworkAccessManager::finished,
             this, &FeedFetcher::netFinished);
 
@@ -47,7 +49,7 @@ FeedFetcher::FeedFetcher(QObject *parent) :
 
 FeedFetcher::FeedFetcher(QNetworkAccessManager* networkManager, QObject *parent) :
     FeedSource(parent),
-    feed(nullptr), result(OK), networkError(QNetworkReply::NetworkError::NoError),
+    result(FeedFetchResult::OK), networkError(QNetworkReply::NetworkError::NoError),
     activeManager(networkManager ? networkManager : &manager),
     currentReply(nullptr), redirectReply(nullptr),
     fromCache(false), noParseIfCached(false),
@@ -126,12 +128,12 @@ void FeedFetcher::parseFile(const QString &filename)
     QFile file(filename);
 
     if (!file.exists()) {
-        qCCritical(logParser) << "FeedFetcher::parseFile: File does not exist:" << filename;
+        qCCritical(logFeedDiscovery) << "FeedFetcher::parseFile: File does not exist:" << filename;
         return;
     }
 
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        qCCritical(logParser) << "FeedFetcher::parseFile: Cannot open file:" << filename;
+        qCCritical(logFeedDiscovery) << "FeedFetcher::parseFile: Cannot open file:" << filename;
         return;
     }
 
@@ -146,7 +148,7 @@ void FeedFetcher::error(QNetworkReply::NetworkError ne)
     currentReply->deleteLater();
     currentReply = 0;
     
-    result = FeedFetcher::NETWORK_ERROR;
+    result = FeedFetchResult::NetworkError;
     networkError = ne;
     emit done();
 }
@@ -162,7 +164,7 @@ void FeedFetcher::readyRead()
         currentReply->deleteLater();
         currentReply = nullptr;
 
-        result = FeedFetcher::NOT_MODIFIED;
+        result = FeedFetchResult::NotModified;
         emit done();
         return;
     }
@@ -188,12 +190,12 @@ void FeedFetcher::metaDataChanged()
     if (redirectionTarget.isValid()) {
         // Guard against unlimited redirects.
         if (redirectAttempts >= MAX_PARSER_REDIRECTS) {
-            qCDebug(logParser) << "FeedFetcher: Maximum redirects reached, aborting";
+            qCDebug(logFeedDiscovery) << "FeedFetcher: Maximum redirects reached, aborting";
             currentReply->disconnect(this);
             currentReply->deleteLater();
             currentReply = nullptr;
 
-            result = FeedFetcher::NETWORK_ERROR;
+            result = FeedFetchResult::NetworkError;
             networkError = QNetworkReply::TooManyRedirectsError;
             emit done();
             return;
@@ -204,7 +206,7 @@ void FeedFetcher::metaDataChanged()
             permanentRedirect = true;
         }
 
-        qCDebug(logParser) << "Redirect:" << redirectionTarget.toString();
+        qCDebug(logFeedDiscovery) << "Redirect:" << redirectionTarget.toString();
         redirectAttempts++;
         redirectReply = currentReply;
         // Don't send conditional headers on redirect -- the new URL may be different.
@@ -221,7 +223,7 @@ void FeedFetcher::metaDataChanged()
                 currentReply->deleteLater();
                 currentReply = 0;
                 
-                result = FeedFetcher::OK;
+                result = FeedFetchResult::OK;
                 emit done();
                 
                 return;
@@ -230,14 +232,14 @@ void FeedFetcher::metaDataChanged()
     }
 }
 
-FeedFetcher::ParseResult FeedFetcher::getResult()
+FeedFetchResult FeedFetcher::getResult()
 {
     return result;
 }
 
-RawFeed* FeedFetcher::getFeed()
+std::shared_ptr<RawFeed> FeedFetcher::getFeed()
 {
-    return result == FeedFetcher::OK ? feed : nullptr;
+    return result == FeedFetchResult::OK ? feed : nullptr;
 }
 
 void FeedFetcher::netFinished(QNetworkReply *reply)
@@ -253,19 +255,19 @@ void FeedFetcher::netFinished(QNetworkReply *reply)
     emit triggerParse(rawData);
 }
 
-void FeedFetcher::workerDone(RawFeed* rawFeed)
+void FeedFetcher::workerDone(FeedParseResult parseResult)
 {
-    if (result != FeedFetcher::IN_PROGRESS) {
+    if (result != FeedFetchResult::InProgress) {
         // Already emitted a finished signal.  Nothing to dooooo.
         return;
     }
 
-    if (rawFeed) {
-        feed = rawFeed;
+    if (parseResult.ok()) {
+        feed = parseResult.feed();
         feed->url = finalFeedURL;
-        result = FeedFetcher::OK;
+        result = FeedFetchResult::OK;
     } else {
-        result = FeedFetcher::PARSE_ERROR;
+        result = FeedFetchResult::ParseError;
     }
 
     emit done();
@@ -273,7 +275,7 @@ void FeedFetcher::workerDone(RawFeed* rawFeed)
 
 void FeedFetcher::initParse(const QUrl& url)
 {
-    result = FeedFetcher::IN_PROGRESS;
+    result = FeedFetchResult::InProgress;
     networkError = QNetworkReply::NetworkError::NoError;
     finalFeedURL = url;
     respEtag = QString();

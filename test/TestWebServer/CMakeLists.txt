@@ -31,6 +31,7 @@ target_include_directories(tst_webserver PRIVATE
 
 # Link Qt modules
 target_link_libraries(tst_webserver PRIVATE
+    FangFeedParser
     Qt6::Test
     Qt6::Gui
     Qt6::Sql

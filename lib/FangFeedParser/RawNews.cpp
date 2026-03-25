@@ -1,17 +1,5 @@
 #include "RawNews.h"
 
-RawNews::RawNews(QObject *parent) :
-    QObject(parent),
-    title(""),
-    author(""),
-    description(""),
-    timestamp(),
-    url(),
-    guid(""),
-    dbId(-1)
-{
-}
-
 bool RawNews::operator<(const RawNews& right) {
     return LessThan(this, &right);
 }
@@ -19,9 +7,10 @@ bool RawNews::operator<(const RawNews& right) {
 bool RawNews::LessThan(const RawNews *left, const RawNews *right)
 {
     // Use title if dates are equal.
-    if (left->timestamp == right->timestamp)
+    if (left->timestamp == right->timestamp) {
         return left->title < right->title;
-    
+    }
+
     // Sort on timestamp.
     return left->timestamp < right->timestamp;
 }

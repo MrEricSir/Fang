@@ -1,32 +1,12 @@
-# TestFangFaviconGrabber test executable (uses TidyLib)
+# TestFangFaviconGrabber test executable
 qt_add_executable(tst_testfangfavicongrabbertest
     tst_testfangfavicongrabbertest.cpp
     # Mock network manager for offline testing
     ${CMAKE_SOURCE_DIR}/test/MockNetworkAccessManager.h
     ${CMAKE_SOURCE_DIR}/test/MockNetworkAccessManager.cpp
-    # Shared sources from main project
+    # App-level sources
     ${CMAKE_SOURCE_DIR}/src/utilities/FaviconGrabber.cpp
-    ${CMAKE_SOURCE_DIR}/src/utilities/WebPageGrabber.cpp
-    ${CMAKE_SOURCE_DIR}/src/FangObject.cpp
-    ${CMAKE_SOURCE_DIR}/src/network/FangNetworkAccessManager.cpp
-    ${CMAKE_SOURCE_DIR}/src/network/NetworkRetryPolicy.cpp
-    ${CMAKE_SOURCE_DIR}/src/utilities/NetworkUtilities.cpp
-    ${CMAKE_SOURCE_DIR}/src/network/NetworkDownloadCore.cpp
-    ${CMAKE_SOURCE_DIR}/src/network/BatchDownloadCore.cpp
-    ${CMAKE_SOURCE_DIR}/src/utilities/FangLogging.cpp
-    # Include corresponding headers for AUTOMOC
     ${CMAKE_SOURCE_DIR}/src/utilities/FaviconGrabber.h
-    ${CMAKE_SOURCE_DIR}/src/utilities/WebPageGrabber.h
-    ${CMAKE_SOURCE_DIR}/src/FangObject.h
-    ${CMAKE_SOURCE_DIR}/src/network/FangNetworkAccessManager.h
-    ${CMAKE_SOURCE_DIR}/src/network/NetworkRetryPolicy.h
-    ${CMAKE_SOURCE_DIR}/src/utilities/NetworkUtilities.h
-    ${CMAKE_SOURCE_DIR}/src/utilities/FangLogging.h
-)
-
-# Include directories
-target_include_directories(tst_testfangfavicongrabbertest PRIVATE
-    ${CMAKE_SOURCE_DIR}/src/utilities
 )
 
 # Compile definitions for test data paths
@@ -34,13 +14,11 @@ target_compile_definitions(tst_testfangfavicongrabbertest PRIVATE
     SRCDIR="${CMAKE_CURRENT_SOURCE_DIR}/"
 )
 
-# Link TidyLib and Qt modules
+# Link shared test library and Qt modules
 target_link_libraries(tst_testfangfavicongrabbertest PRIVATE
-    TidyLib
-    QSimpleStateMachine::QSimpleStateMachine
+    FangTestLib
+    FangFeedDiscovery
     Qt6::Test
-    Qt6::Network
-    Qt6::Gui
 )
 
 # Add to CTest

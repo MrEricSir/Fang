@@ -6,7 +6,7 @@
 #include <tidy.h>
 #include <buffio.h>
 
-#include "FangLogging.h"
+#include "FeedDiscoveryLogging.h"
 
 namespace {
     // RAII wrapper for TidyDoc to ensure cleanup
@@ -21,7 +21,7 @@ namespace {
 }
 
 WebPageGrabber::WebPageGrabber(bool handleMetaRefresh, int timeoutMS, QObject *parent, QNetworkAccessManager* networkManager) :
-    FangObject(parent),
+    QObject(parent),
     core(nullptr),
     handleMetaRefresh(handleMetaRefresh),
     redirectAttempts(0),
@@ -37,7 +37,7 @@ WebPageGrabber::WebPageGrabber(bool handleMetaRefresh, int timeoutMS, QObject *p
 }
 
 WebPageGrabber::WebPageGrabber(QObject *parent) :
-    FangObject(parent),
+    QObject(parent),
     core(nullptr),
     handleMetaRefresh(DEFAULT_HANDLE_META_REFRESH),
     redirectAttempts(0),
@@ -131,12 +131,12 @@ QString *WebPageGrabber::loadInternal(const QString& htmlString, bool handleRefr
     }
 
     QString result;
-    qCDebug(logWebPage) << "TidyLib rc:" << rc << "output.bp:" << (output.bp != nullptr);
+    qCDebug(logFeedDiscovery) << "TidyLib rc:" << rc << "output.bp:" << (output.bp != nullptr);
 
     if (rc >= 0 && output.bp) {
         result = QString::fromUtf8(reinterpret_cast<const char*>(output.bp));
     } else {
-        qCDebug(logWebPage) << "WebPageGrabber error!";
+        qCDebug(logFeedDiscovery) << "WebPageGrabber error!";
         tidyBufFree(&output);
         tidyBufFree(&errbuf);
         emitReadySignal(nullptr);
@@ -153,7 +153,7 @@ QString *WebPageGrabber::loadInternal(const QString& htmlString, bool handleRefr
     if (handleRefresh) {
         QString redirectURL = searchForRedirect(document);
         if (redirectAttempts > MAX_REDIRECTS) {
-            qCDebug(logWebPage) << "Error: Maximum HTML redirects";
+            qCDebug(logFeedDiscovery) << "Error: Maximum HTML redirects";
             emitReadySignal(nullptr);
             return nullptr;
         } else if (!redirectURL.isEmpty()) {

@@ -5,6 +5,7 @@ qt_add_executable(tst_filelogging
 
 target_link_libraries(tst_filelogging PRIVATE
     FangTestLib
+    FangFeedDiscovery
     Qt6::Test
 )
 

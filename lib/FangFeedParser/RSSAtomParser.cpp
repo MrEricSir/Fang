@@ -109,7 +109,7 @@ void RSSAtomParser::elementStart()
             saveSummary();
         }
         
-        currentItem = new RawNews(feed);
+        currentItem = std::make_shared<RawNews>();
         numItems++;
     } else if ((tagName == "content" || tagName == "summary") && 
                xml.attributes().value("type").toString().toLower() == "xhtml") {
@@ -157,7 +157,7 @@ void RSSAtomParser::elementStart()
     }
 
     // Media RSS image extraction (media:thumbnail and media:content).
-    if (currentItem != nullptr && currentPrefix == "media") {
+    if (currentItem && currentPrefix == "media") {
         if (currentTag == "thumbnail") {
             QString url = xml.attributes().value("url").toString();
             int width = xml.attributes().value("width").toString().toInt();
@@ -197,7 +197,7 @@ void RSSAtomParser::elementEnd()
     
     if ((tagName == "item" || tagName == "entry") && !inAtomXHTML) {
         //qDebug() << "End element:" << xml.name().toString();
-        if (currentItem == nullptr) {
+        if (!currentItem) {
             // Throw some kinda error, this can't happen.
             qCDebug(logFeedParser) << "Current item is null!";
             qCDebug(logFeedParser) << "Current title: " << title;
@@ -234,8 +234,7 @@ void RSSAtomParser::elementEnd()
         if (myGuid.isEmpty()) {
             qCWarning(logFeedParser) << "RSSAtomParser: RSS/Atom item missing GUID/URL, skipping item";
             qCWarning(logFeedParser) << "  Title:" << title;
-            delete currentItem;
-            currentItem = nullptr;
+            currentItem.reset();
 
             // Clear all strings for next item
             author = title = subtitle = content = QString();
@@ -264,7 +263,7 @@ void RSSAtomParser::elementEnd()
         
         feed->items.append(currentItem);
         feed->isPodcast = feed->isPodcast || hasPodcastSignals;
-        currentItem = nullptr;
+        currentItem.reset();
 
         // Clear all strings.
         title = "";

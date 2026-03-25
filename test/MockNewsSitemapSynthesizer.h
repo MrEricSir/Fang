@@ -1,8 +1,9 @@
 #ifndef MOCKNEWSSITEMAPSYNTHESIZER_H
 #define MOCKNEWSSITEMAPSYNTHESIZER_H
 
+#include <memory>
 #include <QTimer>
-#include "../src/utilities/NewsSitemapSynthesizer.h"
+#include "NewsSitemapSynthesizer.h"
 
 /**
  * @brief Mock NewsSitemapSynthesizer for testing without network requests.
@@ -20,9 +21,9 @@ public:
 
     /**
      * @brief Configure the mock to return a successful result.
-     * @param feed The RawFeed to return (ownership is NOT transferred).
+     * @param feed The RawFeed to return.
      */
-    void setResult(RawFeed* feed)
+    void setResult(std::shared_ptr<RawFeed> feed)
     {
         setResultState(feed, false, QString());
     }
@@ -33,7 +34,7 @@ public:
      */
     void setError(const QString& error)
     {
-        setResultState(nullptr, true, error);
+        setResultState(std::shared_ptr<RawFeed>(), true, error);
     }
 
     void synthesize(const QUrl& siteUrl, const QString& siteTitle) override

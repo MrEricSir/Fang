@@ -7,9 +7,6 @@ qt_add_executable(tst_testfangfeeddiscovery
     ${CMAKE_SOURCE_DIR}/test/MockWebPageGrabber.h
     ${CMAKE_SOURCE_DIR}/test/MockBatchFeedFetcher.h
     ${CMAKE_SOURCE_DIR}/test/MockNewsSitemapSynthesizer.h
-    # FeedDiscovery (not in FangTestLib to avoid duplicate MOC symbols for QSimpleStateMachine)
-    ${CMAKE_SOURCE_DIR}/src/utilities/FeedDiscovery.cpp
-    ${CMAKE_SOURCE_DIR}/src/utilities/FeedDiscovery.h
     # Additional sources
     ${CMAKE_SOURCE_DIR}/src/parser/OPMLParser.cpp
     ${CMAKE_SOURCE_DIR}/src/parser/OPMLParser.h
@@ -24,7 +21,7 @@ target_compile_definitions(tst_testfangfeeddiscovery PRIVATE
 # Link shared test library and Qt modules
 target_link_libraries(tst_testfangfeeddiscovery PRIVATE
     FangTestLib
-    QSimpleStateMachine::QSimpleStateMachine
+    FangFeedDiscovery
     Qt6::Test
 )
 

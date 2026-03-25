@@ -6,6 +6,7 @@ qt_add_executable(tst_imagecache
 # Link shared test library and Qt modules
 target_link_libraries(tst_imagecache PRIVATE
     FangTestLib
+    FangFeedDiscovery
     Qt6::Test
     Qt6::Gui
 )

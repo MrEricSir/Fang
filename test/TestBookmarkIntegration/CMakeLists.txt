@@ -31,6 +31,7 @@ target_include_directories(tst_bookmarkintegration PRIVATE
 
 # Link Qt modules
 target_link_libraries(tst_bookmarkintegration PRIVATE
+    FangFeedParser
     Qt6::Test
     Qt6::Gui
     Qt6::Sql

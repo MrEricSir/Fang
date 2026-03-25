@@ -9,7 +9,7 @@
 #include <QMap>
 
 #include "../parser/OPMLParser.h"
-#include "../parser/RawFeed.h"
+#include "RawFeed.h"
 #include "ListModel.h"
 #include "FeedItem.h"
 #include "../utilities/BatchFeedDiscovery.h"

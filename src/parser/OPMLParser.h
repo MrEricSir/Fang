@@ -31,7 +31,7 @@ public slots:
     void parseFile(QString filename);
     
     // Gets the result status.
-    FeedSource::ParseResult getResult() { return result; }
+    FeedFetchResult getResult() { return result; }
     
     // Returns the feed list, assuming there is one.
     QList<RawFeed*> getFeedList() { return feedList; }
@@ -42,7 +42,7 @@ public slots:
 private:
     QFile file;
     QList<RawFeed*> feedList;
-    FeedSource::ParseResult result;
+    FeedFetchResult result;
     
     QXmlStreamReader xml;
 };

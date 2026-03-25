@@ -1,6 +1,9 @@
 add_library(FangFeedParser STATIC
     FeedParserLogging.cpp
     FeedParserLogging.h
+    FeedParseError.h
+    FeedParseResult.cpp
+    FeedParseResult.h
     RawFeed.cpp
     RawFeed.h
     RawNews.cpp

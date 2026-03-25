@@ -8,7 +8,7 @@ OPMLParser::OPMLParser(QObject *parent) :
     FangObject(parent),
     file(),
     feedList(),
-    result(FeedSource::IN_PROGRESS)
+    result(FeedFetchResult::InProgress)
 {
 }
 
@@ -18,12 +18,12 @@ OPMLParser::~OPMLParser()
 
 void OPMLParser::parseFile(QString filename)
 {
-    result = FeedSource::IN_PROGRESS;
+    result = FeedFetchResult::InProgress;
     QFile file(filename);
-    
+
     // Open the file or die with an error.
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        result = FeedSource::FILE_ERROR;
+        result = FeedFetchResult::FileError;
         qCDebug(logParser) << "Couldn't read file: " << file.fileName();
         
         emit done();
@@ -75,11 +75,11 @@ void OPMLParser::parseFile(QString filename)
     // Handle errors.
     if (xml.error() && xml.error() != QXmlStreamReader::PrematureEndOfDocumentError &&
             xml.error() != QXmlStreamReader::NotWellFormedError) {
-        result = FeedSource::PARSE_ERROR;
+        result = FeedFetchResult::ParseError;
     } else if (feedList.size() > 0) {
-        result = FeedSource::OK;
+        result = FeedFetchResult::OK;
     } else {
-        result = FeedSource::EMPTY_DOCUMENT;
+        result = FeedFetchResult::EmptyDocument;
     }
     
     //qDebug() << "Parser result (0 is good): " << result;

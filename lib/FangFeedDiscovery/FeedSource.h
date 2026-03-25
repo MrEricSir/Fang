@@ -1,24 +1,22 @@
 #ifndef FEEDSOURCE_H
 #define FEEDSOURCE_H
 
+#include <memory>
+
 #include <QObject>
 #include <QUrl>
 
+#include "FeedFetchResult.h"
 #include "RawFeed.h"
-
-#include "../FangObject.h"
 
 /*!
     \brief Abstract interface for async feed fetch + parse.
  */
-class FeedSource : public FangObject
+class FeedSource : public QObject
 {
     Q_OBJECT
 
 public:
-    enum ParseResult { OK, NETWORK_ERROR, FILE_ERROR, PARSE_ERROR, EMPTY_DOCUMENT, IN_PROGRESS, NOT_MODIFIED };
-    Q_ENUM(ParseResult)
-
     explicit FeedSource(QObject *parent = nullptr);
     virtual ~FeedSource() {}
 
@@ -38,8 +36,8 @@ public slots:
                        const QString& ifNoneMatch = QString(),
                        const QString& ifModifiedSince = QString()) =0;
 
-    virtual FeedSource::ParseResult getResult() =0;
-    virtual RawFeed* getFeed() =0;
+    virtual FeedFetchResult getResult() =0;
+    virtual std::shared_ptr<RawFeed> getFeed() =0;
     virtual QUrl getURL() =0;
 
     // Whether or not the response was cached.

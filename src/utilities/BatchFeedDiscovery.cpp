@@ -36,7 +36,7 @@ void BatchFeedDiscovery::onFeedDiscoveryFinished(FeedDiscovery* discovery)
     item->setIsUpdating(false);
     
     // See what we got.
-    if (discovery->error()) {
+    if (discovery->error() != FeedDiscovery::Error::None) {
         item->setErrorFlag(true);
     } else {
         // Yay, we got one!  Copy over the corrected URL.

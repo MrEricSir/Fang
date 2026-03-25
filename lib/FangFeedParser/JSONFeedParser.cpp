@@ -8,7 +8,7 @@
 #include "RawFeed.h"
 #include "RawNews.h"
 
-RawFeed* JSONFeedParser::parse(const QByteArray& data, QObject* parent)
+RawFeed* JSONFeedParser::parse(const QByteArray& data)
 {
     QJsonParseError parseError;
     QJsonDocument doc = QJsonDocument::fromJson(data, &parseError);
@@ -24,7 +24,7 @@ RawFeed* JSONFeedParser::parse(const QByteArray& data, QObject* parent)
         return nullptr;
     }
 
-    RawFeed* feed = new RawFeed(parent);
+    RawFeed* feed = new RawFeed();
     feed->feedType = RawFeed::JSONFeed;
 
     feed->title = root.value("title").toString("");
@@ -64,7 +64,7 @@ RawFeed* JSONFeedParser::parse(const QByteArray& data, QObject* parent)
             continue;
         }
 
-        RawNews* news = new RawNews(feed);
+        auto news = std::make_shared<RawNews>();
         news->guid = id;
 
         QString itemUrl = itemObj.value("url").toString();

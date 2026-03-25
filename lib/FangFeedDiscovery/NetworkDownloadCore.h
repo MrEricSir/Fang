@@ -8,7 +8,6 @@
 #include <QTimer>
 #include <QUrl>
 
-#include "../FangObject.h"
 #include "NetworkRetryPolicy.h"
 
 /*!
@@ -30,7 +29,7 @@ struct NetworkDownloadConfig {
       - Progress signal
       - Can be used with a mock QNEtworkAccessManager for unit tests
  */
-class NetworkDownloadCore : public FangObject
+class NetworkDownloadCore : public QObject
 {
     Q_OBJECT
 public:

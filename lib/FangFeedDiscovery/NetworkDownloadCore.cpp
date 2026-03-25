@@ -1,12 +1,12 @@
 #include "NetworkDownloadCore.h"
 #include "FangNetworkAccessManager.h"
 
-#include "../utilities/FangLogging.h"
+#include "FeedDiscoveryLogging.h"
 
 NetworkDownloadCore::NetworkDownloadCore(NetworkDownloadConfig config,
                                           QObject* parent,
                                           QNetworkAccessManager* networkManager)
-    : FangObject(parent)
+    : QObject(parent)
     , manager(networkManager ? networkManager : new FangNetworkAccessManager(this))
     , ownsManager(networkManager == nullptr)
     , config(config)
@@ -122,7 +122,7 @@ void NetworkDownloadCore::onRequestFinished(QNetworkReply* reply)
     if (reply->error() != QNetworkReply::NoError) {
         lastError = reply->error();
         lastErrorString = reply->errorString();
-        qCDebug(logNetwork) << "NetworkDownloadCore error:" << lastErrorString;
+        qCDebug(logFeedDiscovery) << "NetworkDownloadCore error:" << lastErrorString;
 
         // Clean up the reply.
         currentReply = nullptr;
@@ -209,7 +209,7 @@ void NetworkDownloadCore::onTimeout()
 void NetworkDownloadCore::scheduleRetry()
 {
     int delay = config.retryPolicy.calculateDelay(currentAttemptCount);
-    qCDebug(logNetwork) << "NetworkDownloadCore: scheduling retry" << (currentAttemptCount + 1)
+    qCDebug(logFeedDiscovery) << "NetworkDownloadCore: scheduling retry" << (currentAttemptCount + 1)
                         << "in" << delay << "ms for" << originalUrl;
     emit retrying(currentAttemptCount + 1, delay);
     retryTimer.start(delay);

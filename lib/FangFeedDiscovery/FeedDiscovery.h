@@ -1,6 +1,8 @@
 #ifndef FEEDDISCOVERY_H
 #define FEEDDISCOVERY_H
 
+#include <memory>
+
 #include <QList>
 #include <QObject>
 #include <QString>
@@ -8,14 +10,13 @@
 #include <QTimer>
 #include <QUrl>
 
-#include <QSimpleStateMachine/QSimpleStateMachine.h>
+class QSimpleStateMachine;
 
-#include "../parser/FeedSource.h"
-#include "../parser/RawFeed.h"
-#include "../parser/BatchFeedFetcher.h"
-#include "../utilities/WebPageGrabber.h"
-#include "../utilities/NewsSitemapSynthesizer.h"
-#include "../FangObject.h"
+#include "FeedSource.h"
+#include "RawFeed.h"
+#include "BatchFeedFetcher.h"
+#include "WebPageGrabber.h"
+#include "NewsSitemapSynthesizer.h"
 
 /*!
     \brief Attempts to match a user-submitted, URL like "bob.com" to an actual news feed.
@@ -43,7 +44,7 @@
         |  \- FEED_FOUND
         |  \- FEED_ERROR
  */
-class FeedDiscovery : public FangObject
+class FeedDiscovery : public QObject
 {
     Q_OBJECT
     
@@ -61,17 +62,22 @@ private:
     };
     
 public:
+    enum class Error {
+        None,
+        InvalidURL,
+        NoFeedsFound,
+        NetworkError,
+        Timeout
+    };
+
     /*!
         \brief Structure to hold a discovered feed with metadata
      */
     struct DiscoveredFeed {
-        QUrl url;              // Feed URL
-        QString title;         // Feed title (from parsed feed or URL)
-        QString content;       // Downloaded feed content (for lazy parsing)
-        RawFeed* feed;         // Parsed feed (nullptr if not yet parsed)
-        bool validated;        // Has this feed been successfully parsed?
-
-        DiscoveredFeed() : feed(nullptr), validated(false) {}
+        QUrl url;                          // Feed URL
+        QString title;                     // Feed title (from parsed feed or URL)
+        std::shared_ptr<RawFeed> feed;     // Parsed feed (nullptr if not yet parsed)
+        bool validated = false;            // Has this feed been successfully parsed?
     };
 
     explicit FeedDiscovery(QObject *parent = nullptr,
@@ -82,9 +88,9 @@ public:
     virtual ~FeedDiscovery();
 
     /*!
-        \return After done(), this returns true if there was an error.
+        \return After done(), this returns the error code (None if successful).
      */
-    bool error() { return _error; }
+    Error error() { return _error; }
 
     /*!
         \return After done(), this returns the error string, if there was an error.
@@ -92,16 +98,14 @@ public:
     QString errorString() { return _errorString; }
 
     /*!
-        \return The feed URL, or an empty URL if there was an error.
-                For backward compatibility: returns first validated feed.
+        \return The best feed URL, or an empty URL if there was an error.
      */
-    QUrl feedURL() { return _error ? QUrl("") : _feedURL; }
+    QUrl feedURL() { return _error != Error::None ? QUrl("") : _feedURL; }
 
     /*!
-        \return The raw feed or nullptr if there was an error.
-                For backward compatibility: returns first validated feed.
+        \return The best raw feed, or nullptr if there was an error.
      */
-    RawFeed* feedResult() { return _error ? nullptr : _feedResult; }
+    RawFeed* feedResult() { return _error != Error::None ? nullptr : _feedResult; }
 
     /*!
         \return List of all discovered feeds (may be empty if error or single-feed mode)
@@ -169,13 +173,13 @@ private:
     // Common RSS/Atom paths to probe when no feeds are found in HTML.
     static QStringList commonFeedPaths();
 
-    // Sets the error flag, error string, and triggers the ERROR state.
-    void reportError(QString errorString);
+    // Sets the error code, error string, and triggers the ERROR state.
+    void reportError(Error error, const QString& errorString = {});
 
-    QSimpleStateMachine machine;
+    QSimpleStateMachine* machine;
 
     QUrl _feedURL;
-    bool _error;
+    Error _error;
     QString _errorString;
 
     RawFeed* _feedResult;

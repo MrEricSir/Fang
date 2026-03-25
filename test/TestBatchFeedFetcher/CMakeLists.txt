@@ -9,6 +9,7 @@ qt_add_executable(tst_testbatchfeedfetcher
 # Link shared test library (contains all common sources)
 target_link_libraries(tst_testbatchfeedfetcher PRIVATE
     FangTestLib
+    FangFeedDiscovery
     Qt6::Test
 )
 

@@ -1,17 +1,18 @@
 #ifndef NEWSSITEMAPSYNTHESIZER_H
 #define NEWSSITEMAPSYNTHESIZER_H
 
+#include <memory>
+
 #include <QDateTime>
 #include <QList>
 #include <QStringList>
 #include <QUrl>
 
-#include "../FangObject.h"
-#include "../parser/RawFeed.h"
-#include "../parser/SitemapParser.h"
-#include "../network/NetworkDownloadCore.h"
+#include "RawFeed.h"
+#include "SitemapParser.h"
+#include "NetworkDownloadCore.h"
 
-class NewsSitemapSynthesizer : public FangObject
+class NewsSitemapSynthesizer : public QObject
 {
     Q_OBJECT
 public:
@@ -36,7 +37,7 @@ public:
 
     bool hasError() const { return _hasError; }
     QString errorString() const { return _errorString; }
-    RawFeed* result() const { return _result; }
+    std::shared_ptr<RawFeed> result() const { return _result; }
 
 signals:
     void done();
@@ -70,7 +71,7 @@ private:
     bool filterBySinceDate(QList<SitemapEntry>& entries);
 
 protected:
-    void setResultState(RawFeed* result, bool hasError, const QString& errorString);
+    void setResultState(std::shared_ptr<RawFeed> result, bool hasError, const QString& errorString);
 
 public:
     // Public for unit testing.
@@ -93,7 +94,7 @@ private:
     State state;
     bool _hasError;
     QString _errorString;
-    RawFeed* _result;
+    std::shared_ptr<RawFeed> _result;
 
     // Candidate probing
     QList<QUrl> candidateUrls;

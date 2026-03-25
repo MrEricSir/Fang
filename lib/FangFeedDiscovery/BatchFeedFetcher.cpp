@@ -1,9 +1,9 @@
 #include "BatchFeedFetcher.h"
 #include "FeedFetcher.h"
-#include "../utilities/FangLogging.h"
+#include "FeedDiscoveryLogging.h"
 
 BatchFeedFetcher::BatchFeedFetcher(QObject *parent)
-    : FangObject{parent}
+    : QObject{parent}
 {}
 
 void BatchFeedFetcher::parse(const QList<QUrl> &urls)
@@ -38,7 +38,7 @@ void BatchFeedFetcher::onParserDone()
 {
     FeedSource* parser = qobject_cast<FeedSource*>(sender());
     if (!parser) {
-        qCWarning(logParser) << "BatchFeedFetcher: onParserDone called but sender is not a FeedSource";
+        qCWarning(logFeedDiscovery) << "BatchFeedFetcher: onParserDone called but sender is not a FeedSource";
         return;
     }
 
@@ -53,7 +53,7 @@ void BatchFeedFetcher::onParserDone()
     }
 
     if (requestUrl.isEmpty()) {
-        qCWarning(logParser) << "BatchFeedFetcher: parser finished but not found in map:" << parser->getURL();
+        qCWarning(logFeedDiscovery) << "BatchFeedFetcher: parser finished but not found in map:" << parser->getURL();
         return;
     }
 
@@ -61,17 +61,16 @@ void BatchFeedFetcher::onParserDone()
     results[requestUrl] = parser->getResult();
 
     // Store feed if parser succeeded.
-    if (parser->getResult() == FeedSource::OK) {
-        RawFeed* feed = parser->getFeed();
+    if (parser->getResult() == FeedFetchResult::OK) {
+        auto feed = parser->getFeed();
         if (feed) {
-            // Store reference to the feed (owned by the parser)
             feeds[requestUrl] = feed;
         }
     }
 
     // Check if we're done.
     for (auto it = parsers.cbegin(); it != parsers.cend(); ++it) {
-        if (it->second->getResult() == FeedSource::IN_PROGRESS) {
+        if (it->second->getResult() == FeedFetchResult::InProgress) {
             // Not done yet!
             return;
         }
@@ -81,7 +80,7 @@ void BatchFeedFetcher::onParserDone()
     emit ready();
 }
 
-RawFeed* BatchFeedFetcher::getFeed(const QUrl& url)
+std::shared_ptr<RawFeed> BatchFeedFetcher::getFeed(const QUrl& url)
 {
     return feeds.value(url, nullptr);
 }

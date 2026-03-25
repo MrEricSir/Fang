@@ -6,9 +6,9 @@
 #include <QMap>
 #include <QQueue>
 
-#include "../../src/parser/BatchFeedFetcher.h"
-#include "../../src/parser/FeedSource.h"
-#include "../../src/parser/RawFeed.h"
+#include "BatchFeedFetcher.h"
+#include "FeedSource.h"
+#include "RawFeed.h"
 #include "../MockFeedSource.h"
 
 /**
@@ -25,7 +25,7 @@ public:
     }
 
     // Configure mock responses for specific URLs
-    void addMockResponse(const QUrl& url, FeedSource::ParseResult result, RawFeed* feed = nullptr)
+    void addMockResponse(const QUrl& url, FeedFetchResult result, std::shared_ptr<RawFeed> feed = nullptr)
     {
         MockResponseConfig config;
         config.result = result;
@@ -78,7 +78,7 @@ public:
                     }
                 } else {
                     // Default to network error if not configured
-                    parser->setResult(FeedSource::NETWORK_ERROR);
+                    parser->setResult(FeedFetchResult::NetworkError);
                     parser->setURL(url);
                 }
             }
@@ -89,8 +89,8 @@ public:
 
 private:
     struct MockResponseConfig {
-        FeedSource::ParseResult result;
-        RawFeed* feed = nullptr;
+        FeedFetchResult result;
+        std::shared_ptr<RawFeed> feed = nullptr;
     };
 
     QMap<QUrl, MockResponseConfig> mockConfigs;
@@ -119,16 +119,16 @@ private slots:
     void testParserReuse();
 
 private:
-    RawFeed* createTestFeed(const QString& url, const QString& title);
+    std::shared_ptr<RawFeed> createTestFeed(const QString& url, const QString& title);
 };
 
 TestBatchFeedFetcher::TestBatchFeedFetcher()
 {
 }
 
-RawFeed* TestBatchFeedFetcher::createTestFeed(const QString& url, const QString& title)
+std::shared_ptr<RawFeed> TestBatchFeedFetcher::createTestFeed(const QString& url, const QString& title)
 {
-    RawFeed* feed = new RawFeed();
+    auto feed = std::make_shared<RawFeed>();
     feed->url = QUrl(url);
     feed->title = title;
     return feed;
@@ -157,8 +157,8 @@ void TestBatchFeedFetcher::testSingleFeedSuccess()
     TestableBatchFeedFetcher parser;
 
     QUrl url("http://example.com/feed.xml");
-    RawFeed* feed = createTestFeed("http://example.com/feed.xml", "Test Feed");
-    parser.addMockResponse(url, FeedSource::OK, feed);
+    auto feed = createTestFeed("http://example.com/feed.xml", "Test Feed");
+    parser.addMockResponse(url, FeedFetchResult::OK, feed);
 
     QSignalSpy spy(&parser, &BatchFeedFetcher::ready);
 
@@ -171,12 +171,12 @@ void TestBatchFeedFetcher::testSingleFeedSuccess()
     QCOMPARE(spy.count(), 1);
 
     // Check results
-    QMap<QUrl, FeedSource::ParseResult> results = parser.getResults();
+    QMap<QUrl, FeedFetchResult> results = parser.getResults();
     QCOMPARE(results.size(), 1);
-    QCOMPARE(results[url], FeedSource::OK);
+    QCOMPARE(results[url], FeedFetchResult::OK);
 
     // Check feed retrieval
-    RawFeed* retrievedFeed = parser.getFeed(url);
+    auto retrievedFeed = parser.getFeed(url);
     QVERIFY(retrievedFeed != nullptr);
     QCOMPARE(retrievedFeed->url, url);
     QCOMPARE(retrievedFeed->title, QString("Test Feed"));
@@ -188,7 +188,7 @@ void TestBatchFeedFetcher::testSingleFeedNetworkError()
     TestableBatchFeedFetcher parser;
 
     QUrl url("http://example.com/feed.xml");
-    parser.addMockResponse(url, FeedSource::NETWORK_ERROR);
+    parser.addMockResponse(url, FeedFetchResult::NetworkError);
 
     QSignalSpy spy(&parser, &BatchFeedFetcher::ready);
 
@@ -199,8 +199,8 @@ void TestBatchFeedFetcher::testSingleFeedNetworkError()
     QVERIFY(spy.wait(5000));
 
     // Check results
-    QMap<QUrl, FeedSource::ParseResult> results = parser.getResults();
-    QCOMPARE(results[url], FeedSource::NETWORK_ERROR);
+    QMap<QUrl, FeedFetchResult> results = parser.getResults();
+    QCOMPARE(results[url], FeedFetchResult::NetworkError);
 
     // Feed should be null on error
     QVERIFY(parser.getFeed(url) == nullptr);
@@ -212,7 +212,7 @@ void TestBatchFeedFetcher::testSingleFeedParseError()
     TestableBatchFeedFetcher parser;
 
     QUrl url("http://example.com/feed.xml");
-    parser.addMockResponse(url, FeedSource::EMPTY_DOCUMENT);
+    parser.addMockResponse(url, FeedFetchResult::EmptyDocument);
 
     QSignalSpy spy(&parser, &BatchFeedFetcher::ready);
 
@@ -223,8 +223,8 @@ void TestBatchFeedFetcher::testSingleFeedParseError()
     QVERIFY(spy.wait(5000));
 
     // Check results
-    QMap<QUrl, FeedSource::ParseResult> results = parser.getResults();
-    QCOMPARE(results[url], FeedSource::EMPTY_DOCUMENT);
+    QMap<QUrl, FeedFetchResult> results = parser.getResults();
+    QCOMPARE(results[url], FeedFetchResult::EmptyDocument);
 
     // Feed should be null on error
     QVERIFY(parser.getFeed(url) == nullptr);
@@ -239,9 +239,9 @@ void TestBatchFeedFetcher::testMultipleFeedsAllSuccess()
     QUrl url2("http://example.com/feed2.xml");
     QUrl url3("http://example.com/feed3.xml");
 
-    parser.addMockResponse(url1, FeedSource::OK, createTestFeed("http://example.com/feed1.xml", "Feed 1"));
-    parser.addMockResponse(url2, FeedSource::OK, createTestFeed("http://example.com/feed2.xml", "Feed 2"));
-    parser.addMockResponse(url3, FeedSource::OK, createTestFeed("http://example.com/feed3.xml", "Feed 3"));
+    parser.addMockResponse(url1, FeedFetchResult::OK, createTestFeed("http://example.com/feed1.xml", "Feed 1"));
+    parser.addMockResponse(url2, FeedFetchResult::OK, createTestFeed("http://example.com/feed2.xml", "Feed 2"));
+    parser.addMockResponse(url3, FeedFetchResult::OK, createTestFeed("http://example.com/feed3.xml", "Feed 3"));
 
     QSignalSpy spy(&parser, &BatchFeedFetcher::ready);
 
@@ -252,11 +252,11 @@ void TestBatchFeedFetcher::testMultipleFeedsAllSuccess()
     QVERIFY(spy.wait(5000));
 
     // Check results
-    QMap<QUrl, FeedSource::ParseResult> results = parser.getResults();
+    QMap<QUrl, FeedFetchResult> results = parser.getResults();
     QCOMPARE(results.size(), 3);
-    QCOMPARE(results[url1], FeedSource::OK);
-    QCOMPARE(results[url2], FeedSource::OK);
-    QCOMPARE(results[url3], FeedSource::OK);
+    QCOMPARE(results[url1], FeedFetchResult::OK);
+    QCOMPARE(results[url2], FeedFetchResult::OK);
+    QCOMPARE(results[url3], FeedFetchResult::OK);
 
     // Check all feeds retrieved
     QVERIFY(parser.getFeed(url1) != nullptr);
@@ -274,10 +274,10 @@ void TestBatchFeedFetcher::testMultipleFeedsMixedResults()
     QUrl url3("http://example.com/feed3.xml");
     QUrl url4("http://example.com/feed4.xml");
 
-    parser.addMockResponse(url1, FeedSource::OK, createTestFeed("http://example.com/feed1.xml", "Feed 1"));
-    parser.addMockResponse(url2, FeedSource::NETWORK_ERROR);
-    parser.addMockResponse(url3, FeedSource::OK, createTestFeed("http://example.com/feed3.xml", "Feed 3"));
-    parser.addMockResponse(url4, FeedSource::EMPTY_DOCUMENT);
+    parser.addMockResponse(url1, FeedFetchResult::OK, createTestFeed("http://example.com/feed1.xml", "Feed 1"));
+    parser.addMockResponse(url2, FeedFetchResult::NetworkError);
+    parser.addMockResponse(url3, FeedFetchResult::OK, createTestFeed("http://example.com/feed3.xml", "Feed 3"));
+    parser.addMockResponse(url4, FeedFetchResult::EmptyDocument);
 
     QSignalSpy spy(&parser, &BatchFeedFetcher::ready);
 
@@ -288,12 +288,12 @@ void TestBatchFeedFetcher::testMultipleFeedsMixedResults()
     QVERIFY(spy.wait(5000));
 
     // Check results
-    QMap<QUrl, FeedSource::ParseResult> results = parser.getResults();
+    QMap<QUrl, FeedFetchResult> results = parser.getResults();
     QCOMPARE(results.size(), 4);
-    QCOMPARE(results[url1], FeedSource::OK);
-    QCOMPARE(results[url2], FeedSource::NETWORK_ERROR);
-    QCOMPARE(results[url3], FeedSource::OK);
-    QCOMPARE(results[url4], FeedSource::EMPTY_DOCUMENT);
+    QCOMPARE(results[url1], FeedFetchResult::OK);
+    QCOMPARE(results[url2], FeedFetchResult::NetworkError);
+    QCOMPARE(results[url3], FeedFetchResult::OK);
+    QCOMPARE(results[url4], FeedFetchResult::EmptyDocument);
 
     // Check feed retrieval - only successful ones should have feeds
     QVERIFY(parser.getFeed(url1) != nullptr);
@@ -308,7 +308,7 @@ void TestBatchFeedFetcher::testDuplicateURLsSkipped()
     TestableBatchFeedFetcher parser;
 
     QUrl url("http://example.com/feed.xml");
-    parser.addMockResponse(url, FeedSource::OK, createTestFeed("http://example.com/feed.xml", "Test Feed"));
+    parser.addMockResponse(url, FeedFetchResult::OK, createTestFeed("http://example.com/feed.xml", "Test Feed"));
 
     QSignalSpy spy(&parser, &BatchFeedFetcher::ready);
 
@@ -320,9 +320,9 @@ void TestBatchFeedFetcher::testDuplicateURLsSkipped()
     QVERIFY(spy.wait(5000));
 
     // Should only have one result
-    QMap<QUrl, FeedSource::ParseResult> results = parser.getResults();
+    QMap<QUrl, FeedFetchResult> results = parser.getResults();
     QCOMPARE(results.size(), 1);
-    QCOMPARE(results[url], FeedSource::OK);
+    QCOMPARE(results[url], FeedFetchResult::OK);
 }
 
 // Test getFeed returns correct feed on success
@@ -331,8 +331,8 @@ void TestBatchFeedFetcher::testGetFeedSuccess()
     TestableBatchFeedFetcher parser;
 
     QUrl url("http://example.com/feed.xml");
-    RawFeed* feed = createTestFeed("http://example.com/feed.xml", "My Test Feed");
-    parser.addMockResponse(url, FeedSource::OK, feed);
+    auto feed = createTestFeed("http://example.com/feed.xml", "My Test Feed");
+    parser.addMockResponse(url, FeedFetchResult::OK, feed);
 
     QList<QUrl> urls;
     urls << url;
@@ -341,7 +341,7 @@ void TestBatchFeedFetcher::testGetFeedSuccess()
     QSignalSpy spy(&parser, &BatchFeedFetcher::ready);
     QVERIFY(spy.wait(5000));
 
-    RawFeed* retrievedFeed = parser.getFeed(url);
+    auto retrievedFeed = parser.getFeed(url);
     QVERIFY(retrievedFeed != nullptr);
     QCOMPARE(retrievedFeed->title, QString("My Test Feed"));
 }
@@ -352,7 +352,7 @@ void TestBatchFeedFetcher::testGetFeedFailure()
     TestableBatchFeedFetcher parser;
 
     QUrl url("http://example.com/feed.xml");
-    parser.addMockResponse(url, FeedSource::FILE_ERROR);
+    parser.addMockResponse(url, FeedFetchResult::FileError);
 
     QList<QUrl> urls;
     urls << url;
@@ -372,7 +372,7 @@ void TestBatchFeedFetcher::testGetFeedUnknownURL()
     QUrl url1("http://example.com/feed1.xml");
     QUrl url2("http://example.com/feed2.xml");
 
-    parser.addMockResponse(url1, FeedSource::OK, createTestFeed("http://example.com/feed1.xml", "Feed 1"));
+    parser.addMockResponse(url1, FeedFetchResult::OK, createTestFeed("http://example.com/feed1.xml", "Feed 1"));
 
     QList<QUrl> urls;
     urls << url1;
@@ -393,8 +393,8 @@ void TestBatchFeedFetcher::testGetResultsAccessor()
     QUrl url1("http://example.com/feed1.xml");
     QUrl url2("http://example.com/feed2.xml");
 
-    parser.addMockResponse(url1, FeedSource::OK, createTestFeed("http://example.com/feed1.xml", "Feed 1"));
-    parser.addMockResponse(url2, FeedSource::NETWORK_ERROR);
+    parser.addMockResponse(url1, FeedFetchResult::OK, createTestFeed("http://example.com/feed1.xml", "Feed 1"));
+    parser.addMockResponse(url2, FeedFetchResult::NetworkError);
 
     QList<QUrl> urls;
     urls << url1 << url2;
@@ -403,12 +403,12 @@ void TestBatchFeedFetcher::testGetResultsAccessor()
     QSignalSpy spy(&parser, &BatchFeedFetcher::ready);
     QVERIFY(spy.wait(5000));
 
-    QMap<QUrl, FeedSource::ParseResult> results = parser.getResults();
+    QMap<QUrl, FeedFetchResult> results = parser.getResults();
     QCOMPARE(results.size(), 2);
     QVERIFY(results.contains(url1));
     QVERIFY(results.contains(url2));
-    QCOMPARE(results[url1], FeedSource::OK);
-    QCOMPARE(results[url2], FeedSource::NETWORK_ERROR);
+    QCOMPARE(results[url1], FeedFetchResult::OK);
+    QCOMPARE(results[url2], FeedFetchResult::NetworkError);
 }
 
 // Test that calling parse() again clears previous results
@@ -418,7 +418,7 @@ void TestBatchFeedFetcher::testParserReuse()
 
     // First parse
     QUrl url1("http://example.com/feed1.xml");
-    parser.addMockResponse(url1, FeedSource::OK, createTestFeed("http://example.com/feed1.xml", "Feed 1"));
+    parser.addMockResponse(url1, FeedFetchResult::OK, createTestFeed("http://example.com/feed1.xml", "Feed 1"));
 
     QList<QUrl> urls1;
     urls1 << url1;
@@ -428,12 +428,12 @@ void TestBatchFeedFetcher::testParserReuse()
     QVERIFY(spy1.wait(5000));
 
     // Verify first results
-    QMap<QUrl, FeedSource::ParseResult> results1 = parser.getResults();
+    QMap<QUrl, FeedFetchResult> results1 = parser.getResults();
     QCOMPARE(results1.size(), 1);
 
     // Second parse with different URL
     QUrl url2("http://example.com/feed2.xml");
-    parser.addMockResponse(url2, FeedSource::OK, createTestFeed("http://example.com/feed2.xml", "Feed 2"));
+    parser.addMockResponse(url2, FeedFetchResult::OK, createTestFeed("http://example.com/feed2.xml", "Feed 2"));
 
     QList<QUrl> urls2;
     urls2 << url2;
@@ -443,7 +443,7 @@ void TestBatchFeedFetcher::testParserReuse()
     QVERIFY(spy2.wait(5000));
 
     // Verify second results - should only contain url2, not url1
-    QMap<QUrl, FeedSource::ParseResult> results2 = parser.getResults();
+    QMap<QUrl, FeedFetchResult> results2 = parser.getResults();
     QCOMPARE(results2.size(), 1);
     QVERIFY(results2.contains(url2));
     QVERIFY(!results2.contains(url1));

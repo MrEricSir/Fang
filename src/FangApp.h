@@ -19,7 +19,7 @@
 #include "models/SearchFeedItem.h"
 #include "models/ListModel.h"
 #include "models/FangSettings.h"
-#include "parser/RawFeed.h"
+#include "RawFeed.h"
 #include "FangObject.h"
 #include "notifications/Notification.h"
 #include "db/DBSettings.h"

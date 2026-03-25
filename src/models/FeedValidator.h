@@ -6,7 +6,7 @@
 #include <QUrl>
 #include <QVariantList>
 
-#include "../utilities/FeedDiscovery.h"
+#include "FeedDiscovery.h"
 
 /*!
     \brief Initially this class was for validating feed URLs, but has now outgrown that to handle

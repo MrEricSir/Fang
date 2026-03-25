@@ -12,7 +12,7 @@
 #include "../utilities/ErrorHandling.h"
 #include "../utilities/FangLogging.h"
 #include "../utilities/ImageCache.h"
-#include "../utilities/NetworkUtilities.h"
+#include "NetworkUtilities.h"
 
 WebServer::WebServer(FangApp* appInstance, FangObject *parent) :
     FangObject(parent),

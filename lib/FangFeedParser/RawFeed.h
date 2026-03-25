@@ -1,19 +1,21 @@
 #ifndef RAWFEED_H
 #define RAWFEED_H
 
-#include <QObject>
+#include <memory>
+
+#include <QList>
+#include <QString>
+#include <QUrl>
+#include <QDateTime>
 
 #include "RawNews.h"
 
-class RawFeed : public QObject
+class RawFeed
 {
-    Q_OBJECT
-
 public:
     enum FeedType { RSS = 0, GoogleNewsSitemap = 1, JSONFeed = 2 };
 
-    explicit RawFeed(QObject *parent = nullptr);
-    virtual ~RawFeed();
+    RawFeed() = default;
 
     FeedType feedType = RSS;
 
@@ -21,11 +23,11 @@ public:
     QString subtitle;
     QUrl url;
     QDateTime lastUpdated;
-    quint32 minutesToUpdate;
+    quint32 minutesToUpdate = 0;
     QUrl siteURL;
     QUrl imageURL;
-    
-    QList<RawNews*> items;
+
+    QList<std::shared_ptr<RawNews>> items;
 
     bool isPodcast = false;
 

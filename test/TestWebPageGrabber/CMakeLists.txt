@@ -14,6 +14,7 @@ target_compile_definitions(tst_testwebpagegrabber PRIVATE
 # Link shared test library and Qt modules
 target_link_libraries(tst_testwebpagegrabber PRIVATE
     FangTestLib
+    FangFeedDiscovery
     Qt6::Test
 )
 

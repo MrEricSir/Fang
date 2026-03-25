@@ -27,6 +27,7 @@ target_include_directories(tst_lisvelfeeditem PRIVATE
 
 # Link Qt modules
 target_link_libraries(tst_lisvelfeeditem PRIVATE
+    FangFeedParser
     Qt6::Test
     Qt6::Gui
     Qt6::Sql

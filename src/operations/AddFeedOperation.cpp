@@ -37,7 +37,7 @@ void AddFeedOperation::execute()
 void AddFeedOperation::onFeedFinished()
 {
     // Ooh, data.
-    rawFeed = parser.getFeed();
+    rawFeed = parser.getFeed().get();
     if (rawFeed == nullptr) {
         reportError("Parse error");
         

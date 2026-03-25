@@ -9,24 +9,12 @@ qt_add_executable(tst_updatechecker
     ${CMAKE_SOURCE_DIR}/src/utilities/UpdateChecker.cpp
     ${CMAKE_SOURCE_DIR}/src/utilities/UpdateChecker.h
     ${CMAKE_SOURCE_DIR}/src/utilities/SettingsInterface.h
-    ${CMAKE_SOURCE_DIR}/src/parser/FeedFetcher.cpp
-    ${CMAKE_SOURCE_DIR}/src/parser/FeedFetcher.h
-    ${CMAKE_SOURCE_DIR}/src/parser/FeedSource.cpp
-    ${CMAKE_SOURCE_DIR}/src/parser/FeedSource.h
-    ${CMAKE_SOURCE_DIR}/src/network/FangNetworkAccessManager.cpp
-    ${CMAKE_SOURCE_DIR}/src/network/FangNetworkAccessManager.h
-    ${CMAKE_SOURCE_DIR}/src/FangObject.cpp
-    ${CMAKE_SOURCE_DIR}/src/FangObject.h
-    ${CMAKE_SOURCE_DIR}/src/utilities/FangLogging.cpp
-    ${CMAKE_SOURCE_DIR}/src/utilities/FangLogging.h
 )
 
 # Include directories
 target_include_directories(tst_updatechecker PRIVATE
     ${CMAKE_SOURCE_DIR}/src
     ${CMAKE_SOURCE_DIR}/src/utilities
-    ${CMAKE_SOURCE_DIR}/src/parser
-    ${CMAKE_SOURCE_DIR}/src/network
     ${CMAKE_SOURCE_DIR}/test
 )
 
@@ -38,11 +26,11 @@ target_compile_definitions(tst_updatechecker PRIVATE
     UPDATECHECKER_NO_FANGAPP
 )
 
-# Link Qt Test and Network modules
+# Link shared test library and Qt modules
 target_link_libraries(tst_updatechecker PRIVATE
-    FangFeedParser
+    FangTestLib
+    FangFeedDiscovery
     Qt6::Test
-    Qt6::Network
 )
 
 # Add to CTest

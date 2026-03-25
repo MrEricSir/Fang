@@ -3,13 +3,7 @@ qt_add_executable(tst_testfangopmlparser
     tst_testfangopmlparser.cpp
     # Shared sources from main project
     ${CMAKE_SOURCE_DIR}/src/parser/OPMLParser.cpp
-    ${CMAKE_SOURCE_DIR}/src/parser/FeedSource.cpp
-    ${CMAKE_SOURCE_DIR}/src/FangObject.cpp
-    ${CMAKE_SOURCE_DIR}/src/utilities/FangLogging.cpp
-    # Include corresponding headers for AUTOMOC
     ${CMAKE_SOURCE_DIR}/src/parser/OPMLParser.h
-    ${CMAKE_SOURCE_DIR}/src/parser/FeedSource.h
-    ${CMAKE_SOURCE_DIR}/src/FangObject.h
 )
 
 # Compile definitions for test data paths
@@ -17,11 +11,11 @@ target_compile_definitions(tst_testfangopmlparser PRIVATE
     SRCDIR="${CMAKE_CURRENT_SOURCE_DIR}/"
 )
 
-# Link Qt Test module
+# Link shared test library and Qt modules
 target_link_libraries(tst_testfangopmlparser PRIVATE
-    FangFeedParser
+    FangTestLib
+    FangFeedDiscovery
     Qt6::Test
-    Qt6::Gui
 )
 
 # Add to CTest

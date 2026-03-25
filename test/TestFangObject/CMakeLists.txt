@@ -12,6 +12,7 @@ target_include_directories(tst_fangobject PRIVATE
 )
 
 target_link_libraries(tst_fangobject PRIVATE
+    FangFeedParser
     Qt6::Test
     Qt6::Core
 )

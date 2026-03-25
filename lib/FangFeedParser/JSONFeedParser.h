@@ -14,7 +14,7 @@ class JSONFeedParser
 public:
     // Returns a parsed RawFeed, or nullptr if not valid JSON Feed.
     // Caller takes ownership of the returned RawFeed.
-    static RawFeed* parse(const QByteArray& data, QObject* parent = nullptr);
+    static RawFeed* parse(const QByteArray& data);
 };
 
 #endif // JSONFEEDPARSER_H

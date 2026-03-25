@@ -2,7 +2,7 @@
 #include <QTest>
 #include <QSignalSpy>
 
-#include "../../src/utilities/WebPageGrabber.h"
+#include "WebPageGrabber.h"
 #include "../MockNetworkAccessManager.h"
 
 #ifdef _WIN32

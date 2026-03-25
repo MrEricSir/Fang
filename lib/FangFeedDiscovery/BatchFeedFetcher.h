@@ -7,14 +7,13 @@
 #include <QMap>
 #include <QUrl>
 
-#include "../FangObject.h"
 #include "FeedSource.h"
 #include "RawFeed.h"
 
 /*!
  * \brief The BatchFeedFetcher is a wrapper for FeedFetcher that handles multiple feeds.
  */
-class BatchFeedFetcher : public FangObject
+class BatchFeedFetcher : public QObject
 {
     Q_OBJECT
 public:
@@ -24,10 +23,10 @@ public:
     virtual void parse(const QList<QUrl> &urls);
 
     // Map of parse results
-    virtual QMap<QUrl, FeedSource::ParseResult> getResults() { return results; }
+    virtual QMap<QUrl, FeedFetchResult> getResults() { return results; }
 
     // Get parsed feed for a specific URL (nullptr if parse failed)
-    virtual RawFeed* getFeed(const QUrl& url);
+    virtual std::shared_ptr<RawFeed> getFeed(const QUrl& url);
 
 signals:
     void ready();
@@ -43,10 +42,10 @@ protected:
     std::map<QUrl, std::unique_ptr<FeedSource>> parsers;
 
     // Results of parsing per-URL.
-    QMap<QUrl, FeedSource::ParseResult> results;
+    QMap<QUrl, FeedFetchResult> results;
 
-    // Parsed feeds per-URL (references to feeds owned by parsers).
-    QMap<QUrl, RawFeed*> feeds;
+    // Parsed feeds per-URL.
+    QMap<QUrl, std::shared_ptr<RawFeed>> feeds;
 };
 
 #endif // BATCHFEEDFETCHER_H

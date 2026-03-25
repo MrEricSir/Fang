@@ -1,14 +1,16 @@
 #ifndef FEEDFETCHER_H
 #define FEEDFETCHER_H
 
-#include <QObject>
+#include <memory>
 
+#include <QObject>
 #include <QString>
 #include <QNetworkReply>
 #include <QThread>
 
-#include "../network/FangNetworkAccessManager.h"
+#include "FangNetworkAccessManager.h"
 #include "FeedSource.h"
+#include "FeedParseResult.h"
 
 // Max number of HTTP redirects to prevent looping.
 #define MAX_PARSER_REDIRECTS 10
@@ -33,9 +35,9 @@ public slots:
     // For testing purposes.
     void parseFile(const QString& filename);
     
-    virtual ParseResult getResult(); // Override.
+    virtual FeedFetchResult getResult(); // Override.
     virtual QNetworkReply::NetworkError getNetworkError() { return networkError; }
-    virtual RawFeed* getFeed(); // Override.
+    virtual std::shared_ptr<RawFeed> getFeed(); // Override.
     virtual inline QUrl getURL() { return finalFeedURL; } // Override.
     
     virtual bool isFromCache() { return fromCache; } // Override
@@ -56,7 +58,7 @@ protected slots:
     void netFinished(QNetworkReply *reply);
     
     // When the worker thread thinks the document is complete, or an error occured.
-    void workerDone(RawFeed* rawFeed);
+    void workerDone(FeedParseResult parseResult);
     
 private:
     void initParse(const QUrl& url = QUrl("")); // called prior to parse.
@@ -64,8 +66,8 @@ private:
                        const QString& ifNoneMatch = QString(),
                        const QString& ifModifiedSince = QString()); // used for redirects.
     
-    RawFeed* feed;
-    ParseResult result;
+    std::shared_ptr<RawFeed> feed;
+    FeedFetchResult result;
     QNetworkReply::NetworkError networkError;
     
     FangNetworkAccessManager manager;

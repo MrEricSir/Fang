@@ -6,10 +6,10 @@
 #include <QDateTime>
 
 #include "../utilities/RawFeedRewriter.h"
-#include "../parser/FeedFetcher.h"
+#include "FeedFetcher.h"
 #include "../models/FeedItem.h"
-#include "../utilities/FeedDiscovery.h"
-#include "../utilities/NewsSitemapSynthesizer.h"
+#include "FeedDiscovery.h"
+#include "NewsSitemapSynthesizer.h"
 
 /*!
     \brief Updates a feed.
@@ -69,7 +69,7 @@ private:
     FeedItem *feed;
     RawFeed* rawFeed;
     RawFeedRewriter rewriter;
-    QList<RawNews*> newsList;
+    QList<std::shared_ptr<RawNews>> newsList;
     QDateTime timestamp;
     bool useCache;
     FeedDiscovery discovery;

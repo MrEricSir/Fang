@@ -43,20 +43,20 @@ void UpdateChecker::checkNow()
 
 void UpdateChecker::onParserDone()
 {
-    if (parser->getResult() != FeedSource::OK) {
+    if (parser->getResult() != FeedFetchResult::OK) {
         qCWarning(logUtility) << "UpdateChecker: Failed to fetch update feed:"
-                              << parser->getResult();
+                              << static_cast<int>(parser->getResult());
         return;
     }
 
-    RawFeed* feed = parser->getFeed();
+    auto feed = parser->getFeed();
     if (!feed || feed->items.isEmpty()) {
         qCWarning(logUtility) << "UpdateChecker: No items in update feed";
         return;
     }
 
     // Get the latest release (first item in feed)
-    RawNews* latestRelease = feed->items.first();
+    const auto& latestRelease = feed->items.first();
     QString version = extractVersion(latestRelease->title);
 
     if (version.isEmpty()) {

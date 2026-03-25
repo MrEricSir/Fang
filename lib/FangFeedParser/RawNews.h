@@ -1,21 +1,15 @@
 #ifndef RAWNEWS_H
 #define RAWNEWS_H
 
-#include <QObject>
 #include <QDateTime>
 #include <QUrl>
 #include <QString>
 
-#include <QDebug>
-
-class RawNews : public QObject
+class RawNews
 {
-    Q_OBJECT
 public:
-    explicit RawNews(QObject *parent = nullptr);
-    
-    virtual ~RawNews() {}
-    
+    RawNews() = default;
+
     QString title;
     QString author;
     QString description;
@@ -25,14 +19,10 @@ public:
     QString guid; // id, guid, or link URL
     QString mediaImageURL; // media:thumbnail or media:content URL (cached path after rewrite)
 
-    // For convenience.
-    qint64 dbId;
-    
     // Sorting
     bool operator<(const RawNews& right);
     static bool LessThan(const RawNews* left, const RawNews* right);
     static bool GreaterThan(const RawNews* left, const RawNews* right);
-    
 };
 
 #endif // RAWNEWS_H

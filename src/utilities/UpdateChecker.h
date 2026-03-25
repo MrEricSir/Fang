@@ -7,7 +7,7 @@
 #include <QSettings>
 
 #include "../FangObject.h"
-#include "../parser/FeedFetcher.h"
+#include "FeedFetcher.h"
 #include "SettingsInterface.h"
 
 /*!

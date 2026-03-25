@@ -94,7 +94,7 @@ private:
     QString getTagStackAt(qint32 n);
 
     RawFeed* feed;
-    RawNews* currentItem;
+    std::shared_ptr<RawNews> currentItem;
     bool isValid;
 
     QXmlStreamReader xml;

@@ -6,7 +6,7 @@
 #include <QDebug>
 #include <QDateTime>
 
-#include "../parser/RawFeed.h"
+#include "RawFeed.h"
 #include "../models/FeedItem.h"
 
 class Utilities

@@ -1,9 +1,11 @@
+#include <memory>
+
 #include <QString>
 #include <QTest>
 #include <QSignalSpy>
 #include <QSettings>
 
-#include "../../src/utilities/UpdateChecker.h"
+#include "UpdateChecker.h"
 #include "../MockFeedSource.h"
 #include "../MockFangSettings.h"
 
@@ -223,12 +225,12 @@ void TestUpdateChecker::testUpdateAvailable_emitsSignal()
     MockFeedSource* mockParser = new MockFeedSource();
 
     // Create feed with newer version
-    RawFeed* feed = new RawFeed();
-    RawNews* news = new RawNews(feed);
+    auto feed = std::make_shared<RawFeed>();
+    auto news = std::make_shared<RawNews>();
     news->title = "Fang 99.0.0"; // Much higher than any real version
     feed->items.append(news);
 
-    mockParser->setResult(FeedSource::OK);
+    mockParser->setResult(FeedFetchResult::OK);
     mockParser->setFeed(feed);
 
     // Pass mockSettings so update check can proceed
@@ -247,12 +249,12 @@ void TestUpdateChecker::testUpdateAvailable_noSignalIfSameVersion()
 {
     MockFeedSource* mockParser = new MockFeedSource();
 
-    RawFeed* feed = new RawFeed();
-    RawNews* news = new RawNews(feed);
+    auto feed = std::make_shared<RawFeed>();
+    auto news = std::make_shared<RawNews>();
     news->title = QString("Fang ") + APP_VERSION; // Same as current
     feed->items.append(news);
 
-    mockParser->setResult(FeedSource::OK);
+    mockParser->setResult(FeedFetchResult::OK);
     mockParser->setFeed(feed);
 
     checker = new TestableUpdateChecker(nullptr, mockParser, mockSettings);
@@ -269,12 +271,12 @@ void TestUpdateChecker::testUpdateAvailable_noSignalIfOlderVersion()
 {
     MockFeedSource* mockParser = new MockFeedSource();
 
-    RawFeed* feed = new RawFeed();
-    RawNews* news = new RawNews(feed);
+    auto feed = std::make_shared<RawFeed>();
+    auto news = std::make_shared<RawNews>();
     news->title = "Fang 0.0.1"; // Very old version
     feed->items.append(news);
 
-    mockParser->setResult(FeedSource::OK);
+    mockParser->setResult(FeedFetchResult::OK);
     mockParser->setFeed(feed);
 
     checker = new TestableUpdateChecker(nullptr, mockParser, mockSettings);
@@ -293,12 +295,12 @@ void TestUpdateChecker::testUpdateAvailable_noSignalIfAlreadyShown()
 
     MockFeedSource* mockParser = new MockFeedSource();
 
-    RawFeed* feed = new RawFeed();
-    RawNews* news = new RawNews(feed);
+    auto feed = std::make_shared<RawFeed>();
+    auto news = std::make_shared<RawNews>();
     news->title = "Fang 99.0.0";
     feed->items.append(news);
 
-    mockParser->setResult(FeedSource::OK);
+    mockParser->setResult(FeedFetchResult::OK);
     mockParser->setFeed(feed);
 
     // Pass mockSettings to UpdateChecker
@@ -314,7 +316,7 @@ void TestUpdateChecker::testUpdateAvailable_noSignalIfAlreadyShown()
 void TestUpdateChecker::testUpdateAvailable_parserError()
 {
     MockFeedSource* mockParser = new MockFeedSource();
-    mockParser->setResult(FeedSource::NETWORK_ERROR);
+    mockParser->setResult(FeedFetchResult::NetworkError);
 
     checker = new TestableUpdateChecker(nullptr, mockParser, mockSettings);
     QSignalSpy spy(checker, &UpdateChecker::updateAvailable);
@@ -329,10 +331,10 @@ void TestUpdateChecker::testUpdateAvailable_emptyFeed()
 {
     MockFeedSource* mockParser = new MockFeedSource();
 
-    RawFeed* feed = new RawFeed();
+    auto feed = std::make_shared<RawFeed>();
     // No items in feed
 
-    mockParser->setResult(FeedSource::OK);
+    mockParser->setResult(FeedFetchResult::OK);
     mockParser->setFeed(feed);
 
     checker = new TestableUpdateChecker(nullptr, mockParser, mockSettings);
@@ -348,12 +350,12 @@ void TestUpdateChecker::testUpdateAvailable_invalidTitle()
 {
     MockFeedSource* mockParser = new MockFeedSource();
 
-    RawFeed* feed = new RawFeed();
-    RawNews* news = new RawNews(feed);
+    auto feed = std::make_shared<RawFeed>();
+    auto news = std::make_shared<RawNews>();
     news->title = "Some random title without version"; // No parseable version
     feed->items.append(news);
 
-    mockParser->setResult(FeedSource::OK);
+    mockParser->setResult(FeedFetchResult::OK);
     mockParser->setFeed(feed);
 
     checker = new TestableUpdateChecker(nullptr, mockParser, mockSettings);
