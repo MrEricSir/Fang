@@ -1,4 +1,5 @@
 #include "NewsSitemapSynthesizer.h"
+#include "NetworkDownloadCore.h"
 #include "FeedDiscoveryLogging.h"
 
 #include <algorithm>
@@ -464,6 +465,7 @@ void NewsSitemapSynthesizer::buildRawFeed()
         auto item = std::make_shared<RawNews>();
         item->guid = entry.url.toString();
         item->title = entry.newsTitle;
+        item->author = entry.publicationName;
         item->url = entry.url;
         item->timestamp = entry.publicationDate.isValid()
             ? entry.publicationDate

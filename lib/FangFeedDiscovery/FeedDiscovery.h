@@ -12,11 +12,12 @@
 
 class QSimpleStateMachine;
 
-#include "FeedSource.h"
 #include "RawFeed.h"
-#include "BatchFeedFetcher.h"
-#include "WebPageGrabber.h"
-#include "NewsSitemapSynthesizer.h"
+
+class FeedSource;
+class BatchFeedFetcher;
+class WebPageGrabber;
+class NewsSitemapSynthesizer;
 
 /*!
     \brief Attempts to match a user-submitted, URL like "bob.com" to an actual news feed.
@@ -105,7 +106,12 @@ public:
     /*!
         \return The best raw feed, or nullptr if there was an error.
      */
-    RawFeed* feedResult() { return _error != Error::None ? nullptr : _feedResult; }
+    std::shared_ptr<RawFeed> feedResult() {
+        if (_error != Error::None || _discoveredFeeds.isEmpty()) {
+            return nullptr;
+        }
+        return _discoveredFeeds.first().feed;
+    }
 
     /*!
         \return List of all discovered feeds (may be empty if error or single-feed mode)
@@ -135,7 +141,6 @@ public slots:
 
     /*!
         \brief Try to find RSS and Atom feed(s), if available.
-               External use: Intended for use in unit tests.
         \param document
      */
     QList<QString> parseFeedsFromXHTML(const QString& document);
@@ -181,8 +186,6 @@ private:
     QUrl _feedURL;
     Error _error;
     QString _errorString;
-
-    RawFeed* _feedResult;
 
     // Multi-feed discovery state
     QList<DiscoveredFeed> _discoveredFeeds;  // All discovered feeds

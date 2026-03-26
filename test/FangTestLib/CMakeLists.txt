@@ -9,7 +9,6 @@ add_library(FangTestLib STATIC
     # App-level sources used by multiple tests
     ${CMAKE_SOURCE_DIR}/src/network/BatchDownloadCore.cpp
     ${CMAKE_SOURCE_DIR}/src/utilities/ImageGrabber.cpp
-    ${CMAKE_SOURCE_DIR}/src/utilities/ImageCache.cpp
 )
 
 # Include directories
@@ -28,6 +27,7 @@ target_include_directories(FangTestLib PUBLIC
 
 # Link required libraries
 target_link_libraries(FangTestLib PUBLIC
+    QImageCache
     Qt6::Concurrent
     Qt6::Core
     Qt6::Network

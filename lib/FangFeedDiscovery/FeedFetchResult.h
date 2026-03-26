@@ -1,7 +1,7 @@
 #ifndef FEEDFETCHRESULT_H
 #define FEEDFETCHRESULT_H
 
-#include <QObject>
+#include <QMetaType>
 
 /*!
     \brief Result codes for async feed fetch + parse operations.

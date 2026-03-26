@@ -14,7 +14,7 @@ static QString stripEscapedCDATA(const QString& text)
     return text;
 }
 
-RawFeed* RSSAtomParser::parse(const QByteArray& data)
+std::unique_ptr<RawFeed> RSSAtomParser::parse(const QByteArray& data)
 {
     RSSAtomParser worker;
     worker.documentStart();
@@ -30,21 +30,17 @@ RSSAtomParser::RSSAtomParser() :
 
 RSSAtomParser::~RSSAtomParser()
 {
-    delete feed;
 }
 
-RawFeed* RSSAtomParser::takeFeed()
+std::unique_ptr<RawFeed> RSSAtomParser::takeFeed()
 {
-    RawFeed* result = feed;
-    feed = nullptr;
-    return result;
+    return std::move(feed);
 }
 
 void RSSAtomParser::documentStart()
 {
     // Make a new feed!  Yay!
-    delete feed;
-    feed = new RawFeed();
+    feed = std::make_unique<RawFeed>();
     isValid = true;
     
     resetParserVars();
@@ -317,7 +313,8 @@ void RSSAtomParser::elementContents()
             title += xml.text().toString();
         } else if (currentTag == "link" && currentPrefix == "") {
             urlData += xml.text().toString();
-        } else if (currentTag == "description" || currentTag == "summary") {
+        } else if ((currentTag == "description" || currentTag == "summary")
+                   && currentPrefix == "") {
             subtitle += xml.text().toString();
         } else if (currentTag == "name"
                    || (currentTag == "creator" && currentPrefix == "dc")) {
@@ -344,12 +341,13 @@ void RSSAtomParser::elementContents()
         //
         // Top level items.
         //
-        
+
         if (currentTag == "title" && currentPrefix == "") {
             title += xml.text().toString();
         } else if (currentTag == "link" && currentPrefix == "") {
             urlData += xml.text().toString();
-        } else if (currentTag == "description" || currentTag == "summary") {
+        } else if ((currentTag == "description" || currentTag == "summary")
+                   && currentPrefix == "") {
             subtitle += xml.text().toString();
         }
     }

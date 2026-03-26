@@ -1,6 +1,8 @@
 #ifndef JSONFEEDPARSER_H
 #define JSONFEEDPARSER_H
 
+#include <memory>
+
 #include <QByteArray>
 
 class RawFeed;
@@ -13,8 +15,7 @@ class JSONFeedParser
 {
 public:
     // Returns a parsed RawFeed, or nullptr if not valid JSON Feed.
-    // Caller takes ownership of the returned RawFeed.
-    static RawFeed* parse(const QByteArray& data);
+    static std::unique_ptr<RawFeed> parse(const QByteArray& data);
 };
 
 #endif // JSONFEEDPARSER_H

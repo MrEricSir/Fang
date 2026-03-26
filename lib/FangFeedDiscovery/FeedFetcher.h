@@ -8,12 +8,10 @@
 #include <QNetworkReply>
 #include <QThread>
 
-#include "FangNetworkAccessManager.h"
 #include "FeedSource.h"
 #include "FeedParseResult.h"
 
-// Max number of HTTP redirects to prevent looping.
-#define MAX_PARSER_REDIRECTS 10
+class BrowserNetworkAccessManager;
 
 /*!
     PaRSSes RSS/Atom feeds into RawFeed/RawNews objects.
@@ -70,7 +68,6 @@ private:
     FeedFetchResult result;
     QNetworkReply::NetworkError networkError;
     
-    FangNetworkAccessManager manager;
     QNetworkAccessManager* activeManager;
     QNetworkReply *currentReply;
     QUrl finalFeedURL;

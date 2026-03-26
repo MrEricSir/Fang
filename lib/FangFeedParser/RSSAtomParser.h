@@ -1,6 +1,8 @@
 #ifndef RSSATOMPARSER_H
 #define RSSATOMPARSER_H
 
+#include <memory>
+
 #include <QString>
 #include <QByteArray>
 #include <QQueue>
@@ -12,22 +14,21 @@
 /*!
     \brief Synchronous RSS/Atom XML parser.
 
-    Public API: call RSSAtomParser::parse(data) to get a RawFeed*.
+    Public API: call RSSAtomParser::parse(data) to get a RawFeed.
 
     Internally uses a streaming XML reader via documentStart/addXML/documentEnd.
  */
 class RSSAtomParser
 {
 public:
-    // Parse a complete RSS/Atom XML document and return a RawFeed*.
-    // Caller takes ownership of the returned pointer.
-    static RawFeed* parse(const QByteArray& data);
+    // Parse a complete RSS/Atom XML document and return a RawFeed.
+    static std::unique_ptr<RawFeed> parse(const QByteArray& data);
 
 private:
     RSSAtomParser();
     ~RSSAtomParser();
 
-    RawFeed* takeFeed();
+    std::unique_ptr<RawFeed> takeFeed();
 
     // Call this prior to adding XML.
     void documentStart();
@@ -93,7 +94,7 @@ private:
      */
     QString getTagStackAt(qint32 n);
 
-    RawFeed* feed;
+    std::unique_ptr<RawFeed> feed;
     std::shared_ptr<RawNews> currentItem;
     bool isValid;
 

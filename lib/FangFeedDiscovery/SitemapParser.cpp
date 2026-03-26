@@ -2,7 +2,7 @@
 
 #include <QXmlStreamReader>
 
-#include "FeedParserLogging.h"
+#include "FeedDiscoveryLogging.h"
 
 SitemapParser::SitemapParser()
     : _hasNewsEntries(false)
@@ -43,13 +43,13 @@ SitemapParser::SitemapType SitemapParser::parseImpl(QXmlStreamReader& reader)
                 parseSitemapIndex(reader);
                 return SitemapIndex;
             } else {
-                qCDebug(logFeedParser) << "SitemapParser: unexpected root element:" << root;
+                qCDebug(logFeedDiscovery) << "SitemapParser: unexpected root element:" << root;
                 return Invalid;
             }
         }
     }
 
-    qCDebug(logFeedParser) << "SitemapParser: no root element found";
+    qCDebug(logFeedDiscovery) << "SitemapParser: no root element found";
     return Invalid;
 }
 
@@ -121,7 +121,7 @@ void SitemapParser::parseUrlSet(QXmlStreamReader& xml)
         }
     }
 
-    qCDebug(logFeedParser) << "SitemapParser: parsed" << _entries.size() << "URL entries"
+    qCDebug(logFeedDiscovery) << "SitemapParser: parsed" << _entries.size() << "URL entries"
                         << (_hasNewsEntries ? "(with news extensions)" : "(no news extensions)");
 }
 
@@ -159,5 +159,5 @@ void SitemapParser::parseSitemapIndex(QXmlStreamReader& xml)
         }
     }
 
-    qCDebug(logFeedParser) << "SitemapParser: parsed" << _subSitemaps.size() << "sub-sitemaps";
+    qCDebug(logFeedDiscovery) << "SitemapParser: parsed" << _subSitemaps.size() << "sub-sitemaps";
 }

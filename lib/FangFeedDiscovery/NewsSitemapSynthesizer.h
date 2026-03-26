@@ -10,7 +10,8 @@
 
 #include "RawFeed.h"
 #include "SitemapParser.h"
-#include "NetworkDownloadCore.h"
+
+class NetworkDownloadCore;
 
 class NewsSitemapSynthesizer : public QObject
 {
@@ -74,7 +75,6 @@ protected:
     void setResultState(std::shared_ptr<RawFeed> result, bool hasError, const QString& errorString);
 
 public:
-    // Public for unit testing.
     static QList<QUrl> parseRobotsSitemaps(const QString& robotsTxt, const QUrl& siteBaseUrl);
     static QStringList newsSitemapPaths();
     static QList<SitemapEntry> deduplicateRepetitiveTitles(

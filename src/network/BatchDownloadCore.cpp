@@ -1,5 +1,5 @@
 #include "BatchDownloadCore.h"
-#include "FangNetworkAccessManager.h"
+#include "BrowserNetworkAccessManager.h"
 
 #include <QSet>
 
@@ -8,7 +8,7 @@ BatchDownloadCore::BatchDownloadCore(int timeoutMs,
                                      QObject* parent,
                                      QNetworkAccessManager* networkManager)
     : FangObject(parent)
-    , manager(networkManager ? networkManager : new FangNetworkAccessManager(this))
+    , manager(networkManager ? networkManager : new BrowserNetworkAccessManager(this))
     , totalCount(0)
 {
     config.timeoutMs = timeoutMs;

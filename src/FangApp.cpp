@@ -9,7 +9,7 @@
 #include <QQmlFileSelector>
 
 #include "utilities/ErrorHandling.h"
-#include "utilities/ImageCache.h"
+#include "QImageCache.h"
 #include "network/FangQQmlNetworkAccessManagerFactory.h"
 
 #include "operations/UpdateFeedOperation.h"
@@ -645,7 +645,7 @@ void FangApp::onQuit()
     manager.run(&expireOp);
 
     // Delete expired images from cache.
-    ImageCache::evictOlderThan(olderThan);
+    QImageCache::evictOlderThan(olderThan);
 }
 
 void FangApp::setCurrentFeed(FeedItem *feed, bool reloadIfSameFeed)

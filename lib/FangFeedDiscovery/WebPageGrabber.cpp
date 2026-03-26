@@ -1,4 +1,5 @@
 #include "WebPageGrabber.h"
+#include "NetworkDownloadCore.h"
 #include <QXmlStreamReader>
 #include <memory>
 
@@ -39,13 +40,13 @@ WebPageGrabber::WebPageGrabber(bool handleMetaRefresh, int timeoutMS, QObject *p
 WebPageGrabber::WebPageGrabber(QObject *parent) :
     QObject(parent),
     core(nullptr),
-    handleMetaRefresh(DEFAULT_HANDLE_META_REFRESH),
+    handleMetaRefresh(defaultHandleMetaRefresh),
     redirectAttempts(0),
     error(true),
     done(false)
 {
     NetworkDownloadConfig config;
-    config.timeoutMs = DEFAULT_TIMEOUT_MS;
+    config.timeoutMs = defaultTimeoutMs;
     config.maxRedirects = 10;
     config.useInactivityTimeout = true;
     core = new NetworkDownloadCore(config, this, nullptr);
@@ -152,7 +153,7 @@ QString *WebPageGrabber::loadInternal(const QString& htmlString, bool handleRefr
     // Check for an HTML meta refresh if requested.
     if (handleRefresh) {
         QString redirectURL = searchForRedirect(document);
-        if (redirectAttempts > MAX_REDIRECTS) {
+        if (redirectAttempts > maxRedirects) {
             qCDebug(logFeedDiscovery) << "Error: Maximum HTML redirects";
             emitReadySignal(nullptr);
             return nullptr;

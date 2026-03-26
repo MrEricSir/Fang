@@ -1,5 +1,5 @@
 #include "FangQQmlNetworkAccessManagerFactory.h"
-#include "FangNetworkAccessManager.h"
+#include "BrowserNetworkAccessManager.h"
 
 FangQQmlNetworkAccessManagerFactory::FangQQmlNetworkAccessManagerFactory() :
     QQmlNetworkAccessManagerFactory()
@@ -8,5 +8,5 @@ FangQQmlNetworkAccessManagerFactory::FangQQmlNetworkAccessManagerFactory() :
 
 QNetworkAccessManager* FangQQmlNetworkAccessManagerFactory::create(QObject* parent)
 {
-    return new FangNetworkAccessManager(parent);
+    return new BrowserNetworkAccessManager(parent);
 }

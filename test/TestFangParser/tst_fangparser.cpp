@@ -7,6 +7,7 @@
 #include <QNetworkAccessManager>
 
 #include "FeedFetcher.h"
+#include "RSSAtomParser.h"
 #include "RawFeed.h"
 #include "../MockNetworkAccessManager.h"
 
@@ -40,6 +41,9 @@ private slots:
     void testJSONFeedAuthors();
     void testJSONFeedMediaImage();
     void testJSONFeedFeedType();
+
+    // Media namespace isolation
+    void testMediaNamespaceIsolation();
 
     // Permanent redirect detection
     void testPermanentRedirect301();
@@ -971,6 +975,53 @@ void TestFangParser::testTimezoneAbbreviations()
     QVERIFY2(edtTime.isValid(), "EDT timestamp should be valid");
     QCOMPARE(edtTime.time().hour(), 14);
     QCOMPARE(edtTime.time().minute(), 30);
+}
+
+// =====================================================================
+// Media namespace isolation test
+// =====================================================================
+
+void TestFangParser::testMediaNamespaceIsolation()
+{
+    // RSS feed with <media:title> and <media:description> that should NOT
+    // bleed into the item's title or description fields. This mirrors the
+    // structure of abc7news.com's RSS feed.
+    QByteArray rss = R"(<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:media="http://search.yahoo.com/mrss/"
+     xmlns:dc="http://purl.org/dc/elements/1.1/">
+<channel>
+<title>Test Feed</title>
+<link>http://example.com</link>
+<description>Test channel description</description>
+<item>
+  <title>Full headline for the article</title>
+  <description>Full description of the article.</description>
+  <link>http://example.com/1</link>
+  <guid>http://example.com/1</guid>
+  <dc:creator>Reporter</dc:creator>
+  <pubDate>Wed, 19 Mar 2026 10:30:00 +0000</pubDate>
+  <media:title>Shorter media headline</media:title>
+  <media:description>Shorter media description.</media:description>
+  <media:thumbnail url="http://example.com/thumb.jpg" width="1280" height="720"/>
+</item>
+</channel>
+</rss>)";
+
+    auto feed = RSSAtomParser::parse(rss);
+    QVERIFY(feed != nullptr);
+    QCOMPARE(feed->items.size(), 1);
+
+    const auto& item = feed->items.first();
+
+    // Title must be exactly the <title> text, not contaminated by media:title.
+    QCOMPARE(item->title, QString("Full headline for the article"));
+
+    // Description must be exactly the <description> text, not contaminated
+    // by media:description.
+    QCOMPARE(item->description, QString("Full description of the article."));
+
+    // media:thumbnail should still be extracted.
+    QCOMPARE(item->mediaImageURL, QString("http://example.com/thumb.jpg"));
 }
 
 // =====================================================================

@@ -6,9 +6,12 @@
 #include <QSet>
 #include <algorithm>
 #include "NetworkUtilities.h"
+#include "FeedSource.h"
+#include "FeedFetchResult.h"
 #include "FeedFetcher.h"
 #include "BatchFeedFetcher.h"
 #include "WebPageGrabber.h"
+#include "NewsSitemapSynthesizer.h"
 
 FeedDiscovery::FeedDiscovery(QObject *parent,
                            FeedSource* firstParser,
@@ -19,7 +22,6 @@ FeedDiscovery::FeedDiscovery(QObject *parent,
     machine(new QSimpleStateMachine(this)),
     _error(Error::None),
     _errorString(),
-    _feedResult(nullptr),
     _probingCommonPaths(false),
     newsSitemapSynthesizer(sitemapSynthesizer)
 {
@@ -151,10 +153,9 @@ void FeedDiscovery::onFirstParseDone()
         // User directly entered a feed URL! Add it to discovered feeds
         _feedURL = parserFirstTry->getURL();
         auto parsedFeed = parserFirstTry->getFeed();
-        _feedResult = parsedFeed.get();
 
         // Reject empty feeds - a feed that parses OK but has no items is useless.
-        if (!_feedResult || _feedResult->items.isEmpty()) {
+        if (!parsedFeed || parsedFeed->items.isEmpty()) {
             qCDebug(logFeedDiscovery) << "Feed parsed OK but has no items, trying web grabber";
             machine->setState(WEB_GRABBER);
             break;
@@ -164,7 +165,7 @@ void FeedDiscovery::onFirstParseDone()
         DiscoveredFeed discovered;
         discovered.url = _feedURL;
         discovered.feed = parsedFeed;
-        discovered.title = _feedResult->title.isEmpty() ? _feedURL.toString() : _feedResult->title;
+        discovered.title = parsedFeed->title.isEmpty() ? _feedURL.toString() : parsedFeed->title;
         discovered.validated = true;
         _discoveredFeeds.clear();
         _discoveredFeeds.append(discovered);
@@ -356,7 +357,6 @@ void FeedDiscovery::onFeedParserReady()
 
     // Set the first valid feed as the primary one (for backward compatibility)
     _feedURL = _discoveredFeeds.first().url;
-    _feedResult = _discoveredFeeds.first().feed.get();
 
     // Emit done signal
     machine->setState(FEED_FOUND);
@@ -444,7 +444,6 @@ void FeedDiscovery::onNewsSitemapDone()
 
     // Set the primary feed result.
     _feedURL = synthFeed->url;
-    _feedResult = synthFeed.get();
 
     // Add to discovered feeds list.
     DiscoveredFeed discovered;

@@ -5,11 +5,8 @@
 #include <QString>
 #include <QUrl>
 #include <QTimer>
-#include "NetworkDownloadCore.h"
-
-#define DEFAULT_HANDLE_META_REFRESH true
-#define DEFAULT_TIMEOUT_MS 5000
-#define MAX_REDIRECTS 10
+class NetworkDownloadCore;
+class QNetworkAccessManager;
 
 /*!
     \brief Loads a web page at a given URL and signals with the XHTML document when done.
@@ -28,8 +25,8 @@ public:
         \param parent
         \param networkManager    Optional network manager for dependency injection (for testing)
      */
-    explicit WebPageGrabber(bool handleMetaRefresh = DEFAULT_HANDLE_META_REFRESH,
-                            int timeoutMS = DEFAULT_TIMEOUT_MS,
+    explicit WebPageGrabber(bool handleMetaRefresh = defaultHandleMetaRefresh,
+                            int timeoutMS = defaultTimeoutMs,
                             QObject *parent = nullptr,
                             QNetworkAccessManager* networkManager = nullptr);
 
@@ -79,6 +76,10 @@ private slots:
     void emitReadySignal(QString* document);
     
 private:
+    static constexpr bool defaultHandleMetaRefresh = true;
+    static constexpr int defaultTimeoutMs = 5000;
+    static constexpr int maxRedirects = 10;
+
     void init();
 
     NetworkDownloadCore* core;

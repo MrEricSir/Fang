@@ -11,7 +11,7 @@
 #include "../models/SearchFeedItem.h"
 #include "../utilities/ErrorHandling.h"
 #include "../utilities/FangLogging.h"
-#include "../utilities/ImageCache.h"
+#include "QImageCache.h"
 #include "NetworkUtilities.h"
 
 WebServer::WebServer(FangApp* appInstance, FangObject *parent) :
@@ -38,7 +38,7 @@ WebServer::WebServer(FangApp* appInstance, FangObject *parent) :
     });
 
     server.route("/images/<arg>", this, [] (QString filename) {
-        return QHttpServerResponse::fromFile(ImageCache::cacheDir() + "/" + filename);
+        return QHttpServerResponse::fromFile(QImageCache::cacheDir() + "/" + filename);
     });
 
     server.route("/api/open_link", QHttpServerRequest::Method::Post, this, [] (const QHttpServerRequest &request) {

@@ -106,6 +106,9 @@ set(QML_IMPORT_PATH "${CMAKE_BINARY_DIR}/external/QMLRearrangeableTreeView" CACH
 add_subdirectory(lib/FangFeedParser)
 add_subdirectory(lib/FangFeedDiscovery)
 
+# Image cache library
+add_subdirectory(external/QImageCache)
+
 # Main application target
 qt_add_executable(Fang WIN32
     # Sources
@@ -146,7 +149,6 @@ qt_add_executable(Fang WIN32
     src/models/FangSettings.cpp
     src/utilities/RawFeedRewriter.cpp
     src/utilities/HTMLSanitizer.cpp
-    src/utilities/ImageCache.cpp
     src/operations/LoadAllNewsOperation.cpp
     src/utilities/UnreadCountReader.cpp
     src/operations/UpdateOrdinalsOperation.cpp
@@ -212,7 +214,6 @@ qt_add_executable(Fang WIN32
     src/models/FangSettings.h
     src/utilities/RawFeedRewriter.h
     src/utilities/HTMLSanitizer.h
-    src/utilities/ImageCache.h
     src/operations/LoadAllNewsOperation.h
     src/utilities/UnreadCountReader.h
     src/operations/UpdateOrdinalsOperation.h
@@ -275,6 +276,7 @@ set_property(TARGET Fang PROPERTY COMPILE_WARNING_AS_ERROR ON)
 # Link libraries
 target_link_libraries(Fang PRIVATE
     FangFeedDiscovery
+    QImageCache
     QSingleInstanceCheck
     Qt6::Concurrent
     Qt6::Core

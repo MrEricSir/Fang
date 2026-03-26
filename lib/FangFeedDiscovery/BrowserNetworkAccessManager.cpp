@@ -1,9 +1,9 @@
-#include "FangNetworkAccessManager.h"
+#include "BrowserNetworkAccessManager.h"
 
 #include <QNetworkDiskCache>
 #include <QStandardPaths>
 
-FangNetworkAccessManager::FangNetworkAccessManager(QObject *parent) :
+BrowserNetworkAccessManager::BrowserNetworkAccessManager(QObject *parent) :
     QNetworkAccessManager(parent)
 {
     QNetworkDiskCache* diskCache = new QNetworkDiskCache(this);
@@ -14,7 +14,7 @@ FangNetworkAccessManager::FangNetworkAccessManager(QObject *parent) :
     }
 }
 
-QNetworkReply* FangNetworkAccessManager::createRequest(QNetworkAccessManager::Operation op, const QNetworkRequest& request, QIODevice* outgoingData)
+QNetworkReply* BrowserNetworkAccessManager::createRequest(QNetworkAccessManager::Operation op, const QNetworkRequest& request, QIODevice* outgoingData)
 {
     QNetworkRequest& req = const_cast<QNetworkRequest&>(request);
 

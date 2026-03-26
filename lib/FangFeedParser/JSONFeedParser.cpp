@@ -8,7 +8,7 @@
 #include "RawFeed.h"
 #include "RawNews.h"
 
-RawFeed* JSONFeedParser::parse(const QByteArray& data)
+std::unique_ptr<RawFeed> JSONFeedParser::parse(const QByteArray& data)
 {
     QJsonParseError parseError;
     QJsonDocument doc = QJsonDocument::fromJson(data, &parseError);
@@ -24,7 +24,7 @@ RawFeed* JSONFeedParser::parse(const QByteArray& data)
         return nullptr;
     }
 
-    RawFeed* feed = new RawFeed();
+    auto feed = std::make_unique<RawFeed>();
     feed->feedType = RawFeed::JSONFeed;
 
     feed->title = root.value("title").toString("");

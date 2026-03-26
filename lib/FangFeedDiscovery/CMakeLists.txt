@@ -16,12 +16,14 @@ add_library(FangFeedDiscovery STATIC
     PageMetadataExtractor.h
     NewsSitemapSynthesizer.cpp
     NewsSitemapSynthesizer.h
+    SitemapParser.cpp
+    SitemapParser.h
     NetworkDownloadCore.cpp
     NetworkDownloadCore.h
     NetworkRetryPolicy.cpp
     NetworkRetryPolicy.h
-    FangNetworkAccessManager.cpp
-    FangNetworkAccessManager.h
+    BrowserNetworkAccessManager.cpp
+    BrowserNetworkAccessManager.h
     NetworkUtilities.cpp
     NetworkUtilities.h
 )

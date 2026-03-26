@@ -10,3 +10,6 @@
 [submodule "external/QAutoStart"]
 	path = external/QAutoStart
 	url = https://github.com/MrEricSir/QAutoStart.git
+[submodule "external/QImageCache"]
+	path = external/QImageCache
+	url = https://github.com/MrEricSir/QImageCache.git

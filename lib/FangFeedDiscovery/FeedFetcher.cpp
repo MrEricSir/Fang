@@ -1,4 +1,5 @@
 #include "FeedFetcher.h"
+#include "BrowserNetworkAccessManager.h"
 
 #include <QFile>
 #include <QFileInfo>
@@ -6,6 +7,8 @@
 #include "FeedDiscoveryLogging.h"
 
 #include "FeedParser.h"
+
+static constexpr int maxParserRedirects = 10;
 
 // Thin QObject wrapper so FeedParser::parse() runs on the worker thread.
 class ParseWorker : public QObject
@@ -27,7 +30,7 @@ static const int feedParseResultMetaType = qRegisterMetaType<FeedParseResult>();
 FeedFetcher::FeedFetcher(QObject *parent) :
     FeedSource(parent),
     result(FeedFetchResult::OK), networkError(QNetworkReply::NetworkError::NoError),
-    activeManager(&manager),
+    activeManager(new BrowserNetworkAccessManager(this)),
     currentReply(nullptr), redirectReply(nullptr),
     fromCache(false), noParseIfCached(false),
     redirectAttempts(0),
@@ -50,7 +53,7 @@ FeedFetcher::FeedFetcher(QObject *parent) :
 FeedFetcher::FeedFetcher(QNetworkAccessManager* networkManager, QObject *parent) :
     FeedSource(parent),
     result(FeedFetchResult::OK), networkError(QNetworkReply::NetworkError::NoError),
-    activeManager(networkManager ? networkManager : &manager),
+    activeManager(networkManager ? networkManager : new BrowserNetworkAccessManager(this)),
     currentReply(nullptr), redirectReply(nullptr),
     fromCache(false), noParseIfCached(false),
     redirectAttempts(0),
@@ -189,7 +192,7 @@ void FeedFetcher::metaDataChanged()
 
     if (redirectionTarget.isValid()) {
         // Guard against unlimited redirects.
-        if (redirectAttempts >= MAX_PARSER_REDIRECTS) {
+        if (redirectAttempts >= maxParserRedirects) {
             qCDebug(logFeedDiscovery) << "FeedFetcher: Maximum redirects reached, aborting";
             currentReply->disconnect(this);
             currentReply->deleteLater();

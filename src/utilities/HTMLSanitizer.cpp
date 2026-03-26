@@ -5,7 +5,7 @@
 #include <QXmlStreamWriter>
 #include <QStack>
 
-#include "ImageCache.h"
+#include "QImageCache.h"
 #include "NetworkUtilities.h"
 
 // Strings.
@@ -338,7 +338,7 @@ QString HTMLSanitizer::finalize(const QString &html, const QMap<QUrl, ImageData>
                         height = imageData.image.height();
 
                         if (width > 2 && height > 2) {
-                            QString cachedPath = ImageCache::saveImage(url, imageData);
+                            QString cachedPath = "/images/" + QImageCache::saveImage(url, imageData);
                             if (!cachedPath.isEmpty()) {
                                 srcToUse = cachedPath;
                             }

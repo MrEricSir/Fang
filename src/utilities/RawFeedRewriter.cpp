@@ -3,7 +3,7 @@
 #include <QDebug>
 #include <QtConcurrent>
 
-#include "ImageCache.h"
+#include "QImageCache.h"
 
 RawFeedRewriter::RawFeedRewriter(QObject *parent, QNetworkAccessManager* networkManager) :
     FangObject(parent),
@@ -94,7 +94,7 @@ void RawFeedRewriter::finalizeAll()
         if (!news->mediaImageURL.isEmpty()) {
             QUrl mediaUrl(news->mediaImageURL);
             if (imageResults.contains(mediaUrl)) {
-                QString cachedPath = ImageCache::saveImage(mediaUrl, imageResults.value(mediaUrl));
+                QString cachedPath = "/images/" + QImageCache::saveImage(mediaUrl, imageResults.value(mediaUrl));
                 news->mediaImageURL = cachedPath;
             } else {
                 news->mediaImageURL = "";

@@ -14,8 +14,6 @@ add_library(FangFeedParser STATIC
     JSONFeedParser.h
     FeedParser.cpp
     FeedParser.h
-    SitemapParser.cpp
-    SitemapParser.h
 )
 
 target_include_directories(FangFeedParser PUBLIC

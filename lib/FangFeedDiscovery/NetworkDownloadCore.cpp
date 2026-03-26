@@ -1,5 +1,5 @@
 #include "NetworkDownloadCore.h"
-#include "FangNetworkAccessManager.h"
+#include "BrowserNetworkAccessManager.h"
 
 #include "FeedDiscoveryLogging.h"
 
@@ -7,7 +7,7 @@ NetworkDownloadCore::NetworkDownloadCore(NetworkDownloadConfig config,
                                           QObject* parent,
                                           QNetworkAccessManager* networkManager)
     : QObject(parent)
-    , manager(networkManager ? networkManager : new FangNetworkAccessManager(this))
+    , manager(networkManager ? networkManager : new BrowserNetworkAccessManager(this))
     , ownsManager(networkManager == nullptr)
     , config(config)
     , currentReply(nullptr)
