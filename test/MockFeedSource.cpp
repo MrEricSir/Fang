@@ -5,8 +5,7 @@ MockFeedSource::MockFeedSource(QObject *parent)
     : FeedSource(parent),
       result(FeedFetchResult::InProgress),
       feed(nullptr),
-      url(),
-      romCache(false)
+      url()
 {
 }
 
@@ -29,23 +28,16 @@ void MockFeedSource::setURL(const QUrl& url)
     this->url = url;
 }
 
-void MockFeedSource::setFromCache(bool cached)
-{
-    romCache = cached;
-}
-
 void MockFeedSource::reset()
 {
     result = FeedFetchResult::OK;
     feed.reset();
     url = QUrl();
-    romCache = false;
 }
 
-void MockFeedSource::parse(const QUrl& url, bool noParseIfCached,
+void MockFeedSource::parse(const QUrl& url,
                            const QString& ifNoneMatch, const QString& ifModifiedSince)
 {
-    Q_UNUSED(noParseIfCached);
     Q_UNUSED(ifNoneMatch);
     Q_UNUSED(ifModifiedSince);
 
@@ -71,9 +63,4 @@ std::shared_ptr<RawFeed> MockFeedSource::getFeed()
 QUrl MockFeedSource::getURL()
 {
     return url;
-}
-
-bool MockFeedSource::isFromCache()
-{
-    return romCache;
 }

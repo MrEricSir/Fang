@@ -30,9 +30,6 @@ public:
     QList<std::shared_ptr<RawNews>> items;
 
     bool isPodcast = false;
-
-    // For debuggin' and stuff.
-    QString toString();
 };
 
 #endif // RAWFEED_H

@@ -426,8 +426,7 @@ void FangApp::refreshFeed(FeedItem *feed)
     }
 
     QList<FeedItem*> feedsToUpdate;
-    bool useCache = true; // Use cache by default.
-    
+
     // Special handling for all news.
     if (feed->isSpecialFeed()) {
         // Update ALL the feeds.
@@ -464,12 +463,11 @@ void FangApp::refreshFeed(FeedItem *feed)
 
     } else {
         feedsToUpdate.append(feed);
-        useCache = false; // Don't check cache if we're just checking a single feed.
     }
     
     // Update 'em all!
     for (FeedItem* item : feedsToUpdate) {
-        manager.enqueue(new UpdateFeedOperation(&manager, item, nullptr, useCache));
+        manager.enqueue(new UpdateFeedOperation(&manager, item));
         manager.enqueue(new FaviconUpdateOperation(&manager, item));
     }
 }

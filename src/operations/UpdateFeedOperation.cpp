@@ -10,14 +10,13 @@
 #include "../utilities/FangLogging.h"
 #include "../FangApp.h"
 
-UpdateFeedOperation::UpdateFeedOperation(OperationManager *parent, FeedItem *feed, RawFeed* rawFeed, bool useCache) :
+UpdateFeedOperation::UpdateFeedOperation(OperationManager *parent, FeedItem *feed, RawFeed* rawFeed) :
     AsyncOperation(BACKGROUND, parent),
     parser(),
     feed(feed),
     rawFeed(rawFeed),
     rewriter(),
     timestamp(),
-    useCache(useCache),
     newsSitemapSynthesizer(nullptr)
 {
     connect(&parser, &FeedFetcher::done, this, &UpdateFeedOperation::onFeedFinished);
@@ -68,7 +67,7 @@ void UpdateFeedOperation::execute()
                                        feed->getLastUpdated());
     } else if (rawFeed == nullptr) {
         // Send network request with conditional headers if available.
-        parser.parse(feed->getURL(), useCache, feed->getEtag(), feed->getLastModified());
+        parser.parse(feed->getURL(), feed->getEtag(), feed->getLastModified());
     } else {
         onFeedFinished();
     }
@@ -421,5 +420,5 @@ void UpdateFeedOperation::onDiscoveryDone(FeedDiscovery* feedDiscovery)
 
     // Send network request with the updated URL and conditional headers.
     qCDebug(logOperation) << "Finished updating feed URL, updating feed " << feed->getURL();
-    parser.parse(feed->getURL(), useCache, feed->getEtag(), feed->getLastModified());
+    parser.parse(feed->getURL(), feed->getEtag(), feed->getLastModified());
 }

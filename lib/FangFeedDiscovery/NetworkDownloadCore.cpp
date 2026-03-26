@@ -3,6 +3,16 @@
 
 #include "FeedDiscoveryLogging.h"
 
+QByteArray NetworkDownloadResult::responseHeader(const QByteArray& name) const
+{
+    for (const auto& pair : headers) {
+        if (pair.first.toLower() == name.toLower()) {
+            return pair.second;
+        }
+    }
+    return QByteArray();
+}
+
 NetworkDownloadCore::NetworkDownloadCore(NetworkDownloadConfig config,
                                           QObject* parent,
                                           QNetworkAccessManager* networkManager)
@@ -14,6 +24,7 @@ NetworkDownloadCore::NetworkDownloadCore(NetworkDownloadConfig config,
     , redirectCount(0)
     , currentAttemptCount(0)
     , lastError(QNetworkReply::NoError)
+    , permanentRedirect(false)
 {
     inactivityTimer.setSingleShot(true);
     retryTimer.setSingleShot(true);
@@ -48,6 +59,7 @@ void NetworkDownloadCore::download(const QUrl& url)
     originalUrl = url;
     lastError = QNetworkReply::NoError;
     lastErrorString.clear();
+    permanentRedirect = false;
 
     // Stop any pending retries.
     retryTimer.stop();
@@ -82,6 +94,11 @@ void NetworkDownloadCore::downloadInternal(const QUrl& url)
     // Configure timeout based on mode.
     if (!config.useInactivityTimeout) {
         request.setTransferTimeout(config.timeoutMs);
+    }
+
+    // Apply custom request headers.
+    for (const auto& header : requestHeaders) {
+        request.setRawHeader(header.first, header.second);
     }
 
     currentReply = manager->get(request);
@@ -136,6 +153,11 @@ void NetworkDownloadCore::onRequestFinished(QNetworkReply* reply)
         }
 
         // No more retries - emit error.
+        NetworkDownloadResult result;
+        result.url = originalUrl;
+        result.networkError = lastError;
+        result.errorString = lastErrorString;
+        emit finishedWithResult(result);
         emit error(originalUrl, lastErrorString);
         return;
     }
@@ -148,6 +170,11 @@ void NetworkDownloadCore::onRequestFinished(QNetworkReply* reply)
             reply->deleteLater();
             emit error(originalUrl, "Maximum HTTP redirects exceeded");
             return;
+        }
+
+        int statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+        if (statusCode == 301 || statusCode == 308) {
+            permanentRedirect = true;
         }
 
         redirectCount++;
@@ -163,10 +190,26 @@ void NetworkDownloadCore::onRequestFinished(QNetworkReply* reply)
     }
 
     // Success!
+    int statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
     QUrl finalUrl = reply->url();
     QByteArray data = reply->readAll();
+
+    // Build result with response metadata.
+    NetworkDownloadResult downloadResult;
+    downloadResult.url = finalUrl;
+    downloadResult.data = data;
+    downloadResult.statusCode = statusCode;
+    downloadResult.permanentRedirect = permanentRedirect;
+    downloadResult.networkError = QNetworkReply::NoError;
+
+    // Capture response headers.
+    for (const auto& headerPair : reply->rawHeaderPairs()) {
+        downloadResult.headers.append({headerPair.first, headerPair.second});
+    }
+
     currentReply = nullptr;  // Clean up before emitting signal.
     reply->deleteLater();
+    emit finishedWithResult(downloadResult);
     emit finished(finalUrl, data);
 }
 
@@ -202,8 +245,23 @@ void NetworkDownloadCore::onTimeout()
         }
 
         // No more retries - emit error.
+        NetworkDownloadResult result;
+        result.url = originalUrl;
+        result.networkError = lastError;
+        result.errorString = lastErrorString;
+        emit finishedWithResult(result);
         emit error(originalUrl, lastErrorString);
     }
+}
+
+void NetworkDownloadCore::setRequestHeader(const QByteArray& name, const QByteArray& value)
+{
+    requestHeaders.append({name, value});
+}
+
+void NetworkDownloadCore::clearRequestHeaders()
+{
+    requestHeaders.clear();
 }
 
 void NetworkDownloadCore::scheduleRetry()

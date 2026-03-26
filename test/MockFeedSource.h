@@ -27,25 +27,22 @@ public:
     void setResult(FeedFetchResult result);
     void setFeed(std::shared_ptr<RawFeed> feed);
     void setURL(const QUrl& url);
-    void setFromCache(bool cached);
 
     // Reset state
     void reset();
 
     // FeedSource implementation
-    virtual void parse(const QUrl& url, bool noParseIfCached = false,
+    virtual void parse(const QUrl& url,
                        const QString& ifNoneMatch = QString(),
                        const QString& ifModifiedSince = QString()) override;
     virtual FeedFetchResult getResult() override;
     virtual std::shared_ptr<RawFeed> getFeed() override;
     virtual QUrl getURL() override;
-    virtual bool isFromCache() override;
 
 private:
     FeedFetchResult result;
     std::shared_ptr<RawFeed> feed;
     QUrl url;
-    bool romCache;
 };
 
 #endif // MOCKFEEDSOURCE_H

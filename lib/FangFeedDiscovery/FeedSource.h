@@ -29,19 +29,14 @@ public slots:
     /*!
         \brief Contacts URL and parses the RSS/Atom feed, if it exists.
         \param url               The URL
-        \param noParseIfCached   If true, this won't bother with the
-                                 parse if the content was cached.
      */
-    virtual void parse(const QUrl& url, bool noParseIfCached = false,
+    virtual void parse(const QUrl& url,
                        const QString& ifNoneMatch = QString(),
                        const QString& ifModifiedSince = QString()) =0;
 
     virtual FeedFetchResult getResult() =0;
     virtual std::shared_ptr<RawFeed> getFeed() =0;
     virtual QUrl getURL() =0;
-
-    // Whether or not the response was cached.
-    virtual bool isFromCache() =0;
 
     // Conditional request response headers.
     virtual QString responseEtag() { return QString(); }

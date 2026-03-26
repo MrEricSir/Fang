@@ -11,6 +11,25 @@
 #include "NetworkRetryPolicy.h"
 
 /*!
+    Result of a completed download, including response metadata.
+ */
+struct NetworkDownloadResult {
+    QUrl url;
+    QByteArray data;
+    int statusCode = 0;
+    bool permanentRedirect = false;
+    QNetworkReply::NetworkError networkError = QNetworkReply::NoError;
+    QString errorString;
+
+    bool ok() const { return networkError == QNetworkReply::NoError; }
+    QByteArray responseHeader(const QByteArray& name) const;
+
+private:
+    QList<QPair<QByteArray, QByteArray>> headers;
+    friend class NetworkDownloadCore;
+};
+
+/*!
     Config options.
  */
 struct NetworkDownloadConfig {
@@ -38,6 +57,11 @@ public:
                                   QNetworkAccessManager* networkManager = nullptr);
     ~NetworkDownloadCore();
 
+    void setRequestHeader(const QByteArray& name, const QByteArray& value);
+    void clearRequestHeaders();
+
+    QNetworkReply::NetworkError lastNetworkError() const { return lastError; }
+
 signals:
     /*!
         \brief Signals completion of a download.
@@ -45,6 +69,11 @@ signals:
         \param data The downloaded content
      */
     void finished(const QUrl& url, const QByteArray& data);
+
+    /*!
+        \brief Signals completion with full result metadata.
+     */
+    void finishedWithResult(NetworkDownloadResult result);
 
     /*!
         \brief Signals an error.
@@ -98,6 +127,8 @@ private:
     QUrl originalUrl;  // The URL originally requested (for error reporting)
     QNetworkReply::NetworkError lastError;
     QString lastErrorString;
+    bool permanentRedirect;
+    QList<QPair<QByteArray, QByteArray>> requestHeaders;
 };
 
 #endif // NETWORKDOWNLOADCORE_H

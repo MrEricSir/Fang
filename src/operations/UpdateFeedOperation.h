@@ -29,9 +29,8 @@ public:
         \param parent   Set this to the manager
         \param feed     Feed to update
         \param rawFeed  Optional: include this if you've already downloaded the feed and parsed it.
-        \param useCache If we're fetching the feed, should we use the cache? (Ignored if RawFeed isn't null.)
      */
-    explicit UpdateFeedOperation(OperationManager *parent, FeedItem* feed, RawFeed* rawFeed = nullptr, bool useCache = true);
+    explicit UpdateFeedOperation(OperationManager *parent, FeedItem* feed, RawFeed* rawFeed = nullptr);
     virtual ~UpdateFeedOperation();
     
     
@@ -71,7 +70,6 @@ private:
     RawFeedRewriter rewriter;
     QList<std::shared_ptr<RawNews>> newsList;
     QDateTime timestamp;
-    bool useCache;
     FeedDiscovery discovery;
     NewsSitemapSynthesizer* newsSitemapSynthesizer;
 };

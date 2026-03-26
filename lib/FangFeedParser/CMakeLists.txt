@@ -4,12 +4,13 @@ add_library(FangFeedParser STATIC
     FeedParseError.h
     FeedParseResult.cpp
     FeedParseResult.h
-    RawFeed.cpp
     RawFeed.h
     RawNews.cpp
     RawNews.h
     RSSAtomParser.cpp
     RSSAtomParser.h
+    FeedDateParser.cpp
+    FeedDateParser.h
     JSONFeedParser.cpp
     JSONFeedParser.h
     FeedParser.cpp

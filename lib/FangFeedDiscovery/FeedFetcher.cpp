@@ -8,8 +8,6 @@
 
 #include "FeedParser.h"
 
-static constexpr int maxParserRedirects = 10;
-
 // Thin QObject wrapper so FeedParser::parse() runs on the worker thread.
 class ParseWorker : public QObject
 {
@@ -27,40 +25,26 @@ signals:
 
 static const int feedParseResultMetaType = qRegisterMetaType<FeedParseResult>();
 
-FeedFetcher::FeedFetcher(QObject *parent) :
-    FeedSource(parent),
-    result(FeedFetchResult::OK), networkError(QNetworkReply::NetworkError::NoError),
-    activeManager(new BrowserNetworkAccessManager(this)),
-    currentReply(nullptr), redirectReply(nullptr),
-    fromCache(false), noParseIfCached(false),
-    redirectAttempts(0),
-    permanentRedirect(false)
-{
-    Q_UNUSED(feedParseResultMetaType);
-    connect(activeManager, &QNetworkAccessManager::finished,
-            this, &FeedFetcher::netFinished);
-
-    // Setup the worker object on the worker thread.
-    ParseWorker* worker = new ParseWorker();
-    worker->moveToThread(&workerThread);
-    connect(&workerThread, &QThread::finished, worker, &QObject::deleteLater);
-    connect(this, &FeedFetcher::triggerParse, worker, &ParseWorker::parse);
-    connect(worker, &ParseWorker::done, this, &FeedFetcher::workerDone);
-
-    workerThread.start();
-}
+FeedFetcher::FeedFetcher(QObject *parent)
+    : FeedFetcher(nullptr, parent)
+{}
 
 FeedFetcher::FeedFetcher(QNetworkAccessManager* networkManager, QObject *parent) :
     FeedSource(parent),
     result(FeedFetchResult::OK), networkError(QNetworkReply::NetworkError::NoError),
-    activeManager(networkManager ? networkManager : new BrowserNetworkAccessManager(this)),
-    currentReply(nullptr), redirectReply(nullptr),
-    fromCache(false), noParseIfCached(false),
-    redirectAttempts(0),
+    downloader(nullptr),
     permanentRedirect(false)
 {
-    connect(activeManager, &QNetworkAccessManager::finished,
-            this, &FeedFetcher::netFinished);
+    Q_UNUSED(feedParseResultMetaType);
+
+    NetworkDownloadConfig config;
+    config.timeoutMs = 30000;
+    config.maxRedirects = 10;
+    config.useInactivityTimeout = false;
+
+    downloader = new NetworkDownloadCore(config, this, networkManager);
+    connect(downloader, &NetworkDownloadCore::finishedWithResult,
+            this, &FeedFetcher::onDownloadResult);
 
     ParseWorker* worker = new ParseWorker();
     worker->moveToThread(&workerThread);
@@ -75,54 +59,24 @@ FeedFetcher::~FeedFetcher()
 {
     workerThread.quit();
     workerThread.wait();
-    
-    delete currentReply;
 }
 
-void FeedFetcher::parse(const QUrl& url, bool noParseIfCached,
+void FeedFetcher::parse(const QUrl& url,
                        const QString& ifNoneMatch, const QString& ifModifiedSince)
 {
-    // Reset redirect counter.
-    redirectAttempts = 0;
+    initParse(url);
     permanentRedirect = false;
 
-    parseInternal(url, noParseIfCached, ifNoneMatch, ifModifiedSince);
-}
-
-void FeedFetcher::parseInternal(const QUrl& url, bool noParseIfCached,
-                               const QString& ifNoneMatch, const QString& ifModifiedSince)
-{
-    initParse(url);
-
-    this->noParseIfCached = noParseIfCached;
-    this->condIfNoneMatch = ifNoneMatch;
-    this->condIfModifiedSince = ifModifiedSince;
-
-    // in with the new
-    QNetworkRequest request(url);
-
-    // Sets a 30 second timeout in case the connection is lost or screwy.
-    request.setTransferTimeout(30000);
-
-    // Conditional request headers for ETag/Last-Modified support.
+    downloader->clearRequestHeaders();
     if (!ifNoneMatch.isEmpty()) {
-        request.setRawHeader("If-None-Match", ifNoneMatch.toUtf8());
+        downloader->setRequestHeader("If-None-Match", ifNoneMatch.toUtf8());
     }
     if (!ifModifiedSince.isEmpty()) {
-        request.setRawHeader("If-Modified-Since", ifModifiedSince.toUtf8());
+        downloader->setRequestHeader("If-Modified-Since", ifModifiedSince.toUtf8());
     }
 
-    if (currentReply) {
-        currentReply->disconnect(this);
-        currentReply->deleteLater();
-    }
-
-    currentReply = activeManager->get(request);
-    connect(currentReply, &QNetworkReply::readyRead, this, &FeedFetcher::readyRead);
-    connect(currentReply, &QNetworkReply::metaDataChanged, this, &FeedFetcher::metaDataChanged);
-    connect(currentReply, &QNetworkReply::errorOccurred, this, &FeedFetcher::error);
+    downloader->download(url);
 }
-
 
 void FeedFetcher::parseFile(const QString &filename)
 {
@@ -144,95 +98,29 @@ void FeedFetcher::parseFile(const QString &filename)
     emit triggerParse(data);
 }
 
-void FeedFetcher::error(QNetworkReply::NetworkError ne)
+void FeedFetcher::onDownloadResult(NetworkDownloadResult downloadResult)
 {
-    Q_UNUSED(ne);
-    currentReply->disconnect(this);
-    currentReply->deleteLater();
-    currentReply = 0;
-    
-    result = FeedFetchResult::NetworkError;
-    networkError = ne;
-    emit done();
-}
-
-
-void FeedFetcher::readyRead()
-{
-    int statusCode = currentReply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+    if (!downloadResult.ok()) {
+        networkError = downloadResult.networkError;
+        result = FeedFetchResult::NetworkError;
+        emit done();
+        return;
+    }
 
     // 304 Not Modified: Content hasn't changed, nothing to do.
-    if (statusCode == 304) {
-        currentReply->disconnect(this);
-        currentReply->deleteLater();
-        currentReply = nullptr;
-
+    if (downloadResult.statusCode == 304) {
         result = FeedFetchResult::NotModified;
         emit done();
         return;
     }
 
-    if (statusCode >= 200 && statusCode < 300) {
-        rawData.append(currentReply->readAll());
-    }
-}
+    // Success path.
+    finalFeedURL = downloadResult.url;
+    permanentRedirect = downloadResult.permanentRedirect;
+    respEtag = QString::fromUtf8(downloadResult.responseHeader("ETag"));
+    respLastModified = QString::fromUtf8(downloadResult.responseHeader("Last-Modified"));
 
-void FeedFetcher::metaDataChanged()
-{
-    // Capture ETag and Last-Modified response headers.
-    if (currentReply->hasRawHeader("ETag")) {
-        respEtag = QString::fromUtf8(currentReply->rawHeader("ETag"));
-    }
-    if (currentReply->hasRawHeader("Last-Modified")) {
-        respLastModified = QString::fromUtf8(currentReply->rawHeader("Last-Modified"));
-    }
-
-    QUrl redirectionTarget = currentReply->attribute(
-                QNetworkRequest::RedirectionTargetAttribute).toUrl();
-
-    if (redirectionTarget.isValid()) {
-        // Guard against unlimited redirects.
-        if (redirectAttempts >= maxParserRedirects) {
-            qCDebug(logFeedDiscovery) << "FeedFetcher: Maximum redirects reached, aborting";
-            currentReply->disconnect(this);
-            currentReply->deleteLater();
-            currentReply = nullptr;
-
-            result = FeedFetchResult::NetworkError;
-            networkError = QNetworkReply::TooManyRedirectsError;
-            emit done();
-            return;
-        }
-
-        int statusCode = currentReply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
-        if (statusCode == 301 || statusCode == 308) {
-            permanentRedirect = true;
-        }
-
-        qCDebug(logFeedDiscovery) << "Redirect:" << redirectionTarget.toString();
-        redirectAttempts++;
-        redirectReply = currentReply;
-        // Don't send conditional headers on redirect -- the new URL may be different.
-        parseInternal(redirectionTarget, noParseIfCached);
-    }
-
-    if (currentReply->attribute(
-                QNetworkRequest::SourceIsFromCacheAttribute).isValid()) {
-        if (currentReply->attribute(
-                    QNetworkRequest::SourceIsFromCacheAttribute).toBool()) {
-            if (noParseIfCached) {
-                // Early exit for cache.
-                currentReply->disconnect(this);
-                currentReply->deleteLater();
-                currentReply = 0;
-                
-                result = FeedFetchResult::OK;
-                emit done();
-                
-                return;
-            }
-        }
-    }
+    emit triggerParse(downloadResult.data);
 }
 
 FeedFetchResult FeedFetcher::getResult()
@@ -243,19 +131,6 @@ FeedFetchResult FeedFetcher::getResult()
 std::shared_ptr<RawFeed> FeedFetcher::getFeed()
 {
     return result == FeedFetchResult::OK ? feed : nullptr;
-}
-
-void FeedFetcher::netFinished(QNetworkReply *reply)
-{
-    if (redirectReply == reply) {
-        return; // This was the previous redirect.
-    }
-    
-    // Remember this URL.
-    finalFeedURL = reply->url();
-    
-    // Send buffered data to the worker thread for parsing.
-    emit triggerParse(rawData);
 }
 
 void FeedFetcher::workerDone(FeedParseResult parseResult)
@@ -283,7 +158,6 @@ void FeedFetcher::initParse(const QUrl& url)
     finalFeedURL = url;
     respEtag = QString();
     respLastModified = QString();
-    rawData.clear();
 }
 
 #include "FeedFetcher.moc"
