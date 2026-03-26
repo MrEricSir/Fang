@@ -381,8 +381,9 @@ void RSSAtomParser::saveSummary()
 QString RSSAtomParser::getTagStackAt(qint32 n)
 {
     // n is from 0..size - 1
-    if (tagStack.isEmpty() || (tagStack.size() - 1) < n)
+    if (tagStack.isEmpty() || (tagStack.size() - 1) < n) {
         return "";
+    }
     
     return tagStack.at(tagStack.size() - 1 - n);
 }

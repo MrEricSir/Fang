@@ -1,8 +1,6 @@
 #include "FeedFetcher.h"
-#include "BrowserNetworkAccessManager.h"
 
 #include <QFile>
-#include <QFileInfo>
 
 #include "FeedDiscoveryLogging.h"
 

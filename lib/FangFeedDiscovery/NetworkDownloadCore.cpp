@@ -18,7 +18,6 @@ NetworkDownloadCore::NetworkDownloadCore(NetworkDownloadConfig config,
                                           QNetworkAccessManager* networkManager)
     : QObject(parent)
     , manager(networkManager ? networkManager : new BrowserNetworkAccessManager(this))
-    , ownsManager(networkManager == nullptr)
     , config(config)
     , currentReply(nullptr)
     , redirectCount(0)
@@ -84,7 +83,12 @@ void NetworkDownloadCore::downloadInternal(const QUrl& url)
 
     // Validate URL.
     if (url.isRelative()) {
-        emit error(originalUrl, "Relative URLs are not allowed");
+        NetworkDownloadResult result;
+        result.url = originalUrl;
+        result.networkError = QNetworkReply::ProtocolInvalidOperationError;
+        result.errorString = "Relative URLs are not allowed";
+        emit finishedWithResult(result);
+        emit error(originalUrl, result.errorString);
         return;
     }
 
@@ -168,7 +172,13 @@ void NetworkDownloadCore::onRequestFinished(QNetworkReply* reply)
         if (redirectCount >= config.maxRedirects) {
             currentReply = nullptr;  // Clean up before emitting signal.
             reply->deleteLater();
-            emit error(originalUrl, "Maximum HTTP redirects exceeded");
+
+            NetworkDownloadResult result;
+            result.url = originalUrl;
+            result.networkError = QNetworkReply::TooManyRedirectsError;
+            result.errorString = "Maximum HTTP redirects exceeded";
+            emit finishedWithResult(result);
+            emit error(originalUrl, result.errorString);
             return;
         }
 

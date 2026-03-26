@@ -1,7 +1,5 @@
 #include "RemoveFeedOperation.h"
 
-#include <QThread>
-
 #include "../utilities/UnreadCountReader.h"
 #include "../utilities/FangLogging.h"
 #include "../models/FolderFeedItem.h"

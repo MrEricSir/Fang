@@ -25,20 +25,20 @@ public:
     virtual ~FeedFetcher();
 
 public slots:
-    virtual void parse(const QUrl& url,
-                       const QString& ifNoneMatch = QString(),
-                       const QString& ifModifiedSince = QString()); // Override.
+    void parse(const QUrl& url,
+               const QString& ifNoneMatch = QString(),
+               const QString& ifModifiedSince = QString()) override;
 
     // For testing purposes.
     void parseFile(const QString& filename);
 
-    virtual FeedFetchResult getResult(); // Override.
-    virtual QNetworkReply::NetworkError getNetworkError() { return networkError; }
-    virtual std::shared_ptr<RawFeed> getFeed(); // Override.
-    virtual inline QUrl getURL() { return finalFeedURL; } // Override.
+    FeedFetchResult getResult() override;
+    QNetworkReply::NetworkError getNetworkError() { return networkError; }
+    std::shared_ptr<RawFeed> getFeed() override;
+    QUrl getURL() override { return finalFeedURL; }
 
-    virtual QString responseEtag() { return respEtag; }
-    virtual QString responseLastModified() { return respLastModified; }
+    QString responseEtag() override { return respEtag; }
+    QString responseLastModified() override { return respLastModified; }
     bool wasPermanentRedirect() const { return permanentRedirect; }
 
     // These are used internally.

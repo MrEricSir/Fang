@@ -48,6 +48,10 @@ private slots:
     void testMultipleSequentialDownloads();
     void testNewDownloadAbortsExisting();
 
+    // finishedWithResult tests
+    void testRelativeURLEmitsFinishedWithResult();
+    void testMaxRedirectsEmitsFinishedWithResult();
+
     // Retry tests
     void testNoRetryByDefault();
     void testRetryOnTransientError();
@@ -431,6 +435,53 @@ void TestNetworkDownloadCore::testNewDownloadAbortsExisting()
     // Should only get one finished signal (for the fast one)
     QCOMPARE(finishedSpy.count(), 1);
     QCOMPARE(finishedSpy.takeFirst().at(1).toByteArray(), QByteArray("fast data"));
+}
+
+void TestNetworkDownloadCore::testRelativeURLEmitsFinishedWithResult()
+{
+    MockNetworkAccessManager mockManager;
+    NetworkDownloadCore downloader({}, nullptr, &mockManager);
+
+    QSignalSpy resultSpy(&downloader, &NetworkDownloadCore::finishedWithResult);
+
+    downloader.download(QUrl("/relative/path"));
+
+    // finishedWithResult should be emitted synchronously
+    QCOMPARE(resultSpy.count(), 1);
+
+    NetworkDownloadResult result = resultSpy.takeFirst().at(0).value<NetworkDownloadResult>();
+    QCOMPARE(result.networkError, QNetworkReply::ProtocolInvalidOperationError);
+    QVERIFY(!result.ok());
+    QVERIFY(result.errorString.contains("Relative"));
+}
+
+void TestNetworkDownloadCore::testMaxRedirectsEmitsFinishedWithResult()
+{
+    MockNetworkAccessManager mockManager;
+    NetworkDownloadConfig config;
+    config.maxRedirects = 2;
+    NetworkDownloadCore downloader(config, nullptr, &mockManager);
+
+    // Create redirect chain longer than maxRedirects
+    QUrl url0("http://example.com/r0");
+    QUrl url1("http://example.com/r1");
+    QUrl url2("http://example.com/r2");
+    QUrl url3("http://example.com/r3");
+
+    mockManager.addRedirect(url0, url1);
+    mockManager.addRedirect(url1, url2);
+    mockManager.addRedirect(url2, url3);
+
+    QSignalSpy resultSpy(&downloader, &NetworkDownloadCore::finishedWithResult);
+    downloader.download(url0);
+
+    QVERIFY(resultSpy.wait(2000));
+    QCOMPARE(resultSpy.count(), 1);
+
+    NetworkDownloadResult result = resultSpy.takeFirst().at(0).value<NetworkDownloadResult>();
+    QCOMPARE(result.networkError, QNetworkReply::TooManyRedirectsError);
+    QVERIFY(!result.ok());
+    QVERIFY(result.errorString.contains("redirect"));
 }
 
 void TestNetworkDownloadCore::testNoRetryByDefault()

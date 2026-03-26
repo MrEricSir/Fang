@@ -5,7 +5,6 @@
 
 #include <QString>
 #include <QByteArray>
-#include <QQueue>
 #include <QXmlStreamReader>
 #include <QStack>
 

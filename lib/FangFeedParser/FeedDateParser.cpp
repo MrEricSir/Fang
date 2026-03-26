@@ -96,24 +96,21 @@ QDateTime FeedDateParser::dateFromFeedString(const QString& _timestamp)
         // OR in the format of -hh:mm or +hh:mm
         if ((sAdjustment.length() == 5 || sAdjustment.length() == 6) &&
                 (sAdjustment.startsWith("+") || sAdjustment.startsWith("-"))) {
-            int adjustment = 0; // Adjustment in minutes.
             bool containsCol = sAdjustment.contains(':');
             bool isNum = false;
             int hours = 0;
             int minutes = 0;
 
             QString sNumber = sAdjustment.right(containsCol ? 5 : 4); // Skip + or -
-            // YES!  We've got an adjustment!
             hours = sNumber.left(2).toInt(&isNum);
             if (isNum) {
                 minutes = sNumber.right(2).toInt(&isNum);
             }
 
-            // Looks like we're good!
             if (isNum) {
                 // Condense down to minutes.
                 minutes += (hours * 60);
-                adjustment = sAdjustment.startsWith("-") ? minutes : -minutes;
+                int adjustment = sAdjustment.startsWith("-") ? minutes : -minutes;
 
                 // Add in our adjustment if we need it.
                 ret = ret.addSecs(adjustment * 60 /* seconds */);

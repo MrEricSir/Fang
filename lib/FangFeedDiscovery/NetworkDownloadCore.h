@@ -40,13 +40,13 @@ struct NetworkDownloadConfig {
 };
 
 /*!
-`   \brief NetworkDownloadCore is a straightforward, reusable HTTP/HTTPS downloader.
+    \brief NetworkDownloadCore is a straightforward, reusable HTTP/HTTPS downloader.
 
     Features:
       - Redirect handling with configurable limit
       - Cancel after timeout
       - Progress signal
-      - Can be used with a mock QNEtworkAccessManager for unit tests
+      - Can be used with a mock QNetworkAccessManager for unit tests
  */
 class NetworkDownloadCore : public QObject
 {
@@ -114,10 +114,8 @@ private slots:
 
 private:
     void scheduleRetry();
-    void cleanupCurrentReply();
 
     QPointer<QNetworkAccessManager> manager;
-    bool ownsManager;
     NetworkDownloadConfig config;
     QNetworkReply* currentReply;
     QTimer inactivityTimer;
@@ -130,5 +128,7 @@ private:
     bool permanentRedirect;
     QList<QPair<QByteArray, QByteArray>> requestHeaders;
 };
+
+Q_DECLARE_METATYPE(NetworkDownloadResult)
 
 #endif // NETWORKDOWNLOADCORE_H
