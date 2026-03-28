@@ -89,6 +89,11 @@ add_subdirectory(external/QSingleInstanceCheck)
 
 # Add QSimpleStateMachine directory
 add_subdirectory(external/QSimpleStateMachine)
+# QSimpleStateMachine is header-only with Q_OBJECT. Its INTERFACE_SOURCES propagates the
+# header to every consumer target, causing each one's AUTOMOC to generate duplicate MOC.
+# Clear it here; the INTERFACE_INCLUDE_DIRECTORIES still lets consumers #include the header.
+# FangFeedDiscovery compiles the MOC exactly once via qt_wrap_cpp().
+set_property(TARGET QSimpleStateMachine PROPERTY INTERFACE_SOURCES "")
 
 # Add QAutoStart directory
 add_subdirectory(external/QAutoStart)
@@ -96,6 +101,13 @@ add_subdirectory(external/QAutoStart)
 # Add QMLRearrangeableTreeView directory
 add_subdirectory(external/QMLRearrangeableTreeView)
 set(QML_IMPORT_PATH "${CMAKE_BINARY_DIR}/external/QMLRearrangeableTreeView" CACHE STRING "" FORCE)
+
+# Feed parsing and discovery libraries
+add_subdirectory(lib/FangFeedParser)
+add_subdirectory(lib/FangFeedDiscovery)
+
+# Image cache library
+add_subdirectory(external/QImageCache)
 
 # Main application target
 qt_add_executable(Fang WIN32
@@ -115,9 +127,6 @@ qt_add_executable(Fang WIN32
     src/operations/LoadNewsOperation.cpp
     src/operations/MarkAllReadOrUnreadOperation.cpp
     src/operations/UpdateFeedURLOperation.cpp
-    src/parser/RawFeed.cpp
-    src/parser/RawNews.cpp
-    src/parser/SitemapParser.cpp
     src/FangApp.cpp
     src/operations/OperationManager.cpp
     src/operations/UpdateFeedOperation.cpp
@@ -133,34 +142,23 @@ qt_add_executable(Fang WIN32
     src/operations/SetBookmarkOperation.cpp
     src/operations/SetFolderOpenOperation.cpp
     src/operations/ReloadNewsOperation.cpp
-    src/utilities/WebPageGrabber.cpp
     src/operations/FaviconUpdateOperation.cpp
     src/models/AllNewsFeedItem.cpp
     src/utilities/ImageGrabber.cpp
     src/operations/UpdateTitleOperation.cpp
-    src/parser/ParserInterface.cpp
     src/models/FangSettings.cpp
     src/utilities/RawFeedRewriter.cpp
     src/utilities/HTMLSanitizer.cpp
-    src/utilities/ImageCache.cpp
     src/operations/LoadAllNewsOperation.cpp
     src/utilities/UnreadCountReader.cpp
     src/operations/UpdateOrdinalsOperation.cpp
-    src/utilities/NetworkUtilities.cpp
     src/parser/OPMLParser.cpp
-    src/utilities/FeedDiscovery.cpp
-    src/utilities/PageMetadataExtractor.cpp
-    src/utilities/GoogleNewsSitemapSynthesizer.cpp
     src/utilities/UpdateChecker.cpp
     src/models/OPMLInteractor.cpp
     src/utilities/OPMLExport.cpp
     src/utilities/BatchFeedDiscovery.cpp
     src/FangObject.cpp
-    src/parser/ParserXMLWorker.cpp
-    src/parser/JSONFeedParser.cpp
-    src/network/FangNetworkAccessManager.cpp
     src/network/FangQQmlNetworkAccessManagerFactory.cpp
-    src/network/NetworkRetryPolicy.cpp
     src/network/BatchDownloadCore.cpp
     src/notifications/Notification.cpp
     src/operations/SetPinOperation.cpp
@@ -175,10 +173,6 @@ qt_add_executable(Fang WIN32
     src/db/DBSettings.cpp
     src/db/DBSettingsInterface.cpp
     src/operations/GetAllDBSettingsOperation.cpp
-    src/parser/BatchNewsParser.h
-    src/parser/BatchNewsParser.cpp
-    src/parser/NewsParser.cpp
-    src/network/NetworkDownloadCore.cpp
     src/server/WebSocketServer.cpp
     src/server/WebServer.cpp
 
@@ -198,9 +192,6 @@ qt_add_executable(Fang WIN32
     src/operations/LoadNewsOperation.h
     src/operations/MarkAllReadOrUnreadOperation.h
     src/operations/UpdateFeedURLOperation.h
-    src/parser/RawFeed.h
-    src/parser/RawNews.h
-    src/parser/SitemapParser.h
     src/FangApp.h
     src/operations/OperationManager.h
     src/operations/UpdateFeedOperation.h
@@ -216,34 +207,22 @@ qt_add_executable(Fang WIN32
     src/operations/SetBookmarkOperation.h
     src/operations/SetFolderOpenOperation.h
     src/operations/ReloadNewsOperation.h
-    src/utilities/WebPageGrabber.h
     src/operations/FaviconUpdateOperation.h
     src/models/AllNewsFeedItem.h
     src/utilities/ImageGrabber.h
     src/operations/UpdateTitleOperation.h
-    src/parser/ParserInterface.h
     src/models/FangSettings.h
     src/utilities/RawFeedRewriter.h
     src/utilities/HTMLSanitizer.h
-    src/utilities/ImageCache.h
     src/operations/LoadAllNewsOperation.h
     src/utilities/UnreadCountReader.h
     src/operations/UpdateOrdinalsOperation.h
-    src/utilities/NetworkUtilities.h
     src/parser/OPMLParser.h
-    src/utilities/FeedDiscovery.h
-    src/utilities/PageMetadataExtractor.h
-    src/utilities/GoogleNewsSitemapSynthesizer.h
     src/models/OPMLInteractor.h
     src/utilities/OPMLExport.h
     src/utilities/BatchFeedDiscovery.h
     src/FangObject.h
-    src/parser/ParserXMLWorker.h
-    src/parser/JSONFeedParser.h
-    src/network/FangNetworkAccessManager.h
     src/network/FangQQmlNetworkAccessManagerFactory.h
-    src/network/NetworkRetryPolicy.h
-    src/network/NetworkDownloadCore.h
     src/network/BatchDownloadCore.h
     src/notifications/Notification.h
 
@@ -260,8 +239,6 @@ qt_add_executable(Fang WIN32
     src/db/DBSettingsInterface.h
     src/operations/GetAllDBSettingsOperation.h
     src/db/DBSettingsKey.h
-    src/parser/BatchNewsParser.h
-    src/parser/NewsParser.h
     src/server/WebSocketServer.h
     src/server/WebServer.h
 
@@ -286,14 +263,21 @@ target_compile_definitions(Fang PRIVATE
     FANG_SOURCE_QML_PATH="${CMAKE_SOURCE_DIR}/qml"
 )
 
+# QSimpleStateMachine is header-only with Q_OBJECT; its MOC is compiled once in
+# FangFeedDiscovery via qt_wrap_cpp. Suppress AUTOMOC here to prevent duplicates.
+set_source_files_properties(
+    ${CMAKE_SOURCE_DIR}/external/QSimpleStateMachine/include/QSimpleStateMachine/QSimpleStateMachine.h
+    PROPERTIES SKIP_AUTOMOC TRUE
+)
+
 # Enable warnings as errors
 set_property(TARGET Fang PROPERTY COMPILE_WARNING_AS_ERROR ON)
 
 # Link libraries
 target_link_libraries(Fang PRIVATE
-    TidyLib
+    FangFeedDiscovery
+    QImageCache
     QSingleInstanceCheck
-    QSimpleStateMachine::QSimpleStateMachine
     Qt6::Concurrent
     Qt6::Core
     Qt6::Qml

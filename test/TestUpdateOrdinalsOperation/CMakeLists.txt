@@ -47,6 +47,7 @@ target_include_directories(tst_updateordinalsoperation PRIVATE
 
 # Link Qt modules
 target_link_libraries(tst_updateordinalsoperation PRIVATE
+    FangFeedParser
     Qt6::Test
     Qt6::Gui
     Qt6::Sql

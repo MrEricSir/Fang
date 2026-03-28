@@ -12,15 +12,15 @@
 const QUrl UpdateChecker::UPDATE_FEED_URL = QUrl("https://getfang.com/feed.xml");
 const int UpdateChecker::CHECK_INTERVAL_MS = 24 * 60 * 60 * 1000; // 24 hours
 
-UpdateChecker::UpdateChecker(QObject *parent, ParserInterface* injectedParser, SettingsInterface* injectedSettings) :
+UpdateChecker::UpdateChecker(QObject *parent, FeedSource* injectedParser, SettingsInterface* injectedSettings) :
     FangObject(parent),
-    parser(injectedParser ? injectedParser : new NewsParser(this)),
+    parser(injectedParser ? injectedParser : new FeedFetcher(this)),
     settingsInterface(injectedSettings),
     timer(this),
     _latestVersion(""),
     _updateAvailable(false)
 {
-    connect(parser, &ParserInterface::done, this, &UpdateChecker::onParserDone);
+    connect(parser, &FeedSource::done, this, &UpdateChecker::onParserDone);
     connect(&timer, &QTimer::timeout, this, &UpdateChecker::checkNow);
 
     timer.setInterval(CHECK_INTERVAL_MS);
@@ -43,20 +43,20 @@ void UpdateChecker::checkNow()
 
 void UpdateChecker::onParserDone()
 {
-    if (parser->getResult() != ParserInterface::OK) {
+    if (parser->getResult() != FeedFetchResult::OK) {
         qCWarning(logUtility) << "UpdateChecker: Failed to fetch update feed:"
-                              << parser->getResult();
+                              << static_cast<int>(parser->getResult());
         return;
     }
 
-    RawFeed* feed = parser->getFeed();
+    auto feed = parser->getFeed();
     if (!feed || feed->items.isEmpty()) {
         qCWarning(logUtility) << "UpdateChecker: No items in update feed";
         return;
     }
 
     // Get the latest release (first item in feed)
-    RawNews* latestRelease = feed->items.first();
+    const auto& latestRelease = feed->items.first();
     QString version = extractVersion(latestRelease->title);
 
     if (version.isEmpty()) {

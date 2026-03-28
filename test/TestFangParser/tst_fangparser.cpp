@@ -1,12 +1,14 @@
+#include <memory>
+
 #include <QString>
 #include <QTemporaryFile>
 #include <QTest>
 #include <QSignalSpy>
 #include <QNetworkAccessManager>
 
-#include "../../src/parser/NewsParser.h"
-#include "../../src/parser/JSONFeedParser.h"
-#include "../../src/parser/RawFeed.h"
+#include "FeedFetcher.h"
+#include "RSSAtomParser.h"
+#include "RawFeed.h"
 #include "../MockNetworkAccessManager.h"
 
 /**
@@ -40,6 +42,9 @@ private slots:
     void testJSONFeedMediaImage();
     void testJSONFeedFeedType();
 
+    // Media namespace isolation
+    void testMediaNamespaceIsolation();
+
     // Permanent redirect detection
     void testPermanentRedirect301();
     void testPermanentRedirect308();
@@ -64,9 +69,9 @@ void TestFangParser::parseTest()
     QFETCH(QDateTime, firstNewsTimestamp);
     QFETCH(bool, isPodcast);
     
-    NewsParser parser(this);
+    FeedFetcher parser(this);
     
-    QSignalSpy spy(&parser, &NewsParser::done);
+    QSignalSpy spy(&parser, &FeedFetcher::done);
 
     QString projectPath = PROJECT_PATH;
     QString fullFilename = projectPath + "/feeds/" + filename;
@@ -87,15 +92,15 @@ void TestFangParser::parseTest()
     // Verify the signal is only emitted once.
     QCOMPARE(spy.count(), 1);
     
-    RawFeed* feed = parser.getFeed();
+    auto feed = parser.getFeed();
     QVERIFY2(feed != nullptr, "Feed was null");
     
     // Check all dates in the feed for validity, as this is a common issue.
-    for (RawNews* newsItem : feed->items) {
+    for (const auto& newsItem : feed->items) {
         QVERIFY2(newsItem->timestamp.isValid(), "Invalid timestamp.");
     }
-    
-    RawNews* firstNews = nullptr;
+
+    std::shared_ptr<RawNews> firstNews;
     
     // All the times are in UTC; it's easier to set that here for the test cases.
     firstNewsTimestamp.setTimeZone(QTimeZone::UTC);
@@ -754,8 +759,8 @@ void TestFangParser::testMediaImage()
     QFETCH(QString, expectedFragment);
     QFETCH(bool, shouldInject);
 
-    NewsParser parser(this);
-    QSignalSpy spy(&parser, &NewsParser::done);
+    FeedFetcher parser(this);
+    QSignalSpy spy(&parser, &FeedFetcher::done);
 
     QString projectPath = PROJECT_PATH;
     QString fullFilename = projectPath + "/feeds/" + filename;
@@ -767,11 +772,11 @@ void TestFangParser::testMediaImage()
     }
     QCOMPARE(spy.count(), 1);
 
-    RawFeed* feed = parser.getFeed();
+    auto feed = parser.getFeed();
     QVERIFY2(feed != nullptr, "Feed was null");
     QVERIFY2(!feed->items.isEmpty(), "Feed has no items");
 
-    RawNews* firstItem = feed->items.first();
+    const auto& firstItem = feed->items.first();
     if (shouldInject) {
         QVERIFY2(!firstItem->mediaImageURL.isEmpty(), "Expected mediaImageURL to be set");
         QVERIFY2(firstItem->mediaImageURL.contains(expectedFragment),
@@ -816,8 +821,8 @@ void TestFangParser::testDcCreatorAuthor()
     QFETCH(QString, filename);
     QFETCH(QString, expectedAuthor);
 
-    NewsParser parser(this);
-    QSignalSpy spy(&parser, &NewsParser::done);
+    FeedFetcher parser(this);
+    QSignalSpy spy(&parser, &FeedFetcher::done);
 
     QString projectPath = PROJECT_PATH;
     QString fullFilename = projectPath + "/feeds/" + filename;
@@ -829,7 +834,7 @@ void TestFangParser::testDcCreatorAuthor()
     }
     QCOMPARE(spy.count(), 1);
 
-    RawFeed* feed = parser.getFeed();
+    auto feed = parser.getFeed();
     QVERIFY2(feed != nullptr, "Feed was null");
     QVERIFY2(!feed->items.isEmpty(), "Feed has no items");
 
@@ -860,10 +865,8 @@ void TestFangParser::testDcCreatorAuthor_data()
 
 void TestFangParser::testTimezoneAbbreviations()
 {
-    // Access dateFromFeedString via a ParserXMLWorker instance. The method is
-    // public static, so we just need an instance to call it on.
-    // Actually, dateFromFeedString is a static public method, but it's declared
-    // as a member. Let's parse minimal feeds with specific timezone strings.
+    // dateFromFeedString is private, so we test timezone parsing indirectly
+    // by parsing minimal feeds with specific timezone strings.
 
     // Feed with PST timezone
     QString pstFeed = R"(<?xml version="1.0" encoding="UTF-8"?>
@@ -935,14 +938,14 @@ void TestFangParser::testTimezoneAbbreviations()
         tempFile.write(feedXml.toUtf8());
         tempFile.close();
 
-        NewsParser parser(this);
-        QSignalSpy spy(&parser, &NewsParser::done);
+        FeedFetcher parser(this);
+        QSignalSpy spy(&parser, &FeedFetcher::done);
         parser.parseFile(tempFile.fileName());
         if (!spy.count()) {
             spy.wait(10000);
         }
 
-        RawFeed* feed = parser.getFeed();
+        auto feed = parser.getFeed();
         if (!feed || feed->items.isEmpty()) {
             return QDateTime();
         }
@@ -975,6 +978,53 @@ void TestFangParser::testTimezoneAbbreviations()
 }
 
 // =====================================================================
+// Media namespace isolation test
+// =====================================================================
+
+void TestFangParser::testMediaNamespaceIsolation()
+{
+    // RSS feed with <media:title> and <media:description> that should NOT
+    // bleed into the item's title or description fields. This mirrors the
+    // structure of abc7news.com's RSS feed.
+    QByteArray rss = R"(<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:media="http://search.yahoo.com/mrss/"
+     xmlns:dc="http://purl.org/dc/elements/1.1/">
+<channel>
+<title>Test Feed</title>
+<link>http://example.com</link>
+<description>Test channel description</description>
+<item>
+  <title>Full headline for the article</title>
+  <description>Full description of the article.</description>
+  <link>http://example.com/1</link>
+  <guid>http://example.com/1</guid>
+  <dc:creator>Reporter</dc:creator>
+  <pubDate>Wed, 19 Mar 2026 10:30:00 +0000</pubDate>
+  <media:title>Shorter media headline</media:title>
+  <media:description>Shorter media description.</media:description>
+  <media:thumbnail url="http://example.com/thumb.jpg" width="1280" height="720"/>
+</item>
+</channel>
+</rss>)";
+
+    auto feed = RSSAtomParser::parse(rss);
+    QVERIFY(feed != nullptr);
+    QCOMPARE(feed->items.size(), 1);
+
+    const auto& item = feed->items.first();
+
+    // Title must be exactly the <title> text, not contaminated by media:title.
+    QCOMPARE(item->title, QString("Full headline for the article"));
+
+    // Description must be exactly the <description> text, not contaminated
+    // by media:description.
+    QCOMPARE(item->description, QString("Full description of the article."));
+
+    // media:thumbnail should still be extracted.
+    QCOMPARE(item->mediaImageURL, QString("http://example.com/thumb.jpg"));
+}
+
+// =====================================================================
 // Permanent redirect detection tests
 // =====================================================================
 
@@ -1004,8 +1054,8 @@ void TestFangParser::testPermanentRedirect301()
     mockManager.addRedirect(originalUrl, finalUrl, 301);
     mockManager.addResponse(finalUrl, simpleRSSFeed());
 
-    NewsParser parser(&mockManager, this);
-    QSignalSpy spy(&parser, &NewsParser::done);
+    FeedFetcher parser(&mockManager, this);
+    QSignalSpy spy(&parser, &FeedFetcher::done);
 
     parser.parse(originalUrl);
     if (!spy.count()) {
@@ -1025,8 +1075,8 @@ void TestFangParser::testPermanentRedirect308()
     mockManager.addRedirect(originalUrl, finalUrl, 308);
     mockManager.addResponse(finalUrl, simpleRSSFeed());
 
-    NewsParser parser(&mockManager, this);
-    QSignalSpy spy(&parser, &NewsParser::done);
+    FeedFetcher parser(&mockManager, this);
+    QSignalSpy spy(&parser, &FeedFetcher::done);
 
     parser.parse(originalUrl);
     if (!spy.count()) {
@@ -1046,8 +1096,8 @@ void TestFangParser::testTemporaryRedirect302()
     mockManager.addRedirect(originalUrl, finalUrl, 302);
     mockManager.addResponse(finalUrl, simpleRSSFeed());
 
-    NewsParser parser(&mockManager, this);
-    QSignalSpy spy(&parser, &NewsParser::done);
+    FeedFetcher parser(&mockManager, this);
+    QSignalSpy spy(&parser, &FeedFetcher::done);
 
     parser.parse(originalUrl);
     if (!spy.count()) {
@@ -1067,8 +1117,8 @@ void TestFangParser::testTemporaryRedirect307()
     mockManager.addRedirect(originalUrl, finalUrl, 307);
     mockManager.addResponse(finalUrl, simpleRSSFeed());
 
-    NewsParser parser(&mockManager, this);
-    QSignalSpy spy(&parser, &NewsParser::done);
+    FeedFetcher parser(&mockManager, this);
+    QSignalSpy spy(&parser, &FeedFetcher::done);
 
     parser.parse(originalUrl);
     if (!spy.count()) {
@@ -1086,8 +1136,8 @@ void TestFangParser::testNoRedirect()
 
     mockManager.addResponse(feedUrl, simpleRSSFeed());
 
-    NewsParser parser(&mockManager, this);
-    QSignalSpy spy(&parser, &NewsParser::done);
+    FeedFetcher parser(&mockManager, this);
+    QSignalSpy spy(&parser, &FeedFetcher::done);
 
     parser.parse(feedUrl);
     if (!spy.count()) {
@@ -1105,8 +1155,8 @@ void TestFangParser::testNoRedirect()
 void TestFangParser::testJSONFeedContentMapping()
 {
     // Verify content_html takes priority over content_text.
-    NewsParser parser(this);
-    QSignalSpy spy(&parser, &NewsParser::done);
+    FeedFetcher parser(this);
+    QSignalSpy spy(&parser, &FeedFetcher::done);
 
     QString projectPath = PROJECT_PATH;
     parser.parseFile(projectPath + "/feeds/jsonfeed.basic.json");
@@ -1115,7 +1165,7 @@ void TestFangParser::testJSONFeedContentMapping()
     }
     QCOMPARE(spy.count(), 1);
 
-    RawFeed* feed = parser.getFeed();
+    auto feed = parser.getFeed();
     QVERIFY(feed != nullptr);
     QVERIFY(feed->items.size() >= 3);
 
@@ -1131,8 +1181,8 @@ void TestFangParser::testJSONFeedContentMapping()
 
 void TestFangParser::testJSONFeedAuthors()
 {
-    NewsParser parserV11(this);
-    QSignalSpy spyV11(&parserV11, &NewsParser::done);
+    FeedFetcher parserV11(this);
+    QSignalSpy spyV11(&parserV11, &FeedFetcher::done);
     QString projectPath = PROJECT_PATH;
 
     // v1.1 uses "authors" array.
@@ -1142,28 +1192,28 @@ void TestFangParser::testJSONFeedAuthors()
     }
     QCOMPARE(spyV11.count(), 1);
 
-    RawFeed* feedV11 = parserV11.getFeed();
+    auto feedV11 = parserV11.getFeed();
     QVERIFY(feedV11 != nullptr);
     QCOMPARE(feedV11->items[0]->author, "Alice Smith");
 
     // v1.0 uses "author" object.
-    NewsParser parserV1(this);
-    QSignalSpy spyV1(&parserV1, &NewsParser::done);
+    FeedFetcher parserV1(this);
+    QSignalSpy spyV1(&parserV1, &FeedFetcher::done);
     parserV1.parseFile(projectPath + "/feeds/jsonfeed.v1.json");
     if (!spyV1.count()) {
         spyV1.wait(10000);
     }
     QCOMPARE(spyV1.count(), 1);
 
-    RawFeed* feedV1 = parserV1.getFeed();
+    auto feedV1 = parserV1.getFeed();
     QVERIFY(feedV1 != nullptr);
     QCOMPARE(feedV1->items[0]->author, "Legacy Author");
 }
 
 void TestFangParser::testJSONFeedMediaImage()
 {
-    NewsParser parser(this);
-    QSignalSpy spy(&parser, &NewsParser::done);
+    FeedFetcher parser(this);
+    QSignalSpy spy(&parser, &FeedFetcher::done);
     QString projectPath = PROJECT_PATH;
 
     parser.parseFile(projectPath + "/feeds/jsonfeed.basic.json");
@@ -1172,7 +1222,7 @@ void TestFangParser::testJSONFeedMediaImage()
     }
     QCOMPARE(spy.count(), 1);
 
-    RawFeed* feed = parser.getFeed();
+    auto feed = parser.getFeed();
     QVERIFY(feed != nullptr);
     QCOMPARE(feed->items[0]->mediaImageURL, "https://example.org/images/article1.jpg");
 
@@ -1182,8 +1232,8 @@ void TestFangParser::testJSONFeedMediaImage()
 
 void TestFangParser::testJSONFeedFeedType()
 {
-    NewsParser parser(this);
-    QSignalSpy spy(&parser, &NewsParser::done);
+    FeedFetcher parser(this);
+    QSignalSpy spy(&parser, &FeedFetcher::done);
     QString projectPath = PROJECT_PATH;
 
     parser.parseFile(projectPath + "/feeds/jsonfeed.basic.json");
@@ -1192,7 +1242,7 @@ void TestFangParser::testJSONFeedFeedType()
     }
     QCOMPARE(spy.count(), 1);
 
-    RawFeed* feed = parser.getFeed();
+    auto feed = parser.getFeed();
     QVERIFY(feed != nullptr);
     QCOMPARE(feed->feedType, RawFeed::JSONFeed);
 }

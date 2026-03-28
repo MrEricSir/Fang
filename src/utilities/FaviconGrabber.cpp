@@ -1,5 +1,6 @@
 #include "FaviconGrabber.h"
 #include "../network/BatchDownloadCore.h"
+#include <QSimpleStateMachine/QSimpleStateMachine.h>
 
 #include <QString>
 #include <QStringList>
@@ -11,15 +12,16 @@
 
 FaviconGrabber::FaviconGrabber(QObject *parent, QNetworkAccessManager* networkManager) :
     FangObject(parent),
+    machine(new QSimpleStateMachine(this)),
     batchDownloader(new BatchDownloadCore(15000, 10, this, networkManager)),
     webGrabber(true, 5000, this, networkManager)
 {
     // Set up our state machine.
-    machine.addStateChange(START, WEB_GRABBER, [this]() { onWebGrabber(); });
-    machine.addStateChange(WEB_GRABBER, CHECK_ICONS, [this]() { onCheckIcons(); });
-    machine.addStateChange(CHECK_ICONS, PICK_BEST, [this]() { onPickBest(); });
+    machine->addStateChange(START, WEB_GRABBER, [this]() { onWebGrabber(); });
+    machine->addStateChange(WEB_GRABBER, CHECK_ICONS, [this]() { onCheckIcons(); });
+    machine->addStateChange(CHECK_ICONS, PICK_BEST, [this]() { onPickBest(); });
 
-    machine.addStateChange(-1, GRAB_ERROR, [this]() { onError(); }); // Many errors, one slot.
+    machine->addStateChange(-1, GRAB_ERROR, [this]() { onError(); }); // Many errors, one slot.
 
     // Signals!
     connect(batchDownloader, &BatchDownloadCore::finished, this, &FaviconGrabber::onBatchFinished);
@@ -31,7 +33,7 @@ void FaviconGrabber::find(const QUrl &url)
     urlsToCheck.clear();
     imagesToCheck.clear();
     location = url;
-    machine.start(START);
+    machine->start(START);
 
     // Make a list of "root" favicons.
     QUrl host = NetworkUtilities::getHost(location);
@@ -44,7 +46,7 @@ void FaviconGrabber::find(const QUrl &url)
         urlsToCheck << toCheck;
     }
 
-    machine.setState(WEB_GRABBER);
+    machine->setState(WEB_GRABBER);
 }
 
 void FaviconGrabber::onWebGrabber()
@@ -57,7 +59,7 @@ void FaviconGrabber::onWebGrabber()
 void FaviconGrabber::onCheckIcons()
 {
     if (urlsToCheck.isEmpty()) {
-        machine.setState(GRAB_ERROR);
+        machine->setState(GRAB_ERROR);
         return;
     }
 
@@ -68,7 +70,7 @@ void FaviconGrabber::onCheckIcons()
 void FaviconGrabber::onBatchFinished()
 {
     // Ignore if we've moved past CHECK_ICONS state.
-    if (machine.getState() != CHECK_ICONS) {
+    if (machine->getState() != CHECK_ICONS) {
         return;
     }
 
@@ -89,13 +91,13 @@ void FaviconGrabber::onBatchFinished()
         }
     }
 
-    machine.setState(PICK_BEST);
+    machine->setState(PICK_BEST);
 }
 
 void FaviconGrabber::onPickBest()
 {
     if (imagesToCheck.isEmpty()) {
-        machine.setState(GRAB_ERROR);
+        machine->setState(GRAB_ERROR);
         return;
     }
 
@@ -120,7 +122,7 @@ void FaviconGrabber::onPickBest()
         }
     }
 
-    machine.setState(GRAB_ERROR);
+    machine->setState(GRAB_ERROR);
 }
 
 void FaviconGrabber::onError()
@@ -158,20 +160,20 @@ void FaviconGrabber::onWebGrabberReady(WebPageGrabber* grabber, QString *documen
 
     // Ignore responses that arrive after we've already moved past WEB_GRABBER state
     // (e.g., multiple async responses from favicon URLs being parsed as HTML)
-    if (machine.getState() != WEB_GRABBER) {
+    if (machine->getState() != WEB_GRABBER) {
         return;
     }
 
     // Could indicate no internet.
     if (document == nullptr || document->isEmpty()) {
-        machine.setState(CHECK_ICONS);
+        machine->setState(CHECK_ICONS);
 
         return;
     }
 
     findIcons(*document);
 
-    machine.setState(CHECK_ICONS);
+    machine->setState(CHECK_ICONS);
 }
 
 void FaviconGrabber::findIcons(const QString& document)

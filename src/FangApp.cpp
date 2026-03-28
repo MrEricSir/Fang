@@ -7,9 +7,10 @@
 #include <QFileOpenEvent>
 #include <QKeyEvent>
 #include <QQmlFileSelector>
+#include <memory>
 
 #include "utilities/ErrorHandling.h"
-#include "utilities/ImageCache.h"
+#include "QImageCache.h"
 #include "network/FangQQmlNetworkAccessManagerFactory.h"
 
 #include "operations/UpdateFeedOperation.h"
@@ -426,8 +427,7 @@ void FangApp::refreshFeed(FeedItem *feed)
     }
 
     QList<FeedItem*> feedsToUpdate;
-    bool useCache = true; // Use cache by default.
-    
+
     // Special handling for all news.
     if (feed->isSpecialFeed()) {
         // Update ALL the feeds.
@@ -464,12 +464,11 @@ void FangApp::refreshFeed(FeedItem *feed)
 
     } else {
         feedsToUpdate.append(feed);
-        useCache = false; // Don't check cache if we're just checking a single feed.
     }
     
     // Update 'em all!
     for (FeedItem* item : feedsToUpdate) {
-        manager.enqueue(new UpdateFeedOperation(&manager, item, nullptr, useCache));
+        manager.enqueue(new UpdateFeedOperation(&manager, item));
         manager.enqueue(new FaviconUpdateOperation(&manager, item));
     }
 }
@@ -645,7 +644,7 @@ void FangApp::onQuit()
     manager.run(&expireOp);
 
     // Delete expired images from cache.
-    ImageCache::evictOlderThan(olderThan);
+    QImageCache::evictOlderThan(olderThan);
 }
 
 void FangApp::setCurrentFeed(FeedItem *feed, bool reloadIfSameFeed)
@@ -925,11 +924,33 @@ void FangApp::addFeed(const QString userURL, const RawFeed* rawFeed, bool switch
     qCDebug(logApp) << "Add feed: " << userURL;
     AddFeedOperation* addOp = new AddFeedOperation(
                                   &manager, &feedList, userURL, rawFeed);
-    
+
     if (switchTo) {
         connect(addOp, &AddFeedOperation::finished, this, &FangApp::onNewFeedAddedSelect);
     }
-    
+
+    // When the feed's initial update finishes, reload news if it's active.
+    // The feed gets selected (above) before articles exist in the DB, so the
+    // first loadNews returns empty. This watches for UpdateFeedOperation to
+    // complete (isUpdating -> false) and triggers a second load.
+    connect(addOp, &AddFeedOperation::finished, this, [this](AsyncOperation* op) {
+        AddFeedOperation* addOp = qobject_cast<AddFeedOperation*>(op);
+        if (!addOp || !addOp->getFeedItem()) {
+            return;
+        }
+
+        FeedItem* feed = addOp->getFeedItem();
+        auto conn = std::make_shared<QMetaObject::Connection>();
+        *conn = connect(feed, &ListItem::dataChanged, this, [this, feed, conn]() {
+            if (!feed->getIsUpdating()) {
+                disconnect(*conn);
+                if (feed == currentFeed) {
+                    emit currentFeedChanged();
+                }
+            }
+        });
+    });
+
     manager.enqueue(addOp);
 }
 

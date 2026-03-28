@@ -1,14 +1,11 @@
 # TestNetworkRetryPolicy test executable
 qt_add_executable(tst_networkretrypolicy
     tst_networkretrypolicy.cpp
-    # Shared sources from main project
-    ${CMAKE_SOURCE_DIR}/src/network/NetworkRetryPolicy.cpp
-    # Include corresponding headers for AUTOMOC
-    ${CMAKE_SOURCE_DIR}/src/network/NetworkRetryPolicy.h
 )
 
-# Link Qt modules
+# Link libraries
 target_link_libraries(tst_networkretrypolicy PRIVATE
+    FangFeedDiscovery
     Qt6::Test
     Qt6::Network
 )

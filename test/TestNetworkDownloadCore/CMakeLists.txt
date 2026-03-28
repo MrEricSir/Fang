@@ -9,6 +9,7 @@ qt_add_executable(tst_networkdownloadcore
 # Link shared test library and Qt modules
 target_link_libraries(tst_networkdownloadcore PRIVATE
     FangTestLib
+    FangFeedDiscovery
     Qt6::Test
 )
 

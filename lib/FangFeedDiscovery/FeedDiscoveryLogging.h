@@ -1,0 +1,8 @@
+#ifndef FEEDDISCOVERYLOGGING_H
+#define FEEDDISCOVERYLOGGING_H
+
+#include <QLoggingCategory>
+
+Q_DECLARE_LOGGING_CATEGORY(logFeedDiscovery)
+
+#endif // FEEDDISCOVERYLOGGING_H

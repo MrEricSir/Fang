@@ -8,7 +8,7 @@
 #include <QImage>
 #include <QBuffer>
 
-#include <QSimpleStateMachine/QSimpleStateMachine.h>
+class QSimpleStateMachine;
 
 #include "WebPageGrabber.h"
 #include "../FangObject.h"
@@ -85,7 +85,7 @@ private slots:
     QString imageToDataUri(const QImage& image);
 
 private:
-    QSimpleStateMachine machine;
+    QSimpleStateMachine* machine;
     QList<QUrl> urlsToCheck;
     QList<QPair<QUrl, QImage>> imagesToCheck;
     BatchDownloadCore* batchDownloader;

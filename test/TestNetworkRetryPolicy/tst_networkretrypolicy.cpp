@@ -1,6 +1,6 @@
 #include <QNetworkReply>
 #include <QTest>
-#include "../../src/network/NetworkRetryPolicy.h"
+#include "NetworkRetryPolicy.h"
 
 class TestNetworkRetryPolicy : public QObject
 {

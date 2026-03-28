@@ -5,7 +5,7 @@
 #include <QString>
 #include <QUrl>
 #include <QTimer>
-#include "../src/utilities/WebPageGrabber.h"
+#include "WebPageGrabber.h"
 
 /**
  * @brief Mock WebPageGrabber for testing - allows pre-configuration of results

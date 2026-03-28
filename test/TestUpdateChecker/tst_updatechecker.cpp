@@ -1,10 +1,12 @@
+#include <memory>
+
 #include <QString>
 #include <QTest>
 #include <QSignalSpy>
 #include <QSettings>
 
-#include "../../src/utilities/UpdateChecker.h"
-#include "../MockNewsParser.h"
+#include "UpdateChecker.h"
+#include "../MockFeedSource.h"
 #include "../MockFangSettings.h"
 
 /*!
@@ -14,7 +16,7 @@ class TestableUpdateChecker : public UpdateChecker
 {
 public:
     explicit TestableUpdateChecker(QObject *parent = nullptr,
-                                   ParserInterface* parser = nullptr,
+                                   FeedSource* parser = nullptr,
                                    SettingsInterface* settings = nullptr)
         : UpdateChecker(parent, parser, settings) {}
 
@@ -103,42 +105,42 @@ void TestUpdateChecker::cleanup()
 
 void TestUpdateChecker::testExtractVersion_standardFormat()
 {
-    MockNewsParser* mockParser = new MockNewsParser();
+    MockFeedSource* mockParser = new MockFeedSource();
     checker = new TestableUpdateChecker(nullptr, mockParser);
     QCOMPARE(checker->testExtractVersion("Fang 1.2.3"), QString("1.2.3"));
 }
 
 void TestUpdateChecker::testExtractVersion_betaFormat()
 {
-    MockNewsParser* mockParser = new MockNewsParser();
+    MockFeedSource* mockParser = new MockFeedSource();
     checker = new TestableUpdateChecker(nullptr, mockParser);
     QCOMPARE(checker->testExtractVersion("Fang 0.2.9-beta"), QString("0.2.9-beta"));
 }
 
 void TestUpdateChecker::testExtractVersion_betaWithNumber()
 {
-    MockNewsParser* mockParser = new MockNewsParser();
+    MockFeedSource* mockParser = new MockFeedSource();
     checker = new TestableUpdateChecker(nullptr, mockParser);
     QCOMPARE(checker->testExtractVersion("Fang 0.2.10-beta.1"), QString("0.2.10-beta.1"));
 }
 
 void TestUpdateChecker::testExtractVersion_releaseCandidate()
 {
-    MockNewsParser* mockParser = new MockNewsParser();
+    MockFeedSource* mockParser = new MockFeedSource();
     checker = new TestableUpdateChecker(nullptr, mockParser);
     QCOMPARE(checker->testExtractVersion("Fang 1.0.0-rc.2"), QString("1.0.0-rc.2"));
 }
 
 void TestUpdateChecker::testExtractVersion_noVersion()
 {
-    MockNewsParser* mockParser = new MockNewsParser();
+    MockFeedSource* mockParser = new MockFeedSource();
     checker = new TestableUpdateChecker(nullptr, mockParser);
     QCOMPARE(checker->testExtractVersion("Some random title"), QString(""));
 }
 
 void TestUpdateChecker::testExtractVersion_differentPrefix()
 {
-    MockNewsParser* mockParser = new MockNewsParser();
+    MockFeedSource* mockParser = new MockFeedSource();
     checker = new TestableUpdateChecker(nullptr, mockParser);
     // Should not match different app names
     QCOMPARE(checker->testExtractVersion("OtherApp 1.2.3"), QString(""));
@@ -150,42 +152,42 @@ void TestUpdateChecker::testExtractVersion_differentPrefix()
 
 void TestUpdateChecker::testIsNewerVersion_majorHigher()
 {
-    MockNewsParser* mockParser = new MockNewsParser();
+    MockFeedSource* mockParser = new MockFeedSource();
     checker = new TestableUpdateChecker(nullptr, mockParser);
     QVERIFY(checker->testIsNewerVersion("1.0.0", "2.0.0"));
 }
 
 void TestUpdateChecker::testIsNewerVersion_minorHigher()
 {
-    MockNewsParser* mockParser = new MockNewsParser();
+    MockFeedSource* mockParser = new MockFeedSource();
     checker = new TestableUpdateChecker(nullptr, mockParser);
     QVERIFY(checker->testIsNewerVersion("1.0.0", "1.1.0"));
 }
 
 void TestUpdateChecker::testIsNewerVersion_patchHigher()
 {
-    MockNewsParser* mockParser = new MockNewsParser();
+    MockFeedSource* mockParser = new MockFeedSource();
     checker = new TestableUpdateChecker(nullptr, mockParser);
     QVERIFY(checker->testIsNewerVersion("1.0.0", "1.0.1"));
 }
 
 void TestUpdateChecker::testIsNewerVersion_sameVersion()
 {
-    MockNewsParser* mockParser = new MockNewsParser();
+    MockFeedSource* mockParser = new MockFeedSource();
     checker = new TestableUpdateChecker(nullptr, mockParser);
     QVERIFY(!checker->testIsNewerVersion("1.0.0", "1.0.0"));
 }
 
 void TestUpdateChecker::testIsNewerVersion_olderVersion()
 {
-    MockNewsParser* mockParser = new MockNewsParser();
+    MockFeedSource* mockParser = new MockFeedSource();
     checker = new TestableUpdateChecker(nullptr, mockParser);
     QVERIFY(!checker->testIsNewerVersion("2.0.0", "1.0.0"));
 }
 
 void TestUpdateChecker::testIsNewerVersion_releaseVsBeta()
 {
-    MockNewsParser* mockParser = new MockNewsParser();
+    MockFeedSource* mockParser = new MockFeedSource();
     checker = new TestableUpdateChecker(nullptr, mockParser);
     // Release (no suffix) should be newer than beta with same version number
     QVERIFY(checker->testIsNewerVersion("1.0.0-beta", "1.0.0"));
@@ -193,7 +195,7 @@ void TestUpdateChecker::testIsNewerVersion_releaseVsBeta()
 
 void TestUpdateChecker::testIsNewerVersion_betaVsRelease()
 {
-    MockNewsParser* mockParser = new MockNewsParser();
+    MockFeedSource* mockParser = new MockFeedSource();
     checker = new TestableUpdateChecker(nullptr, mockParser);
     // Beta should NOT be newer than release with same version number
     QVERIFY(!checker->testIsNewerVersion("1.0.0", "1.0.0-beta"));
@@ -201,7 +203,7 @@ void TestUpdateChecker::testIsNewerVersion_betaVsRelease()
 
 void TestUpdateChecker::testIsNewerVersion_betaVersions()
 {
-    MockNewsParser* mockParser = new MockNewsParser();
+    MockFeedSource* mockParser = new MockFeedSource();
     checker = new TestableUpdateChecker(nullptr, mockParser);
     // beta.2 should be newer than beta.1
     QVERIFY(checker->testIsNewerVersion("1.0.0-beta.1", "1.0.0-beta.2"));
@@ -209,7 +211,7 @@ void TestUpdateChecker::testIsNewerVersion_betaVersions()
 
 void TestUpdateChecker::testIsNewerVersion_sameBeta()
 {
-    MockNewsParser* mockParser = new MockNewsParser();
+    MockFeedSource* mockParser = new MockFeedSource();
     checker = new TestableUpdateChecker(nullptr, mockParser);
     QVERIFY(!checker->testIsNewerVersion("1.0.0-beta.1", "1.0.0-beta.1"));
 }
@@ -220,15 +222,15 @@ void TestUpdateChecker::testIsNewerVersion_sameBeta()
 
 void TestUpdateChecker::testUpdateAvailable_emitsSignal()
 {
-    MockNewsParser* mockParser = new MockNewsParser();
+    MockFeedSource* mockParser = new MockFeedSource();
 
     // Create feed with newer version
-    RawFeed* feed = new RawFeed();
-    RawNews* news = new RawNews(feed);
+    auto feed = std::make_shared<RawFeed>();
+    auto news = std::make_shared<RawNews>();
     news->title = "Fang 99.0.0"; // Much higher than any real version
     feed->items.append(news);
 
-    mockParser->setResult(ParserInterface::OK);
+    mockParser->setResult(FeedFetchResult::OK);
     mockParser->setFeed(feed);
 
     // Pass mockSettings so update check can proceed
@@ -245,14 +247,14 @@ void TestUpdateChecker::testUpdateAvailable_emitsSignal()
 
 void TestUpdateChecker::testUpdateAvailable_noSignalIfSameVersion()
 {
-    MockNewsParser* mockParser = new MockNewsParser();
+    MockFeedSource* mockParser = new MockFeedSource();
 
-    RawFeed* feed = new RawFeed();
-    RawNews* news = new RawNews(feed);
+    auto feed = std::make_shared<RawFeed>();
+    auto news = std::make_shared<RawNews>();
     news->title = QString("Fang ") + APP_VERSION; // Same as current
     feed->items.append(news);
 
-    mockParser->setResult(ParserInterface::OK);
+    mockParser->setResult(FeedFetchResult::OK);
     mockParser->setFeed(feed);
 
     checker = new TestableUpdateChecker(nullptr, mockParser, mockSettings);
@@ -267,14 +269,14 @@ void TestUpdateChecker::testUpdateAvailable_noSignalIfSameVersion()
 
 void TestUpdateChecker::testUpdateAvailable_noSignalIfOlderVersion()
 {
-    MockNewsParser* mockParser = new MockNewsParser();
+    MockFeedSource* mockParser = new MockFeedSource();
 
-    RawFeed* feed = new RawFeed();
-    RawNews* news = new RawNews(feed);
+    auto feed = std::make_shared<RawFeed>();
+    auto news = std::make_shared<RawNews>();
     news->title = "Fang 0.0.1"; // Very old version
     feed->items.append(news);
 
-    mockParser->setResult(ParserInterface::OK);
+    mockParser->setResult(FeedFetchResult::OK);
     mockParser->setFeed(feed);
 
     checker = new TestableUpdateChecker(nullptr, mockParser, mockSettings);
@@ -291,14 +293,14 @@ void TestUpdateChecker::testUpdateAvailable_noSignalIfAlreadyShown()
     // Pre-mark version as shown via MockFangSettings
     mockSettings->setLastSeenVersion("99.0.0");
 
-    MockNewsParser* mockParser = new MockNewsParser();
+    MockFeedSource* mockParser = new MockFeedSource();
 
-    RawFeed* feed = new RawFeed();
-    RawNews* news = new RawNews(feed);
+    auto feed = std::make_shared<RawFeed>();
+    auto news = std::make_shared<RawNews>();
     news->title = "Fang 99.0.0";
     feed->items.append(news);
 
-    mockParser->setResult(ParserInterface::OK);
+    mockParser->setResult(FeedFetchResult::OK);
     mockParser->setFeed(feed);
 
     // Pass mockSettings to UpdateChecker
@@ -313,8 +315,8 @@ void TestUpdateChecker::testUpdateAvailable_noSignalIfAlreadyShown()
 
 void TestUpdateChecker::testUpdateAvailable_parserError()
 {
-    MockNewsParser* mockParser = new MockNewsParser();
-    mockParser->setResult(ParserInterface::NETWORK_ERROR);
+    MockFeedSource* mockParser = new MockFeedSource();
+    mockParser->setResult(FeedFetchResult::NetworkError);
 
     checker = new TestableUpdateChecker(nullptr, mockParser, mockSettings);
     QSignalSpy spy(checker, &UpdateChecker::updateAvailable);
@@ -327,12 +329,12 @@ void TestUpdateChecker::testUpdateAvailable_parserError()
 
 void TestUpdateChecker::testUpdateAvailable_emptyFeed()
 {
-    MockNewsParser* mockParser = new MockNewsParser();
+    MockFeedSource* mockParser = new MockFeedSource();
 
-    RawFeed* feed = new RawFeed();
+    auto feed = std::make_shared<RawFeed>();
     // No items in feed
 
-    mockParser->setResult(ParserInterface::OK);
+    mockParser->setResult(FeedFetchResult::OK);
     mockParser->setFeed(feed);
 
     checker = new TestableUpdateChecker(nullptr, mockParser, mockSettings);
@@ -346,14 +348,14 @@ void TestUpdateChecker::testUpdateAvailable_emptyFeed()
 
 void TestUpdateChecker::testUpdateAvailable_invalidTitle()
 {
-    MockNewsParser* mockParser = new MockNewsParser();
+    MockFeedSource* mockParser = new MockFeedSource();
 
-    RawFeed* feed = new RawFeed();
-    RawNews* news = new RawNews(feed);
+    auto feed = std::make_shared<RawFeed>();
+    auto news = std::make_shared<RawNews>();
     news->title = "Some random title without version"; // No parseable version
     feed->items.append(news);
 
-    mockParser->setResult(ParserInterface::OK);
+    mockParser->setResult(FeedFetchResult::OK);
     mockParser->setFeed(feed);
 
     checker = new TestableUpdateChecker(nullptr, mockParser, mockSettings);

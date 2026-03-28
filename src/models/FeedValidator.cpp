@@ -90,10 +90,10 @@ void FeedValidator::addFeeds()
     for (const FeedInfo& feedInfo : _feeds) {
         if (feedInfo.selected) {
             if (feedInfo.discoveryIndex >= 0 && feedInfo.discoveryIndex < discovered.count()) {
-                RawFeed* feed = discovered[feedInfo.discoveryIndex].feed;
+                auto feed = discovered[feedInfo.discoveryIndex].feed;
                 if (feed) {
                     feed->title = feedInfo.title;
-                    FangApp::instance()->addFeed(feedInfo.url, feed, true);
+                    FangApp::instance()->addFeed(feedInfo.url, feed.get(), true);
                 }
             }
         }
@@ -121,7 +121,7 @@ void FeedValidator::onFeedDiscoveryDone(FeedDiscovery* discovery)
     // Clear previous feeds.
     _feeds.clear();
 
-    if (!feedDiscovery.error()) {
+    if (feedDiscovery.error() == FeedDiscovery::Error::None) {
         // Add all discovered feeds to our list.
         QList<FeedDiscovery::DiscoveredFeed> discovered = feedDiscovery.discoveredFeeds();
         for (int i = 0; i < discovered.count(); i++) {
@@ -144,6 +144,6 @@ void FeedValidator::onFeedDiscoveryDone(FeedDiscovery* discovery)
     }
 
     // Completion!
-    emit validationComplete(!feedDiscovery.error(), feedDiscovery.errorString());
+    emit validationComplete(feedDiscovery.error() == FeedDiscovery::Error::None, feedDiscovery.errorString());
 }
 

@@ -1,3 +1,5 @@
+#include <memory>
+
 #include <QString>
 #include <QTest>
 #include <QCoreApplication>
@@ -88,10 +90,10 @@ void TestRawFeedRewriterTest::testCase1()
                                  QNetworkReply::ContentNotFoundError);
 
     // Setup our "fake" raw news list.
-    RawNews news;
-    news.description = input;
-    QList<RawNews*> newsList;
-    newsList.append(&news);
+    auto news = std::make_shared<RawNews>();
+    news->description = input;
+    QList<std::shared_ptr<RawNews>> newsList;
+    newsList.append(news);
 
     // Send it to the rewriter.
     RawFeedRewriter rewriter(nullptr, &mockManager);
@@ -105,7 +107,7 @@ void TestRawFeedRewriterTest::testCase1()
     QCOMPARE(spy.count(), 1);
 
     // Normalize both strings to handle cached images.
-    QString normalizedOutput = normalizeImageSrc(news.description);
+    QString normalizedOutput = normalizeImageSrc(news->description);
     QString normalizedExpected = normalizeImageSrc(output);
 
     qDebug() << "Expected output: " << normalizedExpected;

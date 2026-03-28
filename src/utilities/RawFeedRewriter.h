@@ -1,13 +1,15 @@
 #ifndef RAWFEEDIMAGESIZEREWRITER_H
 #define RAWFEEDIMAGESIZEREWRITER_H
 
+#include <memory>
+
 #include <QObject>
 #include <QFutureWatcher>
 #include <QList>
 #include <QSet>
 #include <QUrl>
 
-#include "../parser/RawNews.h"
+#include "RawNews.h"
 #include "../FangObject.h"
 #include "HTMLSanitizer.h"
 #include "ImageGrabber.h"
@@ -40,12 +42,12 @@ signals:
 
 public slots:
 
-    void rewrite(QList<RawNews*>* newsList);
+    void rewrite(QList<std::shared_ptr<RawNews>>* newsList);
 
     /*!
         \return The news list being processed.
      */
-    inline QList<RawNews*>* getNewsList() { return newsList; }
+    inline QList<std::shared_ptr<RawNews>>* getNewsList() { return newsList; }
 
 private slots:
     void onImageGrabberFinished();
@@ -54,7 +56,7 @@ private slots:
 private:
     void finalizeAll();
 
-    QList<RawNews*>* newsList;
+    QList<std::shared_ptr<RawNews>>* newsList;
     HTMLSanitizer sanitizer;
     ImageGrabber imageGrabber;
     QFutureWatcher<QSet<QUrl>> sanitizeWatcher;

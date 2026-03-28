@@ -6,47 +6,28 @@ add_library(FangTestLib STATIC
     ${CMAKE_SOURCE_DIR}/src/FangObject.cpp
     ${CMAKE_SOURCE_DIR}/src/utilities/FangLogging.cpp
 
-    # Network stack (used by most tests)
-    ${CMAKE_SOURCE_DIR}/src/network/FangNetworkAccessManager.cpp
-    ${CMAKE_SOURCE_DIR}/src/network/NetworkRetryPolicy.cpp
+    # App-level sources used by multiple tests
     ${CMAKE_SOURCE_DIR}/src/network/BatchDownloadCore.cpp
-
-    # Parser infrastructure (used by parser/feed tests)
-    ${CMAKE_SOURCE_DIR}/src/parser/ParserInterface.cpp
-    ${CMAKE_SOURCE_DIR}/src/parser/ParserXMLWorker.cpp
-    ${CMAKE_SOURCE_DIR}/src/parser/NewsParser.cpp
-    ${CMAKE_SOURCE_DIR}/src/parser/JSONFeedParser.cpp
-    ${CMAKE_SOURCE_DIR}/src/parser/RawFeed.cpp
-    ${CMAKE_SOURCE_DIR}/src/parser/RawNews.cpp
-    ${CMAKE_SOURCE_DIR}/src/parser/BatchNewsParser.cpp
-
-    # Sitemap support
-    ${CMAKE_SOURCE_DIR}/src/parser/SitemapParser.cpp
-    ${CMAKE_SOURCE_DIR}/src/utilities/PageMetadataExtractor.cpp
-    ${CMAKE_SOURCE_DIR}/src/utilities/GoogleNewsSitemapSynthesizer.cpp
-
-    # Utilities (used by multiple tests)
-    ${CMAKE_SOURCE_DIR}/src/network/NetworkDownloadCore.cpp
-    ${CMAKE_SOURCE_DIR}/src/utilities/NetworkUtilities.cpp
-    ${CMAKE_SOURCE_DIR}/src/utilities/WebPageGrabber.cpp
     ${CMAKE_SOURCE_DIR}/src/utilities/ImageGrabber.cpp
-    ${CMAKE_SOURCE_DIR}/src/utilities/ImageCache.cpp
-    # NOTE: FeedDiscovery is NOT included here because it uses QSimpleStateMachine
-    # Tests that need FeedDiscovery should compile it directly to avoid duplicate MOC symbols
 )
 
 # Include directories
+# NOTE: Library include dirs are added directly (not via linking FangFeedDiscovery)
+# to avoid AUTOMOC generating duplicate MOC symbols for QSimpleStateMachine.
+# Tests that need FangFeedDiscovery symbols must link it explicitly.
 target_include_directories(FangTestLib PUBLIC
     ${CMAKE_SOURCE_DIR}/src
     ${CMAKE_SOURCE_DIR}/src/parser
     ${CMAKE_SOURCE_DIR}/src/network
     ${CMAKE_SOURCE_DIR}/src/utilities
+    ${CMAKE_SOURCE_DIR}/lib/FangFeedDiscovery
+    ${CMAKE_SOURCE_DIR}/lib/FangFeedParser
     ${CMAKE_SOURCE_DIR}/external/tidylib/include
 )
 
 # Link required libraries
 target_link_libraries(FangTestLib PUBLIC
-    TidyLib
+    QImageCache
     Qt6::Concurrent
     Qt6::Core
     Qt6::Network

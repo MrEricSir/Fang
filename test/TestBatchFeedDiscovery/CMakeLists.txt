@@ -2,23 +2,13 @@
 qt_add_executable(tst_testbatchfeeddiscovery
     tst_testbatchfeeddiscovery.cpp
     # Mock objects for testing
-    ${CMAKE_SOURCE_DIR}/test/MockNewsParser.cpp
-    ${CMAKE_SOURCE_DIR}/test/MockNewsParser.h
+    ${CMAKE_SOURCE_DIR}/test/MockFeedSource.cpp
+    ${CMAKE_SOURCE_DIR}/test/MockFeedSource.h
     ${CMAKE_SOURCE_DIR}/test/MockWebPageGrabber.h
-    ${CMAKE_SOURCE_DIR}/test/MockBatchNewsParser.h
-    # Shared sources from main project
+    ${CMAKE_SOURCE_DIR}/test/MockBatchFeedFetcher.h
+    # App-level sources
     ${CMAKE_SOURCE_DIR}/src/utilities/BatchFeedDiscovery.cpp
     ${CMAKE_SOURCE_DIR}/src/utilities/BatchFeedDiscovery.h
-    ${CMAKE_SOURCE_DIR}/src/utilities/FeedDiscovery.cpp
-    ${CMAKE_SOURCE_DIR}/src/utilities/FeedDiscovery.h
-    ${CMAKE_SOURCE_DIR}/src/utilities/WebPageGrabber.cpp
-    ${CMAKE_SOURCE_DIR}/src/utilities/WebPageGrabber.h
-    ${CMAKE_SOURCE_DIR}/src/network/NetworkDownloadCore.cpp
-    ${CMAKE_SOURCE_DIR}/src/network/NetworkDownloadCore.h
-    ${CMAKE_SOURCE_DIR}/src/utilities/NetworkUtilities.cpp
-    ${CMAKE_SOURCE_DIR}/src/utilities/NetworkUtilities.h
-    ${CMAKE_SOURCE_DIR}/src/utilities/FangLogging.cpp
-    ${CMAKE_SOURCE_DIR}/src/utilities/FangLogging.h
     ${CMAKE_SOURCE_DIR}/src/models/ListModel.cpp
     ${CMAKE_SOURCE_DIR}/src/models/ListModel.h
     ${CMAKE_SOURCE_DIR}/src/models/FeedItem.cpp
@@ -28,34 +18,8 @@ qt_add_executable(tst_testbatchfeeddiscovery
     ${CMAKE_SOURCE_DIR}/src/models/NewsItem.cpp
     ${CMAKE_SOURCE_DIR}/src/models/NewsItem.h
     ${CMAKE_SOURCE_DIR}/src/models/DBObject.h
-    ${CMAKE_SOURCE_DIR}/src/parser/BatchNewsParser.cpp
-    ${CMAKE_SOURCE_DIR}/src/parser/BatchNewsParser.h
-    ${CMAKE_SOURCE_DIR}/src/parser/NewsParser.cpp
-    ${CMAKE_SOURCE_DIR}/src/parser/NewsParser.h
-    ${CMAKE_SOURCE_DIR}/src/parser/JSONFeedParser.cpp
-    ${CMAKE_SOURCE_DIR}/src/parser/JSONFeedParser.h
-    ${CMAKE_SOURCE_DIR}/src/parser/ParserInterface.cpp
-    ${CMAKE_SOURCE_DIR}/src/parser/ParserInterface.h
-    ${CMAKE_SOURCE_DIR}/src/parser/ParserXMLWorker.cpp
-    ${CMAKE_SOURCE_DIR}/src/parser/ParserXMLWorker.h
     ${CMAKE_SOURCE_DIR}/src/parser/OPMLParser.cpp
     ${CMAKE_SOURCE_DIR}/src/parser/OPMLParser.h
-    ${CMAKE_SOURCE_DIR}/src/parser/RawFeed.cpp
-    ${CMAKE_SOURCE_DIR}/src/parser/RawFeed.h
-    ${CMAKE_SOURCE_DIR}/src/parser/RawNews.cpp
-    ${CMAKE_SOURCE_DIR}/src/parser/RawNews.h
-    ${CMAKE_SOURCE_DIR}/src/parser/SitemapParser.cpp
-    ${CMAKE_SOURCE_DIR}/src/parser/SitemapParser.h
-    ${CMAKE_SOURCE_DIR}/src/utilities/GoogleNewsSitemapSynthesizer.cpp
-    ${CMAKE_SOURCE_DIR}/src/utilities/GoogleNewsSitemapSynthesizer.h
-    ${CMAKE_SOURCE_DIR}/src/utilities/PageMetadataExtractor.cpp
-    ${CMAKE_SOURCE_DIR}/src/utilities/PageMetadataExtractor.h
-    ${CMAKE_SOURCE_DIR}/src/FangObject.cpp
-    ${CMAKE_SOURCE_DIR}/src/FangObject.h
-    ${CMAKE_SOURCE_DIR}/src/network/FangNetworkAccessManager.cpp
-    ${CMAKE_SOURCE_DIR}/src/network/FangNetworkAccessManager.h
-    ${CMAKE_SOURCE_DIR}/src/network/NetworkRetryPolicy.cpp
-    ${CMAKE_SOURCE_DIR}/src/network/NetworkRetryPolicy.h
 )
 
 # Include directories
@@ -68,11 +32,9 @@ target_include_directories(tst_testbatchfeeddiscovery PRIVATE
 
 # Link libraries
 target_link_libraries(tst_testbatchfeeddiscovery PRIVATE
-    TidyLib
-    QSimpleStateMachine::QSimpleStateMachine
+    FangTestLib
+    FangFeedDiscovery
     Qt6::Test
-    Qt6::Core
-    Qt6::Network
 )
 
 # Add to CTest

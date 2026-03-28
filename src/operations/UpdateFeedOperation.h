@@ -6,10 +6,10 @@
 #include <QDateTime>
 
 #include "../utilities/RawFeedRewriter.h"
-#include "../parser/NewsParser.h"
+#include "FeedFetcher.h"
 #include "../models/FeedItem.h"
-#include "../utilities/FeedDiscovery.h"
-#include "../utilities/GoogleNewsSitemapSynthesizer.h"
+#include "FeedDiscovery.h"
+#include "NewsSitemapSynthesizer.h"
 
 /*!
     \brief Updates a feed.
@@ -29,9 +29,8 @@ public:
         \param parent   Set this to the manager
         \param feed     Feed to update
         \param rawFeed  Optional: include this if you've already downloaded the feed and parsed it.
-        \param useCache If we're fetching the feed, should we use the cache? (Ignored if RawFeed isn't null.)
      */
-    explicit UpdateFeedOperation(OperationManager *parent, FeedItem* feed, RawFeed* rawFeed = nullptr, bool useCache = true);
+    explicit UpdateFeedOperation(OperationManager *parent, FeedItem* feed, RawFeed* rawFeed = nullptr);
     virtual ~UpdateFeedOperation();
     
     
@@ -65,15 +64,14 @@ private slots:
     void onNewsSitemapRefreshDone();
 
 private:
-    NewsParser parser;
+    FeedFetcher parser;
     FeedItem *feed;
     RawFeed* rawFeed;
     RawFeedRewriter rewriter;
-    QList<RawNews*> newsList;
+    QList<std::shared_ptr<RawNews>> newsList;
     QDateTime timestamp;
-    bool useCache;
     FeedDiscovery discovery;
-    GoogleNewsSitemapSynthesizer* newsSitemapSynthesizer;
+    NewsSitemapSynthesizer* newsSitemapSynthesizer;
 };
 
 #endif // UPDATEFEEDOPERATION_H
