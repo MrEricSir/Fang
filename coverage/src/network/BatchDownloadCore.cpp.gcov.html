@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-03-25 02:43:58</td>
+            <td class="headerValue">2026-03-28 23:49:11</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -61,7 +61,7 @@
 <pre class="sourceHeading">            Line data    Source code</pre>
 <pre class="source">
 <span id="L1"><span class="lineNum">       1</span>              : #include &quot;BatchDownloadCore.h&quot;</span>
-<span id="L2"><span class="lineNum">       2</span>              : #include &quot;FangNetworkAccessManager.h&quot;</span>
+<span id="L2"><span class="lineNum">       2</span>              : #include &quot;BrowserNetworkAccessManager.h&quot;</span>
 <span id="L3"><span class="lineNum">       3</span>              : </span>
 <span id="L4"><span class="lineNum">       4</span>              : #include &lt;QSet&gt;</span>
 <span id="L5"><span class="lineNum">       5</span>              : </span>
@@ -70,7 +70,7 @@
 <span id="L8"><span class="lineNum">       8</span>              :                                      QObject* parent,</span>
 <span id="L9"><span class="lineNum">       9</span> <span class="tlaGNC">          62 :                                      QNetworkAccessManager* networkManager)</span></span>
 <span id="L10"><span class="lineNum">      10</span>              :     : FangObject(parent)</span>
-<span id="L11"><span class="lineNum">      11</span> <span class="tlaGNC">          62 :     , manager(networkManager ? networkManager : new FangNetworkAccessManager(this))</span></span>
+<span id="L11"><span class="lineNum">      11</span> <span class="tlaGNC">          62 :     , manager(networkManager ? networkManager : new BrowserNetworkAccessManager(this))</span></span>
 <span id="L12"><span class="lineNum">      12</span> <span class="tlaGNC">         124 :     , totalCount(0)</span></span>
 <span id="L13"><span class="lineNum">      13</span>              : {</span>
 <span id="L14"><span class="lineNum">      14</span> <span class="tlaGNC">          62 :     config.timeoutMs = timeoutMs;</span></span>

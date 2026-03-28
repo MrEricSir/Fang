@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-03-25 02:43:58</td>
+            <td class="headerValue">2026-03-28 23:49:11</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryLo">33.3&nbsp;%</td>
@@ -68,7 +68,7 @@
 <span id="L6"><span class="lineNum">       6</span>              : #include &lt;QList&gt;</span>
 <span id="L7"><span class="lineNum">       7</span>              : #include &lt;QXmlStreamReader&gt;</span>
 <span id="L8"><span class="lineNum">       8</span>              : </span>
-<span id="L9"><span class="lineNum">       9</span>              : #include &quot;ParserInterface.h&quot;</span>
+<span id="L9"><span class="lineNum">       9</span>              : #include &quot;FeedSource.h&quot;</span>
 <span id="L10"><span class="lineNum">      10</span>              : #include &quot;RawFeed.h&quot;</span>
 <span id="L11"><span class="lineNum">      11</span>              : #include &quot;../FangObject.h&quot;</span>
 <span id="L12"><span class="lineNum">      12</span>              : </span>
@@ -93,7 +93,7 @@
 <span id="L31"><span class="lineNum">      31</span>              :     void parseFile(QString filename);</span>
 <span id="L32"><span class="lineNum">      32</span>              :     </span>
 <span id="L33"><span class="lineNum">      33</span>              :     // Gets the result status.</span>
-<span id="L34"><span class="lineNum">      34</span> <span class="tlaUNC tlaBgUNC">           0 :     ParserInterface::ParseResult getResult() { return result; }</span></span>
+<span id="L34"><span class="lineNum">      34</span> <span class="tlaUNC tlaBgUNC">           0 :     FeedFetchResult getResult() { return result; }</span></span>
 <span id="L35"><span class="lineNum">      35</span>              :     </span>
 <span id="L36"><span class="lineNum">      36</span>              :     // Returns the feed list, assuming there is one.</span>
 <span id="L37"><span class="lineNum">      37</span> <span class="tlaGNC tlaBgGNC">           4 :     QList&lt;RawFeed*&gt; getFeedList() { return feedList; }</span></span>
@@ -104,7 +104,7 @@
 <span id="L42"><span class="lineNum">      42</span>              : private:</span>
 <span id="L43"><span class="lineNum">      43</span>              :     QFile file;</span>
 <span id="L44"><span class="lineNum">      44</span>              :     QList&lt;RawFeed*&gt; feedList;</span>
-<span id="L45"><span class="lineNum">      45</span>              :     ParserInterface::ParseResult result;</span>
+<span id="L45"><span class="lineNum">      45</span>              :     FeedFetchResult result;</span>
 <span id="L46"><span class="lineNum">      46</span>              :     </span>
 <span id="L47"><span class="lineNum">      47</span>              :     QXmlStreamReader xml;</span>
 <span id="L48"><span class="lineNum">      48</span>              : };</span>

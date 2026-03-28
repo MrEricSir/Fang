@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-03-25 02:43:58</td>
+            <td class="headerValue">2026-03-28 23:49:11</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -67,7 +67,7 @@
 <span id="L5"><span class="lineNum">       5</span>              : #include &lt;QXmlStreamWriter&gt;</span>
 <span id="L6"><span class="lineNum">       6</span>              : #include &lt;QStack&gt;</span>
 <span id="L7"><span class="lineNum">       7</span>              : </span>
-<span id="L8"><span class="lineNum">       8</span>              : #include &quot;ImageCache.h&quot;</span>
+<span id="L8"><span class="lineNum">       8</span>              : #include &quot;QImageCache.h&quot;</span>
 <span id="L9"><span class="lineNum">       9</span>              : #include &quot;NetworkUtilities.h&quot;</span>
 <span id="L10"><span class="lineNum">      10</span>              : </span>
 <span id="L11"><span class="lineNum">      11</span>              : // Strings.</span>
@@ -400,7 +400,7 @@
 <span id="L338"><span class="lineNum">     338</span> <span class="tlaGNC">          12 :                         height = imageData.image.height();</span></span>
 <span id="L339"><span class="lineNum">     339</span>              : </span>
 <span id="L340"><span class="lineNum">     340</span> <span class="tlaGNC">          12 :                         if (width &gt; 2 &amp;&amp; height &gt; 2) {</span></span>
-<span id="L341"><span class="lineNum">     341</span> <span class="tlaGNC">           9 :                             QString cachedPath = ImageCache::saveImage(url, imageData);</span></span>
+<span id="L341"><span class="lineNum">     341</span> <span class="tlaGNC">           9 :                             QString cachedPath = &quot;/images/&quot; + QImageCache::saveImage(url, imageData);</span></span>
 <span id="L342"><span class="lineNum">     342</span> <span class="tlaGNC">           9 :                             if (!cachedPath.isEmpty()) {</span></span>
 <span id="L343"><span class="lineNum">     343</span> <span class="tlaGNC">           9 :                                 srcToUse = cachedPath;</span></span>
 <span id="L344"><span class="lineNum">     344</span>              :                             }</span>

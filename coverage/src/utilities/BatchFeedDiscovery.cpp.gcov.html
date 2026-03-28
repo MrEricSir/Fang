@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-03-25 02:43:58</td>
+            <td class="headerValue">2026-03-28 23:49:11</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryMed">80.0&nbsp;%</td>
@@ -98,7 +98,7 @@
 <span id="L36"><span class="lineNum">      36</span> <span class="tlaGNC">          19 :     item-&gt;setIsUpdating(false);</span></span>
 <span id="L37"><span class="lineNum">      37</span>              :     </span>
 <span id="L38"><span class="lineNum">      38</span>              :     // See what we got.</span>
-<span id="L39"><span class="lineNum">      39</span> <span class="tlaGNC">          19 :     if (discovery-&gt;error()) {</span></span>
+<span id="L39"><span class="lineNum">      39</span> <span class="tlaGNC">          19 :     if (discovery-&gt;error() != FeedDiscovery::Error::None) {</span></span>
 <span id="L40"><span class="lineNum">      40</span> <span class="tlaGNC">           3 :         item-&gt;setErrorFlag(true);</span></span>
 <span id="L41"><span class="lineNum">      41</span>              :     } else {</span>
 <span id="L42"><span class="lineNum">      42</span>              :         // Yay, we got one!  Copy over the corrected URL.</span>
