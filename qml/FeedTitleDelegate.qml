@@ -162,7 +162,10 @@ RearrangeableDelegate {
                         width: 24 * style.scale;
                         height: 24 * style.scale;
 
-                        opacity: 1;
+                        opacity: isUpdating ? 0 : 1;
+                        Behavior on opacity {
+                            NumberAnimation { duration: 300; easing.type: Easing.InOutQuad }
+                        }
 
                         FeedIcon {
                             id: feedIconImage;
@@ -201,35 +204,6 @@ RearrangeableDelegate {
                             anchors.bottom: parent.bottom
                             anchors.margins: -parent.width * 0.25;
                         }
-
-                        property bool updating: isUpdating;
-                        onUpdatingChanged: {
-                            if (updating) {
-                                iconFadeOut.restart();
-                            } else {
-                                iconFadeIn.restart();
-                            }
-                        }
-
-                        OpacityAnimator {
-                            id: iconFadeIn;
-
-                            target: feedIconContainer;
-                            from: 0;
-                            to: 1;
-                            duration: 300;
-                            easing.type: Easing.InQuad;
-                        }
-
-                        OpacityAnimator {
-                            id: iconFadeOut;
-
-                            target: feedIconContainer;
-                            from: 1;
-                            to: 0;
-                            duration: 300;
-                            easing.type: Easing.OutQuad;
-                        }
                     }
 
                     FangIcon {
@@ -237,41 +211,15 @@ RearrangeableDelegate {
 
                         state: "spinner";
                         visible: true;
-                        opacity: 0;
+                        opacity: isUpdating ? 1 : 0;
+                        Behavior on opacity {
+                            NumberAnimation { duration: 300; easing.type: Easing.InOutQuad }
+                        }
 
                         anchors.verticalCenter: parent.verticalCenter;
 
                         width: 23 * style.scale;
                         height: 23 * style.scale;
-
-                        property bool updating: isUpdating;
-                        onUpdatingChanged: {
-                            if (updating) {
-                                spinnerFadeIn.restart();
-                            } else {
-                                spinnerFadeOut.restart();
-                            }
-                        }
-
-                        OpacityAnimator {
-                            id: spinnerFadeIn;
-
-                            target: feedBusySpinner;
-                            from: 0;
-                            to: 1;
-                            duration: 300;
-                            easing.type: Easing.InQuad;
-                        }
-
-                        OpacityAnimator {
-                            id: spinnerFadeOut;
-
-                            target: feedBusySpinner;
-                            from: 1;
-                            to: 0;
-                            duration: 300;
-                            easing.type: Easing.OutQuad;
-                        }
                     }
                 }
 

@@ -7,6 +7,7 @@
 #include <QFileOpenEvent>
 #include <QKeyEvent>
 #include <QQmlFileSelector>
+#include <memory>
 
 #include "utilities/ErrorHandling.h"
 #include "QImageCache.h"
@@ -923,11 +924,33 @@ void FangApp::addFeed(const QString userURL, const RawFeed* rawFeed, bool switch
     qCDebug(logApp) << "Add feed: " << userURL;
     AddFeedOperation* addOp = new AddFeedOperation(
                                   &manager, &feedList, userURL, rawFeed);
-    
+
     if (switchTo) {
         connect(addOp, &AddFeedOperation::finished, this, &FangApp::onNewFeedAddedSelect);
     }
-    
+
+    // When the feed's initial update finishes, reload news if it's active.
+    // The feed gets selected (above) before articles exist in the DB, so the
+    // first loadNews returns empty. This watches for UpdateFeedOperation to
+    // complete (isUpdating -> false) and triggers a second load.
+    connect(addOp, &AddFeedOperation::finished, this, [this](AsyncOperation* op) {
+        AddFeedOperation* addOp = qobject_cast<AddFeedOperation*>(op);
+        if (!addOp || !addOp->getFeedItem()) {
+            return;
+        }
+
+        FeedItem* feed = addOp->getFeedItem();
+        auto conn = std::make_shared<QMetaObject::Connection>();
+        *conn = connect(feed, &ListItem::dataChanged, this, [this, feed, conn]() {
+            if (!feed->getIsUpdating()) {
+                disconnect(*conn);
+                if (feed == currentFeed) {
+                    emit currentFeedChanged();
+                }
+            }
+        });
+    });
+
     manager.enqueue(addOp);
 }
 

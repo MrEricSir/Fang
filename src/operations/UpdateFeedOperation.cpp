@@ -104,8 +104,6 @@ void UpdateFeedOperation::onFeedFinished()
         return;
     }
 
-    feed->setIsUpdating(false);
-
     if (rawFeed == nullptr) {
         rawFeed = parser.getFeed().get();
     }
@@ -114,6 +112,7 @@ void UpdateFeedOperation::onFeedFinished()
         // This is often the result of the feed not having been updated, and thus
         // it was already cached.  We return null in that case to save time.
         feed->setErrorFlag(false); // Clear error flag, if set.
+        feed->setIsUpdating(false);
         emit finished(this);
 
         return;
@@ -122,6 +121,7 @@ void UpdateFeedOperation::onFeedFinished()
     if (rawFeed->items.size() == 0) {
         qCDebug(logOperation) << "Feed list was empty! (Could be cache.)";
         feed->setErrorFlag(false);
+        feed->setIsUpdating(false);
         emit finished(this);
 
         return;
@@ -138,7 +138,8 @@ void UpdateFeedOperation::onFeedFinished()
     query.bindValue(":feed_id", feed->getDbID());
     if (!query.exec()) {
         reportSQLError(query, "Error: Could not read news timestamp");
-        
+        feed->setIsUpdating(false);
+
         return;
     }
     
@@ -150,6 +151,7 @@ void UpdateFeedOperation::onFeedFinished()
     QDateTime newestNewNews = rawFeed->items.last()->timestamp;
     if (newestNewNews <= newestLocalNews) {
         feed->setErrorFlag(false);
+        feed->setIsUpdating(false);
         emit finished(this);
 
         return;
@@ -168,6 +170,7 @@ void UpdateFeedOperation::onFeedFinished()
     // Check should be a duplicate of the one above, but just in case...
     if (newIndex < 0) {
         feed->setErrorFlag(false);
+        feed->setIsUpdating(false);
         emit finished(this);
         qCDebug(logOperation) << "New index was negative, all feeds must be up to date!";
 
@@ -273,6 +276,7 @@ void UpdateFeedOperation::onFeedFinished()
 
     if (newsList.isEmpty()) {
         feed->setErrorFlag(false);
+        feed->setIsUpdating(false);
         emit finished(this);
         return;
     }
