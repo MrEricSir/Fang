@@ -32,6 +32,7 @@ target_link_libraries(FangTestLib PUBLIC
     Qt6::Core
     Qt6::Network
     Qt6::Gui
+    Qt6::Svg
 )
 
 # Precompiled headers for Qt (optimization #2)

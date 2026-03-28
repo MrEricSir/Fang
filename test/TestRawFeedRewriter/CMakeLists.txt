@@ -21,6 +21,9 @@ target_link_libraries(tst_testrawfeedrewritertest PRIVATE
     FangTestLib
     FangFeedDiscovery
     Qt6::Test
+    Qt6::Network
+    Qt6::Gui
+    Qt6::Svg
 )
 
 # Add to CTest
