@@ -8,6 +8,9 @@ on:
   pull_request:
     branches: [ master, main ]
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   build-and-test:
     name: ${{ matrix.os }} - Qt ${{ matrix.qt-version }}
@@ -17,11 +20,17 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        qt-version: ['6.10.1']
+        qt-version: ['6.11.0']
+        exclude:
+          - os: windows-latest
+            qt-version: '6.11.0'
+        include:
+          - os: windows-latest
+            qt-version: '6.10.3'
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
       with:
         submodules: recursive
 
@@ -327,21 +336,21 @@ jobs:
 
     - name: Upload DMG Installer (macOS)
       if: runner.os == 'macOS'
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: Fang-macOS-DMG
         path: Fang.dmg
 
     - name: Upload AppImage (Linux)
       if: runner.os == 'Linux'
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: Fang-Linux-AppImage
         path: Fang.AppImage
 
     - name: Upload MSI Installer (Windows)
       if: runner.os == 'Windows'
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: Fang-Windows-MSI
         path: build/Fang.msi
@@ -353,7 +362,7 @@ jobs:
 
     - name: Upload test results on failure
       if: failure()
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: test-results-${{ matrix.os }}
         path: build/Testing/Temporary/
@@ -364,14 +373,14 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
       with:
         submodules: recursive
 
     - name: Install Qt
       uses: jurplel/install-qt-action@v4
       with:
-        version: '6.10.1'
+        version: '6.11.0'
         modules: 'qtwebsockets qthttpserver qtwebengine qtwebchannel qtpositioning'
         cache: true
 
@@ -430,24 +439,24 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
       with:
         submodules: recursive
 
     - name: Download macOS DMG
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v8
       with:
         name: Fang-macOS-DMG
         path: ./release-artifacts
 
     - name: Download Linux AppImage
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v8
       with:
         name: Fang-Linux-AppImage
         path: ./release-artifacts
 
     - name: Download Windows MSI
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v8
       with:
         name: Fang-Windows-MSI
         path: ./release-artifacts
