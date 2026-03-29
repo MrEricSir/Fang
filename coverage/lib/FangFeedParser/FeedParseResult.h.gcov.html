@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-03-29 08:13:23</td>
+            <td class="headerValue">2026-03-29 20:32:17</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -76,10 +76,10 @@
 <span id="L14"><span class="lineNum">      14</span>              :     static FeedParseResult success(std::shared_ptr&lt;RawFeed&gt; feed);</span>
 <span id="L15"><span class="lineNum">      15</span>              :     static FeedParseResult failure(FeedParseError error, const QString&amp; detail = {});</span>
 <span id="L16"><span class="lineNum">      16</span>              : </span>
-<span id="L17"><span class="lineNum">      17</span> <span class="tlaGNC tlaBgGNC">          90 :     bool ok() const { return _error == FeedParseError::None; }</span></span>
+<span id="L17"><span class="lineNum">      17</span> <span class="tlaGNC tlaBgGNC">          94 :     bool ok() const { return _error == FeedParseError::None; }</span></span>
 <span id="L18"><span class="lineNum">      18</span>              :     FeedParseError error() const { return _error; }</span>
 <span id="L19"><span class="lineNum">      19</span>              :     QString errorDetail() const { return _errorDetail; }</span>
-<span id="L20"><span class="lineNum">      20</span> <span class="tlaGNC">          90 :     std::shared_ptr&lt;RawFeed&gt; feed() const { return _feed; }</span></span>
+<span id="L20"><span class="lineNum">      20</span> <span class="tlaGNC">          93 :     std::shared_ptr&lt;RawFeed&gt; feed() const { return _feed; }</span></span>
 <span id="L21"><span class="lineNum">      21</span>              :     explicit operator bool() const { return ok(); }</span>
 <span id="L22"><span class="lineNum">      22</span>              : </span>
 <span id="L23"><span class="lineNum">      23</span>              : private:</span>
