@@ -309,9 +309,10 @@ void UpdateFeedOperation::onRewriterFinished()
         query.bindValue(":media_image_url", rawNews->mediaImageURL);
         
         if (!query.exec()) {
+            feed->setErrorFlag(true);
             reportSQLError(query, "Unable to add news item.");
             db().rollback();
-            
+
             return;
         }
     }
@@ -323,6 +324,7 @@ void UpdateFeedOperation::onRewriterFinished()
     query.bindValue(":lastUpdated", timestamp.toMSecsSinceEpoch());
     
     if (!query.exec()) {
+        feed->setErrorFlag(true);
         reportSQLError(query, "Unable to update the feed's timestamp.");
         db().rollback();
 
@@ -337,6 +339,7 @@ void UpdateFeedOperation::onRewriterFinished()
         etagQuery.bindValue(":last_modified", parser.responseLastModified());
         etagQuery.bindValue(":feed_id", feed->getDbID());
         if (!etagQuery.exec()) {
+            feed->setErrorFlag(true);
             reportSQLError(etagQuery, "Unable to update ETag/Last-Modified.");
             db().rollback();
             return;
@@ -355,6 +358,7 @@ void UpdateFeedOperation::onRewriterFinished()
             urlQuery.bindValue(":url", finalURL);
             urlQuery.bindValue(":feed_id", feed->getDbID());
             if (!urlQuery.exec()) {
+                feed->setErrorFlag(true);
                 reportSQLError(urlQuery, "Unable to update feed URL after redirect.");
                 db().rollback();
                 return;

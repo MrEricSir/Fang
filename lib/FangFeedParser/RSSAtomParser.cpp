@@ -166,10 +166,10 @@ void RSSAtomParser::elementEnd()
     if ((tagName == "item" || tagName == "entry") && !inAtomXHTML) {
         //qDebug() << "End element:" << xml.name().toString();
         if (!currentItem) {
-            // Throw some kinda error, this can't happen.
-            qCDebug(logFeedParser) << "Current item is null!";
-            qCDebug(logFeedParser) << "Current title: " << title;
-            qCDebug(logFeedParser) << "Xml element: " << tagName;
+            qCWarning(logFeedParser) << "Current item is null!";
+            qCWarning(logFeedParser) << "Current title: " << title;
+            qCWarning(logFeedParser) << "Xml element: " << tagName;
+            return;
         }
         
         // Figure out which date to use.

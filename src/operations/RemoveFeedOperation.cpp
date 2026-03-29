@@ -45,7 +45,7 @@ void RemoveFeedOperation::execute()
         unlinkFolder.prepare("UPDATE FeedItemTable SET parent_folder = 0 WHERE parent_folder = :folder_id");
         unlinkFolder.bindValue(":folder_id", dbID);
         if (!unlinkFolder.exec()) {
-            reportSQLError(removeFeed, "Unable to unlink feed.");
+            reportSQLError(unlinkFolder, "Unable to unlink feed.");
             db().rollback();
 
             return;

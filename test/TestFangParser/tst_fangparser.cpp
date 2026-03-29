@@ -7,6 +7,7 @@
 #include <QNetworkAccessManager>
 
 #include "FeedFetcher.h"
+#include "FeedParser.h"
 #include "RSSAtomParser.h"
 #include "RawFeed.h"
 #include "../MockNetworkAccessManager.h"
@@ -44,6 +45,11 @@ private slots:
 
     // Media namespace isolation
     void testMediaNamespaceIsolation();
+
+    // Malformed feed handling
+    void testMissingGuidSkipsItem();
+    void testMissingItemTag();
+    void testEmptyInput();
 
     // Permanent redirect detection
     void testPermanentRedirect301();
@@ -1245,6 +1251,80 @@ void TestFangParser::testJSONFeedFeedType()
     auto feed = parser.getFeed();
     QVERIFY(feed != nullptr);
     QCOMPARE(feed->feedType, RawFeed::JSONFeed);
+}
+
+// =====================================================================
+// Malformed feed handling tests
+// =====================================================================
+
+void TestFangParser::testMissingGuidSkipsItem()
+{
+    // Items without any GUID/URL should be skipped gracefully
+    // rather than crashing or producing empty entries.
+    QByteArray rss = R"(<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+<channel>
+<title>Test Feed</title>
+<link>http://example.com</link>
+<item>
+  <title>Article with no GUID or link</title>
+  <description>This item has no guid, no link, no id.</description>
+  <pubDate>Wed, 19 Mar 2026 10:00:00 +0000</pubDate>
+</item>
+<item>
+  <title>Good Article</title>
+  <link>http://example.com/good</link>
+  <guid>good-article-1</guid>
+  <pubDate>Wed, 19 Mar 2026 11:00:00 +0000</pubDate>
+</item>
+</channel>
+</rss>)";
+
+    auto result = FeedParser::parse(rss);
+    QVERIFY(result.ok());
+
+    auto feed = result.feed();
+    QVERIFY(feed != nullptr);
+
+    // Only the second item (with a GUID) should be present.
+    QCOMPARE(feed->items.size(), 1);
+    QCOMPARE(feed->items.first()->title, QString("Good Article"));
+    QCOMPARE(feed->items.first()->guid, QString("good-article-1"));
+}
+
+void TestFangParser::testMissingItemTag()
+{
+    // An RSS feed where <item> opening tag is present but the closing
+    // </item> is never reached due to truncation. The parser should
+    // not crash and should return the feed (possibly with no items).
+    QByteArray rss = R"(<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+<channel>
+<title>Truncated Feed</title>
+<link>http://example.com</link>
+<item>
+  <title>Incomplete Article</title>
+  <link>http://example.com/incomplete</link>
+)";
+
+    auto result = FeedParser::parse(rss);
+
+    // Parser should not crash. Whether it returns ok or an error is
+    // acceptable - the important thing is no crash/null dereference.
+    if (result.ok() && result.feed()) {
+        // If it did parse, items may be empty or contain the partial item.
+        QVERIFY(result.feed()->items.size() <= 1);
+    }
+}
+
+void TestFangParser::testEmptyInput()
+{
+    // Empty and whitespace-only input should return an error, not crash.
+    auto emptyResult = FeedParser::parse(QByteArray());
+    QVERIFY(!emptyResult.ok());
+
+    auto whitespaceResult = FeedParser::parse(QByteArray("   \n  \t  "));
+    QVERIFY(!whitespaceResult.ok());
 }
 
 QTEST_MAIN(TestFangParser)
