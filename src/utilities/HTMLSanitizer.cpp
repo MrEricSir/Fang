@@ -166,24 +166,37 @@ QString HTMLSanitizer::sanitize(const QString &document, QSet<QUrl> &imageURLs)
                         QString imgSrc = NetworkUtilities::urlFixup(xml.attributes().value(S_SRC).toString());
                         writer.writeAttribute(S_SRC, imgSrc);
 
+                        // WordPress emoji: class="wp-smiley" images are inline emoji
+                        // that should render at text size (~16px), not at their
+                        // natural pixel dimensions (typically 72x72).
+                        QString classValue = xml.attributes().value("class").toString();
+                        bool isSmiley = classValue.contains("wp-smiley");
+                        if (isSmiley) {
+                            writer.writeAttribute(S_WIDTH, "16");
+                            writer.writeAttribute(S_HEIGHT, "16");
+                            writer.writeAttribute("data-smiley", "1");
+                        }
+
                         // Check for tracking pixels using HTML dimensions.
-                        QString sWidth = xml.attributes().value(S_WIDTH).toString();
-                        QString sHeight = xml.attributes().value(S_HEIGHT).toString();
+                        if (!isSmiley) {
+                            QString sWidth = xml.attributes().value(S_WIDTH).toString();
+                            QString sHeight = xml.attributes().value(S_HEIGHT).toString();
 
-                        bool widthOK, heightOK;
-                        int width = sWidth.toInt(&widthOK);
-                        int height = sHeight.toInt(&heightOK);
+                            bool widthOK, heightOK;
+                            int width = sWidth.toInt(&widthOK);
+                            int height = sHeight.toInt(&heightOK);
 
-                        if (widthOK && heightOK) {
-                            if (width < 3 || height < 3) {
-                                // Delete tiny images (tracking pixels).
-                                idsToDelete << intToID(currentId);
-                            } else {
-                                // Pass dimensions as metadata for finalize() to use
-                                // when the image fetch fails and we need to verify
-                                // this isn't a tracking pixel.
-                                writer.writeAttribute(S_WIDTH, sWidth);
-                                writer.writeAttribute(S_HEIGHT, sHeight);
+                            if (widthOK && heightOK) {
+                                if (width < 3 || height < 3) {
+                                    // Delete tiny images (tracking pixels).
+                                    idsToDelete << intToID(currentId);
+                                } else {
+                                    // Pass dimensions as metadata for finalize() to use
+                                    // when the image fetch fails and we need to verify
+                                    // this isn't a tracking pixel.
+                                    writer.writeAttribute(S_WIDTH, sWidth);
+                                    writer.writeAttribute(S_HEIGHT, sHeight);
+                                }
                             }
                         }
 
@@ -328,14 +341,22 @@ QString HTMLSanitizer::finalize(const QString &html, const QMap<QUrl, ImageData>
                     QString url = xml.attributes().value(S_SRC).toString();
                     QString srcToUse = url;
                     bool keepImage = false;
+                    bool isSmiley = xml.attributes().value("data-smiley").toString() == "1";
 
                     int width = 0;
                     int height = 0;
 
                     ImageData imageData = imageResults.value(url);
                     if (imageData.isValid()) {
-                        width = imageData.image.width();
-                        height = imageData.image.height();
+                        if (isSmiley) {
+                            // WordPress emoji: use the small dimensions from
+                            // sanitize() instead of the fetched pixel size.
+                            width = xml.attributes().value(S_WIDTH).toInt();
+                            height = xml.attributes().value(S_HEIGHT).toInt();
+                        } else {
+                            width = imageData.image.width();
+                            height = imageData.image.height();
+                        }
 
                         if (width > 2 && height > 2) {
                             QString cachedPath = "/images/" + QImageCache::saveImage(url, imageData);
@@ -361,6 +382,9 @@ QString HTMLSanitizer::finalize(const QString &html, const QMap<QUrl, ImageData>
                         if (width > 0 && height > 0) {
                             writer.writeAttribute(S_WIDTH, QString::number(width));
                             writer.writeAttribute(S_HEIGHT, QString::number(height));
+                        }
+                        if (isSmiley) {
+                            writer.writeAttribute("class", "smiley");
                         }
                         if (srcToUse != url) {
                             writer.writeAttribute("data-original-src", url);

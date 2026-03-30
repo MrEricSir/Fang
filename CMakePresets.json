@@ -1,0 +1,41 @@
+{
+    "version": 6,
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 16,
+        "patch": 0
+    },
+    "configurePresets": [
+        {
+            "name": "default",
+            "displayName": "Default",
+            "binaryDir": "${sourceDir}/build"
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "debug",
+            "displayName": "Debug",
+            "configurePreset": "default",
+            "configuration": "Debug"
+        },
+        {
+            "name": "release",
+            "displayName": "Release",
+            "configurePreset": "default",
+            "configuration": "Release"
+        },
+        {
+            "name": "relwithdebinfo",
+            "displayName": "Profile",
+            "configurePreset": "default",
+            "configuration": "RelWithDebInfo"
+        },
+        {
+            "name": "minsizerel",
+            "displayName": "Minimum Size Release",
+            "configurePreset": "default",
+            "configuration": "MinSizeRel"
+        }
+    ]
+}

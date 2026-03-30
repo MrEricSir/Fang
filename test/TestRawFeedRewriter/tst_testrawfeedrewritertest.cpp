@@ -41,6 +41,7 @@ private slots:
     void testFinalizeFilterOneTinyDimension();
     void testFinalizeFetchFailedWithDimensions();
     void testFinalizeFetchFailedNoDimensions();
+    void testFinalizeSmileyUsesSanitizeDimensions();
 };
 
 TestRawFeedRewriterTest::TestRawFeedRewriterTest()
@@ -88,6 +89,10 @@ void TestRawFeedRewriterTest::testCase1()
     // imgur is expected to fail — the Streetsblog test verifies HTML-dimension fallback.
     mockManager.addErrorResponse(QUrl("http://i.imgur.com/523Qeov.jpg"),
                                  QNetworkReply::ContentNotFoundError);
+    // WordPress emoji (72x72 PNGs with class="wp-smiley") should render at text size,
+    // not at their natural 72x72 dimensions.
+    mockManager.addResponse(QUrl("https://s.w.org/images/core/emoji/17.0.2/72x72/2728.png"),
+                            createTestPNGData(72, 72));
 
     // Setup our "fake" raw news list.
     auto news = std::make_shared<RawNews>();
@@ -338,6 +343,14 @@ void TestRawFeedRewriterTest::testCase1_data()
                                      "</p>"
                                      "<h2><em><a href=\"http://missionlocal.org/calendar-14/\">Events in the Mission Today</a></em></h2>"
                                      "<h2><em><a href=\"http://missionlocal.org/newcomers/\">The Essential Mission Guide</a></em></h2>";
+
+    // WordPress emoji (wp-smiley class): 72x72 PNGs that should display inline at text
+    // size, not at their natural pixel dimensions. The style="height: 1em" is stripped
+    // by the sanitizer, so we need to detect wp-smiley and set small dimensions.
+    QTest::newRow("WP Smiley") << "<p>Celebrate <img src=\"https://s.w.org/images/core/emoji/17.0.2/72x72/2728.png\""
+                                  " alt=\"✨\" class=\"wp-smiley\" style=\"height: 1em; max-height: 1em;\" /> today!</p>"
+                               << "<p>Celebrate <img src=\"[CACHED_IMAGE]\""
+                                  " width=\"16\" height=\"16\" class=\"smiley\"/> today!</p>";
 }
 
 ImageData TestRawFeedRewriterTest::createImageData(int width, int height)
@@ -502,6 +515,34 @@ void TestRawFeedRewriterTest::testFinalizeFetchFailedNoDimensions()
     // Should skip the image - can't verify it's not a tracking pixel.
     QVERIFY(!output.contains("mystery.gif"));
     QVERIFY(output.contains("text"));
+}
+
+// Test that wp-smiley images use the small dimensions from sanitize()
+// even when the fetched image has larger pixel dimensions.
+void TestRawFeedRewriterTest::testFinalizeSmileyUsesSanitizeDimensions()
+{
+    HTMLSanitizer sanitizer;
+
+    // Simulates sanitize() output for a wp-smiley image: small dimensions
+    // and a data-smiley marker, even though the actual image is 72x72.
+    QString sanitized = "<?xml version=\"1.0\"?>"
+                        "<html id=\"FangID_1\"><body id=\"FangID_2\">"
+                        "<p id=\"FangID_3\">text "
+                        "<img id=\"FangID_4\" src=\"https://s.w.org/images/core/emoji/17.0.2/72x72/2728.png\""
+                        " width=\"16\" height=\"16\" data-smiley=\"1\"/>"
+                        "</p></body></html>";
+
+    // Fetched image is 72x72 — but finalize should use 16x16 from sanitize.
+    QMap<QUrl, ImageData> results;
+    results[QUrl("https://s.w.org/images/core/emoji/17.0.2/72x72/2728.png")] = createImageData(72, 72);
+
+    QString output = sanitizer.finalize(sanitized, results);
+
+    QVERIFY(output.contains("width=\"16\""));
+    QVERIFY(output.contains("height=\"16\""));
+    QVERIFY(!output.contains("width=\"72\""));
+    QVERIFY(!output.contains("data-smiley"));
+    QVERIFY(output.contains("class=\"smiley\""));
 }
 
 QTEST_MAIN(TestRawFeedRewriterTest)
