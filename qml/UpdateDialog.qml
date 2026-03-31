@@ -11,14 +11,10 @@ Dialog {
 
     Image {
         source: "qrc:/qml/images/fang_logo_color.svg";
-
-        // 20% margins, for a decent size.
-        x: parent.width * 0.2;
-        width: parent.width - (parent.width * 0.4);
-        fillMode: Image.PreserveAspectCrop;
-
+        anchors.horizontalCenter: parent.horizontalCenter;
+        width: parent.width * 0.6;
+        fillMode: Image.PreserveAspectFit;
         sourceSize.width: width;
-        sourceSize.height: height;
     }
 
     DialogText {
