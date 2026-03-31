@@ -67,6 +67,13 @@ private slots:
     // Flags test
     void testFlags();
 
+    // Gap coverage
+    void testSetEtag();
+    void testSetLastModified();
+    void testId_method();
+    void testIsSearchFeedRole();
+    void testFeedType();
+
 private:
     FeedItem* createTestFeed();
 };
@@ -674,6 +681,78 @@ void TestFeedItem::testFlags()
     QVERIFY(flags & Qt::ItemIsEditable);
 
     delete feed;
+}
+
+void TestFeedItem::testSetEtag()
+{
+    FeedItem* feed = createTestFeed();
+
+    QCOMPARE(feed->getEtag(), QString(""));
+
+    feed->setEtag("abc123");
+    QCOMPARE(feed->getEtag(), QString("abc123"));
+
+    delete feed;
+}
+
+void TestFeedItem::testSetLastModified()
+{
+    FeedItem* feed = createTestFeed();
+
+    QCOMPARE(feed->getLastModified(), QString(""));
+
+    feed->setLastModified("Mon, 01 Jan 2024 00:00:00 GMT");
+    QCOMPARE(feed->getLastModified(), QString("Mon, 01 Jan 2024 00:00:00 GMT"));
+
+    delete feed;
+}
+
+void TestFeedItem::testId_method()
+{
+    FeedItem* feed = createTestFeed();
+    QCOMPARE(feed->id(), QString("FeedItem_1"));
+    delete feed;
+
+    FeedItem* feed2 = new FeedItem(42, 0, "Test", "", QDateTime::currentDateTime(), 0,
+                                   QUrl(), QUrl(), "", QUrl(), QDateTime::currentDateTime(),
+                                   -1, true, FeedTypeRSS, this);
+    QCOMPARE(feed2->id(), QString("FeedItem_42"));
+    delete feed2;
+}
+
+void TestFeedItem::testIsSearchFeedRole()
+{
+    // Normal feed
+    FeedItem* normalFeed = createTestFeed();
+    QCOMPARE(normalFeed->data(FeedItem::IsSearchFeedRole).toBool(), false);
+    delete normalFeed;
+
+    // Search feed
+    FeedItem* searchFeed = new FeedItem(FEED_ID_SEARCH, 0, "Search", "", QDateTime::currentDateTime(), 0,
+                                        QUrl(), QUrl(), "", QUrl(), QDateTime::currentDateTime(),
+                                        -1, true, FeedTypeRSS, this);
+    QCOMPARE(searchFeed->data(FeedItem::IsSearchFeedRole).toBool(), true);
+    delete searchFeed;
+}
+
+void TestFeedItem::testFeedType()
+{
+    // Default constructor
+    FeedItem* defaultFeed = new FeedItem(this);
+    QCOMPARE(defaultFeed->getFeedType(), FeedTypeRSS);
+    delete defaultFeed;
+
+    // Explicit RSS
+    FeedItem* rssFeed = createTestFeed();
+    QCOMPARE(rssFeed->getFeedType(), FeedTypeRSS);
+    delete rssFeed;
+
+    // Google News Sitemap
+    FeedItem* sitemapFeed = new FeedItem(1, 0, "Test", "", QDateTime::currentDateTime(), 0,
+                                         QUrl(), QUrl(), "", QUrl(), QDateTime::currentDateTime(),
+                                         -1, true, FeedTypeGoogleNewsSitemap, this);
+    QCOMPARE(sitemapFeed->getFeedType(), FeedTypeGoogleNewsSitemap);
+    delete sitemapFeed;
 }
 
 QTEST_MAIN(TestFeedItem)

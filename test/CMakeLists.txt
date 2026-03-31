@@ -24,6 +24,7 @@ add_subdirectory(TestUpdateChecker)
 add_subdirectory(TestWebPageGrabber)
 
 # Database tests
+add_subdirectory(TestDB)
 add_subdirectory(TestDatabaseOperations)
 add_subdirectory(TestSearch)
 
@@ -37,6 +38,8 @@ add_subdirectory(TestLoadNewsOperation)
 add_subdirectory(TestFangObject)
 add_subdirectory(TestFangSettings)
 add_subdirectory(TestFeedItem)
+add_subdirectory(TestListModel)
+add_subdirectory(TestSpecialFeedItems)
 add_subdirectory(TestFeedValidator)
 add_subdirectory(TestLisvelFeedItem)
 add_subdirectory(TestNewsItem)
