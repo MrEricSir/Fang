@@ -31,6 +31,7 @@ add_subdirectory(TestSearch)
 add_subdirectory(TestUpdateOrdinalsOperation)
 add_subdirectory(TestSearchOperation)
 add_subdirectory(TestFeedOperations)
+add_subdirectory(TestLoadNewsOperation)
 
 # Model tests
 add_subdirectory(TestFangObject)

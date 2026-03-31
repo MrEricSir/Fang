@@ -5,6 +5,7 @@
 #include <QProcess>
 #include <QGuiApplication>
 #include <QStyleHints>
+#include <cstring>
 
 #include "../../src/models/FangSettings.h"
 #include "../../src/db/DBSettingsKey.h"
@@ -50,7 +51,6 @@ private slots:
     // DBSettingsKeyDefaultValue tests
     void testDBSettingsKeyDefaultValue_knownKey();
     void testDBSettingsKeyDefaultValue_unknownKeyCrashes();
-    void testDBSettingsKeyDefaultValue_unknownKeyCrashes_helper();
 
     // Refresh property tests
     void testGetRefresh_defaultValue();
@@ -288,24 +288,16 @@ void TestFangSettings::testDBSettingsKeyDefaultValue_knownKey()
 void TestFangSettings::testDBSettingsKeyDefaultValue_unknownKeyCrashes()
 {
     // FANG_UNREACHABLE aborts the process, so we verify in a subprocess.
+    // The subprocess is this same binary invoked with "--death-test-dbsettingskey",
+    // which is handled in main() before the test framework starts. This avoids
+    // issues with test runners (e.g., Qt Creator) that pass individual test names
+    // as arguments and would inadvertently trigger a helper slot.
     QProcess process;
-    QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
-    env.insert("FANG_DEATH_TEST", "1");
-    process.setProcessEnvironment(env);
     process.start(QCoreApplication::applicationFilePath(),
-                  {"testDBSettingsKeyDefaultValue_unknownKeyCrashes_helper"});
+                  {"--death-test-dbsettingskey"});
     QVERIFY(process.waitForFinished(5000));
     QVERIFY(process.exitStatus() == QProcess::CrashExit ||
             process.exitCode() != 0);
-}
-
-void TestFangSettings::testDBSettingsKeyDefaultValue_unknownKeyCrashes_helper()
-{
-    if (!qEnvironmentVariableIsSet("FANG_DEATH_TEST")) {
-        QSKIP("Only runs as a subprocess of testDBSettingsKeyDefaultValue_unknownKeyCrashes");
-    }
-    DBSettingsKey invalidKey = static_cast<DBSettingsKey>(999);
-    DBSettingsKeyDefaultValue(invalidKey);
 }
 
 // ============================================================================
@@ -483,6 +475,22 @@ void TestFangSettings::testInit_connectsDBSettings()
     delete mockDB;
 }
 
-QTEST_MAIN(TestFangSettings)
+int main(int argc, char *argv[])
+{
+    // Handle death test subprocess: if invoked with --death-test-dbsettingskey,
+    // call the function that should crash and exit. This runs before the test
+    // framework so it works regardless of how tests are discovered or invoked.
+    for (int i = 1; i < argc; i++) {
+        if (strcmp(argv[i], "--death-test-dbsettingskey") == 0) {
+            DBSettingsKey invalidKey = static_cast<DBSettingsKey>(999);
+            DBSettingsKeyDefaultValue(invalidKey);
+            return 0;
+        }
+    }
+
+    QGuiApplication app(argc, argv);
+    TestFangSettings tc;
+    return QTest::qExec(&tc, argc, argv);
+}
 
 #include "tst_fangsettings.moc"
