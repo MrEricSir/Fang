@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-03-31 02:50:11</td>
+            <td class="headerValue">2026-03-31 03:40:47</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryMed">84.0&nbsp;%</td>
@@ -78,42 +78,42 @@
 <span id="L16"><span class="lineNum">      16</span>              : #include &lt;QTextStream&gt;</span>
 <span id="L17"><span class="lineNum">      17</span>              : #endif</span>
 <span id="L18"><span class="lineNum">      18</span>              : </span>
-<span id="L19"><span class="lineNum">      19</span> <span class="tlaGNC tlaBgGNC">          37 : FangSettings::FangSettings(FangObject *parent) :</span></span>
+<span id="L19"><span class="lineNum">      19</span> <span class="tlaGNC tlaBgGNC">          40 : FangSettings::FangSettings(FangObject *parent) :</span></span>
 <span id="L20"><span class="lineNum">      20</span>              :     FangObject(parent),</span>
-<span id="L21"><span class="lineNum">      21</span> <span class="tlaGNC">          37 :     dbSettings(nullptr),</span></span>
-<span id="L22"><span class="lineNum">      22</span> <span class="tlaGNC">          37 :     styleHints(nullptr)</span></span>
+<span id="L21"><span class="lineNum">      21</span> <span class="tlaGNC">          40 :     dbSettings(nullptr),</span></span>
+<span id="L22"><span class="lineNum">      22</span> <span class="tlaGNC">          40 :     styleHints(nullptr)</span></span>
 <span id="L23"><span class="lineNum">      23</span>              : {</span>
-<span id="L24"><span class="lineNum">      24</span> <span class="tlaGNC">          37 : }</span></span>
+<span id="L24"><span class="lineNum">      24</span> <span class="tlaGNC">          40 : }</span></span>
 <span id="L25"><span class="lineNum">      25</span>              : </span>
-<span id="L26"><span class="lineNum">      26</span> <span class="tlaGNC">          33 : void FangSettings::init(DBSettingsInterface *dbSettings)</span></span>
+<span id="L26"><span class="lineNum">      26</span> <span class="tlaGNC">          36 : void FangSettings::init(DBSettingsInterface *dbSettings)</span></span>
 <span id="L27"><span class="lineNum">      27</span>              : {</span>
 <span id="L28"><span class="lineNum">      28</span>              :     // Database</span>
-<span id="L29"><span class="lineNum">      29</span> <span class="tlaGNC">          33 :     this-&gt;dbSettings = dbSettings;</span></span>
-<span id="L30"><span class="lineNum">      30</span> <span class="tlaGNC">          33 :     connect(this-&gt;dbSettings, &amp;DBSettingsInterface::settingChanged, this, &amp;FangSettings::onDBSettingChanged);</span></span>
+<span id="L29"><span class="lineNum">      29</span> <span class="tlaGNC">          36 :     this-&gt;dbSettings = dbSettings;</span></span>
+<span id="L30"><span class="lineNum">      30</span> <span class="tlaGNC">          36 :     connect(this-&gt;dbSettings, &amp;DBSettingsInterface::settingChanged, this, &amp;FangSettings::onDBSettingChanged);</span></span>
 <span id="L31"><span class="lineNum">      31</span>              : </span>
 <span id="L32"><span class="lineNum">      32</span>              :     // System default color scheme.</span>
-<span id="L33"><span class="lineNum">      33</span> <span class="tlaGNC">          33 :     styleHints = QGuiApplication::styleHints();</span></span>
-<span id="L34"><span class="lineNum">      34</span> <span class="tlaGNC">          33 :     connect(styleHints, &amp;QStyleHints::colorSchemeChanged, this, &amp;FangSettings::onSystemColorSchemeChanged);</span></span>
+<span id="L33"><span class="lineNum">      33</span> <span class="tlaGNC">          36 :     styleHints = QGuiApplication::styleHints();</span></span>
+<span id="L34"><span class="lineNum">      34</span> <span class="tlaGNC">          36 :     connect(styleHints, &amp;QStyleHints::colorSchemeChanged, this, &amp;FangSettings::onSystemColorSchemeChanged);</span></span>
 <span id="L35"><span class="lineNum">      35</span>              : </span>
 <span id="L36"><span class="lineNum">      36</span>              :     // Manually apply the color scheme if not set to the system default.</span>
-<span id="L37"><span class="lineNum">      37</span> <span class="tlaGNC">          33 :     QString style = getStyle();</span></span>
-<span id="L38"><span class="lineNum">      38</span> <span class="tlaGNC">          33 :     if (style == &quot;LIGHT&quot;) {</span></span>
+<span id="L37"><span class="lineNum">      37</span> <span class="tlaGNC">          36 :     QString style = getStyle();</span></span>
+<span id="L38"><span class="lineNum">      38</span> <span class="tlaGNC">          36 :     if (style == &quot;LIGHT&quot;) {</span></span>
 <span id="L39"><span class="lineNum">      39</span> <span class="tlaUNC tlaBgUNC">           0 :         styleHints-&gt;setColorScheme(Qt::ColorScheme::Light);</span></span>
-<span id="L40"><span class="lineNum">      40</span> <span class="tlaGNC tlaBgGNC">          33 :     } else if (style == &quot;DARK&quot;) {</span></span>
+<span id="L40"><span class="lineNum">      40</span> <span class="tlaGNC tlaBgGNC">          36 :     } else if (style == &quot;DARK&quot;) {</span></span>
 <span id="L41"><span class="lineNum">      41</span> <span class="tlaUNC tlaBgUNC">           0 :         styleHints-&gt;setColorScheme(Qt::ColorScheme::Dark);</span></span>
 <span id="L42"><span class="lineNum">      42</span>              :     }</span>
-<span id="L43"><span class="lineNum">      43</span> <span class="tlaGNC tlaBgGNC">          33 : }</span></span>
+<span id="L43"><span class="lineNum">      43</span> <span class="tlaGNC tlaBgGNC">          36 : }</span></span>
 <span id="L44"><span class="lineNum">      44</span>              : </span>
-<span id="L45"><span class="lineNum">      45</span> <span class="tlaGNC">          70 : QString FangSettings::getStringSetting(const QString&amp; name, const QString&amp; defaultValue)</span></span>
+<span id="L45"><span class="lineNum">      45</span> <span class="tlaGNC">          73 : QString FangSettings::getStringSetting(const QString&amp; name, const QString&amp; defaultValue)</span></span>
 <span id="L46"><span class="lineNum">      46</span>              : {</span>
-<span id="L47"><span class="lineNum">      47</span> <span class="tlaGNC">          70 :     QString ret = defaultValue;</span></span>
-<span id="L48"><span class="lineNum">      48</span> <span class="tlaGNC">         140 :     settings.beginGroup(&quot;FangSettings&quot;);</span></span>
-<span id="L49"><span class="lineNum">      49</span> <span class="tlaGNC">          70 :     if (settings.contains(name)) {</span></span>
+<span id="L47"><span class="lineNum">      47</span> <span class="tlaGNC">          73 :     QString ret = defaultValue;</span></span>
+<span id="L48"><span class="lineNum">      48</span> <span class="tlaGNC">         146 :     settings.beginGroup(&quot;FangSettings&quot;);</span></span>
+<span id="L49"><span class="lineNum">      49</span> <span class="tlaGNC">          73 :     if (settings.contains(name)) {</span></span>
 <span id="L50"><span class="lineNum">      50</span> <span class="tlaGNC">          16 :         ret = settings.value(name).toString();</span></span>
 <span id="L51"><span class="lineNum">      51</span>              :     }</span>
 <span id="L52"><span class="lineNum">      52</span>              :     </span>
-<span id="L53"><span class="lineNum">      53</span> <span class="tlaGNC">          70 :     settings.endGroup();</span></span>
-<span id="L54"><span class="lineNum">      54</span> <span class="tlaGNC">          70 :     return ret;</span></span>
+<span id="L53"><span class="lineNum">      53</span> <span class="tlaGNC">          73 :     settings.endGroup();</span></span>
+<span id="L54"><span class="lineNum">      54</span> <span class="tlaGNC">          73 :     return ret;</span></span>
 <span id="L55"><span class="lineNum">      55</span> <span class="tlaUNC tlaBgUNC">           0 : }</span></span>
 <span id="L56"><span class="lineNum">      56</span>              : </span>
 <span id="L57"><span class="lineNum">      57</span> <span class="tlaGNC tlaBgGNC">          15 : void FangSettings::setStringSetting(const QString&amp; name, const QString&amp; newValue)</span></span>
@@ -182,9 +182,9 @@
 <span id="L120"><span class="lineNum">     120</span>              :     }</span>
 <span id="L121"><span class="lineNum">     121</span>              : }</span>
 <span id="L122"><span class="lineNum">     122</span>              : </span>
-<span id="L123"><span class="lineNum">     123</span> <span class="tlaGNC">          52 : QString FangSettings::getStyle()</span></span>
+<span id="L123"><span class="lineNum">     123</span> <span class="tlaGNC">          55 : QString FangSettings::getStyle()</span></span>
 <span id="L124"><span class="lineNum">     124</span>              : {</span>
-<span id="L125"><span class="lineNum">     125</span> <span class="tlaGNC">          52 :     return getStringSetting(&quot;style&quot;, &quot;DEFAULT&quot;);</span></span>
+<span id="L125"><span class="lineNum">     125</span> <span class="tlaGNC">          55 :     return getStringSetting(&quot;style&quot;, &quot;DEFAULT&quot;);</span></span>
 <span id="L126"><span class="lineNum">     126</span>              : }</span>
 <span id="L127"><span class="lineNum">     127</span>              : </span>
 <span id="L128"><span class="lineNum">     128</span> <span class="tlaGNC">           8 : void FangSettings::setStyle(QString s)</span></span>
