@@ -2,10 +2,12 @@
 #include <QTest>
 #include <QSignalSpy>
 #include <QSettings>
+#include <QProcess>
 #include <QGuiApplication>
 #include <QStyleHints>
 
 #include "../../src/models/FangSettings.h"
+#include "../../src/db/DBSettingsKey.h"
 #include "../MockDBSettings.h"
 
 class TestFangSettings : public QObject
@@ -44,6 +46,11 @@ private slots:
     void testGetCacheLength_delegatesToDBSettings();
     void testSetCacheLength_delegatesToDBSettings();
     void testCacheLength_dbSettingChangedEmitsSignal();
+
+    // DBSettingsKeyDefaultValue tests
+    void testDBSettingsKeyDefaultValue_knownKey();
+    void testDBSettingsKeyDefaultValue_unknownKeyCrashes();
+    void testDBSettingsKeyDefaultValue_unknownKeyCrashes_helper();
 
     // Refresh property tests
     void testGetRefresh_defaultValue();
@@ -267,6 +274,38 @@ void TestFangSettings::testCacheLength_dbSettingChangedEmitsSignal()
 
     QCOMPARE(spy.count(), 1);
     QCOMPARE(spy.first().first().toString(), QString("3MONTHS"));
+}
+
+// ============================================================================
+// DBSettingsKeyDefaultValue tests
+// ============================================================================
+
+void TestFangSettings::testDBSettingsKeyDefaultValue_knownKey()
+{
+    QCOMPARE(DBSettingsKeyDefaultValue(CACHE_LENGTH), TWO_WEEKS);
+}
+
+void TestFangSettings::testDBSettingsKeyDefaultValue_unknownKeyCrashes()
+{
+    // FANG_UNREACHABLE aborts the process, so we verify in a subprocess.
+    QProcess process;
+    QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+    env.insert("FANG_DEATH_TEST", "1");
+    process.setProcessEnvironment(env);
+    process.start(QCoreApplication::applicationFilePath(),
+                  {"testDBSettingsKeyDefaultValue_unknownKeyCrashes_helper"});
+    QVERIFY(process.waitForFinished(5000));
+    QVERIFY(process.exitStatus() == QProcess::CrashExit ||
+            process.exitCode() != 0);
+}
+
+void TestFangSettings::testDBSettingsKeyDefaultValue_unknownKeyCrashes_helper()
+{
+    if (!qEnvironmentVariableIsSet("FANG_DEATH_TEST")) {
+        QSKIP("Only runs as a subprocess of testDBSettingsKeyDefaultValue_unknownKeyCrashes");
+    }
+    DBSettingsKey invalidKey = static_cast<DBSettingsKey>(999);
+    DBSettingsKeyDefaultValue(invalidKey);
 }
 
 // ============================================================================
