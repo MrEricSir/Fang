@@ -31,18 +31,18 @@
             <td class="headerValue">coverage.info.cleaned</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntryMed">76.5&nbsp;%</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
             <td class="headerCovTableEntry">17</td>
-            <td class="headerCovTableEntry">13</td>
+            <td class="headerCovTableEntry">17</td>
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-03-31 18:15:46</td>
+            <td class="headerValue">2026-03-31 19:54:56</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntryLo">60.0&nbsp;%</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
             <td class="headerCovTableEntry">5</td>
-            <td class="headerCovTableEntry">3</td>
+            <td class="headerCovTableEntry">5</td>
           </tr>
                   <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
                 </table>
@@ -62,42 +62,42 @@
 <pre class="source">
 <span id="L1"><span class="lineNum">       1</span>              : #include &quot;SearchFeedItem.h&quot;</span>
 <span id="L2"><span class="lineNum">       2</span>              : </span>
-<span id="L3"><span class="lineNum">       3</span> <span class="tlaGNC tlaBgGNC">           1 : SearchFeedItem::SearchFeedItem(ListModel *feedList) :</span></span>
+<span id="L3"><span class="lineNum">       3</span> <span class="tlaGNC tlaBgGNC">          12 : SearchFeedItem::SearchFeedItem(ListModel *feedList) :</span></span>
 <span id="L4"><span class="lineNum">       4</span>              :     LisvelFeedItem(FEED_ID_SEARCH, -3, &quot;Search Results&quot;, feedList),</span>
-<span id="L5"><span class="lineNum">       5</span> <span class="tlaGNC">           1 :     searchScope(Scope::Global),</span></span>
-<span id="L6"><span class="lineNum">       6</span> <span class="tlaGNC">           1 :     scopeId(-1)</span></span>
+<span id="L5"><span class="lineNum">       5</span> <span class="tlaGNC">          12 :     searchScope(Scope::Global),</span></span>
+<span id="L6"><span class="lineNum">       6</span> <span class="tlaGNC">          12 :     scopeId(-1)</span></span>
 <span id="L7"><span class="lineNum">       7</span>              : {</span>
-<span id="L8"><span class="lineNum">       8</span> <span class="tlaGNC">           1 : }</span></span>
+<span id="L8"><span class="lineNum">       8</span> <span class="tlaGNC">          12 : }</span></span>
 <span id="L9"><span class="lineNum">       9</span>              : </span>
-<span id="L10"><span class="lineNum">      10</span> <span class="tlaGNC">           1 : void SearchFeedItem::setScope(Scope scope, qint64 id)</span></span>
+<span id="L10"><span class="lineNum">      10</span> <span class="tlaGNC">           3 : void SearchFeedItem::setScope(Scope scope, qint64 id)</span></span>
 <span id="L11"><span class="lineNum">      11</span>              : {</span>
-<span id="L12"><span class="lineNum">      12</span> <span class="tlaGNC">           1 :     searchScope = scope;</span></span>
-<span id="L13"><span class="lineNum">      13</span> <span class="tlaGNC">           1 :     scopeId = id;</span></span>
-<span id="L14"><span class="lineNum">      14</span> <span class="tlaGNC">           1 : }</span></span>
+<span id="L12"><span class="lineNum">      12</span> <span class="tlaGNC">           3 :     searchScope = scope;</span></span>
+<span id="L13"><span class="lineNum">      13</span> <span class="tlaGNC">           3 :     scopeId = id;</span></span>
+<span id="L14"><span class="lineNum">      14</span> <span class="tlaGNC">           3 : }</span></span>
 <span id="L15"><span class="lineNum">      15</span>              : </span>
-<span id="L16"><span class="lineNum">      16</span> <span class="tlaGNC">           8 : void SearchFeedItem::setSearchQuery(const QString&amp; query)</span></span>
+<span id="L16"><span class="lineNum">      16</span> <span class="tlaGNC">          13 : void SearchFeedItem::setSearchQuery(const QString&amp; query)</span></span>
 <span id="L17"><span class="lineNum">      17</span>              : {</span>
-<span id="L18"><span class="lineNum">      18</span> <span class="tlaGNC">           8 :     searchQuery = query.trimmed();</span></span>
+<span id="L18"><span class="lineNum">      18</span> <span class="tlaGNC">          13 :     searchQuery = query.trimmed();</span></span>
 <span id="L19"><span class="lineNum">      19</span>              : </span>
 <span id="L20"><span class="lineNum">      20</span>              :     // Clear any existing results when starting a new search.</span>
-<span id="L21"><span class="lineNum">      21</span> <span class="tlaGNC">           8 :     clearNews();</span></span>
+<span id="L21"><span class="lineNum">      21</span> <span class="tlaGNC">          13 :     clearNews();</span></span>
 <span id="L22"><span class="lineNum">      22</span>              : </span>
-<span id="L23"><span class="lineNum">      23</span> <span class="tlaGNC">           8 :     setTitle(&quot;Search Results&quot;);</span></span>
-<span id="L24"><span class="lineNum">      24</span> <span class="tlaGNC">           8 : }</span></span>
+<span id="L23"><span class="lineNum">      23</span> <span class="tlaGNC">          13 :     setTitle(&quot;Search Results&quot;);</span></span>
+<span id="L24"><span class="lineNum">      24</span> <span class="tlaGNC">          13 : }</span></span>
 <span id="L25"><span class="lineNum">      25</span>              : </span>
-<span id="L26"><span class="lineNum">      26</span> <span class="tlaUNC tlaBgUNC">           0 : bool SearchFeedItem::canBookmark(qint64 bookmarkID, bool allowBackward)</span></span>
+<span id="L26"><span class="lineNum">      26</span> <span class="tlaGNC">           2 : bool SearchFeedItem::canBookmark(qint64 bookmarkID, bool allowBackward)</span></span>
 <span id="L27"><span class="lineNum">      27</span>              : {</span>
 <span id="L28"><span class="lineNum">      28</span>              :     Q_UNUSED(bookmarkID);</span>
 <span id="L29"><span class="lineNum">      29</span>              :     Q_UNUSED(allowBackward);</span>
 <span id="L30"><span class="lineNum">      30</span>              : </span>
 <span id="L31"><span class="lineNum">      31</span>              :     // Search results are relevance-ordered, not chronological.</span>
 <span id="L32"><span class="lineNum">      32</span>              :     // Bookmarking doesn't make sense in this context.</span>
-<span id="L33"><span class="lineNum">      33</span> <span class="tlaUNC">           0 :     return false;</span></span>
+<span id="L33"><span class="lineNum">      33</span> <span class="tlaGNC">           2 :     return false;</span></span>
 <span id="L34"><span class="lineNum">      34</span>              : }</span>
 <span id="L35"><span class="lineNum">      35</span>              : </span>
-<span id="L36"><span class="lineNum">      36</span> <span class="tlaUNC">           0 : bool SearchFeedItem::bookmarksEnabled() const</span></span>
+<span id="L36"><span class="lineNum">      36</span> <span class="tlaGNC">           1 : bool SearchFeedItem::bookmarksEnabled() const</span></span>
 <span id="L37"><span class="lineNum">      37</span>              : {</span>
-<span id="L38"><span class="lineNum">      38</span> <span class="tlaUNC">           0 :     return false;</span></span>
+<span id="L38"><span class="lineNum">      38</span> <span class="tlaGNC">           1 :     return false;</span></span>
 <span id="L39"><span class="lineNum">      39</span>              : }</span>
         </pre>
               </td>
