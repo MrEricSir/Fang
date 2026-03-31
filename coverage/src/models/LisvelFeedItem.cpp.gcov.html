@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-03-31 08:26:46</td>
+            <td class="headerValue">2026-03-31 18:15:46</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -65,23 +65,23 @@
 <span id="L3"><span class="lineNum">       3</span>              : #include &quot;src/models/NewsList.h&quot;</span>
 <span id="L4"><span class="lineNum">       4</span>              : #include &quot;../utilities/FangLogging.h&quot;</span>
 <span id="L5"><span class="lineNum">       5</span>              : </span>
-<span id="L6"><span class="lineNum">       6</span> <span class="tlaGNC tlaBgGNC">          92 : LisvelFeedItem::LisvelFeedItem(const qint64 id, const qint32 ordinal, const QString&amp; title, QObject *parent) :</span></span>
-<span id="L7"><span class="lineNum">       7</span> <span class="tlaGNC">          92 :     FeedItem(id, ordinal, title, &quot;&quot;, QDateTime(), 0, QUrl(), QUrl(), &quot;&quot;, QUrl(), QDateTime(), -1, true, FeedTypeRSS, parent)</span></span>
+<span id="L6"><span class="lineNum">       6</span> <span class="tlaGNC tlaBgGNC">         110 : LisvelFeedItem::LisvelFeedItem(const qint64 id, const qint32 ordinal, const QString&amp; title, QObject *parent) :</span></span>
+<span id="L7"><span class="lineNum">       7</span> <span class="tlaGNC">         110 :     FeedItem(id, ordinal, title, &quot;&quot;, QDateTime(), 0, QUrl(), QUrl(), &quot;&quot;, QUrl(), QDateTime(), -1, true, FeedTypeRSS, parent)</span></span>
 <span id="L8"><span class="lineNum">       8</span>              : {</span>
-<span id="L9"><span class="lineNum">       9</span> <span class="tlaGNC">          92 : }</span></span>
+<span id="L9"><span class="lineNum">       9</span> <span class="tlaGNC">         110 : }</span></span>
 <span id="L10"><span class="lineNum">      10</span>              : </span>
-<span id="L11"><span class="lineNum">      11</span> <span class="tlaGNC">          83 : void LisvelFeedItem::setBookmark(qint64 toBookmarkID)</span></span>
+<span id="L11"><span class="lineNum">      11</span> <span class="tlaGNC">          89 : void LisvelFeedItem::setBookmark(qint64 toBookmarkID)</span></span>
 <span id="L12"><span class="lineNum">      12</span>              : {</span>
 <span id="L13"><span class="lineNum">      13</span>              :     // Call base class implementation.</span>
-<span id="L14"><span class="lineNum">      14</span> <span class="tlaGNC">          83 :     FeedItem::setBookmark(toBookmarkID);</span></span>
+<span id="L14"><span class="lineNum">      14</span> <span class="tlaGNC">          89 :     FeedItem::setBookmark(toBookmarkID);</span></span>
 <span id="L15"><span class="lineNum">      15</span>              : </span>
 <span id="L16"><span class="lineNum">      16</span>              :     // Get the position data (timestamp, id) for Lisvel ordering comparison.</span>
-<span id="L17"><span class="lineNum">      17</span> <span class="tlaGNC">          83 :     if (toBookmarkID &gt;= 0) {</span></span>
-<span id="L18"><span class="lineNum">      18</span> <span class="tlaGNC">          82 :         NewsItem* item = getNewsList()-&gt;fullNewsItemForID(toBookmarkID);</span></span>
-<span id="L19"><span class="lineNum">      19</span> <span class="tlaGNC">          82 :         if (item) {</span></span>
-<span id="L20"><span class="lineNum">      20</span> <span class="tlaGNC">          79 :             _bookmarkPosition = NewsPosition(toBookmarkID, item-&gt;getTimestamp());</span></span>
-<span id="L21"><span class="lineNum">      21</span> <span class="tlaGNC">         158 :             qCDebug(logModel) &lt;&lt; &quot;LisvelFeedItem::setBookmark: ID&quot; &lt;&lt; toBookmarkID</span></span>
-<span id="L22"><span class="lineNum">      22</span> <span class="tlaGNC">          79 :                               &lt;&lt; &quot;timestamp&quot; &lt;&lt; item-&gt;getTimestamp().toString(Qt::ISODate);</span></span>
+<span id="L17"><span class="lineNum">      17</span> <span class="tlaGNC">          89 :     if (toBookmarkID &gt;= 0) {</span></span>
+<span id="L18"><span class="lineNum">      18</span> <span class="tlaGNC">          88 :         NewsItem* item = getNewsList()-&gt;fullNewsItemForID(toBookmarkID);</span></span>
+<span id="L19"><span class="lineNum">      19</span> <span class="tlaGNC">          88 :         if (item) {</span></span>
+<span id="L20"><span class="lineNum">      20</span> <span class="tlaGNC">          85 :             _bookmarkPosition = NewsPosition(toBookmarkID, item-&gt;getTimestamp());</span></span>
+<span id="L21"><span class="lineNum">      21</span> <span class="tlaGNC">         170 :             qCDebug(logModel) &lt;&lt; &quot;LisvelFeedItem::setBookmark: ID&quot; &lt;&lt; toBookmarkID</span></span>
+<span id="L22"><span class="lineNum">      22</span> <span class="tlaGNC">          85 :                               &lt;&lt; &quot;timestamp&quot; &lt;&lt; item-&gt;getTimestamp().toString(Qt::ISODate);</span></span>
 <span id="L23"><span class="lineNum">      23</span>              :         } else {</span>
 <span id="L24"><span class="lineNum">      24</span>              :             // Item not in memory: clear the position so canBookmark will try to initialize</span>
 <span id="L25"><span class="lineNum">      25</span>              :             // with the ID only (in other words, not the timestamp.)</span>
@@ -93,7 +93,7 @@
 <span id="L31"><span class="lineNum">      31</span> <span class="tlaGNC">           1 :         _bookmarkPosition = NewsPosition();</span></span>
 <span id="L32"><span class="lineNum">      32</span> <span class="tlaGNC">           2 :         qCDebug(logModel) &lt;&lt; &quot;LisvelFeedItem::setBookmark: Clearing bookmark&quot;;</span></span>
 <span id="L33"><span class="lineNum">      33</span>              :     }</span>
-<span id="L34"><span class="lineNum">      34</span> <span class="tlaGNC">          83 : }</span></span>
+<span id="L34"><span class="lineNum">      34</span> <span class="tlaGNC">          89 : }</span></span>
 <span id="L35"><span class="lineNum">      35</span>              : </span>
 <span id="L36"><span class="lineNum">      36</span> <span class="tlaGNC">         205 : bool LisvelFeedItem::canBookmark(qint64 proposedBookmarkID, bool allowBackward)</span></span>
 <span id="L37"><span class="lineNum">      37</span>              : {</span>

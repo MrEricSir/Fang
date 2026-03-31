@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-03-31 08:26:46</td>
+            <td class="headerValue">2026-03-31 18:15:46</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryMed">75.0&nbsp;%</td>
@@ -173,8 +173,8 @@
 <span id="L111"><span class="lineNum">     111</span> <span class="tlaGNC">           8 :     inline quint32 getUnreadCount() const { return unreadCount; }</span></span>
 <span id="L112"><span class="lineNum">     112</span> <span class="tlaGNC">           5 :     inline QString getDropTarget() const { return dropTarget; }</span></span>
 <span id="L113"><span class="lineNum">     113</span> <span class="tlaGNC">           2 :     inline FeedItem* getSelf() const { return const_cast&lt;FeedItem*&gt;(this); }</span></span>
-<span id="L114"><span class="lineNum">     114</span> <span class="tlaGNC">         661 :     virtual inline qint64 getDbID() const { return _id; }</span></span>
-<span id="L115"><span class="lineNum">     115</span> <span class="tlaGNC">         112 :     inline bool isSpecialFeed() const { return _id &lt; 0; }</span></span>
+<span id="L114"><span class="lineNum">     114</span> <span class="tlaGNC">         736 :     virtual inline qint64 getDbID() const { return _id; }</span></span>
+<span id="L115"><span class="lineNum">     115</span> <span class="tlaGNC">         124 :     inline bool isSpecialFeed() const { return _id &lt; 0; }</span></span>
 <span id="L116"><span class="lineNum">     116</span> <span class="tlaUNC tlaBgUNC">           0 :     inline bool isSearchFeed() const { return _id == FEED_ID_SEARCH; }</span></span>
 <span id="L117"><span class="lineNum">     117</span> <span class="tlaUNC">           0 :     inline FeedType getFeedType() const { return _feedType; }</span></span>
 <span id="L118"><span class="lineNum">     118</span> <span class="tlaUNC">           0 :     inline QString getEtag() const { return etag; }</span></span>
@@ -212,7 +212,7 @@
 <span id="L150"><span class="lineNum">     150</span>              :         Note: This represents news items that are loaded and can be viewed. As such it will</span>
 <span id="L151"><span class="lineNum">     151</span>              :         slowly grow as more news items are added to the feed.</span>
 <span id="L152"><span class="lineNum">     152</span>              :      */</span>
-<span id="L153"><span class="lineNum">     153</span> <span class="tlaGNC tlaBgGNC">        2994 :     inline NewsList* getNewsList() { return &amp;newsList; }</span></span>
+<span id="L153"><span class="lineNum">     153</span> <span class="tlaGNC tlaBgGNC">        3466 :     inline NewsList* getNewsList() { return &amp;newsList; }</span></span>
 <span id="L154"><span class="lineNum">     154</span>              :     </span>
 <span id="L155"><span class="lineNum">     155</span>              :     /*!</span>
 <span id="L156"><span class="lineNum">     156</span>              :         \brief Used to set the bookmark internally.  External classes shouldn't need to call this.</span>
@@ -231,7 +231,7 @@
 <span id="L169"><span class="lineNum">     169</span>              :         \brief Returns the current bookmark ID or -1 if none.</span>
 <span id="L170"><span class="lineNum">     170</span>              :         \return</span>
 <span id="L171"><span class="lineNum">     171</span>              :      */</span>
-<span id="L172"><span class="lineNum">     172</span> <span class="tlaGNC">         806 :     inline qint64 getBookmarkID() const { return _bookmarkID; }</span></span>
+<span id="L172"><span class="lineNum">     172</span> <span class="tlaGNC">         810 :     inline qint64 getBookmarkID() const { return _bookmarkID; }</span></span>
 <span id="L173"><span class="lineNum">     173</span>              :     </span>
 <span id="L174"><span class="lineNum">     174</span>              :     /*!</span>
 <span id="L175"><span class="lineNum">     175</span>              :         \brief Detaches the feed ID when this feed is being disconnected.</span>
@@ -242,14 +242,14 @@
 <span id="L180"><span class="lineNum">     180</span>              :         \return The ID of the very first item in the feed that we have in our database;</span>
 <span id="L181"><span class="lineNum">     181</span>              :                 not the ID that's necessarily currently loaded.</span>
 <span id="L182"><span class="lineNum">     182</span>              :      */</span>
-<span id="L183"><span class="lineNum">     183</span> <span class="tlaGNC tlaBgGNC">           3 :     inline qint64 getFirstNewsID() { return firstNewsID; }</span></span>
+<span id="L183"><span class="lineNum">     183</span> <span class="tlaGNC tlaBgGNC">           8 :     inline qint64 getFirstNewsID() { return firstNewsID; }</span></span>
 <span id="L184"><span class="lineNum">     184</span>              :     </span>
 <span id="L185"><span class="lineNum">     185</span>              :     /*!</span>
 <span id="L186"><span class="lineNum">     186</span>              :         \brief setFirstNewsID Sets the first item available in the feed.  This is used</span>
 <span id="L187"><span class="lineNum">     187</span>              :                               to tell if we should draw the top bookmark to unbookmark all.</span>
 <span id="L188"><span class="lineNum">     188</span>              :         \param id</span>
 <span id="L189"><span class="lineNum">     189</span>              :      */</span>
-<span id="L190"><span class="lineNum">     190</span> <span class="tlaGNC">           8 :     inline void setFirstNewsID(qint64 id) { firstNewsID = id; }</span></span>
+<span id="L190"><span class="lineNum">     190</span> <span class="tlaGNC">          46 :     inline void setFirstNewsID(qint64 id) { firstNewsID = id; }</span></span>
 <span id="L191"><span class="lineNum">     191</span>              :     </span>
 <span id="L192"><span class="lineNum">     192</span>              :     /*!</span>
 <span id="L193"><span class="lineNum">     193</span>              :         \brief Sets the unread count to the new value and emits a change signal.</span>
