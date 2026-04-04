@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-04-04 05:25:47</td>
+            <td class="headerValue">2026-04-04 07:39:46</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryLo">66.7&nbsp;%</td>
@@ -65,17 +65,17 @@
 <span id="L3"><span class="lineNum">       3</span>              : </span>
 <span id="L4"><span class="lineNum">       4</span>              : #include &lt;QObject&gt;</span>
 <span id="L5"><span class="lineNum">       5</span>              : #include &lt;QString&gt;</span>
-<span id="L6"><span class="lineNum">       6</span>              : #include &quot;../FangObject.h&quot;</span>
+<span id="L6"><span class="lineNum">       6</span>              : #include &lt;QObject&gt;</span>
 <span id="L7"><span class="lineNum">       7</span>              : #include &quot;DBSettingsKey.h&quot;</span>
 <span id="L8"><span class="lineNum">       8</span>              : </span>
 <span id="L9"><span class="lineNum">       9</span>              : /*!</span>
 <span id="L10"><span class="lineNum">      10</span>              :     \brief Interface for DBSettings allowing mock implementations for testing.</span>
 <span id="L11"><span class="lineNum">      11</span>              :  */</span>
-<span id="L12"><span class="lineNum">      12</span>              : class DBSettingsInterface : public FangObject</span>
+<span id="L12"><span class="lineNum">      12</span>              : class DBSettingsInterface : public QObject</span>
 <span id="L13"><span class="lineNum">      13</span>              : {</span>
 <span id="L14"><span class="lineNum">      14</span>              :     Q_OBJECT</span>
 <span id="L15"><span class="lineNum">      15</span>              : public:</span>
-<span id="L16"><span class="lineNum">      16</span> <span class="tlaGNC tlaBgGNC">          35 :     explicit DBSettingsInterface(FangObject *parent = nullptr) : FangObject(parent) {}</span></span>
+<span id="L16"><span class="lineNum">      16</span> <span class="tlaGNC tlaBgGNC">          35 :     explicit DBSettingsInterface(QObject *parent = nullptr) : QObject(parent) {}</span></span>
 <span id="L17"><span class="lineNum">      17</span> <span class="tlaGNC">          35 :     virtual ~DBSettingsInterface() = default;</span></span>
 <span id="L18"><span class="lineNum">      18</span>              : </span>
 <span id="L19"><span class="lineNum">      19</span>              : signals:</span>

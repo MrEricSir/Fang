@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-04-04 05:25:47</td>
+            <td class="headerValue">2026-04-04 07:39:46</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -66,7 +66,7 @@
 <span id="L4"><span class="lineNum">       4</span>              : #include &quot;../models/FeedItem.h&quot;</span>
 <span id="L5"><span class="lineNum">       5</span>              : #include &quot;../models/ListModel.h&quot;</span>
 <span id="L6"><span class="lineNum">       6</span>              : #include &quot;FeedDiscovery.h&quot;</span>
-<span id="L7"><span class="lineNum">       7</span>              : #include &quot;../FangObject.h&quot;</span>
+<span id="L7"><span class="lineNum">       7</span>              : #include &lt;QObject&gt;</span>
 <span id="L8"><span class="lineNum">       8</span>              : </span>
 <span id="L9"><span class="lineNum">       9</span>              : #include &lt;QObject&gt;</span>
 <span id="L10"><span class="lineNum">      10</span>              : #include &lt;QMap&gt;</span>
@@ -82,7 +82,7 @@
 <span id="L20"><span class="lineNum">      20</span>              :     If both are false at the time done() is emitted, you're hella</span>
 <span id="L21"><span class="lineNum">      21</span>              :     ready to rock and roll!</span>
 <span id="L22"><span class="lineNum">      22</span>              :  */</span>
-<span id="L23"><span class="lineNum">      23</span>              : class BatchFeedDiscovery : public FangObject</span>
+<span id="L23"><span class="lineNum">      23</span>              : class BatchFeedDiscovery : public QObject</span>
 <span id="L24"><span class="lineNum">      24</span>              : {</span>
 <span id="L25"><span class="lineNum">      25</span>              :     Q_OBJECT</span>
 <span id="L26"><span class="lineNum">      26</span>              : public:</span>

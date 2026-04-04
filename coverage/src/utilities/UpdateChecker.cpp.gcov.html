@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-04-04 05:25:47</td>
+            <td class="headerValue">2026-04-04 07:39:46</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryMed">85.7&nbsp;%</td>
@@ -75,7 +75,7 @@
 <span id="L13"><span class="lineNum">      13</span>              : const int UpdateChecker::CHECK_INTERVAL_MS = 24 * 60 * 60 * 1000; // 24 hours</span>
 <span id="L14"><span class="lineNum">      14</span>              : </span>
 <span id="L15"><span class="lineNum">      15</span> <span class="tlaGNC tlaBgGNC">          22 : UpdateChecker::UpdateChecker(QObject *parent, FeedSource* injectedParser, SettingsInterface* injectedSettings) :</span></span>
-<span id="L16"><span class="lineNum">      16</span>              :     FangObject(parent),</span>
+<span id="L16"><span class="lineNum">      16</span>              :     QObject(parent),</span>
 <span id="L17"><span class="lineNum">      17</span> <span class="tlaGNC">          22 :     parser(injectedParser ? injectedParser : new FeedFetcher(this)),</span></span>
 <span id="L18"><span class="lineNum">      18</span> <span class="tlaGNC">          22 :     settingsInterface(injectedSettings),</span></span>
 <span id="L19"><span class="lineNum">      19</span> <span class="tlaGNC">          22 :     timer(this),</span></span>

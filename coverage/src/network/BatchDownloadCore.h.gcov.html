@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-04-04 05:25:47</td>
+            <td class="headerValue">2026-04-04 07:39:46</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -69,7 +69,7 @@
 <span id="L7"><span class="lineNum">       7</span>              : #include &lt;QMap&gt;</span>
 <span id="L8"><span class="lineNum">       8</span>              : #include &lt;QList&gt;</span>
 <span id="L9"><span class="lineNum">       9</span>              : </span>
-<span id="L10"><span class="lineNum">      10</span>              : #include &quot;../FangObject.h&quot;</span>
+<span id="L10"><span class="lineNum">      10</span>              : #include &lt;QObject&gt;</span>
 <span id="L11"><span class="lineNum">      11</span>              : #include &quot;NetworkDownloadCore.h&quot;</span>
 <span id="L12"><span class="lineNum">      12</span>              : </span>
 <span id="L13"><span class="lineNum">      13</span>              : class QNetworkAccessManager;</span>
@@ -89,7 +89,7 @@
 <span id="L27"><span class="lineNum">      27</span>              : </span>
 <span id="L28"><span class="lineNum">      28</span>              :     Use case: You need to download multiple things and wait for all the results before proeeding.</span>
 <span id="L29"><span class="lineNum">      29</span>              :  */</span>
-<span id="L30"><span class="lineNum">      30</span>              : class BatchDownloadCore : public FangObject</span>
+<span id="L30"><span class="lineNum">      30</span>              : class BatchDownloadCore : public QObject</span>
 <span id="L31"><span class="lineNum">      31</span>              : {</span>
 <span id="L32"><span class="lineNum">      32</span>              :     Q_OBJECT</span>
 <span id="L33"><span class="lineNum">      33</span>              : public:</span>

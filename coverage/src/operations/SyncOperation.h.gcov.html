@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-04-04 05:25:47</td>
+            <td class="headerValue">2026-04-04 07:39:46</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryLo">50.0&nbsp;%</td>
@@ -66,7 +66,7 @@
 <span id="L4"><span class="lineNum">       4</span>              : #include &lt;QObject&gt;</span>
 <span id="L5"><span class="lineNum">       5</span>              : #include &lt;QString&gt;</span>
 <span id="L6"><span class="lineNum">       6</span>              : </span>
-<span id="L7"><span class="lineNum">       7</span>              : #include &quot;../FangObject.h&quot;</span>
+<span id="L7"><span class="lineNum">       7</span>              : #include &lt;QObject&gt;</span>
 <span id="L8"><span class="lineNum">       8</span>              : </span>
 <span id="L9"><span class="lineNum">       9</span>              : class OperationManager;</span>
 <span id="L10"><span class="lineNum">      10</span>              : </span>
@@ -74,7 +74,7 @@
 <span id="L12"><span class="lineNum">      12</span>              :     \brief Base class for synchronous operations. This is mainly used for operations that</span>
 <span id="L13"><span class="lineNum">      13</span>              :     complete quickly and/or need to happen in a certain order, such as database operations.</span>
 <span id="L14"><span class="lineNum">      14</span>              :  */</span>
-<span id="L15"><span class="lineNum">      15</span>              : class SyncOperation : public FangObject</span>
+<span id="L15"><span class="lineNum">      15</span>              : class SyncOperation : public QObject</span>
 <span id="L16"><span class="lineNum">      16</span>              : {</span>
 <span id="L17"><span class="lineNum">      17</span>              :     Q_OBJECT</span>
 <span id="L18"><span class="lineNum">      18</span>              : </span>
