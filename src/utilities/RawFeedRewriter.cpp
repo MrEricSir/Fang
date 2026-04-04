@@ -6,7 +6,7 @@
 #include "QImageCache.h"
 
 RawFeedRewriter::RawFeedRewriter(QObject *parent, QNetworkAccessManager* networkManager) :
-    FangObject(parent),
+    QObject(parent),
     newsList(nullptr),
     sanitizer(),
     imageGrabber(nullptr, networkManager)

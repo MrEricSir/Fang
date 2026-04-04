@@ -6,7 +6,7 @@
 #include <QSqlQuery>
 #include <QSqlError>
 
-#include "../FangObject.h"
+#include <QObject>
 
 #define FANG_BACKGROUND_CHECK do { if (shouldTerminate()) return; } while(0)
 
@@ -17,7 +17,7 @@ class OperationManager;
 
     Intended to be used for network requests, etc.
  */
-class AsyncOperation : public FangObject
+class AsyncOperation : public QObject
 {
     Q_OBJECT
 

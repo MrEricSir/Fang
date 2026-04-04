@@ -3,7 +3,7 @@
 
 add_library(FangTestLib STATIC
     # Core infrastructure (used by almost every test)
-    ${CMAKE_SOURCE_DIR}/src/FangObject.cpp
+    ${CMAKE_SOURCE_DIR}/src/utilities/QObjectLeakTracker.cpp
     ${CMAKE_SOURCE_DIR}/src/utilities/FangLogging.cpp
 
     # App-level sources used by multiple tests
@@ -30,6 +30,7 @@ target_link_libraries(FangTestLib PUBLIC
     QImageCache
     Qt6::Concurrent
     Qt6::Core
+    Qt6::CorePrivate
     Qt6::Network
     Qt6::Gui
     Qt6::Svg

@@ -10,8 +10,8 @@ NewsSlot::NewsSlot(NewsItem* newsItem)
 {}
 
 // NewsList implementation
-NewsList::NewsList(FangObject *parent)
-    : FangObject{parent}
+NewsList::NewsList(QObject *parent)
+    : QObject{parent}
 {}
 
 NewsList::~NewsList()

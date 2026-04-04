@@ -7,7 +7,7 @@ BatchDownloadCore::BatchDownloadCore(int timeoutMs,
                                      int maxRedirects,
                                      QObject* parent,
                                      QNetworkAccessManager* networkManager)
-    : FangObject(parent)
+    : QObject(parent)
     , manager(networkManager ? networkManager : new BrowserNetworkAccessManager(this))
     , totalCount(0)
 {

@@ -4,7 +4,7 @@
 #include <QList>
 #include <functional>
 
-#include "../FangObject.h"
+#include <QObject>
 #include "NewsPosition.h"
 
 class NewsItem;
@@ -41,10 +41,10 @@ using ReloadCallback = std::function<QList<NewsItem*>(const QList<qint64>&)>;
     Public methods (size, first, last, at, indexOf) operate on the display window.
     Internal methods (fullSize, fullAt, etc.) operate on the complete list.
  */
-class NewsList : public FangObject
+class NewsList : public QObject
 {
 public:
-    explicit NewsList(FangObject *parent = nullptr);
+    explicit NewsList(QObject *parent = nullptr);
     virtual ~NewsList();
 
     /*!

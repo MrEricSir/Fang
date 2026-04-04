@@ -7,7 +7,7 @@
 #include <QMap>
 #include <QList>
 
-#include "../FangObject.h"
+#include <QObject>
 #include "NetworkDownloadCore.h"
 
 class QNetworkAccessManager;
@@ -27,7 +27,7 @@ struct BatchDownloadResult {
 
     Use case: You need to download multiple things and wait for all the results before proeeding.
  */
-class BatchDownloadCore : public FangObject
+class BatchDownloadCore : public QObject
 {
     Q_OBJECT
 public:

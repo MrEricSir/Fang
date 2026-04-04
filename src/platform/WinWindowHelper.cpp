@@ -8,8 +8,8 @@
 #include <dwmapi.h>
 #include <windowsx.h>
 
-WinWindowHelper::WinWindowHelper(QQuickWindow* window, FangSettings* settings, FangObject* parent)
-    : FangObject(parent)
+WinWindowHelper::WinWindowHelper(QQuickWindow* window, FangSettings* settings, QObject* parent)
+    : QObject(parent)
     , m_window(window)
     , m_settings(settings)
     , m_hwnd(reinterpret_cast<void*>(window->winId()))

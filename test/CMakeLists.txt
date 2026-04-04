@@ -35,7 +35,7 @@ add_subdirectory(TestFeedOperations)
 add_subdirectory(TestLoadNewsOperation)
 
 # Model tests
-add_subdirectory(TestFangObject)
+add_subdirectory(TestLeakTracker)
 add_subdirectory(TestFangSettings)
 add_subdirectory(TestFeedItem)
 add_subdirectory(TestListModel)

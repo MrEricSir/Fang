@@ -4,7 +4,7 @@
 #include "../utilities/FangLogging.h"
 
 AsyncOperation::AsyncOperation(Priority priority, OperationManager* parent) :
-    FangObject((QObject*)parent),
+    QObject((QObject*)parent),
     operationManager(parent),
     priority(priority),
     error(false),

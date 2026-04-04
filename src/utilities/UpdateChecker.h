@@ -6,7 +6,7 @@
 #include <QUrl>
 #include <QSettings>
 
-#include "../FangObject.h"
+#include <QObject>
 #include "FeedFetcher.h"
 #include "SettingsInterface.h"
 
@@ -17,7 +17,7 @@
     and compares the latest version to the current application version.
     Emits updateAvailable() if a newer version is found.
  */
-class UpdateChecker : public FangObject
+class UpdateChecker : public QObject
 {
     Q_OBJECT
 

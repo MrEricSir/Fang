@@ -45,6 +45,7 @@ set(CMAKE_AUTOUIC ON)
 find_package(Qt6 REQUIRED COMPONENTS
     Concurrent
     Core
+    CorePrivate
     Qml
     Quick
     QuickControls2
@@ -157,7 +158,7 @@ qt_add_executable(Fang WIN32
     src/models/OPMLInteractor.cpp
     src/utilities/OPMLExport.cpp
     src/utilities/BatchFeedDiscovery.cpp
-    src/FangObject.cpp
+    src/utilities/QObjectLeakTracker.cpp
     src/network/FangQQmlNetworkAccessManagerFactory.cpp
     src/network/BatchDownloadCore.cpp
     src/notifications/Notification.cpp
@@ -221,7 +222,7 @@ qt_add_executable(Fang WIN32
     src/models/OPMLInteractor.h
     src/utilities/OPMLExport.h
     src/utilities/BatchFeedDiscovery.h
-    src/FangObject.h
+    src/utilities/QObjectLeakTracker.h
     src/network/FangQQmlNetworkAccessManagerFactory.h
     src/network/BatchDownloadCore.h
     src/notifications/Notification.h
@@ -280,6 +281,7 @@ target_link_libraries(Fang PRIVATE
     QSingleInstanceCheck
     Qt6::Concurrent
     Qt6::Core
+    Qt6::CorePrivate
     Qt6::Qml
     Qt6::Quick
     Qt6::QuickControls2

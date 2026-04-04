@@ -20,7 +20,7 @@
 #include "models/ListModel.h"
 #include "models/FangSettings.h"
 #include "RawFeed.h"
-#include "FangObject.h"
+#include <QObject>
 #include "notifications/Notification.h"
 #include "db/DBSettings.h"
 #include "server/WebServer.h"
@@ -28,7 +28,7 @@
 #include "utilities/UpdateChecker.h"
 
 
-class FangApp : public FangObject
+class FangApp : public QObject
 {
     Q_OBJECT
 public:

@@ -11,15 +11,15 @@
 #include <QAbstractListModel>
 #include <QList>
 #include <QVariant>
-#include "../FangObject.h"
+#include <QObject>
 
 class FeedItem;
 
-class ListItem: public FangObject {
+class ListItem: public QObject {
   Q_OBJECT
  
 public:
-  ListItem(QObject* parent = nullptr) : FangObject(parent) {}
+  ListItem(QObject* parent = nullptr) : QObject(parent) {}
   virtual ~ListItem() {}
   virtual QString id() const { return "invalid id"; }
   virtual QVariant data(int role) const { Q_UNUSED(role); return QVariant(); }

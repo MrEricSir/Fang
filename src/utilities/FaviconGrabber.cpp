@@ -11,7 +11,7 @@
 #include "FangLogging.h"
 
 FaviconGrabber::FaviconGrabber(QObject *parent, QNetworkAccessManager* networkManager) :
-    FangObject(parent),
+    QObject(parent),
     machine(new QSimpleStateMachine(this)),
     batchDownloader(new BatchDownloadCore(15000, 10, this, networkManager)),
     webGrabber(true, 5000, this, networkManager)

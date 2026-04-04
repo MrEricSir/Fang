@@ -1,5 +1,5 @@
 #include <QTest>
-#include "../../src/FangObject.h"
+#include <QObject>
 #include "../../src/models/NewsList.h"
 #include "../../src/models/NewsItem.h"
 #include "../../src/models/FeedItem.h"
@@ -7,7 +7,7 @@
 /**
  * @brief Tests NewsList dual list+set data structure
  */
-class TestNewsList : public FangObject
+class TestNewsList : public QObject
 {
     Q_OBJECT
 

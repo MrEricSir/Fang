@@ -8,13 +8,13 @@
 
 #include "FeedSource.h"
 #include "RawFeed.h"
-#include "../FangObject.h"
+#include <QObject>
 
 /*!
     \brief Parses an OPML document containing an RSS list.  The feeds are
            validated and can be added immediately.
  */
-class OPMLParser : public FangObject
+class OPMLParser : public QObject
 {
     Q_OBJECT
 public:

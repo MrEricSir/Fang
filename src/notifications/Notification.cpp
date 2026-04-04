@@ -5,8 +5,8 @@
 Notification::Notification(FangSettings *fangSettings,
                            ListModel *feedList,
                            AllNewsFeedItem *allNews,
-                           FangObject *parent) :
-    FangObject(parent),
+                           QObject *parent) :
+    QObject(parent),
     fangSettings(fangSettings),
     feedList(feedList),
     allNews(allNews)

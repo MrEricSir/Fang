@@ -10,9 +10,9 @@
 
 #include "AsyncOperation.h"
 #include "SyncOperation.h"
-#include "../FangObject.h"
+#include <QObject>
 
-class OperationManager : public FangObject
+class OperationManager : public QObject
 {
     Q_OBJECT
 public:

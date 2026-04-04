@@ -18,10 +18,25 @@
 
 #include <QSingleInstanceCheck/QSingleInstanceCheck.h>
 
-#include "FangObject.h"
+#include "utilities/QObjectLeakTracker.h"
 
 Q_DECL_EXPORT int main(int argc, char *argv[])
 {
+    QObjectLeakTracker::install();
+
+    // Register class name prefixes for leak report filtering.
+    for (const char *p : {
+        "Add", "AllNews", "Async", "Batch", "Bookmark", "Browser",
+        "DB", "Expire", "Fang", "FaviconGrabber", "FaviconUpdate", "Feed", "Folder",
+        "GetAll", "HTML", "Image", "Insert", "List", "Lisvel",
+        "Load", "MarkAll", "Network", "News", "Notification",
+        "OPML", "Operation", "Pinned", "QAutoStart", "QSimple",
+        "QSingle", "Raw", "Reload", "Remove", "Search", "Set",
+        "Sync", "Update", "Web", "Win", "Xml"
+    }) {
+        QObjectLeakTracker::addPrefix(p);
+    }
+
     qmlRegisterType<FeedValidator>("Fang", 1, 0, "FeedValidator");
     qmlRegisterType<NewsFeedInteractor>("Fang", 1, 0, "NewsFeedInteractor");
     qmlRegisterType<ListItem>("Fang", 1, 0, "ListItem");
@@ -85,7 +100,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     delete DB::instance();
 
     // Leak check.
-    FangObject::printRemainingObjects();
+    QObjectLeakTracker::printRemaining();
 
     return ret;
 }

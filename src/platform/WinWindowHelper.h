@@ -4,14 +4,14 @@
 #include <QAbstractNativeEventFilter>
 #include <QQuickWindow>
 
-#include "../FangObject.h"
+#include <QObject>
 
 class FangSettings;
 
 /*!
     \brief The WinWindowHelper class renders our custom titlebar on Windows.
  */
-class WinWindowHelper : public FangObject, public QAbstractNativeEventFilter
+class WinWindowHelper : public QObject, public QAbstractNativeEventFilter
 {
     Q_OBJECT
     Q_PROPERTY(int titleBarHeight READ titleBarHeight NOTIFY titleBarHeightChanged)
@@ -19,7 +19,7 @@ class WinWindowHelper : public FangObject, public QAbstractNativeEventFilter
     Q_PROPERTY(int buttonWidth READ buttonWidth NOTIFY titleBarHeightChanged)
 
 public:
-    explicit WinWindowHelper(QQuickWindow* window, FangSettings* settings, FangObject* parent = nullptr);
+    explicit WinWindowHelper(QQuickWindow* window, FangSettings* settings, QObject* parent = nullptr);
     ~WinWindowHelper() override;
 
     int titleBarHeight() const;   // resize border + caption, logical px

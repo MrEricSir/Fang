@@ -6,7 +6,7 @@
 #include <QtConcurrent>
 
 ImageGrabber::ImageGrabber(QObject *parent, QNetworkAccessManager* networkManager) :
-    FangObject(parent),
+    QObject(parent),
     batchDownloader(new BatchDownloadCore(30000, 10, this, networkManager))
 {
     connect(batchDownloader, &BatchDownloadCore::finished,

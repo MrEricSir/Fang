@@ -5,7 +5,7 @@
 #include "../utilities/FangLogging.h"
 
 OPMLParser::OPMLParser(QObject *parent) :
-    FangObject(parent),
+    QObject(parent),
     file(),
     feedList(),
     result(FeedFetchResult::InProgress)

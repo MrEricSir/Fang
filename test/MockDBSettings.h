@@ -1,7 +1,7 @@
 #ifndef MOCKDBSETTINGS_H
 #define MOCKDBSETTINGS_H
 
-#include "../src/FangObject.h"
+#include <QObject>
 #include "../src/db/DBSettingsInterface.h"
 
 /*!
@@ -12,7 +12,7 @@ class MockDBSettings : public DBSettingsInterface
 {
     Q_OBJECT
 public:
-    explicit MockDBSettings(FangObject *parent = nullptr)
+    explicit MockDBSettings(QObject *parent = nullptr)
         : DBSettingsInterface(parent)
     {
     }

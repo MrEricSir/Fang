@@ -1,7 +1,7 @@
 #ifndef NOTIFICATION_H
 #define NOTIFICATION_H
 
-#include "../FangObject.h"
+#include <QObject>
 #include "../models/FangSettings.h"
 #include "../models/ListModel.h"
 #include "../models/AllNewsFeedItem.h"
@@ -14,14 +14,14 @@
     onUnreadCountChanged() to add platform-specific behavior
     (e.g. window title updates on Windows).
  */
-class Notification : public FangObject
+class Notification : public QObject
 {
     Q_OBJECT
 public:
     explicit Notification(FangSettings *fangSettings,
                           ListModel *feedList,
                           AllNewsFeedItem *allNews,
-                          FangObject *parent = nullptr);
+                          QObject *parent = nullptr);
 
     /*!
         \brief Subclasses must call this from their constructor.

@@ -10,7 +10,7 @@
 #include <QUrl>
 
 #include "RawNews.h"
-#include "../FangObject.h"
+#include <QObject>
 #include "HTMLSanitizer.h"
 #include "ImageGrabber.h"
 
@@ -26,7 +26,7 @@
       - HTMLSanitizer for HTML cleanup and XHTML conversion
       - ImageGrabber for fetching image dimensions
  */
-class RawFeedRewriter : public FangObject
+class RawFeedRewriter : public QObject
 {
     Q_OBJECT
 public:
