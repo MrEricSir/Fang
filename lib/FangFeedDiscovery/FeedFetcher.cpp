@@ -1,9 +1,5 @@
 #include "FeedFetcher.h"
 
-#include <QFile>
-
-#include "FeedDiscoveryLogging.h"
-
 #include "FeedParser.h"
 
 // Thin QObject wrapper so FeedParser::parse() runs on the worker thread.
@@ -74,26 +70,6 @@ void FeedFetcher::parse(const QUrl& url,
     }
 
     downloader->download(url);
-}
-
-void FeedFetcher::parseFile(const QString &filename)
-{
-    initParse();
-
-    QFile file(filename);
-
-    if (!file.exists()) {
-        qCCritical(logFeedDiscovery) << "FeedFetcher::parseFile: File does not exist:" << filename;
-        return;
-    }
-
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        qCCritical(logFeedDiscovery) << "FeedFetcher::parseFile: Cannot open file:" << filename;
-        return;
-    }
-
-    QByteArray data = file.readAll();
-    emit triggerParse(data);
 }
 
 void FeedFetcher::onDownloadResult(NetworkDownloadResult downloadResult)

@@ -29,9 +29,6 @@ public slots:
                const QString& ifNoneMatch = QString(),
                const QString& ifModifiedSince = QString()) override;
 
-    // For testing purposes.
-    void parseFile(const QString& filename);
-
     FeedFetchResult getResult() override;
     QNetworkReply::NetworkError getNetworkError() { return networkError; }
     std::shared_ptr<RawFeed> getFeed() override;

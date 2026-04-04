@@ -1,7 +1,7 @@
 #include <memory>
 
+#include <QFile>
 #include <QString>
-#include <QTemporaryFile>
 #include <QTest>
 #include <QSignalSpy>
 #include <QNetworkAccessManager>
@@ -11,6 +11,16 @@
 #include "RSSAtomParser.h"
 #include "RawFeed.h"
 #include "../MockNetworkAccessManager.h"
+
+static std::shared_ptr<RawFeed> parseFeedFile(const QString &filename)
+{
+    QFile file(filename);
+    if (!file.open(QIODevice::ReadOnly)) {
+        return nullptr;
+    }
+    auto result = FeedParser::parse(file.readAll());
+    return result.ok() ? result.feed() : nullptr;
+}
 
 /**
  * @brief Tests a number of RSS feeds I've saved from around the web.  
@@ -75,30 +85,11 @@ void TestFangParser::parseTest()
     QFETCH(QDateTime, firstNewsTimestamp);
     QFETCH(bool, isPodcast);
     
-    FeedFetcher parser(this);
-    
-    QSignalSpy spy(&parser, &FeedFetcher::done);
-
     QString projectPath = PROJECT_PATH;
     QString fullFilename = projectPath + "/feeds/" + filename;
-    QFile file(fullFilename);
-    QVERIFY2(file.exists(), "File does not exist");
-    if (!file.exists()) {
-        qDebug() << "Filename: " << file.fileName();
-    }
-    
-    // Parse the file.
-    parser.parseFile(fullFilename);
-    
-    if (!spy.count()) {
-        // We *may* need to wait here.
-        spy.wait(10000);
-    }
-    
-    // Verify the signal is only emitted once.
-    QCOMPARE(spy.count(), 1);
-    
-    auto feed = parser.getFeed();
+    QVERIFY2(QFile::exists(fullFilename), "File does not exist");
+
+    auto feed = parseFeedFile(fullFilename);
     QVERIFY2(feed != nullptr, "Feed was null");
     
     // Check all dates in the feed for validity, as this is a common issue.
@@ -765,20 +756,11 @@ void TestFangParser::testMediaImage()
     QFETCH(QString, expectedFragment);
     QFETCH(bool, shouldInject);
 
-    FeedFetcher parser(this);
-    QSignalSpy spy(&parser, &FeedFetcher::done);
-
     QString projectPath = PROJECT_PATH;
     QString fullFilename = projectPath + "/feeds/" + filename;
     QVERIFY2(QFile::exists(fullFilename), "Feed file does not exist");
 
-    parser.parseFile(fullFilename);
-    if (!spy.count()) {
-        spy.wait(10000);
-    }
-    QCOMPARE(spy.count(), 1);
-
-    auto feed = parser.getFeed();
+    auto feed = parseFeedFile(fullFilename);
     QVERIFY2(feed != nullptr, "Feed was null");
     QVERIFY2(!feed->items.isEmpty(), "Feed has no items");
 
@@ -827,20 +809,11 @@ void TestFangParser::testDcCreatorAuthor()
     QFETCH(QString, filename);
     QFETCH(QString, expectedAuthor);
 
-    FeedFetcher parser(this);
-    QSignalSpy spy(&parser, &FeedFetcher::done);
-
     QString projectPath = PROJECT_PATH;
     QString fullFilename = projectPath + "/feeds/" + filename;
     QVERIFY2(QFile::exists(fullFilename), "Feed file does not exist");
 
-    parser.parseFile(fullFilename);
-    if (!spy.count()) {
-        spy.wait(10000);
-    }
-    QCOMPARE(spy.count(), 1);
-
-    auto feed = parser.getFeed();
+    auto feed = parseFeedFile(fullFilename);
     QVERIFY2(feed != nullptr, "Feed was null");
     QVERIFY2(!feed->items.isEmpty(), "Feed has no items");
 
@@ -934,28 +907,13 @@ void TestFangParser::testTimezoneAbbreviations()
 </channel>
 </rss>)";
 
-    // Helper: write feed to temp file, parse, and return first item timestamp.
-    auto parseFeedTimestamp = [this](const QString& feedXml) -> QDateTime {
-        QTemporaryFile tempFile;
-        tempFile.setAutoRemove(true);
-        if (!tempFile.open()) {
+    // Helper: parse feed XML and return first item timestamp.
+    auto parseFeedTimestamp = [](const QString &feedXml) -> QDateTime {
+        auto result = FeedParser::parse(feedXml.toUtf8());
+        if (!result.ok() || !result.feed() || result.feed()->items.isEmpty()) {
             return QDateTime();
         }
-        tempFile.write(feedXml.toUtf8());
-        tempFile.close();
-
-        FeedFetcher parser(this);
-        QSignalSpy spy(&parser, &FeedFetcher::done);
-        parser.parseFile(tempFile.fileName());
-        if (!spy.count()) {
-            spy.wait(10000);
-        }
-
-        auto feed = parser.getFeed();
-        if (!feed || feed->items.isEmpty()) {
-            return QDateTime();
-        }
-        return feed->items.first()->timestamp;
+        return result.feed()->items.first()->timestamp;
     };
 
     // PST = UTC-8, so 10:30 PST = 18:30 UTC
@@ -1161,17 +1119,8 @@ void TestFangParser::testNoRedirect()
 void TestFangParser::testJSONFeedContentMapping()
 {
     // Verify content_html takes priority over content_text.
-    FeedFetcher parser(this);
-    QSignalSpy spy(&parser, &FeedFetcher::done);
-
     QString projectPath = PROJECT_PATH;
-    parser.parseFile(projectPath + "/feeds/jsonfeed.basic.json");
-    if (!spy.count()) {
-        spy.wait(10000);
-    }
-    QCOMPARE(spy.count(), 1);
-
-    auto feed = parser.getFeed();
+    auto feed = parseFeedFile(projectPath + "/feeds/jsonfeed.basic.json");
     QVERIFY(feed != nullptr);
     QVERIFY(feed->items.size() >= 3);
 
@@ -1187,48 +1136,23 @@ void TestFangParser::testJSONFeedContentMapping()
 
 void TestFangParser::testJSONFeedAuthors()
 {
-    FeedFetcher parserV11(this);
-    QSignalSpy spyV11(&parserV11, &FeedFetcher::done);
     QString projectPath = PROJECT_PATH;
 
     // v1.1 uses "authors" array.
-    parserV11.parseFile(projectPath + "/feeds/jsonfeed.basic.json");
-    if (!spyV11.count()) {
-        spyV11.wait(10000);
-    }
-    QCOMPARE(spyV11.count(), 1);
-
-    auto feedV11 = parserV11.getFeed();
+    auto feedV11 = parseFeedFile(projectPath + "/feeds/jsonfeed.basic.json");
     QVERIFY(feedV11 != nullptr);
     QCOMPARE(feedV11->items[0]->author, "Alice Smith");
 
     // v1.0 uses "author" object.
-    FeedFetcher parserV1(this);
-    QSignalSpy spyV1(&parserV1, &FeedFetcher::done);
-    parserV1.parseFile(projectPath + "/feeds/jsonfeed.v1.json");
-    if (!spyV1.count()) {
-        spyV1.wait(10000);
-    }
-    QCOMPARE(spyV1.count(), 1);
-
-    auto feedV1 = parserV1.getFeed();
+    auto feedV1 = parseFeedFile(projectPath + "/feeds/jsonfeed.v1.json");
     QVERIFY(feedV1 != nullptr);
     QCOMPARE(feedV1->items[0]->author, "Legacy Author");
 }
 
 void TestFangParser::testJSONFeedMediaImage()
 {
-    FeedFetcher parser(this);
-    QSignalSpy spy(&parser, &FeedFetcher::done);
     QString projectPath = PROJECT_PATH;
-
-    parser.parseFile(projectPath + "/feeds/jsonfeed.basic.json");
-    if (!spy.count()) {
-        spy.wait(10000);
-    }
-    QCOMPARE(spy.count(), 1);
-
-    auto feed = parser.getFeed();
+    auto feed = parseFeedFile(projectPath + "/feeds/jsonfeed.basic.json");
     QVERIFY(feed != nullptr);
     QCOMPARE(feed->items[0]->mediaImageURL, "https://example.org/images/article1.jpg");
 
@@ -1238,17 +1162,8 @@ void TestFangParser::testJSONFeedMediaImage()
 
 void TestFangParser::testJSONFeedFeedType()
 {
-    FeedFetcher parser(this);
-    QSignalSpy spy(&parser, &FeedFetcher::done);
     QString projectPath = PROJECT_PATH;
-
-    parser.parseFile(projectPath + "/feeds/jsonfeed.basic.json");
-    if (!spy.count()) {
-        spy.wait(10000);
-    }
-    QCOMPARE(spy.count(), 1);
-
-    auto feed = parser.getFeed();
+    auto feed = parseFeedFile(projectPath + "/feeds/jsonfeed.basic.json");
     QVERIFY(feed != nullptr);
     QCOMPARE(feed->feedType, RawFeed::JSONFeed);
 }
