@@ -455,4 +455,4 @@ void TestBatchFeedFetcher::testParserReuse()
 
 QTEST_MAIN(TestBatchFeedFetcher)
 
-#include "tst_testbatchnewsparser.moc"
+#include "tst_batchfeedfetcher.moc"

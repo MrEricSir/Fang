@@ -1,6 +1,6 @@
 # TestRawFeedRewriter test executable (uses TidyLib)
-qt_add_executable(tst_testrawfeedrewritertest
-    tst_testrawfeedrewritertest.cpp
+qt_add_executable(tst_rawfeedrewriter
+    tst_rawfeedrewriter.cpp
     # Mock objects for testing
     ${CMAKE_SOURCE_DIR}/test/MockNetworkAccessManager.cpp
     ${CMAKE_SOURCE_DIR}/test/MockNetworkAccessManager.h
@@ -12,12 +12,12 @@ qt_add_executable(tst_testrawfeedrewritertest
 )
 
 # Compile definitions for test data paths
-target_compile_definitions(tst_testrawfeedrewritertest PRIVATE
+target_compile_definitions(tst_rawfeedrewriter PRIVATE
     SRCDIR="${CMAKE_CURRENT_SOURCE_DIR}/"
 )
 
 # Link shared test library and Qt modules
-target_link_libraries(tst_testrawfeedrewritertest PRIVATE
+target_link_libraries(tst_rawfeedrewriter PRIVATE
     FangTestLib
     FangFeedDiscovery
     Qt6::Test
@@ -27,4 +27,4 @@ target_link_libraries(tst_testrawfeedrewritertest PRIVATE
 )
 
 # Add to CTest
-add_test(NAME RawFeedRewriter COMMAND tst_testrawfeedrewritertest)
+add_test(NAME RawFeedRewriter COMMAND tst_rawfeedrewriter)

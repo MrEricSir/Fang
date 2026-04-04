@@ -7,12 +7,12 @@
 #include "../../src/utilities/FaviconGrabber.h"
 #include "../MockNetworkAccessManager.h"
 
-class TestFangFaviconGrabberTest : public QObject
+class TestFaviconGrabber : public QObject
 {
     Q_OBJECT
 
 public:
-    TestFangFaviconGrabberTest();
+    TestFaviconGrabber();
 
 private:
     // Validate that a string is a valid PNG data URI
@@ -25,11 +25,11 @@ private slots:
     void testCase1_data();
 };
 
-TestFangFaviconGrabberTest::TestFangFaviconGrabberTest()
+TestFaviconGrabber::TestFaviconGrabber()
 {
 }
 
-bool TestFangFaviconGrabberTest::isValidPngDataUri(const QString& dataUri)
+bool TestFaviconGrabber::isValidPngDataUri(const QString& dataUri)
 {
     // Check prefix
     if (!dataUri.startsWith("data:image/png;base64,")) {
@@ -45,15 +45,15 @@ bool TestFangFaviconGrabberTest::isValidPngDataUri(const QString& dataUri)
     return image.loadFromData(imageData, "PNG");
 }
 
-void TestFangFaviconGrabberTest::initTestCase()
+void TestFaviconGrabber::initTestCase()
 {
 }
 
-void TestFangFaviconGrabberTest::cleanupTestCase()
+void TestFaviconGrabber::cleanupTestCase()
 {
 }
 
-void TestFangFaviconGrabberTest::testCase1()
+void TestFaviconGrabber::testCase1()
 {
     QFETCH(QUrl, siteURL);
     QFETCH(QUrl, faviconURL);
@@ -105,7 +105,7 @@ void TestFangFaviconGrabberTest::testCase1()
     QVERIFY2(isValidPngDataUri(dataUri), "Expected a valid PNG data URI");
 }
 
-void TestFangFaviconGrabberTest::testCase1_data()
+void TestFaviconGrabber::testCase1_data()
 {
     QTest::addColumn<QUrl>("siteURL");
     QTest::addColumn<QUrl>("faviconURL");
@@ -132,6 +132,6 @@ void TestFangFaviconGrabberTest::testCase1_data()
             << "sfgate.com.html";
 }
 
-QTEST_MAIN(TestFangFaviconGrabberTest)
+QTEST_MAIN(TestFaviconGrabber)
 
-#include "tst_testfangfavicongrabbertest.moc"
+#include "tst_favicongrabber.moc"

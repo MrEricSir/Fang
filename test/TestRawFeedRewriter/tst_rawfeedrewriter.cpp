@@ -12,12 +12,12 @@
 #include "../../src/utilities/HTMLSanitizer.h"
 #include "../MockNetworkAccessManager.h"
 
-class TestRawFeedRewriterTest : public QObject
+class TestRawFeedRewriter : public QObject
 {
     Q_OBJECT
 
 public:
-    TestRawFeedRewriterTest();
+    TestRawFeedRewriter();
 
 private:
     // Normalize image src attributes for comparison.
@@ -44,11 +44,11 @@ private slots:
     void testFinalizeSmileyUsesSanitizeDimensions();
 };
 
-TestRawFeedRewriterTest::TestRawFeedRewriterTest()
+TestRawFeedRewriter::TestRawFeedRewriter()
 {
 }
 
-QString TestRawFeedRewriterTest::normalizeImageSrc(const QString& html)
+QString TestRawFeedRewriter::normalizeImageSrc(const QString& html)
 {
     QString normalized = html;
     // Cached image paths.
@@ -60,7 +60,7 @@ QString TestRawFeedRewriterTest::normalizeImageSrc(const QString& html)
     return normalized;
 }
 
-QByteArray TestRawFeedRewriterTest::createTestPNGData(int width, int height)
+QByteArray TestRawFeedRewriter::createTestPNGData(int width, int height)
 {
     QImage image(width, height, QImage::Format_RGB32);
     image.fill(Qt::red);
@@ -71,7 +71,7 @@ QByteArray TestRawFeedRewriterTest::createTestPNGData(int width, int height)
     return ba;
 }
 
-void TestRawFeedRewriterTest::testCase1()
+void TestRawFeedRewriter::testCase1()
 {
     QFETCH(QString, input);
     QFETCH(QString, output);
@@ -122,7 +122,7 @@ void TestRawFeedRewriterTest::testCase1()
     QCOMPARE(normalizedOutput, normalizedExpected);
 }
 
-void TestRawFeedRewriterTest::testCase1_data()
+void TestRawFeedRewriter::testCase1_data()
 {
     QTest::addColumn<QString>("input");  // HTML input
     QTest::addColumn<QString>("output"); // Expected HTML output
@@ -353,7 +353,7 @@ void TestRawFeedRewriterTest::testCase1_data()
                                   " width=\"16\" height=\"16\" class=\"smiley\"/> today!</p>";
 }
 
-ImageData TestRawFeedRewriterTest::createImageData(int width, int height)
+ImageData TestRawFeedRewriter::createImageData(int width, int height)
 {
     ImageData data;
     data.image = QImage(width, height, QImage::Format_RGB32);
@@ -369,7 +369,7 @@ ImageData TestRawFeedRewriterTest::createImageData(int width, int height)
 }
 
 // Test that finalize() uses actual fetched dimensions, not HTML attributes.
-void TestRawFeedRewriterTest::testFinalizeUseFetchedDimensions()
+void TestRawFeedRewriter::testFinalizeUseFetchedDimensions()
 {
     HTMLSanitizer sanitizer;
 
@@ -393,7 +393,7 @@ void TestRawFeedRewriterTest::testFinalizeUseFetchedDimensions()
 }
 
 // Test that finalize() filters tracking pixels detected by fetched dimensions.
-void TestRawFeedRewriterTest::testFinalizeFilterTrackingPixel()
+void TestRawFeedRewriter::testFinalizeFilterTrackingPixel()
 {
     HTMLSanitizer sanitizer;
 
@@ -414,7 +414,7 @@ void TestRawFeedRewriterTest::testFinalizeFilterTrackingPixel()
 }
 
 // Test that a 2x2 image is filtered (boundary case - must be > 2 to keep).
-void TestRawFeedRewriterTest::testFinalizeFilterTrackingPixelBoundary()
+void TestRawFeedRewriter::testFinalizeFilterTrackingPixelBoundary()
 {
     HTMLSanitizer sanitizer;
 
@@ -434,7 +434,7 @@ void TestRawFeedRewriterTest::testFinalizeFilterTrackingPixelBoundary()
 }
 
 // Test that a 3x3 image is kept (boundary case - smallest non-tracking-pixel).
-void TestRawFeedRewriterTest::testFinalizeKeepSmallImage()
+void TestRawFeedRewriter::testFinalizeKeepSmallImage()
 {
     HTMLSanitizer sanitizer;
 
@@ -453,7 +453,7 @@ void TestRawFeedRewriterTest::testFinalizeKeepSmallImage()
 }
 
 // Test that one tiny dimension is enough to filter (e.g. 1x1000 spacer gif).
-void TestRawFeedRewriterTest::testFinalizeFilterOneTinyDimension()
+void TestRawFeedRewriter::testFinalizeFilterOneTinyDimension()
 {
     HTMLSanitizer sanitizer;
 
@@ -473,7 +473,7 @@ void TestRawFeedRewriterTest::testFinalizeFilterOneTinyDimension()
 }
 
 // Test that finalize() keeps images with HTML dimensions when fetch fails.
-void TestRawFeedRewriterTest::testFinalizeFetchFailedWithDimensions()
+void TestRawFeedRewriter::testFinalizeFetchFailedWithDimensions()
 {
     HTMLSanitizer sanitizer;
 
@@ -496,7 +496,7 @@ void TestRawFeedRewriterTest::testFinalizeFetchFailedWithDimensions()
 }
 
 // Test that finalize() skips images with no dimensions when fetch fails.
-void TestRawFeedRewriterTest::testFinalizeFetchFailedNoDimensions()
+void TestRawFeedRewriter::testFinalizeFetchFailedNoDimensions()
 {
     HTMLSanitizer sanitizer;
 
@@ -519,7 +519,7 @@ void TestRawFeedRewriterTest::testFinalizeFetchFailedNoDimensions()
 
 // Test that wp-smiley images use the small dimensions from sanitize()
 // even when the fetched image has larger pixel dimensions.
-void TestRawFeedRewriterTest::testFinalizeSmileyUsesSanitizeDimensions()
+void TestRawFeedRewriter::testFinalizeSmileyUsesSanitizeDimensions()
 {
     HTMLSanitizer sanitizer;
 
@@ -545,6 +545,6 @@ void TestRawFeedRewriterTest::testFinalizeSmileyUsesSanitizeDimensions()
     QVERIFY(output.contains("class=\"smiley\""));
 }
 
-QTEST_MAIN(TestRawFeedRewriterTest)
+QTEST_MAIN(TestRawFeedRewriter)
 
-#include "tst_testrawfeedrewritertest.moc"
+#include "tst_rawfeedrewriter.moc"

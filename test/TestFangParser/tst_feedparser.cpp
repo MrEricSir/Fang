@@ -25,12 +25,12 @@ static std::shared_ptr<RawFeed> parseFeedFile(const QString &filename)
 /**
  * @brief Tests a number of RSS feeds I've saved from around the web.  
  */
-class TestFangParser : public QObject
+class TestFeedParser : public QObject
 {
     Q_OBJECT
     
 public:
-    TestFangParser();
+    TestFeedParser();
     
 private slots:
     void parseTest();
@@ -69,11 +69,11 @@ private slots:
     void testNoRedirect();
 };
 
-TestFangParser::TestFangParser()
+TestFeedParser::TestFeedParser()
 {
 }
 
-void TestFangParser::parseTest()
+void TestFeedParser::parseTest()
 {
     QFETCH(QString, filename);
     QFETCH(QString, title);
@@ -116,7 +116,7 @@ void TestFangParser::parseTest()
     }
 }
 
-void TestFangParser::parseTest_data()
+void TestFeedParser::parseTest_data()
 {
     // Date format example: 01 Feb 2014 01:20:54
     const QString dtf = "dd MMM yyyy hh:mm:ss";
@@ -750,7 +750,7 @@ void TestFangParser::parseTest_data()
 // Media RSS image extraction tests
 // =====================================================================
 
-void TestFangParser::testMediaImage()
+void TestFeedParser::testMediaImage()
 {
     QFETCH(QString, filename);
     QFETCH(QString, expectedFragment);
@@ -778,7 +778,7 @@ void TestFangParser::testMediaImage()
     }
 }
 
-void TestFangParser::testMediaImage_data()
+void TestFeedParser::testMediaImage_data()
 {
     QTest::addColumn<QString>("filename");
     QTest::addColumn<QString>("expectedFragment");
@@ -804,7 +804,7 @@ void TestFangParser::testMediaImage_data()
 // dc:creator author extraction tests
 // =====================================================================
 
-void TestFangParser::testDcCreatorAuthor()
+void TestFeedParser::testDcCreatorAuthor()
 {
     QFETCH(QString, filename);
     QFETCH(QString, expectedAuthor);
@@ -820,7 +820,7 @@ void TestFangParser::testDcCreatorAuthor()
     QCOMPARE(feed->items.first()->author, expectedAuthor);
 }
 
-void TestFangParser::testDcCreatorAuthor_data()
+void TestFeedParser::testDcCreatorAuthor_data()
 {
     QTest::addColumn<QString>("filename");
     QTest::addColumn<QString>("expectedAuthor");
@@ -842,7 +842,7 @@ void TestFangParser::testDcCreatorAuthor_data()
 // Three-letter timezone parsing tests
 // =====================================================================
 
-void TestFangParser::testTimezoneAbbreviations()
+void TestFeedParser::testTimezoneAbbreviations()
 {
     // dateFromFeedString is private, so we test timezone parsing indirectly
     // by parsing minimal feeds with specific timezone strings.
@@ -945,7 +945,7 @@ void TestFangParser::testTimezoneAbbreviations()
 // Media namespace isolation test
 // =====================================================================
 
-void TestFangParser::testMediaNamespaceIsolation()
+void TestFeedParser::testMediaNamespaceIsolation()
 {
     // RSS feed with <media:title> and <media:description> that should NOT
     // bleed into the item's title or description fields. This mirrors the
@@ -1009,7 +1009,7 @@ static QByteArray simpleRSSFeed()
 </rss>)";
 }
 
-void TestFangParser::testPermanentRedirect301()
+void TestFeedParser::testPermanentRedirect301()
 {
     MockNetworkAccessManager mockManager;
     QUrl originalUrl("http://example.com/old-feed");
@@ -1030,7 +1030,7 @@ void TestFangParser::testPermanentRedirect301()
     QCOMPARE(parser.getURL(), finalUrl);
 }
 
-void TestFangParser::testPermanentRedirect308()
+void TestFeedParser::testPermanentRedirect308()
 {
     MockNetworkAccessManager mockManager;
     QUrl originalUrl("http://example.com/old-feed");
@@ -1051,7 +1051,7 @@ void TestFangParser::testPermanentRedirect308()
     QCOMPARE(parser.getURL(), finalUrl);
 }
 
-void TestFangParser::testTemporaryRedirect302()
+void TestFeedParser::testTemporaryRedirect302()
 {
     MockNetworkAccessManager mockManager;
     QUrl originalUrl("http://example.com/old-feed");
@@ -1072,7 +1072,7 @@ void TestFangParser::testTemporaryRedirect302()
     QCOMPARE(parser.getURL(), finalUrl);
 }
 
-void TestFangParser::testTemporaryRedirect307()
+void TestFeedParser::testTemporaryRedirect307()
 {
     MockNetworkAccessManager mockManager;
     QUrl originalUrl("http://example.com/old-feed");
@@ -1093,7 +1093,7 @@ void TestFangParser::testTemporaryRedirect307()
     QCOMPARE(parser.getURL(), finalUrl);
 }
 
-void TestFangParser::testNoRedirect()
+void TestFeedParser::testNoRedirect()
 {
     MockNetworkAccessManager mockManager;
     QUrl feedUrl("http://example.com/feed");
@@ -1116,7 +1116,7 @@ void TestFangParser::testNoRedirect()
 // JSON Feed tests
 // =====================================================================
 
-void TestFangParser::testJSONFeedContentMapping()
+void TestFeedParser::testJSONFeedContentMapping()
 {
     // Verify content_html takes priority over content_text.
     QString projectPath = PROJECT_PATH;
@@ -1134,7 +1134,7 @@ void TestFangParser::testJSONFeedContentMapping()
     QCOMPARE(feed->items[2]->description, "Plain text only for this article.");
 }
 
-void TestFangParser::testJSONFeedAuthors()
+void TestFeedParser::testJSONFeedAuthors()
 {
     QString projectPath = PROJECT_PATH;
 
@@ -1149,7 +1149,7 @@ void TestFangParser::testJSONFeedAuthors()
     QCOMPARE(feedV1->items[0]->author, "Legacy Author");
 }
 
-void TestFangParser::testJSONFeedMediaImage()
+void TestFeedParser::testJSONFeedMediaImage()
 {
     QString projectPath = PROJECT_PATH;
     auto feed = parseFeedFile(projectPath + "/feeds/jsonfeed.basic.json");
@@ -1160,7 +1160,7 @@ void TestFangParser::testJSONFeedMediaImage()
     QVERIFY(feed->items[1]->mediaImageURL.isEmpty());
 }
 
-void TestFangParser::testJSONFeedFeedType()
+void TestFeedParser::testJSONFeedFeedType()
 {
     QString projectPath = PROJECT_PATH;
     auto feed = parseFeedFile(projectPath + "/feeds/jsonfeed.basic.json");
@@ -1172,7 +1172,7 @@ void TestFangParser::testJSONFeedFeedType()
 // Malformed feed handling tests
 // =====================================================================
 
-void TestFangParser::testMissingGuidSkipsItem()
+void TestFeedParser::testMissingGuidSkipsItem()
 {
     // Items without any GUID/URL should be skipped gracefully
     // rather than crashing or producing empty entries.
@@ -1207,7 +1207,7 @@ void TestFangParser::testMissingGuidSkipsItem()
     QCOMPARE(feed->items.first()->guid, QString("good-article-1"));
 }
 
-void TestFangParser::testMissingItemTag()
+void TestFeedParser::testMissingItemTag()
 {
     // An RSS feed where <item> opening tag is present but the closing
     // </item> is never reached due to truncation. The parser should
@@ -1232,7 +1232,7 @@ void TestFangParser::testMissingItemTag()
     }
 }
 
-void TestFangParser::testEmptyInput()
+void TestFeedParser::testEmptyInput()
 {
     // Empty and whitespace-only input should return an error, not crash.
     auto emptyResult = FeedParser::parse(QByteArray());
@@ -1242,6 +1242,6 @@ void TestFangParser::testEmptyInput()
     QVERIFY(!whitespaceResult.ok());
 }
 
-QTEST_MAIN(TestFangParser)
+QTEST_MAIN(TestFeedParser)
 
-#include "tst_fangparser.moc"
+#include "tst_feedparser.moc"

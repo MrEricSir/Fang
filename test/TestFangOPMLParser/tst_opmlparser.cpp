@@ -6,12 +6,12 @@
 #include "../../src/parser/OPMLParser.h"
 
 
-class TestFangOPMLParser : public QObject
+class TestOPMLParser : public QObject
 {
     Q_OBJECT
     
 public:
-    TestFangOPMLParser();
+    TestOPMLParser();
     
 private Q_SLOTS:
     void initTestCase();
@@ -20,19 +20,19 @@ private Q_SLOTS:
     void testCase1_data();
 };
 
-TestFangOPMLParser::TestFangOPMLParser()
+TestOPMLParser::TestOPMLParser()
 {
 }
 
-void TestFangOPMLParser::initTestCase()
+void TestOPMLParser::initTestCase()
 {
 }
 
-void TestFangOPMLParser::cleanupTestCase()
+void TestOPMLParser::cleanupTestCase()
 {
 }
 
-void TestFangOPMLParser::testCase1()
+void TestOPMLParser::testCase1()
 {
     QFETCH(QString, filename);
     QFETCH(qint32, numFeeds);
@@ -61,7 +61,7 @@ void TestFangOPMLParser::testCase1()
     QCOMPARE(feed->url, QUrl(lastURL));
 }
 
-void TestFangOPMLParser::testCase1_data()
+void TestOPMLParser::testCase1_data()
 {
     //
     // Test parameters go here (don't forget to add the test above!)
@@ -80,6 +80,6 @@ void TestFangOPMLParser::testCase1_data()
     QTest::newRow("Fang") << "fang.opml" << 3 << "Mission Mission" << "http://feeds.feedburner.com/MissionMission";
 }
 
-QTEST_MAIN(TestFangOPMLParser)
+QTEST_MAIN(TestOPMLParser)
 
-#include "tst_testfangopmlparser.moc"
+#include "tst_opmlparser.moc"
