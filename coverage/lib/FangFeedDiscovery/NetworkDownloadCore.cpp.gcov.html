@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-04-04 07:39:46</td>
+            <td class="headerValue">2026-04-04 08:29:57</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">92.9&nbsp;%</td>
@@ -75,42 +75,42 @@
 <span id="L13"><span class="lineNum">      13</span> <span class="tlaGNC tlaBgGNC">          10 :     return QByteArray();</span></span>
 <span id="L14"><span class="lineNum">      14</span>              : }</span>
 <span id="L15"><span class="lineNum">      15</span>              : </span>
-<span id="L16"><span class="lineNum">      16</span> <span class="tlaGNC">         403 : NetworkDownloadCore::NetworkDownloadCore(NetworkDownloadConfig config,</span></span>
+<span id="L16"><span class="lineNum">      16</span> <span class="tlaGNC">         318 : NetworkDownloadCore::NetworkDownloadCore(NetworkDownloadConfig config,</span></span>
 <span id="L17"><span class="lineNum">      17</span>              :                                           QObject* parent,</span>
-<span id="L18"><span class="lineNum">      18</span> <span class="tlaGNC">         403 :                                           QNetworkAccessManager* networkManager)</span></span>
+<span id="L18"><span class="lineNum">      18</span> <span class="tlaGNC">         318 :                                           QNetworkAccessManager* networkManager)</span></span>
 <span id="L19"><span class="lineNum">      19</span>              :     : QObject(parent)</span>
-<span id="L20"><span class="lineNum">      20</span> <span class="tlaGNC">         403 :     , manager(networkManager ? networkManager : new BrowserNetworkAccessManager(this))</span></span>
-<span id="L21"><span class="lineNum">      21</span> <span class="tlaGNC">         403 :     , config(config)</span></span>
-<span id="L22"><span class="lineNum">      22</span> <span class="tlaGNC">         403 :     , currentReply(nullptr)</span></span>
-<span id="L23"><span class="lineNum">      23</span> <span class="tlaGNC">         403 :     , redirectCount(0)</span></span>
-<span id="L24"><span class="lineNum">      24</span> <span class="tlaGNC">         403 :     , currentAttemptCount(0)</span></span>
-<span id="L25"><span class="lineNum">      25</span> <span class="tlaGNC">         403 :     , lastError(QNetworkReply::NoError)</span></span>
-<span id="L26"><span class="lineNum">      26</span> <span class="tlaGNC">         806 :     , permanentRedirect(false)</span></span>
+<span id="L20"><span class="lineNum">      20</span> <span class="tlaGNC">         318 :     , manager(networkManager ? networkManager : new BrowserNetworkAccessManager(this))</span></span>
+<span id="L21"><span class="lineNum">      21</span> <span class="tlaGNC">         318 :     , config(config)</span></span>
+<span id="L22"><span class="lineNum">      22</span> <span class="tlaGNC">         318 :     , currentReply(nullptr)</span></span>
+<span id="L23"><span class="lineNum">      23</span> <span class="tlaGNC">         318 :     , redirectCount(0)</span></span>
+<span id="L24"><span class="lineNum">      24</span> <span class="tlaGNC">         318 :     , currentAttemptCount(0)</span></span>
+<span id="L25"><span class="lineNum">      25</span> <span class="tlaGNC">         318 :     , lastError(QNetworkReply::NoError)</span></span>
+<span id="L26"><span class="lineNum">      26</span> <span class="tlaGNC">         636 :     , permanentRedirect(false)</span></span>
 <span id="L27"><span class="lineNum">      27</span>              : {</span>
-<span id="L28"><span class="lineNum">      28</span> <span class="tlaGNC">         403 :     inactivityTimer.setSingleShot(true);</span></span>
-<span id="L29"><span class="lineNum">      29</span> <span class="tlaGNC">         403 :     retryTimer.setSingleShot(true);</span></span>
+<span id="L28"><span class="lineNum">      28</span> <span class="tlaGNC">         318 :     inactivityTimer.setSingleShot(true);</span></span>
+<span id="L29"><span class="lineNum">      29</span> <span class="tlaGNC">         318 :     retryTimer.setSingleShot(true);</span></span>
 <span id="L30"><span class="lineNum">      30</span>              : </span>
-<span id="L31"><span class="lineNum">      31</span> <span class="tlaGNC">         403 :     connect(manager, &amp;QNetworkAccessManager::finished, this, &amp;NetworkDownloadCore::onRequestFinished);</span></span>
-<span id="L32"><span class="lineNum">      32</span> <span class="tlaGNC">         403 :     connect(&amp;inactivityTimer, &amp;QTimer::timeout, this, &amp;NetworkDownloadCore::onTimeout);</span></span>
-<span id="L33"><span class="lineNum">      33</span> <span class="tlaGNC">         403 :     connect(&amp;retryTimer, &amp;QTimer::timeout, this, &amp;NetworkDownloadCore::onRetryTimer);</span></span>
-<span id="L34"><span class="lineNum">      34</span> <span class="tlaGNC">         403 : }</span></span>
+<span id="L31"><span class="lineNum">      31</span> <span class="tlaGNC">         318 :     connect(manager, &amp;QNetworkAccessManager::finished, this, &amp;NetworkDownloadCore::onRequestFinished);</span></span>
+<span id="L32"><span class="lineNum">      32</span> <span class="tlaGNC">         318 :     connect(&amp;inactivityTimer, &amp;QTimer::timeout, this, &amp;NetworkDownloadCore::onTimeout);</span></span>
+<span id="L33"><span class="lineNum">      33</span> <span class="tlaGNC">         318 :     connect(&amp;retryTimer, &amp;QTimer::timeout, this, &amp;NetworkDownloadCore::onRetryTimer);</span></span>
+<span id="L34"><span class="lineNum">      34</span> <span class="tlaGNC">         318 : }</span></span>
 <span id="L35"><span class="lineNum">      35</span>              : </span>
-<span id="L36"><span class="lineNum">      36</span> <span class="tlaGNC">         778 : NetworkDownloadCore::~NetworkDownloadCore()</span></span>
+<span id="L36"><span class="lineNum">      36</span> <span class="tlaGNC">         608 : NetworkDownloadCore::~NetworkDownloadCore()</span></span>
 <span id="L37"><span class="lineNum">      37</span>              : {</span>
 <span id="L38"><span class="lineNum">      38</span>              :     // Disconnect from manager to avoid receiving signals during destruction. This prevents</span>
 <span id="L39"><span class="lineNum">      39</span>              :     // signals from being emitted on the object as its being destructed.</span>
-<span id="L40"><span class="lineNum">      40</span> <span class="tlaGNC">         403 :     if (manager) {</span></span>
-<span id="L41"><span class="lineNum">      41</span> <span class="tlaGNC">         379 :         disconnect(manager, &amp;QNetworkAccessManager::finished, this, &amp;NetworkDownloadCore::onRequestFinished);</span></span>
+<span id="L40"><span class="lineNum">      40</span> <span class="tlaGNC">         318 :     if (manager) {</span></span>
+<span id="L41"><span class="lineNum">      41</span> <span class="tlaGNC">         294 :         disconnect(manager, &amp;QNetworkAccessManager::finished, this, &amp;NetworkDownloadCore::onRequestFinished);</span></span>
 <span id="L42"><span class="lineNum">      42</span>              :     }</span>
 <span id="L43"><span class="lineNum">      43</span>              : </span>
-<span id="L44"><span class="lineNum">      44</span> <span class="tlaGNC">         403 :     retryTimer.stop();</span></span>
+<span id="L44"><span class="lineNum">      44</span> <span class="tlaGNC">         318 :     retryTimer.stop();</span></span>
 <span id="L45"><span class="lineNum">      45</span>              : </span>
-<span id="L46"><span class="lineNum">      46</span> <span class="tlaGNC">         403 :     if (currentReply) {</span></span>
+<span id="L46"><span class="lineNum">      46</span> <span class="tlaGNC">         318 :     if (currentReply) {</span></span>
 <span id="L47"><span class="lineNum">      47</span> <span class="tlaUNC tlaBgUNC">           0 :         currentReply-&gt;abort();</span></span>
 <span id="L48"><span class="lineNum">      48</span> <span class="tlaUNC">           0 :         currentReply-&gt;deleteLater();</span></span>
 <span id="L49"><span class="lineNum">      49</span> <span class="tlaUNC">           0 :         currentReply = nullptr;</span></span>
 <span id="L50"><span class="lineNum">      50</span>              :     }</span>
-<span id="L51"><span class="lineNum">      51</span> <span class="tlaGNC tlaBgGNC">         778 : }</span></span>
+<span id="L51"><span class="lineNum">      51</span> <span class="tlaGNC tlaBgGNC">         608 : }</span></span>
 <span id="L52"><span class="lineNum">      52</span>              : </span>
 <span id="L53"><span class="lineNum">      53</span> <span class="tlaGNC">         123 : void NetworkDownloadCore::download(const QUrl&amp; url)</span></span>
 <span id="L54"><span class="lineNum">      54</span>              : {</span>
