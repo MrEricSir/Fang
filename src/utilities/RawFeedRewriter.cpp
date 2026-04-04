@@ -90,11 +90,17 @@ void RawFeedRewriter::finalizeAll()
             news->description = sanitizer.finalize(news->description, imageResults);
         }
 
-        // Cache media image and store cached path.
+        // Cache media image and store cached path with dimensions.
         if (!news->mediaImageURL.isEmpty()) {
             QUrl mediaUrl(news->mediaImageURL);
             if (imageResults.contains(mediaUrl)) {
-                QString cachedPath = "/images/" + QImageCache::saveImage(mediaUrl, imageResults.value(mediaUrl));
+                ImageData imageData = imageResults.value(mediaUrl);
+                QString cachedPath = "/images/" + QImageCache::saveImage(mediaUrl, imageData);
+                int w = imageData.image.width();
+                int h = imageData.image.height();
+                if (w > 0 && h > 0) {
+                    cachedPath += "?w=" + QString::number(w) + "&h=" + QString::number(h);
+                }
                 news->mediaImageURL = cachedPath;
             } else {
                 news->mediaImageURL = "";
