@@ -8,7 +8,7 @@
 #include <QMap>
 
 #include "ImageData.h"
-#include "../FangObject.h"
+#include <QObject>
 
 class BatchDownloadCore;
 class QNetworkAccessManager;
@@ -19,7 +19,7 @@ class QNetworkAccessManager;
     Uses BatchDownloadCore internally to handle parallel downloads with
     redirect and timeout handling.
  */
-class ImageGrabber : public FangObject
+class ImageGrabber : public QObject
 {
     Q_OBJECT
 public:

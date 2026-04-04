@@ -3,17 +3,17 @@
 
 #include <QObject>
 #include <QString>
-#include "../FangObject.h"
+#include <QObject>
 #include "DBSettingsKey.h"
 
 /*!
     \brief Interface for DBSettings allowing mock implementations for testing.
  */
-class DBSettingsInterface : public FangObject
+class DBSettingsInterface : public QObject
 {
     Q_OBJECT
 public:
-    explicit DBSettingsInterface(FangObject *parent = nullptr) : FangObject(parent) {}
+    explicit DBSettingsInterface(QObject *parent = nullptr) : QObject(parent) {}
     virtual ~DBSettingsInterface() = default;
 
 signals:

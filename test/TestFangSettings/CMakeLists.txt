@@ -5,8 +5,8 @@ qt_add_executable(tst_fangsettings
     ${CMAKE_SOURCE_DIR}/test/MockDBSettings.h
     # Shared sources from main project
     ${CMAKE_SOURCE_DIR}/src/utilities/FangLogging.cpp
-    ${CMAKE_SOURCE_DIR}/src/FangObject.cpp
-    ${CMAKE_SOURCE_DIR}/src/FangObject.h
+    ${CMAKE_SOURCE_DIR}/src/utilities/QObjectLeakTracker.cpp
+    ${CMAKE_SOURCE_DIR}/src/utilities/QObjectLeakTracker.h
     ${CMAKE_SOURCE_DIR}/src/models/FangSettings.cpp
     ${CMAKE_SOURCE_DIR}/src/models/FangSettings.h
     ${CMAKE_SOURCE_DIR}/src/utilities/SettingsInterface.h
@@ -35,6 +35,8 @@ target_link_libraries(tst_fangsettings PRIVATE
     FangFeedParser
     QAutoStart
     Qt6::Test
+    Qt6::Core
+    Qt6::CorePrivate
     Qt6::Quick
     Qt6::Gui
     Qt6::Sql

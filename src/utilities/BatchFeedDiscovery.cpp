@@ -1,7 +1,7 @@
 #include "BatchFeedDiscovery.h"
 
 BatchFeedDiscovery::BatchFeedDiscovery(QObject *parent) :
-    FangObject(parent),
+    QObject(parent),
     feedList(nullptr)
 {
 }

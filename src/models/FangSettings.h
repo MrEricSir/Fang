@@ -6,11 +6,11 @@
 #include <QSettings>
 #include <QStyleHints>
 
-#include "../FangObject.h"
+#include <QObject>
 #include "../db/DBSettingsInterface.h"
 #include "../utilities/SettingsInterface.h"
 
-class FangSettings : public FangObject, public SettingsInterface
+class FangSettings : public QObject, public SettingsInterface
 {
     Q_OBJECT
     Q_DISABLE_COPY(FangSettings)
@@ -40,7 +40,7 @@ class FangSettings : public FangObject, public SettingsInterface
     Q_PROPERTY(bool startAtLogin READ getStartAtLogin WRITE setStartAtLogin NOTIFY startAtLoginChanged)
 
 public:
-    explicit FangSettings(FangObject *parent = nullptr);
+    explicit FangSettings(QObject *parent = nullptr);
 
     bool event(QEvent *event) override;
 

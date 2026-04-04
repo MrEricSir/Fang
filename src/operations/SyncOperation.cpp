@@ -2,7 +2,7 @@
 #include "../utilities/FangLogging.h"
 
 SyncOperation::SyncOperation(OperationManager *parent) :
-    FangObject((QObject*)parent),
+    QObject((QObject*)parent),
     operationManager(parent)
 {
 

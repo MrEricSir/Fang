@@ -7,12 +7,12 @@
 #include <QVariant>
 #include <QDebug>
 
-#include "../FangObject.h"
+#include <QObject>
 #include "DBObject.h"
 
 class FeedItem;
 
-class NewsItem : public FangObject, DBObject
+class NewsItem : public QObject, DBObject
 {
     Q_OBJECT
     

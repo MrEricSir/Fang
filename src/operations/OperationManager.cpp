@@ -5,7 +5,7 @@
 #include "../utilities/FangLogging.h"
 
 OperationManager::OperationManager(QObject *parent) :
-    FangObject(parent),
+    QObject(parent),
     queue(),
     pending(),
     operationTimer()

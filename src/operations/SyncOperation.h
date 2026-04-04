@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QString>
 
-#include "../FangObject.h"
+#include <QObject>
 
 class OperationManager;
 
@@ -12,7 +12,7 @@ class OperationManager;
     \brief Base class for synchronous operations. This is mainly used for operations that
     complete quickly and/or need to happen in a certain order, such as database operations.
  */
-class SyncOperation : public FangObject
+class SyncOperation : public QObject
 {
     Q_OBJECT
 

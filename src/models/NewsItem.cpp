@@ -3,7 +3,7 @@
 #include <QDebug>
 
 NewsItem::NewsItem(QObject *parent) :
-    FangObject(parent),
+    QObject(parent),
     feed(nullptr),
     _id(-1),
     _feedId(-1),
@@ -22,7 +22,7 @@ NewsItem::NewsItem(FeedItem* feed, qint64 id, qint64 feedId, const QString &titl
                    const QString &author, const QString &summary, const QString &content,
                    const QDateTime &timestamp, const QUrl &url, bool pinned,
                    const QString &mediaImageURL) :
-    FangObject(feed),
+    QObject(feed),
     feed(feed),
     _id(id),
     _feedId(feedId),

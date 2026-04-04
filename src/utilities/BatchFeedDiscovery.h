@@ -4,7 +4,7 @@
 #include "../models/FeedItem.h"
 #include "../models/ListModel.h"
 #include "FeedDiscovery.h"
-#include "../FangObject.h"
+#include <QObject>
 
 #include <QObject>
 #include <QMap>
@@ -20,7 +20,7 @@
     If both are false at the time done() is emitted, you're hella
     ready to rock and roll!
  */
-class BatchFeedDiscovery : public FangObject
+class BatchFeedDiscovery : public QObject
 {
     Q_OBJECT
 public:

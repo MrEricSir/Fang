@@ -16,8 +16,8 @@
 #include <QTextStream>
 #endif
 
-FangSettings::FangSettings(FangObject *parent) :
-    FangObject(parent),
+FangSettings::FangSettings(QObject *parent) :
+    QObject(parent),
     dbSettings(nullptr),
     styleHints(nullptr)
 {

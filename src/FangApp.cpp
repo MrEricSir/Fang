@@ -45,7 +45,7 @@
 FangApp* FangApp::_instance = nullptr;
 
 FangApp::FangApp(QApplication *parent, QSingleInstanceCheck* single) :
-    FangObject(parent),
+    QObject(parent),
     engine(nullptr),
     single(single),
     manager(this),
@@ -112,7 +112,7 @@ FangApp::~FangApp()
 }
 
 FangApp::FangApp(QObject *parent) :
-    FangObject(parent),
+    QObject(parent),
     engine(nullptr),
     single(nullptr),
     manager(this),
@@ -1095,7 +1095,7 @@ bool FangApp::eventFilter(QObject* obj, QEvent* event)
             return true;
         }
     }
-    return FangObject::eventFilter(obj, event);
+    return QObject::eventFilter(obj, event);
 }
 
 void FangApp::reloadQml()

@@ -11,7 +11,7 @@
 class QSimpleStateMachine;
 
 #include "WebPageGrabber.h"
-#include "../FangObject.h"
+#include <QObject>
 
 class BatchDownloadCore;
 class QNetworkAccessManager;
@@ -22,7 +22,7 @@ class QNetworkAccessManager;
 /*!
    Favicon Grabber attempts to find the best available favicon for a URL.
  */
-class FaviconGrabber : public FangObject
+class FaviconGrabber : public QObject
 {
     Q_OBJECT
 

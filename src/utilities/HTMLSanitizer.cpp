@@ -17,7 +17,7 @@
 #define S_ID "id"
 
 HTMLSanitizer::HTMLSanitizer(QObject *parent) :
-    FangObject(parent),
+    QObject(parent),
     webPageGrabber(false),
     currentId(0)
 {

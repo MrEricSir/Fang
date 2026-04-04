@@ -14,8 +14,8 @@
 #include "QImageCache.h"
 #include "NetworkUtilities.h"
 
-WebServer::WebServer(FangApp* appInstance, FangObject *parent) :
-    FangObject(parent),
+WebServer::WebServer(FangApp* appInstance, QObject *parent) :
+    QObject(parent),
     app(appInstance),
     webSocketPort(0)
 {

@@ -13,7 +13,7 @@ const QUrl UpdateChecker::UPDATE_FEED_URL = QUrl("https://getfang.com/feed.xml")
 const int UpdateChecker::CHECK_INTERVAL_MS = 24 * 60 * 60 * 1000; // 24 hours
 
 UpdateChecker::UpdateChecker(QObject *parent, FeedSource* injectedParser, SettingsInterface* injectedSettings) :
-    FangObject(parent),
+    QObject(parent),
     parser(injectedParser ? injectedParser : new FeedFetcher(this)),
     settingsInterface(injectedSettings),
     timer(this),

@@ -1,7 +1,7 @@
 #ifndef WEBSERVER_H
 #define WEBSERVER_H
 
-#include "../FangObject.h"
+#include <QObject>
 #include <QHttpServer>
 #include <QTcpServer>
 
@@ -13,7 +13,7 @@ class FangApp;
 /*!
   WebServer used internally by Fang for the WebView.
  */
-class WebServer : public FangObject
+class WebServer : public QObject
 {
     Q_OBJECT
 public:
@@ -22,7 +22,7 @@ public:
         \param appInstance The FangApp instance to use for all operations. (Can be mocked in tests.)
         \param parent QObject parent.
      */
-    explicit WebServer(FangApp* appInstance, FangObject *parent = nullptr);
+    explicit WebServer(FangApp* appInstance, QObject *parent = nullptr);
 
     // Gets the port for this server, or zero if invalid.
     inline quint16 port() { return tcpServer ? tcpServer->serverPort() : 0; }

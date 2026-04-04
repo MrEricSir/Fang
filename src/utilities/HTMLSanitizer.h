@@ -7,7 +7,7 @@
 #include <QUrl>
 #include <QString>
 
-#include "../FangObject.h"
+#include <QObject>
 #include "ImageGrabber.h"
 #include "WebPageGrabber.h"
 
@@ -47,7 +47,7 @@ public:
       - Extracts image URLs that need dimension fetching
       - Handles two-pass processing to remove empty elements
  */
-class HTMLSanitizer : public FangObject
+class HTMLSanitizer : public QObject
 {
     Q_OBJECT
 public:
