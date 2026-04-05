@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-04-05 05:15:33</td>
+            <td class="headerValue">2026-04-05 08:32:40</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -63,9 +63,9 @@
 <span id="L1"><span class="lineNum">       1</span>              : #ifndef BATCHFEEDFETCHER_H</span>
 <span id="L2"><span class="lineNum">       2</span>              : #define BATCHFEEDFETCHER_H</span>
 <span id="L3"><span class="lineNum">       3</span>              : </span>
-<span id="L4"><span class="lineNum">       4</span>              : #include &lt;map&gt;</span>
-<span id="L5"><span class="lineNum">       5</span>              : #include &lt;memory&gt;</span>
-<span id="L6"><span class="lineNum">       6</span>              : </span>
+<span id="L4"><span class="lineNum">       4</span>              : #include &lt;memory&gt;</span>
+<span id="L5"><span class="lineNum">       5</span>              : </span>
+<span id="L6"><span class="lineNum">       6</span>              : #include &lt;QHash&gt;</span>
 <span id="L7"><span class="lineNum">       7</span>              : #include &lt;QMap&gt;</span>
 <span id="L8"><span class="lineNum">       8</span>              : #include &lt;QUrl&gt;</span>
 <span id="L9"><span class="lineNum">       9</span>              : </span>
@@ -95,22 +95,25 @@
 <span id="L33"><span class="lineNum">      33</span>              : </span>
 <span id="L34"><span class="lineNum">      34</span>              : protected:</span>
 <span id="L35"><span class="lineNum">      35</span>              :     // Virtual method for creating parsers; can be overridden for unit tests.</span>
-<span id="L36"><span class="lineNum">      36</span>              :     virtual std::unique_ptr&lt;FeedSource&gt; createParser();</span>
+<span id="L36"><span class="lineNum">      36</span>              :     virtual std::shared_ptr&lt;FeedSource&gt; createParser();</span>
 <span id="L37"><span class="lineNum">      37</span>              : </span>
 <span id="L38"><span class="lineNum">      38</span>              :     // Called whenever a parser is done.</span>
 <span id="L39"><span class="lineNum">      39</span>              :     void onParserDone();</span>
 <span id="L40"><span class="lineNum">      40</span>              : </span>
 <span id="L41"><span class="lineNum">      41</span>              :     // Parsers that are in flight.</span>
-<span id="L42"><span class="lineNum">      42</span>              :     std::map&lt;QUrl, std::unique_ptr&lt;FeedSource&gt;&gt; parsers;</span>
+<span id="L42"><span class="lineNum">      42</span>              :     QMap&lt;QUrl, std::shared_ptr&lt;FeedSource&gt;&gt; parsers;</span>
 <span id="L43"><span class="lineNum">      43</span>              : </span>
-<span id="L44"><span class="lineNum">      44</span>              :     // Results of parsing per-URL.</span>
-<span id="L45"><span class="lineNum">      45</span>              :     QMap&lt;QUrl, FeedFetchResult&gt; results;</span>
+<span id="L44"><span class="lineNum">      44</span>              :     // Reverse index: parser pointer -&gt; original request URL.</span>
+<span id="L45"><span class="lineNum">      45</span>              :     QHash&lt;FeedSource*, QUrl&gt; parserUrls;</span>
 <span id="L46"><span class="lineNum">      46</span>              : </span>
-<span id="L47"><span class="lineNum">      47</span>              :     // Parsed feeds per-URL.</span>
-<span id="L48"><span class="lineNum">      48</span>              :     QMap&lt;QUrl, std::shared_ptr&lt;RawFeed&gt;&gt; feeds;</span>
-<span id="L49"><span class="lineNum">      49</span>              : };</span>
-<span id="L50"><span class="lineNum">      50</span>              : </span>
-<span id="L51"><span class="lineNum">      51</span>              : #endif // BATCHFEEDFETCHER_H</span>
+<span id="L47"><span class="lineNum">      47</span>              :     // Results of parsing per-URL.</span>
+<span id="L48"><span class="lineNum">      48</span>              :     QMap&lt;QUrl, FeedFetchResult&gt; results;</span>
+<span id="L49"><span class="lineNum">      49</span>              : </span>
+<span id="L50"><span class="lineNum">      50</span>              :     // Parsed feeds per-URL.</span>
+<span id="L51"><span class="lineNum">      51</span>              :     QMap&lt;QUrl, std::shared_ptr&lt;RawFeed&gt;&gt; feeds;</span>
+<span id="L52"><span class="lineNum">      52</span>              : };</span>
+<span id="L53"><span class="lineNum">      53</span>              : </span>
+<span id="L54"><span class="lineNum">      54</span>              : #endif // BATCHFEEDFETCHER_H</span>
         </pre>
               </td>
             </tr>
