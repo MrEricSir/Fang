@@ -16,13 +16,9 @@ static QString stripEscapedCDATA(const QString& text)
 std::unique_ptr<RawFeed> RSSAtomParser::parse(const QByteArray& data)
 {
     RSSAtomParser worker;
-
-    // Init
     worker.feed = std::make_unique<RawFeed>();
     worker.isValid = true;
-    worker.resetParserVars();
 
-    // Parse
     worker.xml.addData(data);
     while (!worker.xml.atEnd()) {
         worker.xml.readNext();
@@ -43,7 +39,6 @@ std::unique_ptr<RawFeed> RSSAtomParser::parse(const QByteArray& data)
                                  << ": " << worker.xml.errorString();
     }
 
-    // Finalize
     if (worker.isValid && worker.feed->items.size() == 0) {
         worker.saveSummary();
     }
@@ -51,41 +46,26 @@ std::unique_ptr<RawFeed> RSSAtomParser::parse(const QByteArray& data)
     return std::move(worker.feed);
 }
 
-RSSAtomParser::RSSAtomParser() :
-    feed(nullptr), currentItem(nullptr), isValid(false), inAtomXHTML(false)
-{
-}
-
-RSSAtomParser::~RSSAtomParser()
-{
-}
-
 void RSSAtomParser::elementStart()
 {
     QString tagName = xml.name().toString().toLower();
-    
-    // Look for start of entries.
-    //qDebug() << "XML node: " << xml.name().toString() << " " << xml.prefix().toString();
-    if ((tagName == "item" || tagName == "entry") && !inAtomXHTML) {
-        
-        if (urlHref.isEmpty()) {
-            urlHref = xml.attributes().value("rss:about").toString();
+
+    if ((tagName == "item" || tagName == "entry") && !state.inAtomXHTML) {
+
+        if (state.urlHref.isEmpty()) {
+            state.urlHref = xml.attributes().value("rss:about").toString();
         }
-        
-        if (numItems == 0) {
-            // Oh, first item?  Assume we've seen the summary then.
+
+        if (state.numItems == 0) {
             saveSummary();
         }
-        
+
         currentItem = std::make_shared<RawNews>();
-        numItems++;
-    } else if ((tagName == "content" || tagName == "summary") && 
+        state.numItems++;
+    } else if ((tagName == "content" || tagName == "summary") &&
                xml.attributes().value("type").toString().toLower() == "xhtml") {
-        // Atom has a crappy feature where you can just stick unescaped xhtml
-        // into the Atom's DOM.  Someone at Google must not believe in SAX
-        // parsers, I guess?
-        inAtomXHTML = true;
-    } else if (inAtomXHTML) {
+        state.inAtomXHTML = true;
+    } else if (state.inAtomXHTML) {
         // Build a string of the tag's elements.
         QString elements = "";
         QXmlStreamAttributes attributes = xml.attributes();
@@ -93,297 +73,243 @@ void RSSAtomParser::elementStart()
             elements += " " + attribute.name().toString() + "=\""
                         + attribute.value().toString() + "\"";
         }
-        
+
         // Mash the tag together.
-        content += "<" + xml.qualifiedName().toString() + elements + ">";
-        
-        // Early exit!
+        state.content += "<" + xml.qualifiedName().toString() + elements + ">";
+
         return;
     }
-    
-    currentTag = tagName;
-    currentPrefix = xml.prefix().toString().toLower();
-    hasType = xml.attributes().hasAttribute("type");
+
+    state.currentTag = tagName;
+    state.currentPrefix = xml.prefix().toString().toLower();
+    state.hasType = xml.attributes().hasAttribute("type");
 
     // Podcast detection: only flag itunes elements that are specific to actual
     // podcast feeds. Many non-podcast feeds (e.g. Substack blogs) include generic
     // itunes metadata like itunes:owner, itunes:author, and itunes:block.
-    if (currentPrefix == "itunes") {
-        if (currentTag == "duration" || currentTag == "episode"
-                || currentTag == "episodetype" || currentTag == "season"
-                || currentTag == "explicit" || currentTag == "category") {
-            hasPodcastSignals = true;
+    if (state.currentPrefix == "itunes") {
+        if (state.currentTag == "duration" || state.currentTag == "episode"
+                || state.currentTag == "episodetype" || state.currentTag == "season"
+                || state.currentTag == "explicit" || state.currentTag == "category") {
+            state.hasPodcastSignals = true;
         }
     }
 
     // Podcast detection: audio enclosures.
-    if (currentTag == "enclosure") {
+    if (state.currentTag == "enclosure") {
         QString type = xml.attributes().value("type").toString().toLower();
         if (type.startsWith("audio/")) {
-            hasPodcastSignals = true;
+            state.hasPodcastSignals = true;
         }
     }
 
     // Media RSS image extraction (media:thumbnail and media:content).
-    if (currentItem && currentPrefix == "media") {
-        if (currentTag == "thumbnail") {
+    if (currentItem && state.currentPrefix == "media") {
+        if (state.currentTag == "thumbnail") {
             QString url = xml.attributes().value("url").toString();
             int width = xml.attributes().value("width").toString().toInt();
-            if (!url.isEmpty() && (mediaImageURL.isEmpty() || width > mediaImageWidth)) {
-                mediaImageURL = url;
-                mediaImageWidth = width;
+            if (!url.isEmpty() && (state.mediaImageURL.isEmpty() || width > state.mediaImageWidth)) {
+                state.mediaImageURL = url;
+                state.mediaImageWidth = width;
             }
-        } else if (currentTag == "content") {
+        } else if (state.currentTag == "content") {
             QString type = xml.attributes().value("type").toString().toLower();
             if (type.startsWith("image/")) {
                 QString url = xml.attributes().value("url").toString();
                 int width = xml.attributes().value("width").toString().toInt();
-                if (!url.isEmpty() && (mediaImageURL.isEmpty() || width > mediaImageWidth)) {
-                    mediaImageURL = url;
-                    mediaImageWidth = width;
+                if (!url.isEmpty() && (state.mediaImageURL.isEmpty() || width > state.mediaImageWidth)) {
+                    state.mediaImageURL = url;
+                    state.mediaImageWidth = width;
                 }
             }
         }
     }
 
-    if (currentTag == "link" && urlHref.isEmpty() && xml.attributes().hasAttribute("href")) {
-        // Used by atom feeds to grab the first link.
-        urlHref = xml.attributes().value("href").toString();
+    if (state.currentTag == "link" && state.urlHref.isEmpty() && xml.attributes().hasAttribute("href")) {
+        state.urlHref = xml.attributes().value("href").toString();
     }
-    
-    // Add this new tag to our stack. :)
-    tagStack.push(tagName);
+
+    state.tagStack.push(tagName);
 }
 
 void RSSAtomParser::elementEnd()
 {
-    if (!inAtomXHTML) {
-        tagStack.pop(); // Pop our tag stack, we're through with this one!
+    if (!state.inAtomXHTML) {
+        state.tagStack.pop();
     }
-    
+
     QString tagName = xml.name().toString().toLower();
-    
-    if ((tagName == "item" || tagName == "entry") && !inAtomXHTML) {
-        //qDebug() << "End element:" << xml.name().toString();
+
+    if ((tagName == "item" || tagName == "entry") && !state.inAtomXHTML) {
         if (!currentItem) {
             qCWarning(logFeedParser) << "Current item is null!";
-            qCWarning(logFeedParser) << "Current title: " << title;
+            qCWarning(logFeedParser) << "Current title: " << state.title;
             qCWarning(logFeedParser) << "Xml element: " << tagName;
             return;
         }
-        
+
         // Figure out which date to use.
         QString timestamp;
-        if (!pubdate.trimmed().isEmpty()) {
-            timestamp = pubdate;
-        } else if (!lastbuilddate.trimmed().isEmpty()) {
-            timestamp = lastbuilddate;
-        } else if (!created.trimmed().isEmpty()) {
-            timestamp = created;
-        } else if (!date.trimmed().isEmpty()) {
-            timestamp = date;
-        } else if (!updated.trimmed().isEmpty()) {
-            timestamp = updated;
+        if (!state.pubdate.trimmed().isEmpty()) {
+            timestamp = state.pubdate;
+        } else if (!state.lastbuilddate.trimmed().isEmpty()) {
+            timestamp = state.lastbuilddate;
+        } else if (!state.created.trimmed().isEmpty()) {
+            timestamp = state.created;
+        } else if (!state.date.trimmed().isEmpty()) {
+            timestamp = state.date;
+        } else if (!state.updated.trimmed().isEmpty()) {
+            timestamp = state.updated;
         }
-        
+
         // Determine the GUID.
         QString myGuid;
-        if (!id.trimmed().isEmpty()) {
-            myGuid = id.trimmed();
-        } else if (!guid.trimmed().isEmpty()) {
-            myGuid = guid.trimmed();
-        } else if (!urlData.trimmed().isEmpty()) {
-            myGuid = urlData.trimmed();
+        if (!state.id.trimmed().isEmpty()) {
+            myGuid = state.id.trimmed();
+        } else if (!state.guid.trimmed().isEmpty()) {
+            myGuid = state.guid.trimmed();
+        } else if (!state.urlData.trimmed().isEmpty()) {
+            myGuid = state.urlData.trimmed();
         } else {
-            myGuid = urlHref.trimmed();
+            myGuid = state.urlHref.trimmed();
         }
 
         // Skip items without a GUID - malformed feed
         if (myGuid.isEmpty()) {
             qCWarning(logFeedParser) << "RSSAtomParser: RSS/Atom item missing GUID/URL, skipping item";
-            qCWarning(logFeedParser) << "  Title:" << title;
+            qCWarning(logFeedParser) << "  Title:" << state.title;
             currentItem.reset();
-
-            // Clear all strings for next item
-            author = title = subtitle = content = QString();
-            urlData = urlHref = guid = id = date = updated = timestamp = QString();
+            state.clearItemFields();
             return;
         }
 
         // Item space.
-        currentItem->author = author;
-        currentItem->title = stripEscapedCDATA(title);
-        currentItem->description = stripEscapedCDATA(subtitle);
-        currentItem->content = stripEscapedCDATA(content);
+        currentItem->author = state.author;
+        currentItem->title = stripEscapedCDATA(state.title);
+        currentItem->description = stripEscapedCDATA(state.subtitle);
+        currentItem->content = stripEscapedCDATA(state.content);
 
-        currentItem->mediaImageURL = mediaImageURL;
+        currentItem->mediaImageURL = state.mediaImageURL;
 
-        currentItem->url = urlData.isEmpty() ? QUrl(urlHref) : QUrl(urlData);
+        currentItem->url = state.urlData.isEmpty() ? QUrl(state.urlHref) : QUrl(state.urlData);
         currentItem->timestamp = FeedDateParser::dateFromFeedString(timestamp);
         currentItem->guid = myGuid;
-        
-        // Okay, give it up. :(
+
         if (!currentItem->timestamp.isValid()) {
             qCDebug(logFeedParser) << "Time string: " << timestamp;
             qCDebug(logFeedParser) << "invalid date!";
         }
-        
-        
+
+
         feed->items.append(currentItem);
-        feed->isPodcast = feed->isPodcast || hasPodcastSignals;
+        feed->isPodcast = feed->isPodcast || state.hasPodcastSignals;
         currentItem.reset();
 
-        // Clear all strings.
-        title = "";
-        urlHref = "";
-        urlData = "";
-        subtitle = "";
-        pubdate = "";
-        lastbuilddate = "";
-        created = "";
-        date = "";
-        updated = "";
-        author = "";
-        content = "";
-        guid = "";
-        id = "";
-        mediaImageURL = "";
-        mediaImageWidth = 0;
+        state.clearItemFields();
     } else if (tagName == "content" || tagName == "summary") {
-        // Just accept that this is the end of one of these:
-        // <contents type="xhtml">
-        if (inAtomXHTML) {
-            inAtomXHTML = false;
-            tagStack.pop(); // We didn't do this earlier, you see.
+        if (state.inAtomXHTML) {
+            state.inAtomXHTML = false;
+            state.tagStack.pop();
         }
     }
-    
-    if (inAtomXHTML) {
-        // SLORG we need to add this tag to the contents.
-        
-        // TODO: Is there a better way to do this?!
-        content += "</" + xml.qualifiedName().toString() + ">";
+
+    if (state.inAtomXHTML) {
+        state.content += "</" + xml.qualifiedName().toString() + ">";
     }
 }
 
 void RSSAtomParser::elementContents()
 {
-    if (inAtomXHTML) {
-        // Atom sucks!
-        content += xml.text().toString();
-        
-        return; // Early exit.
+    if (state.inAtomXHTML) {
+        state.content += xml.text().toString();
+        return;
     }
-    
+
     QString parentTag = getTagStackAt(1);
     if (parentTag == "item" || parentTag == "entry") {
         //
         // Inside a news item.
         //
-        
-        if (currentTag == "title" && currentPrefix == "") {
-            title += xml.text().toString();
-        } else if (currentTag == "link" && currentPrefix == "") {
-            urlData += xml.text().toString();
-        } else if ((currentTag == "description" || currentTag == "summary")
-                   && currentPrefix == "") {
-            subtitle += xml.text().toString();
-        } else if (currentTag == "name"
-                   || (currentTag == "creator" && currentPrefix == "dc")) {
-            author += xml.text().toString();
-        } else if (currentTag == "pubdate") {
-            pubdate += xml.text().toString();
-        } else if (currentTag == "lastbuilddate") {
-            lastbuilddate += xml.text().toString();
-        } else if (currentTag == "created") {
-            created += xml.text().toString();
-        } else if (currentTag == "updated") {
-            updated += xml.text().toString();
-        } else if (currentTag == "date") {
-            date += xml.text().toString();
-        } else if (currentTag == "guid") {
-            guid += xml.text().toString();
-        } else if (currentTag == "id") {
-            id += xml.text().toString();
-        } else if ((currentTag == "encoded" && currentPrefix == "content")
-                   || (currentTag == "content" && hasType)) {
-            content += xml.text().toString();
+
+        if (state.currentTag == "title" && state.currentPrefix == "") {
+            state.title += xml.text().toString();
+        } else if (state.currentTag == "link" && state.currentPrefix == "") {
+            state.urlData += xml.text().toString();
+        } else if ((state.currentTag == "description" || state.currentTag == "summary")
+                   && state.currentPrefix == "") {
+            state.subtitle += xml.text().toString();
+        } else if (state.currentTag == "name"
+                   || (state.currentTag == "creator" && state.currentPrefix == "dc")) {
+            state.author += xml.text().toString();
+        } else if (state.currentTag == "pubdate") {
+            state.pubdate += xml.text().toString();
+        } else if (state.currentTag == "lastbuilddate") {
+            state.lastbuilddate += xml.text().toString();
+        } else if (state.currentTag == "created") {
+            state.created += xml.text().toString();
+        } else if (state.currentTag == "updated") {
+            state.updated += xml.text().toString();
+        } else if (state.currentTag == "date") {
+            state.date += xml.text().toString();
+        } else if (state.currentTag == "guid") {
+            state.guid += xml.text().toString();
+        } else if (state.currentTag == "id") {
+            state.id += xml.text().toString();
+        } else if ((state.currentTag == "encoded" && state.currentPrefix == "content")
+                   || (state.currentTag == "content" && state.hasType)) {
+            state.content += xml.text().toString();
         }
     } else if (parentTag == "channel" || parentTag == "feed") {
         //
         // Top level items.
         //
 
-        if (currentTag == "title" && currentPrefix == "") {
-            title += xml.text().toString();
-        } else if (currentTag == "link" && currentPrefix == "") {
-            urlData += xml.text().toString();
-        } else if ((currentTag == "description" || currentTag == "summary")
-                   && currentPrefix == "") {
-            subtitle += xml.text().toString();
+        if (state.currentTag == "title" && state.currentPrefix == "") {
+            state.title += xml.text().toString();
+        } else if (state.currentTag == "link" && state.currentPrefix == "") {
+            state.urlData += xml.text().toString();
+        } else if ((state.currentTag == "description" || state.currentTag == "summary")
+                   && state.currentPrefix == "") {
+            state.subtitle += xml.text().toString();
         }
     }
 }
 
-void RSSAtomParser::resetParserVars()
+void RSSAtomParser::ParseState::clearItemFields()
 {
-    xml.clear();
-
-    numItems = 0;
-    currentTag = "";
-    currentPrefix = "";
-    urlHref = "";
-    title = "";
-    subtitle = "";
-    content = "";
-    pubdate = "";
-    lastbuilddate = "";
-    created = "";
-    updated = "";
-    date = "";
-    author = "";
-    guid = "";
-    id = "";
-    mediaImageURL = "";
+    title.clear();
+    subtitle.clear();
+    content.clear();
+    author.clear();
+    urlHref.clear();
+    urlData.clear();
+    pubdate.clear();
+    lastbuilddate.clear();
+    created.clear();
+    updated.clear();
+    date.clear();
+    guid.clear();
+    id.clear();
+    mediaImageURL.clear();
     mediaImageWidth = 0;
-    hasType = false;
-    hasPodcastSignals = false;
-    inAtomXHTML = false;
-    tagStack.clear();
 }
 
 void RSSAtomParser::saveSummary()
 {
-    // Global space.
-    feed->title = title;
-    feed->subtitle = subtitle;
-    feed->siteURL = urlData.isEmpty() ? QUrl(urlHref) : QUrl(urlData);
-    feed->isPodcast = hasPodcastSignals;
+    feed->title = state.title;
+    feed->subtitle = state.subtitle;
+    feed->siteURL = state.urlData.isEmpty() ? QUrl(state.urlHref) : QUrl(state.urlData);
+    feed->isPodcast = state.hasPodcastSignals;
 
-    // Clear all local strings.
-    title = "";
-    urlHref = "";
-    urlData = "";
-    subtitle = "";
-    pubdate = "";
-    lastbuilddate = "";
-    updated = "";
-    date = "";
-    author = "";
-    content = "";
-    guid = "";
-    id = "";
-    mediaImageURL = "";
-    mediaImageWidth = 0;
+    state.clearItemFields();
 }
 
 
 QString RSSAtomParser::getTagStackAt(qint32 n)
 {
-    // n is from 0..size - 1
-    if (tagStack.isEmpty() || (tagStack.size() - 1) < n) {
+    if (state.tagStack.isEmpty() || (state.tagStack.size() - 1) < n) {
         return "";
     }
-    
-    return tagStack.at(tagStack.size() - 1 - n);
+
+    return state.tagStack.at(state.tagStack.size() - 1 - n);
 }

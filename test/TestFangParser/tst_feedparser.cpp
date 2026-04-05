@@ -61,6 +61,12 @@ private slots:
     void testMissingItemTag();
     void testEmptyInput();
 
+    // Coverage gap tests
+    void testEscapedCDATA();
+    void testLastBuildDateFallback();
+    void testNestedItemTags();
+    void testShallowTagContent();
+
     // Permanent redirect detection
     void testPermanentRedirect301();
     void testPermanentRedirect308();
@@ -986,6 +992,117 @@ void TestFeedParser::testMediaNamespaceIsolation()
 
     // media:thumbnail should still be extracted.
     QCOMPARE(item->mediaImageURL, QString("http://example.com/thumb.jpg"));
+}
+
+// =====================================================================
+// Coverage gap tests
+// =====================================================================
+
+void TestFeedParser::testEscapedCDATA()
+{
+    // Some feeds double-escape CDATA markers, producing literal
+    // "<![CDATA[...]]>" text. The parser should strip them.
+    QByteArray rss = R"(<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+<channel>
+<title>CDATA Test</title>
+<link>http://example.com</link>
+<item>
+  <title>&lt;![CDATA[Escaped Title]]&gt;</title>
+  <link>http://example.com/1</link>
+  <guid>cdata-1</guid>
+  <pubDate>Wed, 19 Mar 2026 10:00:00 +0000</pubDate>
+</item>
+</channel>
+</rss>)";
+
+    auto result = FeedParser::parse(rss);
+    QVERIFY(result.ok());
+    auto feed = result.feed();
+    QVERIFY(feed != nullptr);
+    QCOMPARE(feed->items.size(), 1);
+    QCOMPARE(feed->items.first()->title, QString("Escaped Title"));
+}
+
+void TestFeedParser::testLastBuildDateFallback()
+{
+    // When an item has <lastBuildDate> but no <pubDate>, the parser should
+    // fall back to lastBuildDate for the timestamp.
+    QByteArray rss = R"(<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+<channel>
+<title>LBD Test</title>
+<link>http://example.com</link>
+<item>
+  <title>Article</title>
+  <link>http://example.com/1</link>
+  <guid>lbd-1</guid>
+  <lastBuildDate>Wed, 19 Mar 2026 14:30:00 +0000</lastBuildDate>
+</item>
+</channel>
+</rss>)";
+
+    auto result = FeedParser::parse(rss);
+    QVERIFY(result.ok());
+    auto feed = result.feed();
+    QVERIFY(feed != nullptr);
+    QCOMPARE(feed->items.size(), 1);
+
+    QDateTime expected = QDateTime(QDate(2026, 3, 19), QTime(14, 30, 0), QTimeZone::UTC);
+    QCOMPARE(feed->items.first()->timestamp, expected);
+}
+
+void TestFeedParser::testNestedItemTags()
+{
+    // Nested <item> tags cause the outer </item> to find currentItem null
+    // after the inner </item> already consumed it. The parser should handle
+    // this gracefully without crashing.
+    QByteArray rss = R"(<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+<channel>
+<title>Nested Test</title>
+<link>http://example.com</link>
+<item>
+  <item>
+    <title>Inner Article</title>
+    <link>http://example.com/inner</link>
+    <guid>inner-1</guid>
+    <pubDate>Wed, 19 Mar 2026 10:00:00 +0000</pubDate>
+  </item>
+</item>
+</channel>
+</rss>)";
+
+    auto result = FeedParser::parse(rss);
+    QVERIFY(result.ok());
+    auto feed = result.feed();
+    QVERIFY(feed != nullptr);
+    QCOMPARE(feed->items.size(), 1);
+    QCOMPARE(feed->items.first()->title, QString("Inner Article"));
+}
+
+void TestFeedParser::testShallowTagContent()
+{
+    // Non-whitespace text at a shallow nesting level (directly inside <rss>,
+    // outside <channel>) should be handled gracefully.
+    QByteArray rss = R"(<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">ShallowText<channel>
+<title>Test</title>
+<link>http://example.com</link>
+<item>
+  <title>Article</title>
+  <link>http://example.com/1</link>
+  <guid>shallow-1</guid>
+  <pubDate>Wed, 19 Mar 2026 10:00:00 +0000</pubDate>
+</item>
+</channel>
+</rss>)";
+
+    auto result = FeedParser::parse(rss);
+    QVERIFY(result.ok());
+    auto feed = result.feed();
+    QVERIFY(feed != nullptr);
+    QCOMPARE(feed->items.size(), 1);
 }
 
 // =====================================================================

@@ -382,9 +382,13 @@ if(ENABLE_COVERAGE)
     if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
         message(STATUS "Code coverage enabled")
 
-        # Add coverage flags to main target
+        # Add coverage flags to main target and libraries
         target_compile_options(Fang PRIVATE --coverage -O0 -g)
         target_link_options(Fang PRIVATE --coverage)
+        target_compile_options(FangFeedParser PRIVATE --coverage -O0 -g)
+        target_link_options(FangFeedParser PRIVATE --coverage)
+        target_compile_options(FangFeedDiscovery PRIVATE --coverage -O0 -g)
+        target_link_options(FangFeedDiscovery PRIVATE --coverage)
 
         # Add custom target for coverage report generation
         find_program(LCOV_PATH lcov)

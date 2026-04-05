@@ -22,8 +22,38 @@ public:
     static std::unique_ptr<RawFeed> parse(const QByteArray& data);
 
 private:
-    RSSAtomParser();
-    ~RSSAtomParser();
+    RSSAtomParser() = default;
+
+    struct ParseState {
+        int numItems = 0;
+        bool hasPodcastSignals = false;
+        bool inAtomXHTML = false;
+        QStack<QString> tagStack;
+
+        // Per-element (set fresh on each start element)
+        QString currentTag;
+        QString currentPrefix;
+        bool hasType = false;
+
+        // Per-item accumulated text (cleared between items)
+        QString title;
+        QString subtitle;
+        QString content;
+        QString author;
+        QString urlHref;
+        QString urlData;
+        QString pubdate;
+        QString lastbuilddate;
+        QString created;
+        QString updated;
+        QString date;
+        QString guid;
+        QString id;
+        QString mediaImageURL;
+        int mediaImageWidth = 0;
+
+        void clearItemFields();
+    };
 
     /*!
         \brief Parse a start element, e.g. <b>
@@ -40,8 +70,6 @@ private:
      */
     void elementContents();
 
-    void resetParserVars();
-
     // Call this when we have a summary.
     void saveSummary();
 
@@ -52,34 +80,9 @@ private:
 
     std::unique_ptr<RawFeed> feed;
     std::shared_ptr<RawNews> currentItem;
-    bool isValid;
-
+    bool isValid = false;
     QXmlStreamReader xml;
-
-    // Parser vars
-    int numItems;
-    QString currentTag;
-    QString currentPrefix;
-    QString urlHref;
-    QString urlData;
-    QString title;
-    QString subtitle;
-    QString content;
-    QString pubdate;
-    QString lastbuilddate;
-    QString created;
-    QString updated;
-    QString date;
-    QString author;
-    bool hasType;
-    bool hasPodcastSignals;
-    bool inAtomXHTML;
-    QString guid;
-    QString id;
-    QString mediaImageURL;
-    int mediaImageWidth;
-    QStack<QString> tagStack;
-    //
+    ParseState state;
 };
 
 #endif // RSSATOMPARSER_H
