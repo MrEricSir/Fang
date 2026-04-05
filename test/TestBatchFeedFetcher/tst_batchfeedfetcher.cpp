@@ -35,9 +35,9 @@ public:
 
 protected:
     // Override factory method to create mock parsers instead of real ones
-    std::unique_ptr<FeedSource> createParser() override
+    std::shared_ptr<FeedSource> createParser() override
     {
-        auto parser = std::make_unique<MockFeedSource>();
+        auto parser = std::make_shared<MockFeedSource>();
 
         // Store the raw pointer so we can configure it when parse() is called with a URL
         pendingParsers.enqueue(parser.get());

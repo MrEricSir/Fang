@@ -1,9 +1,9 @@
 #ifndef BATCHFEEDFETCHER_H
 #define BATCHFEEDFETCHER_H
 
-#include <map>
 #include <memory>
 
+#include <QHash>
 #include <QMap>
 #include <QUrl>
 
@@ -33,13 +33,16 @@ signals:
 
 protected:
     // Virtual method for creating parsers; can be overridden for unit tests.
-    virtual std::unique_ptr<FeedSource> createParser();
+    virtual std::shared_ptr<FeedSource> createParser();
 
     // Called whenever a parser is done.
     void onParserDone();
 
     // Parsers that are in flight.
-    std::map<QUrl, std::unique_ptr<FeedSource>> parsers;
+    QMap<QUrl, std::shared_ptr<FeedSource>> parsers;
+
+    // Reverse index: parser pointer -> original request URL.
+    QHash<FeedSource*, QUrl> parserUrls;
 
     // Results of parsing per-URL.
     QMap<QUrl, FeedFetchResult> results;

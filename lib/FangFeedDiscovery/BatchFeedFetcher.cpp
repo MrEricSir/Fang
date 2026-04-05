@@ -10,6 +10,7 @@ void BatchFeedFetcher::parse(const QList<QUrl> &urls)
 {
     // Clear any existing parsers and results, in case this object is being reused.
     parsers.clear();
+    parserUrls.clear();
     results.clear();
 
     // Clear feed map as the pointers are no longer valid (they were owned by parsers.)
@@ -18,20 +19,21 @@ void BatchFeedFetcher::parse(const QList<QUrl> &urls)
     // Set up parsers.
     for (const QUrl& url : urls) {
         // Skip this URL if we've already seen it.
-        if (parsers.count(url) > 0) {
+        if (parsers.contains(url)) {
             continue;
         }
 
         auto parser = createParser();
         connect(parser.get(), &FeedSource::done, this, &BatchFeedFetcher::onParserDone);
+        parserUrls.insert(parser.get(), url);
         parser->parse(url);
-        parsers[url] = std::move(parser);
+        parsers.insert(url, parser);
     }
 }
 
-std::unique_ptr<FeedSource> BatchFeedFetcher::createParser()
+std::shared_ptr<FeedSource> BatchFeedFetcher::createParser()
 {
-    return std::make_unique<FeedFetcher>();
+    return std::make_shared<FeedFetcher>();
 }
 
 void BatchFeedFetcher::onParserDone()
@@ -42,15 +44,9 @@ void BatchFeedFetcher::onParserDone()
         return;
     }
 
-    // Find the original request URL by matching the parser pointer, since
+    // Look up the original request URL via the reverse index, since
     // parser->getURL() may differ from the request URL after redirects.
-    QUrl requestUrl;
-    for (auto it = parsers.cbegin(); it != parsers.cend(); ++it) {
-        if (it->second.get() == parser) {
-            requestUrl = it->first;
-            break;
-        }
-    }
+    QUrl requestUrl = parserUrls.value(parser);
 
     if (requestUrl.isEmpty()) {
         qCWarning(logFeedDiscovery) << "BatchFeedFetcher: parser finished but not found in map:" << parser->getURL();
@@ -70,7 +66,7 @@ void BatchFeedFetcher::onParserDone()
 
     // Check if we're done.
     for (auto it = parsers.cbegin(); it != parsers.cend(); ++it) {
-        if (it->second->getResult() == FeedFetchResult::InProgress) {
+        if (it.value()->getResult() == FeedFetchResult::InProgress) {
             // Not done yet!
             return;
         }
