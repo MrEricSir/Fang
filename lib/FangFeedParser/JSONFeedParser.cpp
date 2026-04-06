@@ -72,7 +72,7 @@ std::unique_ptr<RawFeed> JSONFeedParser::parse(const QByteArray& data)
             news->url = QUrl(itemUrl);
         }
 
-        news->title = itemObj.value("title").toString("");
+        news->title = itemObj.value("title").toString();
 
         // content_html takes priority over content_text for the content field.
         QString contentHtml = itemObj.value("content_html").toString("");

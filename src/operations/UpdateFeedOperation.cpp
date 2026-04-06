@@ -291,6 +291,12 @@ void UpdateFeedOperation::onRewriterFinished()
 
     feed->setIsUpdating(false);
     
+    // Null QStrings bind as SQL NULL, which violates NOT NULL constraints.
+    // Coerce to empty string for safe binding.
+    auto safeString = [](const QString& s) -> QString {
+        return s.isNull() ? QString("") : s;
+    };
+
     // Add all new items to DB.
     db().transaction(); // Prevent getting out of sync on error.
     for (const auto& rawNews : newsList) {
@@ -299,14 +305,14 @@ void UpdateFeedOperation::onRewriterFinished()
                       "timestamp, url, media_image_url) VALUES (:feed_id, :guid, :title, :author, :summary, :content, "
                       ":timestamp, :url, :media_image_url)");
         query.bindValue(":feed_id", feed->getDbID());
-        query.bindValue(":guid", rawNews->guid);
-        query.bindValue(":title", rawNews->title);
-        query.bindValue(":author", rawNews->author);
-        query.bindValue(":summary", rawNews->description);
-        query.bindValue(":content", rawNews->content);
+        query.bindValue(":guid", safeString(rawNews->guid));
+        query.bindValue(":title", safeString(rawNews->title));
+        query.bindValue(":author", safeString(rawNews->author));
+        query.bindValue(":summary", safeString(rawNews->description));
+        query.bindValue(":content", safeString(rawNews->content));
         query.bindValue(":timestamp", rawNews->timestamp.toMSecsSinceEpoch());
         query.bindValue(":url", rawNews->url);
-        query.bindValue(":media_image_url", rawNews->mediaImageURL);
+        query.bindValue(":media_image_url", safeString(rawNews->mediaImageURL));
         
         if (!query.exec()) {
             feed->setErrorFlag(true);

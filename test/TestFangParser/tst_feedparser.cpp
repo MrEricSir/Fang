@@ -67,6 +67,11 @@ private slots:
     void testNestedItemTags();
     void testShallowTagContent();
 
+    // Absent fields produce null QStrings
+    void testRSSMissingOptionalFields();
+    void testAtomMissingOptionalFields();
+    void testJSONFeedMissingOptionalFields();
+
     // Permanent redirect detection
     void testPermanentRedirect301();
     void testPermanentRedirect308();
@@ -1357,6 +1362,91 @@ void TestFeedParser::testEmptyInput()
 
     auto whitespaceResult = FeedParser::parse(QByteArray("   \n  \t  "));
     QVERIFY(!whitespaceResult.ok());
+}
+
+// =====================================================================
+// Absent field tests - parsers should produce null QStrings for missing
+// optional fields, not empty strings. Null means "absent" which lets
+// consumers distinguish between "no author" and "author is blank".
+// =====================================================================
+
+void TestFeedParser::testRSSMissingOptionalFields()
+{
+    QByteArray rss = R"(<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+<channel>
+<title>Minimal Feed</title>
+<link>http://example.com</link>
+<item>
+  <guid>minimal-1</guid>
+  <link>http://example.com/1</link>
+</item>
+</channel>
+</rss>)";
+
+    auto result = FeedParser::parse(rss);
+    QVERIFY(result.ok());
+    auto feed = result.feed();
+    QCOMPARE(feed->items.size(), 1);
+
+    auto item = feed->items.first();
+    QVERIFY(item->author.isNull());
+    QVERIFY(item->title.isNull());
+    QVERIFY(item->description.isNull());
+    QVERIFY(item->content.isNull());
+    QVERIFY(item->mediaImageURL.isNull());
+}
+
+void TestFeedParser::testAtomMissingOptionalFields()
+{
+    QByteArray atom = R"(<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+<title>Minimal Atom</title>
+<link href="http://example.com"/>
+<entry>
+  <id>atom-1</id>
+  <link href="http://example.com/1"/>
+  <updated>2026-03-19T10:00:00Z</updated>
+</entry>
+</feed>)";
+
+    auto result = FeedParser::parse(atom);
+    QVERIFY(result.ok());
+    auto feed = result.feed();
+    QCOMPARE(feed->items.size(), 1);
+
+    auto item = feed->items.first();
+    QVERIFY(item->author.isNull());
+    QVERIFY(item->title.isNull());
+    QVERIFY(item->description.isNull());
+    QVERIFY(item->content.isNull());
+    QVERIFY(item->mediaImageURL.isNull());
+}
+
+void TestFeedParser::testJSONFeedMissingOptionalFields()
+{
+    QByteArray json = R"({
+    "version": "https://jsonfeed.org/version/1.1",
+    "title": "Minimal JSON Feed",
+    "items": [
+        {
+            "id": "json-1",
+            "url": "http://example.com/1"
+        }
+    ]
+})";
+
+    auto result = FeedParser::parse(json);
+    QVERIFY(result.ok());
+    auto feed = result.feed();
+    QCOMPARE(feed->items.size(), 1);
+
+    auto item = feed->items.first();
+    QVERIFY(item->author.isNull());
+    QVERIFY(item->title.isNull());
+    QVERIFY(item->description.isNull());
+    QVERIFY(item->content.isNull());
+    QVERIFY(item->mediaImageURL.isNull());
 }
 
 QTEST_MAIN(TestFeedParser)

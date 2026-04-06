@@ -19,8 +19,8 @@ public:
 
     FeedType feedType = RSS;
 
-    QString title = "";
-    QString subtitle = "";
+    QString title;
+    QString subtitle;
     QUrl url;
     QDateTime lastUpdated;
     quint32 minutesToUpdate = 0;

@@ -10,14 +10,14 @@ class RawNews
 public:
     RawNews() = default;
 
-    QString title = "";
-    QString author = "";
-    QString description = "";
-    QString content = "";
+    QString title;
+    QString author;
+    QString description;
+    QString content;
     QDateTime timestamp;
     QUrl url;
-    QString guid = "";
-    QString mediaImageURL = "";
+    QString guid;
+    QString mediaImageURL;
 
     // Sorting
     bool operator<(const RawNews& right);
