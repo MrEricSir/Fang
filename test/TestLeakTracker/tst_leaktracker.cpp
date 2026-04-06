@@ -1,6 +1,6 @@
 #include <QtTest>
 #include <QDebug>
-#include "../../src/utilities/QObjectLeakTracker.h"
+#include "QObjectLeakTracker.h"
 
 // For capturing log output
 static QStringList capturedMessages;

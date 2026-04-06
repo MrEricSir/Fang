@@ -99,6 +99,9 @@ set_property(TARGET QSimpleStateMachine PROPERTY INTERFACE_SOURCES "")
 # Add QAutoStart directory
 add_subdirectory(external/QAutoStart)
 
+# Add QObjectLeakTracker directory
+add_subdirectory(external/QObjectLeakTracker)
+
 # Add QMLRearrangeableTreeView directory
 add_subdirectory(external/QMLRearrangeableTreeView)
 set(QML_IMPORT_PATH "${CMAKE_BINARY_DIR}/external/QMLRearrangeableTreeView" CACHE STRING "" FORCE)
@@ -158,7 +161,7 @@ qt_add_executable(Fang WIN32
     src/models/OPMLInteractor.cpp
     src/utilities/OPMLExport.cpp
     src/utilities/BatchFeedDiscovery.cpp
-    src/utilities/QObjectLeakTracker.cpp
+
     src/network/FangQQmlNetworkAccessManagerFactory.cpp
     src/network/BatchDownloadCore.cpp
     src/notifications/Notification.cpp
@@ -222,7 +225,7 @@ qt_add_executable(Fang WIN32
     src/models/OPMLInteractor.h
     src/utilities/OPMLExport.h
     src/utilities/BatchFeedDiscovery.h
-    src/utilities/QObjectLeakTracker.h
+
     src/network/FangQQmlNetworkAccessManagerFactory.h
     src/network/BatchDownloadCore.h
     src/notifications/Notification.h
@@ -293,6 +296,7 @@ target_link_libraries(Fang PRIVATE
     Qt6::HttpServer
     Qt6::QuickEffects
     QAutoStart
+    QObjectLeakTracker
     rearrangeabletreeview
     rearrangeabletreeviewplugin
 )

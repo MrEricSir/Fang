@@ -9,7 +9,6 @@ qt_add_executable(tst_lisvelfeeditem
     ${CMAKE_SOURCE_DIR}/src/models/ListModel.cpp
     ${CMAKE_SOURCE_DIR}/src/models/NewsList.cpp
     ${CMAKE_SOURCE_DIR}/src/models/NewsItem.cpp
-    ${CMAKE_SOURCE_DIR}/src/utilities/QObjectLeakTracker.cpp
     # Headers for AUTOMOC
     ${CMAKE_SOURCE_DIR}/src/models/FeedItem.h
     ${CMAKE_SOURCE_DIR}/src/models/LisvelFeedItem.h
@@ -17,7 +16,6 @@ qt_add_executable(tst_lisvelfeeditem
     ${CMAKE_SOURCE_DIR}/src/models/NewsList.h
     ${CMAKE_SOURCE_DIR}/src/models/NewsItem.h
     ${CMAKE_SOURCE_DIR}/src/models/DBObject.h
-    ${CMAKE_SOURCE_DIR}/src/utilities/QObjectLeakTracker.h
 )
 
 # Add include directories
@@ -28,6 +26,7 @@ target_include_directories(tst_lisvelfeeditem PRIVATE
 # Link Qt modules
 target_link_libraries(tst_lisvelfeeditem PRIVATE
     FangFeedParser
+    QObjectLeakTracker
     Qt6::Test
     Qt6::Core
     Qt6::CorePrivate

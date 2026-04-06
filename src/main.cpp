@@ -18,7 +18,7 @@
 
 #include <QSingleInstanceCheck/QSingleInstanceCheck.h>
 
-#include "utilities/QObjectLeakTracker.h"
+#include "QObjectLeakTracker.h"
 
 Q_DECL_EXPORT int main(int argc, char *argv[])
 {

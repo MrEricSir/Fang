@@ -13,3 +13,6 @@
 [submodule "external/QImageCache"]
 	path = external/QImageCache
 	url = https://github.com/MrEricSir/QImageCache.git
+[submodule "external/QObjectLeakTracker"]
+	path = external/QObjectLeakTracker
+	url = https://github.com/MrEricSir/QObjectLeakTracker.git

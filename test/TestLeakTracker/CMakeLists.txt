@@ -1,18 +1,11 @@
 # TestLeakTracker test executable
 qt_add_executable(tst_leaktracker
     tst_leaktracker.cpp
-    ${CMAKE_SOURCE_DIR}/src/utilities/QObjectLeakTracker.cpp
-    ${CMAKE_SOURCE_DIR}/src/utilities/QObjectLeakTracker.h
-)
-
-target_include_directories(tst_leaktracker PRIVATE
-    ${CMAKE_SOURCE_DIR}/src
 )
 
 target_link_libraries(tst_leaktracker PRIVATE
-    FangFeedParser
+    QObjectLeakTracker
     Qt6::Test
-    Qt6::Core
     Qt6::CorePrivate
 )
 

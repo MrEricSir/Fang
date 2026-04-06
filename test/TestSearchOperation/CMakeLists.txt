@@ -7,7 +7,6 @@ qt_add_executable(tst_searchoperation
     ${CMAKE_SOURCE_DIR}/src/utilities/UnreadCountReader.cpp
     ${CMAKE_SOURCE_DIR}/src/utilities/UnreadCountReader.h
     # Core
-    ${CMAKE_SOURCE_DIR}/src/utilities/QObjectLeakTracker.cpp
     ${CMAKE_SOURCE_DIR}/src/db/DB.cpp
     # Models
     ${CMAKE_SOURCE_DIR}/src/models/FeedItem.cpp
@@ -33,7 +32,6 @@ qt_add_executable(tst_searchoperation
     ${CMAKE_SOURCE_DIR}/src/models/NewsItem.h
     ${CMAKE_SOURCE_DIR}/src/models/NewsPosition.h
     ${CMAKE_SOURCE_DIR}/src/models/DBObject.h
-    ${CMAKE_SOURCE_DIR}/src/utilities/QObjectLeakTracker.h
     ${CMAKE_SOURCE_DIR}/src/db/DB.h
     ${CMAKE_SOURCE_DIR}/src/operations/AsyncOperation.h
     ${CMAKE_SOURCE_DIR}/src/operations/SyncOperation.h
@@ -52,6 +50,7 @@ target_include_directories(tst_searchoperation PRIVATE
 # Link Qt modules
 target_link_libraries(tst_searchoperation PRIVATE
     FangFeedParser
+    QObjectLeakTracker
     Qt6::Test
     Qt6::Core
     Qt6::CorePrivate
