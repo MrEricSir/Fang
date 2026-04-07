@@ -3,8 +3,6 @@ qt_add_executable(tst_db
     tst_db.cpp
     # Database
     ${CMAKE_SOURCE_DIR}/src/db/DB.cpp
-    # Utilities
-    ${CMAKE_SOURCE_DIR}/src/utilities/FangLogging.cpp
     # Base classes
     # Headers for AUTOMOC
     ${CMAKE_SOURCE_DIR}/src/db/DB.h
@@ -19,11 +17,8 @@ target_include_directories(tst_db PRIVATE
 
 # Link Qt modules
 target_link_libraries(tst_db PRIVATE
-    QObjectLeakTracker
+    FangTestLib
     Qt6::Test
-    Qt6::Core
-    Qt6::CorePrivate
-    Qt6::Gui
     Qt6::Sql
 )
 

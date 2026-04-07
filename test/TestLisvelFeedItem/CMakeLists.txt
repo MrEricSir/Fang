@@ -1,8 +1,6 @@
 # TestLisvelFeedItem test executable
 qt_add_executable(tst_lisvelfeeditem
     tst_lisvelfeeditem.cpp
-    # Utilities
-    ${CMAKE_SOURCE_DIR}/src/utilities/FangLogging.cpp
     # Models
     ${CMAKE_SOURCE_DIR}/src/models/FeedItem.cpp
     ${CMAKE_SOURCE_DIR}/src/models/LisvelFeedItem.cpp
@@ -25,12 +23,9 @@ target_include_directories(tst_lisvelfeeditem PRIVATE
 
 # Link Qt modules
 target_link_libraries(tst_lisvelfeeditem PRIVATE
+    FangTestLib
     FangFeedParser
-    QObjectLeakTracker
     Qt6::Test
-    Qt6::Core
-    Qt6::CorePrivate
-    Qt6::Gui
     Qt6::Sql
 )
 

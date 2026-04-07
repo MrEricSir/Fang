@@ -1,8 +1,6 @@
 # TestNewsItem test executable
 qt_add_executable(tst_newsitem
     tst_newsitem.cpp
-    # Utilities
-    ${CMAKE_SOURCE_DIR}/src/utilities/FangLogging.cpp
     # Models
     ${CMAKE_SOURCE_DIR}/src/models/NewsItem.cpp
     ${CMAKE_SOURCE_DIR}/src/models/FeedItem.cpp
@@ -23,12 +21,9 @@ target_include_directories(tst_newsitem PRIVATE
 
 # Link Qt modules
 target_link_libraries(tst_newsitem PRIVATE
+    FangTestLib
     FangFeedParser
-    QObjectLeakTracker
     Qt6::Test
-    Qt6::Core
-    Qt6::CorePrivate
-    Qt6::Gui
     Qt6::Sql
 )
 

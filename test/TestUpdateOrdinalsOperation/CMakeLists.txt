@@ -2,7 +2,6 @@
 qt_add_executable(tst_updateordinalsoperation
     tst_updateordinalsoperation.cpp
     # Utilities
-    ${CMAKE_SOURCE_DIR}/src/utilities/FangLogging.cpp
     ${CMAKE_SOURCE_DIR}/src/utilities/Utilities.cpp
     ${CMAKE_SOURCE_DIR}/src/utilities/UnreadCountReader.cpp
     ${CMAKE_SOURCE_DIR}/src/utilities/UnreadCountReader.h
@@ -45,12 +44,9 @@ target_include_directories(tst_updateordinalsoperation PRIVATE
 
 # Link Qt modules
 target_link_libraries(tst_updateordinalsoperation PRIVATE
+    FangTestLib
     FangFeedParser
-    QObjectLeakTracker
     Qt6::Test
-    Qt6::Core
-    Qt6::CorePrivate
-    Qt6::Gui
     Qt6::Sql
 )
 

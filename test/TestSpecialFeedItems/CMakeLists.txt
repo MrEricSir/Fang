@@ -1,8 +1,6 @@
 # TestSpecialFeedItems test executable
 qt_add_executable(tst_specialfeeditems
     tst_specialfeeditems.cpp
-    # Utilities
-    ${CMAKE_SOURCE_DIR}/src/utilities/FangLogging.cpp
     # Models
     ${CMAKE_SOURCE_DIR}/src/models/FeedItem.cpp
     ${CMAKE_SOURCE_DIR}/src/models/LisvelFeedItem.cpp
@@ -33,12 +31,9 @@ target_include_directories(tst_specialfeeditems PRIVATE
 
 # Link Qt modules
 target_link_libraries(tst_specialfeeditems PRIVATE
+    FangTestLib
     FangFeedParser
-    QObjectLeakTracker
     Qt6::Test
-    Qt6::Core
-    Qt6::CorePrivate
-    Qt6::Gui
     Qt6::Sql
 )
 
