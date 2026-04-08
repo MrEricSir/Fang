@@ -8,9 +8,6 @@ on:
   pull_request:
     branches: [ master, main ]
 
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-
 jobs:
   build-and-test:
     name: ${{ matrix.os }} - Qt ${{ matrix.qt-version }}
