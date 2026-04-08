@@ -274,8 +274,8 @@ jobs:
         Remove-Item -ErrorAction SilentlyContinue build/Release/Fang.lib
         Remove-Item -ErrorAction SilentlyContinue build/Release/Fang.pdb
 
-        # Install WiX Toolset
-        dotnet tool install --global wix
+        # Install WiX Toolset (pinned to 5.x; v7 requires OSMF EULA acceptance)
+        dotnet tool install --global wix --version 5.0.2
 
         # Add WiX Heat extension for file harvesting
         wix extension add WixToolset.Heat.Extension
