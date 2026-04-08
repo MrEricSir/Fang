@@ -1,23 +1,8 @@
 #include "FeedFetcher.h"
 
+#include <QtConcurrent>
+
 #include "FeedParser.h"
-
-// Thin QObject wrapper so FeedParser::parse() runs on the worker thread.
-class ParseWorker : public QObject
-{
-    Q_OBJECT
-public:
-    using QObject::QObject;
-public slots:
-    void parse(QByteArray data)
-    {
-        emit done(FeedParser::parse(data));
-    }
-signals:
-    void done(FeedParseResult result);
-};
-
-static const int feedParseResultMetaType = qRegisterMetaType<FeedParseResult>();
 
 FeedFetcher::FeedFetcher(QObject *parent)
     : FeedFetcher(nullptr, parent)
@@ -29,8 +14,6 @@ FeedFetcher::FeedFetcher(QNetworkAccessManager* networkManager, QObject *parent)
     downloader(nullptr),
     permanentRedirect(false)
 {
-    Q_UNUSED(feedParseResultMetaType);
-
     NetworkDownloadConfig config;
     config.timeoutMs = 30000;
     config.maxRedirects = 10;
@@ -40,20 +23,11 @@ FeedFetcher::FeedFetcher(QNetworkAccessManager* networkManager, QObject *parent)
     connect(downloader, &NetworkDownloadCore::finishedWithResult,
             this, &FeedFetcher::onDownloadResult);
 
-    ParseWorker* worker = new ParseWorker();
-    worker->moveToThread(&workerThread);
-    connect(&workerThread, &QThread::finished, worker, &QObject::deleteLater);
-    connect(this, &FeedFetcher::triggerParse, worker, &ParseWorker::parse);
-    connect(worker, &ParseWorker::done, this, &FeedFetcher::workerDone);
-
-    workerThread.start();
+    connect(&parseWatcher, &QFutureWatcher<FeedParseResult>::finished,
+            this, [this] { workerDone(parseWatcher.result()); });
 }
 
-FeedFetcher::~FeedFetcher()
-{
-    workerThread.quit();
-    workerThread.wait();
-}
+FeedFetcher::~FeedFetcher() = default;
 
 void FeedFetcher::parse(const QUrl& url,
                        const QString& ifNoneMatch, const QString& ifModifiedSince)
@@ -94,7 +68,10 @@ void FeedFetcher::onDownloadResult(NetworkDownloadResult downloadResult)
     respEtag = QString::fromUtf8(downloadResult.responseHeader("ETag"));
     respLastModified = QString::fromUtf8(downloadResult.responseHeader("Last-Modified"));
 
-    emit triggerParse(downloadResult.data);
+    auto future = QtConcurrent::run([data = downloadResult.data] {
+        return FeedParser::parse(data);
+    });
+    parseWatcher.setFuture(future);
 }
 
 FeedFetchResult FeedFetcher::getResult()
@@ -133,5 +110,3 @@ void FeedFetcher::initParse(const QUrl& url)
     respEtag = QString();
     respLastModified = QString();
 }
-
-#include "FeedFetcher.moc"

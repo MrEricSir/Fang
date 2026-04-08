@@ -46,6 +46,7 @@ target_include_directories(FangFeedDiscovery PUBLIC
 
 target_link_libraries(FangFeedDiscovery PUBLIC
     FangFeedParser
+    Qt6::Concurrent
     Qt6::Core
     Qt6::Network
     TidyLib

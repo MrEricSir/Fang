@@ -6,7 +6,7 @@
 #include <QObject>
 #include <QString>
 #include <QNetworkReply>
-#include <QThread>
+#include <QFutureWatcher>
 
 #include "FeedSource.h"
 #include "FeedParseResult.h"
@@ -38,20 +38,14 @@ public slots:
     QString responseLastModified() override { return respLastModified; }
     bool wasPermanentRedirect() const { return permanentRedirect; }
 
-    // These are used internally.
-signals:
-
-    // Send buffered data to the worker thread for parsing.
-    void triggerParse(QByteArray data);
-
 private slots:
     // When the download completes (success or error).
     void onDownloadResult(NetworkDownloadResult downloadResult);
 
-    // When the worker thread thinks the document is complete, or an error occurred.
+private:
+    // When parsing completes on the thread pool.
     void workerDone(FeedParseResult parseResult);
 
-private:
     void initParse(const QUrl& url = QUrl("")); // called prior to parse.
 
     std::shared_ptr<RawFeed> feed;
@@ -66,7 +60,7 @@ private:
 
     bool permanentRedirect;
 
-    QThread workerThread;
+    QFutureWatcher<FeedParseResult> parseWatcher;
 };
 
 #endif // FEEDFETCHER_H

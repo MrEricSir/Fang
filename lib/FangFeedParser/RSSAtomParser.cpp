@@ -2,13 +2,19 @@
 #include "FeedDateParser.h"
 #include "FeedParserLogging.h"
 
+// Returns true if the string contains only whitespace (or is empty).
+static bool isBlankOrEmpty(const QString& s)
+{
+    return QStringView(s).trimmed().isEmpty();
+}
+
 // Some feeds (e.g. excelsior.com.mx) double-escape CDATA markers, producing
 // literal "<![CDATA[...]]>" text instead of actual CDATA sections. Strip them.
 static QString stripEscapedCDATA(const QString& text)
 {
-    QString trimmed = text.trimmed();
-    if (trimmed.startsWith("<![CDATA[") && trimmed.endsWith("]]>")) {
-        return trimmed.mid(9, trimmed.length() - 12).trimmed();
+    QStringView view = QStringView(text).trimmed();
+    if (view.startsWith(u"<![CDATA[") && view.endsWith(u"]]>")) {
+        return view.mid(9, view.size() - 12).trimmed().toString();
     }
     return text;
 }
@@ -65,17 +71,19 @@ void RSSAtomParser::elementStart()
     } else if ((tagName == "content" || tagName == "summary") &&
                xml.attributes().value("type").toString().toLower() == "xhtml") {
         state.inAtomXHTML = true;
+        state.content.reserve(4096);
     } else if (state.inAtomXHTML) {
-        // Build a string of the tag's elements.
-        QString elements = "";
-        QXmlStreamAttributes attributes = xml.attributes();
-        for (QXmlStreamAttribute attribute : attributes) {
-            elements += " " + attribute.name().toString() + "=\""
-                        + attribute.value().toString() + "\"";
+        // Rebuild the XHTML tag directly into content (no temporaries).
+        state.content.append('<');
+        state.content.append(xml.qualifiedName());
+        for (const auto& attribute : xml.attributes()) {
+            state.content.append(' ');
+            state.content.append(attribute.name());
+            state.content.append(QStringLiteral("=\""));
+            state.content.append(attribute.value());
+            state.content.append('"');
         }
-
-        // Mash the tag together.
-        state.content += "<" + xml.qualifiedName().toString() + elements + ">";
+        state.content.append('>');
 
         return;
     }
@@ -150,25 +158,25 @@ void RSSAtomParser::elementEnd()
 
         // Figure out which date to use.
         QString timestamp;
-        if (!state.pubdate.trimmed().isEmpty()) {
+        if (!isBlankOrEmpty(state.pubdate)) {
             timestamp = state.pubdate;
-        } else if (!state.lastbuilddate.trimmed().isEmpty()) {
+        } else if (!isBlankOrEmpty(state.lastbuilddate)) {
             timestamp = state.lastbuilddate;
-        } else if (!state.created.trimmed().isEmpty()) {
+        } else if (!isBlankOrEmpty(state.created)) {
             timestamp = state.created;
-        } else if (!state.date.trimmed().isEmpty()) {
+        } else if (!isBlankOrEmpty(state.date)) {
             timestamp = state.date;
-        } else if (!state.updated.trimmed().isEmpty()) {
+        } else if (!isBlankOrEmpty(state.updated)) {
             timestamp = state.updated;
         }
 
         // Determine the GUID.
         QString myGuid;
-        if (!state.id.trimmed().isEmpty()) {
+        if (!isBlankOrEmpty(state.id)) {
             myGuid = state.id.trimmed();
-        } else if (!state.guid.trimmed().isEmpty()) {
+        } else if (!isBlankOrEmpty(state.guid)) {
             myGuid = state.guid.trimmed();
-        } else if (!state.urlData.trimmed().isEmpty()) {
+        } else if (!isBlankOrEmpty(state.urlData)) {
             myGuid = state.urlData.trimmed();
         } else {
             myGuid = state.urlHref.trimmed();
@@ -214,7 +222,9 @@ void RSSAtomParser::elementEnd()
     }
 
     if (state.inAtomXHTML) {
-        state.content += "</" + xml.qualifiedName().toString() + ">";
+        state.content.append(QStringLiteral("</"));
+        state.content.append(xml.qualifiedName());
+        state.content.append('>');
     }
 }
 
@@ -225,8 +235,8 @@ void RSSAtomParser::elementContents()
         return;
     }
 
-    QString parentTag = getTagStackAt(1);
-    if (parentTag == "item" || parentTag == "entry") {
+    QStringView parentTag = getTagStackAt(1);
+    if (parentTag == u"item" || parentTag == u"entry") {
         //
         // Inside a news item.
         //
@@ -259,7 +269,7 @@ void RSSAtomParser::elementContents()
                    || (state.currentTag == "content" && state.hasType)) {
             state.content += xml.text().toString();
         }
-    } else if (parentTag == "channel" || parentTag == "feed") {
+    } else if (parentTag == u"channel" || parentTag == u"feed") {
         //
         // Top level items.
         //
@@ -305,10 +315,10 @@ void RSSAtomParser::saveSummary()
 }
 
 
-QString RSSAtomParser::getTagStackAt(qint32 n)
+QStringView RSSAtomParser::getTagStackAt(qint32 n)
 {
     if (state.tagStack.isEmpty() || (state.tagStack.size() - 1) < n) {
-        return "";
+        return QStringView();
     }
 
     return state.tagStack.at(state.tagStack.size() - 1 - n);

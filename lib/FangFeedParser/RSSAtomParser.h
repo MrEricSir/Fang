@@ -4,6 +4,7 @@
 #include <memory>
 
 #include <QString>
+#include <QStringView>
 #include <QByteArray>
 #include <QXmlStreamReader>
 #include <QStack>
@@ -74,9 +75,9 @@ private:
     void saveSummary();
 
     /*!
-        \return The nth value in the tag stack, or the empty string.
+        \return The nth value in the tag stack, or an empty view.
      */
-    QString getTagStackAt(qint32 n);
+    QStringView getTagStackAt(qint32 n);
 
     std::unique_ptr<RawFeed> feed;
     std::shared_ptr<RawNews> currentItem;
