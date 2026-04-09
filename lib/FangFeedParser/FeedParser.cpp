@@ -15,9 +15,24 @@ FeedParseResult FeedParser::parse(const QByteArray& data)
         if (feed) {
             return FeedParseResult::success(std::move(feed));
         }
-        return FeedParseResult::failure(FeedParseError::MalformedJSON);
+
+        // Couldn't parse JSON, maybe it's RSS/Atom?
+        return parseXML(data);
     }
-    return parseXML(data);
+
+    FeedParseResult xmlResult = parseXML(data);
+    if (xmlResult.ok()) {
+        return xmlResult;
+    }
+
+    // RSS/Atom parser failed, try JSON parser as fallback.
+    auto feed = JSONFeedParser::parse(data);
+    if (feed) {
+        return FeedParseResult::success(std::move(feed));
+    }
+
+    // We tried. *shrugs*
+    return xmlResult;
 }
 
 bool FeedParser::looksLikeJSON(const QByteArray& data)

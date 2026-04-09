@@ -67,6 +67,10 @@ private slots:
     void testNestedItemTags();
     void testShallowTagContent();
 
+    // Cross-format fallback
+    void testJSONSniffFallsBackToXML();
+    void testXMLSniffFallsBackToJSON();
+
     // Absent fields produce null QStrings
     void testRSSMissingOptionalFields();
     void testAtomMissingOptionalFields();
@@ -1362,6 +1366,56 @@ void TestFeedParser::testEmptyInput()
 
     auto whitespaceResult = FeedParser::parse(QByteArray("   \n  \t  "));
     QVERIFY(!whitespaceResult.ok());
+}
+
+// =====================================================================
+// Cross-format fallback tests - if the format sniff guesses wrong,
+// the parser should try the other format before giving up.
+// =====================================================================
+
+void TestFeedParser::testJSONSniffFallsBackToXML()
+{
+    // Valid JSON object that starts with '{' (so looksLikeJSON returns
+    // true) but is not a JSON Feed (missing the version field). The JSON
+    // parser rejects it, then the fallback to XML also fails. Both
+    // parsers reject the input, so the result should be an error.
+    QByteArray notAFeed = R"({"key": "value", "items": []})";
+
+    auto result = FeedParser::parse(notAFeed);
+    QVERIFY(!result.ok());
+}
+
+void TestFeedParser::testXMLSniffFallsBackToJSON()
+{
+    // Valid JSON Feed with a UTF-8 BOM prefix. The BOM bytes (0xEF 0xBB
+    // 0xBF) come before '{', so looksLikeJSON sees 0xEF first and picks
+    // XML. XML parsing fails (not valid RSS/Atom), then the fallback
+    // tries JSON parsing which succeeds (QJsonDocument strips BOMs).
+    QByteArray jsonFeed = R"({
+  "version": "https://jsonfeed.org/version/1.1",
+  "title": "BOM JSON Feed",
+  "home_page_url": "http://example.com",
+  "items": [
+    {
+      "id": "bom-json-1",
+      "title": "JSON Article",
+      "url": "http://example.com/json-article",
+      "content_text": "This is a JSON Feed item."
+    }
+  ]
+})";
+
+    QByteArray bom("\xEF\xBB\xBF");
+    QByteArray data = bom + jsonFeed;
+
+    auto result = FeedParser::parse(data);
+    QVERIFY2(result.ok(), "XML-to-JSON fallback should have succeeded");
+
+    auto feed = result.feed();
+    QVERIFY(feed != nullptr);
+    QCOMPARE(feed->title, QString("BOM JSON Feed"));
+    QCOMPARE(feed->items.size(), 1);
+    QCOMPARE(feed->items.first()->title, QString("JSON Article"));
 }
 
 // =====================================================================

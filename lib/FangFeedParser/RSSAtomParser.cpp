@@ -45,8 +45,17 @@ std::unique_ptr<RawFeed> RSSAtomParser::parse(const QByteArray& data)
                                  << ": " << worker.xml.errorString();
     }
 
-    if (worker.isValid && worker.feed->items.size() == 0) {
+    if (!worker.isValid) {
+        return nullptr;
+    }
+
+    if (worker.feed->items.size() == 0) {
         worker.saveSummary();
+    }
+
+    // No items and no feed title means we never found RSS/Atom content.
+    if (worker.feed->items.isEmpty() && worker.feed->title.isEmpty()) {
+        return nullptr;
     }
 
     return std::move(worker.feed);
