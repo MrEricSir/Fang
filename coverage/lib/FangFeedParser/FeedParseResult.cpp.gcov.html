@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-04-08 04:27:32</td>
+            <td class="headerValue">2026-04-09 06:56:15</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -63,19 +63,19 @@
 <span id="L1"><span class="lineNum">       1</span>              : #include &quot;FeedParseResult.h&quot;</span>
 <span id="L2"><span class="lineNum">       2</span>              : #include &quot;RawFeed.h&quot;</span>
 <span id="L3"><span class="lineNum">       3</span>              : </span>
-<span id="L4"><span class="lineNum">       4</span> <span class="tlaGNC tlaBgGNC">          99 : FeedParseResult FeedParseResult::success(std::shared_ptr&lt;RawFeed&gt; feed)</span></span>
+<span id="L4"><span class="lineNum">       4</span> <span class="tlaGNC tlaBgGNC">         100 : FeedParseResult FeedParseResult::success(std::shared_ptr&lt;RawFeed&gt; feed)</span></span>
 <span id="L5"><span class="lineNum">       5</span>              : {</span>
-<span id="L6"><span class="lineNum">       6</span> <span class="tlaGNC">          99 :     FeedParseResult result;</span></span>
-<span id="L7"><span class="lineNum">       7</span> <span class="tlaGNC">          99 :     result._feed = std::move(feed);</span></span>
-<span id="L8"><span class="lineNum">       8</span> <span class="tlaGNC">          99 :     return result;</span></span>
+<span id="L6"><span class="lineNum">       6</span> <span class="tlaGNC">         100 :     FeedParseResult result;</span></span>
+<span id="L7"><span class="lineNum">       7</span> <span class="tlaGNC">         100 :     result._feed = std::move(feed);</span></span>
+<span id="L8"><span class="lineNum">       8</span> <span class="tlaGNC">         100 :     return result;</span></span>
 <span id="L9"><span class="lineNum">       9</span>              : }</span>
 <span id="L10"><span class="lineNum">      10</span>              : </span>
-<span id="L11"><span class="lineNum">      11</span> <span class="tlaGNC">           2 : FeedParseResult FeedParseResult::failure(FeedParseError error, const QString&amp; detail)</span></span>
+<span id="L11"><span class="lineNum">      11</span> <span class="tlaGNC">           4 : FeedParseResult FeedParseResult::failure(FeedParseError error, const QString&amp; detail)</span></span>
 <span id="L12"><span class="lineNum">      12</span>              : {</span>
-<span id="L13"><span class="lineNum">      13</span> <span class="tlaGNC">           2 :     FeedParseResult result;</span></span>
-<span id="L14"><span class="lineNum">      14</span> <span class="tlaGNC">           2 :     result._error = error;</span></span>
-<span id="L15"><span class="lineNum">      15</span> <span class="tlaGNC">           2 :     result._errorDetail = detail;</span></span>
-<span id="L16"><span class="lineNum">      16</span> <span class="tlaGNC">           2 :     return result;</span></span>
+<span id="L13"><span class="lineNum">      13</span> <span class="tlaGNC">           4 :     FeedParseResult result;</span></span>
+<span id="L14"><span class="lineNum">      14</span> <span class="tlaGNC">           4 :     result._error = error;</span></span>
+<span id="L15"><span class="lineNum">      15</span> <span class="tlaGNC">           4 :     result._errorDetail = detail;</span></span>
+<span id="L16"><span class="lineNum">      16</span> <span class="tlaGNC">           4 :     return result;</span></span>
 <span id="L17"><span class="lineNum">      17</span>              : }</span>
         </pre>
               </td>
