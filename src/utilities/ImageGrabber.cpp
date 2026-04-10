@@ -1,5 +1,5 @@
 #include "ImageGrabber.h"
-#include "../network/BatchDownloadCore.h"
+#include "BatchDownloadCore.h"
 
 #include <QMimeDatabase>
 #include <QSvgRenderer>

@@ -1,5 +1,7 @@
 #include "NewsSitemapSynthesizer.h"
 #include "NetworkDownloadCore.h"
+#include "PageMetadataExtractor.h"
+#include "WebPageGrabber.h"
 #include "FeedDiscoveryLogging.h"
 
 #include <algorithm>
@@ -20,6 +22,7 @@ NewsSitemapSynthesizer::NewsSitemapSynthesizer(QObject* parent)
     , _hasError(false)
     , _result(nullptr)
     , downloader(new NetworkDownloadCore({}, this, nullptr))
+    , descriptionDownloader(nullptr)
 {
     connect(downloader, &NetworkDownloadCore::finished,
             this, &NewsSitemapSynthesizer::onDownloadFinished);
@@ -128,6 +131,7 @@ void NewsSitemapSynthesizer::onDownloadFinished(const QUrl& url, const QByteArra
         handleSubSitemapResponse(url, data);
         break;
     case IDLE:
+    case FETCHING_DESCRIPTIONS:
         break;
     }
 }
@@ -145,6 +149,7 @@ void NewsSitemapSynthesizer::onDownloadError(const QUrl& url, const QString& err
         handleSubSitemapError(url, errorString);
         break;
     case IDLE:
+    case FETCHING_DESCRIPTIONS:
         break;
     }
 }
@@ -448,6 +453,50 @@ void NewsSitemapSynthesizer::processParsedEntries(const QList<SitemapEntry>& ent
     qCDebug(logFeedDiscovery) << "NewsSitemapSynthesizer: selected" << feedEntries.size()
                         << "entries from" << feedSourceUrl;
 
+    fetchDescriptions();
+}
+
+void NewsSitemapSynthesizer::fetchDescriptions()
+{
+    state = FETCHING_DESCRIPTIONS;
+    fetchedDescriptions.clear();
+
+    QList<QUrl> urls;
+    for (const SitemapEntry& entry : feedEntries) {
+        urls.append(entry.url);
+    }
+
+    descriptionDownloader = new BatchDownloadCore(10000, 5, this);
+    connect(descriptionDownloader, &BatchDownloadCore::finished,
+            this, &NewsSitemapSynthesizer::onDescriptionsReady);
+    descriptionDownloader->download(urls);
+}
+
+void NewsSitemapSynthesizer::onDescriptionsReady()
+{
+    auto results = descriptionDownloader->results();
+    descriptionDownloader->deleteLater();
+    descriptionDownloader = nullptr;
+
+    for (auto it = results.constBegin(); it != results.constEnd(); ++it) {
+        if (!it.value().success) {
+            continue;
+        }
+
+        QString xhtml = WebPageGrabber::htmlToXhtml(it.value().data);
+        if (xhtml.isEmpty()) {
+            continue;
+        }
+
+        PageMetadata meta = PageMetadataExtractor::extract(xhtml);
+        if (!meta.description.isEmpty()) {
+            fetchedDescriptions[it.key()] = meta.description;
+        }
+    }
+
+    qCDebug(logFeedDiscovery) << "NewsSitemapSynthesizer: fetched" << fetchedDescriptions.size()
+                        << "descriptions from" << results.size() << "articles";
+
     state = IDLE;
     buildRawFeed();
     emit done();
@@ -458,6 +507,7 @@ void NewsSitemapSynthesizer::buildRawFeed()
     _result = std::make_shared<RawFeed>();
     _result->feedType = RawFeed::GoogleNewsSitemap;
     _result->title = feedTitle;
+    _result->subtitle = "";
     _result->url = feedSourceUrl;
     _result->siteURL = QUrl(siteBaseUrl.scheme() + "://" + siteBaseUrl.host());
 
@@ -470,6 +520,10 @@ void NewsSitemapSynthesizer::buildRawFeed()
         item->timestamp = entry.publicationDate.isValid()
             ? entry.publicationDate
             : (entry.lastmod.isValid() ? entry.lastmod : QDateTime::currentDateTime());
+
+        if (fetchedDescriptions.contains(entry.url)) {
+            item->description = fetchedDescriptions.value(entry.url);
+        }
 
         // Embed the sitemap thumbnail image in the content so it flows
         // through the normal HTML sanitizer and image pipeline.

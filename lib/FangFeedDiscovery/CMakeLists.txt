@@ -18,6 +18,8 @@ add_library(FangFeedDiscovery STATIC
     NewsSitemapSynthesizer.h
     SitemapParser.cpp
     SitemapParser.h
+    BatchDownloadCore.cpp
+    BatchDownloadCore.h
     NetworkDownloadCore.cpp
     NetworkDownloadCore.h
     NetworkRetryPolicy.cpp

@@ -163,7 +163,6 @@ qt_add_executable(Fang WIN32
     src/utilities/BatchFeedDiscovery.cpp
 
     src/network/FangQQmlNetworkAccessManagerFactory.cpp
-    src/network/BatchDownloadCore.cpp
     src/notifications/Notification.cpp
     src/operations/SetPinOperation.cpp
     src/models/PinnedFeedItem.cpp
@@ -227,7 +226,6 @@ qt_add_executable(Fang WIN32
     src/utilities/BatchFeedDiscovery.h
 
     src/network/FangQQmlNetworkAccessManagerFactory.h
-    src/network/BatchDownloadCore.h
     src/notifications/Notification.h
 
     src/operations/SetPinOperation.h

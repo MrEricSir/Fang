@@ -255,4 +255,58 @@ void WebPageGrabber::init()
     connect(core, &NetworkDownloadCore::finished, this, &WebPageGrabber::onDownloadFinished);
 }
 
+QString WebPageGrabber::htmlToXhtml(const QByteArray& html)
+{
+    TidyBuffer output;
+    TidyBuffer errbuf;
+    tidyBufInit(&output);
+    tidyBufInit(&errbuf);
+
+    TidyDocPtr tdoc(tidyCreate());
+    if (!tdoc) {
+        return {};
+    }
+
+    tidySetInCharEncoding(tdoc.get(), "utf8");
+    tidySetOutCharEncoding(tdoc.get(), "utf8");
+
+    if (!tidyOptSetBool(tdoc.get(), TidyXhtmlOut, yes)) {
+        tidyBufFree(&output);
+        tidyBufFree(&errbuf);
+        return {};
+    }
+
+    if (!tidyOptSetInt(tdoc.get(), TidyIndentContent, TidyNoState)) {
+        tidyBufFree(&output);
+        tidyBufFree(&errbuf);
+        return {};
+    }
+
+    int rc = tidySetErrorBuffer(tdoc.get(), &errbuf);
+    if (rc >= 0) {
+        rc = tidyParseString(tdoc.get(), html.constData());
+    }
+    if (rc >= 0) {
+        rc = tidyCleanAndRepair(tdoc.get());
+    }
+    if (rc >= 0) {
+        rc = tidyRunDiagnostics(tdoc.get());
+    }
+    if (rc > 1) {
+        rc = tidyOptSetBool(tdoc.get(), TidyForceOutput, yes) ? rc : -1;
+    }
+    if (rc >= 0) {
+        rc = tidySaveBuffer(tdoc.get(), &output);
+    }
+
+    QString result;
+    if (rc >= 0 && output.bp) {
+        result = QString::fromUtf8(reinterpret_cast<const char*>(output.bp));
+    }
+
+    tidyBufFree(&output);
+    tidyBufFree(&errbuf);
+    return result;
+}
+
 

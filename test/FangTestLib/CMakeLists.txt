@@ -6,7 +6,6 @@ add_library(FangTestLib STATIC
     ${CMAKE_SOURCE_DIR}/src/utilities/FangLogging.cpp
 
     # App-level sources used by multiple tests
-    ${CMAKE_SOURCE_DIR}/src/network/BatchDownloadCore.cpp
     ${CMAKE_SOURCE_DIR}/src/utilities/ImageGrabber.cpp
 )
 

@@ -35,6 +35,11 @@ public:
      */
     explicit WebPageGrabber(QObject *parent);
 
+    /*!
+        \brief Convert raw HTML bytes to XHTML via TidyLib.
+        \return The XHTML string, or empty string on failure.
+     */
+    static QString htmlToXhtml(const QByteArray& html);
 
 signals:
     // If you requested a URL, ready() will be emitted when it's ready!

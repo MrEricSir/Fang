@@ -5,9 +5,11 @@
 
 #include <QDateTime>
 #include <QList>
+#include <QMap>
 #include <QStringList>
 #include <QUrl>
 
+#include "BatchDownloadCore.h"
 #include "RawFeed.h"
 #include "SitemapParser.h"
 
@@ -48,7 +50,8 @@ private slots:
     void onDownloadError(const QUrl& url, const QString& errorString);
 
 private:
-    enum State { IDLE, FETCHING_ROBOTS_TXT, FETCHING_CANDIDATE, FETCHING_SUB_SITEMAP };
+    enum State { IDLE, FETCHING_ROBOTS_TXT, FETCHING_CANDIDATE, FETCHING_SUB_SITEMAP,
+                 FETCHING_DESCRIPTIONS };
 
     static const int MAX_ENTRIES = 30;
 
@@ -70,6 +73,9 @@ private:
 
     void filterByLanguage(QList<SitemapEntry>& entries);
     bool filterBySinceDate(QList<SitemapEntry>& entries);
+
+    void fetchDescriptions();
+    void onDescriptionsReady();
 
 protected:
     void setResultState(std::shared_ptr<RawFeed> result, bool hasError, const QString& errorString);
@@ -108,6 +114,10 @@ private:
     // Filtered entries ready for feed building
     QList<SitemapEntry> feedEntries;
     QUrl feedSourceUrl; // The actual sitemap URL that provided the entries
+
+    // Description enrichment
+    BatchDownloadCore* descriptionDownloader;
+    QMap<QUrl, QString> fetchedDescriptions;
 };
 
 #endif // NEWSSITEMAPSYNTHESIZER_H

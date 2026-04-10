@@ -1,5 +1,5 @@
 #include "FaviconGrabber.h"
-#include "../network/BatchDownloadCore.h"
+#include "BatchDownloadCore.h"
 #include <QSimpleStateMachine/QSimpleStateMachine.h>
 
 #include <QString>
