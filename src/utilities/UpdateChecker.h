@@ -7,7 +7,7 @@
 #include <QSettings>
 
 #include <QObject>
-#include "FeedFetcher.h"
+#include "FeedSource.h"
 #include "SettingsInterface.h"
 
 /*!

@@ -6,7 +6,7 @@
 #include <QList>
 #include <QXmlStreamReader>
 
-#include "FeedSource.h"
+#include "FeedFetchResult.h"
 #include "RawFeed.h"
 #include <QObject>
 

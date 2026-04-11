@@ -4,7 +4,6 @@
 #include <QXmlStreamWriter>
 #include <QDateTime>
 #include <QFile>
-#include "ErrorHandling.h"
 #include "../models/FeedItem.h"
 
 OPMLExport::OPMLExport()

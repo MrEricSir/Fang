@@ -1,5 +1,6 @@
 #include "UpdateChecker.h"
 #include "FangLogging.h"
+#include"FeedFetcher.h"
 
 #include <QRegularExpression>
 #include <QVersionNumber>
