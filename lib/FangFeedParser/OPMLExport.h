@@ -1,9 +1,10 @@
 #ifndef OPMLEXPORT_H
 #define OPMLEXPORT_H
 
+#include <QList>
 #include <QString>
 
-#include "../models/ListModel.h"
+#include "RawFeed.h"
 
 /*!
     \brief Exports a given feed list to an OPML file.
@@ -13,9 +14,7 @@
 class OPMLExport
 {
 public:
-    OPMLExport();
-    
-    static bool save(const QString &file, ListModel* feedList);
+    static bool save(const QString &file, const QList<RawFeed*>& feeds);
 };
 
 #endif // OPMLEXPORT_H

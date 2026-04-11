@@ -3,7 +3,7 @@
 #include <QSignalSpy>
 #include <QFile>
 
-#include "../../src/parser/OPMLParser.h"
+#include "OPMLParser.h"
 
 
 class TestOPMLParser : public QObject

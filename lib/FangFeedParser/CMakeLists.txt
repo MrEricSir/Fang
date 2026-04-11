@@ -1,6 +1,7 @@
 add_library(FangFeedParser STATIC
     FeedParserLogging.cpp
     FeedParserLogging.h
+    FeedFetchResult.h
     FeedParseError.h
     FeedParseResult.cpp
     FeedParseResult.h
@@ -15,6 +16,10 @@ add_library(FangFeedParser STATIC
     JSONFeedParser.h
     FeedParser.cpp
     FeedParser.h
+    OPMLParser.cpp
+    OPMLParser.h
+    OPMLExport.cpp
+    OPMLExport.h
 )
 
 target_include_directories(FangFeedParser PUBLIC

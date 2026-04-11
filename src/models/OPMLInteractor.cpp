@@ -5,7 +5,7 @@
 #include "../FangApp.h"
 #include "../utilities/FangLogging.h"
 #include "../utilities/Utilities.h"
-#include "../utilities/OPMLExport.h"
+#include "OPMLExport.h"
 #include "../utilities/ErrorHandling.h"
 
 OPMLInteractor::OPMLInteractor(QQuickItem *parent) :
@@ -109,7 +109,24 @@ void OPMLInteractor::onImportFileSelected(const QString &file)
 void OPMLInteractor::onExportFileSelected(const QString &file)
 {
     qCDebug(logModel) << "Export: " << file;
-    bool res = OPMLExport::save(file, FangApp::instance()->getFeedList());
+
+    ListModel* feedList = FangApp::instance()->getFeedList();
+    QList<RawFeed*> feeds;
+    for (int i = 1; i < feedList->count(); i++) {
+        FeedItem* item = qobject_cast<FeedItem*>(feedList->row(i));
+        if (!item) {
+            continue;
+        }
+        RawFeed* raw = new RawFeed();
+        raw->title = item->getTitle();
+        raw->url = item->getURL();
+        raw->siteURL = item->getSiteURL();
+        feeds.append(raw);
+    }
+
+    bool res = OPMLExport::save(file, feeds);
+    qDeleteAll(feeds);
+
     if (!res) {
         qCWarning(logModel) << "Error: unable to write file.";
     }

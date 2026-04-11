@@ -8,7 +8,7 @@
 #include <QString>
 #include <QMap>
 
-#include "../parser/OPMLParser.h"
+#include "OPMLParser.h"
 #include "RawFeed.h"
 #include "ListModel.h"
 #include "FeedItem.h"

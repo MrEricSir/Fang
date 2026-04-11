@@ -156,10 +156,8 @@ qt_add_executable(Fang WIN32
     src/operations/LoadAllNewsOperation.cpp
     src/utilities/UnreadCountReader.cpp
     src/operations/UpdateOrdinalsOperation.cpp
-    src/parser/OPMLParser.cpp
     src/utilities/UpdateChecker.cpp
     src/models/OPMLInteractor.cpp
-    src/utilities/OPMLExport.cpp
     src/utilities/BatchFeedDiscovery.cpp
 
     src/network/FangQQmlNetworkAccessManagerFactory.cpp
@@ -220,9 +218,7 @@ qt_add_executable(Fang WIN32
     src/operations/LoadAllNewsOperation.h
     src/utilities/UnreadCountReader.h
     src/operations/UpdateOrdinalsOperation.h
-    src/parser/OPMLParser.h
     src/models/OPMLInteractor.h
-    src/utilities/OPMLExport.h
     src/utilities/BatchFeedDiscovery.h
 
     src/network/FangQQmlNetworkAccessManagerFactory.h

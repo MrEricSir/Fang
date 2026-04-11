@@ -3,7 +3,6 @@ add_library(FangFeedDiscovery STATIC
     FeedDiscoveryLogging.h
     FeedSource.cpp
     FeedSource.h
-    FeedFetchResult.h
     FeedFetcher.cpp
     FeedFetcher.h
     BatchFeedFetcher.cpp

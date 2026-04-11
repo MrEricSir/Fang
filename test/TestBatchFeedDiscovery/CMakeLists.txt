@@ -18,8 +18,6 @@ qt_add_executable(tst_testbatchfeeddiscovery
     ${CMAKE_SOURCE_DIR}/src/models/NewsItem.cpp
     ${CMAKE_SOURCE_DIR}/src/models/NewsItem.h
     ${CMAKE_SOURCE_DIR}/src/models/DBObject.h
-    ${CMAKE_SOURCE_DIR}/src/parser/OPMLParser.cpp
-    ${CMAKE_SOURCE_DIR}/src/parser/OPMLParser.h
 )
 
 # Include directories

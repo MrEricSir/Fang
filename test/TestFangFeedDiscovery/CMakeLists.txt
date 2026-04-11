@@ -7,9 +7,6 @@ qt_add_executable(tst_testfangfeeddiscovery
     ${CMAKE_SOURCE_DIR}/test/MockWebPageGrabber.h
     ${CMAKE_SOURCE_DIR}/test/MockBatchFeedFetcher.h
     ${CMAKE_SOURCE_DIR}/test/MockNewsSitemapSynthesizer.h
-    # Additional sources
-    ${CMAKE_SOURCE_DIR}/src/parser/OPMLParser.cpp
-    ${CMAKE_SOURCE_DIR}/src/parser/OPMLParser.h
 )
 
 # Compile definitions for test data paths

@@ -2,9 +2,8 @@
 #include <QFile>
 #include <QXmlStreamReader>
 #include <QTemporaryDir>
-#include "../../src/utilities/OPMLExport.h"
-#include "../../src/models/ListModel.h"
-#include "../../src/models/FeedItem.h"
+#include "OPMLExport.h"
+#include "RawFeed.h"
 
 /**
  * OPML export tests
@@ -35,7 +34,6 @@ private slots:
 private:
     QTemporaryDir* tempDir;
     QString getTempFilePath(const QString& name);
-    ListModel* createTestModel();
     void verifyOPMLStructure(const QString& filePath);
     QXmlStreamReader::TokenType skipToElement(QXmlStreamReader& xml, const QString& elementName);
 };
@@ -53,19 +51,11 @@ void TestOPMLExport::initTestCase()
 
 void TestOPMLExport::cleanup()
 {
-    // TODO: Cleanup: Do we need this?
 }
 
 QString TestOPMLExport::getTempFilePath(const QString& name)
 {
     return tempDir->filePath(name);
-}
-
-ListModel* TestOPMLExport::createTestModel()
-{
-    // Create a feed item.
-    FeedItem* prototype = new FeedItem();
-    return new ListModel(prototype, this);
 }
 
 QXmlStreamReader::TokenType TestOPMLExport::skipToElement(QXmlStreamReader& xml, const QString& elementName)
@@ -111,10 +101,10 @@ void TestOPMLExport::verifyOPMLStructure(const QString& filePath)
 
 void TestOPMLExport::testExportEmptyList()
 {
-    ListModel* model = createTestModel();
+    QList<RawFeed*> feeds;
     QString filePath = getTempFilePath("empty.opml");
 
-    bool result = OPMLExport::save(filePath, model);
+    bool result = OPMLExport::save(filePath, feeds);
     QVERIFY(result);
 
     QFile file(filePath);
@@ -141,43 +131,19 @@ void TestOPMLExport::testExportEmptyList()
     QCOMPARE(outlineCount, 0);
 
     file.close();
-    delete model;
 }
 
 void TestOPMLExport::testExportSingleFeed()
 {
-    ListModel* model = createTestModel();
-
-    // Add placeholder at index 0 (reserved for "All News" special feed)
-    FeedItem* placeholder = new FeedItem(
-        FEED_ID_ALLNEWS, -1, "All News", "", QDateTime::currentDateTime(), 60,
-        QUrl(), QUrl(), "", QUrl(), QDateTime::currentDateTime(), -1, true, FeedTypeRSS, model
-    );
-    model->appendRow(placeholder);
-
-    // Add a real feed at index 1
-    FeedItem* feed = new FeedItem(
-        1,                                          // id
-        0,                                          // ordinal
-        "Test Feed",                                // title
-        "Test Subtitle",                            // subtitle
-        QDateTime::currentDateTime(),               // lastUpdated
-        60,                                         // minutesToUpdate
-        QUrl("http://example.com/feed.xml"),       // url
-        QUrl("http://example.com"),                // siteURL
-        "http://example.com/feed.xml",             // userURL
-        QUrl("http://example.com/icon.png"),       // imageURL
-        QDateTime::currentDateTime(),               // lastIconUpdate
-        -1,                                         // parentFolder
-        true,                                       // folderOpen
-        FeedTypeRSS,
-        model
-    );
-
-    model->appendRow(feed);
+    QList<RawFeed*> feeds;
+    RawFeed* feed = new RawFeed();
+    feed->title = "Test Feed";
+    feed->url = QUrl("http://example.com/feed.xml");
+    feed->siteURL = QUrl("http://example.com");
+    feeds.append(feed);
 
     QString filePath = getTempFilePath("single.opml");
-    bool result = OPMLExport::save(filePath, model);
+    bool result = OPMLExport::save(filePath, feeds);
     QVERIFY(result);
 
     QFile file(filePath);
@@ -200,44 +166,22 @@ void TestOPMLExport::testExportSingleFeed()
     QCOMPARE(xml.attributes().value("htmlUrl").toString(), QString("http://example.com"));
 
     file.close();
-    delete model;
+    qDeleteAll(feeds);
 }
 
 void TestOPMLExport::testExportMultipleFeeds()
 {
-    ListModel* model = createTestModel();
-
-    // Add placeholder at index 0
-    FeedItem* placeholder = new FeedItem(
-        FEED_ID_ALLNEWS, -1, "All News", "", QDateTime::currentDateTime(), 60,
-        QUrl(), QUrl(), "", QUrl(), QDateTime::currentDateTime(), -1, true, FeedTypeRSS, model
-    );
-    model->appendRow(placeholder);
-
-    // Add multiple real feeds
+    QList<RawFeed*> feeds;
     for (int i = 1; i <= 3; i++) {
-        FeedItem* feed = new FeedItem(
-            i,
-            i - 1,
-            QString("Feed %1").arg(i),
-            QString("Subtitle %1").arg(i),
-            QDateTime::currentDateTime(),
-            60,
-            QUrl(QString("http://example.com/feed%1.xml").arg(i)),
-            QUrl(QString("http://example.com/site%1").arg(i)),
-            QString("http://example.com/feed%1.xml").arg(i),
-            QUrl(),
-            QDateTime::currentDateTime(),
-            -1,
-            true,
-            FeedTypeRSS,
-            model
-        );
-        model->appendRow(feed);
+        RawFeed* feed = new RawFeed();
+        feed->title = QString("Feed %1").arg(i);
+        feed->url = QUrl(QString("http://example.com/feed%1.xml").arg(i));
+        feed->siteURL = QUrl(QString("http://example.com/site%1").arg(i));
+        feeds.append(feed);
     }
 
     QString filePath = getTempFilePath("multiple.opml");
-    bool result = OPMLExport::save(filePath, model);
+    bool result = OPMLExport::save(filePath, feeds);
     QVERIFY(result);
 
     QFile file(filePath);
@@ -268,43 +212,20 @@ void TestOPMLExport::testExportMultipleFeeds()
     QCOMPARE(titles.at(2), QString("Feed 3"));
 
     file.close();
-    delete model;
+    qDeleteAll(feeds);
 }
 
 void TestOPMLExport::testExportWithSpecialCharacters()
 {
-    ListModel* model = createTestModel();
-
-    // Add placeholder at index 0
-    FeedItem* placeholder = new FeedItem(
-        FEED_ID_ALLNEWS, -1, "All News", "", QDateTime::currentDateTime(), 60,
-        QUrl(), QUrl(), "", QUrl(), QDateTime::currentDateTime(), -1, true, FeedTypeRSS, model
-    );
-    model->appendRow(placeholder);
-
-    // Add feed with special XML characters
-    FeedItem* feed = new FeedItem(
-        1,
-        0,
-        "Feed with <special> & \"characters\"",
-        "Subtitle",
-        QDateTime::currentDateTime(),
-        60,
-        QUrl("http://example.com/feed.xml?foo=bar&baz=qux"),
-        QUrl("http://example.com"),
-        "http://example.com/feed.xml",
-        QUrl(),
-        QDateTime::currentDateTime(),
-        -1,
-        true,
-        FeedTypeRSS,
-        model
-    );
-
-    model->appendRow(feed);
+    QList<RawFeed*> feeds;
+    RawFeed* feed = new RawFeed();
+    feed->title = "Feed with <special> & \"characters\"";
+    feed->url = QUrl("http://example.com/feed.xml?foo=bar&baz=qux");
+    feed->siteURL = QUrl("http://example.com");
+    feeds.append(feed);
 
     QString filePath = getTempFilePath("special.opml");
-    bool result = OPMLExport::save(filePath, model);
+    bool result = OPMLExport::save(filePath, feeds);
     QVERIFY(result);
 
     QFile file(filePath);
@@ -324,43 +245,20 @@ void TestOPMLExport::testExportWithSpecialCharacters()
     QVERIFY(url.contains("="));
 
     file.close();
-    delete model;
+    qDeleteAll(feeds);
 }
 
 void TestOPMLExport::testExportWithoutSiteURL()
 {
-    ListModel* model = createTestModel();
-
-    // Add placeholder at index 0
-    FeedItem* placeholder = new FeedItem(
-        FEED_ID_ALLNEWS, -1, "All News", "", QDateTime::currentDateTime(), 60,
-        QUrl(), QUrl(), "", QUrl(), QDateTime::currentDateTime(), -1, true, FeedTypeRSS, model
-    );
-    model->appendRow(placeholder);
-
-    // Add feed without siteURL
-    FeedItem* feed = new FeedItem(
-        1,
-        0,
-        "Feed Without Site URL",
-        "Subtitle",
-        QDateTime::currentDateTime(),
-        60,
-        QUrl("http://example.com/feed.xml"),
-        QUrl(),  // Empty siteURL
-        "http://example.com/feed.xml",
-        QUrl(),
-        QDateTime::currentDateTime(),
-        -1,
-        true,
-        FeedTypeRSS,
-        model
-    );
-
-    model->appendRow(feed);
+    QList<RawFeed*> feeds;
+    RawFeed* feed = new RawFeed();
+    feed->title = "Feed Without Site URL";
+    feed->url = QUrl("http://example.com/feed.xml");
+    // siteURL left as default (empty QUrl)
+    feeds.append(feed);
 
     QString filePath = getTempFilePath("nosite.opml");
-    bool result = OPMLExport::save(filePath, model);
+    bool result = OPMLExport::save(filePath, feeds);
     QVERIFY(result);
 
     QFile file(filePath);
@@ -381,37 +279,34 @@ void TestOPMLExport::testExportWithoutSiteURL()
     QVERIFY(xml.attributes().hasAttribute("xmlUrl"));
 
     file.close();
-    delete model;
+    qDeleteAll(feeds);
 }
 
 void TestOPMLExport::testValidXMLStructure()
 {
-    ListModel* model = createTestModel();
-
-    FeedItem* feed = new FeedItem(
-        1, 0, "Test", "", QDateTime::currentDateTime(), 60,
-        QUrl("http://example.com/feed.xml"), QUrl("http://example.com"),
-        "http://example.com/feed.xml", QUrl(), QDateTime::currentDateTime(),
-        -1, true, FeedTypeRSS, model
-    );
-    model->appendRow(feed);
+    QList<RawFeed*> feeds;
+    RawFeed* feed = new RawFeed();
+    feed->title = "Test";
+    feed->url = QUrl("http://example.com/feed.xml");
+    feed->siteURL = QUrl("http://example.com");
+    feeds.append(feed);
 
     QString filePath = getTempFilePath("structure.opml");
-    bool result = OPMLExport::save(filePath, model);
+    bool result = OPMLExport::save(filePath, feeds);
     QVERIFY(result);
 
     // Use verifyOPMLStructure helper
     verifyOPMLStructure(filePath);
 
-    delete model;
+    qDeleteAll(feeds);
 }
 
 void TestOPMLExport::testOPMLVersion()
 {
-    ListModel* model = createTestModel();
+    QList<RawFeed*> feeds;
 
     QString filePath = getTempFilePath("version.opml");
-    OPMLExport::save(filePath, model);
+    OPMLExport::save(filePath, feeds);
 
     QFile file(filePath);
     QVERIFY(file.open(QIODevice::ReadOnly));
@@ -422,15 +317,14 @@ void TestOPMLExport::testOPMLVersion()
     QCOMPARE(xml.attributes().value("version").toString(), QString("1.1"));
 
     file.close();
-    delete model;
 }
 
 void TestOPMLExport::testDateFormat()
 {
-    ListModel* model = createTestModel();
+    QList<RawFeed*> feeds;
 
     QString filePath = getTempFilePath("date.opml");
-    OPMLExport::save(filePath, model);
+    OPMLExport::save(filePath, feeds);
 
     QFile file(filePath);
     QVERIFY(file.open(QIODevice::ReadOnly));
@@ -451,7 +345,6 @@ void TestOPMLExport::testDateFormat()
     QVERIFY2(parsed.isValid(), qPrintable(QString("Invalid date format: %1").arg(dateStr)));
 
     file.close();
-    delete model;
 }
 
 QTEST_MAIN(TestOPMLExport)
