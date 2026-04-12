@@ -865,8 +865,11 @@ void FangApp::markAllAsReadOrUnread(FeedItem *feed, bool read)
 
     // If this is the current feed, update the UI to bookmark last item in list.
     if (feed == currentFeed) {
-        currentFeed->setBookmark(currentFeed->getNewsList()->last()->getDbID());
-        webSocketServer.drawBookmark(currentFeed->getBookmarkID());
+        NewsItem* lastItem = currentFeed->getNewsList()->last();
+        if (lastItem) {
+            currentFeed->setBookmark(lastItem->getDbID());
+            webSocketServer.drawBookmark(currentFeed->getBookmarkID());
+        }
     }
 }
 
