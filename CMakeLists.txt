@@ -106,13 +106,13 @@ add_subdirectory(external/QObjectLeakTracker)
 add_subdirectory(external/QMLRearrangeableTreeView)
 set(QML_IMPORT_PATH "${CMAKE_BINARY_DIR}/external/QMLRearrangeableTreeView" CACHE STRING "" FORCE)
 
+# External libraries
+add_subdirectory(external/QImageCache)
+add_subdirectory(external/QWebDownload)
+
 # Feed parsing, network core, and discovery libraries
 add_subdirectory(lib/FangFeedParser)
-add_subdirectory(lib/QWebDownload)
 add_subdirectory(lib/FangFeedDiscovery)
-
-# Image cache library
-add_subdirectory(external/QImageCache)
 
 # Main application target
 qt_add_executable(Fang WIN32

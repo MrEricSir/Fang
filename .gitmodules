@@ -16,3 +16,6 @@
 [submodule "external/QObjectLeakTracker"]
 	path = external/QObjectLeakTracker
 	url = https://github.com/MrEricSir/QObjectLeakTracker.git
+[submodule "external/QWebDownload"]
+        path = external/QWebDownload
+        url = https://github.com/MrEricSir/QWebDownload.git

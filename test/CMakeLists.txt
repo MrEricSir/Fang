@@ -9,7 +9,6 @@ add_subdirectory(FangTestLib)
 
 # Test suite
 add_subdirectory(TestImageGrabber)
-add_subdirectory(TestQWebDownload)
 add_subdirectory(TestFangParser)
 add_subdirectory(TestFangFaviconGrabber)
 add_subdirectory(TestFangFeedDiscovery)
@@ -18,7 +17,6 @@ add_subdirectory(TestBatchFeedFetcher)
 add_subdirectory(TestFangOPMLParser)
 add_subdirectory(TestOPMLExport)
 add_subdirectory(TestRawFeedRewriter)
-add_subdirectory(TestURLFixup)
 add_subdirectory(TestFeedURLNormalization)
 add_subdirectory(TestUpdateChecker)
 add_subdirectory(TestWebPageGrabber)
@@ -48,9 +46,6 @@ add_subdirectory(TestNewsList)
 # Integration tests
 add_subdirectory(TestBookmarkIntegration)
 add_subdirectory(TestWebServer)
-
-# Network tests
-add_subdirectory(TestWebRetryPolicy)
 
 # Utility tests
 add_subdirectory(TestFileLogging)
