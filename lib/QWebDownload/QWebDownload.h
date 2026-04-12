@@ -1,5 +1,5 @@
-#ifndef NETWORKDOWNLOADCORE_H
-#define NETWORKDOWNLOADCORE_H
+#ifndef QWEBDOWNLOAD_H
+#define QWEBDOWNLOAD_H
 
 #include <QObject>
 #include <QPointer>
@@ -8,12 +8,12 @@
 #include <QTimer>
 #include <QUrl>
 
-#include "NetworkRetryPolicy.h"
+#include "WebRetryPolicy.h"
 
 /*!
     Result of a completed download, including response metadata.
  */
-struct NetworkDownloadResult {
+struct WebDownloadResult {
     QUrl url;
     QByteArray data;
     int statusCode = 0;
@@ -26,21 +26,21 @@ struct NetworkDownloadResult {
 
 private:
     QList<QPair<QByteArray, QByteArray>> headers;
-    friend class NetworkDownloadCore;
+    friend class QWebDownload;
 };
 
 /*!
     Config options.
  */
-struct NetworkDownloadConfig {
+struct WebDownloadConfig {
     int timeoutMs = 30000;           // Timeout in milliseconds
     int maxRedirects = 10;           // Maximum number of HTTP redirects to follow
     bool useInactivityTimeout = true; // true = QTimer reset on progress, false = setTransferTimeout
-    NetworkRetryPolicy retryPolicy;  // Retry policy (default: no retry for backward compatibility)
+    WebRetryPolicy retryPolicy;      // Retry policy (default: no retry for backward compatibility)
 };
 
 /*!
-    \brief NetworkDownloadCore is a straightforward, reusable HTTP/HTTPS downloader.
+    \brief QWebDownload is a straightforward, reusable HTTP/HTTPS downloader.
 
     Features:
       - Redirect handling with configurable limit
@@ -48,14 +48,14 @@ struct NetworkDownloadConfig {
       - Progress signal
       - Can be used with a mock QNetworkAccessManager for unit tests
  */
-class NetworkDownloadCore : public QObject
+class QWebDownload : public QObject
 {
     Q_OBJECT
 public:
-    explicit NetworkDownloadCore(NetworkDownloadConfig config = {},
-                                  QObject* parent = nullptr,
-                                  QNetworkAccessManager* networkManager = nullptr);
-    ~NetworkDownloadCore();
+    explicit QWebDownload(WebDownloadConfig config = {},
+                          QObject* parent = nullptr,
+                          QNetworkAccessManager* networkManager = nullptr);
+    ~QWebDownload();
 
     void setRequestHeader(const QByteArray& name, const QByteArray& value);
     void clearRequestHeaders();
@@ -73,7 +73,7 @@ signals:
     /*!
         \brief Signals completion with full result metadata.
      */
-    void finishedWithResult(NetworkDownloadResult result);
+    void finishedWithResult(WebDownloadResult result);
 
     /*!
         \brief Signals an error.
@@ -94,11 +94,11 @@ signals:
 
 public slots:
     /*!
-        \brief Starts downloading from a URL.
+        \brief Starts an HTTP GET from a URL.
         Notes: URL must be absolute. Calling this function if a download is already in
-        progress will cancel that download..
+        progress will cancel that download.
      */
-    void download(const QUrl& url);
+    void get(const QUrl& url);
 
     /*!
         \brief Cancels the current download. No signal will fire.
@@ -106,7 +106,7 @@ public slots:
     void abort();
 
 private slots:
-    void downloadInternal(const QUrl& url);
+    void getInternal(const QUrl& url);
     void onRequestFinished(QNetworkReply* reply);
     void onDownloadProgress(qint64 bytesReceived, qint64 bytesTotal);
     void onTimeout();
@@ -116,7 +116,7 @@ private:
     void scheduleRetry();
 
     QPointer<QNetworkAccessManager> manager;
-    NetworkDownloadConfig config;
+    WebDownloadConfig config;
     QNetworkReply* currentReply;
     QTimer inactivityTimer;
     QTimer retryTimer;
@@ -129,6 +129,6 @@ private:
     QList<QPair<QByteArray, QByteArray>> requestHeaders;
 };
 
-Q_DECLARE_METATYPE(NetworkDownloadResult)
+Q_DECLARE_METATYPE(WebDownloadResult)
 
-#endif // NETWORKDOWNLOADCORE_H
+#endif // QWEBDOWNLOAD_H

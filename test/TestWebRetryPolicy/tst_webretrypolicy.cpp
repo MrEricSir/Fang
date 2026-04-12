@@ -1,13 +1,13 @@
 #include <QNetworkReply>
 #include <QTest>
-#include "NetworkRetryPolicy.h"
+#include "WebRetryPolicy.h"
 
-class TestNetworkRetryPolicy : public QObject
+class TestWebRetryPolicy : public QObject
 {
     Q_OBJECT
 
 public:
-    TestNetworkRetryPolicy();
+    TestWebRetryPolicy();
 
 private slots:
     // Predefined policies.
@@ -30,11 +30,11 @@ private slots:
     void testCustomPolicy();
 };
 
-TestNetworkRetryPolicy::TestNetworkRetryPolicy() {}
+TestWebRetryPolicy::TestWebRetryPolicy() {}
 
-void TestNetworkRetryPolicy::testForFeedUpdate()
+void TestWebRetryPolicy::testForFeedUpdate()
 {
-    NetworkRetryPolicy policy = NetworkRetryPolicy::forFeedUpdate();
+    WebRetryPolicy policy = WebRetryPolicy::forFeedUpdate();
 
     QCOMPARE(policy.maxRetries(), 3);
     QVERIFY(policy.calculateDelay(0) > 0);
@@ -45,32 +45,32 @@ void TestNetworkRetryPolicy::testForFeedUpdate()
     QVERIFY(!policy.isRetryable(QNetworkReply::SslHandshakeFailedError));
 }
 
-void TestNetworkRetryPolicy::testForFavicon()
+void TestWebRetryPolicy::testForFavicon()
 {
-    NetworkRetryPolicy policy = NetworkRetryPolicy::forFavicon();
+    WebRetryPolicy policy = WebRetryPolicy::forFavicon();
 
     QCOMPARE(policy.maxRetries(), 2);
     QVERIFY(policy.calculateDelay(0) > 0);
 }
 
-void TestNetworkRetryPolicy::testForCritical()
+void TestWebRetryPolicy::testForCritical()
 {
-    NetworkRetryPolicy policy = NetworkRetryPolicy::forCritical();
+    WebRetryPolicy policy = WebRetryPolicy::forCritical();
 
     QCOMPARE(policy.maxRetries(), 5);
     QVERIFY(policy.calculateDelay(0) > 0);
 }
 
-void TestNetworkRetryPolicy::testNoRetry()
+void TestWebRetryPolicy::testNoRetry()
 {
-    NetworkRetryPolicy policy = NetworkRetryPolicy::noRetry();
+    WebRetryPolicy policy = WebRetryPolicy::noRetry();
 
     QCOMPARE(policy.maxRetries(), 0);
 }
 
-void TestNetworkRetryPolicy::testLinearBackoff()
+void TestWebRetryPolicy::testLinearBackoff()
 {
-    NetworkRetryPolicy policy(3, 1000, NetworkRetryPolicy::Linear);
+    WebRetryPolicy policy(3, 1000, WebRetryPolicy::Linear);
 
     // Linear delay
     QCOMPARE(policy.calculateDelay(0), 1000);
@@ -78,9 +78,9 @@ void TestNetworkRetryPolicy::testLinearBackoff()
     QCOMPARE(policy.calculateDelay(2), 3000);
 }
 
-void TestNetworkRetryPolicy::testExponentialBackoff()
+void TestWebRetryPolicy::testExponentialBackoff()
 {
-    NetworkRetryPolicy policy(4, 1000, NetworkRetryPolicy::Exponential);
+    WebRetryPolicy policy(4, 1000, WebRetryPolicy::Exponential);
 
     // Exponential delay
     QCOMPARE(policy.calculateDelay(0), 1000);
@@ -89,9 +89,9 @@ void TestNetworkRetryPolicy::testExponentialBackoff()
     QCOMPARE(policy.calculateDelay(3), 8000);
 }
 
-void TestNetworkRetryPolicy::testFibonacciBackoff()
+void TestWebRetryPolicy::testFibonacciBackoff()
 {
-    NetworkRetryPolicy policy(5, 1000, NetworkRetryPolicy::Fibonacci);
+    WebRetryPolicy policy(5, 1000, WebRetryPolicy::Fibonacci);
 
     // Fibonacci sequence
     // Remember that Mathnet episode, The Case of the Willing Parrot?
@@ -102,9 +102,9 @@ void TestNetworkRetryPolicy::testFibonacciBackoff()
     QCOMPARE(policy.calculateDelay(4), 8000);
 }
 
-void TestNetworkRetryPolicy::testFixedBackoff()
+void TestWebRetryPolicy::testFixedBackoff()
 {
-    NetworkRetryPolicy policy(3, 5000, NetworkRetryPolicy::Fixed);
+    WebRetryPolicy policy(3, 5000, WebRetryPolicy::Fixed);
 
     // Fixed delay (equal delay each time)
     QCOMPARE(policy.calculateDelay(0), 5000);
@@ -112,9 +112,9 @@ void TestNetworkRetryPolicy::testFixedBackoff()
     QCOMPARE(policy.calculateDelay(2), 5000);
 }
 
-void TestNetworkRetryPolicy::testRetryableErrors()
+void TestWebRetryPolicy::testRetryableErrors()
 {
-    NetworkRetryPolicy policy = NetworkRetryPolicy::forFeedUpdate();
+    WebRetryPolicy policy = WebRetryPolicy::forFeedUpdate();
 
     // Should retry
     QVERIFY(policy.isRetryable(QNetworkReply::TimeoutError));
@@ -129,9 +129,9 @@ void TestNetworkRetryPolicy::testRetryableErrors()
     QVERIFY(policy.isRetryable(QNetworkReply::ServiceUnavailableError));
 }
 
-void TestNetworkRetryPolicy::testNonRetryableErrors()
+void TestWebRetryPolicy::testNonRetryableErrors()
 {
-    NetworkRetryPolicy policy = NetworkRetryPolicy::forFeedUpdate();
+    WebRetryPolicy policy = WebRetryPolicy::forFeedUpdate();
 
     // Don't retry for client errors (400's)
     QVERIFY(!policy.isRetryable(QNetworkReply::ContentAccessDenied));
@@ -146,15 +146,15 @@ void TestNetworkRetryPolicy::testNonRetryableErrors()
     QVERIFY(!policy.isRetryable(QNetworkReply::ProtocolInvalidOperationError));
 }
 
-void TestNetworkRetryPolicy::testCustomPolicy()
+void TestWebRetryPolicy::testCustomPolicy()
 {
-    NetworkRetryPolicy policy(10, 500, NetworkRetryPolicy::Exponential);
+    WebRetryPolicy policy(10, 500, WebRetryPolicy::Exponential);
 
     QCOMPARE(policy.maxRetries(), 10);
     QCOMPARE(policy.calculateDelay(0), 500);
     QCOMPARE(policy.calculateDelay(1), 1000);
 }
 
-QTEST_APPLESS_MAIN(TestNetworkRetryPolicy)
+QTEST_APPLESS_MAIN(TestWebRetryPolicy)
 
-#include "tst_networkretrypolicy.moc"
+#include "tst_webretrypolicy.moc"

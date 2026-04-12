@@ -9,7 +9,7 @@ add_subdirectory(FangTestLib)
 
 # Test suite
 add_subdirectory(TestImageGrabber)
-add_subdirectory(TestNetworkDownloadCore)
+add_subdirectory(TestQWebDownload)
 add_subdirectory(TestFangParser)
 add_subdirectory(TestFangFaviconGrabber)
 add_subdirectory(TestFangFeedDiscovery)
@@ -50,7 +50,7 @@ add_subdirectory(TestBookmarkIntegration)
 add_subdirectory(TestWebServer)
 
 # Network tests
-add_subdirectory(TestNetworkRetryPolicy)
+add_subdirectory(TestWebRetryPolicy)
 
 # Utility tests
 add_subdirectory(TestFileLogging)

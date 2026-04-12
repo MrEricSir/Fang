@@ -10,13 +10,13 @@
 #include "ImageData.h"
 #include <QObject>
 
-class BatchDownloadCore;
+class QBatchWebDownload;
 class QNetworkAccessManager;
 
 /*!
     \brief The ImageGrabber attempts to download all images from a list of URLs.
 
-    Uses BatchDownloadCore internally to handle parallel downloads with
+    Uses QBatchWebDownload internally to handle parallel downloads with
     redirect and timeout handling.
  */
 class ImageGrabber : public QObject
@@ -51,7 +51,7 @@ private slots:
     void onBatchFinished();
 
 private:
-    BatchDownloadCore* batchDownloader;
+    QBatchWebDownload* batchDownloader;
     QMap<QUrl, ImageData> results;
     QFutureWatcher<void> processWatcher;
 };

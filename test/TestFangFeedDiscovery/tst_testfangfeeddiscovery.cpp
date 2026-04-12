@@ -584,7 +584,7 @@ void TestFangFeedDiscovery::testRelativeURLThatStaysRelative()
     FeedDiscovery fd(nullptr, firstParser, new MockWebPageGrabber(), new MockBatchFeedFetcher(), sitemapSynth);
     QSignalSpy spy(&fd, &FeedDiscovery::done);
 
-    // Try a path-only URL that NetworkUtilities::urlFixup might not handle
+    // Try a path-only URL that WebUtilities::urlFixup might not handle
     // Note: Most URLs will get fixed up, so this tests the fallback error path
     fd.checkFeed("/just/a/path");
 
@@ -594,7 +594,7 @@ void TestFangFeedDiscovery::testRelativeURLThatStaysRelative()
         QVERIFY(spy.wait(5000));
     }
 
-    // The URL likely got fixed up by NetworkUtilities::urlFixup, so it won't hit the
+    // The URL likely got fixed up by WebUtilities::urlFixup, so it won't hit the
     // "Invalid URL" path. But we should still get an error since the mock isn't configured.
     // This test mainly exists to ensure we don't crash on edge-case URLs.
     QVERIFY(fd.error() != FeedDiscovery::Error::None);

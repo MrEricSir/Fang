@@ -1,5 +1,5 @@
 #include "WebPageGrabber.h"
-#include "NetworkDownloadCore.h"
+#include "QWebDownload.h"
 #include <QXmlStreamReader>
 #include <memory>
 
@@ -29,11 +29,11 @@ WebPageGrabber::WebPageGrabber(bool handleMetaRefresh, int timeoutMS, QObject *p
     error(true),
     done(false)
 {
-    NetworkDownloadConfig config;
+    WebDownloadConfig config;
     config.timeoutMs = timeoutMS;
     config.maxRedirects = 10;
     config.useInactivityTimeout = true;
-    core = new NetworkDownloadCore(config, this, networkManager);
+    core = new QWebDownload(config, this, networkManager);
     init();
 }
 
@@ -45,11 +45,11 @@ WebPageGrabber::WebPageGrabber(QObject *parent) :
     error(true),
     done(false)
 {
-    NetworkDownloadConfig config;
+    WebDownloadConfig config;
     config.timeoutMs = defaultTimeoutMs;
     config.maxRedirects = 10;
     config.useInactivityTimeout = true;
-    core = new NetworkDownloadCore(config, this, nullptr);
+    core = new QWebDownload(config, this, nullptr);
     init();
 }
 
@@ -75,7 +75,7 @@ QString *WebPageGrabber::load(const QString& htmlString)
 void WebPageGrabber::loadInternal(const QUrl& url)
 {
     originalUrl = url;
-    core->download(url);
+    core->get(url);
 }
 
 QString *WebPageGrabber::loadInternal(const QString& htmlString, bool handleRefresh)
@@ -251,8 +251,8 @@ void WebPageGrabber::emitReadySignal(QString* document)
 
 void WebPageGrabber::init()
 {
-    connect(core, &NetworkDownloadCore::error, this, &WebPageGrabber::onDownloadError);
-    connect(core, &NetworkDownloadCore::finished, this, &WebPageGrabber::onDownloadFinished);
+    connect(core, &QWebDownload::error, this, &WebPageGrabber::onDownloadError);
+    connect(core, &QWebDownload::finished, this, &WebPageGrabber::onDownloadFinished);
 }
 
 QString WebPageGrabber::htmlToXhtml(const QByteArray& html)

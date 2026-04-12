@@ -5,7 +5,7 @@
 #include <QString>
 #include <QUrl>
 #include <QTimer>
-class NetworkDownloadCore;
+class QWebDownload;
 class QNetworkAccessManager;
 
 /*!
@@ -87,7 +87,7 @@ private:
 
     void init();
 
-    NetworkDownloadCore* core;
+    QWebDownload* core;
     QString document;
     bool handleMetaRefresh;
     int redirectAttempts;

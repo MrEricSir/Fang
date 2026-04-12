@@ -10,7 +10,7 @@
 
 #include "FeedSource.h"
 #include "FeedParseResult.h"
-#include "NetworkDownloadCore.h"
+#include "QWebDownload.h"
 
 /*!
     PaRSSes RSS/Atom feeds into RawFeed/RawNews objects.
@@ -40,7 +40,7 @@ public slots:
 
 private slots:
     // When the download completes (success or error).
-    void onDownloadResult(NetworkDownloadResult downloadResult);
+    void onDownloadResult(WebDownloadResult downloadResult);
 
 private:
     // When parsing completes on the thread pool.
@@ -52,7 +52,7 @@ private:
     FeedFetchResult result;
     QNetworkReply::NetworkError networkError;
 
-    NetworkDownloadCore* downloader;
+    QWebDownload* downloader;
     QUrl finalFeedURL;
 
     QString respEtag;

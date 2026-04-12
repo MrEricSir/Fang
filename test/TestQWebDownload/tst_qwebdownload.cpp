@@ -2,15 +2,15 @@
 #include <QTest>
 #include <QSignalSpy>
 
-#include "NetworkDownloadCore.h"
+#include "QWebDownload.h"
 #include "../MockNetworkAccessManager.h"
 
-class TestNetworkDownloadCore : public QObject
+class TestQWebDownload : public QObject
 {
     Q_OBJECT
 
 public:
-    TestNetworkDownloadCore();
+    TestQWebDownload();
 
 private slots:
     // Constructor tests
@@ -62,55 +62,55 @@ private slots:
     void testRetryOnTimeout();
 };
 
-TestNetworkDownloadCore::TestNetworkDownloadCore()
+TestQWebDownload::TestQWebDownload()
 {
 }
 
-void TestNetworkDownloadCore::testConstructorWithProvidedManager()
+void TestQWebDownload::testConstructorWithProvidedManager()
 {
     MockNetworkAccessManager mockManager;
-    NetworkDownloadCore downloader({}, nullptr, &mockManager);
+    QWebDownload downloader({}, nullptr, &mockManager);
 
     mockManager.addResponse(QUrl("http://example.com/test"), "test data");
 
-    QSignalSpy finishedSpy(&downloader, &NetworkDownloadCore::finished);
-    downloader.download(QUrl("http://example.com/test"));
+    QSignalSpy finishedSpy(&downloader, &QWebDownload::finished);
+    downloader.get(QUrl("http://example.com/test"));
 
     QVERIFY(finishedSpy.wait(1000));
     QCOMPARE(finishedSpy.count(), 1);
 }
 
-void TestNetworkDownloadCore::testConstructorCreatesOwnManager()
+void TestQWebDownload::testConstructorCreatesOwnManager()
 {
-    NetworkDownloadCore downloader({}, nullptr, nullptr);
+    QWebDownload downloader({}, nullptr, nullptr);
     // If no crash, it worked
     QVERIFY(true);
 }
 
-void TestNetworkDownloadCore::testConstructorWithConfig()
+void TestQWebDownload::testConstructorWithConfig()
 {
-    NetworkDownloadConfig config;
+    WebDownloadConfig config;
     config.timeoutMs = 5000;
     config.maxRedirects = 5;
     config.useInactivityTimeout = false;
 
-    NetworkDownloadCore downloader(config);
+    QWebDownload downloader(config);
     // If no crash, config was accepted
     QVERIFY(true);
 }
 
-void TestNetworkDownloadCore::testSuccessfulDownload()
+void TestQWebDownload::testSuccessfulDownload()
 {
     MockNetworkAccessManager mockManager;
-    NetworkDownloadCore downloader({}, nullptr, &mockManager);
+    QWebDownload downloader({}, nullptr, &mockManager);
 
     QByteArray expectedData = "Hello, World!";
     mockManager.addResponse(QUrl("http://example.com/test"), expectedData);
 
-    QSignalSpy finishedSpy(&downloader, &NetworkDownloadCore::finished);
-    QSignalSpy errorSpy(&downloader, &NetworkDownloadCore::error);
+    QSignalSpy finishedSpy(&downloader, &QWebDownload::finished);
+    QSignalSpy errorSpy(&downloader, &QWebDownload::error);
 
-    downloader.download(QUrl("http://example.com/test"));
+    downloader.get(QUrl("http://example.com/test"));
 
     QVERIFY(finishedSpy.wait(1000));
     QCOMPARE(finishedSpy.count(), 1);
@@ -120,31 +120,31 @@ void TestNetworkDownloadCore::testSuccessfulDownload()
     QCOMPARE(args.at(1).toByteArray(), expectedData);
 }
 
-void TestNetworkDownloadCore::testSuccessfulDownloadEmitsCorrectUrl()
+void TestQWebDownload::testSuccessfulDownloadEmitsCorrectUrl()
 {
     MockNetworkAccessManager mockManager;
-    NetworkDownloadCore downloader({}, nullptr, &mockManager);
+    QWebDownload downloader({}, nullptr, &mockManager);
 
     QUrl testUrl("http://example.com/page.html");
     mockManager.addResponse(testUrl, "content");
 
-    QSignalSpy finishedSpy(&downloader, &NetworkDownloadCore::finished);
-    downloader.download(testUrl);
+    QSignalSpy finishedSpy(&downloader, &QWebDownload::finished);
+    downloader.get(testUrl);
 
     QVERIFY(finishedSpy.wait(1000));
     QList<QVariant> args = finishedSpy.takeFirst();
     QCOMPARE(args.at(0).toUrl(), testUrl);
 }
 
-void TestNetworkDownloadCore::testRelativeURLError()
+void TestQWebDownload::testRelativeURLError()
 {
     MockNetworkAccessManager mockManager;
-    NetworkDownloadCore downloader({}, nullptr, &mockManager);
+    QWebDownload downloader({}, nullptr, &mockManager);
 
-    QSignalSpy errorSpy(&downloader, &NetworkDownloadCore::error);
-    QSignalSpy finishedSpy(&downloader, &NetworkDownloadCore::finished);
+    QSignalSpy errorSpy(&downloader, &QWebDownload::error);
+    QSignalSpy finishedSpy(&downloader, &QWebDownload::finished);
 
-    downloader.download(QUrl("/relative/path"));
+    downloader.get(QUrl("/relative/path"));
 
     // Error should be emitted synchronously
     QCOMPARE(errorSpy.count(), 1);
@@ -154,27 +154,27 @@ void TestNetworkDownloadCore::testRelativeURLError()
     QVERIFY(errorMsg.contains("Relative"));
 }
 
-void TestNetworkDownloadCore::testNetworkError()
+void TestQWebDownload::testNetworkError()
 {
     MockNetworkAccessManager mockManager;
-    NetworkDownloadCore downloader({}, nullptr, &mockManager);
+    QWebDownload downloader({}, nullptr, &mockManager);
 
     mockManager.setNextError(QNetworkReply::HostNotFoundError);
 
-    QSignalSpy errorSpy(&downloader, &NetworkDownloadCore::error);
-    QSignalSpy finishedSpy(&downloader, &NetworkDownloadCore::finished);
+    QSignalSpy errorSpy(&downloader, &QWebDownload::error);
+    QSignalSpy finishedSpy(&downloader, &QWebDownload::finished);
 
-    downloader.download(QUrl("http://nonexistent.example.com/"));
+    downloader.get(QUrl("http://nonexistent.example.com/"));
 
     QVERIFY(errorSpy.wait(1000));
     QCOMPARE(errorSpy.count(), 1);
     QCOMPARE(finishedSpy.count(), 0);
 }
 
-void TestNetworkDownloadCore::testSingleRedirect()
+void TestQWebDownload::testSingleRedirect()
 {
     MockNetworkAccessManager mockManager;
-    NetworkDownloadCore downloader({}, nullptr, &mockManager);
+    QWebDownload downloader({}, nullptr, &mockManager);
 
     QUrl originalUrl("http://example.com/old");
     QUrl redirectUrl("http://example.com/new");
@@ -183,8 +183,8 @@ void TestNetworkDownloadCore::testSingleRedirect()
     mockManager.addRedirect(originalUrl, redirectUrl);
     mockManager.addResponse(redirectUrl, finalData);
 
-    QSignalSpy finishedSpy(&downloader, &NetworkDownloadCore::finished);
-    downloader.download(originalUrl);
+    QSignalSpy finishedSpy(&downloader, &QWebDownload::finished);
+    downloader.get(originalUrl);
 
     QVERIFY(finishedSpy.wait(1000));
     QCOMPARE(finishedSpy.count(), 1);
@@ -194,10 +194,10 @@ void TestNetworkDownloadCore::testSingleRedirect()
     QCOMPARE(args.at(1).toByteArray(), finalData);
 }
 
-void TestNetworkDownloadCore::testRedirectChain()
+void TestQWebDownload::testRedirectChain()
 {
     MockNetworkAccessManager mockManager;
-    NetworkDownloadCore downloader({}, nullptr, &mockManager);
+    QWebDownload downloader({}, nullptr, &mockManager);
 
     QUrl urlA("http://example.com/a");
     QUrl urlB("http://example.com/b");
@@ -208,8 +208,8 @@ void TestNetworkDownloadCore::testRedirectChain()
     mockManager.addRedirect(urlB, urlC);
     mockManager.addResponse(urlC, finalData);
 
-    QSignalSpy finishedSpy(&downloader, &NetworkDownloadCore::finished);
-    downloader.download(urlA);
+    QSignalSpy finishedSpy(&downloader, &QWebDownload::finished);
+    downloader.get(urlA);
 
     QVERIFY(finishedSpy.wait(2000));
     QCOMPARE(finishedSpy.count(), 1);
@@ -219,12 +219,12 @@ void TestNetworkDownloadCore::testRedirectChain()
     QCOMPARE(args.at(1).toByteArray(), finalData);
 }
 
-void TestNetworkDownloadCore::testMaxRedirectsExceeded()
+void TestQWebDownload::testMaxRedirectsExceeded()
 {
     MockNetworkAccessManager mockManager;
-    NetworkDownloadConfig config;
+    WebDownloadConfig config;
     config.maxRedirects = 3;
-    NetworkDownloadCore downloader(config, nullptr, &mockManager);
+    QWebDownload downloader(config, nullptr, &mockManager);
 
     // Create redirect chain longer than maxRedirects
     QList<QUrl> urls;
@@ -236,8 +236,8 @@ void TestNetworkDownloadCore::testMaxRedirectsExceeded()
         mockManager.addRedirect(urls[i], urls[i + 1]);
     }
 
-    QSignalSpy errorSpy(&downloader, &NetworkDownloadCore::error);
-    downloader.download(urls.first());
+    QSignalSpy errorSpy(&downloader, &QWebDownload::error);
+    downloader.get(urls.first());
 
     QVERIFY(errorSpy.wait(2000));
     QCOMPARE(errorSpy.count(), 1);
@@ -246,10 +246,10 @@ void TestNetworkDownloadCore::testMaxRedirectsExceeded()
     QVERIFY(errorMsg.contains("redirect"));
 }
 
-void TestNetworkDownloadCore::testRelativeRedirect()
+void TestQWebDownload::testRelativeRedirect()
 {
     MockNetworkAccessManager mockManager;
-    NetworkDownloadCore downloader({}, nullptr, &mockManager);
+    QWebDownload downloader({}, nullptr, &mockManager);
 
     QUrl originalUrl("http://example.com/dir/page");
     QUrl relativeRedirect("../other/page");  // Relative redirect
@@ -259,8 +259,8 @@ void TestNetworkDownloadCore::testRelativeRedirect()
     mockManager.addRedirect(originalUrl, relativeRedirect);
     mockManager.addResponse(resolvedUrl, finalData);
 
-    QSignalSpy finishedSpy(&downloader, &NetworkDownloadCore::finished);
-    downloader.download(originalUrl);
+    QSignalSpy finishedSpy(&downloader, &QWebDownload::finished);
+    downloader.get(originalUrl);
 
     QVERIFY(finishedSpy.wait(1000));
     QCOMPARE(finishedSpy.count(), 1);
@@ -269,20 +269,20 @@ void TestNetworkDownloadCore::testRelativeRedirect()
     QCOMPARE(args.at(1).toByteArray(), finalData);
 }
 
-void TestNetworkDownloadCore::testInactivityTimeoutFires()
+void TestQWebDownload::testInactivityTimeoutFires()
 {
     MockNetworkAccessManager mockManager;
-    NetworkDownloadConfig config;
+    WebDownloadConfig config;
     config.timeoutMs = 100;  // Short timeout for testing
     config.useInactivityTimeout = true;
-    NetworkDownloadCore downloader(config, nullptr, &mockManager);
+    QWebDownload downloader(config, nullptr, &mockManager);
 
     // Set long delay to trigger timeout
     mockManager.setResponseDelay(500);
     mockManager.addResponse(QUrl("http://example.com/slow"), "data");
 
-    QSignalSpy errorSpy(&downloader, &NetworkDownloadCore::error);
-    downloader.download(QUrl("http://example.com/slow"));
+    QSignalSpy errorSpy(&downloader, &QWebDownload::error);
+    downloader.get(QUrl("http://example.com/slow"));
 
     QVERIFY(errorSpy.wait(1000));
     QCOMPARE(errorSpy.count(), 1);
@@ -291,80 +291,80 @@ void TestNetworkDownloadCore::testInactivityTimeoutFires()
     QVERIFY(errorMsg.contains("timeout", Qt::CaseInsensitive));
 }
 
-void TestNetworkDownloadCore::testInactivityTimeoutResetsOnProgress()
+void TestQWebDownload::testInactivityTimeoutResetsOnProgress()
 {
     MockNetworkAccessManager mockManager;
-    NetworkDownloadConfig config;
+    WebDownloadConfig config;
     config.timeoutMs = 200;
     config.useInactivityTimeout = true;
-    NetworkDownloadCore downloader(config, nullptr, &mockManager);
+    QWebDownload downloader(config, nullptr, &mockManager);
 
     // Short delay - should complete before timeout
     mockManager.setResponseDelay(50);
     mockManager.setEmitProgress(true);
     mockManager.addResponse(QUrl("http://example.com/test"), "data");
 
-    QSignalSpy finishedSpy(&downloader, &NetworkDownloadCore::finished);
-    QSignalSpy errorSpy(&downloader, &NetworkDownloadCore::error);
+    QSignalSpy finishedSpy(&downloader, &QWebDownload::finished);
+    QSignalSpy errorSpy(&downloader, &QWebDownload::error);
 
-    downloader.download(QUrl("http://example.com/test"));
+    downloader.get(QUrl("http://example.com/test"));
 
     QVERIFY(finishedSpy.wait(1000));
     QCOMPARE(finishedSpy.count(), 1);
     QCOMPARE(errorSpy.count(), 0);
 }
 
-void TestNetworkDownloadCore::testTransferTimeoutMode()
+void TestQWebDownload::testTransferTimeoutMode()
 {
     MockNetworkAccessManager mockManager;
-    NetworkDownloadConfig config;
+    WebDownloadConfig config;
     config.timeoutMs = 100;
     config.useInactivityTimeout = false;  // Use setTransferTimeout instead
-    NetworkDownloadCore downloader(config, nullptr, &mockManager);
+    QWebDownload downloader(config, nullptr, &mockManager);
 
     // With transfer timeout mode, the request itself has the timeout
     // Mock doesn't fully simulate this, so just verify no crash
     mockManager.addResponse(QUrl("http://example.com/test"), "data");
 
-    QSignalSpy finishedSpy(&downloader, &NetworkDownloadCore::finished);
-    downloader.download(QUrl("http://example.com/test"));
+    QSignalSpy finishedSpy(&downloader, &QWebDownload::finished);
+    downloader.get(QUrl("http://example.com/test"));
 
     QVERIFY(finishedSpy.wait(1000));
     QCOMPARE(finishedSpy.count(), 1);
 }
 
-void TestNetworkDownloadCore::testProgressSignalEmitted()
+void TestQWebDownload::testProgressSignalEmitted()
 {
     MockNetworkAccessManager mockManager;
-    NetworkDownloadConfig config;
+    WebDownloadConfig config;
     config.useInactivityTimeout = true;  // Need this for progress signals
-    NetworkDownloadCore downloader(config, nullptr, &mockManager);
+    QWebDownload downloader(config, nullptr, &mockManager);
 
     mockManager.setEmitProgress(true);
     mockManager.addResponse(QUrl("http://example.com/test"), "test data");
 
-    QSignalSpy progressSpy(&downloader, &NetworkDownloadCore::progress);
-    QSignalSpy finishedSpy(&downloader, &NetworkDownloadCore::finished);
+    QSignalSpy progressSpy(&downloader, &QWebDownload::progress);
+    QSignalSpy finishedSpy(&downloader, &QWebDownload::finished);
 
-    downloader.download(QUrl("http://example.com/test"));
+    downloader.get(QUrl("http://example.com/test"));
 
     QVERIFY(finishedSpy.wait(1000));
     // Progress signal should have been emitted at least once
     QVERIFY(progressSpy.count() >= 1);
 }
 
-void TestNetworkDownloadCore::testAbortCancelsDownload()
+void TestQWebDownload::testAbortCancelsDownload()
 {
     MockNetworkAccessManager mockManager;
-    NetworkDownloadCore downloader({}, nullptr, &mockManager);
+    QWebDownload downloader({}, nullptr, &mockManager);
 
     mockManager.setResponseDelay(500);  // Long delay
     mockManager.addResponse(QUrl("http://example.com/test"), "data");
 
-    QSignalSpy finishedSpy(&downloader, &NetworkDownloadCore::finished);
-    QSignalSpy errorSpy(&downloader, &NetworkDownloadCore::error);
+    QSignalSpy finishedSpy(&downloader, &QWebDownload::finished);
+    QSignalSpy errorSpy(&downloader, &QWebDownload::error);
 
-    downloader.download(QUrl("http://example.com/test"));
+    downloader.get(QUrl("http://example.com/test"));
 
     // Abort immediately
     downloader.abort();
@@ -377,20 +377,20 @@ void TestNetworkDownloadCore::testAbortCancelsDownload()
     QCOMPARE(errorSpy.count(), 0);
 }
 
-void TestNetworkDownloadCore::testAbortNoSignalAfterAbort()
+void TestQWebDownload::testAbortNoSignalAfterAbort()
 {
     MockNetworkAccessManager mockManager;
-    NetworkDownloadCore downloader({}, nullptr, &mockManager);
+    QWebDownload downloader({}, nullptr, &mockManager);
 
     // Abort when nothing is downloading should be safe
     downloader.abort();
     QVERIFY(true);  // No crash
 }
 
-void TestNetworkDownloadCore::testMultipleSequentialDownloads()
+void TestQWebDownload::testMultipleSequentialDownloads()
 {
     MockNetworkAccessManager mockManager;
-    NetworkDownloadCore downloader({}, nullptr, &mockManager);
+    QWebDownload downloader({}, nullptr, &mockManager);
 
     QByteArray data1 = "First";
     QByteArray data2 = "Second";
@@ -398,38 +398,38 @@ void TestNetworkDownloadCore::testMultipleSequentialDownloads()
     mockManager.addResponse(QUrl("http://example.com/first"), data1);
     mockManager.addResponse(QUrl("http://example.com/second"), data2);
 
-    QSignalSpy finishedSpy(&downloader, &NetworkDownloadCore::finished);
+    QSignalSpy finishedSpy(&downloader, &QWebDownload::finished);
 
     // First download
-    downloader.download(QUrl("http://example.com/first"));
+    downloader.get(QUrl("http://example.com/first"));
     QVERIFY(finishedSpy.wait(1000));
     QCOMPARE(finishedSpy.count(), 1);
     QCOMPARE(finishedSpy.takeFirst().at(1).toByteArray(), data1);
 
     // Second download
-    downloader.download(QUrl("http://example.com/second"));
+    downloader.get(QUrl("http://example.com/second"));
     QVERIFY(finishedSpy.wait(1000));
     QCOMPARE(finishedSpy.count(), 1);
     QCOMPARE(finishedSpy.takeFirst().at(1).toByteArray(), data2);
 }
 
-void TestNetworkDownloadCore::testNewDownloadAbortsExisting()
+void TestQWebDownload::testNewDownloadAbortsExisting()
 {
     MockNetworkAccessManager mockManager;
-    NetworkDownloadCore downloader({}, nullptr, &mockManager);
+    QWebDownload downloader({}, nullptr, &mockManager);
 
     mockManager.setResponseDelay(500);  // Long delay for first
     mockManager.addResponse(QUrl("http://example.com/slow"), "slow data");
     mockManager.addResponse(QUrl("http://example.com/fast"), "fast data");
 
-    QSignalSpy finishedSpy(&downloader, &NetworkDownloadCore::finished);
+    QSignalSpy finishedSpy(&downloader, &QWebDownload::finished);
 
     // Start slow download
-    downloader.download(QUrl("http://example.com/slow"));
+    downloader.get(QUrl("http://example.com/slow"));
 
     // Immediately start another download (should abort the first)
     mockManager.setResponseDelay(0);
-    downloader.download(QUrl("http://example.com/fast"));
+    downloader.get(QUrl("http://example.com/fast"));
 
     QVERIFY(finishedSpy.wait(1000));
     // Should only get one finished signal (for the fast one)
@@ -437,30 +437,30 @@ void TestNetworkDownloadCore::testNewDownloadAbortsExisting()
     QCOMPARE(finishedSpy.takeFirst().at(1).toByteArray(), QByteArray("fast data"));
 }
 
-void TestNetworkDownloadCore::testRelativeURLEmitsFinishedWithResult()
+void TestQWebDownload::testRelativeURLEmitsFinishedWithResult()
 {
     MockNetworkAccessManager mockManager;
-    NetworkDownloadCore downloader({}, nullptr, &mockManager);
+    QWebDownload downloader({}, nullptr, &mockManager);
 
-    QSignalSpy resultSpy(&downloader, &NetworkDownloadCore::finishedWithResult);
+    QSignalSpy resultSpy(&downloader, &QWebDownload::finishedWithResult);
 
-    downloader.download(QUrl("/relative/path"));
+    downloader.get(QUrl("/relative/path"));
 
     // finishedWithResult should be emitted synchronously
     QCOMPARE(resultSpy.count(), 1);
 
-    NetworkDownloadResult result = resultSpy.takeFirst().at(0).value<NetworkDownloadResult>();
+    WebDownloadResult result = resultSpy.takeFirst().at(0).value<WebDownloadResult>();
     QCOMPARE(result.networkError, QNetworkReply::ProtocolInvalidOperationError);
     QVERIFY(!result.ok());
     QVERIFY(result.errorString.contains("Relative"));
 }
 
-void TestNetworkDownloadCore::testMaxRedirectsEmitsFinishedWithResult()
+void TestQWebDownload::testMaxRedirectsEmitsFinishedWithResult()
 {
     MockNetworkAccessManager mockManager;
-    NetworkDownloadConfig config;
+    WebDownloadConfig config;
     config.maxRedirects = 2;
-    NetworkDownloadCore downloader(config, nullptr, &mockManager);
+    QWebDownload downloader(config, nullptr, &mockManager);
 
     // Create redirect chain longer than maxRedirects
     QUrl url0("http://example.com/r0");
@@ -472,52 +472,52 @@ void TestNetworkDownloadCore::testMaxRedirectsEmitsFinishedWithResult()
     mockManager.addRedirect(url1, url2);
     mockManager.addRedirect(url2, url3);
 
-    QSignalSpy resultSpy(&downloader, &NetworkDownloadCore::finishedWithResult);
-    downloader.download(url0);
+    QSignalSpy resultSpy(&downloader, &QWebDownload::finishedWithResult);
+    downloader.get(url0);
 
     QVERIFY(resultSpy.wait(2000));
     QCOMPARE(resultSpy.count(), 1);
 
-    NetworkDownloadResult result = resultSpy.takeFirst().at(0).value<NetworkDownloadResult>();
+    WebDownloadResult result = resultSpy.takeFirst().at(0).value<WebDownloadResult>();
     QCOMPARE(result.networkError, QNetworkReply::TooManyRedirectsError);
     QVERIFY(!result.ok());
     QVERIFY(result.errorString.contains("redirect"));
 }
 
-void TestNetworkDownloadCore::testNoRetryByDefault()
+void TestQWebDownload::testNoRetryByDefault()
 {
     // Default config should not retry - backward compatibility
     MockNetworkAccessManager mockManager;
-    NetworkDownloadCore downloader({}, nullptr, &mockManager);
+    QWebDownload downloader({}, nullptr, &mockManager);
 
     mockManager.setNextError(QNetworkReply::HostNotFoundError);
 
-    QSignalSpy errorSpy(&downloader, &NetworkDownloadCore::error);
-    QSignalSpy retryingSpy(&downloader, &NetworkDownloadCore::retrying);
+    QSignalSpy errorSpy(&downloader, &QWebDownload::error);
+    QSignalSpy retryingSpy(&downloader, &QWebDownload::retrying);
 
-    downloader.download(QUrl("http://example.com/test"));
+    downloader.get(QUrl("http://example.com/test"));
 
     QVERIFY(errorSpy.wait(1000));
     QCOMPARE(errorSpy.count(), 1);
     QCOMPARE(retryingSpy.count(), 0);  // No retry signal
 }
 
-void TestNetworkDownloadCore::testRetryOnTransientError()
+void TestQWebDownload::testRetryOnTransientError()
 {
     MockNetworkAccessManager mockManager;
-    NetworkDownloadConfig config;
-    config.retryPolicy = NetworkRetryPolicy(3, 10, NetworkRetryPolicy::Fixed);  // 3 retries, 10ms delay
-    NetworkDownloadCore downloader(config, nullptr, &mockManager);
+    WebDownloadConfig config;
+    config.retryPolicy = WebRetryPolicy(3, 10, WebRetryPolicy::Fixed);  // 3 retries, 10ms delay
+    QWebDownload downloader(config, nullptr, &mockManager);
 
     // Fail first request, succeed on retry
     mockManager.setFailureCount(1, QNetworkReply::TemporaryNetworkFailureError);
     mockManager.addResponse(QUrl("http://example.com/test"), "success data");
 
-    QSignalSpy finishedSpy(&downloader, &NetworkDownloadCore::finished);
-    QSignalSpy errorSpy(&downloader, &NetworkDownloadCore::error);
-    QSignalSpy retryingSpy(&downloader, &NetworkDownloadCore::retrying);
+    QSignalSpy finishedSpy(&downloader, &QWebDownload::finished);
+    QSignalSpy errorSpy(&downloader, &QWebDownload::error);
+    QSignalSpy retryingSpy(&downloader, &QWebDownload::retrying);
 
-    downloader.download(QUrl("http://example.com/test"));
+    downloader.get(QUrl("http://example.com/test"));
 
     QVERIFY(finishedSpy.wait(2000));
     QCOMPARE(finishedSpy.count(), 1);
@@ -529,22 +529,22 @@ void TestNetworkDownloadCore::testRetryOnTransientError()
     QCOMPARE(args.at(1).toByteArray(), QByteArray("success data"));
 }
 
-void TestNetworkDownloadCore::testRetryExhausted()
+void TestQWebDownload::testRetryExhausted()
 {
     MockNetworkAccessManager mockManager;
-    NetworkDownloadConfig config;
+    WebDownloadConfig config;
     // maxRetries=3 means: attempt 1, retry (attempt 2), retry (attempt 3) = 2 retries total
-    config.retryPolicy = NetworkRetryPolicy(3, 10, NetworkRetryPolicy::Fixed);
-    NetworkDownloadCore downloader(config, nullptr, &mockManager);
+    config.retryPolicy = WebRetryPolicy(3, 10, WebRetryPolicy::Fixed);
+    QWebDownload downloader(config, nullptr, &mockManager);
 
     // All requests fail
     mockManager.setFailureCount(10, QNetworkReply::TemporaryNetworkFailureError);
 
-    QSignalSpy finishedSpy(&downloader, &NetworkDownloadCore::finished);
-    QSignalSpy errorSpy(&downloader, &NetworkDownloadCore::error);
-    QSignalSpy retryingSpy(&downloader, &NetworkDownloadCore::retrying);
+    QSignalSpy finishedSpy(&downloader, &QWebDownload::finished);
+    QSignalSpy errorSpy(&downloader, &QWebDownload::error);
+    QSignalSpy retryingSpy(&downloader, &QWebDownload::retrying);
 
-    downloader.download(QUrl("http://example.com/test"));
+    downloader.get(QUrl("http://example.com/test"));
 
     QVERIFY(errorSpy.wait(2000));
     QCOMPARE(finishedSpy.count(), 0);
@@ -552,20 +552,20 @@ void TestNetworkDownloadCore::testRetryExhausted()
     QCOMPARE(retryingSpy.count(), 2);  // Two retries attempted
 }
 
-void TestNetworkDownloadCore::testRetrySignalEmitted()
+void TestQWebDownload::testRetrySignalEmitted()
 {
     MockNetworkAccessManager mockManager;
-    NetworkDownloadConfig config;
-    config.retryPolicy = NetworkRetryPolicy(3, 50, NetworkRetryPolicy::Fixed);  // 50ms delay
-    NetworkDownloadCore downloader(config, nullptr, &mockManager);
+    WebDownloadConfig config;
+    config.retryPolicy = WebRetryPolicy(3, 50, WebRetryPolicy::Fixed);  // 50ms delay
+    QWebDownload downloader(config, nullptr, &mockManager);
 
     mockManager.setFailureCount(1, QNetworkReply::TemporaryNetworkFailureError);
     mockManager.addResponse(QUrl("http://example.com/test"), "data");
 
-    QSignalSpy retryingSpy(&downloader, &NetworkDownloadCore::retrying);
-    QSignalSpy finishedSpy(&downloader, &NetworkDownloadCore::finished);
+    QSignalSpy retryingSpy(&downloader, &QWebDownload::retrying);
+    QSignalSpy finishedSpy(&downloader, &QWebDownload::finished);
 
-    downloader.download(QUrl("http://example.com/test"));
+    downloader.get(QUrl("http://example.com/test"));
 
     QVERIFY(finishedSpy.wait(2000));
     QCOMPARE(retryingSpy.count(), 1);
@@ -576,33 +576,33 @@ void TestNetworkDownloadCore::testRetrySignalEmitted()
     QCOMPARE(args.at(1).toInt(), 50);  // 50ms delay
 }
 
-void TestNetworkDownloadCore::testNonRetryableErrorNoRetry()
+void TestQWebDownload::testNonRetryableErrorNoRetry()
 {
     MockNetworkAccessManager mockManager;
-    NetworkDownloadConfig config;
-    config.retryPolicy = NetworkRetryPolicy(3, 10, NetworkRetryPolicy::Fixed);
-    NetworkDownloadCore downloader(config, nullptr, &mockManager);
+    WebDownloadConfig config;
+    config.retryPolicy = WebRetryPolicy(3, 10, WebRetryPolicy::Fixed);
+    QWebDownload downloader(config, nullptr, &mockManager);
 
     // 404 is not retryable by default
     mockManager.addErrorResponse(QUrl("http://example.com/missing"), QNetworkReply::ContentNotFoundError);
 
-    QSignalSpy errorSpy(&downloader, &NetworkDownloadCore::error);
-    QSignalSpy retryingSpy(&downloader, &NetworkDownloadCore::retrying);
+    QSignalSpy errorSpy(&downloader, &QWebDownload::error);
+    QSignalSpy retryingSpy(&downloader, &QWebDownload::retrying);
 
-    downloader.download(QUrl("http://example.com/missing"));
+    downloader.get(QUrl("http://example.com/missing"));
 
     QVERIFY(errorSpy.wait(1000));
     QCOMPARE(errorSpy.count(), 1);
     QCOMPARE(retryingSpy.count(), 0);  // No retry for 404
 }
 
-void TestNetworkDownloadCore::testRetryResetsRedirects()
+void TestQWebDownload::testRetryResetsRedirects()
 {
     MockNetworkAccessManager mockManager;
-    NetworkDownloadConfig config;
+    WebDownloadConfig config;
     config.maxRedirects = 2;
-    config.retryPolicy = NetworkRetryPolicy(2, 10, NetworkRetryPolicy::Fixed);
-    NetworkDownloadCore downloader(config, nullptr, &mockManager);
+    config.retryPolicy = WebRetryPolicy(2, 10, WebRetryPolicy::Fixed);
+    QWebDownload downloader(config, nullptr, &mockManager);
 
     QUrl startUrl("http://example.com/start");
     QUrl redirect1("http://example.com/redirect1");
@@ -620,40 +620,40 @@ void TestNetworkDownloadCore::testRetryResetsRedirects()
     mockManager.addRedirect(redirect1, redirect2);
     mockManager.addResponse(redirect2, "final data");
 
-    QSignalSpy finishedSpy(&downloader, &NetworkDownloadCore::finished);
-    QSignalSpy retryingSpy(&downloader, &NetworkDownloadCore::retrying);
+    QSignalSpy finishedSpy(&downloader, &QWebDownload::finished);
+    QSignalSpy retryingSpy(&downloader, &QWebDownload::retrying);
 
-    downloader.download(startUrl);
+    downloader.get(startUrl);
 
     QVERIFY(finishedSpy.wait(2000));
     QCOMPARE(finishedSpy.count(), 1);
     QCOMPARE(retryingSpy.count(), 1);  // One retry
 }
 
-void TestNetworkDownloadCore::testRetryOnTimeout()
+void TestQWebDownload::testRetryOnTimeout()
 {
     MockNetworkAccessManager mockManager;
-    NetworkDownloadConfig config;
+    WebDownloadConfig config;
     config.timeoutMs = 50;  // Very short timeout
     config.useInactivityTimeout = true;
-    config.retryPolicy = NetworkRetryPolicy(2, 10, NetworkRetryPolicy::Fixed);
+    config.retryPolicy = WebRetryPolicy(2, 10, WebRetryPolicy::Fixed);
     config.retryPolicy.setRetryOnTimeout(true);
-    NetworkDownloadCore downloader(config, nullptr, &mockManager);
+    QWebDownload downloader(config, nullptr, &mockManager);
 
     // First request times out, second succeeds
     mockManager.setResponseDelay(200);  // Longer than timeout
     mockManager.addResponse(QUrl("http://example.com/test"), "success");
 
-    QSignalSpy retryingSpy(&downloader, &NetworkDownloadCore::retrying);
-    QSignalSpy errorSpy(&downloader, &NetworkDownloadCore::error);
+    QSignalSpy retryingSpy(&downloader, &QWebDownload::retrying);
+    QSignalSpy errorSpy(&downloader, &QWebDownload::error);
 
-    downloader.download(QUrl("http://example.com/test"));
+    downloader.get(QUrl("http://example.com/test"));
 
     // Should retry on timeout, then eventually fail (all attempts timeout)
     QVERIFY(errorSpy.wait(2000));
     QVERIFY(retryingSpy.count() >= 1);  // At least one retry
 }
 
-QTEST_MAIN(TestNetworkDownloadCore)
+QTEST_MAIN(TestQWebDownload)
 
-#include "tst_networkdownloadcore.moc"
+#include "tst_qwebdownload.moc"

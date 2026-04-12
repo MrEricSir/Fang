@@ -14,13 +14,13 @@ FeedFetcher::FeedFetcher(QNetworkAccessManager* networkManager, QObject *parent)
     downloader(nullptr),
     permanentRedirect(false)
 {
-    NetworkDownloadConfig config;
+    WebDownloadConfig config;
     config.timeoutMs = 30000;
     config.maxRedirects = 10;
     config.useInactivityTimeout = false;
 
-    downloader = new NetworkDownloadCore(config, this, networkManager);
-    connect(downloader, &NetworkDownloadCore::finishedWithResult,
+    downloader = new QWebDownload(config, this, networkManager);
+    connect(downloader, &QWebDownload::finishedWithResult,
             this, &FeedFetcher::onDownloadResult);
 
     connect(&parseWatcher, &QFutureWatcher<FeedParseResult>::finished,
@@ -43,10 +43,10 @@ void FeedFetcher::parse(const QUrl& url,
         downloader->setRequestHeader("If-Modified-Since", ifModifiedSince.toUtf8());
     }
 
-    downloader->download(url);
+    downloader->get(url);
 }
 
-void FeedFetcher::onDownloadResult(NetworkDownloadResult downloadResult)
+void FeedFetcher::onDownloadResult(WebDownloadResult downloadResult)
 {
     if (!downloadResult.ok()) {
         networkError = downloadResult.networkError;

@@ -13,7 +13,7 @@ class QSimpleStateMachine;
 #include "WebPageGrabber.h"
 #include <QObject>
 
-class BatchDownloadCore;
+class QBatchWebDownload;
 class QNetworkAccessManager;
 
 // Maximum favicon width and/or height to store.
@@ -69,7 +69,7 @@ private slots:
     void onError();
 
     /*!
-        \brief Completion for CHECK_ICONS (from BatchDownloadCore)
+        \brief Completion for CHECK_ICONS (from QBatchWebDownload)
      */
     void onBatchFinished();
 
@@ -88,7 +88,7 @@ private:
     QSimpleStateMachine* machine;
     QList<QUrl> urlsToCheck;
     QList<QPair<QUrl, QImage>> imagesToCheck;
-    BatchDownloadCore* batchDownloader;
+    QBatchWebDownload* batchDownloader;
     WebPageGrabber webGrabber;
     QUrl location;
 };

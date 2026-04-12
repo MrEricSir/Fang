@@ -1,5 +1,5 @@
 #include "FaviconGrabber.h"
-#include "BatchDownloadCore.h"
+#include "QBatchWebDownload.h"
 #include <QSimpleStateMachine/QSimpleStateMachine.h>
 
 #include <QString>
@@ -7,13 +7,13 @@
 #include <QImage>
 #include <QXmlStreamReader>
 
-#include "NetworkUtilities.h"
+#include "WebUtilities.h"
 #include "FangLogging.h"
 
 FaviconGrabber::FaviconGrabber(QObject *parent, QNetworkAccessManager* networkManager) :
     QObject(parent),
     machine(new QSimpleStateMachine(this)),
-    batchDownloader(new BatchDownloadCore(15000, 10, this, networkManager)),
+    batchDownloader(new QBatchWebDownload(15000, 10, this, networkManager)),
     webGrabber(true, 5000, this, networkManager)
 {
     // Set up our state machine.
@@ -24,7 +24,7 @@ FaviconGrabber::FaviconGrabber(QObject *parent, QNetworkAccessManager* networkMa
     machine->addStateChange(-1, GRAB_ERROR, [this]() { onError(); }); // Many errors, one slot.
 
     // Signals!
-    connect(batchDownloader, &BatchDownloadCore::finished, this, &FaviconGrabber::onBatchFinished);
+    connect(batchDownloader, &QBatchWebDownload::finished, this, &FaviconGrabber::onBatchFinished);
     connect(&webGrabber, &WebPageGrabber::ready, this, &FaviconGrabber::onWebGrabberReady);
 }
 
@@ -36,7 +36,7 @@ void FaviconGrabber::find(const QUrl &url)
     machine->start(START);
 
     // Make a list of "root" favicons.
-    QUrl host = NetworkUtilities::getHost(location);
+    QUrl host = WebUtilities::getHost(location);
     const QStringList extensions{"ico", "jpg", "jpeg", "png", "gif"};
 
     // Add each extension to our list.
@@ -53,7 +53,7 @@ void FaviconGrabber::onWebGrabber()
 {
     // Check for favicons embedded in the HTML.
     // We look at the main page rather than the feed.
-    webGrabber.load(NetworkUtilities::getHost(location));
+    webGrabber.load(WebUtilities::getHost(location));
 }
 
 void FaviconGrabber::onCheckIcons()
@@ -64,7 +64,7 @@ void FaviconGrabber::onCheckIcons()
     }
 
     // Start batch download of all favicon candidates.
-    batchDownloader->download(urlsToCheck);
+    batchDownloader->get(urlsToCheck);
 }
 
 void FaviconGrabber::onBatchFinished()
@@ -75,10 +75,10 @@ void FaviconGrabber::onBatchFinished()
     }
 
     // Process batch results.
-    QMap<QUrl, BatchDownloadResult> results = batchDownloader->results();
+    QMap<QUrl, BatchWebDownloadResult> results = batchDownloader->results();
 
     for (auto it = results.constBegin(); it != results.constEnd(); ++it) {
-        const BatchDownloadResult& result = it.value();
+        const BatchWebDownloadResult& result = it.value();
 
         if (result.success && !result.data.isEmpty()) {
             QImage img;

@@ -1,5 +1,5 @@
-#ifndef NETWORKRETRYPOLICY_H
-#define NETWORKRETRYPOLICY_H
+#ifndef WEBRETRYPOLICY_H
+#define WEBRETRYPOLICY_H
 
 #include <QObject>
 #include <QNetworkReply>
@@ -7,7 +7,7 @@
 /*!
     \brief Defines retry behavior.
  */
-class NetworkRetryPolicy
+class WebRetryPolicy
 {
 public:
     enum BackoffStrategy {
@@ -17,16 +17,16 @@ public:
         Fixed         // Same delay every time
     };
 
-    NetworkRetryPolicy();
+    WebRetryPolicy();
 
 
-    NetworkRetryPolicy(int maxRetries, int baseDelay, BackoffStrategy strategy, int maxDelay = 60000);
+    WebRetryPolicy(int maxRetries, int baseDelay, BackoffStrategy strategy, int maxDelay = 60000);
 
 
-    static NetworkRetryPolicy forFeedUpdate();
-    static NetworkRetryPolicy forFavicon();
-    static NetworkRetryPolicy forCritical();
-    static NetworkRetryPolicy noRetry();
+    static WebRetryPolicy forFeedUpdate();
+    static WebRetryPolicy forFavicon();
+    static WebRetryPolicy forCritical();
+    static WebRetryPolicy noRetry();
 
     /*!
         \brief Whether or not we should try, try again.
@@ -75,4 +75,4 @@ private:
     bool shouldRetryOnServerError;
 };
 
-#endif // NETWORKRETRYPOLICY_H
+#endif // WEBRETRYPOLICY_H

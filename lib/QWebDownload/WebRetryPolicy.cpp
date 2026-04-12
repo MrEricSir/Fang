@@ -1,8 +1,8 @@
-#include "NetworkRetryPolicy.h"
+#include "WebRetryPolicy.h"
 #include <algorithm>
 #include <cmath>
 
-NetworkRetryPolicy::NetworkRetryPolicy()
+WebRetryPolicy::WebRetryPolicy()
     : maxNumRetries(0)
     , defaultDelayMs(1000)
     , maxDelayMs(60000)
@@ -14,7 +14,7 @@ NetworkRetryPolicy::NetworkRetryPolicy()
 {
 }
 
-NetworkRetryPolicy::NetworkRetryPolicy(int maxRetries, int baseDelay, BackoffStrategy strategy, int maxDelay)
+WebRetryPolicy::WebRetryPolicy(int maxRetries, int baseDelay, BackoffStrategy strategy, int maxDelay)
     : maxNumRetries(maxRetries)
     , defaultDelayMs(baseDelay)
     , maxDelayMs(maxDelay)
@@ -26,30 +26,30 @@ NetworkRetryPolicy::NetworkRetryPolicy(int maxRetries, int baseDelay, BackoffStr
 {
 }
 
-NetworkRetryPolicy NetworkRetryPolicy::forFeedUpdate()
+WebRetryPolicy WebRetryPolicy::forFeedUpdate()
 {
     // Medium importance: 3 retries with exponential backoff: 2s, 4s, 8s
-    return NetworkRetryPolicy(3, 2000, Exponential, 30000);
+    return WebRetryPolicy(3, 2000, Exponential, 30000);
 }
 
-NetworkRetryPolicy NetworkRetryPolicy::forFavicon()
+WebRetryPolicy WebRetryPolicy::forFavicon()
 {
     // Non-critical: 2 retries with linear backoff: 1s, 2s
-    return NetworkRetryPolicy(2, 1000, Linear, 5000);
+    return WebRetryPolicy(2, 1000, Linear, 5000);
 }
 
-NetworkRetryPolicy NetworkRetryPolicy::forCritical()
+WebRetryPolicy WebRetryPolicy::forCritical()
 {
     // Give it our best shot: 5 retries with fibonacci backoff: 1s, 2s, 3s, 5s, 8s
-    return NetworkRetryPolicy(5, 1000, Fibonacci, 60000);
+    return WebRetryPolicy(5, 1000, Fibonacci, 60000);
 }
 
-NetworkRetryPolicy NetworkRetryPolicy::noRetry()
+WebRetryPolicy WebRetryPolicy::noRetry()
 {
-    return NetworkRetryPolicy(0, 0, Fixed, 0);
+    return WebRetryPolicy(0, 0, Fixed, 0);
 }
 
-bool NetworkRetryPolicy::isRetryable(QNetworkReply::NetworkError error) const
+bool WebRetryPolicy::isRetryable(QNetworkReply::NetworkError error) const
 {
     switch (error) {
     // Network errors
@@ -107,7 +107,7 @@ bool NetworkRetryPolicy::isRetryable(QNetworkReply::NetworkError error) const
     }
 }
 
-int NetworkRetryPolicy::calculateDelay(int attemptNumber) const
+int WebRetryPolicy::calculateDelay(int attemptNumber) const
 {
     if (attemptNumber >= maxNumRetries) {
         return 0;

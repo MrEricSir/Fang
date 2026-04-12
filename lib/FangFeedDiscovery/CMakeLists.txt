@@ -17,16 +17,8 @@ add_library(FangFeedDiscovery STATIC
     NewsSitemapSynthesizer.h
     SitemapParser.cpp
     SitemapParser.h
-    BatchDownloadCore.cpp
-    BatchDownloadCore.h
-    NetworkDownloadCore.cpp
-    NetworkDownloadCore.h
-    NetworkRetryPolicy.cpp
-    NetworkRetryPolicy.h
     BrowserNetworkAccessManager.cpp
     BrowserNetworkAccessManager.h
-    NetworkUtilities.cpp
-    NetworkUtilities.h
 )
 
 # QSimpleStateMachine is header-only with Q_OBJECT. Generate its MOC exactly once
@@ -46,6 +38,7 @@ target_include_directories(FangFeedDiscovery PUBLIC
 )
 
 target_link_libraries(FangFeedDiscovery PUBLIC
+    QWebDownload
     FangFeedParser
     Qt6::Concurrent
     Qt6::Core

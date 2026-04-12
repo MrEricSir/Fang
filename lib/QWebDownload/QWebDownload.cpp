@@ -1,9 +1,9 @@
-#include "NetworkDownloadCore.h"
-#include "BrowserNetworkAccessManager.h"
+#include "QWebDownload.h"
+#include "WebDownloadLogging.h"
 
-#include "FeedDiscoveryLogging.h"
+#include <QNetworkAccessManager>
 
-QByteArray NetworkDownloadResult::responseHeader(const QByteArray& name) const
+QByteArray WebDownloadResult::responseHeader(const QByteArray& name) const
 {
     for (const auto& pair : headers) {
         if (pair.first.toLower() == name.toLower()) {
@@ -13,11 +13,11 @@ QByteArray NetworkDownloadResult::responseHeader(const QByteArray& name) const
     return QByteArray();
 }
 
-NetworkDownloadCore::NetworkDownloadCore(NetworkDownloadConfig config,
-                                          QObject* parent,
-                                          QNetworkAccessManager* networkManager)
+QWebDownload::QWebDownload(WebDownloadConfig config,
+                           QObject* parent,
+                           QNetworkAccessManager* networkManager)
     : QObject(parent)
-    , manager(networkManager ? networkManager : new BrowserNetworkAccessManager(this))
+    , manager(networkManager ? networkManager : new QNetworkAccessManager(this))
     , config(config)
     , currentReply(nullptr)
     , redirectCount(0)
@@ -28,17 +28,17 @@ NetworkDownloadCore::NetworkDownloadCore(NetworkDownloadConfig config,
     inactivityTimer.setSingleShot(true);
     retryTimer.setSingleShot(true);
 
-    connect(manager, &QNetworkAccessManager::finished, this, &NetworkDownloadCore::onRequestFinished);
-    connect(&inactivityTimer, &QTimer::timeout, this, &NetworkDownloadCore::onTimeout);
-    connect(&retryTimer, &QTimer::timeout, this, &NetworkDownloadCore::onRetryTimer);
+    connect(manager, &QNetworkAccessManager::finished, this, &QWebDownload::onRequestFinished);
+    connect(&inactivityTimer, &QTimer::timeout, this, &QWebDownload::onTimeout);
+    connect(&retryTimer, &QTimer::timeout, this, &QWebDownload::onRetryTimer);
 }
 
-NetworkDownloadCore::~NetworkDownloadCore()
+QWebDownload::~QWebDownload()
 {
     // Disconnect from manager to avoid receiving signals during destruction. This prevents
     // signals from being emitted on the object as its being destructed.
     if (manager) {
-        disconnect(manager, &QNetworkAccessManager::finished, this, &NetworkDownloadCore::onRequestFinished);
+        disconnect(manager, &QNetworkAccessManager::finished, this, &QWebDownload::onRequestFinished);
     }
 
     retryTimer.stop();
@@ -50,7 +50,7 @@ NetworkDownloadCore::~NetworkDownloadCore()
     }
 }
 
-void NetworkDownloadCore::download(const QUrl& url)
+void QWebDownload::get(const QUrl& url)
 {
     // Reset counters for new download.
     redirectCount = 0;
@@ -63,10 +63,10 @@ void NetworkDownloadCore::download(const QUrl& url)
     // Stop any pending retries.
     retryTimer.stop();
 
-    downloadInternal(url);
+    getInternal(url);
 }
 
-void NetworkDownloadCore::downloadInternal(const QUrl& url)
+void QWebDownload::getInternal(const QUrl& url)
 {
     // Clean up existing reply if needed.
     if (currentReply) {
@@ -83,7 +83,7 @@ void NetworkDownloadCore::downloadInternal(const QUrl& url)
 
     // Validate URL.
     if (url.isRelative()) {
-        NetworkDownloadResult result;
+        WebDownloadResult result;
         result.url = originalUrl;
         result.networkError = QNetworkReply::ProtocolInvalidOperationError;
         result.errorString = "Relative URLs are not allowed";
@@ -110,12 +110,12 @@ void NetworkDownloadCore::downloadInternal(const QUrl& url)
     // Connect progress signal for inactivity timeout reset.
     if (config.useInactivityTimeout) {
         connect(currentReply, &QNetworkReply::downloadProgress,
-                this, &NetworkDownloadCore::onDownloadProgress);
+                this, &QWebDownload::onDownloadProgress);
         inactivityTimer.start(config.timeoutMs);
     }
 }
 
-void NetworkDownloadCore::abort()
+void QWebDownload::abort()
 {
     inactivityTimer.stop();
     retryTimer.stop();
@@ -130,7 +130,7 @@ void NetworkDownloadCore::abort()
     }
 }
 
-void NetworkDownloadCore::onRequestFinished(QNetworkReply* reply)
+void QWebDownload::onRequestFinished(QNetworkReply* reply)
 {
     // Sanity check: Only process *our* reply.
     if (reply != currentReply) {
@@ -143,7 +143,7 @@ void NetworkDownloadCore::onRequestFinished(QNetworkReply* reply)
     if (reply->error() != QNetworkReply::NoError) {
         lastError = reply->error();
         lastErrorString = reply->errorString();
-        qCDebug(logFeedDiscovery) << "NetworkDownloadCore error:" << lastErrorString;
+        qCDebug(logWebDownload) << "QWebDownload error:" << lastErrorString;
 
         // Clean up the reply.
         currentReply = nullptr;
@@ -157,7 +157,7 @@ void NetworkDownloadCore::onRequestFinished(QNetworkReply* reply)
         }
 
         // No more retries - emit error.
-        NetworkDownloadResult result;
+        WebDownloadResult result;
         result.url = originalUrl;
         result.networkError = lastError;
         result.errorString = lastErrorString;
@@ -173,7 +173,7 @@ void NetworkDownloadCore::onRequestFinished(QNetworkReply* reply)
             currentReply = nullptr;  // Clean up before emitting signal.
             reply->deleteLater();
 
-            NetworkDownloadResult result;
+            WebDownloadResult result;
             result.url = originalUrl;
             result.networkError = QNetworkReply::TooManyRedirectsError;
             result.errorString = "Maximum HTTP redirects exceeded";
@@ -195,7 +195,7 @@ void NetworkDownloadCore::onRequestFinished(QNetworkReply* reply)
             redirectUrl = reply->url().resolved(redirectUrl);
         }
 
-        downloadInternal(redirectUrl);
+        getInternal(redirectUrl);
         return;
     }
 
@@ -205,7 +205,7 @@ void NetworkDownloadCore::onRequestFinished(QNetworkReply* reply)
     QByteArray data = reply->readAll();
 
     // Build result with response metadata.
-    NetworkDownloadResult downloadResult;
+    WebDownloadResult downloadResult;
     downloadResult.url = finalUrl;
     downloadResult.data = data;
     downloadResult.statusCode = statusCode;
@@ -223,7 +223,7 @@ void NetworkDownloadCore::onRequestFinished(QNetworkReply* reply)
     emit finished(finalUrl, data);
 }
 
-void NetworkDownloadCore::onDownloadProgress(qint64 bytesReceived, qint64 bytesTotal)
+void QWebDownload::onDownloadProgress(qint64 bytesReceived, qint64 bytesTotal)
 {
     // Reset inactivity timer on progress.
     inactivityTimer.start(config.timeoutMs);
@@ -234,7 +234,7 @@ void NetworkDownloadCore::onDownloadProgress(qint64 bytesReceived, qint64 bytesT
     }
 }
 
-void NetworkDownloadCore::onTimeout()
+void QWebDownload::onTimeout()
 {
     if (currentReply) {
         // Clear currentReply BEFORE aborting to prevent onRequestFinished from processing.
@@ -255,7 +255,7 @@ void NetworkDownloadCore::onTimeout()
         }
 
         // No more retries - emit error.
-        NetworkDownloadResult result;
+        WebDownloadResult result;
         result.url = originalUrl;
         result.networkError = lastError;
         result.errorString = lastErrorString;
@@ -264,28 +264,28 @@ void NetworkDownloadCore::onTimeout()
     }
 }
 
-void NetworkDownloadCore::setRequestHeader(const QByteArray& name, const QByteArray& value)
+void QWebDownload::setRequestHeader(const QByteArray& name, const QByteArray& value)
 {
     requestHeaders.append({name, value});
 }
 
-void NetworkDownloadCore::clearRequestHeaders()
+void QWebDownload::clearRequestHeaders()
 {
     requestHeaders.clear();
 }
 
-void NetworkDownloadCore::scheduleRetry()
+void QWebDownload::scheduleRetry()
 {
     int delay = config.retryPolicy.calculateDelay(currentAttemptCount);
-    qCDebug(logFeedDiscovery) << "NetworkDownloadCore: scheduling retry" << (currentAttemptCount + 1)
+    qCDebug(logWebDownload) << "QWebDownload: scheduling retry" << (currentAttemptCount + 1)
                         << "in" << delay << "ms for" << originalUrl;
     emit retrying(currentAttemptCount + 1, delay);
     retryTimer.start(delay);
 }
 
-void NetworkDownloadCore::onRetryTimer()
+void QWebDownload::onRetryTimer()
 {
     currentAttemptCount++;
     redirectCount = 0; // Reset redirect count for new attempt.
-    downloadInternal(originalUrl);
+    getInternal(originalUrl);
 }

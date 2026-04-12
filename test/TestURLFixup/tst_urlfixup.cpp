@@ -1,6 +1,6 @@
 #include <QtTest>
 
-#include "NetworkUtilities.h"
+#include "WebUtilities.h"
 
 
 class TestURLFixup : public QObject
@@ -25,7 +25,7 @@ void TestURLFixup::testFixup()
     QFETCH(QUrl, baseURL);
     QFETCH(QString, expectedResult);
 
-    QString result = NetworkUtilities::urlFixup(url, baseURL);
+    QString result = WebUtilities::urlFixup(url, baseURL);
 
     QCOMPARE(result, expectedResult);
 }

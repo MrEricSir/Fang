@@ -9,11 +9,11 @@
 #include <QStringList>
 #include <QUrl>
 
-#include "BatchDownloadCore.h"
+#include "QBatchWebDownload.h"
 #include "RawFeed.h"
 #include "SitemapParser.h"
 
-class NetworkDownloadCore;
+class QWebDownload;
 
 class NewsSitemapSynthesizer : public QObject
 {
@@ -104,7 +104,7 @@ private:
 
     // Candidate probing
     QList<QUrl> candidateUrls;
-    NetworkDownloadCore* downloader;
+    QWebDownload* downloader;
 
     // Sub-sitemap iteration (for sitemapindex responses)
     QList<SubSitemap> pendingSubSitemaps;
@@ -116,7 +116,7 @@ private:
     QUrl feedSourceUrl; // The actual sitemap URL that provided the entries
 
     // Description enrichment
-    BatchDownloadCore* descriptionDownloader;
+    QBatchWebDownload* descriptionDownloader;
     QMap<QUrl, QString> fetchedDescriptions;
 };
 

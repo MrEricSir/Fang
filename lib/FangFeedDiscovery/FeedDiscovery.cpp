@@ -5,7 +5,7 @@
 #include <QXmlStreamReader>
 #include <QSet>
 #include <algorithm>
-#include "NetworkUtilities.h"
+#include "WebUtilities.h"
 #include "FeedSource.h"
 #include "FeedFetchResult.h"
 #include "FeedFetcher.h"
@@ -86,7 +86,7 @@ void FeedDiscovery::checkFeed(QString sURL)
     _sortedFeedURLs.clear();
     machine->start(CHECK_FEED);
 
-    QUrl url = NetworkUtilities::urlFixup(sURL);
+    QUrl url = WebUtilities::urlFixup(sURL);
     
     // Make sure the location isn't a "relative" (and therefore severely invalid) path.
     if (url.isRelative() || url.scheme().isEmpty()) {

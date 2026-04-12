@@ -1,5 +1,5 @@
-#ifndef BATCHDOWNLOADCORE_H
-#define BATCHDOWNLOADCORE_H
+#ifndef QBATCHWEBDOWNLOAD_H
+#define QBATCHWEBDOWNLOAD_H
 
 #include <QObject>
 #include <QUrl>
@@ -7,15 +7,14 @@
 #include <QMap>
 #include <QList>
 
-#include <QObject>
-#include "NetworkDownloadCore.h"
+#include "QWebDownload.h"
 
 class QNetworkAccessManager;
 
 /*!
     \brief Result of a single download in a batch.
  */
-struct BatchDownloadResult {
+struct BatchWebDownloadResult {
     QByteArray data;        // Downloaded content
     QUrl finalUrl;          // Final URL after redirects
     bool success = false;   // Whether download succeeded
@@ -23,11 +22,11 @@ struct BatchDownloadResult {
 };
 
 /*!
-    \brief BatchDownloadCore downloads multiple URLs in parallel by wrapping NetworkDownloadCore.
+    \brief QBatchWebDownload downloads multiple URLs in parallel by wrapping QWebDownload.
 
-    Use case: You need to download multiple things and wait for all the results before proeeding.
+    Use case: You need to download multiple things and wait for all the results before proceeding.
  */
-class BatchDownloadCore : public QObject
+class QBatchWebDownload : public QObject
 {
     Q_OBJECT
 public:
@@ -37,16 +36,16 @@ public:
         \param parent
         \param networkManager If specified, caller is responsible for its lifecycle.
      */
-    explicit BatchDownloadCore(int timeoutMs = 30000,
+    explicit QBatchWebDownload(int timeoutMs = 30000,
                                int maxRedirects = 10,
                                QObject* parent = nullptr,
                                QNetworkAccessManager* networkManager = nullptr);
-    virtual ~BatchDownloadCore();
+    virtual ~QBatchWebDownload();
 
     /*!
         Start downloading a list of URLs, emits finished() when done.
      */
-    void download(const QList<QUrl>& urls);
+    void get(const QList<QUrl>& urls);
 
     /*!
         Abort all pending downloads.
@@ -56,7 +55,7 @@ public:
     /*!
         Get the results (after finished() is emitted.)
      */
-    inline QMap<QUrl, BatchDownloadResult> results() const { return _results; }
+    inline QMap<QUrl, BatchWebDownloadResult> results() const { return _results; }
 
 signals:
     /*!
@@ -80,11 +79,11 @@ private:
     void checkCompletion();
 
     QNetworkAccessManager* manager;
-    NetworkDownloadConfig config;
+    WebDownloadConfig config;
 
     int totalCount;
-    QMap<QUrl, BatchDownloadResult> _results;
-    QMap<NetworkDownloadCore*, QUrl> downloaders;
+    QMap<QUrl, BatchWebDownloadResult> _results;
+    QMap<QWebDownload*, QUrl> downloaders;
 };
 
-#endif // BATCHDOWNLOADCORE_H
+#endif // QBATCHWEBDOWNLOAD_H

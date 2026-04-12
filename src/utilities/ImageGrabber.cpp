@@ -1,5 +1,5 @@
 #include "ImageGrabber.h"
-#include "BatchDownloadCore.h"
+#include "QBatchWebDownload.h"
 
 #include <QMimeDatabase>
 #include <QSvgRenderer>
@@ -7,9 +7,9 @@
 
 ImageGrabber::ImageGrabber(QObject *parent, QNetworkAccessManager* networkManager) :
     QObject(parent),
-    batchDownloader(new BatchDownloadCore(30000, 10, this, networkManager))
+    batchDownloader(new QBatchWebDownload(30000, 10, this, networkManager))
 {
-    connect(batchDownloader, &BatchDownloadCore::finished,
+    connect(batchDownloader, &QBatchWebDownload::finished,
             this, &ImageGrabber::onBatchFinished);
     connect(&processWatcher, &QFutureWatcher<void>::finished,
             this, &ImageGrabber::finished);
@@ -25,14 +25,14 @@ void ImageGrabber::fetchUrl(const QUrl &url)
 void ImageGrabber::fetchUrls(const QList<QUrl> &urls)
 {
     results.clear();
-    batchDownloader->download(urls);
+    batchDownloader->get(urls);
 }
 
 void ImageGrabber::onBatchFinished()
 {
     // Capture batch results on the main thread, then process on a background
     // thread to avoid blocking the UI during image decoding and MIME detection.
-    QMap<QUrl, BatchDownloadResult> batchResults = batchDownloader->results();
+    QMap<QUrl, BatchWebDownloadResult> batchResults = batchDownloader->results();
 
     // Fast path: no images to process.
     if (batchResults.isEmpty()) {
@@ -45,7 +45,7 @@ void ImageGrabber::onBatchFinished()
 
         for (auto it = batchResults.constBegin(); it != batchResults.constEnd(); ++it) {
             const QUrl& url = it.key();
-            const BatchDownloadResult& batchResult = it.value();
+            const BatchWebDownloadResult& batchResult = it.value();
 
             ImageData imageData;
 

@@ -1,26 +1,26 @@
-#include "NetworkUtilities.h"
+#include "WebUtilities.h"
 
 #include <QNetworkDiskCache>
 #include <QStandardPaths>
 
 
-NetworkUtilities::NetworkUtilities()
+WebUtilities::WebUtilities()
 {
 }
 
-QUrl NetworkUtilities::getHost(const QUrl& url) {
+QUrl WebUtilities::getHost(const QUrl& url) {
     QUrl ret = url;
     ret.setPath("");
     ret.setQuery("");
     QString sUrl = ret.toString();
     if (sUrl.endsWith("?"))
         sUrl = sUrl.remove(sUrl.length() - 1, 1);
-    
+
     ret.setUrl(sUrl);
     return ret;
 }
 
-void NetworkUtilities::addCache(QNetworkAccessManager *manager)
+void WebUtilities::addCache(QNetworkAccessManager *manager)
 {
     // Set default cache dir.
     QNetworkDiskCache* diskCache = new QNetworkDiskCache(manager);
@@ -30,25 +30,25 @@ void NetworkUtilities::addCache(QNetworkAccessManager *manager)
         manager->setCache(diskCache);
 }
 
-void NetworkUtilities::useCache(QNetworkRequest* request)
+void WebUtilities::useCache(QNetworkRequest* request)
 {
     // This SHOULD be the default, but just in case.
     request->setAttribute(QNetworkRequest::CacheLoadControlAttribute,
                           QNetworkRequest::PreferNetwork);
 }
 
-void NetworkUtilities::fakeBrowserHeaders(QNetworkRequest* request)
+void WebUtilities::fakeBrowserHeaders(QNetworkRequest* request)
 {
     // Mimic Chromium to avoid servers that block non-browser User-Agents.
     request->setHeader(QNetworkRequest::UserAgentHeader,
                       "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36");
-    
+
     // Required for blogs.gnome.org.
     request->setRawHeader("Accept",
                           "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
 }
 
-QString NetworkUtilities::urlFixup(const QString &url, QUrl baseURL)
+QString WebUtilities::urlFixup(const QString &url, QUrl baseURL)
 {
 
     QUrl qURL(url);

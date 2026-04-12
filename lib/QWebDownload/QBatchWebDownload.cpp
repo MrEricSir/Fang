@@ -1,26 +1,26 @@
-#include "BatchDownloadCore.h"
-#include "BrowserNetworkAccessManager.h"
+#include "QBatchWebDownload.h"
 
+#include <QNetworkAccessManager>
 #include <QSet>
 
-BatchDownloadCore::BatchDownloadCore(int timeoutMs,
+QBatchWebDownload::QBatchWebDownload(int timeoutMs,
                                      int maxRedirects,
                                      QObject* parent,
                                      QNetworkAccessManager* networkManager)
     : QObject(parent)
-    , manager(networkManager ? networkManager : new BrowserNetworkAccessManager(this))
+    , manager(networkManager ? networkManager : new QNetworkAccessManager(this))
     , totalCount(0)
 {
     config.timeoutMs = timeoutMs;
     config.maxRedirects = maxRedirects;
 }
 
-BatchDownloadCore::~BatchDownloadCore()
+QBatchWebDownload::~QBatchWebDownload()
 {
     abort();
 }
 
-void BatchDownloadCore::download(const QList<QUrl>& urls)
+void QBatchWebDownload::get(const QList<QUrl>& urls)
 {
     // Clear previous.
     abort();
@@ -45,25 +45,25 @@ void BatchDownloadCore::download(const QList<QUrl>& urls)
 
     totalCount = uniqueUrls.size();
 
-    // Create a NetworkDownloadCore for each URL.
+    // Create a QWebDownload for each URL.
     for (const QUrl& url : uniqueUrls) {
-        auto* downloader = new NetworkDownloadCore(config, nullptr, manager);
+        auto* downloader = new QWebDownload(config, nullptr, manager);
 
-        connect(downloader, &NetworkDownloadCore::finished,
-                this, &BatchDownloadCore::onDownloadFinished);
-        connect(downloader, &NetworkDownloadCore::error,
-                this, &BatchDownloadCore::onDownloadError);
+        connect(downloader, &QWebDownload::finished,
+                this, &QBatchWebDownload::onDownloadFinished);
+        connect(downloader, &QWebDownload::error,
+                this, &QBatchWebDownload::onDownloadError);
 
         downloaders[downloader] = url;
-        downloader->download(url);
+        downloader->get(url);
     }
 }
 
-void BatchDownloadCore::abort()
+void QBatchWebDownload::abort()
 {
     // STOP! and delete all downloaders.
     for (auto it = downloaders.begin(); it != downloaders.end(); ++it) {
-        NetworkDownloadCore* downloader = it.key();
+        QWebDownload* downloader = it.key();
         downloader->abort();
         delete downloader;
     }
@@ -71,9 +71,9 @@ void BatchDownloadCore::abort()
     downloaders.clear();
 }
 
-void BatchDownloadCore::onDownloadFinished(const QUrl& finalUrl, const QByteArray& data)
+void QBatchWebDownload::onDownloadFinished(const QUrl& finalUrl, const QByteArray& data)
 {
-    auto* downloader = qobject_cast<NetworkDownloadCore*>(sender());
+    auto* downloader = qobject_cast<QWebDownload*>(sender());
     if (!downloader || !downloaders.contains(downloader)) {
         return;
     }
@@ -81,7 +81,7 @@ void BatchDownloadCore::onDownloadFinished(const QUrl& finalUrl, const QByteArra
     QUrl originalUrl = downloaders.take(downloader);
     downloader->deleteLater();
 
-    BatchDownloadResult result;
+    BatchWebDownloadResult result;
     result.success = true;
     result.data = data;
     result.finalUrl = finalUrl;
@@ -92,11 +92,11 @@ void BatchDownloadCore::onDownloadFinished(const QUrl& finalUrl, const QByteArra
     checkCompletion();
 }
 
-void BatchDownloadCore::onDownloadError(const QUrl& url, const QString& errorString)
+void QBatchWebDownload::onDownloadError(const QUrl& url, const QString& errorString)
 {
     Q_UNUSED(url);
 
-    auto* downloader = qobject_cast<NetworkDownloadCore*>(sender());
+    auto* downloader = qobject_cast<QWebDownload*>(sender());
     if (!downloader || !downloaders.contains(downloader)) {
         return;
     }
@@ -104,7 +104,7 @@ void BatchDownloadCore::onDownloadError(const QUrl& url, const QString& errorStr
     QUrl originalUrl = downloaders.take(downloader);
     downloader->deleteLater();
 
-    BatchDownloadResult result;
+    BatchWebDownloadResult result;
     result.success = false;
     result.errorString = errorString;
 
@@ -114,7 +114,7 @@ void BatchDownloadCore::onDownloadError(const QUrl& url, const QString& errorStr
     checkCompletion();
 }
 
-void BatchDownloadCore::checkCompletion()
+void QBatchWebDownload::checkCompletion()
 {
     if (_results.size() == totalCount) {
         emit finished();

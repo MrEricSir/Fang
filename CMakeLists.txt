@@ -106,8 +106,9 @@ add_subdirectory(external/QObjectLeakTracker)
 add_subdirectory(external/QMLRearrangeableTreeView)
 set(QML_IMPORT_PATH "${CMAKE_BINARY_DIR}/external/QMLRearrangeableTreeView" CACHE STRING "" FORCE)
 
-# Feed parsing and discovery libraries
+# Feed parsing, network core, and discovery libraries
 add_subdirectory(lib/FangFeedParser)
+add_subdirectory(lib/QWebDownload)
 add_subdirectory(lib/FangFeedDiscovery)
 
 # Image cache library
@@ -385,6 +386,8 @@ if(ENABLE_COVERAGE)
         target_link_options(Fang PRIVATE --coverage)
         target_compile_options(FangFeedParser PRIVATE --coverage -O0 -g)
         target_link_options(FangFeedParser PRIVATE --coverage)
+        target_compile_options(QWebDownload PRIVATE --coverage -O0 -g)
+        target_link_options(QWebDownload PRIVATE --coverage)
         target_compile_options(FangFeedDiscovery PRIVATE --coverage -O0 -g)
         target_link_options(FangFeedDiscovery PRIVATE --coverage)
 

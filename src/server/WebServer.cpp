@@ -12,7 +12,7 @@
 #include "../utilities/ErrorHandling.h"
 #include "../utilities/FangLogging.h"
 #include "QImageCache.h"
-#include "NetworkUtilities.h"
+#include "WebUtilities.h"
 
 WebServer::WebServer(FangApp* appInstance, QObject *parent) :
     QObject(parent),
@@ -46,7 +46,7 @@ WebServer::WebServer(FangApp* appInstance, QObject *parent) :
         QString url = json.value("url").toString();
         qCDebug(logServer) << "Open URL:" << url;
 
-        QString urlFixed = NetworkUtilities::urlFixup(url);
+        QString urlFixed = WebUtilities::urlFixup(url);
         QDesktopServices::openUrl(QUrl(urlFixed));
         return "";
     });

@@ -6,7 +6,7 @@
 #include <QStack>
 
 #include "QImageCache.h"
-#include "NetworkUtilities.h"
+#include "WebUtilities.h"
 
 // Strings.
 #define S_WIDTH "width"
@@ -163,7 +163,7 @@ QString HTMLSanitizer::sanitize(const QString &document, QSet<QUrl> &imageURLs)
 
                     // Image tags.
                     if (tagName == S_IMG && xml.attributes().hasAttribute(S_SRC)) {
-                        QString imgSrc = NetworkUtilities::urlFixup(xml.attributes().value(S_SRC).toString());
+                        QString imgSrc = WebUtilities::urlFixup(xml.attributes().value(S_SRC).toString());
                         writer.writeAttribute(S_SRC, imgSrc);
 
                         // WordPress emoji: class="wp-smiley" images are inline emoji

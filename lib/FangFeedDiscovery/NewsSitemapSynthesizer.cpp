@@ -1,5 +1,5 @@
 #include "NewsSitemapSynthesizer.h"
-#include "NetworkDownloadCore.h"
+#include "QWebDownload.h"
 #include "PageMetadataExtractor.h"
 #include "WebPageGrabber.h"
 #include "FeedDiscoveryLogging.h"
@@ -21,12 +21,12 @@ NewsSitemapSynthesizer::NewsSitemapSynthesizer(QObject* parent)
     , state(IDLE)
     , _hasError(false)
     , _result(nullptr)
-    , downloader(new NetworkDownloadCore({}, this, nullptr))
+    , downloader(new QWebDownload({}, this, nullptr))
     , descriptionDownloader(nullptr)
 {
-    connect(downloader, &NetworkDownloadCore::finished,
+    connect(downloader, &QWebDownload::finished,
             this, &NewsSitemapSynthesizer::onDownloadFinished);
-    connect(downloader, &NetworkDownloadCore::error,
+    connect(downloader, &QWebDownload::error,
             this, &NewsSitemapSynthesizer::onDownloadError);
 }
 
@@ -87,7 +87,7 @@ void NewsSitemapSynthesizer::fetchRobotsTxt()
     qCDebug(logFeedDiscovery) << "NewsSitemapSynthesizer: fetching" << robotsUrl;
 
     state = FETCHING_ROBOTS_TXT;
-    downloader->download(robotsUrl);
+    downloader->get(robotsUrl);
 }
 
 QList<QUrl> NewsSitemapSynthesizer::parseRobotsSitemaps(const QString& robotsTxt,
@@ -212,7 +212,7 @@ void NewsSitemapSynthesizer::tryNextCandidate()
     qCDebug(logFeedDiscovery) << "NewsSitemapSynthesizer: trying" << url;
 
     state = FETCHING_CANDIDATE;
-    downloader->download(url);
+    downloader->get(url);
 }
 
 void NewsSitemapSynthesizer::handleCandidateResponse(const QUrl& url, const QByteArray& data)
@@ -294,7 +294,7 @@ void NewsSitemapSynthesizer::tryNextSubSitemap()
     qCDebug(logFeedDiscovery) << "NewsSitemapSynthesizer: trying sub-sitemap" << sub.url;
 
     state = FETCHING_SUB_SITEMAP;
-    downloader->download(sub.url);
+    downloader->get(sub.url);
 }
 
 void NewsSitemapSynthesizer::handleSubSitemapResponse(const QUrl& url, const QByteArray& data)
@@ -466,10 +466,10 @@ void NewsSitemapSynthesizer::fetchDescriptions()
         urls.append(entry.url);
     }
 
-    descriptionDownloader = new BatchDownloadCore(10000, 5, this);
-    connect(descriptionDownloader, &BatchDownloadCore::finished,
+    descriptionDownloader = new QBatchWebDownload(10000, 5, this);
+    connect(descriptionDownloader, &QBatchWebDownload::finished,
             this, &NewsSitemapSynthesizer::onDescriptionsReady);
-    descriptionDownloader->download(urls);
+    descriptionDownloader->get(urls);
 }
 
 void NewsSitemapSynthesizer::onDescriptionsReady()
