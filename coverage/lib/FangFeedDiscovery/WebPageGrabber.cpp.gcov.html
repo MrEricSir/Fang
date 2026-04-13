@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-04-10 03:49:42</td>
+            <td class="headerValue">2026-04-13 06:22:21</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">92.3&nbsp;%</td>
@@ -61,7 +61,7 @@
 <pre class="sourceHeading">            Line data    Source code</pre>
 <pre class="source">
 <span id="L1"><span class="lineNum">       1</span>              : #include &quot;WebPageGrabber.h&quot;</span>
-<span id="L2"><span class="lineNum">       2</span>              : #include &quot;NetworkDownloadCore.h&quot;</span>
+<span id="L2"><span class="lineNum">       2</span>              : #include &quot;QWebDownload.h&quot;</span>
 <span id="L3"><span class="lineNum">       3</span>              : #include &lt;QXmlStreamReader&gt;</span>
 <span id="L4"><span class="lineNum">       4</span>              : #include &lt;memory&gt;</span>
 <span id="L5"><span class="lineNum">       5</span>              : </span>
@@ -91,11 +91,11 @@
 <span id="L29"><span class="lineNum">      29</span> <span class="tlaGNC">         117 :     error(true),</span></span>
 <span id="L30"><span class="lineNum">      30</span> <span class="tlaGNC">         117 :     done(false)</span></span>
 <span id="L31"><span class="lineNum">      31</span>              : {</span>
-<span id="L32"><span class="lineNum">      32</span> <span class="tlaGNC">         117 :     NetworkDownloadConfig config;</span></span>
+<span id="L32"><span class="lineNum">      32</span> <span class="tlaGNC">         117 :     WebDownloadConfig config;</span></span>
 <span id="L33"><span class="lineNum">      33</span> <span class="tlaGNC">         117 :     config.timeoutMs = timeoutMS;</span></span>
 <span id="L34"><span class="lineNum">      34</span> <span class="tlaGNC">         117 :     config.maxRedirects = 10;</span></span>
 <span id="L35"><span class="lineNum">      35</span> <span class="tlaGNC">         117 :     config.useInactivityTimeout = true;</span></span>
-<span id="L36"><span class="lineNum">      36</span> <span class="tlaGNC">         117 :     core = new NetworkDownloadCore(config, this, networkManager);</span></span>
+<span id="L36"><span class="lineNum">      36</span> <span class="tlaGNC">         117 :     core = new QWebDownload(config, this, networkManager);</span></span>
 <span id="L37"><span class="lineNum">      37</span> <span class="tlaGNC">         117 :     init();</span></span>
 <span id="L38"><span class="lineNum">      38</span> <span class="tlaGNC">         117 : }</span></span>
 <span id="L39"><span class="lineNum">      39</span>              : </span>
@@ -107,11 +107,11 @@
 <span id="L45"><span class="lineNum">      45</span> <span class="tlaGNC">          41 :     error(true),</span></span>
 <span id="L46"><span class="lineNum">      46</span> <span class="tlaGNC">          41 :     done(false)</span></span>
 <span id="L47"><span class="lineNum">      47</span>              : {</span>
-<span id="L48"><span class="lineNum">      48</span> <span class="tlaGNC">          41 :     NetworkDownloadConfig config;</span></span>
+<span id="L48"><span class="lineNum">      48</span> <span class="tlaGNC">          41 :     WebDownloadConfig config;</span></span>
 <span id="L49"><span class="lineNum">      49</span> <span class="tlaGNC">          41 :     config.timeoutMs = defaultTimeoutMs;</span></span>
 <span id="L50"><span class="lineNum">      50</span> <span class="tlaGNC">          41 :     config.maxRedirects = 10;</span></span>
 <span id="L51"><span class="lineNum">      51</span> <span class="tlaGNC">          41 :     config.useInactivityTimeout = true;</span></span>
-<span id="L52"><span class="lineNum">      52</span> <span class="tlaGNC">          41 :     core = new NetworkDownloadCore(config, this, nullptr);</span></span>
+<span id="L52"><span class="lineNum">      52</span> <span class="tlaGNC">          41 :     core = new QWebDownload(config, this, nullptr);</span></span>
 <span id="L53"><span class="lineNum">      53</span> <span class="tlaGNC">          41 :     init();</span></span>
 <span id="L54"><span class="lineNum">      54</span> <span class="tlaGNC">          41 : }</span></span>
 <span id="L55"><span class="lineNum">      55</span>              : </span>
@@ -137,7 +137,7 @@
 <span id="L75"><span class="lineNum">      75</span> <span class="tlaGNC">           7 : void WebPageGrabber::loadInternal(const QUrl&amp; url)</span></span>
 <span id="L76"><span class="lineNum">      76</span>              : {</span>
 <span id="L77"><span class="lineNum">      77</span> <span class="tlaGNC">           7 :     originalUrl = url;</span></span>
-<span id="L78"><span class="lineNum">      78</span> <span class="tlaGNC">           7 :     core-&gt;download(url);</span></span>
+<span id="L78"><span class="lineNum">      78</span> <span class="tlaGNC">           7 :     core-&gt;get(url);</span></span>
 <span id="L79"><span class="lineNum">      79</span> <span class="tlaGNC">           7 : }</span></span>
 <span id="L80"><span class="lineNum">      80</span>              : </span>
 <span id="L81"><span class="lineNum">      81</span> <span class="tlaGNC">          76 : QString *WebPageGrabber::loadInternal(const QString&amp; htmlString, bool handleRefresh)</span></span>
@@ -313,8 +313,8 @@
 <span id="L251"><span class="lineNum">     251</span>              : </span>
 <span id="L252"><span class="lineNum">     252</span> <span class="tlaGNC">         158 : void WebPageGrabber::init()</span></span>
 <span id="L253"><span class="lineNum">     253</span>              : {</span>
-<span id="L254"><span class="lineNum">     254</span> <span class="tlaGNC">         158 :     connect(core, &amp;NetworkDownloadCore::error, this, &amp;WebPageGrabber::onDownloadError);</span></span>
-<span id="L255"><span class="lineNum">     255</span> <span class="tlaGNC">         158 :     connect(core, &amp;NetworkDownloadCore::finished, this, &amp;WebPageGrabber::onDownloadFinished);</span></span>
+<span id="L254"><span class="lineNum">     254</span> <span class="tlaGNC">         158 :     connect(core, &amp;QWebDownload::error, this, &amp;WebPageGrabber::onDownloadError);</span></span>
+<span id="L255"><span class="lineNum">     255</span> <span class="tlaGNC">         158 :     connect(core, &amp;QWebDownload::finished, this, &amp;WebPageGrabber::onDownloadFinished);</span></span>
 <span id="L256"><span class="lineNum">     256</span> <span class="tlaGNC">         158 : }</span></span>
 <span id="L257"><span class="lineNum">     257</span>              : </span>
 <span id="L258"><span class="lineNum">     258</span> <span class="tlaUNC tlaBgUNC">           0 : QString WebPageGrabber::htmlToXhtml(const QByteArray&amp; html)</span></span>

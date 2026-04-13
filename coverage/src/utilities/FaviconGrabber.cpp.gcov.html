@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-04-10 03:49:42</td>
+            <td class="headerValue">2026-04-13 06:22:21</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryMed">85.7&nbsp;%</td>
@@ -61,7 +61,7 @@
 <pre class="sourceHeading">            Line data    Source code</pre>
 <pre class="source">
 <span id="L1"><span class="lineNum">       1</span>              : #include &quot;FaviconGrabber.h&quot;</span>
-<span id="L2"><span class="lineNum">       2</span>              : #include &quot;BatchDownloadCore.h&quot;</span>
+<span id="L2"><span class="lineNum">       2</span>              : #include &quot;QBatchWebDownload.h&quot;</span>
 <span id="L3"><span class="lineNum">       3</span>              : #include &lt;QSimpleStateMachine/QSimpleStateMachine.h&gt;</span>
 <span id="L4"><span class="lineNum">       4</span>              : </span>
 <span id="L5"><span class="lineNum">       5</span>              : #include &lt;QString&gt;</span>
@@ -69,13 +69,13 @@
 <span id="L7"><span class="lineNum">       7</span>              : #include &lt;QImage&gt;</span>
 <span id="L8"><span class="lineNum">       8</span>              : #include &lt;QXmlStreamReader&gt;</span>
 <span id="L9"><span class="lineNum">       9</span>              : </span>
-<span id="L10"><span class="lineNum">      10</span>              : #include &quot;NetworkUtilities.h&quot;</span>
+<span id="L10"><span class="lineNum">      10</span>              : #include &quot;WebUtilities.h&quot;</span>
 <span id="L11"><span class="lineNum">      11</span>              : #include &quot;FangLogging.h&quot;</span>
 <span id="L12"><span class="lineNum">      12</span>              : </span>
 <span id="L13"><span class="lineNum">      13</span> <span class="tlaGNC tlaBgGNC">           4 : FaviconGrabber::FaviconGrabber(QObject *parent, QNetworkAccessManager* networkManager) :</span></span>
 <span id="L14"><span class="lineNum">      14</span>              :     QObject(parent),</span>
 <span id="L15"><span class="lineNum">      15</span> <span class="tlaGNC">           4 :     machine(new QSimpleStateMachine(this)),</span></span>
-<span id="L16"><span class="lineNum">      16</span> <span class="tlaGNC">           4 :     batchDownloader(new BatchDownloadCore(15000, 10, this, networkManager)),</span></span>
+<span id="L16"><span class="lineNum">      16</span> <span class="tlaGNC">           4 :     batchDownloader(new QBatchWebDownload(15000, 10, this, networkManager)),</span></span>
 <span id="L17"><span class="lineNum">      17</span> <span class="tlaGNC">          12 :     webGrabber(true, 5000, this, networkManager)</span></span>
 <span id="L18"><span class="lineNum">      18</span>              : {</span>
 <span id="L19"><span class="lineNum">      19</span>              :     // Set up our state machine.</span>
@@ -86,7 +86,7 @@
 <span id="L24"><span class="lineNum">      24</span> <span class="tlaGNC">           4 :     machine-&gt;addStateChange(-1, GRAB_ERROR, [this]() { onError(); }); // Many errors, one slot.</span></span>
 <span id="L25"><span class="lineNum">      25</span>              : </span>
 <span id="L26"><span class="lineNum">      26</span>              :     // Signals!</span>
-<span id="L27"><span class="lineNum">      27</span> <span class="tlaGNC">           4 :     connect(batchDownloader, &amp;BatchDownloadCore::finished, this, &amp;FaviconGrabber::onBatchFinished);</span></span>
+<span id="L27"><span class="lineNum">      27</span> <span class="tlaGNC">           4 :     connect(batchDownloader, &amp;QBatchWebDownload::finished, this, &amp;FaviconGrabber::onBatchFinished);</span></span>
 <span id="L28"><span class="lineNum">      28</span> <span class="tlaGNC">           4 :     connect(&amp;webGrabber, &amp;WebPageGrabber::ready, this, &amp;FaviconGrabber::onWebGrabberReady);</span></span>
 <span id="L29"><span class="lineNum">      29</span> <span class="tlaGNC">           4 : }</span></span>
 <span id="L30"><span class="lineNum">      30</span>              : </span>
@@ -98,7 +98,7 @@
 <span id="L36"><span class="lineNum">      36</span> <span class="tlaGNC">           4 :     machine-&gt;start(START);</span></span>
 <span id="L37"><span class="lineNum">      37</span>              : </span>
 <span id="L38"><span class="lineNum">      38</span>              :     // Make a list of &quot;root&quot; favicons.</span>
-<span id="L39"><span class="lineNum">      39</span> <span class="tlaGNC">           4 :     QUrl host = NetworkUtilities::getHost(location);</span></span>
+<span id="L39"><span class="lineNum">      39</span> <span class="tlaGNC">           4 :     QUrl host = WebUtilities::getHost(location);</span></span>
 <span id="L40"><span class="lineNum">      40</span> <span class="tlaGNC">          24 :     const QStringList extensions{&quot;ico&quot;, &quot;jpg&quot;, &quot;jpeg&quot;, &quot;png&quot;, &quot;gif&quot;};</span></span>
 <span id="L41"><span class="lineNum">      41</span>              : </span>
 <span id="L42"><span class="lineNum">      42</span>              :     // Add each extension to our list.</span>
@@ -115,7 +115,7 @@
 <span id="L53"><span class="lineNum">      53</span>              : {</span>
 <span id="L54"><span class="lineNum">      54</span>              :     // Check for favicons embedded in the HTML.</span>
 <span id="L55"><span class="lineNum">      55</span>              :     // We look at the main page rather than the feed.</span>
-<span id="L56"><span class="lineNum">      56</span> <span class="tlaGNC">           4 :     webGrabber.load(NetworkUtilities::getHost(location));</span></span>
+<span id="L56"><span class="lineNum">      56</span> <span class="tlaGNC">           4 :     webGrabber.load(WebUtilities::getHost(location));</span></span>
 <span id="L57"><span class="lineNum">      57</span> <span class="tlaGNC">           4 : }</span></span>
 <span id="L58"><span class="lineNum">      58</span>              : </span>
 <span id="L59"><span class="lineNum">      59</span> <span class="tlaGNC">           4 : void FaviconGrabber::onCheckIcons()</span></span>
@@ -126,7 +126,7 @@
 <span id="L64"><span class="lineNum">      64</span>              :     }</span>
 <span id="L65"><span class="lineNum">      65</span>              : </span>
 <span id="L66"><span class="lineNum">      66</span>              :     // Start batch download of all favicon candidates.</span>
-<span id="L67"><span class="lineNum">      67</span> <span class="tlaGNC tlaBgGNC">           4 :     batchDownloader-&gt;download(urlsToCheck);</span></span>
+<span id="L67"><span class="lineNum">      67</span> <span class="tlaGNC tlaBgGNC">           4 :     batchDownloader-&gt;get(urlsToCheck);</span></span>
 <span id="L68"><span class="lineNum">      68</span>              : }</span>
 <span id="L69"><span class="lineNum">      69</span>              : </span>
 <span id="L70"><span class="lineNum">      70</span> <span class="tlaGNC">           4 : void FaviconGrabber::onBatchFinished()</span></span>
@@ -137,10 +137,10 @@
 <span id="L75"><span class="lineNum">      75</span>              :     }</span>
 <span id="L76"><span class="lineNum">      76</span>              : </span>
 <span id="L77"><span class="lineNum">      77</span>              :     // Process batch results.</span>
-<span id="L78"><span class="lineNum">      78</span> <span class="tlaGNC tlaBgGNC">           4 :     QMap&lt;QUrl, BatchDownloadResult&gt; results = batchDownloader-&gt;results();</span></span>
+<span id="L78"><span class="lineNum">      78</span> <span class="tlaGNC tlaBgGNC">           4 :     QMap&lt;QUrl, BatchWebDownloadResult&gt; results = batchDownloader-&gt;results();</span></span>
 <span id="L79"><span class="lineNum">      79</span>              : </span>
 <span id="L80"><span class="lineNum">      80</span> <span class="tlaGNC">          28 :     for (auto it = results.constBegin(); it != results.constEnd(); ++it) {</span></span>
-<span id="L81"><span class="lineNum">      81</span> <span class="tlaGNC">          24 :         const BatchDownloadResult&amp; result = it.value();</span></span>
+<span id="L81"><span class="lineNum">      81</span> <span class="tlaGNC">          24 :         const BatchWebDownloadResult&amp; result = it.value();</span></span>
 <span id="L82"><span class="lineNum">      82</span>              : </span>
 <span id="L83"><span class="lineNum">      83</span> <span class="tlaGNC">          24 :         if (result.success &amp;&amp; !result.data.isEmpty()) {</span></span>
 <span id="L84"><span class="lineNum">      84</span> <span class="tlaGNC">           4 :             QImage img;</span></span>
