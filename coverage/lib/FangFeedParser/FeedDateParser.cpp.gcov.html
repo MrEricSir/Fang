@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-04-13 06:22:21</td>
+            <td class="headerValue">2026-04-14 06:27:29</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -64,24 +64,24 @@
 <span id="L2"><span class="lineNum">       2</span>              : #include &lt;QMap&gt;</span>
 <span id="L3"><span class="lineNum">       3</span>              : #include &lt;QtCore/qtimezone.h&gt;</span>
 <span id="L4"><span class="lineNum">       4</span>              : </span>
-<span id="L5"><span class="lineNum">       5</span> <span class="tlaGNC tlaBgGNC">        2232 : QDateTime FeedDateParser::dateFromFeedString(const QString&amp; _timestamp)</span></span>
+<span id="L5"><span class="lineNum">       5</span> <span class="tlaGNC tlaBgGNC">        2235 : QDateTime FeedDateParser::dateFromFeedString(const QString&amp; _timestamp)</span></span>
 <span id="L6"><span class="lineNum">       6</span>              : {</span>
-<span id="L7"><span class="lineNum">       7</span> <span class="tlaGNC">        2232 :     QDateTime ret; // Defaults to invalid timestamp.</span></span>
+<span id="L7"><span class="lineNum">       7</span> <span class="tlaGNC">        2235 :     QDateTime ret; // Defaults to invalid timestamp.</span></span>
 <span id="L8"><span class="lineNum">       8</span>              : </span>
 <span id="L9"><span class="lineNum">       9</span>              :     // Come up with a few versions of the time stamp.</span>
-<span id="L10"><span class="lineNum">      10</span> <span class="tlaGNC">        2232 :     QString timestamp = _timestamp.trimmed();</span></span>
-<span id="L11"><span class="lineNum">      11</span> <span class="tlaGNC">        2232 :     yearFix(timestamp); // IMPORTANT: Must be done *before* weekday name is shaved.</span></span>
-<span id="L12"><span class="lineNum">      12</span> <span class="tlaGNC">        2232 :     shaveWeekdayName(timestamp);</span></span>
-<span id="L13"><span class="lineNum">      13</span> <span class="tlaGNC">        2232 :     monthMassager(timestamp);</span></span>
+<span id="L10"><span class="lineNum">      10</span> <span class="tlaGNC">        2235 :     QString timestamp = _timestamp.trimmed();</span></span>
+<span id="L11"><span class="lineNum">      11</span> <span class="tlaGNC">        2235 :     yearFix(timestamp); // IMPORTANT: Must be done *before* weekday name is shaved.</span></span>
+<span id="L12"><span class="lineNum">      12</span> <span class="tlaGNC">        2235 :     shaveWeekdayName(timestamp);</span></span>
+<span id="L13"><span class="lineNum">      13</span> <span class="tlaGNC">        2235 :     monthMassager(timestamp);</span></span>
 <span id="L14"><span class="lineNum">      14</span>              :     QString timestamps[] = {</span>
 <span id="L15"><span class="lineNum">      15</span>              :         timestamp,</span>
-<span id="L16"><span class="lineNum">      16</span> <span class="tlaGNC">        4464 :         timestamp.left(timestamp.lastIndexOf(&quot; &quot;)).trimmed(),</span></span>
-<span id="L17"><span class="lineNum">      17</span> <span class="tlaGNC">        4464 :         timestamp.left(timestamp.lastIndexOf(&quot;.&quot;)).trimmed(),</span></span>
-<span id="L18"><span class="lineNum">      18</span> <span class="tlaGNC">        4464 :         timestamp.left(timestamp.lastIndexOf(&quot;-&quot;)).trimmed(),</span></span>
-<span id="L19"><span class="lineNum">      19</span> <span class="tlaGNC">        4464 :         timestamp.left(timestamp.lastIndexOf(&quot;+&quot;)).trimmed(),</span></span>
+<span id="L16"><span class="lineNum">      16</span> <span class="tlaGNC">        4470 :         timestamp.left(timestamp.lastIndexOf(&quot; &quot;)).trimmed(),</span></span>
+<span id="L17"><span class="lineNum">      17</span> <span class="tlaGNC">        4470 :         timestamp.left(timestamp.lastIndexOf(&quot;.&quot;)).trimmed(),</span></span>
+<span id="L18"><span class="lineNum">      18</span> <span class="tlaGNC">        4470 :         timestamp.left(timestamp.lastIndexOf(&quot;-&quot;)).trimmed(),</span></span>
+<span id="L19"><span class="lineNum">      19</span> <span class="tlaGNC">        4470 :         timestamp.left(timestamp.lastIndexOf(&quot;+&quot;)).trimmed(),</span></span>
 <span id="L20"><span class="lineNum">      20</span>              : </span>
 <span id="L21"><span class="lineNum">      21</span>              :         &quot;&quot; // must be last</span>
-<span id="L22"><span class="lineNum">      22</span> <span class="tlaGNC">       26784 :     };</span></span>
+<span id="L22"><span class="lineNum">      22</span> <span class="tlaGNC">       26820 :     };</span></span>
 <span id="L23"><span class="lineNum">      23</span>              : </span>
 <span id="L24"><span class="lineNum">      24</span>              :     // Date time.  Comes in many (ugh) different formats.</span>
 <span id="L25"><span class="lineNum">      25</span>              :     const QString dateFormats[] = {</span>
@@ -125,30 +125,30 @@
 <span id="L63"><span class="lineNum">      63</span>              : </span>
 <span id="L64"><span class="lineNum">      64</span>              : </span>
 <span id="L65"><span class="lineNum">      65</span>              :         &quot;&quot; // must be last!</span>
-<span id="L66"><span class="lineNum">      66</span> <span class="tlaGNC">       31248 :     };</span></span>
+<span id="L66"><span class="lineNum">      66</span> <span class="tlaGNC">       31290 :     };</span></span>
 <span id="L67"><span class="lineNum">      67</span>              : </span>
 <span id="L68"><span class="lineNum">      68</span>              :     // Iterate over date formats.</span>
-<span id="L69"><span class="lineNum">      69</span> <span class="tlaGNC">        2232 :     int i = 0;</span></span>
-<span id="L70"><span class="lineNum">      70</span> <span class="tlaGNC">        7674 :     while (!ret.isValid() &amp;&amp; !dateFormats[i].isEmpty()) {</span></span>
-<span id="L71"><span class="lineNum">      71</span> <span class="tlaGNC">        5442 :         const QString&amp; format = dateFormats[i];</span></span>
+<span id="L69"><span class="lineNum">      69</span> <span class="tlaGNC">        2235 :     int i = 0;</span></span>
+<span id="L70"><span class="lineNum">      70</span> <span class="tlaGNC">        7680 :     while (!ret.isValid() &amp;&amp; !dateFormats[i].isEmpty()) {</span></span>
+<span id="L71"><span class="lineNum">      71</span> <span class="tlaGNC">        5445 :         const QString&amp; format = dateFormats[i];</span></span>
 <span id="L72"><span class="lineNum">      72</span>              : </span>
 <span id="L73"><span class="lineNum">      73</span>              :         // Try each format against each possible manipulated timestamp.</span>
-<span id="L74"><span class="lineNum">      74</span> <span class="tlaGNC">        5442 :         int j = 0;</span></span>
-<span id="L75"><span class="lineNum">      75</span> <span class="tlaGNC">       26029 :         while (!ret.isValid() &amp;&amp; !timestamps[j].isEmpty()) {</span></span>
-<span id="L76"><span class="lineNum">      76</span> <span class="tlaGNC">       20587 :             QString&amp; ts = timestamps[j];</span></span>
-<span id="L77"><span class="lineNum">      77</span> <span class="tlaGNC">       20587 :             ret = QDateTime::fromString(ts, format);</span></span>
+<span id="L74"><span class="lineNum">      74</span> <span class="tlaGNC">        5445 :         int j = 0;</span></span>
+<span id="L75"><span class="lineNum">      75</span> <span class="tlaGNC">       26038 :         while (!ret.isValid() &amp;&amp; !timestamps[j].isEmpty()) {</span></span>
+<span id="L76"><span class="lineNum">      76</span> <span class="tlaGNC">       20593 :             QString&amp; ts = timestamps[j];</span></span>
+<span id="L77"><span class="lineNum">      77</span> <span class="tlaGNC">       20593 :             ret = QDateTime::fromString(ts, format);</span></span>
 <span id="L78"><span class="lineNum">      78</span>              : </span>
-<span id="L79"><span class="lineNum">      79</span> <span class="tlaGNC">       20587 :             j++;</span></span>
+<span id="L79"><span class="lineNum">      79</span> <span class="tlaGNC">       20593 :             j++;</span></span>
 <span id="L80"><span class="lineNum">      80</span>              :         }</span>
 <span id="L81"><span class="lineNum">      81</span>              : </span>
-<span id="L82"><span class="lineNum">      82</span> <span class="tlaGNC">        5442 :         i++;</span></span>
+<span id="L82"><span class="lineNum">      82</span> <span class="tlaGNC">        5445 :         i++;</span></span>
 <span id="L83"><span class="lineNum">      83</span>              :     }</span>
 <span id="L84"><span class="lineNum">      84</span>              : </span>
 <span id="L85"><span class="lineNum">      85</span>              :     // Check if there's a time-based adjustment and/or timezone.</span>
 <span id="L86"><span class="lineNum">      86</span>              :     // First try numeric offsets in the format of -hhmm, +hhmm, -hh:mm, or +hh:mm.</span>
-<span id="L87"><span class="lineNum">      87</span> <span class="tlaGNC">        2232 :     int lastPlus = timestamp.lastIndexOf(&quot;+&quot;);</span></span>
-<span id="L88"><span class="lineNum">      88</span> <span class="tlaGNC">        2232 :     int lastMinus = timestamp.lastIndexOf(&quot;-&quot;);</span></span>
-<span id="L89"><span class="lineNum">      89</span> <span class="tlaGNC">        2232 :     if (lastPlus &gt; 3 || lastMinus &gt; 3) {</span></span>
+<span id="L87"><span class="lineNum">      87</span> <span class="tlaGNC">        2235 :     int lastPlus = timestamp.lastIndexOf(&quot;+&quot;);</span></span>
+<span id="L88"><span class="lineNum">      88</span> <span class="tlaGNC">        2235 :     int lastMinus = timestamp.lastIndexOf(&quot;-&quot;);</span></span>
+<span id="L89"><span class="lineNum">      89</span> <span class="tlaGNC">        2235 :     if (lastPlus &gt; 3 || lastMinus &gt; 3) {</span></span>
 <span id="L90"><span class="lineNum">      90</span>              :         // We have a plus or a minus.</span>
 <span id="L91"><span class="lineNum">      91</span> <span class="tlaGNC">        1568 :         int signPos = lastPlus &gt; 3 ? lastPlus : lastMinus;</span></span>
 <span id="L92"><span class="lineNum">      92</span> <span class="tlaGNC">        1568 :         QString sAdjustment = timestamp.right(timestamp.length() - signPos);</span></span>
@@ -187,60 +187,60 @@
 <span id="L125"><span class="lineNum">     125</span> <span class="tlaUNC">           0 :         {&quot;CST&quot;, -360}, {&quot;CDT&quot;, -300},</span></span>
 <span id="L126"><span class="lineNum">     126</span> <span class="tlaUNC">           0 :         {&quot;MST&quot;, -420}, {&quot;MDT&quot;, -360},</span></span>
 <span id="L127"><span class="lineNum">     127</span> <span class="tlaUNC">           0 :         {&quot;PST&quot;, -480}, {&quot;PDT&quot;, -420}</span></span>
-<span id="L128"><span class="lineNum">     128</span> <span class="tlaGNC tlaBgGNC">        2243 :     };</span></span>
+<span id="L128"><span class="lineNum">     128</span> <span class="tlaGNC tlaBgGNC">        2246 :     };</span></span>
 <span id="L129"><span class="lineNum">     129</span>              : </span>
 <span id="L130"><span class="lineNum">     130</span>              :     // Check if the timestamp ends with a known abbreviation.</span>
-<span id="L131"><span class="lineNum">     131</span> <span class="tlaGNC">        2232 :     QString lastWord = timestamp.section(' ', -1).trimmed().toUpper();</span></span>
-<span id="L132"><span class="lineNum">     132</span> <span class="tlaGNC">        2232 :     if (tzOffsets.contains(lastWord)) {</span></span>
-<span id="L133"><span class="lineNum">     133</span> <span class="tlaGNC">         663 :         int offsetMinutes = tzOffsets.value(lastWord);</span></span>
-<span id="L134"><span class="lineNum">     134</span> <span class="tlaGNC">         663 :         ret = ret.addSecs(-offsetMinutes * 60);</span></span>
+<span id="L131"><span class="lineNum">     131</span> <span class="tlaGNC">        2235 :     QString lastWord = timestamp.section(' ', -1).trimmed().toUpper();</span></span>
+<span id="L132"><span class="lineNum">     132</span> <span class="tlaGNC">        2235 :     if (tzOffsets.contains(lastWord)) {</span></span>
+<span id="L133"><span class="lineNum">     133</span> <span class="tlaGNC">         666 :         int offsetMinutes = tzOffsets.value(lastWord);</span></span>
+<span id="L134"><span class="lineNum">     134</span> <span class="tlaGNC">         666 :         ret = ret.addSecs(-offsetMinutes * 60);</span></span>
 <span id="L135"><span class="lineNum">     135</span>              :     }</span>
 <span id="L136"><span class="lineNum">     136</span>              : </span>
 <span id="L137"><span class="lineNum">     137</span>              :     // All times are (supposedly) in UTC.</span>
-<span id="L138"><span class="lineNum">     138</span> <span class="tlaGNC">        2232 :     ret.setTimeZone(QTimeZone::UTC);</span></span>
+<span id="L138"><span class="lineNum">     138</span> <span class="tlaGNC">        2235 :     ret.setTimeZone(QTimeZone::UTC);</span></span>
 <span id="L139"><span class="lineNum">     139</span>              : </span>
-<span id="L140"><span class="lineNum">     140</span> <span class="tlaGNC">        4464 :     return ret;</span></span>
-<span id="L141"><span class="lineNum">     141</span> <span class="tlaGNC">       49105 : }</span></span>
+<span id="L140"><span class="lineNum">     140</span> <span class="tlaGNC">        4470 :     return ret;</span></span>
+<span id="L141"><span class="lineNum">     141</span> <span class="tlaGNC">       49171 : }</span></span>
 <span id="L142"><span class="lineNum">     142</span>              : </span>
 <span id="L143"><span class="lineNum">     143</span>              : </span>
-<span id="L144"><span class="lineNum">     144</span> <span class="tlaGNC">        2232 : void FeedDateParser::yearFix(QString&amp; timestamp)</span></span>
+<span id="L144"><span class="lineNum">     144</span> <span class="tlaGNC">        2235 : void FeedDateParser::yearFix(QString&amp; timestamp)</span></span>
 <span id="L145"><span class="lineNum">     145</span>              : {</span>
 <span id="L146"><span class="lineNum">     146</span>              :     // If the timestamp is something like this:</span>
 <span id="L147"><span class="lineNum">     147</span>              :     // Tue, 02 Jul 13 [etc]</span>
 <span id="L148"><span class="lineNum">     148</span>              :     // We want to make it something like this:</span>
 <span id="L149"><span class="lineNum">     149</span>              :     // Tue, 02 Jul 2013 [etc]</span>
-<span id="L150"><span class="lineNum">     150</span> <span class="tlaGNC">        2232 :     if (timestamp.length() == 0 || !timestamp[0].isLetter()) {</span></span>
+<span id="L150"><span class="lineNum">     150</span> <span class="tlaGNC">        2235 :     if (timestamp.length() == 0 || !timestamp[0].isLetter()) {</span></span>
 <span id="L151"><span class="lineNum">     151</span> <span class="tlaGNC">         337 :         return; // Early exit.</span></span>
 <span id="L152"><span class="lineNum">     152</span>              :     }</span>
 <span id="L153"><span class="lineNum">     153</span>              : </span>
-<span id="L154"><span class="lineNum">     154</span> <span class="tlaGNC">        1895 :     bool seenWeekday = false;</span></span>
-<span id="L155"><span class="lineNum">     155</span> <span class="tlaGNC">        1895 :     bool seenDay = false;</span></span>
-<span id="L156"><span class="lineNum">     156</span> <span class="tlaGNC">        1895 :     bool seenMonth = false;</span></span>
-<span id="L157"><span class="lineNum">     157</span> <span class="tlaGNC">        1895 :     bool seenYear = false;</span></span>
-<span id="L158"><span class="lineNum">     158</span> <span class="tlaGNC">        1895 :     bool hitSpace = true; // This controls whether or not we examine the character.</span></span>
-<span id="L159"><span class="lineNum">     159</span> <span class="tlaGNC">        1895 :     int charsInYear = 0;</span></span>
-<span id="L160"><span class="lineNum">     160</span> <span class="tlaGNC">       32215 :     for (int i = 0; i &lt; timestamp.length(); i++) {</span></span>
-<span id="L161"><span class="lineNum">     161</span> <span class="tlaGNC">       32215 :         if (hitSpace &amp;&amp; (timestamp[i].isLetter() || timestamp[i] == ',')) {</span></span>
-<span id="L162"><span class="lineNum">     162</span> <span class="tlaGNC">        3790 :             hitSpace = false; // reset</span></span>
+<span id="L154"><span class="lineNum">     154</span> <span class="tlaGNC">        1898 :     bool seenWeekday = false;</span></span>
+<span id="L155"><span class="lineNum">     155</span> <span class="tlaGNC">        1898 :     bool seenDay = false;</span></span>
+<span id="L156"><span class="lineNum">     156</span> <span class="tlaGNC">        1898 :     bool seenMonth = false;</span></span>
+<span id="L157"><span class="lineNum">     157</span> <span class="tlaGNC">        1898 :     bool seenYear = false;</span></span>
+<span id="L158"><span class="lineNum">     158</span> <span class="tlaGNC">        1898 :     bool hitSpace = true; // This controls whether or not we examine the character.</span></span>
+<span id="L159"><span class="lineNum">     159</span> <span class="tlaGNC">        1898 :     int charsInYear = 0;</span></span>
+<span id="L160"><span class="lineNum">     160</span> <span class="tlaGNC">       32266 :     for (int i = 0; i &lt; timestamp.length(); i++) {</span></span>
+<span id="L161"><span class="lineNum">     161</span> <span class="tlaGNC">       32266 :         if (hitSpace &amp;&amp; (timestamp[i].isLetter() || timestamp[i] == ',')) {</span></span>
+<span id="L162"><span class="lineNum">     162</span> <span class="tlaGNC">        3796 :             hitSpace = false; // reset</span></span>
 <span id="L163"><span class="lineNum">     163</span>              : </span>
-<span id="L164"><span class="lineNum">     164</span> <span class="tlaGNC">        3790 :             if (!seenWeekday) {</span></span>
-<span id="L165"><span class="lineNum">     165</span> <span class="tlaGNC">        1895 :                 seenWeekday = true;</span></span>
-<span id="L166"><span class="lineNum">     166</span> <span class="tlaGNC">        1895 :             } else if (!seenMonth) {</span></span>
-<span id="L167"><span class="lineNum">     167</span> <span class="tlaGNC">        1895 :                 seenMonth = true;</span></span>
+<span id="L164"><span class="lineNum">     164</span> <span class="tlaGNC">        3796 :             if (!seenWeekday) {</span></span>
+<span id="L165"><span class="lineNum">     165</span> <span class="tlaGNC">        1898 :                 seenWeekday = true;</span></span>
+<span id="L166"><span class="lineNum">     166</span> <span class="tlaGNC">        1898 :             } else if (!seenMonth) {</span></span>
+<span id="L167"><span class="lineNum">     167</span> <span class="tlaGNC">        1898 :                 seenMonth = true;</span></span>
 <span id="L168"><span class="lineNum">     168</span>              :             }</span>
-<span id="L169"><span class="lineNum">     169</span> <span class="tlaGNC">       28425 :         } else if (hitSpace &amp;&amp; (timestamp[i].isDigit())) {</span></span>
-<span id="L170"><span class="lineNum">     170</span> <span class="tlaGNC">        3790 :             hitSpace = false; // reset</span></span>
+<span id="L169"><span class="lineNum">     169</span> <span class="tlaGNC">       28470 :         } else if (hitSpace &amp;&amp; (timestamp[i].isDigit())) {</span></span>
+<span id="L170"><span class="lineNum">     170</span> <span class="tlaGNC">        3796 :             hitSpace = false; // reset</span></span>
 <span id="L171"><span class="lineNum">     171</span>              : </span>
-<span id="L172"><span class="lineNum">     172</span> <span class="tlaGNC">        3790 :             if (!seenDay) {</span></span>
-<span id="L173"><span class="lineNum">     173</span> <span class="tlaGNC">        1895 :                 seenDay = true;</span></span>
-<span id="L174"><span class="lineNum">     174</span> <span class="tlaGNC">        1895 :             } else if (!seenYear) {</span></span>
-<span id="L175"><span class="lineNum">     175</span> <span class="tlaGNC">        1895 :                 seenYear = true;</span></span>
+<span id="L172"><span class="lineNum">     172</span> <span class="tlaGNC">        3796 :             if (!seenDay) {</span></span>
+<span id="L173"><span class="lineNum">     173</span> <span class="tlaGNC">        1898 :                 seenDay = true;</span></span>
+<span id="L174"><span class="lineNum">     174</span> <span class="tlaGNC">        1898 :             } else if (!seenYear) {</span></span>
+<span id="L175"><span class="lineNum">     175</span> <span class="tlaGNC">        1898 :                 seenYear = true;</span></span>
 <span id="L176"><span class="lineNum">     176</span>              :             }</span>
-<span id="L177"><span class="lineNum">     177</span> <span class="tlaGNC">       24635 :         } else if (timestamp[i].isSpace()) {</span></span>
-<span id="L178"><span class="lineNum">     178</span> <span class="tlaGNC">        7580 :             if (seenYear) {</span></span>
+<span id="L177"><span class="lineNum">     177</span> <span class="tlaGNC">       24674 :         } else if (timestamp[i].isSpace()) {</span></span>
+<span id="L178"><span class="lineNum">     178</span> <span class="tlaGNC">        7592 :             if (seenYear) {</span></span>
 <span id="L179"><span class="lineNum">     179</span>              :                 // Here's where we find out if we can leave yet.</span>
-<span id="L180"><span class="lineNum">     180</span> <span class="tlaGNC">        1895 :                 if (charsInYear != 2) {</span></span>
-<span id="L181"><span class="lineNum">     181</span> <span class="tlaGNC">        1879 :                     break; // Early exit!</span></span>
+<span id="L180"><span class="lineNum">     180</span> <span class="tlaGNC">        1898 :                 if (charsInYear != 2) {</span></span>
+<span id="L181"><span class="lineNum">     181</span> <span class="tlaGNC">        1882 :                     break; // Early exit!</span></span>
 <span id="L182"><span class="lineNum">     182</span>              :                 } else {</span>
 <span id="L183"><span class="lineNum">     183</span>              :                     // Sigh... okay, now we have to back up and insert a &quot;20&quot;.</span>
 <span id="L184"><span class="lineNum">     184</span>              :                     // Currently we're here: [Tue, 02 Jul 13 ]</span>
@@ -248,37 +248,37 @@
 <span id="L186"><span class="lineNum">     186</span> <span class="tlaGNC">          16 :                     return; // YAY! WE DID IT!</span></span>
 <span id="L187"><span class="lineNum">     187</span>              :                 }</span>
 <span id="L188"><span class="lineNum">     188</span>              :             } else {</span>
-<span id="L189"><span class="lineNum">     189</span> <span class="tlaGNC">        5685 :                 hitSpace = true;</span></span>
+<span id="L189"><span class="lineNum">     189</span> <span class="tlaGNC">        5694 :                 hitSpace = true;</span></span>
 <span id="L190"><span class="lineNum">     190</span>              :             }</span>
 <span id="L191"><span class="lineNum">     191</span>              :         }</span>
 <span id="L192"><span class="lineNum">     192</span>              : </span>
-<span id="L193"><span class="lineNum">     193</span> <span class="tlaGNC">       30320 :         if (seenYear) {</span></span>
-<span id="L194"><span class="lineNum">     194</span> <span class="tlaGNC">        7548 :             ++charsInYear;</span></span>
+<span id="L193"><span class="lineNum">     193</span> <span class="tlaGNC">       30368 :         if (seenYear) {</span></span>
+<span id="L194"><span class="lineNum">     194</span> <span class="tlaGNC">        7560 :             ++charsInYear;</span></span>
 <span id="L195"><span class="lineNum">     195</span>              :         }</span>
 <span id="L196"><span class="lineNum">     196</span>              :     }</span>
 <span id="L197"><span class="lineNum">     197</span>              : }</span>
 <span id="L198"><span class="lineNum">     198</span>              : </span>
 <span id="L199"><span class="lineNum">     199</span>              : </span>
-<span id="L200"><span class="lineNum">     200</span> <span class="tlaGNC">        2232 : void FeedDateParser::shaveWeekdayName(QString&amp; timestamp)</span></span>
+<span id="L200"><span class="lineNum">     200</span> <span class="tlaGNC">        2235 : void FeedDateParser::shaveWeekdayName(QString&amp; timestamp)</span></span>
 <span id="L201"><span class="lineNum">     201</span>              : {</span>
 <span id="L202"><span class="lineNum">     202</span>              :     // NOTE:</span>
 <span id="L203"><span class="lineNum">     203</span>              :     // By the time we've reached this method, the timestamp has</span>
 <span id="L204"><span class="lineNum">     204</span>              :     // already been trimmed, and we've made sure the year has four digits.</span>
 <span id="L205"><span class="lineNum">     205</span>              : </span>
-<span id="L206"><span class="lineNum">     206</span> <span class="tlaGNC">        2232 :     int comma = timestamp.indexOf(',');</span></span>
-<span id="L207"><span class="lineNum">     207</span> <span class="tlaGNC">        2232 :     if (comma &lt; 0) {</span></span>
+<span id="L206"><span class="lineNum">     206</span> <span class="tlaGNC">        2235 :     int comma = timestamp.indexOf(',');</span></span>
+<span id="L207"><span class="lineNum">     207</span> <span class="tlaGNC">        2235 :     if (comma &lt; 0) {</span></span>
 <span id="L208"><span class="lineNum">     208</span> <span class="tlaGNC">         337 :         return; // Early exit.</span></span>
 <span id="L209"><span class="lineNum">     209</span>              :     }</span>
 <span id="L210"><span class="lineNum">     210</span>              : </span>
 <span id="L211"><span class="lineNum">     211</span>              :     // Remove up to and including the comma itself.</span>
-<span id="L212"><span class="lineNum">     212</span> <span class="tlaGNC">        1895 :     timestamp = timestamp.remove(0, comma + 1).trimmed();</span></span>
+<span id="L212"><span class="lineNum">     212</span> <span class="tlaGNC">        1898 :     timestamp = timestamp.remove(0, comma + 1).trimmed();</span></span>
 <span id="L213"><span class="lineNum">     213</span>              : }</span>
 <span id="L214"><span class="lineNum">     214</span>              : </span>
-<span id="L215"><span class="lineNum">     215</span> <span class="tlaGNC">        2232 : void FeedDateParser::monthMassager(QString&amp; timestamp)</span></span>
+<span id="L215"><span class="lineNum">     215</span> <span class="tlaGNC">        2235 : void FeedDateParser::monthMassager(QString&amp; timestamp)</span></span>
 <span id="L216"><span class="lineNum">     216</span>              : {</span>
 <span id="L217"><span class="lineNum">     217</span>              :     // Add new ones as they're encountered.</span>
-<span id="L218"><span class="lineNum">     218</span> <span class="tlaGNC">        2232 :     timestamp = timestamp.replace(&quot;Sept &quot;, &quot;Sep &quot;);</span></span>
-<span id="L219"><span class="lineNum">     219</span> <span class="tlaGNC">        2232 : }</span></span>
+<span id="L218"><span class="lineNum">     218</span> <span class="tlaGNC">        2235 :     timestamp = timestamp.replace(&quot;Sept &quot;, &quot;Sep &quot;);</span></span>
+<span id="L219"><span class="lineNum">     219</span> <span class="tlaGNC">        2235 : }</span></span>
         </pre>
               </td>
             </tr>
