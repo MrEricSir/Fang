@@ -82,6 +82,11 @@ private slots:
     void testTemporaryRedirect302();
     void testTemporaryRedirect307();
     void testNoRedirect();
+
+    // Future Last-Modified validation
+    void testFutureLastModifiedDiscardsHeaders();
+    void testValidLastModifiedPreservesHeaders();
+    void testUnparseableLastModifiedPreservesHeaders();
 };
 
 TestFeedParser::TestFeedParser()
@@ -1501,6 +1506,89 @@ void TestFeedParser::testJSONFeedMissingOptionalFields()
     QVERIFY(item->description.isNull());
     QVERIFY(item->content.isNull());
     QVERIFY(item->mediaImageURL.isNull());
+}
+
+// =====================================================================
+// Future Last-Modified validation tests
+// =====================================================================
+
+void TestFeedParser::testFutureLastModifiedDiscardsHeaders()
+{
+    MockNetworkAccessManager mockManager;
+    QUrl feedUrl("http://example.com/feed");
+
+    mockManager.addResponse(feedUrl, simpleRSSFeed());
+    mockManager.addResponseHeaders(feedUrl, {
+        {"ETag", R"(W/"bogus-etag")"},
+        {"Last-Modified", "Wed, 21 Mar 9792 20:59:48 GMT"}
+    });
+
+    FeedFetcher parser(&mockManager, this);
+    QSignalSpy spy(&parser, &FeedFetcher::done);
+
+    parser.parse(feedUrl);
+    if (!spy.count()) {
+        spy.wait(10000);
+    }
+    QCOMPARE(spy.count(), 1);
+    QCOMPARE(parser.getResult(), FeedFetchResult::OK);
+
+    // Both headers should be discarded since Last-Modified is in the future
+    QVERIFY(parser.responseEtag().isEmpty());
+    QVERIFY(parser.responseLastModified().isEmpty());
+}
+
+void TestFeedParser::testValidLastModifiedPreservesHeaders()
+{
+    MockNetworkAccessManager mockManager;
+    QUrl feedUrl("http://example.com/feed");
+
+    mockManager.addResponse(feedUrl, simpleRSSFeed());
+    mockManager.addResponseHeaders(feedUrl, {
+        {"ETag", R"(W/"valid-etag")"},
+        {"Last-Modified", "Tue, 01 Jan 2019 00:00:00 GMT"}
+    });
+
+    FeedFetcher parser(&mockManager, this);
+    QSignalSpy spy(&parser, &FeedFetcher::done);
+
+    parser.parse(feedUrl);
+    if (!spy.count()) {
+        spy.wait(10000);
+    }
+    QCOMPARE(spy.count(), 1);
+    QCOMPARE(parser.getResult(), FeedFetchResult::OK);
+
+    // Both headers should be preserved since Last-Modified is in the past
+    QCOMPARE(parser.responseEtag(), QString(R"(W/"valid-etag")"));
+    QCOMPARE(parser.responseLastModified(), QString("Tue, 01 Jan 2019 00:00:00 GMT"));
+}
+
+void TestFeedParser::testUnparseableLastModifiedPreservesHeaders()
+{
+    MockNetworkAccessManager mockManager;
+    QUrl feedUrl("http://example.com/feed");
+
+    mockManager.addResponse(feedUrl, simpleRSSFeed());
+    mockManager.addResponseHeaders(feedUrl, {
+        {"ETag", R"(W/"keep-me")"},
+        {"Last-Modified", "not-a-valid-date"}
+    });
+
+    FeedFetcher parser(&mockManager, this);
+    QSignalSpy spy(&parser, &FeedFetcher::done);
+
+    parser.parse(feedUrl);
+    if (!spy.count()) {
+        spy.wait(10000);
+    }
+    QCOMPARE(spy.count(), 1);
+    QCOMPARE(parser.getResult(), FeedFetchResult::OK);
+
+    // Unparseable dates should be kept (conservative - only discard what we
+    // can confirm is in the future)
+    QCOMPARE(parser.responseEtag(), QString(R"(W/"keep-me")"));
+    QCOMPARE(parser.responseLastModified(), QString("not-a-valid-date"));
 }
 
 QTEST_MAIN(TestFeedParser)

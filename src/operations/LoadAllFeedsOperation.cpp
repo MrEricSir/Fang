@@ -1,6 +1,8 @@
 #include "LoadAllFeedsOperation.h"
 
+#include <QDateTime>
 #include <QDebug>
+#include <QLocale>
 #include <QMap>
 
 #include "../models/AllNewsFeedItem.h"
@@ -57,8 +59,19 @@ void LoadAllFeedsOperation::execute()
                         static_cast<FeedType>(query.value("feed_type").toInt()),
                         feedList
                         );
-            item->setEtag(query.value("etag").toString());
-            item->setLastModified(query.value("last_modified").toString());
+            QString etag = query.value("etag").toString();
+            QString lastMod = query.value("last_modified").toString();
+
+            // Discard conditional headers if Last-Modified is in the future,
+            // since they would cause requests to always return 304 Not Modified.
+            QDateTime parsed = QLocale::c().toDateTime(lastMod, "ddd, dd MMM yyyy HH:mm:ss 'GMT'");
+            if (parsed.isValid() && parsed > QDateTime::currentDateTimeUtc()) {
+                etag.clear();
+                lastMod.clear();
+            }
+
+            item->setEtag(etag);
+            item->setLastModified(lastMod);
         }
 
         tempFeedItemList.append(item);

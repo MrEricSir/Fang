@@ -30,7 +30,8 @@ public:
                      QNetworkReply::NetworkError errorCode = QNetworkReply::ContentNotFoundError,
                      int delayMs = 0,
                      const QUrl& redirectUrl = QUrl(),
-                     int httpStatusCode = 0);
+                     int httpStatusCode = 0,
+                     const QList<QPair<QByteArray, QByteArray>>& responseHeaders = {});
 
     // Backwards-compatible constructor taking QUrl (creates minimal QNetworkRequest internally)
     MockNetworkReply(const QByteArray& data, const QUrl& url, QObject* parent = nullptr,
@@ -120,6 +121,13 @@ public:
     void addErrorResponse(const QUrl& url, QNetworkReply::NetworkError errorCode);
 
     /**
+     * @brief Add custom response headers for a given URL
+     * @param url The URL these headers apply to
+     * @param headers List of header name/value pairs
+     */
+    void addResponseHeaders(const QUrl& url, const QList<QPair<QByteArray, QByteArray>>& headers);
+
+    /**
      * @brief Set a delay for all responses (simulates slow network)
      * @param delayMs Delay in milliseconds before response completes
      */
@@ -137,6 +145,7 @@ protected:
 
 private:
     QMap<QString, QByteArray> responses;
+    QMap<QString, QList<QPair<QByteArray, QByteArray>>> responseHeaderMap;
     QMap<QString, QUrl> redirects;
     QMap<QString, int> redirectStatusCodes;
     QMap<QString, QNetworkReply::NetworkError> urlErrors;

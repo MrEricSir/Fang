@@ -1,5 +1,6 @@
 #include "FeedFetcher.h"
 
+#include <QDateTime>
 #include <QtConcurrent>
 
 #include "FeedParser.h"
@@ -67,6 +68,14 @@ void FeedFetcher::onDownloadResult(WebDownloadResult downloadResult)
     permanentRedirect = downloadResult.permanentRedirect;
     respEtag = QString::fromUtf8(downloadResult.responseHeader("ETag"));
     respLastModified = QString::fromUtf8(downloadResult.responseHeader("Last-Modified"));
+
+    // Discard conditional headers if Last-Modified is in the future, since
+    // they would cause requests to always return 304 Not Modified.
+    QDateTime parsed = QLocale::c().toDateTime(respLastModified, "ddd, dd MMM yyyy HH:mm:ss 'GMT'");
+    if (parsed.isValid() && parsed > QDateTime::currentDateTimeUtc()) {
+        respEtag.clear();
+        respLastModified.clear();
+    }
 
     auto future = QtConcurrent::run([data = downloadResult.data] {
         return FeedParser::parse(data);

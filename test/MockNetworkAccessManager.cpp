@@ -4,7 +4,8 @@
 
 MockNetworkReply::MockNetworkReply(const QByteArray& data, const QNetworkRequest& request, QObject* parent,
                                    bool isError, QNetworkReply::NetworkError errorCode,
-                                   int delayMs, const QUrl& redirectUrl, int httpStatusCode)
+                                   int delayMs, const QUrl& redirectUrl, int httpStatusCode,
+                                   const QList<QPair<QByteArray, QByteArray>>& responseHeaders)
     : QNetworkReply(parent)
     , aborted(false)
 {
@@ -35,6 +36,11 @@ MockNetworkReply::MockNetworkReply(const QByteArray& data, const QNetworkRequest
         if (httpStatusCode != 0) {
             setAttribute(QNetworkRequest::HttpStatusCodeAttribute, httpStatusCode);
         }
+    }
+
+    // Set custom response headers
+    for (const auto& header : responseHeaders) {
+        setRawHeader(header.first, header.second);
     }
 
     setOpenMode(QIODevice::ReadOnly);
@@ -197,6 +203,12 @@ void MockNetworkAccessManager::addErrorResponse(const QUrl& url, QNetworkReply::
     qCDebug(logMock) << "MockNetworkAccessManager: Added error response" << errorCode << "for" << key;
 }
 
+void MockNetworkAccessManager::addResponseHeaders(const QUrl& url,
+                                                    const QList<QPair<QByteArray, QByteArray>>& headers)
+{
+    responseHeaderMap[url.toString()] = headers;
+}
+
 void MockNetworkAccessManager::setResponseDelay(int delayMs)
 {
     responseDelayMs = delayMs;
@@ -251,7 +263,8 @@ QNetworkReply* MockNetworkAccessManager::createRequest(Operation op, const QNetw
     if (responses.contains(key)) {
         qCDebug(logMock) << "MockNetworkAccessManager: Returning mock response for" << key;
         return new MockNetworkReply(responses[key], request, this, false,
-                                    QNetworkReply::NoError, responseDelayMs, redirectUrl, redirectCode);
+                                    QNetworkReply::NoError, responseDelayMs, redirectUrl, redirectCode,
+                                    responseHeaderMap.value(key));
     }
 
     // If we have a redirect but no response, return empty body with redirect
