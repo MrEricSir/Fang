@@ -19,3 +19,6 @@
 [submodule "external/QWebDownload"]
         path = external/QWebDownload
         url = https://github.com/MrEricSir/QWebDownload.git
+[submodule "external/QTidyLibClassic"]
+	path = external/QTidyLibClassic
+	url = https://github.com/MrEricSir/QTidyLibClassic.git

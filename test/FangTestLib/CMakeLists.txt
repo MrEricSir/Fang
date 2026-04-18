@@ -21,7 +21,7 @@ target_include_directories(FangTestLib PUBLIC
     ${CMAKE_SOURCE_DIR}/external/QWebDownload/src
     ${CMAKE_SOURCE_DIR}/lib/FangFeedDiscovery
     ${CMAKE_SOURCE_DIR}/lib/FangFeedParser
-    ${CMAKE_SOURCE_DIR}/external/tidylib/include
+    ${CMAKE_SOURCE_DIR}/external/QTidyLibClassic/external/tidylib-classic/include
 )
 
 # Link required libraries

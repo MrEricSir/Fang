@@ -6,46 +6,18 @@
 #include <QMap>
 #include <QUrl>
 #include <QString>
+#include <functional>
 
-#include <QObject>
 #include "ImageGrabber.h"
-#include "WebPageGrabber.h"
 
 /*!
-    \brief Represents a DOM node during HTML parsing.
- */
-class DOMNode {
-public:
-    DOMNode(QString tagName, int intID) :
-        tagName(tagName),
-        intID(intID),
-        nonEmptyTextCount(0),
-        numChildren(0)
-    {}
+    \brief Fang HTML sanitizer.
 
-    // Stack requires a default c'tor
-    DOMNode() :
-        intID(0),
-        nonEmptyTextCount(0),
-        numChildren(0)
-    {}
+    First pass: converts untrusted HTML into clean XHTML via TidyLib, then
+    applies configurable tag, class, and URL-pattern filtering.
 
-    QString tagName;
-    int intID;
-    int nonEmptyTextCount;
-    int numChildren;
-};
-
-/*!
-    \brief HTMLSanitizer handles HTML cleanup and XHTML conversion.
-
-    This is a synchronous component that:
-      - Converts HTML to XHTML via TidyLib
-      - Removes unwanted tags (script, style, iframe, etc.)
-      - Removes social media share buttons
-      - Removes tracking pixels
-      - Extracts image URLs that need dimension fetching
-      - Handles two-pass processing to remove empty elements
+    Second pass (finalize): removes marked elements and applies image data
+    from ImageGrabber, caching images via QImageCache.
  */
 class HTMLSanitizer : public QObject
 {
@@ -85,15 +57,14 @@ public:
     void reset();
 
 private:
-    WebPageGrabber webPageGrabber;
-
-    // Configuration
+    // Configuration (initialized in constructor)
     QSet<QString> tagsToRemove;
     QSet<QString> classesToRemove;
     QList<QString> shareButtonURLs;
     QSet<QString> containerTags;
+    std::function<QString(const QString&)> urlTransform;
 
-    // State for two-pass processing
+    // Two-pass state
     QSet<QString> idsToDelete;
     int currentId;
 

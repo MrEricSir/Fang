@@ -1,25 +1,9 @@
 #include "WebPageGrabber.h"
 #include "QWebDownload.h"
+#include "QTidyLibClassic.h"
 #include <QXmlStreamReader>
-#include <memory>
-
-// TidyLib
-#include <tidy.h>
-#include <buffio.h>
 
 #include "FeedDiscoveryLogging.h"
-
-namespace {
-    // RAII wrapper for TidyDoc to ensure cleanup
-    struct TidyDocDeleter {
-        void operator()(TidyDoc doc) const {
-            if (doc) {
-                tidyRelease(doc);
-            }
-        }
-    };
-    using TidyDocPtr = std::unique_ptr<std::remove_pointer<TidyDoc>::type, TidyDocDeleter>;
-}
 
 WebPageGrabber::WebPageGrabber(bool handleMetaRefresh, int timeoutMS, QObject *parent, QNetworkAccessManager* networkManager) :
     QObject(parent),
@@ -82,71 +66,12 @@ QString *WebPageGrabber::loadInternal(const QString& htmlString, bool handleRefr
 {
     document.clear();
 
-    // Tidy up the string!
-    TidyBuffer output;
-    TidyBuffer errbuf;
-    tidyBufInit(&output);
-    tidyBufInit(&errbuf);
-
-    TidyDocPtr tdoc(tidyCreate());
-    if (!tdoc) {
-        emitReadySignal(nullptr);
-        return nullptr;
-    }
-
-    // QString can convert to/from utf8
-    tidySetInCharEncoding(tdoc.get(), "utf8");
-    tidySetOutCharEncoding(tdoc.get(), "utf8");
-
-    // Configure and process the HTML
-    if (!tidyOptSetBool(tdoc.get(), TidyXhtmlOut, yes)) {
-        tidyBufFree(&output);
-        tidyBufFree(&errbuf);
-        emitReadySignal(nullptr);
-        return nullptr;
-    }
-
-    if (!tidyOptSetInt(tdoc.get(), TidyIndentContent, TidyNoState)) {
-        tidyBufFree(&output);
-        tidyBufFree(&errbuf);
-        emitReadySignal(nullptr);
-        return nullptr;
-    }
-
-    int rc = tidySetErrorBuffer(tdoc.get(), &errbuf);
-    if (rc >= 0) {
-        rc = tidyParseString(tdoc.get(), htmlString.toUtf8().constData());
-    }
-    if (rc >= 0) {
-        rc = tidyCleanAndRepair(tdoc.get());
-    }
-    if (rc >= 0) {
-        rc = tidyRunDiagnostics(tdoc.get());
-    }
-    if (rc > 1) {
-        // If error, force output
-        rc = tidyOptSetBool(tdoc.get(), TidyForceOutput, yes) ? rc : -1;
-    }
-    if (rc >= 0) {
-        rc = tidySaveBuffer(tdoc.get(), &output);
-    }
-
-    QString result;
-    qCDebug(logFeedDiscovery) << "TidyLib rc:" << rc << "output.bp:" << (output.bp != nullptr);
-
-    if (rc >= 0 && output.bp) {
-        result = QString::fromUtf8(reinterpret_cast<const char*>(output.bp));
-    } else {
+    QString result = QTidyLibClassic::toXhtml(htmlString);
+    if (result.isEmpty()) {
         qCDebug(logFeedDiscovery) << "WebPageGrabber error!";
-        tidyBufFree(&output);
-        tidyBufFree(&errbuf);
         emitReadySignal(nullptr);
         return nullptr;
     }
-
-    // Free memory (tdoc is automatically freed by unique_ptr)
-    tidyBufFree(&output);
-    tidyBufFree(&errbuf);
 
     document = result;
 
@@ -257,56 +182,7 @@ void WebPageGrabber::init()
 
 QString WebPageGrabber::htmlToXhtml(const QByteArray& html)
 {
-    TidyBuffer output;
-    TidyBuffer errbuf;
-    tidyBufInit(&output);
-    tidyBufInit(&errbuf);
-
-    TidyDocPtr tdoc(tidyCreate());
-    if (!tdoc) {
-        return {};
-    }
-
-    tidySetInCharEncoding(tdoc.get(), "utf8");
-    tidySetOutCharEncoding(tdoc.get(), "utf8");
-
-    if (!tidyOptSetBool(tdoc.get(), TidyXhtmlOut, yes)) {
-        tidyBufFree(&output);
-        tidyBufFree(&errbuf);
-        return {};
-    }
-
-    if (!tidyOptSetInt(tdoc.get(), TidyIndentContent, TidyNoState)) {
-        tidyBufFree(&output);
-        tidyBufFree(&errbuf);
-        return {};
-    }
-
-    int rc = tidySetErrorBuffer(tdoc.get(), &errbuf);
-    if (rc >= 0) {
-        rc = tidyParseString(tdoc.get(), html.constData());
-    }
-    if (rc >= 0) {
-        rc = tidyCleanAndRepair(tdoc.get());
-    }
-    if (rc >= 0) {
-        rc = tidyRunDiagnostics(tdoc.get());
-    }
-    if (rc > 1) {
-        rc = tidyOptSetBool(tdoc.get(), TidyForceOutput, yes) ? rc : -1;
-    }
-    if (rc >= 0) {
-        rc = tidySaveBuffer(tdoc.get(), &output);
-    }
-
-    QString result;
-    if (rc >= 0 && output.bp) {
-        result = QString::fromUtf8(reinterpret_cast<const char*>(output.bp));
-    }
-
-    tidyBufFree(&output);
-    tidyBufFree(&errbuf);
-    return result;
+    return QTidyLibClassic::toXhtml(html);
 }
 
 

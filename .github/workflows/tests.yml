@@ -410,7 +410,7 @@ jobs:
       run: |
         cd build
         lcov --directory . --capture --output-file coverage.info --ignore-errors inconsistent,format,gcov,unsupported,unused
-        lcov --remove coverage.info '/usr/*' '*/Qt/*' '*/test/*' '*_autogen/*' '*/tidylib/*' '*/external/*' --output-file coverage.info.cleaned --ignore-errors inconsistent,format,gcov,unsupported,unused
+        lcov --remove coverage.info '/usr/*' '*/Qt/*' '*/test/*' '*_autogen/*' '*/tidylib-classic/*' '*/external/*' --output-file coverage.info.cleaned --ignore-errors inconsistent,format,gcov,unsupported,unused
         lcov --list coverage.info.cleaned --ignore-errors inconsistent,format,gcov,unsupported,unused
 
     - name: Generate HTML coverage report

@@ -43,6 +43,6 @@ target_link_libraries(FangFeedDiscovery PUBLIC
     Qt6::Concurrent
     Qt6::Core
     Qt6::Network
-    TidyLib
+    QTidyLibClassic
     QSimpleStateMachine::QSimpleStateMachine
 )

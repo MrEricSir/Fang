@@ -82,8 +82,8 @@ execute_process(
     ERROR_QUIET
 )
 
-# Add TidyLib subdirectory
-add_subdirectory(external/tidylib)
+# Add TidyLib Classic subdirectory (bundled inside QTidyLibClassic)
+add_subdirectory(external/QTidyLibClassic/external/tidylib-classic)
 
 # Add QSingleInstanceCheck directory
 add_subdirectory(external/QSingleInstanceCheck)
@@ -109,6 +109,7 @@ set(QML_IMPORT_PATH "${CMAKE_BINARY_DIR}/external/QMLRearrangeableTreeView" CACH
 # External libraries
 add_subdirectory(external/QImageCache)
 add_subdirectory(external/QWebDownload)
+add_subdirectory(external/QTidyLibClassic)
 
 # Feed parsing, network core, and discovery libraries
 add_subdirectory(lib/FangFeedParser)
@@ -275,6 +276,7 @@ set_property(TARGET Fang PROPERTY COMPILE_WARNING_AS_ERROR ON)
 # Link libraries
 target_link_libraries(Fang PRIVATE
     FangFeedDiscovery
+    QTidyLibClassic
     QImageCache
     QSingleInstanceCheck
     Qt6::Concurrent
@@ -390,6 +392,8 @@ if(ENABLE_COVERAGE)
         target_link_options(QWebDownload PRIVATE --coverage)
         target_compile_options(FangFeedDiscovery PRIVATE --coverage -O0 -g)
         target_link_options(FangFeedDiscovery PRIVATE --coverage)
+        target_compile_options(QTidyLibClassic PRIVATE --coverage -O0 -g)
+        target_link_options(QTidyLibClassic PRIVATE --coverage)
 
         # Add custom target for coverage report generation
         find_program(LCOV_PATH lcov)
@@ -407,7 +411,7 @@ if(ENABLE_COVERAGE)
                 COMMAND ${LCOV_PATH} --directory . --capture --output-file coverage.info --ignore-errors inconsistent,format,gcov,unsupported,unused
 
                 # Remove system and test files from coverage
-                COMMAND ${LCOV_PATH} --remove coverage.info '/usr/*' '*/Qt/*' '*/test/*' '*_autogen/*' '*/tidylib/*' --output-file coverage.info.cleaned --ignore-errors inconsistent,format,gcov,unsupported,unused
+                COMMAND ${LCOV_PATH} --remove coverage.info '/usr/*' '*/Qt/*' '*/test/*' '*_autogen/*' '*/tidylib-classic/*' --output-file coverage.info.cleaned --ignore-errors inconsistent,format,gcov,unsupported,unused
 
                 # Generate HTML report
                 COMMAND ${GENHTML_PATH} coverage.info.cleaned --output-directory coverage_html --ignore-errors inconsistent,format,unused
@@ -426,7 +430,7 @@ if(ENABLE_COVERAGE)
                     --ignore-errors inconsistent,format,gcov,unsupported,unused
 
                 # Remove system and test files
-                COMMAND ${LCOV_PATH} --remove coverage.info '/usr/*' '*/Qt/*' '*/test/*' '*_autogen/*' '*/tidylib/*'
+                COMMAND ${LCOV_PATH} --remove coverage.info '/usr/*' '*/Qt/*' '*/test/*' '*_autogen/*' '*/tidylib-classic/*'
                     --output-file coverage.info.cleaned
                     --ignore-errors inconsistent,format,gcov,unsupported,unused
 

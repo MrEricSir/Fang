@@ -7,6 +7,7 @@
 
 #include "QImageCache.h"
 #include "WebUtilities.h"
+#include "QTidyLibClassic.h"
 
 // Strings.
 #define S_WIDTH "width"
@@ -16,9 +17,37 @@
 #define S_HREF "href"
 #define S_ID "id"
 
+namespace {
+
+/*!
+    \brief Represents a DOM node during HTML parsing.
+ */
+class DOMNode {
+public:
+    DOMNode(QString tagName, int intID) :
+        tagName(tagName),
+        intID(intID),
+        nonEmptyTextCount(0),
+        numChildren(0)
+    {}
+
+    // Stack requires a default c'tor
+    DOMNode() :
+        intID(0),
+        nonEmptyTextCount(0),
+        numChildren(0)
+    {}
+
+    QString tagName;
+    int intID;
+    int nonEmptyTextCount;
+    int numChildren;
+};
+
+} // anonymous namespace
+
 HTMLSanitizer::HTMLSanitizer(QObject *parent) :
     QObject(parent),
-    webPageGrabber(false),
     currentId(0)
 {
     tagsToRemove << "script"    // Javascript
@@ -46,6 +75,10 @@ HTMLSanitizer::HTMLSanitizer(QObject *parent) :
                    << "div"
                    << "span"
                    << "pre";
+
+    urlTransform = [](const QString& url) {
+        return WebUtilities::urlFixup(url);
+    };
 }
 
 void HTMLSanitizer::reset()
@@ -82,25 +115,25 @@ QString HTMLSanitizer::intToID(int id)
 
 QString HTMLSanitizer::sanitize(const QString &document, QSet<QUrl> &imageURLs)
 {
-    // We use TidyLib via WebPageGrabber to convert the (potentially crappy) HTML into proper
-    // XHTML.  This will add a doctype and other unwanted headers/footers, so we strip those
-    // out in a separate post-processing method.  You'll see.
-    QString* doc = webPageGrabber.load("<html><body>" + document + "</body></html>");
-    if (doc == nullptr) {
+    // We use TidyLib to convert the (potentially crappy) HTML into proper
+    // XHTML. This will add a doctype and other unwanted headers/footers, so we strip those
+    // out in a separate post-processing method. You'll see.
+    QString doc = QTidyLibClassic::toXhtml("<html><body>" + document + "</body></html>");
+    if (doc.isEmpty()) {
         qCDebug(logRewriter) << "Error loading HTML document";
 
         return "";
     }
 
     // Swap out non-breaking spaces here since QXmlStreamReader doesn't handle them well.
-    doc->replace("&nbsp;", " ", Qt::CaseInsensitive);
+    doc.replace("&nbsp;", " ", Qt::CaseInsensitive);
 
     // We're going to count the number of tags to determine if this is a real HTML document,
     // or a text document.
     int tagCount = 0;
 
     QXmlStreamReader xml;
-    xml.addData(*doc);
+    xml.addData(doc);
 
     QString output;
     QXmlStreamWriter writer(&output);
@@ -163,14 +196,17 @@ QString HTMLSanitizer::sanitize(const QString &document, QSet<QUrl> &imageURLs)
 
                     // Image tags.
                     if (tagName == S_IMG && xml.attributes().hasAttribute(S_SRC)) {
-                        QString imgSrc = WebUtilities::urlFixup(xml.attributes().value(S_SRC).toString());
+                        QString imgSrc = xml.attributes().value(S_SRC).toString();
+                        if (urlTransform) {
+                            imgSrc = urlTransform(imgSrc);
+                        }
                         writer.writeAttribute(S_SRC, imgSrc);
 
                         // WordPress emoji: class="wp-smiley" images are inline emoji
                         // that should render at text size (~16px), not at their
                         // natural pixel dimensions (typically 72x72).
-                        QString classValue = xml.attributes().value("class").toString();
-                        bool isSmiley = classValue.contains("wp-smiley");
+                        QString imgClassValue = xml.attributes().value("class").toString();
+                        bool isSmiley = imgClassValue.contains("wp-smiley");
                         if (isSmiley) {
                             writer.writeAttribute(S_WIDTH, "16");
                             writer.writeAttribute(S_HEIGHT, "16");
@@ -205,9 +241,9 @@ QString HTMLSanitizer::sanitize(const QString &document, QSet<QUrl> &imageURLs)
                             imageURLs << imgSrc;
                         }
                     }
-                }
 
-                lastWasText = false;
+                    lastWasText = false;
+                }
             } else {
                  skip++;
             }
@@ -229,7 +265,7 @@ QString HTMLSanitizer::sanitize(const QString &document, QSet<QUrl> &imageURLs)
                 // second pass.
                 if (containerTags.contains(tagName) && dom.nonEmptyTextCount == 0 && dom.numChildren == 0) {
                     //
-                    // This doesn't work -- at the very least the IDs are wrong.  We need to
+                    // This doesn't work -- at the very least the IDs are wrong. We need to
                     // employ a stack here.
                     //
                     idsToDelete << intToID(dom.intID);
@@ -306,9 +342,45 @@ QString HTMLSanitizer::sanitize(const QString &document, QSet<QUrl> &imageURLs)
     return output;
 }
 
+void HTMLSanitizer::removeNewlinesBothSides(QString &docString)
+{
+    while (docString.startsWith("\n")) {
+        docString = docString.mid(1);
+    }
+
+    while (docString.endsWith("\n")) {
+        docString = docString.left(docString.length() - 1);
+    }
+}
+
+QString HTMLSanitizer::textToHtml(const QString& input)
+{
+    QString output;
+
+    // Keep it simple, stupid.
+    QString cleaned = input.trimmed();
+    cleaned.replace("\r\n", "\r");
+    cleaned.replace("\r", "\n");
+
+    QStringList list = cleaned.split('\n', Qt::SkipEmptyParts);
+    for (const QString& line : list) {
+        // Trim lines, and skip empty ones.
+        QString trimmed = line.trimmed();
+        if (!trimmed.isEmpty()) {
+            output += "<p>" + trimmed + "</p>";
+        }
+    }
+
+    // As a signal to the 2nd pass, we prepend the output with an ASCII beep character. 2nd pass
+    // will remove this and return the string without further modification.
+    output = '\07' + output;
+
+    return output;
+}
+
 QString HTMLSanitizer::finalize(const QString &html, const QMap<QUrl, ImageData> &imageResults)
 {
-    // If it was a text-only document, we've prepended it with an ASCII beep.  All we have to do
+    // If it was a text-only document, we've prepended it with an ASCII beep. All we have to do
     // here is remove the beep and return it.
     if (html.startsWith('\07')) {
         return html.mid(1);
@@ -472,40 +544,3 @@ void HTMLSanitizer::postProcessDocString(QString &docString)
     // This happens.
     docString = docString.trimmed();
 }
-
-void HTMLSanitizer::removeNewlinesBothSides(QString &docString)
-{
-    while (docString.startsWith("\n")) {
-        docString = docString.mid(1);
-    }
-
-    while (docString.endsWith("\n")) {
-        docString = docString.left(docString.length() - 1);
-    }
-}
-
-QString HTMLSanitizer::textToHtml(const QString& input)
-{
-    QString output;
-
-    // Keep it simple, stupid.
-    QString cleaned = input.trimmed();
-    cleaned.replace("\r\n", "\r");
-    cleaned.replace("\r", "\n");
-
-    QStringList list = cleaned.split('\n', Qt::SkipEmptyParts);
-    for (const QString& line : list) {
-        // Trim lines, and skip empty ones.
-        QString trimmed = line.trimmed();
-        if (!trimmed.isEmpty()) {
-            output += "<p>" + trimmed + "</p>";
-        }
-    }
-
-    // As a signal to the 2nd pass, we prepend the output with an ASCII beep character.  2nd pass
-    // will remove this and return the string without further modification.
-    output = '\07' + output;
-
-    return output;
-}
-

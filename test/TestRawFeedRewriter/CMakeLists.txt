@@ -20,6 +20,7 @@ target_compile_definitions(tst_rawfeedrewriter PRIVATE
 target_link_libraries(tst_rawfeedrewriter PRIVATE
     FangTestLib
     FangFeedDiscovery
+    QTidyLibClassic
     Qt6::Test
     Qt6::Network
     Qt6::Gui
